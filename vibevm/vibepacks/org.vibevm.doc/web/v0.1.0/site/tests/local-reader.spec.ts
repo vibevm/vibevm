@@ -24,6 +24,17 @@
  * the producer is the half that could drift: the build writes the page
  * on its own and nothing about the server is involved.
  *
+ * The third case is the chrome around the island. The shell `vibe`
+ * carries is one prerendered template built against this package's
+ * fixture library, so until it asks the reader what it is serving, the
+ * navigation, the meta row and the agent block belong to a two-page
+ * fixture manual that exists on nobody's machine. It asks for
+ * `<base>manifest.json` at the start of the route, and what is measured
+ * here is the only thing that settles it: the titles in the navigation
+ * are the manual's, and following one of them opens that page of the
+ * manual. Those two need the real shell, so they skip when this `vibe`
+ * carries the bare fallback — which has no navigation at all.
+ *
  * It needs a built `vibe`, which the panel has and a fresh clone does
  * not, so without one it SKIPS with the reason printed rather than
  * failing. A test that went red because nobody had compiled the product
@@ -148,12 +159,13 @@ async function carriesAnalytics(page: Page): Promise<boolean> {
 /** What the manual says about itself, read from the product once. */
 type Manifest = {
   package: { group: string; name: string; version: string };
-  pages: { path: string }[];
+  pages: { path: string; title: string }[];
 };
 
 let reader: ChildProcess | undefined;
 let port = 0;
 let missing = "";
+let bare = "";
 let scratch = "";
 let manifest: Manifest | undefined;
 
@@ -165,6 +177,13 @@ function pageHref(at: number): string {
   if (path === "") throw new Error(`the manual has no page ${at}`);
   const stem = path.replace(/\.xml$/, "");
   return `/doc/${card.group}/${card.name}/${card.version}/${stem}/`;
+}
+
+/** The heading of the manual's page number `at`, as the manifest has it. */
+function pageTitle(at: number): string {
+  const title = manifest?.pages[at]?.title ?? "";
+  if (title === "") throw new Error(`the manual has no page ${at}`);
+  return title;
 }
 
 test.beforeAll(async () => {
@@ -190,6 +209,21 @@ test.beforeAll(async () => {
     missing = "this manual has fewer than two pages to read";
     return;
   }
+  /* Which shell this binary carries. The bare one is a working reader
+     with typography and no scripts, so the offline promises above hold
+     under it — but it has no navigation to be right or wrong about. */
+  const carried = spawnSync(
+    VIBE_BIN,
+    ["doc", "serve", "--path", MANUAL, "--print-shell"],
+    { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 },
+  );
+  const provenance = /"provenance":\s*"([a-z]+)"/.exec(carried.stdout ?? "");
+  if (provenance?.[1] !== "embedded" && provenance?.[1] !== "store") {
+    bare =
+      `this \`vibe\` carries the ${provenance?.[1] ?? "unknown"} shell, which has no ` +
+      "chrome to read a manifest into; build it with `--features vibe-doc-shell/embedded-shell`";
+  }
+
   port = await freePort();
   reader = spawn(
     VIBE_BIN,
@@ -259,9 +293,9 @@ test("a second page of the manual loads with nothing from outside, and no policy
   page.on("pageerror", (error) => complaints.push(error.message));
 
   // Two real pages of the manual, named by the manifest rather than by
-  // following a link: the shell's own navigation is built from the page
-  // library the shell was BUILT with, not from the package this reader
-  // was pointed at, so a link on the page is not yet an address here.
+  // following a link: this case is about what a page FETCHES, and naming
+  // the addresses keeps it independent of whether the chrome that links
+  // them has been read in yet.
   for (const at of [0, 1]) {
     const response = await page.goto(`${origin}${pageHref(at)}`, {
       waitUntil: "networkidle",
@@ -335,4 +369,46 @@ test("the static build opened as a file makes no request of its own", async ({
       requests,
     ).join(", ")}\n`,
   );
+});
+
+test("the navigation is the manual's own and not the shell's fixture", async ({
+  page,
+}) => {
+  test.skip(bare !== "", bare);
+  const origin = `http://127.0.0.1:${port}`;
+  await page.goto(`${origin}${pageHref(0)}`, { waitUntil: "networkidle" });
+
+  const links = page.locator(".docs-nav a");
+  await expect
+    .poll(async () => links.count(), { timeout: 10_000 })
+    .toBe(manifest?.pages.length ?? 0);
+  await expect(links.first()).toHaveText(pageTitle(0));
+  await expect(page.locator(".docs-nav")).not.toContainText("Every block once");
+
+  // The meta row is the manual's too: its publisher, not the fixture's.
+  await expect(page.locator(".page-meta")).toContainText(
+    manifest?.package.group ?? "",
+  );
+  process.stdout.write(
+    `local-reader: ${await links.count()} page(s) in the navigation, first «${pageTitle(0)}»\n`,
+  );
+});
+
+test("following a link in that navigation opens that page of the manual", async ({
+  page,
+}) => {
+  test.skip(bare !== "", bare);
+  const origin = `http://127.0.0.1:${port}`;
+  await page.goto(`${origin}${pageHref(0)}`, { waitUntil: "networkidle" });
+
+  const second = page.locator(".docs-nav a").nth(1);
+  await expect(second).toHaveText(pageTitle(1));
+  await second.click();
+  await page.waitForURL(`${origin}${pageHref(1)}`);
+
+  // The island is the server's, rendered for the address that was asked
+  // for \u2014 an ordinary link and a whole page, never a redraw of the
+  // island on the client.
+  await expect(page.locator("[data-island] h1")).toHaveText(pageTitle(1));
+  await expect(page.locator(".docs-nav a").nth(1)).toHaveClass(/current/);
 });

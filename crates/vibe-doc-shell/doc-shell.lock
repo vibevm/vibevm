@@ -11,4 +11,4 @@
 schema = 1
 package = "org.vibevm.doc/web"
 version = "0.1.0"
-sha256 = "d700bac7b1d395ce1c44cb181f12abf7c1ee668b093ea7930367adce59eba570"
+sha256 = "cdd52f66e07f1253ba48a402fd45fb9e4c1a19cd0b97fa1d4961fbbdbc76de9f"

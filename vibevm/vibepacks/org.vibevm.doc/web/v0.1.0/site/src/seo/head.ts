@@ -54,7 +54,7 @@ import { BUILT } from "../lib/library-source.ts";
 import type { DocView, PackageView, PageView } from "../lib/view.ts";
 import { analytics } from "./analytics.ts";
 import { docFileHref, LATEST } from "./editions.ts";
-import { localPageHead, localShelfHead } from "./local.ts";
+import { localHead } from "./local.ts";
 import { previewOf } from "./media.ts";
 import { articleData, collectionData } from "./structured-data.ts";
 
@@ -184,9 +184,7 @@ function ogLocale(tag: string): string {
 /** The head of one documentation page. */
 function pageHead(view: PageView, local: boolean): DocumentHeadValue {
   const address = view.address;
-  if (local) {
-    return localPageHead(view.title, view.summary, projections(address));
-  }
+  if (local) return localHead();
   const latest: DocAddress = { ...address, version: LATEST };
   const source = resolvePage(BUILT, address.lang, address.document);
   const canonical = view.fallback
@@ -245,7 +243,7 @@ function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
     href: llmsHref(address),
     title: "llms.txt of this documentation",
   };
-  if (local) return localShelfHead(view.title, description, [agentIndex]);
+  if (local) return localHead();
 
   const canonical = packageHref({ ...address, version: LATEST });
   const card = cardOf();
@@ -317,7 +315,7 @@ export function catalogueHead(
     href: docFileHref("llms.txt"),
     title: "The catalogue for an agent",
   };
-  if (local) return localShelfHead("Documentation", description, [agentIndex]);
+  if (local) return localHead();
 
   const canonical = catalogueHref(lang);
   return {
