@@ -24,6 +24,6 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
   </step-5>
   <after title="After the route">
-    <p>From here the manual branches. To work day to day, the pages under *How to* cover installing, updating, removing, working offline and publishing. To understand the machinery, the pages under *Model* explain packages and kinds, [registries](../glossary/index.xml#registry), the [lock file](../glossary/index.xml#lock-file) and versions. To let your agent do the work, *Give your agent the vibevm [skill](../glossary/index.xml#skill)* comes next. And whenever a command refuses, *From an error message to the rule* names the rule it enforced.</p>
+    <p>From here the manual branches. To work day to day, the pages under *How to* cover [installing](../howto/install-a-package.xml), [updating](../howto/update-packages.xml), [removing](../howto/remove-a-package.xml), [working offline](../howto/work-offline.xml) and [publishing](../howto/publish-a-package.xml). To understand the machinery, the pages under *Model* explain [packages and kinds](../model/packages-and-kinds.xml), [registries](../model/registries.xml), the [lock file](../glossary/index.xml#lock-file) and the machine [store](../glossary/index.xml#store), and [versions](../model/versions.xml). To let your agent do the work, [Give your agent the vibevm skill](../agent/give-your-agent-the-skill.xml) comes next. And whenever a command refuses, [From an error message to the rule](../diagnostics/errors.xml) names the rule it enforced.</p>
   </after>
 </spec>
