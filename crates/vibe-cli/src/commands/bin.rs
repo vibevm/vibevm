@@ -76,11 +76,47 @@ pub fn run_path(project_root: &Path, name: &str) -> Result<()> {
     Ok(())
 }
 
+/// The `app`-kind boundary of `vibe bin exec` (PROP-057
+/// `##KIND-APP-VS-TOOL`).
+///
+/// The line between `tool` and `app` is mechanical: a `tool` lives in a
+/// project and runs through this very command by the lock file, while an
+/// `app` runs in no consumer project at all — it is built and deployed on
+/// its own. So dispatching an `app`'s binary here is not a missing feature
+/// to be added later; it is the one operation the kind says does not
+/// exist, and the refusal says which kind drew the line.
+///
+/// The kind is read from the slot manifest rather than carried on
+/// [`DeclaredBinary`](vibe_workspace::bins::DeclaredBinary): the
+/// declaration is already addressed by its slot, and only this one verb
+/// asks the question.
+fn refuse_app_dispatch(bin: &vibe_workspace::bins::DeclaredBinary, name: &str) -> Result<()> {
+    let manifest_path = bin.slot.join(vibe_core::manifest::Manifest::FILENAME);
+    let Ok(manifest) = vibe_core::manifest::Manifest::read(&manifest_path) else {
+        // An unreadable slot manifest is not this verb's diagnosis to
+        // make: `vibe check` owns it, and dispatch stays on the path it
+        // took before the kind existed.
+        return Ok(());
+    };
+    if manifest.package.map(|p| p.kind) == Some(vibe_core::PackageKind::App) {
+        bail!(
+            "`{name}` is declared by {} and an `app` package runs nowhere in a consumer \
+             project — it is built and deployed on its own \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#KIND-APP-VS-TOOL; \
+              fix: run the app through its own deploy profile, or declare the binary in a \
+              `tool` package if a project really does dispatch it)",
+            bin.package
+        );
+    }
+    Ok(())
+}
+
 /// `vibe bin exec <name> -- <args…>` — build-if-missing, then exec with
 /// the exit code passed through.
 pub fn run_exec(project_root: &Path, name: &str, args: &[String], assume_yes: bool) -> Result<i32> {
     let bins = collect_binaries(project_root)?;
     let bin = find_binary(&bins, name)?;
+    refuse_app_dispatch(bin, name)?;
     if !bin.artifact().exists() {
         build_binary(bin, assume_yes)?;
     }
@@ -89,4 +125,77 @@ pub fn run_exec(project_root: &Path, name: &str, args: &[String], assume_yes: bo
         .status()
         .with_context(|| format!("spawning {}", bin.artifact().display()))?;
     Ok(status.code().unwrap_or(1))
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+    use std::path::PathBuf;
+
+    use vibe_core::manifest::BinaryDecl;
+    use vibe_workspace::bins::DeclaredBinary;
+
+    use super::refuse_app_dispatch;
+
+    /// One slot on disk carrying a manifest of the given kind, plus the
+    /// declaration that addresses it.
+    fn declared(kind: &str) -> (tempfile::TempDir, DeclaredBinary) {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let slot = dir.path().join("slot");
+        fs::create_dir_all(&slot).expect("slot");
+        fs::write(
+            slot.join("vibe.toml"),
+            format!(
+                "[package]\ngroup = \"org.vibevm.doc\"\nname = \"web\"\nkind = \"{kind}\"\n\
+                 version = \"0.1.0\"\n"
+            ),
+        )
+        .expect("slot manifest");
+        let bin = DeclaredBinary {
+            decl: BinaryDecl {
+                name: "site".to_string(),
+                crate_dir: PathBuf::from("crates/site"),
+                description: None,
+            },
+            package: "org.vibevm.doc/web".to_string(),
+            group: "org.vibevm.doc".to_string(),
+            vibedeps_root: dir.path().to_path_buf(),
+            slot,
+        };
+        (dir, bin)
+    }
+
+    /// An `app` runs in no consumer project, so the one verb that would
+    /// run it there refuses and says which rule drew the line
+    /// (PROP-057 `##KIND-APP-VS-TOOL`).
+    #[test]
+    fn an_app_package_is_never_dispatched_by_bin_exec() {
+        let (_dir, bin) = declared("app");
+        let error = refuse_app_dispatch(&bin, "site").expect_err("an app never dispatches");
+        let message = error.to_string();
+        assert!(
+            message.contains("org.vibevm.doc/web"),
+            "the refusal names the declaring package: {message}"
+        );
+        assert!(
+            message.contains("spec://org.vibevm.core/vibevm/common/PROP-057#KIND-APP-VS-TOOL"),
+            "the refusal is navigable back to the rule: {message}"
+        );
+    }
+
+    /// Every other kind dispatches as it always did — the boundary is
+    /// `app` against `tool`, not a new gate on `vibe bin exec`.
+    ///
+    /// The loop names the kinds whose manifest is complete with
+    /// `[package]` alone; `mcp` and `doc` each owe their own tables, so
+    /// their slot manifests would fail to READ here and take the
+    /// unreadable-manifest path instead of the one under test.
+    #[test]
+    fn every_other_kind_still_dispatches() {
+        for kind in ["flow", "feat", "stack", "tool", "lang"] {
+            let (_dir, bin) = declared(kind);
+            refuse_app_dispatch(&bin, "site")
+                .unwrap_or_else(|e| panic!("`{kind}` must still dispatch: {e}"));
+        }
+    }
 }

@@ -164,6 +164,12 @@ pub type JsonMap = BTreeMap<String, Option<Value>>;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ManifestKind {
+    #[serde(rename = "app")]
+    App,
+
+    #[serde(rename = "doc")]
+    Doc,
+
     #[serde(rename = "feat")]
     Feat,
 
@@ -213,6 +219,12 @@ pub struct Order {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PackageKind {
+    #[serde(rename = "app")]
+    App,
+
+    #[serde(rename = "doc")]
+    Doc,
+
     #[serde(rename = "feat")]
     Feat,
 

@@ -11,6 +11,39 @@ fn kind_roundtrip() {
     }
 }
 
+/// The two kinds admitted by the 2026-09-12 register amendment
+/// (VIBEVM-SPEC §4.1, PROP-057 `##KIND-DOC-LEAD` / `##KIND-APP-VS-TOOL`):
+/// their wire strings are `doc` and `app`, and they join the closed set
+/// rather than living beside it.
+#[test]
+fn kind_names_doc_and_app() {
+    assert_eq!("doc".parse::<PackageKind>().unwrap(), PackageKind::Doc);
+    assert_eq!("app".parse::<PackageKind>().unwrap(), PackageKind::App);
+    assert_eq!(PackageKind::Doc.as_str(), "doc");
+    assert_eq!(PackageKind::App.as_str(), "app");
+    assert_eq!(PackageKind::ALL.len(), 8);
+    assert!(PackageKind::ALL.contains(&PackageKind::Doc));
+    assert!(PackageKind::ALL.contains(&PackageKind::App));
+}
+
+/// `doc` is the one kind that is read instead of installed
+/// (PROP-057 `##KIND-DOC-NOT-INSTALLED`). `app` is NOT: it installs
+/// like any other package and differs from `tool` only in dispatch
+/// (`##KIND-APP-VS-TOOL`), so it must not be swept into the same
+/// refusal.
+#[test]
+fn only_doc_is_read_instead_of_installed() {
+    assert!(PackageKind::Doc.is_read_only());
+    for kind in PackageKind::ALL {
+        if kind != PackageKind::Doc {
+            assert!(
+                !kind.is_read_only(),
+                "`{kind}` installs — only documentation is read"
+            );
+        }
+    }
+}
+
 #[test]
 fn kind_rejects_unknown() {
     let err = "widget".parse::<PackageKind>().unwrap_err();

@@ -315,6 +315,8 @@ fn manifest_kind(kind: EffectiveManifestKind) -> ManifestKind {
             vibe_core::PackageKind::Tool => ManifestKind::Tool,
             vibe_core::PackageKind::Mcp => ManifestKind::Mcp,
             vibe_core::PackageKind::Lang => ManifestKind::Lang,
+            vibe_core::PackageKind::Doc => ManifestKind::Doc,
+            vibe_core::PackageKind::App => ManifestKind::App,
         },
     }
 }
@@ -345,6 +347,8 @@ fn package_kind(value: vibe_core::PackageKind) -> ReportPackageKind {
         vibe_core::PackageKind::Tool => ReportPackageKind::Tool,
         vibe_core::PackageKind::Mcp => ReportPackageKind::Mcp,
         vibe_core::PackageKind::Lang => ReportPackageKind::Lang,
+        vibe_core::PackageKind::Doc => ReportPackageKind::Doc,
+        vibe_core::PackageKind::App => ReportPackageKind::App,
     }
 }
 

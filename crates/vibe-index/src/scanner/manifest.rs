@@ -9,7 +9,7 @@
 //! §3.2 / §9 item 11 record the reversal of the standalone-workspace
 //! decision this dependency rests on.
 //!
-//! What stays converted is narrow: `vibe-core`'s closed four-variant
+//! What stays converted is narrow: `vibe-core`'s closed eight-variant
 //! [`PackageKind`](vibe_core::PackageKind) against the index's open wire
 //! vocabulary ([`crate::types::PackageKind`] — a re-export of the
 //! generated type, `Unknown(String)` and all). The manifest side is
@@ -76,6 +76,16 @@ pub fn package_kind(kind: CorePackageKind) -> PackageKind {
         CorePackageKind::Tool => PackageKind::Tool,
         CorePackageKind::Mcp => PackageKind::Mcp,
         CorePackageKind::Lang => PackageKind::Lang,
+        // The two kinds the core enum learned before the wire
+        // vocabulary did. The index side is an OPEN vocabulary, so a
+        // value this build cannot yet NAME still travels verbatim:
+        // `Unknown("doc")` writes the byte string `"doc"`, which is
+        // exactly what the named variant will write once
+        // `formats/vocabularies.json` widens and `cargo xtask codegen`
+        // emits it (PROP-044 §4.2a, PROP-057 `##KIND-CODE-LAW`). These
+        // two arms become `PackageKind::Doc` / `PackageKind::App`.
+        CorePackageKind::Doc => PackageKind::Unknown("doc".to_string()),
+        CorePackageKind::App => PackageKind::Unknown("app".to_string()),
     }
 }
 

@@ -388,6 +388,13 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         )?);
     }
 
+    // The read-only kind stops here, before anything is materialised.
+    // A package's kind lives inside its own bytes, so this is the first
+    // point in the install where it is known at all — and the last one
+    // before `apply` writes a slot (PROP-057
+    // `##KIND-DOC-NOT-INSTALLED`).
+    refuse_read_only_kinds(&fetched)?;
+
     // Visibility check: warn if a requested feature was accepted by no
     // root package.
     if !request.features.explicit.is_empty() {
@@ -482,6 +489,32 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         // exact tree that produced this plan.
         workspace: workspace.clone(),
     })))
+}
+
+/// Refuse the kinds that are read instead of installed.
+///
+/// Documentation is not a dependency: it carries no boot snippet, no
+/// binary and no MCP server, and a consumer that materialised it would
+/// commit a tutorial into `vibedeps/` and hand it to every `grep` an
+/// agent runs over its dependencies. The refusal therefore names the
+/// path that DOES work — `vibe cache add` warms the package into the
+/// machine store, where the local reader and `vibe explain` read it
+/// (PROP-057 `##KIND-DOC-NOT-INSTALLED`).
+///
+/// Checked over the whole solved graph, not the roots alone: a `doc`
+/// package reached through someone else's `[requires]` is the same
+/// mistake one level further away, and saying so at the root would
+/// name the wrong package.
+fn refuse_read_only_kinds(fetched: &[Fetched]) -> Result<()> {
+    for node in fetched {
+        let meta = node.cached.package_meta();
+        if meta.kind.is_read_only() {
+            return Err(Error::DocNotInstalled {
+                coordinate: format!("{}/{}", meta.group, meta.name),
+            });
+        }
+    }
+    Ok(())
 }
 
 /// Append the case-c migration's concrete entries to the selected node of the

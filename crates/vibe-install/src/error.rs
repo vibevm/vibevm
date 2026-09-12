@@ -21,6 +21,17 @@ pub enum Error {
     )]
     NothingToInstall { manifest_dir: String },
 
+    /// A `doc`-kind package reached the install path. Documentation is
+    /// read, not installed: it never materialises into a consumer's
+    /// dependency root, so the refusal names the warm-up command
+    /// instead of failing blankly (PROP-057 `##KIND-DOC-NOT-INSTALLED`).
+    #[error(
+        "`{coordinate}` is a `doc` package and documentation is read, never installed \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED; \
+          fix: read it with `vibe cache add {coordinate}` and the local reader)"
+    )]
+    DocNotInstalled { coordinate: String },
+
     #[error(
         "conditional-dep expansion exceeded {iterations} iterations — cascading \
          predicates may form a cycle or runaway chain; pending extras: {pending:?} \
