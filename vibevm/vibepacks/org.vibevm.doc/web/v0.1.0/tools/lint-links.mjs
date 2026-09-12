@@ -75,6 +75,29 @@ const ALLOWED_HOSTS = new Map([
 ]);
 
 /**
+ * The addresses the DOMAIN answers from outside this site's output.
+ *
+ * The site is one container of the domain, not the whole of it: the
+ * host's proxy answers the first-party analytics paths itself (D-24,
+ * `##SITE-ANALYTICS`), so the page writes the tag and no file in the
+ * output stands behind it. It is not a citation leaving the library and
+ * it is not a foreign host — it is the one place where «is there a file
+ * behind it?» is the wrong question, and it is asked of the domain
+ * instead: the live check of A5.6 fetches it through the whole stack.
+ * The script posts to `/u/e` at runtime; no page writes that address,
+ * so it is not listed — a table entry nothing exercises is a claim.
+ *
+ * The first live render found this the hard way: 814 red links, one per
+ * page, on the first build whose website id was not empty.
+ */
+const ANSWERED_BY_THE_DOMAIN = new Map([
+  [
+    "/u/s.js",
+    "the first-party analytics script, served by the domain's proxy rather than by this site (D-24)",
+  ],
+]);
+
+/**
  * Misses that are known, filed, and not this build's to fix.
  *
  * The shape of a parity difference and for the same reason: a gate that
@@ -271,11 +294,19 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
   const islandForms = new Map();
   const foreign = new Map();
   const outbound = new Map();
+  const domainAnswered = new Map();
   let checked = 0;
 
   /** An address the site claims to serve: is there a file behind it? */
   const carried = (address) =>
     files.has(fileFor(address)) || addresses.has(address);
+
+  /** An address the domain answers on the site's behalf: counted, never a miss. */
+  const answeredByDomain = (address) => {
+    if (!ANSWERED_BY_THE_DOMAIN.has(address)) return false;
+    domainAnswered.set(address, (domainAnswered.get(address) ?? 0) + 1);
+    return true;
+  };
 
   /** The coordinates the site actually carries pages for. */
   const coordinates = new Set(
@@ -356,13 +387,14 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
     if (/^https?:\/\//i.test(target)) {
       const inside = external(page, kind, target);
       if (inside === null) return;
-      if (!carried(decodeURI(inside.replace(/[?#].*$/, "")))) {
-        miss(page, kind, decodeURI(inside), island);
-      }
+      const path = decodeURI(inside.replace(/[?#].*$/, ""));
+      if (answeredByDomain(path)) return;
+      if (!carried(path)) miss(page, kind, decodeURI(inside), island);
       return;
     }
     const address = resolveLink(page, target);
     if (address === null) return;
+    if (answeredByDomain(address)) return;
     if (!carried(address)) miss(page, kind, address, island);
   };
 
@@ -470,6 +502,11 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
   );
   for (const [host, count] of [...foreign].sort()) {
     say(`    ok        ${count}x ${host} — ${ALLOWED_HOSTS.get(host)}`);
+  }
+  for (const [path, count] of [...domainAnswered].sort()) {
+    say(
+      `    ok        ${count}x ${path} — ${ANSWERED_BY_THE_DOMAIN.get(path)}`,
+    );
   }
   if (outbound.size > 0) {
     const total = [...outbound.values()].reduce((sum, one) => sum + one, 0);
