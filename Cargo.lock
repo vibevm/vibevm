@@ -4481,6 +4481,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-doc"
+version = "1.0.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "vibe-specdoc",
+ "walkdir",
+]
+
+[[package]]
 name = "vibe-ext"
 version = "1.0.0"
 dependencies = [

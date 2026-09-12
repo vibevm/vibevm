@@ -56,6 +56,7 @@ audit_crates = ["vibe-ext", "vibe-native-loader", "vibe-test-support"]
 gated = [
     "progress-core",
     "vibe-core",
+    "vibe-doc",
     "vibe-ext",
     "vibe-extension-registry",
     "vibe-facts",
