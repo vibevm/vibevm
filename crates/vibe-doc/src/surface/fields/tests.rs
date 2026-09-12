@@ -53,6 +53,55 @@ fn the_lock_file_surface_holds_its_own_tables() {
     }
 }
 
+/// A level whose members are not all optional still answers with its
+/// whole list.
+///
+/// `vibe.lock` is the document that tests this, because `[meta]` is
+/// required: were the refusal to arrive as «missing field `meta`»
+/// instead of «unknown field … expected `meta` or `package`», the probe
+/// would read it as «this is not a struct» and the whole lock-file
+/// surface would collapse to nothing — silently, since an empty list and
+/// a leaf print the same. Asserted on the refusal itself rather than on
+/// the count, so an upgrade of serde or toml that reordered the two
+/// checks turns this test red instead of turning the surface empty.
+#[test]
+fn a_required_member_does_not_hide_the_list() {
+    let mut probes = 0usize;
+    assert_eq!(
+        accepted::<vibe_core::manifest::Lockfile>(&[], &mut probes),
+        Some(vec!["meta".to_string(), "package".to_string()]),
+        "the top level of `vibe.lock` has one required member and one optional one; \
+         the refusal must still name both"
+    );
+}
+
+/// An array of tables is recorded in ONE spelling — the one the document
+/// actually accepts.
+///
+/// `vibe.lock` writes `[[package]]`, and a plain `[package]` is refused
+/// («invalid type: map, expected a sequence»). Recording the bare name
+/// beside the bracketed one would put a key in the surface that the
+/// parser rejects, and `vibe doc diff` would then report a page owed to
+/// a field that never existed.
+#[test]
+fn an_array_of_tables_is_recorded_bracketed_and_not_bare() {
+    let fields = lock_fields();
+    assert!(
+        fields.iter().any(|f| f == "package[]"),
+        "`[[package]]` is what `vibe.lock` accepts; found: {:?}",
+        fields
+            .iter()
+            .filter(|f| f.starts_with("package"))
+            .take(3)
+            .collect::<Vec<_>>()
+    );
+    assert!(
+        !fields.iter().any(|f| f == "package"),
+        "`[package]` as a plain table is refused by `vibe.lock`, so the surface \
+         must not claim it"
+    );
+}
+
 #[test]
 fn the_two_documents_do_not_answer_the_same() {
     assert_ne!(

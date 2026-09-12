@@ -61,9 +61,21 @@ pub fn manifest_fields() -> Vec<String> {
 
 /// Every dotted key path `vibe.lock` accepts, sorted.
 ///
+/// A path carries the bracket form of the table it names, so the two
+/// documents do not read alike where they are not alike: `vibe.toml`
+/// declares `[package]` once, `vibe.lock` declares `[[package]]` per
+/// locked package, and only the second spelling ends in `[]`.
+///
 /// ```
 /// let fields = vibe_doc::surface::fields::lock_fields();
-/// assert!(fields.iter().any(|f| f == "package"));
+/// // `[meta]` is a REQUIRED member, and it does not hide the list: the
+/// // refusal names every key this level takes, not the one it misses.
+/// assert!(fields.iter().any(|f| f == "meta"));
+/// assert!(fields.iter().any(|f| f == "meta.schema_version"));
+/// // The locked packages are an array of tables, and the path says so.
+/// assert!(fields.iter().any(|f| f == "package[]"));
+/// assert!(fields.iter().any(|f| f == "package[].name"));
+/// assert!(!fields.iter().any(|f| f == "package"));
 /// ```
 pub fn lock_fields() -> Vec<String> {
     crawl::<Lockfile>()
