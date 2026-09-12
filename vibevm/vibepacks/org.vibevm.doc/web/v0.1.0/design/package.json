@@ -6,6 +6,7 @@
   "description": "The design system of vibevm.org: the raw palette, the semantic tokens in both themes, the self-hosted fonts and the shell components.",
   "exports": {
     ".": "./src/index.ts",
+    "./base.css": "./base.css",
     "./palette.css": "./palette.css",
     "./tokens.css": "./tokens.css",
     "./fonts.css": "./fonts.css",

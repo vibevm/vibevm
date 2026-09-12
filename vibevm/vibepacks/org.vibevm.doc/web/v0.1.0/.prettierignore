@@ -15,6 +15,10 @@ server/
 # pipeline's output and must stay byte-identical to it.
 design/fonts/
 site/src/fixtures/
+# Generated from the wire schema by `cargo xtask codegen`, and diffed
+# against the generator by `check-codegen`: reformatting it would make
+# that diff fail on this machine's prettier rather than on real drift.
+site/src/generated/
 # vibe-generated boot artifacts (rewritten on every install).
 vibevm/vibespecs/boot/
 CLAUDE.md

@@ -42,6 +42,7 @@
     "site/src/**/*.ts",
     "site/src/**/*.tsx",
     "site/vite.config.ts",
+    "site/vite.config.embedded.ts",
     "site/adapters/**/*.ts"
   ],
   "exclude": ["node_modules", "dist", "server", "tmp"]
