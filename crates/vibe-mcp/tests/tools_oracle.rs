@@ -5,7 +5,10 @@
 //! cell-has-oracle net the replacement protocol requires (R-040): the four
 //! tool cells are referenced here by name.
 
+use std::sync::LazyLock;
+
 use serde_json::{Value, json};
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 use vibe_mcp::tools::{
     AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryMcpTool,
     QueryPackageMcpTool, ReadSubskillMcpTool, SelectMcpTool, default_tools,
@@ -17,11 +20,17 @@ use vibe_mcp::{ServerContext, dispatch_one};
 #[path = "tools_oracle/dispatch_compat.rs"]
 mod dispatch_compat;
 
-const LOCKFILE_FIXTURE: &str = r#"
+/// The shared lockfile fixture, minted at the schema the reader accepts
+/// today. Pinning the number by hand turns every oracle below into a
+/// casualty of the next schema bump — the reader rejects the file before
+/// a single tool cell is exercised.
+static LOCKFILE_FIXTURE: LazyLock<String> = LazyLock::new(|| {
+    format!(
+        r#"
 [meta]
 generated_by = "vibe-test"
 generated_at = "2026-05-05T00:00:00Z"
-schema_version = 6
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -60,7 +69,9 @@ describes = "pkg:cargo/sqlx@^0.8"
 cache_files = [
     "vibevm/vibespecs/flows/wal/SQLX-NOTES.md",
 ]
-"#;
+"#
+    )
+});
 
 fn project_with_locked(text: &str) -> (tempfile::TempDir, ServerContext) {
     let dir = tempfile::tempdir().unwrap();
@@ -263,7 +274,7 @@ fn select_cell_refuses_an_unreadable_query_by_naming_the_token() {
 /// surface that failed here would be useless in a fresh tree.
 #[test]
 fn list_tools_cell_returns_an_array_and_tolerates_an_empty_project() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let out = ListToolsMcpTool.run(&json!({}), &ctx).unwrap();
     let arr = out.as_array().expect("an array");
     // The fixture's package declares no `[[binary]]`, so the registry is
@@ -275,7 +286,7 @@ fn list_tools_cell_returns_an_array_and_tolerates_an_empty_project() {
 /// the name the skill template teaches — not merely constructible.
 #[test]
 fn list_tools_is_reachable_through_the_dispatcher() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let reply = dispatch_one(
         ctx,
         &json!({
@@ -305,7 +316,7 @@ fn list_tools_declares_no_arguments() {
 
 #[test]
 fn agentic_explain_cell_returns_inline_instruction() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let out = AgenticExplainMcpTool.run(&json!({}), &ctx).unwrap();
     assert_eq!(out["source"], "agentic explain");
     assert_eq!(out["delivery"], "inline");
@@ -321,7 +332,7 @@ fn agentic_explain_cell_returns_inline_instruction() {
 
 #[test]
 fn query_package_cell_returns_full_entry() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let out = QueryPackageMcpTool
         .run(&json!({ "name": "org.vibevm/wal" }), &ctx)
         .unwrap();
@@ -343,7 +354,7 @@ fn query_package_cell_returns_full_entry() {
 
 #[test]
 fn query_package_cell_unknown_is_not_found() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let err = QueryPackageMcpTool
         .run(&json!({ "name": "org.vibevm/nope" }), &ctx)
         .unwrap_err();
@@ -352,7 +363,7 @@ fn query_package_cell_unknown_is_not_found() {
 
 #[test]
 fn query_package_cell_invalid_pkgref_errors() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let err = QueryPackageMcpTool
         .run(&json!({ "name": "no-group" }), &ctx)
         .unwrap_err();
@@ -364,7 +375,7 @@ fn query_package_cell_invalid_pkgref_errors() {
 
 #[test]
 fn read_subskill_cell_returns_paths_and_content() {
-    let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let p = dir
         .path()
         .join(vibe_core::layout::current_specs_root())
@@ -398,7 +409,7 @@ fn read_subskill_cell_returns_paths_and_content() {
 
 #[test]
 fn read_subskill_cell_unknown_subskill_errors() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let err = ReadSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "made/up" }),
@@ -412,7 +423,7 @@ fn read_subskill_cell_unknown_subskill_errors() {
 
 #[test]
 fn materialise_subskill_cell_copies_lazy_pull_content() {
-    let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let cache_root = ctx
         .store_root
         .join("org.vibevm")
@@ -456,7 +467,7 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
 
 #[test]
 fn materialise_subskill_cell_no_op_for_non_lazy_pull() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let out = MaterialiseSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "stack/rust" }),
@@ -468,7 +479,7 @@ fn materialise_subskill_cell_no_op_for_non_lazy_pull() {
 
 #[test]
 fn materialise_subskill_cell_refuses_overwrite_without_force() {
-    let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let cache_root = ctx
         .store_root
         .join("org.vibevm")
@@ -504,7 +515,7 @@ fn materialise_subskill_cell_refuses_overwrite_without_force() {
 
 #[test]
 fn dispatch_routes_tools_call_through_the_seam() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let req = json!({
         "jsonrpc": "2.0",
         "id": 1,
@@ -520,7 +531,7 @@ fn dispatch_routes_tools_call_through_the_seam() {
 
 #[test]
 fn dispatch_tools_list_includes_every_cell() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let req =
         json!({ "jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {} }).to_string();
     let resp = dispatch_one(ctx, &req).unwrap();

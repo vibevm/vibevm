@@ -1,11 +1,16 @@
 use super::*;
 use vibe_core::Group;
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
-const LOCK: &str = r#"
+/// The fixture lock, minted at the schema the reader accepts today — a
+/// hand-pinned number rots into a hard read rejection on the next bump.
+fn lock_fixture() -> String {
+    format!(
+        r#"
 [meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-07T00:00:00Z"
-schema_version = 6
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "stack"
@@ -17,7 +22,9 @@ source_url = "file://packages"
 source_ref = "v0.4.0"
 content_hash = "sha256:deadbeef"
 files_written = []
-"#;
+"#
+    )
+}
 
 fn fixture_project() -> tempfile::TempDir {
     let dir = tempfile::tempdir().expect("tempdir");
@@ -26,7 +33,7 @@ fn fixture_project() -> tempfile::TempDir {
         "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
     )
     .expect("vibe.toml");
-    std::fs::write(dir.path().join("vibe.lock"), LOCK).expect("vibe.lock");
+    std::fs::write(dir.path().join("vibe.lock"), lock_fixture()).expect("vibe.lock");
     let slot = dir
         .path()
         .join(vibe_core::layout::current_vibedeps_root())

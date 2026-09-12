@@ -17,7 +17,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -124,16 +124,18 @@ fn general_install_defers_in_place_instead_of_recloning() {
         "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
     );
 
-    // The lockfile already records `org.vibevm/giant` as an in-place package
-    // (schema v6). The recorded commit differs from FETCHED_COMMIT so the test
-    // can tell the rewritten lockfile apart from this provisional value.
+    // The lockfile already records `org.vibevm/giant` as an in-place package,
+    // at whatever schema the reader accepts today. The recorded commit differs
+    // from FETCHED_COMMIT so the test can tell the rewritten lockfile apart
+    // from this provisional value.
     write(
         root,
         "vibe.lock",
-        "[meta]\n\
+        &format!(
+            "[meta]\n\
          generated_by = \"vibe test\"\n\
          generated_at = \"2026-06-27T00:00:00Z\"\n\
-         schema_version = 6\n\n\
+         schema_version = {CURRENT_SCHEMA_VERSION}\n\n\
          [[package]]\n\
          kind = \"feat\"\n\
          name = \"giant\"\n\
@@ -143,7 +145,8 @@ fn general_install_defers_in_place_instead_of_recloning() {
          content_hash = \"sha256:0000\"\n\
          source_kind = \"registry\"\n\
          resolved_commit = \"1111111111111111111111111111111111111111\"\n\
-         materialization = \"in-place\"\n",
+         materialization = \"in-place\"\n"
+        ),
     );
     write(
         root,

@@ -4,6 +4,7 @@
 
 use std::cell::Cell;
 
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 use vibe_wire::generated::requirements_report::RelationSourceState;
 
 use crate::tests_provider::{Fake, edge, project as two_sources, relation_of};
@@ -418,7 +419,7 @@ fn two_package_lock(root: &std::path::Path, ghost_hash: &str) {
             "[meta]
 generated_by = \"f\"
 generated_at = \"2026-01-01T00:00:00Z\"
-             schema_version = 6
+             schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = \"feat\"

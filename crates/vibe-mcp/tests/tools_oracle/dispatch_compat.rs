@@ -16,7 +16,7 @@ use super::{LOCKFILE_FIXTURE, project_with_locked, project_with_specmap};
 /// channel is the pretty-JSON projection of that same value.
 #[test]
 fn dispatch_object_tool_renders_exactly_as_before_the_seam() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let req = json!({
         "jsonrpc": "2.0",
         "id": 41,
@@ -65,7 +65,7 @@ fn dispatch_string_tool_renders_raw_text_as_before_the_seam() {
 /// all — there is no structured report to carry.
 #[test]
 fn dispatch_preflight_error_renders_text_only_without_structured_content() {
-    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let (_dir, ctx) = project_with_locked(&LOCKFILE_FIXTURE);
     let req = json!({
         "jsonrpc": "2.0",
         "id": 43,

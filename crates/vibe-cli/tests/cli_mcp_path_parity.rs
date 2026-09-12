@@ -6,14 +6,20 @@ use std::fs;
 
 use common::UserScratch;
 use serde_json::{Value, json};
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 use vibe_mcp::ServerContext;
 use vibe_mcp::tools::{McpTool, QueryPackageMcpTool};
 
-const WINDOWS_STYLE_LOCKFILE: &str = r#"
+/// The fixture is minted at the schema the reader accepts today, so a
+/// schema bump cannot rot it into an `unsupported vibe.lock schema
+/// version` rejection that hides the parity this test is about.
+fn windows_style_lockfile() -> String {
+    format!(
+        r#"
 [meta]
 generated_by = "vibe-test"
 generated_at = "2026-08-20T00:00:00Z"
-schema_version = 6
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -26,14 +32,16 @@ files_written = [
     'vibevm\vibespecs\flows\wal\PROTOCOL.md',
     'vibevm\vibespecs\boot\10-flow-wal.md',
 ]
-"#;
+"#
+    )
+}
 
 #[test]
 fn list_json_and_query_package_return_identical_files_written_paths() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
-    fs::write(project.path().join("vibe.lock"), WINDOWS_STYLE_LOCKFILE).unwrap();
+    fs::write(project.path().join("vibe.lock"), windows_style_lockfile()).unwrap();
 
     let output = user
         .vibe()

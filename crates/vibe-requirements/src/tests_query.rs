@@ -6,6 +6,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 use vibe_wire::generated::shared::Timestamp;
 
 use crate::text::render;
@@ -60,7 +61,7 @@ pub(crate) fn write_lock(root: &Path, in_place: bool) {
         root.join("vibe.lock"),
         format!(
             "[meta]\ngenerated_by = \"fixture\"\ngenerated_at = \"2026-01-01T00:00:00Z\"\n\
-             schema_version = 6\n\n[[package]]\nkind = \"feat\"\nname = \"pkg\"\n\
+             schema_version = {CURRENT_SCHEMA_VERSION}\n\n[[package]]\nkind = \"feat\"\nname = \"pkg\"\n\
              group = \"org.example\"\nversion = \"1.0.0\"\n\
              source_url = \"https://example.invalid/pkg.git\"\n\
              content_hash = \"sha256:{}\"\nmaterialization = \"{materialization}\"\n",
