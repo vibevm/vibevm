@@ -48,6 +48,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod inline;
+pub mod links;
 
 mod emit;
 
@@ -56,7 +57,8 @@ use vibe_specdoc::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl
 use crate::content::{Content, ExampleBody};
 use crate::numbering::{BlockPath, Numbering};
 use emit::{anchor, anchor_line, close, line, open, pre_code, push_p, void};
-use inline::{escape, render};
+use inline::{escape, render_linked};
+use links::Links;
 
 /// One attribute, already escaped.
 type Attrs = Vec<(&'static str, String)>;
@@ -119,7 +121,13 @@ pub fn to_html_numbered(doc: &SpecDoc, content: &Content, numbering: &Numbering)
         if let Some(id) = &title.id {
             attrs.push(("id", id.clone()));
         }
-        line(&mut out, 1, "h1", &attrs, &render(&title.text));
+        line(
+            &mut out,
+            1,
+            "h1",
+            &attrs,
+            &render_linked(&title.text, &Links::page(&content.base)),
+        );
     }
     blocks_html(&mut out, 1, &doc.preamble, &[], content, numbering);
     for (i, section) in doc.sections.iter().enumerate() {
@@ -147,7 +155,13 @@ fn section_html(
     open(out, depth, "section", &attrs);
     // The dialect nests six levels deep at most, and so does HTML.
     let heading = format!("h{}", level.min(6));
-    line(out, depth + 1, &heading, &[], &render(&s.title));
+    line(
+        out,
+        depth + 1,
+        &heading,
+        &[],
+        &render_linked(&s.title, &Links::page(&content.base)),
+    );
     blocks_html(out, depth + 1, &s.blocks, path, content, numbering);
     for (i, sub) in s.sections.iter().enumerate() {
         let mut child = path.to_vec();
@@ -183,14 +197,24 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
                 depth,
                 "p",
                 &attrs,
-                &format!("{}{}", anchor(num), render(&u.text)),
+                &format!(
+                    "{}{}",
+                    anchor(num),
+                    render_linked(&u.text, &Links::page(&content.base))
+                ),
             );
         }
         Block::Quote(u) => {
             push_unit(&mut attrs, u);
             open(out, depth, "blockquote", &attrs);
             anchor_line(out, depth + 1, num);
-            line(out, depth + 1, "p", &[], &render(&u.text));
+            line(
+                out,
+                depth + 1,
+                "p",
+                &[],
+                &render_linked(&u.text, &Links::page(&content.base)),
+            );
             close(out, depth, "blockquote");
         }
         Block::List { ordered, items } => {
@@ -208,12 +232,15 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
                     depth + 1,
                     "li",
                     &item_attrs,
-                    &format!("{head}{}", render(&item.text)),
+                    &format!(
+                        "{head}{}",
+                        render_linked(&item.text, &Links::page(&content.base))
+                    ),
                 );
             }
             close(out, depth, tag);
         }
-        Block::Table { rows } => table(out, depth, rows, &attrs, num),
+        Block::Table { rows } => table(out, depth, rows, &attrs, content, num),
         Block::Fence { lang, text, .. } => {
             pre_code(out, depth, &attrs, lang.as_deref(), text, num);
         }
@@ -280,16 +307,33 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
             push_unit(&mut attrs, body);
             open(out, depth, "aside", &attrs);
             anchor_line(out, depth + 1, num);
-            line(out, depth + 1, "p", &[], &render(&body.text));
+            line(
+                out,
+                depth + 1,
+                "p",
+                &[],
+                &render_linked(&body.text, &Links::page(&content.base)),
+            );
             close(out, depth, "aside");
         }
         Block::Figure { src, alt, caption } => {
             push_unit(&mut attrs, caption);
             open(out, depth, "figure", &attrs);
             anchor_line(out, depth + 1, num);
-            let img: Attrs = vec![("src", src.clone()), ("alt", alt.clone())];
+            let links = Links::page(&content.base);
+            // A picture must have a source, so a target this build cannot
+            // place keeps the spelling the page gave it — an `img` with
+            // no `src` is not an honest gap, it is a hole.
+            let at = links.href(src).unwrap_or_else(|| src.clone());
+            let img: Attrs = vec![("src", at), ("alt", alt.clone())];
             void(out, depth + 1, "img", &img);
-            line(out, depth + 1, "figcaption", &[], &render(&caption.text));
+            line(
+                out,
+                depth + 1,
+                "figcaption",
+                &[],
+                &render_linked(&caption.text, &links),
+            );
             close(out, depth, "figure");
         }
         Block::Prompt {
@@ -322,7 +366,7 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
                     depth + 1,
                     "p",
                     &[("class", "prompt-needs".to_owned())],
-                    &render(needs),
+                    &render_linked(needs, &Links::page(&content.base)),
                 );
             }
             if let Some(outcome) = outcome {
@@ -331,7 +375,7 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
                     depth + 1,
                     "p",
                     &[("class", "prompt-outcome".to_owned())],
-                    &render(outcome),
+                    &render_linked(outcome, &Links::page(&content.base)),
                 );
             }
             if !asserts.is_empty() {
@@ -376,8 +420,13 @@ fn rule(
     open(out, depth, "blockquote", &attrs);
     anchor_line(out, depth + 1, num);
 
+    // The citation goes to the resolver rather than straight down the
+    // address map: the pipeline cannot know what the mount in front of it
+    // carries, and the resolver is the one address that can
+    // (`##SEO-MANIFEST-AND-RESOLVER`).
+    let links = Links::quoting(&content.base, uri);
     let mut link_attrs: Attrs = vec![("class", "rule".to_owned())];
-    if let Some(href) = content.link(uri) {
+    if let Some(href) = links.citation(uri) {
         link_attrs.push(("href", href));
     }
     link_attrs.push(("data-uri", uri.to_owned()));
@@ -386,9 +435,11 @@ fn rule(
     }
     // The address itself is the honest body when the text is not in
     // hand: a reader can still follow it, and a blank quotation would
-    // read as a rule that says nothing.
+    // read as a rule that says nothing. The links INSIDE the text belong
+    // to the document quoted, not to this page, so they are read against
+    // its address.
     let body = found
-        .map(|f| render(&f.text))
+        .map(|f| render_linked(&f.text, &links))
         .unwrap_or_else(|| escape(uri));
     line(out, depth + 1, "a", &link_attrs, &body);
     close(out, depth, "blockquote");
@@ -435,7 +486,15 @@ fn example_body(
 
 /// A table. The first row is the header when the source had one — the
 /// pivot records that by carrying it as `rows[0]`.
-fn table(out: &mut String, depth: usize, rows: &[Vec<Unit>], attrs: &Attrs, num: Option<u32>) {
+fn table(
+    out: &mut String,
+    depth: usize,
+    rows: &[Vec<Unit>],
+    attrs: &Attrs,
+    content: &Content,
+    num: Option<u32>,
+) {
+    let links = Links::page(&content.base);
     open(out, depth, "table", attrs);
     // A table may hold nothing but a caption, column groups and rows, so
     // the block's anchor rides in the caption — the one place HTML puts
@@ -450,7 +509,13 @@ fn table(out: &mut String, depth: usize, rows: &[Vec<Unit>], attrs: &Attrs, num:
         for cell in header {
             let mut cell_attrs: Attrs = Vec::new();
             push_unit(&mut cell_attrs, cell);
-            line(out, depth + 3, "th", &cell_attrs, &render(&cell.text));
+            line(
+                out,
+                depth + 3,
+                "th",
+                &cell_attrs,
+                &render_linked(&cell.text, &links),
+            );
         }
         close(out, depth + 2, "tr");
         close(out, depth + 1, "thead");
@@ -461,7 +526,13 @@ fn table(out: &mut String, depth: usize, rows: &[Vec<Unit>], attrs: &Attrs, num:
         for cell in row {
             let mut cell_attrs: Attrs = Vec::new();
             push_unit(&mut cell_attrs, cell);
-            line(out, depth + 3, "td", &cell_attrs, &render(&cell.text));
+            line(
+                out,
+                depth + 3,
+                "td",
+                &cell_attrs,
+                &render_linked(&cell.text, &links),
+            );
         }
         close(out, depth + 2, "tr");
     }

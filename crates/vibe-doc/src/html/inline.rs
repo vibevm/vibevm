@@ -31,7 +31,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MARKDOWN");
 
-/// Render one unit's inline Markdown as HTML.
+use super::links::Links;
+
+/// Render one unit's inline Markdown as HTML, with every address exactly
+/// as it was written.
+///
+/// This is the vocabulary alone, which is what makes it the shape to
+/// read the table above against. An island uses [`render_linked`]: what a
+/// relative address MEANS is a property of who wrote it, and that is not
+/// a question about Markdown (PROP-057 `##SITE-MOUNT`).
 ///
 /// ```
 /// use vibe_doc::html::inline::render;
@@ -45,6 +53,28 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MAR
 /// assert_eq!(render("a < b & c"), "a &lt; b &amp; c");
 /// ```
 pub fn render(text: &str) -> String {
+    render_linked(text, &Links::verbatim())
+}
+
+/// The same, with every address written as the site addresses it.
+///
+/// An address this build cannot place keeps its spelling in
+/// `data-address` and becomes no link: an island states an address or
+/// states none, and a link that 404s is the one answer that helps
+/// nobody. The attribute is not called `data-href` on purpose — a
+/// scanner looking for `href` on a word boundary finds one inside that
+/// name and reads a link where there is none.
+///
+/// ```
+/// use vibe_doc::html::{inline::render_linked, links::Links};
+///
+/// let links = Links::page("/doc/");
+/// assert_eq!(
+///     render_linked("see [the glossary](../glossary/index.xml#term)", &links),
+///     "see <a href=\"../../glossary/index/#term\">the glossary</a>"
+/// );
+/// ```
+pub fn render_linked(text: &str, links: &Links) -> String {
     let chars: Vec<char> = text.chars().collect();
     let mut out = String::with_capacity(text.len());
     let mut i = 0usize;
@@ -53,15 +83,15 @@ pub fn render(text: &str) -> String {
             i = next;
             continue;
         }
-        if let Some(next) = link(&chars, i, &mut out) {
+        if let Some(next) = link(&chars, i, &mut out, links) {
             i = next;
             continue;
         }
-        if let Some(next) = autolink(&chars, i, &mut out) {
+        if let Some(next) = autolink(&chars, i, &mut out, links) {
             i = next;
             continue;
         }
-        if let Some(next) = emphasis(&chars, i, &mut out) {
+        if let Some(next) = emphasis(&chars, i, &mut out, links) {
             i = next;
             continue;
         }
@@ -69,6 +99,15 @@ pub fn render(text: &str) -> String {
         i += 1;
     }
     out
+}
+
+/// The opening tag of one inline link: an address when this build can
+/// place the target, and the spelling it was given when it cannot.
+fn open_anchor(href: &str, links: &Links) -> String {
+    match links.href(href) {
+        Some(at) => format!("<a href=\"{}\">", escape_attr(&at)),
+        None => format!("<a data-address=\"{}\">", escape_attr(href)),
+    }
 }
 
 /// Escape one character for HTML text content.
@@ -134,7 +173,7 @@ fn code_span(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
 
 /// `[text](href)` — the text may carry its own inline markup, the href
 /// may not.
-fn link(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
+fn link(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
     if chars[at] != '[' {
         return None;
     }
@@ -145,14 +184,14 @@ fn link(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
     let end = find(chars, close + 2, ')')?;
     let label: String = chars[at + 1..close].iter().collect();
     let href: String = chars[close + 2..end].iter().collect();
-    out.push_str(&format!("<a href=\"{}\">", escape_attr(&href)));
-    out.push_str(&render(&label));
+    out.push_str(&open_anchor(&href, links));
+    out.push_str(&render_linked(&label, links));
     out.push_str("</a>");
     Some(end + 1)
 }
 
 /// `<https://example.org>` — the address is its own label.
-fn autolink(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
+fn autolink(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
     if chars[at] != '<' {
         return None;
     }
@@ -164,22 +203,20 @@ fn autolink(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
     if !is_url || body.chars().any(char::is_whitespace) {
         return None;
     }
-    out.push_str(&format!(
-        "<a href=\"{}\">{}</a>",
-        escape_attr(&body),
-        escape(&body)
-    ));
+    out.push_str(&open_anchor(&body, links));
+    out.push_str(&escape(&body));
+    out.push_str("</a>");
     Some(end + 1)
 }
 
 /// `**strong**` before `*em*`, because the longer marker wins; `_em_`
 /// only at a word boundary, so `snake_case_names` stay whole.
-fn emphasis(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
+fn emphasis(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
     if chars[at] == '*' && chars.get(at + 1) == Some(&'*') {
         if let Some(end) = find_marker(chars, at + 2, "**") {
             let body: String = chars[at + 2..end].iter().collect();
             out.push_str("<strong>");
-            out.push_str(&render(&body));
+            out.push_str(&render_linked(&body, links));
             out.push_str("</strong>");
             return Some(end + 2);
         }
@@ -192,7 +229,7 @@ fn emphasis(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
         }
         let body: String = chars[at + 1..end].iter().collect();
         out.push_str("<em>");
-        out.push_str(&render(&body));
+        out.push_str(&render_linked(&body, links));
         out.push_str("</em>");
         return Some(end + 1);
     }
@@ -203,7 +240,7 @@ fn emphasis(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
         }
         let body: String = chars[at + 1..end].iter().collect();
         out.push_str("<em>");
-        out.push_str(&render(&body));
+        out.push_str(&render_linked(&body, links));
         out.push_str("</em>");
         return Some(end + 1);
     }
