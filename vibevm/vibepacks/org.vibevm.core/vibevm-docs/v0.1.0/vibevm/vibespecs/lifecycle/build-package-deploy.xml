@@ -10,7 +10,7 @@
     <assert>vibe deployments --json</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>`vibe deploy --plan` runs the whole default [lifecycle](../glossary/index.xml#lifecycle) in planning mode and prints what each phase would do, ending with the ordered targets of the profile; nothing is written. The real `vibe deploy` then validates, installs, generates, builds, tests, creates, verifies and packages, skipping every step whose inputs did not change, and applies the packaged artifacts to the profile's targets in order. For every resource it creates it writes a *[receipt](../glossary/index.xml#receipt)*: what was placed where, under which generation, owned by which profile. `vibe deployments` reads the receipts this machine holds. `vibe undeploy --profile local` walks the receipts in reverse dependency order and removes exactly what they own, refusing a path that changed after deployment.</p>
+    <p>`vibe deploy --plan` runs the whole default [lifecycle](../glossary/index.xml#lifecycle) in planning mode and prints what each [phase](../glossary/index.xml#phase) would do, ending with the ordered targets of the profile; nothing is written. The real `vibe deploy` then validates, installs, generates, builds, tests, creates, verifies and packages, skipping every step whose inputs did not change, and applies the packaged artifacts to the profile's targets in order. For every resource it creates it writes a *[receipt](../glossary/index.xml#receipt)*: what was placed where, under which generation, owned by which profile. `vibe deployments` reads the receipts this machine holds. `vibe undeploy --profile local` walks the receipts in reverse dependency order and removes exactly what they own, refusing a path that changed after deployment.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
   </what-happens>
   <by-hand title="By hand">
@@ -32,7 +32,7 @@ default_profile = "local"
 
 [deploy.profiles.local]
 targets = ["local"]</fence>
-    <p>The mechanism `deploy:vibe-bin` places the executable as a launcher in vibe's own `bin/` folder on this machine, so the command runs from any terminal; other mechanisms are listed in the specification.</p>
+    <p>The mechanism `deploy:vibe-bin` places the executable as a launcher in vibe's own `bin/` folder on this machine. The command then runs from any terminal; other mechanisms are listed in the [specification](../glossary/index.xml#specification).</p>
     <p>2. Assemble the distributables without touching any destination:</p>
     <example id="package" fixture="hello-deploy">
       <run>vibe package --path hello-deploy --assume-yes</run>
@@ -68,7 +68,7 @@ vibe lifecycle: package completed (8 phases, 1 contribution(s) selected, 1 execu
     <p>The [manifest](../glossary/index.xml#manifest) declares what `build` produces and what `package` assembles, as artifact targets with dependencies between them. vibe lowers them into one validated graph and records every produced artifact. So `package` consumes exactly what `build` verified, and `deploy` applies exactly what `package` assembled. An artifact or a target may declare the operating systems it applies to, and a target that does not apply to the current machine is skipped with a note.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY"/>
-    <p>A [deploy profile](../glossary/index.xml#deploy-profile) names its targets in order and the provider that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>
+    <p>A [deploy profile](../glossary/index.xml#deploy-profile) names its targets in order and the [provider](../glossary/index.xml#provider) that applies each: a folder on this machine, an agent's project or user configuration, and the genres the specification lists. An installed package may replace a built-in provider through an exact pin, so a team can ship its own way of deploying.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER"/>
   </artifacts>
   <edge-cases title="Edge cases and rules">

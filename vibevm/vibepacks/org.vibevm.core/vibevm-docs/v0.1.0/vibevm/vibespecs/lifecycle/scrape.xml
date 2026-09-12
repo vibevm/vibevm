@@ -10,7 +10,7 @@
     <assert>test ! -e ../product-clean/vibevm</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent creates the contract with `vibe scrape contract init` if the project has none and adapts it: for vibe's own trees you never edited it sets `modified = "delete"`, and it keeps a health check that fits the project. It runs `vibe scrape --plan`, which reads the contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output` with the absolute path of the new folder, which creates the scraped copy and runs the project's health checks on it; the original is untouched. The copy is a plain project of its language: no [manifest](../glossary/index.xml#manifest), no [lock file](../glossary/index.xml#lock-file), no dependency tree, no boot files, no [managed block](../glossary/index.xml#managed-block), no source annotations that pointed at specifications.</p>
+    <p>The agent creates the contract with `vibe scrape contract init` if the project has none and adapts it: for vibe's own trees you never edited it sets `modified = "delete"`, and it keeps a health check that fits the project. It runs `vibe scrape --plan`, which reads the contract, classifies every file the tool ever wrote or marked, and prints the complete plan without writing anything: what is deleted, what is rewritten, what is kept under a neutral name. Then it runs `vibe scrape --output` with the absolute path of the new folder, which creates the scraped copy and runs the project's health checks on it; the original is untouched. The copy is a plain project of its language: no [manifest](../glossary/index.xml#manifest), no [lock file](../glossary/index.xml#lock-file), no dependency tree, no boot files, no [managed block](../glossary/index.xml#managed-block), no source annotations that pointed at [specifications](../glossary/index.xml#specification).</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
   </what-happens>
   <by-hand title="By hand">
@@ -21,7 +21,7 @@
   ✓ created  &lt;TMP&gt;/work/hello-vibe/vibevm/scrape/contract.toml
 Review the contract, then run `vibe scrape contract check`.</expect>
     </example>
-    <p>2. Adapt it. A fresh project has no modification baseline for vibe's files, so the two `[[classify]]` rules refuse them as unknown; if you never edited those trees, set `modified = "delete"` on both. Replace the `[[healthcheck]]` if the project is not a Rust workspace. Then validate: `vibe scrape contract check --path hello-vibe`.</p>
+    <p>2. Adapt it. A fresh project has no modification baseline for vibe's files, so the two `[[classify]]` rules refuse them as unknown. If you never edited those trees, set `modified = "delete"` on both. Replace the `[[healthcheck]]` if the project is not a Rust workspace. Then validate: `vibe scrape contract check --path hello-vibe`.</p>
     <p>3. Look at the plan:</p>
     <example id="scrape-plan" fixture="hello-vibe-scrape">
       <run>vibe scrape --plan --path hello-vibe</run>

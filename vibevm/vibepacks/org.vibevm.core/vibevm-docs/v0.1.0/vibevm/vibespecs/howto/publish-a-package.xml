@@ -20,7 +20,7 @@
   <by-hand title="By hand">
     <p>1. Put a publish token where vibe reads it. That is the environment variable `VIBEVM_PUBLISH_TOKEN`, or a file `~/.vibe/&lt;host&gt;.publish.token` such as `~/.vibe/github.publish.token`, readable by you alone. The token needs the right to create repositories in the organisation.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
-    <p>vibe looks for the token in a fixed order and takes the first it finds: `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` for the registry's host, such as `VIBEVM_PUBLISH_TOKEN_GITHUB`, then `VIBEVM_PUBLISH_TOKEN`, then the per-host file, then the older `~/.vibe/git.publish.token`. The token is a surface secret: it is never printed, never logged, never written to a file vibe writes, and leaves the process only in the request to the host over an encrypted connection.</p>
+    <p>vibe looks for the token in a fixed order and takes the first it finds. First comes `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` for the registry's host, such as `VIBEVM_PUBLISH_TOKEN_GITHUB`. Then `VIBEVM_PUBLISH_TOKEN`, then the per-host file, then the older `~/.vibe/git.publish.token`. The token is a surface secret: never printed, never logged, never written to a file vibe writes. It leaves the process only in the request to the host, over an encrypted connection.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-HOST-ENV-VAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-PER-HOST-FILE"/>

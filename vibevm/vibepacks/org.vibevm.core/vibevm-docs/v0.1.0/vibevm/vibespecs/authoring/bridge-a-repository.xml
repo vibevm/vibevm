@@ -9,13 +9,13 @@
     <assert>vibe check --path vibevm/vibepacks/org.example/spec-kit/v0.1.0 --quiet</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent scaffolds the package with `vibe init package`, marks it as a bridge in the manifest, and declares the upstream repository as an embedded source: its public address, the exact commit, the hash of the source tree and the upstream licence. Installing the package fetches that exact source into the consumer's machine store beside the package's own files. The bridge never becomes a second package: the wrapped repository is git content the resolver knows nothing about.</p>
+    <p>The agent scaffolds the package with `vibe init package`, marks it as a bridge in the manifest, and declares the upstream repository as an embedded source: its public address, the exact commit, the hash of the source tree and the upstream licence. Installing the package fetches that exact source into the consumer's machine [store](../glossary/index.xml#store) beside the package's own files. The bridge never becomes a second package: the wrapped repository is git content the resolver knows nothing about.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#BRIDGE-DEF"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#BRIDGE-FLAG"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#NOT-A-PACKAGE"/>
   </what-happens>
   <three-classes title="Three ways to hold the upstream">
-    <p>Vendored: you copied the upstream tree into the package and committed it. This is the cheapest bridge, plain files and the flag, with hooks if the layout needs shaping. Submodule-backed: your workspace references the upstream through a git submodule, which a direct git install preserves live and which publication flattens into ordinary files. Reference-backed: the package repository holds only your metadata and adapters, and `[[embedded_source]]` names the upstream address, an immutable commit, the source-tree hash and the licence; installation fetches that exact source.</p>
+    <p>Vendored: you copied the upstream tree into the package and committed it. This is the cheapest bridge, plain files and the flag, with [hooks](../glossary/index.xml#hook) if the layout needs shaping. Submodule-backed: your workspace references the upstream through a git submodule, which a direct git install preserves live and which publication flattens into ordinary files. Reference-backed: the package repository holds only your metadata and adapters, and `[[embedded_source]]` names the upstream address, an immutable commit, the source-tree hash and the licence; installation fetches that exact source.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-VENDORED"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-SUBMODULE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-REFERENCE"/>
@@ -39,13 +39,13 @@ upstream_license = "MIT"</fence>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-AUTH"/>
   </three-classes>
   <whose-work title="Whose work it is">
-    <p>`authors` in the manifest names the people who wrote the bridge, its metadata and adapters, never the authors of the wrapped bytes; every embedded source records its own `upstream_authors`, and listings, locks and indexes keep the two lists apart. The same for licences: `license` describes the bridge alone, each source records its upstream licence and an immutable link to it, and a bridge never presents upstream bytes as relicensed. The coordinate names the product a consumer installs, not the codebase the packaging was written in: a bridge of Spec Kit may live at `org.speckit/speckit` whoever maintains it.</p>
+    <p>`authors` in the manifest names the people who wrote the bridge, its metadata and adapters, never the authors of the wrapped bytes; every embedded source records its own `upstream_authors`, and listings, locks and [indexes](../glossary/index.xml#index-registry) keep the two lists apart. The same for licences: `license` describes the bridge alone, each source records its upstream licence and an immutable link to it, and a bridge never presents upstream bytes as relicensed. The [coordinate](../glossary/index.xml#coordinate) names the product a consumer installs, not the codebase the packaging was written in: a bridge of Spec Kit may live at `org.speckit/speckit` whoever maintains it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#AUTHORSHIP-SEPARATION"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#LICENSE-BOUNDARY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#GROUP-PROVENANCE"/>
   </whose-work>
   <submodules title="Submodules on the way in and out">
-    <p>vibe fetches a package's submodules when it fetches the package, updates them with it, and makes their content available wherever the package lands: copied into the snapshot for the copying modes, live for an in-place checkout. Publication is the boundary: a registry repository is a self-contained snapshot, so the publisher checks that every populated submodule is at its indexed commit and clean, copies its files in, removes `.gitmodules` and reports what it flattened.</p>
+    <p>vibe fetches a package's submodules when it fetches the package, updates them with it, and makes their content available wherever the package lands: copied into the snapshot for the copying modes, live for an in-place checkout. Publication is the boundary: a [registry](../glossary/index.xml#registry) repository is a self-contained snapshot, so the publisher checks that every populated submodule is at its indexed commit and clean, copies its files in, removes `.gitmodules` and reports what it flattened.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#WHAT-VVM-DOES"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#PUBLISH-FLATTENS-GITLINKS"/>
   </submodules>

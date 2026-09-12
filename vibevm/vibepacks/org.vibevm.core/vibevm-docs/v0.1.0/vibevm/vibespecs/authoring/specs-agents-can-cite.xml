@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="author,agent"/>
   <p>The text in a package is only useful to an agent if every rule in it has an address. This page shows the shape of such text: named sections, one idea per unit, a status on each, and an address that never changes once published.</p>
   <two-processes title="Why an address">
-    <p>A person and an agent share one repository and nothing else: no hallway, no shared memory, no tone of voice. The specification tree is the only channel between them, and a channel works when a message can be pointed at. «Fix the retry count» sends the agent guessing; «fix `spec://org.acme/notes-flow/flows/notes/PROTOCOL#RETRY-COUNT`» sends it to one line. The second costs about twenty tokens; the first costs hundreds and may land on the wrong rule.</p>
+    <p>A person and an agent share one repository and nothing else: no hallway, no shared memory, no tone of voice. The [specification](../glossary/index.xml#specification) tree is the only channel between them, and a channel works when a message can be pointed at. «Fix the retry count» sends the agent guessing; «fix `spec://org.acme/notes-flow/flows/notes/PROTOCOL#RETRY-COUNT`» sends it to one line. The second costs about twenty tokens; the first costs hundreds and may land on the wrong rule.</p>
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL"/>
     <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#FOR-POINT-CORRECTIONS-THE-URI-WINS"/>
   </two-processes>
@@ -68,7 +68,7 @@ summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 sk
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"/>
   </the-dialect>
   <directives title="Directives: use, embed and read">
-    <p>A spec may pull another by address. `#use spec://…` pulls the whole top-level section that contains the addressed node, and not its siblings; `#embed` splices exactly the addressed node, no more. The default merge is `:add`, so interface text need not be repeated to appear in the result. Every file a directive names must be declared in the package's manifest. Cycles are legal in the contract layer and forbidden among source bodies, which is what guarantees that a build always ends.</p>
+    <p>A spec may pull another by address. `#use spec://…` pulls the whole top-level section that contains the addressed node, and not its siblings; `#embed` splices exactly the addressed node, no more. The default merge is `:add`, so interface text need not be repeated to appear in the result. Every file a directive names must be declared in the package's [manifest](../glossary/index.xml#manifest). Cycles are legal in the contract layer and forbidden among source bodies, which is what guarantees that a build always ends.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-ANCESTOR-RULE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-EXACT-RULE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-DEFAULT-ADD"/>

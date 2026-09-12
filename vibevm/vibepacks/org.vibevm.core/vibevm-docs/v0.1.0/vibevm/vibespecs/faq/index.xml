@@ -16,7 +16,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PLAN-UNIT"/>
   </q-confirm>
   <q-llm title="Does vibe call a language model?">
-    <p>Not on its own. vibe has no model inside it and every subsystem works algorithmically. When a step needs reasoning, vibe parks an instruction for the agent that hosts it, or, at a terminal, calls a provider you configured, only for that step and only if you switched the feature on. See [Ask your agent to do the work](../agent/ask-your-agent.xml).</p>
+    <p>Not on its own. vibe has no model inside it and every subsystem works algorithmically. When a step needs reasoning, vibe parks an instruction for the agent that hosts it, or, at a terminal, calls a model service you configured, only for that step and only if you switched the feature on. See [Ask your agent to do the work](../agent/ask-your-agent.xml).</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT"/>
   </q-llm>
   <q-two-versions title="Can two versions of one package coexist in a project?">
@@ -24,7 +24,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-UNIFIED"/>
   </q-two-versions>
   <q-registry-gone title="A registry I used has disappeared. Is my project stuck?">
-    <p>Not while the machine [store](../glossary/index.xml#store) holds the packages: a stored version is usable even when no [registry](../glossary/index.xml#registry) lists it any more, and `vibe reinstall` rebuilds the tree from the lock file and the store. For the long run, `vibe registry vendor` writes a mirror folder of everything the lock file references, which any machine can use as a `file://` mirror.</p>
+    <p>Not while the machine [store](../glossary/index.xml#store) holds the packages: a stored version is usable even when no [registry](../glossary/index.xml#registry) lists it any more, and `vibe reinstall` rebuilds the tree from the lock file and the store. For the long run, `vibe registry vendor` writes a folder of everything the lock file references, which any machine can use as a `file://` [mirror](../glossary/index.xml#mirror).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY"/>
   </q-registry-gone>
   <q-pin title="How do I pin a package to an exact version?">
@@ -32,7 +32,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-EXACT"/>
   </q-pin>
   <q-edit-lock title="Can I edit vibe.lock by hand to silence a hash error?">
-    <p>No. A [fingerprint](../glossary/index.xml#fingerprint) mismatch means the bytes served are not the bytes the lock file remembered: a force-pushed tag, a broken mirror or a deliberate override. Find out which, then uninstall and reinstall to re-pin, remove the broken mirror, or record the override with its reason. Editing the lock file defeats the only integrity check you have.</p>
+    <p>No. A [fingerprint](../glossary/index.xml#fingerprint) mismatch means the bytes served are not the bytes the lock file remembered: a force-pushed tag, a broken mirror or a deliberate [override](../glossary/index.xml#override). Find out which, then uninstall and reinstall to re-pin, remove the broken mirror, or record the override with its reason. Editing the lock file defeats the only integrity check you have.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-MIRROR-SUBSTITUTION"/>
   </q-edit-lock>
   <q-why-eight-kinds title="Why so many package kinds?">

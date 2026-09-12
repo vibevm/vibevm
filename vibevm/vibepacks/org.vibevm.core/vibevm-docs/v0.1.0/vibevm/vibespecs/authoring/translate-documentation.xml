@@ -10,7 +10,7 @@
     <assert>vibe doc check --translations --path vibevm/vibepacks/org.acme/notes-flow-docs-ru/v0.1.0</assert>
   </prompt>
   <what-happens title="What happens">
-    <p>The agent copies the source's page tree and translates the prose of each block in place, without adding or removing a block. It replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example. It sets the package language, names the source in `[translates]` and the same subject in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same [anchors](../glossary/index.xml#anchor), the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
+    <p>The agent copies the source's page tree and translates the prose of each block in place, without adding or removing a block. It replaces every `example` with `example ref="&lt;id&gt;"` pointing at the source's example. It sets the package language, names the source in `[translates]` and the same [subject](../glossary/index.xml#subject) in `[[documents]]`. `vibe doc check --translations` then compares the two trees: the same paths, the same [anchors](../glossary/index.xml#anchor), the same number and kinds of blocks; a difference is an error. The site, seeing a `translates` edge from a package in the source's group named `&lt;source&gt;-ru`, shows the translation as official and offers it in the language selector.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR"/>
   </what-happens>
   <the-manifest title="The manifest">
@@ -23,10 +23,10 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-TRANSLATION-NAME"/>
   </the-manifest>
   <the-rules title="The rules of a translation">
-    <p>A translation mirrors blocks, not sentences: within a block the translator writes what a native editor would write, replaces a joke with one that works in the language or drops it, and follows the glossary of the translation. It never authors examples: an example's output is checked once, on the source, and a translation points at it. It never adds an anchor, because a link into the source must land on the same block in every language, which is also what lets the reader switch languages without losing the place.</p>
+    <p>A translation follows the source block for block, not sentence for sentence: within a block the translator writes what a native editor would write, replaces a joke with one that works in the language or drops it, and follows the glossary of the translation. It never authors examples: an example's output is checked once, on the source, and a translation points at it. It never adds an anchor, because a link into the source must land on the same block in every language, which is also what lets the reader switch languages without losing the place.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"/>
-    <p>Rules quoted from a specification stay in the specification's language, marked as such; translating normative text is not part of a documentation translation.</p>
+    <p>Rules quoted from a [specification](../glossary/index.xml#specification) stay in the specification's language, marked as such; translating normative text is not part of a documentation translation.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NORMATIVE-STAYS"/>
   </the-rules>
   <staleness title="When the source moves">

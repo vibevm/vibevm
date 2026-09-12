@@ -19,7 +19,7 @@
 | `agent/give-your-agent-the-skill` | `servers-from-packages` | Servers that packages bring | A package of the `mcp` kind delivers a server built from its |
 | `agent/give-your-agent-the-skill` | `edge-cases` | Edge cases and rules | `vibe mcp upgrade` refreshes existing integrations to the shape shipped by the |
 | `agent/how-agents-read-this-manual` | `root` | How an agent reads this manual | |
-| `agent/how-agents-read-this-manual` | `the-files` | The machine files | The site also serves the page manifest as JSON at `/doc/manifest.json`, with |
+| `agent/how-agents-read-this-manual` | `the-files` | The machine files | The site also serves the page manifest, a JSON list of every |
 | `agent/how-agents-read-this-manual` | `offline` | Without a network | The same pages live in the machine [store](../glossary/index.xml#store) once `vibe cache add |
 | `agent/how-agents-read-this-manual` | `citing` | Citing a place | Every block on a page carries a number, `p12` and so on, |
 | `agent/how-agents-read-this-manual` | `procedure` | The procedure the skill teaches | 1. On an error, read the address the message names, then the |
@@ -34,13 +34,13 @@
 | `architecture/how-vibe-is-built` | `reading-order` | Where to read next | The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for |
 | `architecture/traceability` | `root` | Traceability: specs, code and the map | |
 | `architecture/traceability` | `marks` | Marks in the code | A Rust item that implements a rule carries an attribute naming the |
-| `architecture/traceability` | `the-map` | The map | `cargo xtask specmap` walks the crates for marks and the specification tree |
+| `architecture/traceability` | `the-map` | The map | `cargo xtask specmap` walks the crates for marks and the [specification](../glossary/index.xml#specification) tree |
 | `architecture/traceability` | `asking` | Asking the map | The commands below run in a checkout of vibe itself, whose specifications |
 | `architecture/traceability` | `documentation-edges` | Documentation in the map | This manual enters the same map. Every `rule` block on a page |
 | `architecture/traceability` | `edge-cases` | Edge cases and rules | Units come in four kinds, and each has a default edge: a |
 | `architecture/what-the-lifecycle-epic-delivered` | `root` | What the lifecycle epic delivered | |
 | `architecture/what-the-lifecycle-epic-delivered` | `the-route` | The route, in eight stages | The work ran as eight numbered stages, each landed as atomic commits |
-| `architecture/what-the-lifecycle-epic-delivered` | `decisions` | Decisions that hold | One nine-phase line: dependency materialisation is `install`, placement outside the project is |
+| `architecture/what-the-lifecycle-epic-delivered` | `decisions` | Decisions that hold | One line of nine [phases](../glossary/index.xml#phase): dependency materialisation is `install`, placement outside the |
 | `architecture/what-the-lifecycle-epic-delivered` | `boundaries` | Compatibility boundaries and migrations | The dependency slot record and the [lifecycle](../glossary/index.xml#lifecycle) state are strict, versioned machine |
 | `architecture/what-the-lifecycle-epic-delivered` | `deferred` | Deliberately left for later | Deploy targets beyond the first genres, a WebAssembly extension tier, per-language and |
 | `architecture/what-the-lifecycle-epic-delivered` | `retired` | Retired lanes, kept as history | The campaign also ran execution lanes that are no longer current: a |
@@ -78,7 +78,7 @@
 | `authoring/translate-documentation` | `root` | Translate documentation | |
 | `authoring/translate-documentation` | `what-happens` | What happens | The agent copies the source's page tree and translates the prose of |
 | `authoring/translate-documentation` | `the-manifest` | The manifest | The language of the package is the existing `[i18n] canonical` field, a |
-| `authoring/translate-documentation` | `the-rules` | The rules of a translation | A translation mirrors blocks, not sentences: within a block the translator writes |
+| `authoring/translate-documentation` | `the-rules` | The rules of a translation | A translation follows the source block for block, not sentence for sentence: |
 | `authoring/translate-documentation` | `staleness` | When the source moves | A translation records no revision or hash of the source. When the |
 | `authoring/translate-documentation` | `edge-cases` | Edge cases and rules | Sidecar files inside the source package, `README.ru.md` beside `README.md`, are how specifications |
 | `authoring/write-a-feat-or-stack` | `root` | Write a feat or a stack | |
@@ -86,7 +86,7 @@
 | `authoring/write-a-feat-or-stack` | `a-feat` | A feat | A feat describes what a feature does for its user, in terms |
 | `authoring/write-a-feat-or-stack` | `a-stack` | A stack | A stack is a technology context: it says how the abstract abilities |
 | `authoring/write-a-feat-or-stack` | `capabilities` | Capabilities | A capability is an abstract interface: a namespace, a colon, a name, |
-| `authoring/write-a-feat-or-stack` | `edge-cases` | Edge cases and rules | The word `stack` also names a family bundle: a package of kind |
+| `authoring/write-a-feat-or-stack` | `edge-cases` | Edge cases and rules | The word `stack` also names a [family](../glossary/index.xml#family) bundle: a package of kind |
 | `authoring/write-a-flow` | `root` | Write a flow package | |
 | `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes`, which adds a package slot |
 | `authoring/write-a-flow` | `by-hand` | By hand | 1. Create the package slot: |
@@ -198,7 +198,7 @@
 | `howto/read-documentation-locally` | `by-hand` | By hand | 1. Warm the store. Inside a project, its [registries](../glossary/index.xml#registry) are the source; |
 | `howto/read-documentation-locally` | `private-packages` | Private packages | The same reader shows the documentation of packages that live in a |
 | `howto/read-documentation-locally` | `the-shell` | The reader's shell | A released `vibe` carries the reader's interface inside the binary. A `vibe` |
-| `howto/read-documentation-locally` | `edge-cases` | Edge cases and rules | Warming a documentation package warms its subjects too, so the rules a |
+| `howto/read-documentation-locally` | `edge-cases` | Edge cases and rules | Warming a documentation package warms its [subjects](../glossary/index.xml#subject) too, so the rules a |
 | `howto/remove-a-package` | `root` | Remove a package | |
 | `howto/remove-a-package` | `what-happens` | What happens | The agent runs `vibe uninstall org.vibevm.world/wal`. vibe shows what will leave: the |
 | `howto/remove-a-package` | `by-hand` | By hand | 1. Remove by [coordinate](../glossary/index.xml#coordinate); the version is not needed: |
@@ -242,7 +242,7 @@
 | `lifecycle/extensions-and-providers` | `providers` | Providers | A contribution of kind `agent` needs someone to run its prompt. Under |
 | `lifecycle/extensions-and-providers` | `edge-cases` | Edge cases and rules | A contribution may carry a selector that limits it to matching files |
 | `lifecycle/phases` | `root` | The lifecycle: from validate to deploy | |
-| `lifecycle/phases` | `the-phases` | The nine phases | vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one phase and removes derived state. |
+| `lifecycle/phases` | `the-phases` | The nine phases | vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one [phase](../glossary/index.xml#phase) and removes derived state. |
 | `lifecycle/phases` | `fresh` | Nothing runs twice for nothing | Every phase run records a [fingerprint](../glossary/index.xml#fingerprint) of the inputs it declared; the |
 | `lifecycle/phases` | `the-plan` | Seeing before doing | `--plan` reports what a phase run would do and changes nothing; every |
 | `lifecycle/phases` | `where-steps-come-from` | Where the steps come from | The phases are fixed; what runs inside them is contributed by packages. |
@@ -306,7 +306,7 @@
 | `reference/commands` | `documentation` | Documentation |  |
 | `reference/lock-file` | `root` | The lock file: vibe.lock | |
 | `reference/lock-file` | `where` | Where it lives and who writes it | There is one `vibe.lock` per workspace, at the absolute root, beside the |
-| `reference/lock-file` | `meta` | [meta] | `root_dependencies` mirrors the manifest's `[requires.packages]`, so the lock file is a self-contained |
+| `reference/lock-file` | `meta` | [meta] | `root_dependencies` copies the manifest's `[requires.packages]`, so the [lock file](../glossary/index.xml#lock-file) is a self-contained |
 | `reference/lock-file` | `package-entries` | [[package]] |  |
 | `reference/lock-file` | `reading-a-diff` | Reading a diff | A changed `version` with a changed `content_hash` is an update. A changed |
 | `reference/lock-file` | `edge-cases` | Edge cases and rules | An unchanged manifest against an unchanged [lock file](../glossary/index.xml#lock-file) makes `vibe install` skip |
@@ -320,7 +320,7 @@
 | `reference/manifest` | `package-table` | [package] | `[project]` carries the same descriptive fields for a consumer, without a version |
 | `reference/manifest` | `requirements` | [requires] and its neighbours | A [feature](../glossary/index.xml#feature) adds content and never removes or contradicts any; `default` lists |
 | `reference/manifest` | `sources` | Where packages come from | A localised file sits beside the canonical one with a language tag |
-| `reference/manifest` | `deliveries` | What a package delivers | A skill is a manifest section, never a kind of its own. |
+| `reference/manifest` | `deliveries` | What a package delivers | A [skill](../glossary/index.xml#skill) is a manifest section, never a kind of its own. |
 | `reference/manifest` | `documentation-tables` | Documentation and its subjects |  |
 | `reference/manifest` | `example-manifest` | A complete example | The manifest of this manual, generated from the package itself, shows a |
 | `reference/settings-and-environment` | `root` | Settings, paths and environment | |
@@ -330,11 +330,11 @@
 | `reference/settings-and-environment` | `precedence` | Precedence | For the same setting, a flag on the command line wins over |
 | `reference/settings-and-environment` | `edge-cases` | Edge cases and rules | Token files are surface secrets: restrict them to your user, never commit |
 | `reference/tree` | `root` | The dependency tree on screen | |
-| `reference/tree` | `what-it-shows` | What it shows | The command reads the committed [lock file](../glossary/index.xml#lock-file), the manifests and the generated |
+| `reference/tree` | `what-it-shows` | What it shows | The command reads the committed [lock file](../glossary/index.xml#lock-file), the [manifests](../glossary/index.xml#manifest) and the generated |
 | `reference/tree` | `three-outputs` | Three outputs | On a terminal the default is the interactive screen. When the output |
 | `reference/tree` | `the-screen` | The screen | The screen has three display modes, each a configuration of one tree |
 | `reference/tree` | `the-terminal-app` | A terminal of its own | `vibe term` launches vibeterm, a terminal application hosting a shell, so the |
-| `reference/tree` | `for-agents` | Looking at the screen from an agent | An agent has no terminal, so the `vibe aiui` family renders the |
+| `reference/tree` | `for-agents` | Looking at the screen from an agent | An agent has no terminal, so the `vibe aiui` commands render the |
 | `reference/tree` | `edge-cases` | Edge cases and rules | English is the complete locale of the interface and the last fallback; |
 | `start/first-project` | `root` | Create your first project | |
 | `start/first-project` | `what-happens` | What happens | The agent runs `vibe init hello-vibe`, which creates the folder with a |

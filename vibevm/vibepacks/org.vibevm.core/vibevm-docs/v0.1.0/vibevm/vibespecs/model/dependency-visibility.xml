@@ -8,7 +8,7 @@
     <expect>org.vibevm.world/wal — present: root-edge via hello-vibe -&gt; org.vibevm.world/wal (override: none)</expect>
   </example>
   <three-marks title="Three marks on a requirement">
-    <p>Every line under `[requires.packages]` is an edge from your [package](../glossary/index.xml#package) to the one it names, and the edge carries an optional `access` mark. The mark is the provider's word about its own dependency: how far it may seep upward, to the projects that depend on the provider.</p>
+    <p>Every line under `[requires.packages]` is an edge from your [package](../glossary/index.xml#package) to the one it names, and the edge carries an optional `access` mark. The mark is the declaring package's word about its own dependency: how far it may seep upward, to the projects that depend on the declaring package.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-LEVELS"/>
     <fence lang="toml">[requires.packages]
 "org.example/style" = "^1.0"
@@ -42,22 +42,22 @@ unfriend = ["org.example/noisy"]
 allow-friends = ["org.example/partner"]</fence>
     <p>`unfriend` removes the named packages from the friendships you pass on. They still arrive at your level when an edge admits them, but nobody sees them as your friends through you. Another package in the same tree may still befriend them; the pruning is yours alone.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#UNFRIEND-IS-NODE-SCOPED"/>
-    <p>`exclude`, written on an edge, is the other prune: the named packages are cut from every chain that passes through that edge, however deep, even where they are public. A different path may still deliver them, and then they are present through that path. Exclusion can only narrow what providers granted, never widen it, so any package may declare it.</p>
+    <p>`exclude`, written on an edge, is the other prune: the named packages are cut from every chain that passes through that edge, however deep, even where they are public. A different path may still deliver them, and then they are present through that path. Exclusion can only narrow what the declaring packages granted, never widen it, so any package may declare it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#EXCLUDE-IS-EDGE-SCOPED"/>
-    <p>A provider can also say who may befriend it. `allow-friends` absent means anyone; an empty list seals the package, so its gated content exists only in its own checkout; a list names the exact circle. The check falls on the one who grants friendship: a grant the provider does not permit is a warning, never an error, and the closure does not grow there.</p>
+    <p>A package can also say who may befriend it. `allow-friends` absent means anyone; an empty list seals the package, so its gated content exists only in its own checkout; a list names the exact circle. The check falls on the one who grants friendship: a grant the package does not permit is a warning, never an error, and the closure does not grow there.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-DESIGN"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-STATES"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-CHECKPOINT"/>
-    <p>A seal gates friendship, not delivery. A sealed package still arrives wherever a friends-only edge delivers it; what stays shut is its own inner circle, and the rejected grant is reported. `vibe friends org.example/partner` prints the whole picture for one provider: open, sealed or a named circle, who befriends it, which grants it rejects, and whether it sits in your closure.</p>
+    <p>A seal gates friendship, not delivery. A sealed package still arrives wherever a friends-only edge delivers it; what stays shut is its own inner circle, and the rejected grant is reported. `vibe friends org.example/partner` prints the whole picture for one package: open, sealed or a named circle, who befriends it, which grants it rejects, and whether it sits in your closure.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#SEAL-GATES-FRIENDSHIP-NOT-DELIVERY"/>
   </the-visibility-section>
   <overrides title="Repairing an edge you do not own">
-    <p>Sometimes the mark you need is on an edge you do not own: a member of a collection marked a dependency private that your consumers need, or a provider sealed itself against you. The `[override]` table rewrites foreign edges, and it is lawful in any manifest, not only at the root. An aggregator uses it to reshape a member's edge for all of its own consumers, the way it curates its delivery with `exclude`.</p>
+    <p>Sometimes the mark you need is on an edge you do not own: a member of a collection marked a dependency private that your consumers need, or a package sealed itself against you. The `[override]` table rewrites foreign edges, and it is lawful in any manifest, at the root or below it. An aggregator uses it to reshape a member's edge for all of its own consumers, the way it curates its delivery with `exclude`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE"/>
     <fence lang="toml">[override]
 "org.example/member -&gt; org.example/wal" = { access = "public" }
 "org.example/partner" = { allow-friends = "*" }</fence>
-    <p>An edge key names the two ends of the edge with an arrow; a package key names a provider and rewrites its `allow-friends`. Overrides apply along the chains that pass through the manifest declaring them. The one nearer to the root is applied later and wins, so the root always has the final word, and an intermediary wins only on the chains it takes part in.</p>
+    <p>An edge key names the two ends of the edge with an arrow; a package key names one package and rewrites its `allow-friends`. [Overrides](../glossary/index.xml#override) apply along the chains that pass through the manifest declaring them. The one nearer to the root is applied later and wins, so the root always has the final word, and an intermediary wins only on the chains it takes part in.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-PATH-SEMANTICS"/>
     <p>The same key, `override`, also serves the older array form `[[override]]` that pins a replacement source for one [coordinate](../glossary/index.xml#coordinate). The two shapes are told apart by their form, either alone is lawful, and one manifest carrying both is a loud error rather than a merge.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-KEY-COEXISTENCE"/>
