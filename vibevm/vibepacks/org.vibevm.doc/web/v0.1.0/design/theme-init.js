@@ -14,21 +14,29 @@
 
    Storage can throw rather than return null — a browser set to block
    site data raises on the property access itself — so the read is
-   wrapped and a failure means «system», the same as never having
-   chosen. Nothing here reads the network, and nothing here needs the
-   DOM to be parsed: at this point `document.documentElement` is the only
-   element that exists, and it is the one being written. */
+   wrapped and a failure means the site's default, the same as never
+   having chosen. Nothing here reads the network, and nothing here needs
+   the DOM to be parsed: at this point `document.documentElement` is the
+   only element that exists, and it is the one being written.
+
+   The site's default is the line marked below, and a build replaces it
+   from `[site].default_theme` in the deployment's configuration (F-48,
+   X-058). The file is valid on its own with the value it carries here,
+   which is what lets it stay a plain script that a browser, a test and a
+   build all read the same way. */
 
 (function () {
   var KEY = "vibe-doc:theme";
+  var DEFAULT = "system";
   var stored = null;
   try {
     stored = window.localStorage.getItem(KEY);
   } catch (e) {
     stored = null;
   }
-  if (stored === "dark" || stored === "light") {
-    document.documentElement.setAttribute("data-theme", stored);
+  var theme = stored === "dark" || stored === "light" ? stored : DEFAULT;
+  if (theme === "dark" || theme === "light") {
+    document.documentElement.setAttribute("data-theme", theme);
   } else {
     document.documentElement.removeAttribute("data-theme");
   }
