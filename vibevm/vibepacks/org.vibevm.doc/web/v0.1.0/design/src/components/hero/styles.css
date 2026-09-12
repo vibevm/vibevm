@@ -1,0 +1,311 @@
+/* The hero and its install panel. One stylesheet, because the panel
+   only ever appears inside the hero and splitting them would put two
+   files where the layout is one conversation.
+
+   Every colour is a semantic token (R-27). Where the source landing used
+   a translucent accent — the ring under a dot, the pill's hairline — the
+   token is mixed rather than re-typed as a literal: `color-mix()` keeps
+   the value derived from `--accent`, so a theme that moves the accent
+   moves these with it. */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 48px;
+  padding-block: clamp(56px, 12vh, 128px) clamp(48px, 9vh, 104px);
+}
+
+.hero__copy {
+  max-width: 34rem;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 26px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.hero__headline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 6.4vw, 74px);
+  line-height: 1.03;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.hero__headline em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero__lead {
+  margin: 26px 0 0;
+  font-size: 18.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+  max-width: 32rem;
+}
+
+.hero__lead strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.hero__cta {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition:
+    transform var(--speed) ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.hero__btn:active {
+  transform: translateY(1px);
+}
+
+/* The label on the filled button is the page's own ground colour: dark
+   ink on terracotta in the dark theme, ivory on terracotta in the light
+   one. One declaration, both themes, and no new token. */
+.hero__btn--primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.hero__btn--primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.hero__btn--ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.hero__btn--ghost:hover {
+  border-color: var(--text-2);
+  background: var(--bg-raise);
+}
+
+.hero__arrow {
+  transition: transform var(--speed) ease;
+}
+
+.hero__btn--primary:hover .hero__arrow {
+  transform: translate(2px, -2px);
+}
+
+/* The pill wraps above the install panel on narrow widths rather than
+   colliding with it. */
+.hero__run {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero__release {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: var(--radius-pill);
+  padding: 10px 18px;
+}
+
+.hero__release-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  animation: hero-release-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes hero-release-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 5%, transparent);
+  }
+}
+
+.hero__aside {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---- The install panel -------------------------------------------- */
+
+.install {
+  margin-top: 18px;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.install__heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.install__heading h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.install__heading p {
+  margin: 0;
+  max-width: 23rem;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+  text-align: right;
+}
+
+.install__command {
+  display: grid;
+  gap: 6px;
+}
+
+.install__label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.install__cmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 15px;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.install__prompt {
+  color: var(--accent);
+  user-select: none;
+}
+
+.install__cmd code {
+  font: inherit;
+  color: inherit;
+}
+
+.install__next {
+  padding-top: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.install__next code {
+  font-family: var(--font-mono);
+  color: var(--text-2);
+}
+
+.install__tool {
+  font-weight: inherit;
+  color: var(--text);
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-block: 44px 40px;
+  }
+  .hero__aside {
+    order: -1;
+    margin-bottom: 12px;
+  }
+  .hero__aside .dep-graph {
+    max-width: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .install__heading {
+    display: grid;
+    gap: 5px;
+  }
+  .install__heading p {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__btn:hover {
+    transform: none;
+  }
+}
