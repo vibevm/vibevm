@@ -27,6 +27,19 @@
 //!   mints carries no pin, so a citation can never go «suspect»
 //!   (`##OBS-RULE-EDGE-UNPINNED`).
 //!
+//! * [`manifest`] — the page manifest, and with it the officiality a
+//!   documentation holds over its subjects. It is computed at every
+//!   build from the convergence of two edges and stored as a flag
+//!   nowhere, because a flag is a second source of truth that vanishes
+//!   in local mode (`##REL-NO-OFFICIAL-FLAG`). Everything machine-facing
+//!   — the navigation, the `llms` files, `/doc/manifest.json` — is one
+//!   fold over it rather than a second walk of the package.
+//!
+//! * [`llms`] — the corpus as a machine reads it: the index, the whole
+//!   text, and two tiers cut to a token budget, all in the layer law's
+//!   order — stable text before text that moves with the product
+//!   (`##SEO-LLMS-FILES`, PROP-048 `##THE-LAYER-LAW`).
+//!
 //! * [`html`] — the island. A page's content as finished HTML, with no
 //!   script, no style and no page furniture: the public site's shell and
 //!   the local reader receive the same bytes, which is what keeps the two
@@ -82,6 +95,8 @@ pub mod derived;
 pub mod error;
 pub mod examples;
 pub mod html;
+pub mod llms;
+pub mod manifest;
 pub mod md;
 pub mod numbering;
 pub mod pages;

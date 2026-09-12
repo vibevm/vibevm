@@ -1,0 +1,30 @@
+# The source half of the translation fixture: two pages a mirror can be
+# checked against (PROP-057 ##LOC-MIRROR).
+#
+# A real package rather than a string in a test, for the reason PROP-024
+# gives: a package is its own source tree, and a fixture taken from a tree
+# is one somebody can open, read and correct.
+[package]
+name = "pair"
+group = "com.example.docs"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["vibevm"]
+license = "UPL-1.0"
+description = "Two pages, so a translation has something to mirror."
+title = "The Pair"
+abstract = """
+What it covers: two pages, one with an example and a section, one with a list.
+For whom: whoever changes the translation check and needs a source to check against.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: everything else.
+"""
+
+[i18n]
+canonical = "en"
+
+[[documents]]
+package = "com.example/subject"
+version = "^1.0"

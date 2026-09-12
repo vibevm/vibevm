@@ -32,6 +32,11 @@ sha2.workspace = true
 # The pivot: pages are read through the documentation vocabulary, never
 # by a second parser of our own (PROP-045 ##PIVOT-MODEL).
 vibe-specdoc.workspace = true
+# The `audience` vocabulary the pivot's `<status>` carries. Its single
+# home is PROP-043 and its single implementation is this crate's
+# `Audience`, so the manifest maps that enum rather than re-reading the
+# attribute with a second opinion about what the values mean.
+progress-core.workspace = true
 # A `rule` citation is a `spec://` address. The grammar and the
 # «doc-path → file» lookup (with its PROP-NNN prefix inversion) have ONE
 # home — `vibe-spec` — and a second reading of either would be a second
@@ -50,6 +55,10 @@ vibe-workspace.workspace = true
 # A store or slot directory is named by its version, and «the freshest
 # one present» is a semver question.
 semver.workspace = true
+# The page manifest is a wire contract, so its type is generated from
+# `schemas/doc_manifest.jtd.json` and never hand-written (PROP-000 §16,
+# PROP-044). This library builds that generated type directly.
+vibe-wire.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

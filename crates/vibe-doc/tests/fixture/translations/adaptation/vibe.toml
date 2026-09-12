@@ -1,0 +1,35 @@
+# The adaptation half of the translation fixture, with ONE deliberate
+# divergence on the second page: where the source carries a list, this
+# carries a paragraph (PROP-057 ##LOC-MIRROR, the campaign's F-44).
+#
+# The divergence is the point. A fixture whose two halves agree proves
+# that a green check can be green; a fixture that diverges proves the
+# check can go red, and names where.
+[package]
+name = "pair-ru"
+group = "com.example.docs"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["vibevm"]
+license = "UPL-1.0"
+description = "Два экземпляра страниц, один из них намеренно расходится."
+title = "Пара"
+abstract = """
+Что покрывает: две страницы — зеркало источника, во второй намеренное расхождение.
+Для кого: для того, кто меняет проверку переводов.
+Что предполагает известным: ничего.
+Чего не покрывает: всё остальное.
+"""
+
+[i18n]
+canonical = "ru"
+
+[[documents]]
+package = "com.example/subject"
+version = "^1.0"
+
+[translates]
+package = "com.example.docs/pair"
+version = "^0.1"
