@@ -35,6 +35,12 @@ import { siteConfig } from "../site/src/config.ts";
 import { packagePath, href } from "../site/src/lib/href.ts";
 import { catalogueLlmsTxt, siteManifest } from "../site/src/seo/catalogue.ts";
 import {
+  cspPolicy,
+  hashOf,
+  hashesIn,
+  inlineScripts,
+} from "../site/src/seo/csp.ts";
+import {
   LATEST,
   addressesOf,
   coordinateOf,
@@ -44,6 +50,7 @@ import {
 } from "../site/src/seo/editions.ts";
 import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
 import { resolveTableOf, resolverPage } from "../site/src/seo/resolve.ts";
+import { sitemapOf } from "../site/src/seo/sitemap.ts";
 import {
   copySurfaces,
   fullCorpus,
@@ -51,6 +58,7 @@ import {
   readTrees,
   treePaths,
 } from "./doc-surfaces.mjs";
+import { lintLinks } from "./lint-links.mjs";
 import { writeRootFiles } from "./root-files.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -125,10 +133,17 @@ function docAddressCount() {
     throw new Error("no source manifest: every one of them is a translation");
   }
   const adaptations = all.length - 1;
+  /* Twice, because a page has two addresses: the version number and
+     `latest`. They are the same content and the site says so — the
+     numbered one carries `rel=canonical` to the other — but a citation
+     without a version resolves to `latest` (D-06) and the version switch
+     offers it, so it is an address the build has to write rather than a
+     word on a page (`##SITE-CANONICAL-LATEST`). */
+  const spellings = 2;
   return (
     1 + // the door at /doc/
     adaptations + // one catalogue per adapted language
-    all.length * (1 + source.pages.length) // a package page plus every page
+    all.length * spellings * (1 + source.pages.length)
   );
 }
 
@@ -179,6 +194,16 @@ function landingRouteCount() {
 const TREES = mode === "static" ? readTrees(treePaths()) : [];
 const EDITIONS = editionsOf(manifests());
 const MEDIA = mode === "static" ? mediaMapOf(TREES, EDITIONS) : {};
+
+/** Every `.html` under a directory, as absolute paths. */
+function htmlFiles(dir, found = []) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) htmlFiles(full, found);
+    else if (entry.endsWith(".html")) found.push(full);
+  }
+  return found;
+}
 
 /**
  * Everything the documentation half of the domain publishes beside its
@@ -235,6 +260,10 @@ function writeDocumentationSurfaces(outDirName) {
   const corpus = fullCorpus(TREES, EDITIONS, config.origin);
   if (corpus !== null) write(docFileHref("llms-full.txt"), corpus);
 
+  const sitemap = sitemapOf(config.origin, EDITIONS, addresses);
+  write(docFileHref("sitemap.xml"), sitemap.index);
+  for (const part of sitemap.parts) write(part.href, part.xml);
+
   write(
     docFileHref("resolve.json"),
     `${JSON.stringify(resolveTableOf(addresses), null, 2)}\n`,
@@ -242,7 +271,7 @@ function writeDocumentationSurfaces(outDirName) {
   write(docFileHref("resolve/index.html"), resolverPage());
 
   process.stdout.write(
-    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, resolver\n`,
+    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, ${sitemap.parts.length} sitemap part(s) over ${sitemap.addresses} address(es), resolver\n`,
   );
   if (copied.unplaced.length > 0) {
     process.stdout.write(
@@ -252,43 +281,47 @@ function writeDocumentationSurfaces(outDirName) {
 }
 
 /**
- * A page that asks not to be indexed does not belong in the sitemap.
+ * The policy line, from the bytes that were actually written.
  *
- * The two say opposite things otherwise: a sitemap is «index this» and
- * `noindex` is «do not», and a crawler handed both spends a fetch to be
- * told to go away. The pages this is about are the translation
- * fallbacks — the source's text materialised under an adaptation's
- * address so a language never 404s (`##READER-LANGUAGE-SWITCH-KEEPS-
- * PLACE`) — and they carry `canonical` to the source as well, so what a
- * crawler should keep is named rather than merely implied.
- *
- * It reads the built HTML rather than being told, because that is what
- * the sitemap itself is written from, and a second list of «which pages
- * are fallbacks» would be a second thing to get wrong. It belongs to
- * whatever writes the sitemap and lives here until the two meet.
+ * Every inline script of every page is hashed and the union goes into
+ * `dist/csp.txt` for the deployment atom to serve as a header (X-035).
+ * The set is then read back off the file and compared against a second
+ * pass over the output: the check is worth its two seconds because the
+ * failure it guards against is silent — a page whose script is missing
+ * from the policy does not break at build time, it breaks in a browser
+ * that has already been served the page.
  */
-function pruneSitemap(outDirName) {
+function writeCsp(outDirName) {
   const out = join(SITE_ROOT, outDirName);
-  const sitemap = join(out, "sitemap.xml");
-  if (!existsSync(sitemap)) return 0;
-
-  const xml = readFileSync(sitemap, "utf8");
-  let removed = 0;
-  const kept = xml.replace(/[ \t]*<url>[\s\S]*?<\/url>\n?/g, (entry) => {
-    const loc = /<loc>([^<]*)<\/loc>/.exec(entry);
-    if (loc === null) return entry;
-    const path = new URL(loc[1]).pathname;
-    const file = join(out, path.replace(/^\/+/, ""), "index.html");
-    if (!existsSync(file)) return entry;
-    const html = readFileSync(file, "utf8");
-    if (!/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i.test(html)) {
-      return entry;
+  const scripts = new Map();
+  for (const file of htmlFiles(out)) {
+    for (const script of inlineScripts(readFileSync(file, "utf8"))) {
+      const hash = hashOf(script.body);
+      scripts.set(hash, (scripts.get(hash) ?? 0) + 1);
     }
-    removed += 1;
-    return "";
-  });
-  if (removed > 0) writeFileSync(sitemap, kept);
-  return removed;
+  }
+  const hashes = [...scripts.keys()].sort();
+  writeFileSync(join(out, "csp.txt"), `${cspPolicy(hashes)}\n`, "utf8");
+
+  const named = new Set(hashesIn(readFileSync(join(out, "csp.txt"), "utf8")));
+  const again = new Set();
+  for (const file of htmlFiles(out)) {
+    for (const script of inlineScripts(readFileSync(file, "utf8"))) {
+      again.add(hashOf(script.body));
+    }
+  }
+  const missing = [...again].filter((hash) => !named.has(hash));
+  const extra = [...named].filter((hash) => !again.has(hash));
+  if (missing.length > 0 || extra.length > 0) {
+    process.stderr.write(
+      `build (${mode}): csp.txt names ${named.size} hash(es); the output carries ${again.size} (${missing.length} unnamed, ${extra.length} named but absent)\n`,
+    );
+    process.exit(1);
+  }
+  const total = [...scripts.values()].reduce((sum, count) => sum + count, 0);
+  process.stdout.write(
+    `build (${mode}): csp.txt — ${hashes.length} inline script hash(es) over ${total} occurrence(s), no external source\n`,
+  );
 }
 
 function vite(configRelative) {
@@ -379,11 +412,19 @@ if (plan.countsLanding) {
   process.stdout.write(
     `build (${mode}): root files ${roots.written.join(", ")}; ${roots.faces} font file(s) at /fonts/, ${roots.rewritten} page(s) repointed at the bundled faces, ${roots.crawlers} crawler name(s) from ${roots.sources} provider page(s)\n`,
   );
-  const skipped = pruneSitemap(plan.outDir);
-  if (skipped > 0) {
+  if (roots.unindexed > 0) {
     process.stdout.write(
-      `build (${mode}): ${skipped} page(s) asked not to be indexed and left the sitemap\n`,
+      `build (${mode}): ${roots.unindexed} page(s) asked not to be indexed and left a sitemap\n`,
     );
+  }
+
+  writeCsp(plan.outDir);
+
+  if (lintLinks(plan.outDir) !== 0) {
+    process.stderr.write(
+      `build (${mode}): the link check is red; the output is not publishable\n`,
+    );
+    process.exit(1);
   }
 }
 

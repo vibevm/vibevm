@@ -117,15 +117,39 @@ test("the door honours an explicit choice over the remembered one", async ({
   await expect(page).toHaveURL(new RegExp("/doc/$"));
 });
 
+/**
+ * The documentation's sitemap is its own file, an index by package and
+ * language (`##SEO-SITEMAP`), and it lists a page at the one address
+ * that is canonical — `latest`, which every numbered address points its
+ * `rel=canonical` at (`##SITE-CANONICAL-LATEST`).
+ *
+ * What is measured here has not changed: a page an adaptation does not
+ * carry is `noindex`, and a sitemap that offered it anyway would spend a
+ * crawler's fetch to be turned away.
+ */
 test("the fallback is not offered to a crawler in the sitemap", async ({
   request,
 }) => {
-  const sitemap = await request.get("/sitemap.xml");
-  const xml = await sitemap.text();
-  expect(xml).toContain(`<loc>https://vibevm.org${ADAPTED}</loc>`);
-  expect(xml).not.toContain(`<loc>https://vibevm.org${MISSING}</loc>`);
+  const index = await (await request.get("/doc/sitemap.xml")).text();
+  const part = "/doc/sitemap/com.example.docs/fixture-manual/ru.xml";
+  expect(index).toContain(`<loc>https://vibevm.org${part}</loc>`);
+
+  const russian = await (await request.get(part)).text();
+  const latest = (address: string) => address.replace("/0.1.0/", "/latest/");
+  expect(russian).toContain(`<loc>https://vibevm.org${latest(ADAPTED)}</loc>`);
+  expect(russian).not.toContain(
+    `<loc>https://vibevm.org${latest(MISSING)}</loc>`,
+  );
+
   // The source it points at is of course still offered.
-  expect(xml).toContain(`<loc>https://vibevm.org${SOURCE}</loc>`);
+  const english = await (
+    await request.get("/doc/sitemap/com.example.docs/fixture-manual/en.xml")
+  ).text();
+  expect(english).toContain(`<loc>https://vibevm.org${latest(SOURCE)}</loc>`);
+
+  // And no version-numbered address stands in any of them.
+  expect(russian).not.toContain("/0.1.0/");
+  expect(english).not.toContain("/0.1.0/");
 });
 
 test("each language has a catalogue of its own", async ({ page }) => {

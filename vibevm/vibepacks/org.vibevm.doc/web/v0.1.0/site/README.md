@@ -66,9 +66,9 @@ source: one an adaptation has not reached yet is written at its address
 with the source's text, `rel=canonical` to the source, `noindex`, a
 bilingual notice shown once per session, and its internal links
 re-pointed so a reader does not silently fall back into the source
-language. The build drops those pages from the sitemap, because a sitemap
-saying «index this» beside a page saying «do not» costs a crawler a fetch
-to be told to go away.
+language. No sitemap names those pages — a sitemap saying «index this»
+beside a page saying «do not» costs a crawler a fetch to be told to go
+away — and `tools/root-files.mjs` prunes any that reaches one anyway.
 
 **The door chooses a language in the browser, and that is a limitation
 rather than a shortcut.** `Accept-Language` is a request header and a
@@ -79,6 +79,50 @@ browser asks for, then the documentation's own language — and the
 decision is taken once per session and never against an explicit click.
 Served one day by something that can read a header, it becomes a 302 and
 `src/reader/catalogue.ts` goes away.
+
+## What a documentation address says about itself
+
+`src/seo/` answers, for every shape the catch-all matches, the question a
+crawler and an agent both ask: which of several addresses is THE address.
+
+**A page has two version spellings and one of them is canonical.** The
+number and `latest` are two addresses of one page — an address with a
+number shows whatever that number currently holds
+(`##SITE-VERSION-SHOWS-CURRENT`), so it is not a permanent link to
+anything — and `##SITE-CANONICAL-LATEST` makes `latest` the one to keep.
+The numbered address carries `rel=canonical` to it, the sitemap lists
+`latest` alone, and the generator writes both, because the version switch,
+a citation with no version and every canonical all name the second one.
+
+**`hreflang` stays inside its own version spelling.** Every language
+points at every other at the same spelling, so the annotations are
+reciprocal within their cluster; `x-default` is the source language,
+because an adaptation is a reading of the source. `tools/lint-links.mjs`
+checks the reciprocity over the built output and only between pages that
+are their own canonical: a page that names another canonical has said its
+annotations are that page's.
+
+**`canonical` is relative and `hreflang`, `og:url` and `og:image` are
+absolute.** The routes are built twice — once for the domain and once for
+the reader `vibe` serves from a machine's own store — so an absolute
+canonical baked in would have every local page claim to be a copy of a
+public one; `hreflang` and Open Graph, read by things that fetched the
+page over some other origin, have nothing to resolve a relative address
+against.
+
+**The card comes from the package, through the environment.** `vibe doc
+build` composes a 1200×630 preview under a content-hashed name and the
+page manifest does not carry the name (X-042), so `tools/build.mjs` finds
+it in the tree it is about to copy and hands the map to both Vite runs as
+`VITE_DOC_MEDIA`. A build given no tree names the site's own `og.png`
+instead: four meta tags promise an image and a 404 is a promise broken on
+every share.
+
+**`dist/csp.txt`** is the policy line, with the `sha256` of every inline
+script in the output, computed from the bytes that were written (X-035).
+The build then reads it back and compares the set against a second pass
+over `dist/`. It is an input to the deployment atom; nothing on the site
+fetches it.
 
 ## The agent surfaces
 
@@ -100,10 +144,11 @@ The default, when the environment names nothing, is
 `src/fixtures/doc-build` — which is what makes a plain `pnpm build:static`
 produce a site whose every link resolves.
 
-Two documents are the SITE's own rather than any package's, and are
+Three documents are the SITE's own rather than any package's, and are
 composed from the manifests: `/doc/llms.txt`, the arXiv-shaped catalogue
-of the editions carried, and `/doc/manifest.json`, the same for a machine
-that will act on it. `/doc/resolve/` is the resolver: on a static host a
+of the editions carried; `/doc/manifest.json`, the same for a machine that
+will act on it; and `/doc/sitemap.xml`, an index by package and language
+over one url set each. `/doc/resolve/` is the resolver: on a static host a
 citation cannot be answered with a 302, so the build publishes the map as
 `/doc/resolve.json` and one hand-written page that reads it in the browser
 and follows it (F-15). The local reader, which has a server, keeps the
@@ -155,6 +200,16 @@ addresses. They are derived from what the build actually produced rather
 than kept by hand, because a hand-kept sitemap goes stale the first time a
 page moves (`##SITE-ONE-SITE`).
 
+The root `sitemap.xml` is the landing's and names the documentation's own
+sitemap rather than its pages: `/doc/sitemap.xml` is the file that knows
+which addresses are canonical and which are translation fallbacks. A url
+set cannot hold a sitemap reference, so the record is an ordinary entry
+beside the two landing addresses; the declaration a crawler reads first is
+the second `Sitemap:` line in `robots.txt`. The same file prunes any page
+that asks not to be indexed out of every sitemap in the output, because
+that rule belongs to whatever writes a sitemap rather than to any one of
+them.
+
 Two details are easy to undo by accident. The crawler names in `robots.txt`
 are read from each provider's own documentation on the build day and never
 from memory (`##SEO-ROBOTS`, F-38); the list carries the date it was
@@ -184,6 +239,16 @@ the gate for pointing the domain at this build. The reference is built in a
 scratch copy of the Astro repository — `npm ci && npm run build && node
 scripts/build-llms-full.mjs` — never in that repository itself, which this
 campaign only reads (R-28).
+
+`node tools/lint-links.mjs [dist]` is the other half and runs as a step of
+the static build: every internal link against the files that were written,
+every `hreflang` pair against the page it names, every `canonical` against
+a page that exists, and every address that is FETCHED against the short
+list of hosts this site is allowed to load from (R-09). A link the prose
+cites is not a fetch and is counted rather than refused — a documentation
+page may cite an RFC. A miss that is known and filed lives in the
+`EXCEPTIONS` table with its reason, in the same shape and for the same
+reason as a parity difference.
 
 ## The end-to-end run
 
