@@ -33,6 +33,7 @@ import { documentationParams } from "../../../lib/pages.ts";
 import { startReader } from "../../../reader/mount.ts";
 import { latestAliasParams } from "../../../seo/addresses.ts";
 import { documentationHead } from "../../../seo/head.ts";
+import { IS_LOCAL_READER } from "../../../seo/mode.ts";
 import {
   DOC_GLYPH,
   viewOf,
@@ -335,7 +336,7 @@ export default component$(() => {
 export const head: DocumentHead = ({ params }) => {
   const view = viewOf(params["path"] ?? "");
   if (view === null) return { title: "Not a documentation address" };
-  const seo = documentationHead(view);
+  const seo = documentationHead(view, IS_LOCAL_READER);
   if (view.kind !== "page") return seo;
   return { ...seo, scripts: [...(seo.scripts ?? []), MANUAL_SCROLL] };
 };

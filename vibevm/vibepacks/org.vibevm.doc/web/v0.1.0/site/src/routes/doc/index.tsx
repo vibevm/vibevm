@@ -5,6 +5,7 @@ import type { DocumentHead } from "@qwik.dev/router";
 
 import { Catalogue } from "../../components/catalogue/index.tsx";
 import { catalogueHead } from "../../seo/head.ts";
+import { IS_LOCAL_READER } from "../../seo/mode.ts";
 
 /**
  * The door: every documentation this build carries, with no language
@@ -27,4 +28,4 @@ export default component$(() => {
  * answers for both, so the `hreflang` set they publish about each other
  * cannot disagree.
  */
-export const head: DocumentHead = catalogueHead(null);
+export const head: DocumentHead = catalogueHead(null, IS_LOCAL_READER);
