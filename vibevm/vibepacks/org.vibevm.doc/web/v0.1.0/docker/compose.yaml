@@ -1,0 +1,77 @@
+# The two services of the site, and the directory between them
+# (PROP-057 `##SITE-TWO-CONTAINERS`).
+#
+# ─── What is a placeholder here, and why ──────────────────────────────
+#
+# The service names (`site`, `renderer`), the project name and the
+# published port (`8080`) are PLACEHOLDERS. The real ones belong to the
+# server's own arrangement — which service name the domain's proxy
+# already points at, which port is free, what else runs beside it — and
+# that arrangement is the owner's and is never written into this
+# repository (R-25, `##SITE-WHO-COMMITS-WHAT`). Substitute them when this
+# file is adapted into the deployment's own compose, and change nothing
+# else: what is below the names is the contract between the two
+# containers, and it is the same on any machine.
+#
+# ─── What this file is for ────────────────────────────────────────────
+#
+# Two things. It is the working local probe of the whole stack — `docker
+# compose -f docker/compose.yaml up --build` from the package root builds
+# both images, renders the site and serves it, on a developer's own
+# machine and nowhere else. And it is the fragment the owner reads when
+# wiring the real services: two of them, one volume, and the serving side
+# waiting for the render rather than racing it.
+#
+# ─── What it deliberately does not carry ──────────────────────────────
+#
+# No TLS, no certificates, no reverse proxy, no network of anybody
+# else's, no host path, no secret. The renderer is told the domain by its
+# configuration file and nothing else; the website id of the analytics
+# tag is empty in that file, and a deployment that wants one passes it in
+# rather than committing it (R-24, `##SITE-ANALYTICS`).
+
+name: vibevm-site # placeholder: the owner's project name
+
+services:
+  # The serving half: stock nginx, the site's configuration, and the
+  # directory the renderer filled, read-only. It holds no content of its
+  # own, so a new render never needs a new image.
+  site: # placeholder: the service name the domain already points at
+    build:
+      context: ../../../../../..
+      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile
+      target: serve
+    ports:
+      # placeholder: whatever the owner's proxy already sends here.
+      - "8080:80"
+    volumes:
+      - rendered:/usr/share/nginx/html:ro
+    depends_on:
+      renderer:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # The rendering half: `vibe` built from this checkout, the site package
+  # with its dependencies, and one command. It runs to completion and
+  # exits — there is no server here and nothing listens.
+  renderer: # placeholder: the owner's name for it
+    build:
+      context: ../../../../../..
+      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile
+      target: render
+    volumes:
+      - rendered:/out
+      # The warmed packages the render reads. A volume and not a layer:
+      # a render that had to fetch every published version again on every
+      # run would spend its hour on the network rather than on what
+      # changed.
+      - store:/root/.vibe
+    restart: "no"
+
+volumes:
+  # What one writes and the other serves. The builder keeps its state
+  # inside it (`.vibe-site/`), which is how a second run rebuilds only
+  # what moved — and which is why the serving configuration refuses that
+  # one path.
+  rendered:
+  store:

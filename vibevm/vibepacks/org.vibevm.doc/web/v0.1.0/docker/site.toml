@@ -1,0 +1,56 @@
+# What the renderer is told before it reads anything.
+#
+# This is the configuration the container ships with: the two sources of
+# the public site and the domain they are rendered for. It is a default
+# and not a secret — every value in it is already public — and a
+# deployment that needs a different one mounts its own over `/site.toml`
+# rather than editing this (`##SITE-WHO-COMMITS-WHAT`).
+#
+# The shape, every optional key and the reason behind each are in
+# `site.example.toml` beside the package. This file states only what the
+# site is actually built from, so that a reader of the deployment sees
+# the whole of it at once.
+
+schema = 1
+
+# The package registry. Its index is the change feed: the builder reads
+# it, compares «coordinate, version, content hash» against what it last
+# rendered, and rebuilds only what moved.
+[[source.registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+# The host. A `[project]` is not a publishable package, so it is never
+# fetched: the deploy keeps a checkout on disk and the renderer reads it
+# where it lies (`##SITE-HOST-CHECKOUT`). `git` is therefore an identity —
+# which repository this checkout is of — and never a fetch instruction.
+#
+# `checkout` is relative to THIS file, which is what lets the same two
+# lines describe the directory inside the container and the directory on
+# the host the container is built from.
+[source.host]
+git = "https://github.com/vibevm/vibevm"
+ref = "main"
+checkout = "checkout"
+debounce_minutes = 60
+
+[site]
+base_path = "/doc"
+origin = "https://vibevm.org"
+default_theme = "system"
+
+# The first-party, self-hosted, cookie-less tag the landing already
+# carries (D-24, `##SITE-ANALYTICS`).
+#
+# The website id identifies a LIVE property, so it belongs to the
+# deployment and not to the repository, and empty is the instruction
+# rather than a hole for whoever notices: no id means no tag in the page
+# at all — never a tag with an empty attribute, which would load the
+# script and report nothing. A deployment that wants the tag passes its
+# id in, as the owner's runbook does with every other live value.
+#
+# `host_url` is left out on purpose: absent, the tag reports to the
+# site's own origin, which is where a first-party script served by the
+# domain itself reports to.
+[site.analytics]
+website_id = ""
