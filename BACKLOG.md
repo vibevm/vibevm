@@ -1700,3 +1700,13 @@ structure, and it goes when the file does.
 | @fact:B148-SEVERITY **severity** | P2 — обход: `vibe registry add`; норма и продукт расходятся на поверхности, которую видит каждый новичок |
 | @fact:B148-DISPOSITION **disposition** | `open` — либо `vibe init` пишет `[[registry]]` с двумя корнями (и `--no-registry` его подавляет), либо норма переписывается под машинный `registry.toml`; решение владельца |
 | @fact:B148-FILED **filed by** | кампания документации, первая полная сверка (A6.5), 2026-09-12 |
+
+## B-149 — `vibe init package` пишет в заголовок сниппета удвоенную группу
+
+| поле | значение |
+|---|---|
+| @fact:B149-WHAT **what** | `vibe init package org.acme/review-notes` создаёт `vibevm/vibespecs/boot/10-tool-review-notes.md` с первой строкой `<!-- vibe:static org.org.acme/review-notes — boot snippet -->`: группа `org.acme` получает второй префикс `org.` (видно в голдене примера `convert` страницы `authoring/specs-agents-can-cite`, снятом раннером с настоящего бинарника) |
+| @fact:B149-EFFECT **effect** | комментарий-маркер сниппета называет несуществующую координату; сам сниппет и манифест верны, так что дефект косметический, но он попадает в каждый новый пакет и в документацию, которая снимает вывод дословно |
+| @fact:B149-SEVERITY **severity** | P3 — обход: поправить строку руками; ни один гейт по ней не читает |
+| @fact:B149-DISPOSITION **disposition** | `open` — найти шаблон сниппета в `vibe init package` и убрать лишний префикс; голден примера перебласти тем же коммитом |
+| @fact:B149-FILED **filed by** | кампания документации, первая полная сверка (A6.5), 2026-09-12 |
