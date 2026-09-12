@@ -15,10 +15,11 @@
 //! Two bounded lists sit beside those laws, because the live corpus was
 //! authored before a reader existed for it. [`QUARANTINED`] names the
 //! pages the pivot cannot read AT ALL and why — defects of the pages, not
-//! of the pivot, each pinned to its exact refusal. [`NOT_CANONICAL`] names
-//! the pages that parse but whose own bytes are not what the writer emits.
-//! Both are tripwires: repair a page and the test that guards its entry
-//! fails, which is how the entry gets deleted.
+//! of the pivot, each pinned to its exact refusal; it is EMPTY today, and
+//! the machinery stays for the next page written ahead of its reader.
+//! [`NOT_CANONICAL`] names the pages that parse but whose own bytes are
+//! not what the writer emits. Both are tripwires: repair a page and the
+//! test that guards its entry fails, which is how the entry gets deleted.
 //!
 //! This is the counterpart of `redbook_roundtrip.rs`, which holds the same
 //! laws for the spec vocabulary on a `flow` package.
@@ -36,24 +37,26 @@ use vibe_specdoc::{
 /// repaired `quarantined_pages_still_carry_exactly_the_recorded_defect`
 /// fails and sends whoever repaired it back here to delete the line.
 ///
+/// **The list is empty: the pivot reads every page of the corpus.** It is
+/// kept — with the test that guards it — because the next page authored
+/// ahead of its reader needs one line here rather than a mechanism.
+///
+/// The three entries it has held, and how each one left:
+///
 /// * `agent/how-agents-read-this-manual.xml` — `audience="agent"`, and the
-///   audience vocabulary is `user|author|dev` (PROP-043 §3.6, owned by
-///   progress-core). Widening a vocabulary to admit one page is a
-///   decision, not a fix, so the page stays as written and refused.
-/// * `glossary/index.xml` — the glossary's entry for the word «fact» is
+///   audience vocabulary had been `user|author|dev`. Widening a vocabulary
+///   to admit one page is a decision, not a fix, so the page stayed as
+///   written and refused until the decision was taken: `agent` joined the
+///   vocabulary on 2026-09-11 (PROP-043 `##AUDIENCE-VALUES`, on the ruling
+///   of PROP-057 `##OBS-AUDIENCE-AGENT`) and the page joined the corpus.
+/// * `glossary/index.xml` — the glossary's entry for the word «fact» was
 ///   spelled `<fact title="fact">`, and `fact` is a RESERVED structural
-///   name: it is not elementable, so it is no named section under any
-///   vocabulary. The generic form `<section id="fact" title="fact">` is
-///   the spelling that works. Pre-dates the genre.
-/// * `reference/machine-formats.xml` — `<derived/>` sits inside `<td>`,
-///   twice in one cell. The genre's members are BLOCKS; a `td` holds ONE
-///   unit, so neither the position nor the repetition is expressible.
-const QUARANTINED: &[(&str, &str)] = &[
-    (
-        "agent/how-agents-read-this-manual.xml",
-        "unknown audience value `agent`",
-    ),
-];
+///   name: not elementable, so no named section under any vocabulary. The
+///   page was respelled `<section id="fact" title="fact">`.
+/// * `reference/machine-formats.xml` — `<derived/>` sat inside `<td>`,
+///   twice in one cell. The genre's members are BLOCKS and a `td` holds
+///   ONE unit, so the cell was rewritten.
+const QUARANTINED: &[(&str, &str)] = &[];
 
 /// Pages that PARSE but are not written in the canonical form the dialect
 /// writer emits, with what differs. They are documentation defects of
@@ -66,6 +69,7 @@ const QUARANTINED: &[(&str, &str)] = &[
 const NOT_CANONICAL: &[(&str, &str)] = &[
     // A whole table row written on one line; the writer gives each cell
     // its own line.
+    ("agent/how-agents-read-this-manual.xml", "compact <tr> rows"),
     ("architecture/how-vibe-is-built.xml", "compact <tr> rows"),
     ("reference/machine-formats.xml", "compact <tr> rows"),
     (
@@ -397,9 +401,9 @@ fn docs_corpus_shape_is_counted() {
         totals.guarded_slots += s.guarded_slots;
         totals.guarded_sections += s.guarded_sections;
     }
-    // The readable corpus (44 pages less the quarantined one).
+    // The whole corpus: 44 pages, none quarantined.
     assert_eq!(totals.examples, 59, "the pages carry 59 examples");
-    assert_eq!(totals.rules, 373, "the pages cite 373 rules");
+    assert_eq!(totals.rules, 381, "the pages cite 381 rules");
     assert_eq!(totals.derived, 72, "the pages derive 72 references");
     assert_eq!(totals.prompts, 19, "19 scenario pages open with a prompt");
     assert_eq!(totals.asserts, 40, "those prompts carry 40 asserts");

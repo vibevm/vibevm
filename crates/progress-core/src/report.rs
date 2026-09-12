@@ -236,6 +236,7 @@ mod terminal_tests;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::doc::{Issue, IssueCode};
     use crate::evidence::NoEvidence;
     use crate::parse::parse_document;
 
@@ -408,6 +409,46 @@ Body. <status stage=\"impl\" state=\"work\" action=\"continue\" actionstage=\"do
         assert_eq!(
             rows([&doc], None, Some(Audience::Dev), &NoEvidence).len(),
             2
+        );
+    }
+
+    /// `agent` filters like any other audience, and — the part worth
+    /// pinning — it does NOT widen the default: an unmarked marker still
+    /// answers only to `dev` (§3.6), so admitting the value moved no
+    /// existing row into the agent's report.
+    #[test]
+    fn the_agent_audience_filters_without_widening_the_default() {
+        let text = "\
+<status stage=\"impl\" state=\"done\"/>
+
+Boot snippet. <status stage=\"doc\" state=\"work\" audience=\"agent\"/>
+
+Both. <status stage=\"doc\" state=\"work\" audience=\"dev, agent\"/>
+";
+        let doc = parse_document("x.md", text);
+        // The fixture's inline markers carry no fact anchor, which is its
+        // own law and not this test's; what must be silent here is the
+        // vocabulary, so `agent` in both spellings raises nothing.
+        let vocabulary: Vec<&Issue> = doc
+            .issues
+            .iter()
+            .filter(|i| i.code == IssueCode::Vocabulary)
+            .collect();
+        assert!(vocabulary.is_empty(), "{vocabulary:?}");
+        assert_eq!(
+            rows([&doc], None, Some(Audience::Agent), &NoEvidence).len(),
+            2,
+            "the agent-only marker and the CSV one carrying `agent`"
+        );
+        assert_eq!(
+            rows([&doc], None, Some(Audience::Dev), &NoEvidence).len(),
+            2,
+            "the unmarked marker by default, plus the CSV one — never the \
+             agent-only marker"
+        );
+        assert_eq!(
+            rows([&doc], None, Some(Audience::User), &NoEvidence).len(),
+            0
         );
     }
 }
