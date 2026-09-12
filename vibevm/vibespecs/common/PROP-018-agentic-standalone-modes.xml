@@ -94,7 +94,7 @@ operation's reasoning happen?**</one-axis></p>
     <mode-is-backend title="2.1 A mode is a choice of inference backend">
       <p><req-mode-backend fact="true" status="spec/done">`req r1`</req-mode-backend></p>
       <facts ordered="false">
-        <MODE-INFERRED fact="true" status="spec/done">**Decision.** Mode is not a global flag the user sets; it is **inferred per
+        <MODE-INFERRED fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,agent">**Decision.** Mode is not a global flag the user sets; it is **inferred per
   operation from how vibevm was reached and what backend is available.**</MODE-INFERRED>
         <OP-DECLARES fact="true" status="spec/done">An operation declares whether it needs inference; if it does, the active
   backend decides the realisation:</OP-DECLARES>
@@ -104,7 +104,7 @@ operation's reasoning happen?**</one-axis></p>
   the **relay backend** (§2.7): delegate the intent back to that agent.</REACH-SUBPROCESS>
         <REACH-STANDALONE-ENGINE fact="true" status="spec/done">reached **standalone** with a built-in engine available (future) → the
   **built-in backend**: run inference in-process via `vibe-llm`.</REACH-STANDALONE-ENGINE>
-        <REACH-STANDALONE-NO-ENGINE fact="true" status="spec/done">reached **standalone** with no engine (today) → a reasoning operation
+        <REACH-STANDALONE-NO-ENGINE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">reached **standalone** with no engine (today) → a reasoning operation
   **fails loud** with "this needs an inference backend; run me under an
   agent, or wait for the built-in engine," and a non-reasoning operation
   runs normally.</REACH-STANDALONE-NO-ENGINE>
@@ -157,7 +157,7 @@ operation's reasoning happen?**</one-axis></p>
     <skill-decl title="2.4 Agent-installable artifacts are declared separately from the package kind">
       <p><req-skill-decl fact="true" status="spec/done">`req r3`</req-skill-decl></p>
       <facts ordered="false">
-        <SKILL-SECTION-NOT-KIND fact="true" status="spec/done">**Decision.** A package declares which of its files are **skills** for
+        <SKILL-SECTION-NOT-KIND fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Decision.** A package declares which of its files are **skills** for
   agents in a dedicated manifest section — **not** by introducing a
   package kind of its own. The kind register (`package_ref.rs`,
   `VIBEVM-SPEC.md` §4.1) stays closed to skills.</SKILL-SECTION-NOT-KIND>
@@ -175,14 +175,14 @@ operation's reasoning happen?**</one-axis></p>
         <skill-decl-rejected fact="true" status="spec/done">**Considered and rejected:** **a fifth package kind for skills** — explicitly rejected (`##OOS-FIFTH-KIND`): kind answers *"what is this package"* while the section answers *"what does it project into an agent"*, and skills can live inside a package of any kind (`##ANY-KIND-RATIONALE`). **MCP servers as a second any-kind section** — proposed in this unit's original text and **superseded**: they became their own `mcp` kind with their own laws, owner resolution 2026-07-07 ([PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml), `##MCP-HALF-SUPERSEDED`). The skill law is unchanged; the MCP half is the counter-example that shows where the line falls.</skill-decl-rejected>
         <skill-decl-revisit fact="true" status="spec/done">**Revisit when:** an agent-installable artefact class arrives that needs **its own lifecycle laws** — install / uninstall semantics, resolution or conflict rules of its own — rather than only a projection path. That is exactly the state that fired for MCP servers on 2026-07-07 (`##MCP-HALF-SUPERSEDED`), so the trigger has a worked precedent. Observation point: the kind register in `crates/vibe-core` (`package_ref.rs`) and `VIBEVM-SPEC.md` §4.1 — whose `##INV-VOCABULARY` already anticipates `app`; the register growing is the fired state.</skill-decl-revisit>
       </facts>
-      <p><SKILL-TABLE-SHAPE fact="true" status="spec/done">The MVP section is an array-of-tables, matching the manifest's existing
+      <p><SKILL-TABLE-SHAPE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">The MVP section is an array-of-tables, matching the manifest's existing
 `[[requires_any]]` / `[[registry]]` / `[[mirror]]` shape:</SKILL-TABLE-SHAPE></p>
       <fence lang="toml">[[skill]]
 name        = "vim"                 # becomes the skill dir name in the agent
 path        = "skills/vim"          # file or dir (relative to package root) = the skill body
 description = "Drive vim from an agent"   # optional; shown in listings
 agents      = ["claude", "opencode"]      # optional; default = all skill-supporting agents</fence>
-      <p><SKILL-EXTERNAL-SHAPE fact="true" status="impl/done">A reference-backed bridge MAY select its body from a declared external
+      <p><SKILL-EXTERNAL-SHAPE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A reference-backed bridge MAY select its body from a declared external
 source, and any skill MAY add authenticated source resources below a dedicated
 subdirectory:</SKILL-EXTERNAL-SHAPE></p>
       <fence lang="toml">[[skill]]
@@ -196,7 +196,7 @@ embedded_source = "upstream"
 path    = "templates"
 include = ["*.md"]
 target  = "references/upstream"</fence>
-      <p><SKILL-EXTERNAL-LAWS fact="true" status="impl/done">`source` and `embedded_source` name a manifest `[[embedded_source]]`.
+      <p><SKILL-EXTERNAL-LAWS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`source` and `embedded_source` name a manifest `[[embedded_source]]`.
 Absent `source` retains the package-root meaning. Resource targets are portable
 relative paths below `references/`; they cannot replace the local `SKILL.md`,
 scripts, or another resource. Include selection, case-fold collision checks and
@@ -208,7 +208,7 @@ the vim-style "tool + mcp + skill" package is expressible end to end.</MCP-TABLE
     <projection title="2.5 Skills are an orthogonal projection, not a delivery mode">
       <p><req-projection fact="true" status="spec/done">`req r3`</req-projection></p>
       <facts ordered="false">
-        <PROJECTION-DEF fact="true" status="spec/done">**Decision.** Installing a skill into an agent is a **projection**: read the
+        <PROJECTION-DEF fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,author">**Decision.** Installing a skill into an agent is a **projection**: read the
   declared skill body from the package (in `vibedeps/…` once installed) or an
   external source authenticated by the package's matching lock record, and
   write it into each target agent's skill directory in that agent's own
@@ -233,13 +233,13 @@ the vim-style "tool + mcp + skill" package is expressible end to end.</MCP-TABLE
 agents, reusing PROP-015's agent machinery (`Agent` enum, detection, the
 idempotent skill writer, the per-(agent, scope) report records):</SKILL-CMD-FAMILY></p>
       <facts ordered="false">
-        <CMD-SKILL-LIST fact="true" status="spec/done">**`vibe skill list`** — skills declared by installed packages.</CMD-SKILL-LIST>
-        <CMD-SKILL-INSTALL fact="true" status="spec/done">**`vibe skill install [--agent …] [--scope project|user|both] [&lt;pkgref&gt;] [&lt;skill&gt;…]`**
+        <CMD-SKILL-LIST fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**`vibe skill list`** — skills declared by installed packages.</CMD-SKILL-LIST>
+        <CMD-SKILL-INSTALL fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**`vibe skill install [--agent …] [--scope project|user|both] [&lt;pkgref&gt;] [&lt;skill&gt;…]`**
   — project skills into agents. **Default: all declared skills**; narrow
   with explicit skill names or a pkgref. Idempotent, `--dry-run`, confirm
   (or `--assume-yes`), per-(agent, scope) report — the same lifecycle and
   merge discipline as `vibe mcp install` (PROP-015 §2.7).</CMD-SKILL-INSTALL>
-        <CMD-SKILL-UNINSTALL fact="true" status="spec/done">**`vibe skill uninstall …`** — the inverse; strips only vibevm-projected
+        <CMD-SKILL-UNINSTALL fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**`vibe skill uninstall …`** — the inverse; strips only vibevm-projected
   skills, leaves foreign skill dirs untouched.</CMD-SKILL-UNINSTALL>
       </facts>
       <p><ONLY-STANDALONE-V1 fact="true" status="spec/done">This is the **only standalone functionality v1 of this PROP ships.** It
@@ -248,16 +248,16 @@ needs no LLM, so it works today, agent-present or not.</ONLY-STANDALONE-V1></p>
     <relay title="2.7 The agentic relay — delegate intent back to the caller">
       <p><req-relay fact="true" status="spec/done">`req r4`</req-relay></p>
       <facts ordered="false">
-        <RELAY-PARKS fact="true" status="spec/done">**Decision.** When a reasoning operation runs under the relay backend, it
+        <RELAY-PARKS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,agent">**Decision.** When a reasoning operation runs under the relay backend, it
   does not act. It writes an `Intent` — a markdown prompt with light
   frontmatter (id, source command, created-at, status) — to a **single-slot
   mailbox**, the project-local `.vibe/agentic/command.md` (§3), and returns a
   pointer telling the caller to drain it.</RELAY-PARKS>
-        <DRAIN-VERB fact="true" status="spec/done">The **consumer seam is one
+        <DRAIN-VERB fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,agent">The **consumer seam is one
   command**, `vibe command`: it prints the pending `Intent` to stdout and
   clears the slot (consume-on-read; the spent intent is archived to
   `.vibe/agentic/command.done.md`).</DRAIN-VERB>
-        <EMPTY-SLOT-OK fact="true" status="spec/done">Re-running with an empty slot prints "no
+        <EMPTY-SLOT-OK fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">Re-running with an empty slot prints "no
   pending command" and exits `0`.</EMPTY-SLOT-OK>
       </facts>
       <p><two-step-lead fact="true" status="spec/done">Two properties make the two-step (produce → `vibe command`) worth its
@@ -272,7 +272,7 @@ seam rather than just printing the intent from the producer:</two-step-lead></p>
    reasoning step and exit, the agent draining it afterward.</SEAM-DECOUPLING>
       </facts>
       <facts ordered="false">
-        <NO-WRITE-BACK fact="true" status="spec/done">**MVP carries no write-back** (`req r4`): the relay is fire-and-forget.</NO-WRITE-BACK>
+        <NO-WRITE-BACK fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">**MVP carries no write-back** (`req r4`): the relay is fire-and-forget.</NO-WRITE-BACK>
         <AGENT-ORCHESTRATES fact="true" status="spec/done">The calling agent orchestrates the conversation — if it wants vibevm to
   see the result, *it* arranges that with a follow-up command.</AGENT-ORCHESTRATES>
         <SKILL-STATES-NO-CHANNEL fact="true" status="spec/done">The installed skill (§2.9) states this contract explicitly so agents do
@@ -285,7 +285,7 @@ seam rather than just printing the intent from the producer:</two-step-lead></p>
     </relay>
     <transports title="2.8 One operation, two transports">
       <p><req-transports fact="true" status="spec/done">`req r5`</req-transports></p>
-      <p><ONE-OP-TWO-TRANSPORTS fact="true" status="spec/done">**Decision.** A reasoning/agentic operation is defined **once**, as a
+      <p><ONE-OP-TWO-TRANSPORTS fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">**Decision.** A reasoning/agentic operation is defined **once**, as a
 transport-agnostic core (the `Intent`-producing function over a project
 context), and exposed by **two thin adapters**:</ONE-OP-TWO-TRANSPORTS></p>
       <facts ordered="false">
@@ -323,7 +323,7 @@ context), and exposed by **two thin adapters**:</ONE-OP-TWO-TRANSPORTS></p>
     </usage-skill>
     <explain title="2.10 `vibe agentic explain` — the MVP demonstrator">
       <p><req-explain fact="true" status="spec/done">`req r4`</req-explain></p>
-      <p><EXPLAIN-DEMONSTRATOR fact="true" status="spec/done">**Decision.** The first `vibe agentic` operation, `explain`, exercises the
+      <p><EXPLAIN-DEMONSTRATOR fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,agent">**Decision.** The first `vibe agentic` operation, `explain`, exercises the
 whole relay with zero real risk. Run under an agent, it parks an `Intent`
 to `.vibe/agentic/command.md` of roughly:</EXPLAIN-DEMONSTRATOR></p>
       <fence>Task — explain this project. In ≤3 short paragraphs, tell the reader

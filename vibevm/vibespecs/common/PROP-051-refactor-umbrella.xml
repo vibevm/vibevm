@@ -41,7 +41,7 @@ renumbering) join under the same charter, each with its own PROP-level
 fact before it ships.</UMBRELLA-VERB></p>
   </umbrella>
   <convert-source title="3. convert-source">
-    <p><CONVERT-SOURCE-SURFACE fact="true" status="impl/done">`vibe refactor convert-source --to
+    <p><CONVERT-SOURCE-SURFACE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`vibe refactor convert-source --to
 xml|markdown [PATH…]` converts spec sources between the two PROP-045
 serialisations (`md` accepted as an alias of `markdown`). Each PATH is a
 file or a directory; a directory walks recursively and selects spec
@@ -52,13 +52,13 @@ skips: `vibedeps/` (##VIBEDEPS-NEVER-CONVERTED), dot-directories,
 vibe` marker (generated artifacts regenerate; they are not authored
 sources) — an EXPLICIT file argument overrides only the marker skip,
 never the `vibedeps/` skip.</CONVERT-SOURCE-SURFACE></p>
-    <p><ONE-DOCUMENT-ONE-FORM-ON-CONVERT fact="true" status="impl/done">A conversion writes the sibling
+    <p><ONE-DOCUMENT-ONE-FORM-ON-CONVERT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A conversion writes the sibling
 serialisation and deletes the original in the same act, so the
 one-document-one-form law (PROP-045 ##TARGET-MIXED, the pair-collision
 check) holds at every instant — the tree never holds `X.md` and `X.xml`
 together, not even transiently between files. The verb assumes version
 control underneath it and keeps no backups of its own.</ONE-DOCUMENT-ONE-FORM-ON-CONVERT></p>
-    <p><HONESTY-BY-REVERSE fact="true" status="impl/done">The destructiveness check is the owner's law,
+    <p><HONESTY-BY-REVERSE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The destructiveness check is the owner's law,
 implemented by reverse reconversion through the pivot: for a source
 `S`, parse to IR, emit the target form, read the target form back, and
 project it into the SOURCE form again; compare. Three classes:
@@ -77,7 +77,7 @@ the source against its back-projection), with dropped comments called
 out as CONTENT loss (PROP-045 ##REVIEW-COMMENTS-LAW: the pivot drops
 comments by design — `REVIEW:` markers and prose comments do not
 survive conversion) rather than folded into formatting noise.</LOSS-REPORT></p>
-    <p><FORCE-AND-PROMPT fact="true" status="impl/done">On a TTY, class-2 files prompt per file
+    <p><FORCE-AND-PROMPT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">On a TTY, class-2 files prompt per file
 (yes / no / all); off a TTY, class-2 without `--force` is an error
 listing every lossy file and what each loses. `--force` waives class 2
 only. `--dry-run` classifies and reports every file, writes nothing,
