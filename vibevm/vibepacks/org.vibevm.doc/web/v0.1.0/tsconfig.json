@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@qwik.dev/core",
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "allowUnreachableCode": false,
+    "erasableSyntaxOnly": true,
+
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "incremental": true,
+    "outDir": "tmp",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node", "vite/client"],
+    "paths": {
+      "~/*": ["./site/src/*"],
+      "@vibe-docs/design": ["./design/src/index.ts"],
+      "@vibe-docs/design/*": ["./design/src/*"]
+    }
+  },
+  "include": [
+    "design/src/**/*.ts",
+    "design/src/**/*.tsx",
+    "site/src/**/*.ts",
+    "site/src/**/*.tsx",
+    "site/vite.config.ts",
+    "site/adapters/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "server", "tmp"]
+}

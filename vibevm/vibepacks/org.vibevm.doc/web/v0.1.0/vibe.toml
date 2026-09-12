@@ -1,0 +1,34 @@
+# The site of VibeVM as a package of kind `app`
+# (spec://org.vibevm.core/vibevm/common/PROP-057#kinds): one Qwik
+# application that carries both the landing and the documentation, built
+# and deployed on its own and installed into nobody's project. Like the
+# other in-tree packages it is a mutable development slot of one version:
+# the content moves, the number stays.
+[package]
+name = "web"
+group = "org.vibevm.doc"
+kind = "app"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The vibevm.org site: the landing and the documentation reader, one Qwik application in two adapters."
+keywords = ["site", "documentation", "qwik", "typescript", "design-system"]
+title = "VibeVM Site"
+abstract = """
+What it covers: the whole of vibevm.org — the landing at `/` and `/ru/`, the documentation reader under `/doc/`, the design system both are drawn with, and the two adapters that build them (a static site for the server, an embedded shell for `vibe doc serve`).
+For whom: the people who build and deploy the site, and the agents that change a component or a route on their behalf.
+What it assumes known: TypeScript, a component framework, and the shape of a static build; the documentation pipeline that renders the HTML islands this application displays is described by its own package.
+What it leaves out: the text of the documentation, which lives in the `doc` packages this site renders; the rendering of a page into an island, which belongs to the Rust pipeline; and the server the build is deployed to.
+"""
+
+[compatibility]
+min_vibe_version = "1.1.0"
+requires_kinds = []
+
+# The TypeScript discipline the package is authored under: the seven-step
+# floor, the structural gate and the traceability map all come from this
+# family (spec://org.vibevm.core/vibevm/common/PROP-057#STACK-FLOOR).
+[requires]
+packages = { "stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0" }

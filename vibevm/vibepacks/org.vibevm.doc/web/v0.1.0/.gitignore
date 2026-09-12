@@ -1,0 +1,8 @@
+# The package is published as source (PROP-024 §2.2): nothing a build
+# writes may enter it, and nothing here is a build input either.
+node_modules/
+dist/
+server/
+tmp/
+.vite/
+*.tsbuildinfo

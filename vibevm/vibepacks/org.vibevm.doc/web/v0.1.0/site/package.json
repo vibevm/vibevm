@@ -1,0 +1,10 @@
+{
+  "name": "@vibe-docs/site",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Qwik application: the landing routes, the documentation routes under /doc/, and the island the Rust pipeline fills.",
+  "dependencies": {
+    "@vibe-docs/design": "workspace:*"
+  }
+}

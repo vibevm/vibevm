@@ -1,0 +1,15 @@
+{
+  "name": "@vibe-docs/design",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The design system of vibevm.org: the raw palette, the semantic tokens in both themes, the self-hosted fonts and the shell components.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./palette.css": "./palette.css",
+    "./tokens.css": "./tokens.css",
+    "./fonts.css": "./fonts.css",
+    "./theme-init.js": "./theme-init.js",
+    "./fonts/*": "./fonts/*"
+  }
+}
