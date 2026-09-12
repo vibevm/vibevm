@@ -119,6 +119,15 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
         rendered.rendered.len(),
     );
 
+    // The address map, recomputed from what STANDS rather than from what
+    // moved: `latest` is an alias over everything the sources publish
+    // now, and a build that computed it from this run's queue would name
+    // whichever version happened to be rebuilt.
+    print!(
+        "{}",
+        vibe_doc::site::addresses::of(&published(&rendered, &work)).render()
+    );
+
     let trees = every_tree(&rendered, &work);
     match web_package(&args, &site) {
         Some(web) => {
@@ -223,6 +232,41 @@ fn forget(
     });
     println!("  gone   {address} — its pages are no longer published");
     Ok(())
+}
+
+/// Every version the output stands on, as the address map sees it.
+///
+/// The language and the page count are read from the manifest the build
+/// WROTE rather than remembered from the run, so a version rendered an
+/// hour ago and one rendered a second ago answer the same way. A tree
+/// whose manifest cannot be read is left out: the address map would
+/// otherwise count pages it cannot name.
+fn published(
+    state: &vibe_wire::generated::doc_site_state::DocSiteState,
+    work: &Path,
+) -> Vec<vibe_doc::site::Published> {
+    let mut out = Vec::new();
+    for row in &state.rendered {
+        let manifest = work
+            .join(format!("{}.{}@{}", row.group, row.name, row.version))
+            .join(render::FORMATS[0].as_str())
+            .join("manifest.json");
+        let Ok(text) = std::fs::read_to_string(&manifest) else {
+            continue;
+        };
+        let Ok(read) =
+            serde_json::from_str::<vibe_wire::generated::doc_manifest::DocManifest>(&text)
+        else {
+            continue;
+        };
+        out.push(vibe_doc::site::Published {
+            coordinate: format!("{}/{}", row.group, row.name),
+            version: row.version.to_string(),
+            lang: read.package.lang,
+            pages: read.pages.len(),
+        });
+    }
+    out
 }
 
 /// Every tree the static build is handed: one per projection of every
