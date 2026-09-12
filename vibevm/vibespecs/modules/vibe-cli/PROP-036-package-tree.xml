@@ -24,7 +24,7 @@ GUI client — a future `tool:org.vibevm.core/package-tree` (§7).</non-goal-lin
   edges (PROP-034) silently promote whole subtrees.</boot-composition>
       <visibility-gap fact="true" status="spec/done">Today a human cannot see this
   at a glance — **what is connected, and how does it load?**</visibility-gap>
-      <TREE-ANSWER fact="true" status="spec/done">`vibe tree` answers
+      <TREE-ANSWER fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">`vibe tree` answers
   that algorithmically: it renders the resolved package tree annotated with the
   *effective* load type and the flags that explain it, and emits the same data as
   JSON for downstream tools.</TREE-ANSWER>
@@ -33,17 +33,17 @@ GUI client — a future `tool:org.vibevm.core/package-tree` (§7).</non-goal-lin
   <decisions title="2. Decisions">
     <command title="2.1 The command">
       <facts ordered="false">
-        <TREE-READ-ONLY fact="true" status="spec/done">`vibe tree` is a **read-only** analyzer over the current project. It mutates
+        <TREE-READ-ONLY fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">`vibe tree` is a **read-only** analyzer over the current project. It mutates
   nothing (REQ: never writes to the tree, manifests, lockfile, or artifacts).</TREE-READ-ONLY>
-        <TREE-INPUTS fact="true" status="spec/done">It
+        <TREE-INPUTS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">It
   operates on the workspace discovered from `--path` (default `.`), reading the
   committed `vibe.lock`, the node manifests, and the generated boot artifacts.</TREE-INPUTS>
       </facts>
       <p><output-surfaces-lead fact="true" status="spec/done">Three output surfaces:</output-surfaces-lead></p>
       <facts ordered="false">
-        <OUT-TUI fact="true" status="spec/done">**interactive TUI** — the default on a tty (§2.11);</OUT-TUI>
-        <OUT-JSON fact="true" status="spec/done">**`--json`** — the machine surface (§2.7), the same data a GUI consumes;</OUT-JSON>
-        <OUT-PLAIN fact="true" status="spec/done">**plain** — a static ASCII tree when not on a tty, or under `--plain`.</OUT-PLAIN>
+        <OUT-TUI fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**interactive TUI** — the default on a tty (§2.11);</OUT-TUI>
+        <OUT-JSON fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**`--json`** — the machine surface (§2.7), the same data a GUI consumes;</OUT-JSON>
+        <OUT-PLAIN fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**plain** — a static ASCII tree when not on a tty, or under `--plain`.</OUT-PLAIN>
       </facts>
       <facts ordered="false">
         <NO-TUI-UNDER-FLAGS fact="true" status="spec/done">`--json` and `--plain` never launch the TUI.</NO-TUI-UNDER-FLAGS>
@@ -52,7 +52,7 @@ GUI client — a future `tool:org.vibevm.core/package-tree` (§7).</non-goal-lin
       </facts>
     </command>
     <columns title="2.2 Row semantics — the columns">
-      <p><ROW-PER-PACKAGE fact="true" status="spec/done">Each package is one row. Columns, left to right (REQ: this order):</ROW-PER-PACKAGE></p>
+      <p><ROW-PER-PACKAGE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Each package is one row. Columns, left to right (REQ: this order):</ROW-PER-PACKAGE></p>
       <facts ordered="true">
         <COL-NAME fact="true" status="spec/done">**name** — the tree column: `group/name`, drawn with indentation + branch
    glyphs + an expand/collapse indicator when the node has children.</COL-NAME>
@@ -71,7 +71,7 @@ GUI client — a future `tool:org.vibevm.core/package-tree` (§7).</non-goal-lin
       </facts>
     </columns>
     <effective-load title="2.3 Effective load type">
-      <p><EFFECTIVE-FROM-ARTIFACTS fact="true" status="spec/done">The `load` value is the lane a package's boot snippet **actually lands in**, read
+      <p><EFFECTIVE-FROM-ARTIFACTS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The `load` value is the lane a package's boot snippet **actually lands in**, read
 from the committed artifacts (REQ):</EFFECTIVE-FROM-ARTIFACTS></p>
       <facts ordered="false">
         <LOAD-STATIC fact="true" status="spec/done">`static` — the package appears as a `&lt;!-- vibe:static {origin} … --&gt;`
@@ -117,7 +117,7 @@ from the committed artifacts (REQ):</EFFECTIVE-FROM-ARTIFACTS></p>
     </condition-flag>
     <static-size title="2.6 The STATIC.md size indicator">
       <facts ordered="false">
-        <STATIC-SIZE-INDICATOR fact="true" status="spec/done">The status line shows the size of the statically-compiled lane: the byte count
+        <STATIC-SIZE-INDICATOR fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The status line shows the size of the statically-compiled lane: the byte count
   and line count of `STATIC.md` (REQ).</STATIC-SIZE-INDICATOR>
         <static-size-purpose fact="true" status="spec/done">This is the "how much am I loading verbatim
   every session" budget the human watches.</static-size-purpose>
@@ -125,7 +125,7 @@ from the committed artifacts (REQ):</EFFECTIVE-FROM-ARTIFACTS></p>
     </static-size>
     <json title="2.7 JSON output">
       <facts ordered="false">
-        <JSON-CONTRACT fact="true" status="spec/done">`vibe tree --json` emits one object, the same data model the TUI renders, valid
+        <JSON-CONTRACT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">`vibe tree --json` emits one object, the same data model the TUI renders, valid
   against the shipped schema (REQ: `schema_version = 1`).</JSON-CONTRACT>
         <JSON-ENVELOPE fact="true" status="spec/done">The envelope follows the
   CLI convention (`{"ok": true, "command": "tree", …}`).</JSON-ENVELOPE>
@@ -170,9 +170,9 @@ from the committed artifacts (REQ):</EFFECTIVE-FROM-ARTIFACTS></p>
     <diagnostics title="2.10 Diagnostics">
       <p><DIAG-NON-FATAL fact="true" status="spec/done">`vibe tree` reports, non-fatally (REQ: never aborts rendering on these):</DIAG-NON-FATAL></p>
       <facts ordered="false">
-        <DIAG-STALE-ARTIFACTS fact="true" status="spec/done">**stale-artifacts** — the committed lanes disagree with a fresh `EffectiveBoot`
+        <DIAG-STALE-ARTIFACTS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**stale-artifacts** — the committed lanes disagree with a fresh `EffectiveBoot`
   recompute (the tree needs `vibe reinstall`).</DIAG-STALE-ARTIFACTS>
-        <DIAG-ROOT-DRIFT fact="true" status="spec/done">**root-drift** — `vibe.lock` `meta.root_dependencies` disagrees with the root
+        <DIAG-ROOT-DRIFT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**root-drift** — `vibe.lock` `meta.root_dependencies` disagrees with the root
   `vibe.toml` `[requires.packages]` (the lock is behind).</DIAG-ROOT-DRIFT>
       </facts>
       <p><DIAG-SHAPE fact="true" status="spec/done">Each diagnostic carries a severity, a stable code, a message, and an optional
@@ -215,7 +215,7 @@ Contract:</TUI-DEFAULT></p>
     <dag title="2.12 The graph is a DAG">
       <facts ordered="false">
         <dag-diamonds fact="true" status="spec/done">The dependency graph has diamonds (a shared package reached by several parents).</dag-diamonds>
-        <DAG-RENDERING fact="true" status="spec/done">`vibe tree` renders each package under each parent, marks a re-occurrence with a
+        <DAG-RENDERING fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">`vibe tree` renders each package under each parent, marks a re-occurrence with a
   trailing `(*)` and does not re-expand it, and cycle-guards the walk on the
   package's qualified `group/name` (REQ).</DAG-RENDERING>
         <DAG-FLAT-COLLAPSE fact="true" status="spec/done">The flat display modes (§2.11) collapse

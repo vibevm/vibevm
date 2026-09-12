@@ -71,7 +71,7 @@ plus the adoption registry beside it (PROP-046); PROP-047 owns the upper layer
 dependency points strictly upward (progress knows facts; facts never knows
 progress), and every unit of both documents kept its anchor through the split —
 only the doc-paths changed, with the old path carrying a tombstone pointer.</BOUNDARY-SPLIT></p>
-    <p><BOUNDARY-CLI fact="true" status="impl/done">**The CLI follows the boundary.** The markup lint is a facts
+    <p><BOUNDARY-CLI fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**The CLI follows the boundary.** The markup lint is a facts
 operation: `vibe facts check [--exhaustive]` becomes its durable home, with
 `vibe progress check` kept as a transitional alias (printing the new spelling);
 the gate panel switches to the facts spelling. Campaign verbs
@@ -92,15 +92,15 @@ the CLI boundary are the ones the public sees.</BOUNDARY-CRATES></p>
   </separability>
   <markup title="3. The markup language">
     <element title="3.1 The `&lt;status&gt;` element">
-      <p><STATUS-ELEMENT fact="true" status="impl/done">One XML-shaped element, embedded in Markdown (and, later, native in XML
+      <p><STATUS-ELEMENT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">One XML-shaped element, embedded in Markdown (and, later, native in XML
 documents — the frontend duality of PROP-035 §5):</STATUS-ELEMENT></p>
       <fence>&lt;status stage="impl" state="work"/&gt;                       — point marker
 &lt;status stage="test" state="plan"&gt;wrapped text&lt;/status&gt;   — fragment wrapper</fence>
       <facts ordered="false">
-        <POINT-SELF-CLOSING fact="true" status="impl/done">A **point marker** MUST be self-closing (`/&gt;`). An unclosed `&lt;status …&gt;`
+        <POINT-SELF-CLOSING fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A **point marker** MUST be self-closing (`/&gt;`). An unclosed `&lt;status …&gt;`
   point form is not well-formed XML and is a `check` error.</POINT-SELF-CLOSING>
         <FRAGMENT-WRAPPER fact="true" status="impl/done">A **fragment wrapper** is the paired form around text inside a paragraph.</FRAGMENT-WRAPPER>
-        <FENCE-AWARE fact="true" status="impl/done">Inside fenced code blocks, inline code spans, and URLs the element and the
+        <FENCE-AWARE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Inside fenced code blocks, inline code spans, and URLs the element and the
   shorthand (§3.7) are **not recognized** — the scanner is fence-aware.</FENCE-AWARE>
       </facts>
       <p><DECISION-ELEMENT-NAME fact="true" status="impl/done">**Decision — element name `status`, not `progress`.**</DECISION-ELEMENT-NAME></p>
@@ -158,12 +158,12 @@ documents — the frontend duality of PROP-035 §5):</STATUS-ELEMENT></p>
         </tr>
       </table>
       <facts ordered="false">
-        <VOCAB-CLOSED fact="true" status="impl/done">Vocabularies are **closed**. Any value outside the tables is a `check` error
+        <VOCAB-CLOSED fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Vocabularies are **closed**. Any value outside the tables is a `check` error
   with a nearest-legal-value hint (typos like `rewrok` die in CI, not in
   review).</VOCAB-CLOSED>
         <VOCAB-AMENDMENT-ONLY fact="true" status="impl/done">New values enter only by amendment to this section.</VOCAB-AMENDMENT-ONLY>
       </facts>
-      <p><MULTI-MARKERS fact="true" status="impl/done">Multiple markers on one node: at most **one** status marker (stage/state), any
+      <p><MULTI-MARKERS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Multiple markers on one node: at most **one** status marker (stage/state), any
 number of **action** markers — a unit may legitimately need
 `remove`+`actionstage="doc"` and `continue`+`actionstage="test"` at once.</MULTI-MARKERS></p>
     </attributes>
@@ -223,7 +223,7 @@ number of **action** markers — a unit may legitimately need
         <ACTION-REWORK fact="true" status="impl/done">`rework` — exists but bad; redo (pairs with the feature-flag disable path).</ACTION-REWORK>
         <ACTION-REMOVE fact="true" status="impl/done">`remove` — bad or abandoned; delete (or demote to `idea`/`hold` archive).</ACTION-REMOVE>
       </facts>
-      <p><ACTIONSTAGE-NARROWS fact="true" status="impl/done">`actionstage` narrows the target: `action="remove" actionstage="doc"` = "the
+      <p><ACTIONSTAGE-NARROWS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`actionstage` narrows the target: `action="remove" actionstage="doc"` = "the
 documentation of this is to be removed", while `stage` keeps describing the
 unit itself.</ACTIONSTAGE-NARROWS></p>
     </actions>
@@ -239,7 +239,7 @@ unit itself.</ACTIONSTAGE-NARROWS></p>
   laws of that PROP — a token budget, no narration, never in a boot prefix).
   The grammar itself knows nothing of lanes; where such text may appear is
   PROP-057's rule, not this vocabulary's.</AUDIENCE-VALUES>
-        <AUDIENCE-DOC-USE fact="true" status="spec/done">Primary use: `actionstage="doc"`
+        <AUDIENCE-DOC-USE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">Primary use: `actionstage="doc"`
   markers with an audience are the **obligations** of the documentation —
   the promises a page for that audience must cite. `vibe progress report
   --view doc --audience user|author|dev|agent` lists them; it is the source
@@ -251,13 +251,13 @@ unit itself.</ACTIONSTAGE-NARROWS></p>
       </facts>
     </audience>
     <shorthand title="3.7 Shorthand">
-      <p><SHORTHAND-FORMS fact="true" status="impl/done">`@status:&lt;stage&gt;/&lt;state&gt;` and `@status:&lt;stage&gt;` are macro-equivalents of a
+      <p><SHORTHAND-FORMS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`@status:&lt;stage&gt;/&lt;state&gt;` and `@status:&lt;stage&gt;` are macro-equivalents of a
 point marker. The **legacy** spellings `@&lt;stage&gt;/&lt;state&gt;` and `@&lt;stage&gt;` mean
 exactly the same and are still read, so a document written before the
 qualified form keeps parsing.</SHORTHAND-FORMS></p>
       <facts ordered="false">
         <SHORTHAND-FULL fact="true" status="impl/done">`@status:test/plan` ⇒ `&lt;status stage="test" state="plan"/&gt;`</SHORTHAND-FULL>
-        <SHORTHAND-BARE fact="true" status="impl/done">`@status:impl` ⇒ `&lt;status stage="impl" state="work"/&gt;` — bare shorthand defaults to
+        <SHORTHAND-BARE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`@status:impl` ⇒ `&lt;status stage="impl" state="work"/&gt;` — bare shorthand defaults to
   `state="work"`, with exactly one exception: `@status:unknown` ⇒ `state="hold"`.
   (`@status:freeze` ⇒ `freeze/work`: "freezing now".)</SHORTHAND-BARE>
       </facts>
@@ -281,26 +281,26 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
     <placement title="3.8 Placement">
       <p><placement-lead fact="true" status="impl/done">Six granularities, one rule each — and no ambiguous positions:</placement-lead></p>
       <facts ordered="true">
-        <PLACE-DOCUMENT fact="true" status="impl/done">**Document** — marker in the preamble, before the first heading.
+        <PLACE-DOCUMENT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Document** — marker in the preamble, before the first heading.
    *Pilot amendment (2026-07-24):* a document that **opens with its
    heading** (the standard shape of this repo's specs) has no preamble;
    there, the standalone marker immediately after that first heading is
    the **document** marker, not a section marker.</PLACE-DOCUMENT>
-        <PLACE-SECTION fact="true" status="impl/done">**Section** — marker on its own line **immediately after the heading
+        <PLACE-SECTION fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Section** — marker on its own line **immediately after the heading
    line** (for any heading other than a preamble-less file's first one,
    per the amendment above). This is the only legal standalone position
    inside a body.</PLACE-SECTION>
-        <PLACE-PARAGRAPH fact="true" status="impl/done">**Paragraph** — marker **inside the paragraph's own text**: the first
+        <PLACE-PARAGRAPH fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Paragraph** — marker **inside the paragraph's own text**: the first
    token (right after the newlines, or right after the paragraph's `@fact:&lt;ID&gt;`
    anchor) or the last token (right before them).</PLACE-PARAGRAPH>
-        <PLACE-LIST-ITEM fact="true" status="impl/done">**List item** *(fact amendment, 2026-07-24 — owner-directed)* — every
+        <PLACE-LIST-ITEM fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**List item** *(fact amendment, 2026-07-24 — owner-directed)* — every
    item of a bulleted or numbered list is a **unit of its own**, at every
    nesting level. Its marker — shorthand or XML form alike — sits **inside
    the item's own text**: the first or last token of the item (before any
    nested sub-items, which carry their own markers).</PLACE-LIST-ITEM>
       </facts>
       <facts ordered="false">
-        <FACT-ANCHOR-SYNTAX fact="true" status="impl/done">**Fact anchors — the anchored-when-marked law** *(owner, 2026-07-24;
+        <FACT-ANCHOR-SYNTAX fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Fact anchors — the anchored-when-marked law** *(owner, 2026-07-24;
      spelling amended 2026-08-06)*. A stable fact address is written
      `@fact:&lt;ID&gt;` as the **first token** of a paragraph or list item. The
      **legacy** spelling `##&lt;ID&gt;` means the same and is still read.</FACT-ANCHOR-SYNTAX>
@@ -331,13 +331,13 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
      that is not its block's last fact and one with no matching block below
      it. Ignoring an unimplemented type would let the grammar promise what it
      cannot do, and the author would learn years later that nothing read it.</UNKNOWN-OBJECT-TYPE-IS-AN-ERROR>
-        <FACT-ID-GRAMMAR fact="true" status="impl/done">`&lt;ID&gt;` is
+        <FACT-ID-GRAMMAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`&lt;ID&gt;` is
      `[A-Za-z][A-Za-z0-9_-]*`; the unit is then addressable as
      `spec://…/&lt;doc&gt;#&lt;ID&gt;`, sharing one address space with the heading
      `{#anchor}`s — a duplicate across both forms is a `check` error. The
      **address is unchanged by the spelling**: it names the id, never the
      opener.</FACT-ID-GRAMMAR>
-        <ANCHORED-WHEN-MARKED fact="true" status="impl/done">**Every unit that carries a status marker — paragraph or list item —
+        <ANCHORED-WHEN-MARKED fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Every unit that carries a status marker — paragraph or list item —
      MUST also carry a `@fact:&lt;ID&gt;` anchor**; a marked, anchor-less unit is a
      `check` error.</ANCHORED-WHEN-MARKED>
         <ANCHOR-MARKER-POSITIONS fact="true" status="impl/done">The marker may stand immediately after the anchor
@@ -385,7 +385,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
    cannot be pulled out of its sentence.</PLACE-FRAGMENT>
       </facts>
       <facts ordered="false">
-        <NO-ORPHAN-MARKER fact="true" status="impl/done">A standalone marker between two paragraphs is a **`check` error** — there is
+        <NO-ORPHAN-MARKER fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A standalone marker between two paragraphs is a **`check` error** — there is
   no "nearest paragraph" heuristic.</NO-ORPHAN-MARKER>
         <SECTION-SPAN fact="true" status="impl/done">A section's span follows the owner-fixed
   IR rule (PROP-035 §5): from its heading to the next heading of the same or
@@ -423,8 +423,8 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
     </granularity>
     <rollup title="3.10 Inheritance and rollup">
       <facts ordered="false">
-        <ROLLUP-DOWNWARD fact="true" status="impl/done">**Downward (defaulting):** a node's marker covers unmarked descendants.</ROLLUP-DOWNWARD>
-        <ROLLUP-UPWARD fact="true" status="impl/done">**Upward (aggregation):** an unmarked node's computed status is the
+        <ROLLUP-DOWNWARD fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Downward (defaulting):** a node's marker covers unmarked descendants.</ROLLUP-DOWNWARD>
+        <ROLLUP-UPWARD fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Upward (aggregation):** an unmarked node's computed status is the
   worst-of its children per the §3.3 order (`unknown` wins the bottom).</ROLLUP-UPWARD>
         <ROLLUP-VOID-OUTSIDE fact="true" status="impl/done">`void` is the one value outside the `(stage, state)` order:
   it sorts **above every other pair regardless of stage**, so worst-of never
@@ -448,7 +448,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
       artifact kinds whose satisfaction closes the whole fact. No stage is a
       mandatory successor of another, and no fact is forced toward source-code
       implementation merely because its specification is complete.</TERMINALITY-IS-ORTHOGONAL></p>
-      <p><REQUIRES-GRAMMAR fact="true" status="impl/done">The Markdown form is
+      <p><REQUIRES-GRAMMAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The Markdown form is
       exactly one qualified trailing annotation
       `@requires:&lt;kind&gt;[,&lt;kind&gt;…]`, immediately before the fact's final
       status shorthand admitted by §3.7 (qualified full/bare or legacy
@@ -499,7 +499,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
         an ordinary pending fact.</REQUIRES-ABSENCE>
       </facts>
       <artifacts title="3.11.1 Closed artifact vocabulary">
-        <p><REQUIRED-ARTIFACT-KINDS fact="true" status="impl/done">The closed
+        <p><REQUIRED-ARTIFACT-KINDS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The closed
         vocabulary, in canonical order, is `specification`, `implementation`,
         `verification`, `documentation`, `decision`, `research`, `plan`,
         `disposition`, `external`. A new kind requires an amendment here before
@@ -679,11 +679,11 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.</S
   </genres>
   <config title="6. Scope configuration — `facts.toml`">
     <facts ordered="false">
-      <CONFIG-FILE fact="true" status="impl/done">Optional dev-mode mechanics, configured by a `facts.toml` at the package
+      <CONFIG-FILE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Optional dev-mode mechanics, configured by a `facts.toml` at the package
   root (the `clippy.toml` pattern — tool config, not manifest pollution);
   `progress.toml` is read as a silent legacy fallback for the transition
   (owner correction 2026-08-22: the observed tree is a facts-layer concern).</CONFIG-FILE>
-      <INCLUDE-STYLE fact="true" status="impl/done">Include-style globs name what **is** observed (not gitignore-style excludes):</INCLUDE-STYLE>
+      <INCLUDE-STYLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Include-style globs name what **is** observed (not gitignore-style excludes):</INCLUDE-STYLE>
     </facts>
     <fence lang="toml">schema = 1
 include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent</fence>

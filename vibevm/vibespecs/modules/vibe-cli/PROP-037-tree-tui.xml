@@ -245,7 +245,7 @@ frames, braille/blocks), **2** (256-colour: palette quantised to the 6×6×6 cub
 rounded, blocks), **1** (16 ANSI: role→ANSI mapping, rounded-or-square frames,
 blocks), **0** (explicitly dumb — `TERM=linux` (the Linux VT) or `TERM=dumb`:
 ANSI mono, ASCII `+-|` frames, `#` indicators).</FOUR-TIERS></p>
-        <p><TIER-DETECTION fact="true" status="spec/done">REQ. Tier detection is a **pure function** over the environment —
+        <p><TIER-DETECTION fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. Tier detection is a **pure function** over the environment —
 `detect_tier(colorterm: Option&lt;&amp;str&gt;, term: Option&lt;&amp;str&gt;) -&gt; Tier` (`$COLORTERM`
 first, then `$TERM`; `crossterm` exposes no colour-count API). The TUI reads the
 env once at launch in a sanctioned spot and feeds the values in; the detected
@@ -361,7 +361,7 @@ not new rendering code. The three tree *shapes* (§3.3) and the orderings (§7.2
 are pipeline settings, selectable by the user and persisted (§9).</FILTER-PIPELINE></p>
     </tree-filters>
     <tree-shapes title="3.3 The three tree shapes">
-      <p><THREE-SHAPES fact="true" status="spec/done">REQ. The pipeline offers three shapes, selectable per context on the F2 sort menu
+      <p><THREE-SHAPES fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. The pipeline offers three shapes, selectable per context on the F2 sort menu
 (§7.2), **default = (a)**:</THREE-SHAPES></p>
       <facts ordered="false">
         <SHAPE-MEMBERS-ROOTS fact="true" status="spec/done">**(a) members-as-roots + full subtrees** — each package in the filter set is a
@@ -378,7 +378,7 @@ that the filter/shape abstraction is right.</shapes-validate></p>
     </tree-shapes>
   </tree-widget>
   <modes title="4. Modes">
-    <p><THREE-MODES fact="true" status="spec/done">REQ. `vibe tree` has three display modes, each a Tree-widget (§3.1) configuration
+    <p><THREE-MODES fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. `vibe tree` has three display modes, each a Tree-widget (§3.1) configuration
 (§3.2) — none is a flat list:</THREE-MODES></p>
     <mode-tree title="4.1 Tree mode">
       <p><MODE-TREE-REQ fact="true" status="spec/done">REQ. One tree over the whole package set (the current default). Filter = all;
@@ -396,7 +396,7 @@ active tab shows that partition's tree (per §3.3). `Shift`+`←`/`→` switches
 (§5.3); plain arrows navigate the active tab's tree.</MODE-TABS-REQ></p>
     </mode-tabs>
     <mode-select title="4.4 Mode selection">
-      <p><MODE-SELECT-REQ fact="true" status="spec/done">REQ. The active mode is chosen from the F3 menu (§7.1) — not a bare cycle key.
+      <p><MODE-SELECT-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. The active mode is chosen from the F3 menu (§7.1) — not a bare cycle key.
 The active mode is shown in the status line and persisted (§9).</MODE-SELECT-REQ></p>
     </mode-select>
   </modes>
@@ -410,7 +410,7 @@ mode) is absent from both the keymap and the footer. Routing (§1.5) consults th
 registry; no context re-implements dispatch.</KEYMAP-REGISTRY-REQ></p>
     </keymap-registry>
     <keys title="5.2 The F-key scheme + footer">
-      <p><F-KEY-SCHEME fact="true" status="spec/done">REQ. Primary actions are on function keys: `F1` Search Everywhere (§7.3), `F2`
+      <p><F-KEY-SCHEME fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. Primary actions are on function keys: `F1` Search Everywhere (§7.3), `F2`
 sort menu (§7.2), `F3` mode menu (§7.1), `F4` settings (opens the `vibe prefs`
 settings UI — PROP-041), `F6` copy / `Shift+F6` copy-settings (§10.2). The footer
 lists the active keys with short labels; **`Shift` is written as `↑`** (e.g.
@@ -423,7 +423,7 @@ jamming every hint onto one line is a violation — the footer carries visual
 rhythm like the rest of the surface (§2.2.5).</FOOTER-TWO-ROWS></p>
     </keys>
     <tree-keys title="5.3 Tree interaction keys">
-      <p><TREE-KEYS-REQ fact="true" status="spec/done">REQ. Within a tree: `↑`/`↓` move selection (+ scroll), `←`/`→` pan horizontally,
+      <p><TREE-KEYS-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. Within a tree: `↑`/`↓` move selection (+ scroll), `←`/`→` pan horizontally,
 `Space` folds/unfolds the selected node, `Enter` opens the detail card (§8).
 `Shift`+`←`/`→` switches **tabs app-wide** — the tree's display tabs (in tabs
 mode) and the Search Everywhere category tabs (§7.3); plain `←`/`→` stay
@@ -431,7 +431,7 @@ tree-pan (which is why tab-switch takes Shift). These direct keys are exempt
 from the F-key scheme (they are navigation, not commands).</TREE-KEYS-REQ></p>
     </tree-keys>
     <focus-groups title="5.4 Focus groups + Tab Order">
-      <p><FOCUS-GROUPS-REQ fact="true" status="spec/done">REQ. A screen's controls are partitioned into **focus groups** — cohesive
+      <p><FOCUS-GROUPS-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. A screen's controls are partitioned into **focus groups** — cohesive
 clusters the user steps between with `Tab` (and `Shift+Tab` backwards). Within a
 group the group's own keys act (arrows move a radio selection, typing edits a
 field, `Enter` activates a button). A screen with more than one focus group
@@ -447,7 +447,7 @@ dialog (§7.4) cycles OK → Cancel.</FOCUS-MARKED></p>
     </focus-groups>
   </keymap>
   <modal-stack title="6. The modal stack">
-    <p><MODAL-STACK-REQ fact="true" status="spec/done">REQ. Modals form a **stack**: opening a modal pushes it; it draws over
+    <p><MODAL-STACK-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. Modals form a **stack**: opening a modal pushes it; it draws over
 everything below (each lower layer still visible as backdrop); input goes only to
 the top modal; `Esc` pops the top modal (returning to the one beneath). A feature
 may push a modal over a modal — e.g. copy-settings (§10.2) → file-path (§10.5) is
@@ -460,7 +460,7 @@ triggers quit-confirm (§7.4), it does not pop.</MODAL-STACK-REQ></p>
 the mode. This replaces any bare mode-cycle key.</F3-MODE-MENU-REQ></p>
     </f3-mode-menu>
     <f2-sort-menu title="7.2 F2 — the sort menu">
-      <p><F2-SORT-MENU-REQ fact="true" status="spec/done">REQ. `F2` opens a dialog whose content depends on the active mode:</F2-SORT-MENU-REQ></p>
+      <p><F2-SORT-MENU-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. `F2` opens a dialog whose content depends on the active mode:</F2-SORT-MENU-REQ></p>
       <facts ordered="false">
         <sort-tree-tabs fact="true" status="spec/done">**tree &amp; tabs modes** — one `RadioGroup` (§2.7): `alphabetical` / `topological`
   (the sibling order, §3.2). One group; no group chrome needed.</sort-tree-tabs>
@@ -472,7 +472,7 @@ the mode. This replaces any bare mode-cycle key.</F3-MODE-MENU-REQ></p>
 Choices persist (§9).</SORT-SHAPE-HERE></p>
     </f2-sort-menu>
     <f1-search title="7.3 F1 — Search Everywhere">
-      <p><F1-SEARCH-REQ fact="true" status="spec/done">REQ. `F1` opens the **Search Everywhere** window — the `vibe-actions` Search
+      <p><F1-SEARCH-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. `F1` opens the **Search Everywhere** window — the `vibe-actions` Search
 Everywhere engine (PROP-039 §10), in the IntelliJ IDEA idiom: a hybrid **"All"**
 tab that searches everything, plus **per-category tabs** that narrow it
 (`Tab`/`Shift+Tab` cycle; the "All" tab carries a category checkbox filter). Three
@@ -495,7 +495,7 @@ primary · a right-aligned keybinding · group). This **supersedes** the reserve
 the same engine with no TUI change.</SEARCH-ENGINE-NOTES></p>
     </f1-search>
     <quit-confirm title="7.4 Escape — quit with confirmation">
-      <p><QUIT-CONFIRM-REQ fact="true" status="spec/done">REQ. At the base screen, `Esc` opens a confirm dialog ("Really quit?") with
+      <p><QUIT-CONFIRM-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. At the base screen, `Esc` opens a confirm dialog ("Really quit?") with
 `Yes`/`No` buttons; `Yes`/`Enter`-on-Yes quits, `No`/`Esc` returns. The
 confirmation exists because loading may be slow and `Esc` is used pervasively in
 modals — an accidental single `Esc` must not discard the session.</QUIT-CONFIRM-REQ></p>
@@ -519,7 +519,7 @@ version, kind, load, transitive + why, condition, STATIC.md, source, hash,
 dependencies, boot path).</CARD-CONTENT></p>
   </detail-card>
   <settings title="9. Settings persistence">
-    <p><SETTINGS-PERSISTENCE fact="true" status="spec/done">REQ. UI state persists under `~/.vibe/tree/` as one or more JSON files. Saved:
+    <p><SETTINGS-PERSISTENCE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. UI state persists under `~/.vibe/tree/` as one or more JSON files. Saved:
 the active mode (§4.4), the per-context sort + shape + block-order choices (§7.2,
 §3.3). On TUI launch the settings are loaded and the UI restored to them; a
 missing/corrupt file falls back to defaults (never a hard error). Writing is
@@ -528,14 +528,14 @@ atomic; the directory is created if absent. (This is the machine-global
   </settings>
   <copy title="10. The copy system">
     <copy-providers title="10.1 Per-screen copy providers">
-      <p><COPY-PROVIDERS-REQ fact="true" status="spec/done">REQ. Each screen (tree/sub-tables/tabs; the card) supplies a **copy provider** —
+      <p><COPY-PROVIDERS-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. Each screen (tree/sub-tables/tabs; the card) supplies a **copy provider** —
 an object that knows how to serialize *what is currently shown* into a copy
 format. A tree provider serializes the tree with its current display options; the
 card provider serializes the card's fields. Copy is "what I see is what I copy":
 in tabs mode only the active tab is serialized.</COPY-PROVIDERS-REQ></p>
     </copy-providers>
     <copy-flow title="10.2 F6 copy / Shift+F6 copy-settings">
-      <p><COPY-FLOW-REQ fact="true" status="spec/done">REQ. `F6` copies the current screen straight to the clipboard as text (the
+      <p><COPY-FLOW-REQ fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. `F6` copies the current screen straight to the clipboard as text (the
 provider's default format). `Shift+F6` opens the **copy-settings** modal: a
 `RadioGroup` for **format** (Markdown / PNG — and later PlantUML / Mermaid) and a
 `RadioGroup` for **destination** (clipboard / file). Confirming with destination
@@ -547,7 +547,7 @@ renders as a pseudographic tree inside a fenced block (or a nested list); the
 card renders as well-formatted Markdown (headers + fields), not a raw text dump.</MARKDOWN-EXPORT-REQ></p>
     </copy-markdown>
     <copy-png title="10.4 PNG export">
-      <p><PNG-RESERVED fact="true" status="spec/done">REQ. PNG export (a rasterized tree image; a designed package info-card image) is
+      <p><PNG-RESERVED fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ. PNG export (a rasterized tree image; a designed package info-card image) is
 **reserved** — selecting PNG opens the `ComingSoon` modal (§2.10) until the
 rasterization (font + image crates) is built. Named non-goal-for-now (§12).</PNG-RESERVED></p>
     </copy-png>

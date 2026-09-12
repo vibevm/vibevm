@@ -38,16 +38,16 @@ amended under owner sanction 2026-07-07).</related></p>
   <decisions title="2. Decisions">
     <kind title="2.1 The `mcp` kind">
       <p><req-kind fact="true" status="impl/done">`req r1`</req-kind></p>
-      <p><MCP-KIND-DEF fact="true" status="impl/done">An **`mcp` package** is one whose primary deliverable is one or more
+      <p><MCP-KIND-DEF fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">An **`mcp` package** is one whose primary deliverable is one or more
 Model Context Protocol servers.</MCP-KIND-DEF></p>
       <facts ordered="false">
         <KIND-REGISTER fact="true" status="impl/done">`kind = "mcp"` joins the installable
   register (VIBEVM-SPEC §4.1); slots materialise under
   `vibedeps/&lt;group&gt;.&lt;name&gt;/&lt;version&gt;/` like every other kind (the identity slot — PROP-022 §2.1, owner ruling 2026-08-13; the path carried a kind prefix before that ruling).</KIND-REGISTER>
-        <TABLE-ONLY-IN-KIND fact="true" status="impl/done">The
+        <TABLE-ONLY-IN-KIND fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The
   `[[mcp_server]]` table (§2.2) is **legal only in this kind** — the kind
   IS the taxonomy, enforced by `Manifest::validate`, not advisory.</TABLE-ONLY-IN-KIND>
-        <KIND-PROMISES-SERVER fact="true" status="impl/done">An
+        <KIND-PROMISES-SERVER fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">An
   `mcp`-kind manifest that declares NO `[[mcp_server]]` is refused: the
   kind promises a server.</KIND-PROMISES-SERVER>
       </facts>
@@ -60,13 +60,13 @@ binary = "rust-ai-native-mcp"     # must match a [[binary]] in this manifest
 description = "AI-Native Rust discipline + type oracle over MCP"
 args = ["--path", "{project_root}"]</fence>
       <facts ordered="false">
-        <SERVER-IS-BINARY fact="true" status="impl/done">The server IS a [PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml)
+        <SERVER-IS-BINARY fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The server IS a [PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml)
   binary: delivery, consent, staleness, and slot residence come from that
   machinery wholesale — `binary` must resolve to a `[[binary]]` declared
   in the same manifest.</SERVER-IS-BINARY>
         <SERVER-NAME fact="true" status="impl/done">`name` is what an MCP host shows as the tool
   namespace; names are unique within the package.</SERVER-NAME>
-        <ARGS-CLOSED-SET fact="true" status="impl/done">`args` may carry
+        <ARGS-CLOSED-SET fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`args` may carry
   substitution tokens ONLY from the closed set `{project_root}` (the
   absolute, verbatim-free root of the consuming project, resolved at
   registration time); unknown `{…}` tokens are refused at validation.</ARGS-CLOSED-SET>
@@ -81,7 +81,7 @@ args = ["--path", "{project_root}"]</fence>
   re-opens the version skew the in-slot prototype excluded by
   construction: a server built from engine copy X enriching against a
   consumer whose gates run engine copy Y.</SKEW-REOPENED>
-        <EXACT-PIN-LAW fact="true" status="impl/done">The pin closes it: **every
+        <EXACT-PIN-LAW fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The pin closes it: **every
   `[requires.packages]` entry of an `mcp`-kind package MUST be an exact
   `=X.Y.Z` requirement** — the resolver holds the served engines and the
   consumer's gates to ONE version set; no runtime handshake exists or is
@@ -99,26 +99,26 @@ args = ["--path", "{project_root}"]</fence>
       <p><req-registration fact="true" status="impl/done">`req r1`</req-registration></p>
       <p><REG-TODAY fact="true" status="impl/done">`vibe mcp install` today writes vibevm's own server into agent configs
 (PROP-015).</REG-TODAY></p>
-      <p><REG-PACKAGE-DISCOVERY fact="true" status="impl/done">It grows package discovery: every installed package of kind
+      <p><REG-PACKAGE-DISCOVERY fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">It grows package discovery: every installed package of kind
 `mcp` contributes its `[[mcp_server]]` entries, written into the target
 agents' configs with</REG-PACKAGE-DISCOVERY></p>
       <facts ordered="false">
         <REG-COMMAND-PATH fact="true" status="impl/done">`command` = the absolute, **verbatim-free** path to the slot-resident
   built artifact (a real executable — no shim, no `cmd /c` wrapper
   class), `args` with the closed-set substitutions resolved;</REG-COMMAND-PATH>
-        <REG-MANAGED-SIDECAR fact="true" status="impl/done">a **managed sidecar**: a top-level `"vibevm": { "managed": [...] }`
+        <REG-MANAGED-SIDECAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">a **managed sidecar**: a top-level `"vibevm": { "managed": [...] }`
   object in the JSON config names the entries vibevm owns (never a key
   INSIDE a server entry — hosts validate entry shapes), so re-installs
   rewrite ONLY vibevm-managed entries and operator-owned servers are
   never touched — the `&lt;vibevm&gt;` block convention of the boot files,
   applied to agent configs.</REG-MANAGED-SIDECAR>
-        <REG-PROJECT-SCOPE fact="true" status="impl/done">Registration is PROJECT-scope only (the
+        <REG-PROJECT-SCOPE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Registration is PROJECT-scope only (the
   `{project_root}` substitution demands a project, and a project's
   servers belong in its committed config), and every project-scope
   agent config is JSON — so no TOML sidecar form exists;</REG-PROJECT-SCOPE>
         <REG-REFRESH fact="true" status="impl/done">lifecycle: `vibe mcp install` re-run refreshes paths after a slot
   move;</REG-REFRESH>
-        <REG-STATUS fact="true" status="impl/done">`vibe mcp status` reports each declared server's artifact state
+        <REG-STATUS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe mcp status` reports each declared server's artifact state
   (an unbuilt artifact registers fine and fails at agent launch — the
   recipe names `vibe bin build &lt;name&gt;`);</REG-STATUS>
         <REG-UNINSTALL fact="true" status="impl/done">`vibe mcp uninstall` removes
@@ -130,7 +130,7 @@ agents' configs with</REG-PACKAGE-DISCOVERY></p>
       <facts ordered="false">
         <CONSENT-TRUST-ACT fact="true" status="impl/done">Registering a server schedules package code execution at agent-session
   start; building its binary compiles package code.</CONSENT-TRUST-ACT>
-        <CONSENT-GATE-INHERITED fact="true" status="impl/done">One trust model, two
+        <CONSENT-GATE-INHERITED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">One trust model, two
   verbs: registration inherits PROP-025's consent gate verbatim —
   `org.vibevm` packages are allow-listed; any other origin requires the
   explicit `--assume-yes` (or is refused with the recipe naming that

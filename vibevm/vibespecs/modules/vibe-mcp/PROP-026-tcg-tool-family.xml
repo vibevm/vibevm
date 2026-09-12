@@ -29,7 +29,7 @@ oracles ship THERE; vibevm ships only this thin product seam).</related></p>
   is unchanged and remains normative; the TOPOLOGY half (one multiplexed
   product server, `language` as the dispatch parameter, the `vibe-tcg`
   registry crate) is retired.</SUPERSEDED-TOPOLOGY>
-    <TOOLS-NEW-HOME fact="true" status="impl/done">The tools now ship in the per-language
+    <TOOLS-NEW-HOME fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">The tools now ship in the per-language
   `mcp`-kind packages ([PROP-027](PROP-027-mcp-packages.xml):
   `mcp:org.vibevm.ai-native/rust-ai-native-mcp`, `…/typescript-ai-native-mcp`), each
   serving its own language over the vendored `mcp-core` transport.</TOOLS-NEW-HOME>
@@ -62,18 +62,18 @@ oracles ship THERE; vibevm ships only this thin product seam).</related></p>
   </problem>
   <tools title="2. The four tools">
     <p><req-tools fact="true" status="impl/done">`req r3`</req-tools></p>
-    <p><FOUR-TOOLS fact="true" status="impl/done">`tcg_validate`, `tcg_scope`, `tcg_complete`, `tcg_type` — thin schema
+    <p><FOUR-TOOLS fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">`tcg_validate`, `tcg_scope`, `tcg_complete`, `tcg_type` — thin schema
 adapters over the TCG-PROTOCOL ops of the same names, each with:</FOUR-TOOLS></p>
     <facts ordered="false">
-      <PARAM-LANGUAGE fact="true" status="impl/done">`language` (required; accepts `"typescript"` and — since the Rust
+      <PARAM-LANGUAGE fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">`language` (required; accepts `"typescript"` and — since the Rust
   twin landed, exactly as this clause promised — `"rust"`; any other
   value is a ToolError NAMING the supported set, so the next language
   adds an enum value, not new tools);</PARAM-LANGUAGE>
-      <PARAMS-PASSTHROUGH fact="true" status="impl/done">the op's own params per TCG-PROTOCOL §2 (`file`, `position`,
+      <PARAMS-PASSTHROUGH fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">the op's own params per TCG-PROTOCOL §2 (`file`, `position`,
   `content`, …), passed through verbatim.</PARAMS-PASSTHROUGH>
     </facts>
     <facts ordered="false">
-      <ENRICHED-RESPONSES fact="true" status="impl/done">Responses return the ENRICHED protocol result (TCG-PROTOCOL §3) as
+      <ENRICHED-RESPONSES fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">Responses return the ENRICHED protocol result (TCG-PROTOCOL §3) as
   `structuredContent`, plus a compact human text rendering (findings
   first).</ENRICHED-RESPONSES>
       <NO-AFFINITY fact="true" status="impl/done">These tools are deterministic queries — per PROP-018 §2.3 they

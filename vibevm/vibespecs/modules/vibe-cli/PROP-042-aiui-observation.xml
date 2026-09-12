@@ -34,20 +34,20 @@ CLI surface itself stays on the host.</status-line></p>
       <SNAPSHOT-PINNING fact="true" status="impl/done">Snapshot callers pin `tree` (a fixture), `size`, and `script`.</SNAPSHOT-PINNING>
     </facts>
     <facts ordered="false">
-      <SIDE-EFFECT-KEYS-REFUSED fact="true" status="impl/done">REQ. A scripted key that would **escape the process or mutate the world** is
+      <SIDE-EFFECT-KEYS-REFUSED fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. A scripted key that would **escape the process or mutate the world** is
   refused, not executed: `F4` (spawns the settings subprocess) and `F6`/`Shift+F6`
   (write the clipboard) are rejected by the key-script parser (§3).</SIDE-EFFECT-KEYS-REFUSED>
       <OBSERVES-NOT-ACTS fact="true" status="impl/done">The render plane observes; it does not act outside the model.</OBSERVES-NOT-ACTS>
     </facts>
   </render-plane>
   <snapshot-contract title="2. The snapshot contract">
-    <p><SNAPSHOT-FORMATS fact="true" status="impl/done">REQ. A rendered Buffer projects to one of two **snapshot formats**, the same
+    <p><SNAPSHOT-FORMATS fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. A rendered Buffer projects to one of two **snapshot formats**, the same
 schema every observation plane emits:</SNAPSHOT-FORMATS></p>
     <facts ordered="false">
       <FMT-TEXT fact="true" status="impl/done">**`text`** — the glyph grid: one line per row, each row the concatenation of
   the cells' symbols with trailing whitespace trimmed. The golden-file form
   (committed `.snap.txt`, re-rendered and diffed).</FMT-TEXT>
-      <FMT-CELLS fact="true" status="impl/done">**`cells`** — JSON: `{cols, rows, rows:[[run,…],…]}` where each **run** is
+      <FMT-CELLS fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`cells`** — JSON: `{cols, rows, rows:[[run,…],…]}` where each **run** is
   `{n, ch, fg?, bg?, mods?}` — `n` cells of glyph `ch` sharing a style, run-length
   encoded per row; `fg`/`bg` are `#rrggbb` (or an ANSI role name), `mods` the set
   of `bold`/`dim`/`italic`/`underlined`/`reversed` present. Enables style/colour
@@ -63,7 +63,7 @@ schema every observation plane emits:</SNAPSHOT-FORMATS></p>
   </snapshot-contract>
   <key-script title="3. The key script">
     <facts ordered="false">
-      <KEY-SCRIPT-GRAMMAR fact="true" status="impl/done">REQ. A **key script** is a space-separated list of key names driving the TUI
+      <KEY-SCRIPT-GRAMMAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. A **key script** is a space-separated list of key names driving the TUI
   before the snapshot. The grammar: function keys `F1`–`F12`; navigation `Up`,
   `Down`, `Left`, `Right`; `Enter`, `Esc`, `Tab`, `BackTab`, `Space`, `Backspace`;
   a `Shift+` prefix on any of them (e.g. `Shift+Left`, `Shift+Tab` ≡ `BackTab`).
@@ -91,16 +91,16 @@ schema every observation plane emits:</SNAPSHOT-FORMATS></p>
     </facts>
   </key-script>
   <aiui-cli title="4. The `vibe aiui` surface">
-    <p><AIUI-FAMILY fact="true" status="impl/done">REQ. `vibe aiui` is the agent-facing command family. Its render-plane verb:</AIUI-FAMILY></p>
+    <p><AIUI-FAMILY fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. `vibe aiui` is the agent-facing command family. Its render-plane verb:</AIUI-FAMILY></p>
     <fence>vibe aiui render [--path &lt;dir&gt;] [--size &lt;COLSxROWS&gt;] [--send "&lt;script&gt;"] [--format text|cells]</fence>
     <facts ordered="false">
-      <RENDER-VERB-SEMANTICS fact="true" status="impl/done">builds the `vibe tree` model at `--path` (the same resolver `vibe tree` uses),
+      <RENDER-VERB-SEMANTICS fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">builds the `vibe tree` model at `--path` (the same resolver `vibe tree` uses),
   drives `--send` (§3) at `--size` (default `80x24`), and prints the `--format`
   snapshot (§2, default `text`) to stdout.</RENDER-VERB-SEMANTICS>
       <RENDER-READ-ONLY fact="true" status="impl/done">It is read-only and non-interactive:
   it never enters the TUI, spawns a terminal, or touches user state.</RENDER-READ-ONLY>
     </facts>
-    <p><TERMINAL-VERBS fact="true" status="impl/done">REQ. The **terminal-plane** verbs drive a live vibeterm control session:</TERMINAL-VERBS></p>
+    <p><TERMINAL-VERBS fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. The **terminal-plane** verbs drive a live vibeterm control session:</TERMINAL-VERBS></p>
     <fence>vibe aiui open     [--exec &lt;cmd&gt;] [--size &lt;COLSxROWS&gt;] [--timeout-ms &lt;n&gt;]
 vibe aiui send     &lt;key&gt;... [--text &lt;literal&gt;] [--session &lt;pid&gt;]
 vibe aiui snapshot [--session &lt;pid&gt;]
@@ -135,7 +135,7 @@ vibe aiui scrollbar &lt;auto|on|off&gt; [--session &lt;pid&gt;]</fence>
       <SESSION-DEFAULT fact="true" status="impl/done">A verb defaults to the most recent session; `--session &lt;pid&gt;`
   targets a specific one.</SESSION-DEFAULT>
     </facts>
-    <p><MODEL-VERB fact="true" status="impl/done">REQ. The **model-plane** verb projects the TUI state — no rendering at all:</MODEL-VERB></p>
+    <p><MODEL-VERB fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ. The **model-plane** verb projects the TUI state — no rendering at all:</MODEL-VERB></p>
     <fence>vibe aiui state [--path &lt;dir&gt;] [--send "&lt;script&gt;"]</fence>
     <facts ordered="false">
       <STATE-SEMANTICS fact="true" status="impl/done">builds the `vibe tree` model at `--path`, drives `--send` (§3), and prints a
@@ -164,7 +164,7 @@ vibe aiui scrollbar &lt;auto|on|off&gt; [--session &lt;pid&gt;]</fence>
   </aiui-cli>
   <vibe-term title="5. The `vibe term` launcher">
     <facts ordered="false">
-      <TERM-LAUNCHER fact="true" status="impl/done">REQ. `vibe term` launches the **vibeterm** terminal app hosting an interactive
+      <TERM-LAUNCHER fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">REQ. `vibe term` launches the **vibeterm** terminal app hosting an interactive
   shell, so the terminal can be used and eyeball-debugged standalone.</TERM-LAUNCHER>
       <SHELL-DETECTION fact="true" status="impl/done">The shell is
   **detected**: on Windows, modern PowerShell 7+ (`pwsh`) is preferred over the
@@ -204,7 +204,7 @@ vibe aiui scrollbar &lt;auto|on|off&gt; [--session &lt;pid&gt;]</fence>
     <in-place-upgrade title="5.1 In-place upgrade &amp; the icon protocol">
       <facts ordered="false">
         <VIBETERM-ENV fact="true" status="impl/done">REQ. vibeterm sets `VIBETERM=1` in its PTY environment.</VIBETERM-ENV>
-        <IN-PLACE-UPGRADE fact="true" status="impl/done">A `vibe tree` launched
+        <IN-PLACE-UPGRADE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">A `vibe tree` launched
   **inside** vibeterm (this env present) does not spawn a second window — it
   upgrades the current terminal in place: the `-t` / vibeterm launch resolves to
   the in-terminal console TUI here, so a plain shell becomes a "VibeTree terminal"
