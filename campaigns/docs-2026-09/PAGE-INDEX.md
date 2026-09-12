@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 44; секций с якорями: 275; примеров: 59; промптов: 19; ссылок `rule`: 381; блоков `derived`: 72; фигур: 0.
+Страниц: 45; секций с якорями: 284; примеров: 60; промптов: 19; ссылок `rule`: 408; блоков `derived`: 72; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -122,6 +122,7 @@
 | `glossary/index` | `contribution` | contribution | A binding of a handler to an extension point, declared as an |
 | `glossary/index` | `coordinate` | coordinate | The name of a package: a group, a slash and a name, |
 | `glossary/index` | `deploy-profile` | deploy profile | A named, ordered list of targets and the providers that apply packaged |
+| `glossary/index` | `effective-set` | effective set | The packages that the visibility marks admit from your root: what version |
 | `glossary/index` | `embedded-registry` | embedded registry | The in-tree packages of a source-built vibe, consulted automatically as a registry: |
 | `glossary/index` | `extension-point` | extension point | A named place in the lifecycle a contribution binds to: a phase, |
 | `glossary/index` | `section` | fact | One anchored unit of a specification with a status: a rule, a |
@@ -129,6 +130,7 @@
 | `glossary/index` | `feature` | feature | An optional, additive content set of a package, declared in `[features]` and |
 | `glossary/index` | `fingerprint` | fingerprint | The hash of a package's shippable tree, the identity half of a |
 | `glossary/index` | `freshness-fingerprint` | freshness fingerprint | The hash of a phase run's declared inputs, recorded under `.vibe/`; a |
+| `glossary/index` | `friend-closure` | friend closure | The packages a project has befriended, directly with `friend = true` or |
 | `glossary/index` | `git-source` | git source | A dependency declared by a git repository and a tag, commit or |
 | `glossary/index` | `handler` | handler | What a contribution runs: a built-in, a script, a binary, a native |
 | `glossary/index` | `hook` | hook | A package's `pre-install` or `post-install` script, run in the package's slot; installing |
@@ -236,6 +238,14 @@
 | `model/boot-lane` | `where-it-comes-from` | Where the list comes from | Every package may contribute one [boot snippet](../glossary/index.xml#boot-snippet): a short text meant to |
 | `model/boot-lane` | `cost` | Why it is short | Every word in the lane is paid for on every session start, |
 | `model/boot-lane` | `edge-cases` | Edge cases and rules | A snippet that declares a condition is always a dynamic entry, whatever |
+| `model/dependency-visibility` | `root` | Dependency visibility: public, private and friends | |
+| `model/dependency-visibility` | `three-marks` | Three marks on a requirement | Every line under `[requires.packages]` is an edge from your [package](../glossary/index.xml#package) to the |
+| `model/dependency-visibility` | `friendship` | Friendship: opting in | Friendship is declared by the consumer, never assumed. On an edge, `friend |
+| `model/dependency-visibility` | `the-visibility-section` | The visibility section, unfriend and exclude | Whatever concerns the package as a whole rather than one edge lives |
+| `model/dependency-visibility` | `overrides` | Repairing an edge you do not own | Sometimes the mark you need is on an edge you do not |
+| `model/dependency-visibility` | `what-arrives` | What arrives in your tree | The packages that the marks admit from your root form the [effective |
+| `model/dependency-visibility` | `asking-why` | Asking why | `vibe why` answers the question a visibility system otherwise turns into folklore. |
+| `model/dependency-visibility` | `edge-cases` | Edge cases and rules | A package reached by two paths is present as soon as one |
 | `model/lock-and-store` | `root` | The lock file and the machine store | |
 | `model/lock-and-store` | `identity` | Identity is the content, not the address | A package version is identified by four things: its group, its name, |
 | `model/lock-and-store` | `the-lock-file` | The lock file | `vibe.lock` lists every package in the resolved graph, direct and transitive, with |

@@ -50,6 +50,10 @@
     <p>A named, ordered list of targets and the providers that apply packaged artifacts to them; `vibe deploy` runs one profile, `vibe undeploy` reverses it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
   </deploy-profile>
+  <effective-set title="effective set">
+    <p>The packages that the visibility marks admit from your root: what version resolution sees, what the lock file records and what the dependency tree holds. A private edge of a package that is not your root lies outside it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"/>
+  </effective-set>
   <embedded-registry title="embedded registry">
     <p>The in-tree packages of a source-built vibe, consulted automatically as a registry: first for a developer's build, after the declared registries for a distributed one.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT"/>
@@ -78,6 +82,10 @@
     <p>The hash of a phase run's declared inputs, recorded under `.vibe/`; a phase whose freshness fingerprint did not change is skipped on the next run.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
   </freshness-fingerprint>
+  <friend-closure title="friend closure">
+    <p>The packages a project has befriended, directly with `friend = true` or a `friends` line, or through a chain of friends-only edges. A friends-only dependency reaches only the projects whose friend closure contains its provider.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-FRIENDS"/>
+  </friend-closure>
   <git-source title="git source">
     <p>A dependency declared by a git repository and a tag, commit or branch instead of a registry; identity and fingerprint discipline are the same, and a branch is re-walked on update.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY"/>
@@ -131,8 +139,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-NO-OFFICIAL-FLAG"/>
   </official>
   <override title="override">
-    <p>A replacement source for one coordinate that short-circuits the registries; marked in the lock file so nobody mistakes it for a published version.</p>
+    <p>A replacement source for one coordinate that short-circuits the registries; marked in the lock file so nobody mistakes it for a published version. The same word names the `[override]` table that rewrites the visibility marks of edges you do not own.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE"/>
   </override>
   <package title="package">
     <p>The unit vibe installs: a folder with a manifest and the text or tools it delivers, published as its own repository, identified by its coordinate, version and content hash. A package is a project made installable.</p>

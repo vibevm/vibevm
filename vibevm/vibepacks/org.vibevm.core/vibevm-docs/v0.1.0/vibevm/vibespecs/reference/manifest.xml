@@ -30,7 +30,9 @@
   <requirements title="[requires] and its neighbours">
     <table>
       <tr><td>Table</td><td>Meaning</td></tr>
-      <tr><td>`[requires.packages]`</td><td>one key per required coordinate, the value a constraint string or an inline table with `version`, a `git` or `path` source, and `link` for the boot inclusion type</td></tr>
+      <tr><td>`[requires.packages]`</td><td>one key per required coordinate, the value a constraint string or an inline table with `version`, a `git` or `path` source, `link` for the boot inclusion type, and the visibility marks `access`, `friend` and `exclude`</td></tr>
+      <tr><td>`[visibility]`</td><td>`friends`, `unfriend`, `allow-friends` and `ignore-concept-warnings` for the package as a whole; see [Dependency visibility](../model/dependency-visibility.xml)</td></tr>
+      <tr><td>`[override]` (table)</td><td>rewrites the visibility marks of edges you do not own, keyed `"a -&gt; b"`, or a provider's `allow-friends`, keyed by its coordinate</td></tr>
       <tr><td>`[requires] capabilities`</td><td>abstract abilities any provider may satisfy, `namespace:name@constraint`</td></tr>
       <tr><td>`[[requires_any]]`</td><td>a disjunction: exactly one of `one_of` must be satisfied</td></tr>
       <tr><td>`[provides] capabilities`</td><td>the abilities this package offers</td></tr>
