@@ -23,6 +23,10 @@ use super::{
 };
 use crate::agents::{Agent, Scope};
 
+#[path = "projection/documentation.rs"]
+mod documentation;
+use documentation::{documentation_skills, lower_manifest_skills};
+
 #[path = "projection/binding.rs"]
 mod binding;
 pub use binding::{
@@ -133,6 +137,15 @@ impl DeclaredSkillProvider {
     }
 }
 
+#[derive(Debug, Clone)]
+struct ProjectionTask {
+    agent: Agent,
+    scope: Scope,
+    name: String,
+    source: PathBuf,
+    include: Vec<String>,
+}
+
 /// Standalone/package-binding selection shared by every surface.
 #[derive(Debug, Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
@@ -209,66 +222,8 @@ pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>
             )?;
         }
     }
+    documentation_skills(&ws, &mut out)?;
     Ok(out)
-}
-
-fn lower_manifest_skills(
-    manifest: &Manifest,
-    base: &Path,
-    origin: &str,
-    content_hash: Option<ContentHash>,
-    locked_embedded_sources: Option<&[LockedEmbeddedSource]>,
-    out: &mut Vec<DeclaredSkill>,
-) -> Result<()> {
-    if manifest.skills.is_empty() {
-        return Ok(());
-    }
-    let package = manifest.package.as_ref().with_context(|| {
-        format!(
-            "manifest `{}` declares [[skill]] without package role",
-            base.join(Manifest::FILENAME).display()
-        )
-    })?;
-    let name = PackageName::parse(&package.name)?;
-    let provider = match content_hash {
-        Some(content_hash) => DeclaredSkillProvider::Installed {
-            group: package.group.clone(),
-            name,
-            version: package.version.to_string(),
-            kind: package.kind,
-            root: base.to_path_buf(),
-            content_hash,
-            embedded_sources: locked_embedded_sources.unwrap_or_default().to_vec(),
-            declared_sources: manifest.embedded_sources.clone(),
-        },
-        None => DeclaredSkillProvider::Authored {
-            group: package.group.clone(),
-            name,
-            version: package.version.to_string(),
-            kind: package.kind,
-            root: base.to_path_buf(),
-            embedded_sources: manifest.embedded_sources.clone(),
-        },
-    };
-    for decl in &manifest.skills {
-        out.push(DeclaredSkill {
-            source: base.join(&decl.path),
-            source_root: base.to_path_buf(),
-            decl: decl.clone(),
-            origin: origin.to_string(),
-            provider: provider.clone(),
-        });
-    }
-    Ok(())
-}
-
-#[derive(Debug, Clone)]
-struct ProjectionTask {
-    agent: Agent,
-    scope: Scope,
-    name: String,
-    source: PathBuf,
-    include: Vec<String>,
 }
 
 /// A prepared inventory snapshot. Preparing performs every fallible parse and
