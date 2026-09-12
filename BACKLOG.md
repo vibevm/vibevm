@@ -1740,3 +1740,63 @@ structure, and it goes when the file does.
 | @fact:B152-SEVERITY **severity** | P3 — семействами: `self`, `facts`, `registry`, `doc` — проза на существующих страницах; `aiui`, `progress` — инструменты разработчика, одна страница в `architecture/` или блоки `derived` второго уровня |
 | @fact:B152-DISPOSITION **disposition** | `open` — решается в недельных петлях по семейству за петлю |
 | @fact:B152-FILED **filed by** | кампания документации, месячная петля A6.3 (аудит P6-C1), 2026-09-12 |
+
+## B-153 — index: маршруты `vibe-index` джойнят percent-декодированный захват с `data_dir`
+
+| поле | значение |
+|---|---|
+| @fact:B153-WHAT **what** | маршруты `/v1/index/by-name/{name}`, `by-cap/{slug}`, `by-purl/{slug}` (`crates/vibe-index/src/server/routes/index_files.rs:80-126`) склеивают percent-декодированный захват с `data_dir` без проверки; на идентичном маршруте с той же axum 0.8.9 `..%2Fsecret.txt` вернул файл вне корня (200); на живом бинарнике не подтверждено |
+| @fact:B153-EFFECT **effect** | любой файл, до которого дотягивается процесс индекс-сервера, читается по HTTP; сайт документации `vibe-index` не использует, риск — при публикации индекс-сервера наружу |
+| @fact:B153-SEVERITY **severity** | P1 — безопасность; чинить до публикации индекс-сервера наружу: лексический `safe_join` или `ServeDir`, тест `oneshot(GET /v1/index/by-name/..%2F..%2Fsecret.json)` |
+| @fact:B153-DISPOSITION **disposition** | `open` — отдельный PR вне кампании документации; владелец извещён на гейте фазы 0 и в HANDOVER-B §6 |
+| @fact:B153-FILED **filed by** | кампания docs-2026-09, фаза 0 (A0.7; DEFERRALS X-017), найдено 2026-09-11, строка заведена при закрытии леджера 2026-09-12 |
+
+## B-154 — codegen: первый `float` в JTD-схемах снимет `Eq` со всех генерируемых типов
+
+| поле | значение |
+|---|---|
+| @fact:B154-WHAT **what** | `xtask/src/codegen/derive_floor.rs` выводит `Eq` на весь набор, и первая дробная метрика его снимет; поэтому «тики на тысячу слов» записаны как `tics_per_100k_words` (`uint32`), а отчёт делит обратно |
+| @fact:B154-EFFECT **effect** | первая схема, которой нужна дробь без потерь, либо ломает пол derive для всех типов, либо повторяет обходной путь целыми |
+| @fact:B154-SEVERITY **severity** | P3 — решить пол derive для типов с `f64` (отдельный набор derive для схем с дробями) при первой настоящей дробной метрике |
+| @fact:B154-DISPOSITION **disposition** | `open` |
+| @fact:B154-FILED **filed by** | кампания docs-2026-09 (P2-O10, аномалия 2; DEFERRALS X-047), 2026-09-12 |
+
+## B-155 — tests: сетевые `redbook_polygon_*` делают `cargo test -p vibe-cli` часовым
+
+| поле | значение |
+|---|---|
+| @fact:B155-WHAT **what** | `crates/vibe-cli/tests/cli_spec_format.rs::redbook_polygon_*` запускают `vibe install` по сети, 10–15 минут на прогон; полный `cargo test -p vibe-cli` не заканчивается за час, панель `tools/self-check.sh` наследует эту стоимость |
+| @fact:B155-EFFECT **effect** | панель гоняется реже, чем нужно, и точечные гейты заменяют её по необходимости, а не по выбору |
+| @fact:B155-SEVERITY **severity** | P2 — офлайновая фикстура реестра для этих тестов или флаг окружения, отделяющий сетевые тесты от пола |
+| @fact:B155-DISPOSITION **disposition** | `open` |
+| @fact:B155-FILED **filed by** | кампания docs-2026-09 (P2-O11, аномалия 3; DEFERRALS X-048), 2026-09-12 |
+
+## B-156 — tests: `golden_corpus.rs` читает wire-типы из рабочего дерева
+
+| поле | значение |
+|---|---|
+| @fact:B156-WHAT **what** | `vibe-index/tests/golden_corpus.rs` читает сгенерированные wire-типы из рабочего дерева, поэтому чужой кодген в соседнем периметре красит его на любой ревизии (1879 против 1891 байт) |
+| @fact:B156-EFFECT **effect** | ложный красный при параллельной работе двух воркеров; правило J-101 (парные замеры последовательно, без чужого кодгена в дереве) обходит, не лечит |
+| @fact:B156-SEVERITY **severity** | P3 — голден сравнивает закоммиченные типы, не рабочее дерево, или тест помечает чужой кодген причиной |
+| @fact:B156-DISPOSITION **disposition** | `open` |
+| @fact:B156-FILED **filed by** | кампания docs-2026-09 (P2-O11, аномалия 1; DEFERRALS X-049), 2026-09-12 |
+
+## B-157 — tests: два теста `vvm.rs` ждут бинарник под `target/` дерева
+
+| поле | значение |
+|---|---|
+| @fact:B157-WHAT **what** | `which_reports_the_direct_source_executable…` и `ls_on_a_fresh_root…` в `crates/vibe-cli/tests/vvm.rs` ждут бинарник под `<репозиторий>/target/`: `find_source_root` идёт по предкам исполняемого файла, и приватный `CARGO_TARGET_DIR` вне дерева красит их |
+| @fact:B157-EFFECT **effect** | воркер с приватным каталогом сборки получает два красных теста без дефекта в продукте |
+| @fact:B157-SEVERITY **severity** | P3 — тест пропускается с причиной, когда бинарник вне дерева, или `find_source_root` принимает корень явно |
+| @fact:B157-DISPOSITION **disposition** | `open` |
+| @fact:B157-FILED **filed by** | кампания docs-2026-09 (P4-O4, А-7; DEFERRALS X-050), 2026-09-12 |
+
+## B-158 — doc site: билдер читает `primary.jsonl`, а не `primary.jsonl.gz`
+
+| поле | значение |
+|---|---|
+| @fact:B158-WHAT **what** | реестровый билдер читает несжатый `primary.jsonl`: цена бэкенда DEFLATE в графе конвейера выше выигрыша на каталоге в килобайты |
+| @fact:B158-EFFECT **effect** | при каталоге больше мегабайта каждый опрос индекса тянет лишние байты |
+| @fact:B158-SEVERITY **severity** | P3 — перейти на `.gz`, когда каталог перерастёт мегабайт; бэкенд `flate2` уже прибит к `zlib-rs` (J-069) |
+| @fact:B158-DISPOSITION **disposition** | `open` |
+| @fact:B158-FILED **filed by** | кампания docs-2026-09 (P5-O1, «не сделано» 4; DEFERRALS X-057), 2026-09-12 |
