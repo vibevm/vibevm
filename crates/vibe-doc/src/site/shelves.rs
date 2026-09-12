@@ -215,17 +215,33 @@ pub fn from_manifest(package_dir: &std::path::Path) -> Option<Facts> {
     })
 }
 
-/// The coordinate inside a requirement, which carries a constraint
-/// beside it. Everything up to the first `@`, space or `:` — the three
-/// spellings a requirement is written in — and the whole string when it
-/// carries none.
+/// The coordinate inside a requirement.
+///
+/// A requirement is a package reference and carries two things beside
+/// the coordinate: a KIND in front (`lang:org.example/wal`) and a
+/// version constraint behind (`@=1.0.0`, `@^1.0`, or a space and a
+/// range). Both are stripped, and a shelf is keyed by what is left,
+/// because the far end of the edge is a coordinate and knows nothing
+/// about how it was asked for.
+///
+/// The kind is what the live catalog actually writes and what a reader
+/// of this function is most likely to forget: measured on the published
+/// index, every one of its requirements carries one, and a fold that
+/// kept it matched nothing at all and reported an empty shelf instead of
+/// a wrong one — which is the kind of emptiness only a live run finds.
 fn coordinate_of(requirement: &str) -> String {
-    requirement
+    let without_constraint = requirement
         .split([' ', '@'])
         .next()
         .unwrap_or(requirement)
-        .trim()
-        .to_string()
+        .trim();
+    // A `:` only ever separates a kind from a coordinate, and only ever
+    // before the `/`: `lang:org.example/wal`. A `:` after the slash is
+    // not a kind and is left alone.
+    match without_constraint.split_once(':') {
+        Some((kind, rest)) if !kind.contains('/') => rest.to_string(),
+        _ => without_constraint.to_string(),
+    }
 }
 
 /// One row on a shelf.
