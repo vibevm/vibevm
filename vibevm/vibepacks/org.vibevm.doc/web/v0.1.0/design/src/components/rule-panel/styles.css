@@ -1,0 +1,68 @@
+/* The transclusion panel. Absolutely positioned in the document, not
+   fixed to the viewport: it belongs beside the rule it came from, and a
+   reader who scrolls should take it with them. */
+
+.rule-panel {
+  position: absolute;
+  z-index: 28;
+  width: min(34rem, calc(100vw - 2rem));
+  padding: 0.8rem 0.95rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+.rule-panel__uri {
+  margin: 0 0 0.4rem;
+}
+
+.rule-panel__uri code {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+  overflow-wrap: anywhere;
+}
+
+.rule-panel__text {
+  margin: 0 0 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.rule-panel__text--unresolved {
+  color: var(--text-3);
+  font-style: italic;
+}
+
+.rule-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.rule-panel__button {
+  padding: 0.18rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.rule-panel__button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.rule-panel__button.copied::after {
+  content: " ✓";
+  color: var(--accent);
+}

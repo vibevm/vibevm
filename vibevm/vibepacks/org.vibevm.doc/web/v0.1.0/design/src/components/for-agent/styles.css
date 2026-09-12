@@ -1,0 +1,75 @@
+.for-agent {
+  margin: 2.4rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-sink);
+}
+
+.for-agent--compact {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.for-agent__title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.for-agent__lead {
+  margin: 0 0 0.7rem;
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+
+.for-agent__uri {
+  margin: 0 0 0.7rem;
+}
+
+.for-agent__uri code {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--code-bg);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.for-agent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.for-agent__button {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.for-agent__button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.for-agent__button.copied::after {
+  content: " ✓";
+  color: var(--accent);
+}
