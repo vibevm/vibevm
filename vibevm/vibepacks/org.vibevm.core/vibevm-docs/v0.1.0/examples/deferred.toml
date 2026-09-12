@@ -40,24 +40,6 @@ captured = "blocked"
 reason = "`vibe doc serve` is the local reader, which this phase opens after the pipeline"
 
 [[deferred]]
-page = "lifecycle/build-package-deploy.xml"
-id = "package"
-captured = "blocked"
-reason = "the manifest this page prints in step 1 is refused by the product: the build target `hello` and its own output `hello` collide, and artifact ids are globally unique in a document (PROP-054 ##ARTIFACT-REGISTRY). The page, not the runner, has to change"
-
-[[deferred]]
-page = "lifecycle/build-package-deploy.xml"
-id = "deploy-plan"
-captured = "blocked"
-reason = "the same manifest: a deploy plan cannot be read from a document the manifest reader refuses"
-
-[[deferred]]
-page = "lifecycle/phases.xml"
-id = "deploy-plan"
-captured = "blocked"
-reason = "the same manifest, cited from a second page: the build target `hello` and its output `hello` collide"
-
-[[deferred]]
 page = "lifecycle/scrape.xml"
 id = "scrape-plan"
 captured = "blocked"

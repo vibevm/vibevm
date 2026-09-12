@@ -16,7 +16,7 @@ path = "work/hello-deploy/vibe.toml"
 text = """
 
 [[artifacts.build]]
-id = "hello"
+id = "build-hello"
 mechanism = "build:cargo"
 outputs = [{ id = "hello", kind = "executable", select = { package = "hello", bin = "hello" } }]
 config = { offline = true }
