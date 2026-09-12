@@ -117,3 +117,53 @@ by = "central session"
 path = "lifecycle/scrape.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "reference/manifest.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "reference/settings-and-environment.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "reference/lock-file.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "reference/machine-formats.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "reference/tree.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "reference/commands.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "diagnostics/errors.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "faq/index.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "agent/ask-your-agent.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "agent/how-agents-read-this-manual.xml"
+read = "2026-09-12"
+by = "central session"
