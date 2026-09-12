@@ -1,0 +1,30 @@
+# The fixture documentation package the island golden renders.
+#
+# It is a real package of kind `doc` rather than a string in a test, for
+# the reason PROP-024 gives: a package is its own source tree. A golden
+# taken from a tree is a golden somebody can open, read and correct; a
+# golden taken from an escaped literal is a golden nobody reviews.
+[package]
+name = "fixture-manual"
+group = "com.example.docs"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["vibevm"]
+license = "UPL-1.0"
+description = "One page carrying every block of the documentation genre, for the island golden."
+title = "Fixture Manual"
+abstract = """
+What it covers: one page that uses every block of the documentation genre once, so the island backend has a subject with no gaps.
+For whom: whoever changes the renderer and needs to see what changed.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: prose worth reading.
+"""
+
+[i18n]
+canonical = "en"
+
+[[documents]]
+package = "com.example/subject"
+version = "^1.0"

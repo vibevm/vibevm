@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Every block once</title>
+  <status stage="impl" state="done" audience="user,dev"/>
+  <p><LEAD fact="true" status="impl/done">This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps.</LEAD></p>
+  <p>Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/).</p>
+  <prose title="Prose blocks">
+    <list ordered="false">
+      <item>A plain item.</item>
+      <item><ANCHORED-ITEM fact="true" status="impl/done">An item that carries a fact.</ANCHORED-ITEM></item>
+    </list>
+    <list ordered="true">
+      <item>First.</item>
+      <item>Second.</item>
+    </list>
+    <table>
+      <tr><td>Verb</td><td>What it does</td></tr>
+      <tr><td>`list`</td><td>lists what is installed</td></tr>
+    </table>
+    <quote>A quotation from nowhere in particular.</quote>
+    <fence lang="rust">let answer = 42;</fence>
+    <fence>a bare fence, no language claimed</fence>
+    <note kind="warning">A call-out the reader should not skip.</note>
+    <figure src="media/diagram.svg" alt="Two boxes and an arrow">
+      <caption>The caption, which is a unit like any other.</caption>
+    </figure>
+  </prose>
+  <verifiable title="Blocks that are checked">
+    <rule ref="spec://com.example/subject/common/PROP-001#A-RULE"/>
+    <rule ref="spec://com.example/subject/common/PROP-001#UNRESOLVED"/>
+    <derived kind="cli-help" ref="vibe list --help"/>
+    <example id="version" fixture="none">
+      <run>vibe --version</run>
+      <expect>vibe 1.0.0</expect>
+    </example>
+    <example id="missing" fixture="none" exit="2">
+      <run>vibe nope</run>
+      <expect></expect>
+      <stderr>error: unrecognized subcommand `nope`</stderr>
+    </example>
+    <example ref="version"/>
+    <prompt id="install">Install vibe on this machine and show me the version.
+      <needs>a terminal and a network connection</needs>
+      <outcome>`vibe --version` prints a version number</outcome>
+      <assert>vibe --version</assert>
+    </prompt>
+    <prompt id="anything" assert="none">Ask the agent for anything at all.</prompt>
+  </verifiable>
+  <varying title="Blocks that vary">
+    <p when="os:windows">On Windows the path separator is a backslash.</p>
+    <p when="os:linux">On Linux it is a slash.</p>
+    <section id="for-codex" title="For one agent" when="agent:codex">
+      <p>A whole section that only one agent sees.</p>
+    </section>
+  </varying>
+</spec>
