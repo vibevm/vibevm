@@ -151,6 +151,34 @@ fn a_shelf_carries_the_mark_the_word_and_the_publisher() {
     assert!(first < second, "the ranked order did not survive");
 }
 
+/// Every table opens with its header, because the Markdown projection
+/// reads the first row as one — and a table that opened with data lost
+/// that data to the header line.
+#[test]
+fn a_table_opens_with_a_header_so_no_row_is_eaten_by_one() {
+    use crate::site::shelves::Rank;
+    let related = Related {
+        documentation: vec![shelf_row("org.example/wal-book", Rank::Primary)],
+        ..Related::default()
+    };
+    let page = manifest_page(&card(), &related);
+    parsed(&page);
+    let card_header = page
+        .find("<tr><td>Field</td><td>Value</td></tr>")
+        .expect("the card table's header");
+    let coordinate = page
+        .find("<tr><td>Coordinate</td>")
+        .expect("the coordinate row");
+    assert!(
+        card_header < coordinate,
+        "the coordinate row stands above the header and is read as one"
+    );
+    assert!(
+        page.contains("<tr><td>Standing</td><td>Title</td>"),
+        "the shelf carries no header: {page}"
+    );
+}
+
 /// «Nobody has documented this» is what an absent shelf says, and it
 /// says it better than a heading over an empty table.
 #[test]

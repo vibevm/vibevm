@@ -220,7 +220,10 @@ fn shelf(id: &str, title: &str, why: &str, rows: &[crate::site::shelves::Row]) -
     if rows.is_empty() {
         return String::new();
     }
-    let mut table = String::from("  <table>\n");
+    let mut table = String::from(
+        "  <table>\n    <tr><td>Standing</td><td>Title</td><td>Coordinate</td>\
+         <td>Publisher and language</td></tr>\n",
+    );
     for row in rows {
         table.push_str(&format!(
             "    <tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
@@ -317,8 +320,14 @@ fn section(id: &str, title: &str, body: &str) -> String {
     format!("  <{id} title=\"{}\">\n{body}  </{id}>\n", escape(title))
 }
 
+/// A two-column table, with its header written out.
+///
+/// The header is not decoration. The Markdown projection reads the FIRST
+/// row of a table as its header, so a table that opened with data lost
+/// its first fact to the header line — measured on a live render, where
+/// the package's own coordinate was the row that disappeared.
 fn table(rows: &[(&str, String)]) -> String {
-    let mut out = String::from("  <table>\n");
+    let mut out = String::from("  <table>\n    <tr><td>Field</td><td>Value</td></tr>\n");
     for (label, value) in rows {
         out.push_str(&format!(
             "    <tr><td>{}</td><td>{}</td></tr>\n",
