@@ -48,7 +48,7 @@ VIBE_LOG=warn</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#app-prefs-not-project"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#no-secrets-in-committed"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command"/>
-    <p>`vibe prefs` without arguments opens a settings screen in the terminal: a tree of pages on the left, drawn by the same widget as `vibe tree`, and a form on the right. Editing a field writes to a layer you choose, your own project layer by default inside a project and the machine layer outside one. A field shows its provenance on demand, the winning layer and the shadowed ones, and lets you override or clear one layer without touching the others. A search finds settings by key, name, description and synonyms.</p>
+    <p>`vibe prefs` without arguments opens a settings screen in the terminal: a tree of pages on the left, drawn by the same widget as `vibe tree`, and a form on the right. Editing a field writes to a layer you choose, your own project layer by default inside a project and the machine layer outside one. A field shows its provenance on demand, the winning layer and the shadowed ones, and lets you set or clear one layer without touching the others. A search finds settings by key, name, description and synonyms.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget-req"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-context"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice"/>

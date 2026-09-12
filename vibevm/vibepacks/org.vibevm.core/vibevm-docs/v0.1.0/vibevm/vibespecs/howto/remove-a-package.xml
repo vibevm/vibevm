@@ -42,7 +42,7 @@ columns: load  T=transitive  C=condition  S=in STATIC.md</expect>
     <p>Uninstalling a package that another installed package requires leaves the shared dependency in place; only packages nothing else needs are removed.</p>
     <p>The machine store keeps the package's bytes after an uninstall. Reinstalling it later costs no network; `vibe cache clean --package` reclaims the space if you want it gone from the machine.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE"/>
-    <p>Removing a package does not undo what its install script did, if it had one: hook effects are not tracked, by design.</p>
+    <p>Removing a package does not undo what its install script did, if it had one: [hook](../glossary/index.xml#hook) effects are not tracked, by design.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
   </edge-cases>
 </spec>

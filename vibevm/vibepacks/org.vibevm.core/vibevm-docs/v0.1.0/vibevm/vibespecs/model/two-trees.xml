@@ -11,7 +11,7 @@ flow  wal  1.0.0    package  —
 1 package installed.</expect>
   </example>
   <the-rule title="The founding rule">
-    <p>Think of how a C++ program uses a library: you write `#include`, and the library's headers are read at build time, but nobody pastes the library's source into your files. vibe follows the same rule for text. Your specifications live in `vibevm/vibespecs/`; the packages you depend on are copied, whole and unchanged, into `vibevm/vibedeps/`, one folder per package and version. The two trees never mix.</p>
+    <p>Think of how a C++ program uses a library: you write `#include`, and the library's headers are read at build time, but nobody pastes the library's source into your files. vibe follows the same rule for text. Your [specifications](../glossary/index.xml#specification) live in `vibevm/vibespecs/`; the packages you depend on are copied, whole and unchanged, into `vibevm/vibedeps/`, one folder per package and version. The two trees never mix.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
     <p>The consequence is simple to state and easy to forget: every file under `vibevm/vibedeps/` is a copy of something published elsewhere. Editing it changes nothing upstream and survives only until the next install. If you want a package to say something else, change the package, publish a new version, and update.</p>
   </the-rule>

@@ -13,7 +13,7 @@ columns: load  T=transitive  C=condition  S=in STATIC.md
 org.vibevm.world/wal  dynamic  .  .  .</expect>
   </example>
   <what-it-shows title="What it shows">
-    <p>The command reads the committed [lock file](../glossary/index.xml#lock-file), the manifests and the generated boot files of the project at `--path`, and writes nothing: it never touches the tree, a manifest, the lock or the generated files. Each package is one row, with the columns in a fixed order. The load column is the lane a package's [boot snippet](../glossary/index.xml#boot-snippet) landed in, read from the generated files rather than recomputed, so the screen shows what an agent will read. A package that appears under several parents is drawn under each one and marked `(*)` after the first, without being expanded again. The status line shows the size of the compiled lane in bytes and lines.</p>
+    <p>The command reads the committed [lock file](../glossary/index.xml#lock-file), the [manifests](../glossary/index.xml#manifest) and the generated boot files of the project at `--path`, and writes nothing: it never touches the tree, a manifest, the lock or the generated files. Each package is one row, with the columns in a fixed order. The load column is the lane a package's [boot snippet](../glossary/index.xml#boot-snippet) landed in, read from the generated files rather than recomputed, so the screen shows what an agent will read. A package that appears under several parents is drawn under each one and marked `(*)` after the first, without being expanded again. The status line shows the size of the compiled lane in bytes and lines.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-ANSWER"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-INPUTS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-READ-ONLY"/>
@@ -58,7 +58,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#IN-PLACE-UPGRADE"/>
   </the-terminal-app>
   <for-agents title="Looking at the screen from an agent">
-    <p>An agent has no terminal, so the `vibe aiui` family renders the screen for it. The render verb builds the same model `vibe tree` builds at `--path`, drives a key script at a given size, `80x24` by default, and prints a snapshot in one of two formats: plain text, or `cells`, a run-length encoding of every cell with its glyph, colours and modifiers, for assertions about style. A key script is a space-separated list of key names, function keys, arrows, `Enter`, `Esc`, `Tab` and the rest, with a `Shift+` prefix where needed. Keys that would leave the process or change the world, `F4` and the copy keys, are refused rather than executed. The model verb projects the state without rendering at all, and the terminal verbs drive a live vibeterm session.</p>
+    <p>An agent has no terminal, so the `vibe aiui` commands render the screen for it. The render verb builds the same model `vibe tree` builds at `--path`, drives a key script at a given size, `80x24` by default, and prints a snapshot in one of two formats: plain text, or `cells`, a run-length encoding of every cell with its glyph, colours and modifiers, for assertions about style. A key script is a space-separated list of key names, function keys, arrows, `Enter`, `Esc`, `Tab` and the rest, with a `Shift+` prefix where needed. Keys that would leave the process or change the world, `F4` and the copy keys, are refused rather than executed. The model verb projects the state without rendering at all, and the terminal verbs drive a live vibeterm session.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#AIUI-FAMILY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#RENDER-VERB-SEMANTICS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#SNAPSHOT-FORMATS"/>
@@ -73,7 +73,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#AIUI-REFERENCE"/>
   </for-agents>
   <edge-cases title="Edge cases and rules">
-    <p>English is the complete locale of the interface and the last fallback; another locale may lag and falls back silently. A package may ship its own locale file, and a language pack may override one.</p>
+    <p>English is the complete locale of the interface and the last fallback; another locale may lag and falls back silently. A package may ship its own locale file, and a language pack may replace one.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#I18N-FALLBACK-LAW"/>
   </edge-cases>
 </spec>

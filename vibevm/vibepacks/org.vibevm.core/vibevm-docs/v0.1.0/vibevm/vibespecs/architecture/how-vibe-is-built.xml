@@ -4,7 +4,7 @@
   <status stage="doc" state="work" audience="dev"/>
   <p>vibe is one binary built from a set of Rust libraries, each owning one concern: reading the description of a project, choosing versions, fetching from where packages are published, writing the tree on disk, talking to agents. This page maps the libraries, the seams between them, and the path an install takes through them.</p>
   <five-layers title="Five layers">
-    <p>Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a content [fingerprint](../glossary/index.xml#fingerprint), and the kind is metadata. *[Registry](../glossary/index.xml#registry)*: ordered package sources with mirrors, overrides and an optional [index](../glossary/index.xml#index-registry). *[Store](../glossary/index.xml#store)*: every fetched package version kept once per machine.</p>
+    <p>Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a content [fingerprint](../glossary/index.xml#fingerprint), and the kind is metadata. *[Registry](../glossary/index.xml#registry)*: ordered package sources with mirrors, [overrides](../glossary/index.xml#override) and an optional [index](../glossary/index.xml#index-registry). *[Store](../glossary/index.xml#store)*: every fetched package version kept once per machine.</p>
     <p>*Materialisation*: the resolved graph copied into the project's dependency tree and recorded in the [lock file](../glossary/index.xml#lock-file). *Computed boot*: the packages' [contributions](../glossary/index.xml#contribution) projected into the two generated files an agent reads. Everything a user sees is one of these five layers or a surface over them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"/>
   </five-layers>
@@ -22,7 +22,7 @@
     </table>
     <p>The dependency direction is fixed: a surface calls an orchestrator, an orchestrator calls a library through a seam, a library returns typed values. Domain libraries never prompt, never format terminal output and never decide authentication; those choices are made at the composition root, in the CLI or the [MCP server](../glossary/index.xml#mcp-server).</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#prod-arch"/>
-    <p>Four decisions hold the tree together. The repository is one Cargo workspace with every crate under `crates/`. A capability lives in a library, and the command line, the terminal interface and the MCP server are thin surfaces over it. JSON Type Definition schemas are the single source of truth for every machine contract. And the commit discipline is the installed git-practices family, read at the start of every session.</p>
+    <p>Four decisions hold the tree together. The repository is one Cargo workspace with every crate under `crates/`. Each ability of the product lives in a library, and the command line, the terminal interface and the MCP server are thin surfaces over it. JSON Type Definition schemas are the single source of truth for every machine contract. And the commit discipline is the installed git-practices family, read at the start of every session.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#WORKSPACE-LAYOUT"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"/>
@@ -31,7 +31,7 @@
   <the-install-path title="The path of an install">
     <p>1. Discover the workspace root and read the [manifests](../glossary/index.xml#manifest), the lock file, the user configuration, the registries, mirrors, overrides and local package sources.</p>
     <p>2. Compare the manifests with the lock file; if nothing changed, skip resolution.</p>
-    <p>3. Otherwise qualify every requested coordinate, build the solver's view of available versions and solve the whole graph, holding every pin the change does not touch.</p>
+    <p>3. Otherwise qualify every requested coordinate and build the solver's view of available versions. Solve the whole graph, holding every pin the change does not touch.</p>
     <p>4. Fetch every selected identity: a store hit is reused, a miss walks the allowed sources and inserts the verified tree into the store.</p>
     <p>5. Build the plan, validate the [managed blocks](../glossary/index.xml#managed-block) of the instruction files, and ask for confirmation.</p>
     <p>6. Materialise the graph into the dependency tree by diff, regenerate the boot files, prune stale slots.</p>

@@ -25,7 +25,7 @@
     <p>Each tool is one `[[binary]]` entry: a `name`, unique in the package, and a `crate`, a directory inside the shippable tree with a `Cargo.toml`. `vibe bin list` shows what the installed packages declare, `vibe bin build` builds the named tools or all of them, `vibe bin path` prints an artifact's location, and `vibe bin exec &lt;name&gt; -- &lt;args&gt;` runs it through the lock file. Building executes the package's build scripts, so it asks for consent the first time, like an install does.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
-    <p>The `name` is unique within the package and should be safe from collisions across packages, which the family prefix gives you for free. The `crate` names a folder inside the shippable tree with a Cargo package whose binary is called exactly `name`.</p>
+    <p>The `name` is unique within the package and should be safe from collisions across packages, which the [family](../glossary/index.xml#family) prefix gives you for free. The `crate` names a folder inside the shippable tree with a Cargo package whose binary is called exactly `name`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#NAME-CONSTRAINTS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#CRATE-CONSTRAINT"/>
     <example id="bin-list" fixture="hello-vibe-cwd">
@@ -46,7 +46,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET"/>
   </servers>
   <hooks title="Install hooks">
-    <p>A package may run a script when it is installed. `[hooks]` names a base path without extension, and the package ships `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` or both; the runner picks the one for the host. `pre-install` runs as soon as the package's folder is complete and before vibe uses it; `post-install` runs after the install is durable, with the lock written and the boot files regenerated. The working directory is the package's own folder in the dependency tree, and the environment names the package's group, name, version, kind, folder and the phase. A hook's edits to files vibe owns are ephemeral: a reinstall or an update restores those bytes and runs the hook again.</p>
+    <p>A package may run a script when it is installed. `[hooks]` names a base path without extension, and the package ships `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` or both; the runner picks the one for the host. `pre-install` runs as soon as the package's folder is complete and before vibe uses it; `post-install` runs after the install is durable, with the lock written and the boot files regenerated. The working directory is the package's own folder in the dependency tree, and the environment names the package's group, name, version, kind and folder, and which of the two moments it is. A [hook](../glossary/index.xml#hook)'s edits to files vibe owns are ephemeral: a reinstall or an update restores those bytes and runs the hook again.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#BASE-PATH-VALUE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#SCRIPT-FORMS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-PRE-INSTALL"/>

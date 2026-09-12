@@ -15,7 +15,7 @@ flow  wal  1.0.0    package  —
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#PACKAGES-CARRY-THE-LAYOUT-TOO"/>
     <p>A package is named by a *[coordinate](../glossary/index.xml#coordinate)*: a group, a slash, and a name, as in `org.vibevm.world/wal`. The group looks like a reversed domain name and says who publishes; the name is unique within the group. A version completes the address when one is needed: `org.vibevm.world/wal@1.0.0`. The kind is not part of the name. It may be written as a prefix on the command line, `flow:org.vibevm.world/wal`, and then vibe checks that the package really is of that kind.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"/>
-    <p>The group is a claim, not a credential: nothing checks that the publisher of `com.google/x` owns that domain, and nothing ever will, because vibe has no central verifier to ask. The name is unique within its group, so the coordinate alone is the identity. On the command line the kind prefix and the group are both optional; in a manifest the coordinate is always written in full. In a registry the repository is named by joining group and name with a dot, `org.vibevm.world.wal`, which is itself a valid reversed domain name.</p>
+    <p>The group is a claim, not a credential: nothing checks that the publisher of `com.google/x` owns that domain, and nothing ever will, because vibe has no central verifier to ask. The name is unique within its group, so the coordinate alone is the identity. On the command line the kind prefix and the group are both optional; in a [manifest](../glossary/index.xml#manifest) the coordinate is always written in full. In a [registry](../glossary/index.xml#registry) the repository is named by joining group and name with a dot, `org.vibevm.world.wal`, which is itself a valid reversed domain name.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-IS-A-CLAIM"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#NAME-UNIQUE-IN-GROUP"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#PKGREF-GRAMMAR"/>
@@ -32,7 +32,7 @@ flow  wal  1.0.0    package  —
   <the-kinds title="The eight kinds">
     <table>
       <tr><td>Kind</td><td>What it delivers</td><td>Example</td></tr>
-      <tr><td>`flow`</td><td>a way of working: commit rules, session notes, review conventions; usually a boot snippet the agent reads every session</td><td>`org.vibevm.world/wal`</td></tr>
+      <tr><td>`flow`</td><td>a way of working: commit rules, session notes, review conventions; usually a [boot snippet](../glossary/index.xml#boot-snippet) the agent reads every session</td><td>`org.vibevm.world/wal`</td></tr>
       <tr><td>`feat`</td><td>a description of what to build, without saying how</td><td>a welcome page, e-mail sign-in</td></tr>
       <tr><td>`stack`</td><td>a technology context that says how a feature is built with it, or a bundle of a family's members at one version</td><td>`org.vibevm.ai-native/rust-ai-native`</td></tr>
       <tr><td>`tool`</td><td>a script or utility a build step can invoke</td><td>a formatter wrapper</td></tr>
@@ -41,7 +41,7 @@ flow  wal  1.0.0    package  —
       <tr><td>`doc`</td><td>documentation of other packages: read, never installed</td><td>`org.vibevm.core/vibevm-docs`</td></tr>
       <tr><td>`app`</td><td>a standalone product with its own deployment</td><td>`org.vibevm.doc/web`</td></tr>
     </table>
-    <p>The set is closed and grows only by an amendment to the specification; a [manifest](../glossary/index.xml#manifest) with an unknown kind is rejected rather than guessed.</p>
+    <p>The set is closed and grows only by an amendment to the [specification](../glossary/index.xml#specification); a [manifest](../glossary/index.xml#manifest) with an unknown kind is rejected rather than guessed.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
     <p>The kind is metadata about the package, not part of its identity: it decides where content is placed, what the `--kind` filter of `vibe list` and `vibe search` shows, and whether a kind-prefixed name is accepted. Two packages of different kinds may not share a coordinate, because the coordinate alone is the identity.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA"/>
@@ -51,13 +51,13 @@ flow  wal  1.0.0    package  —
   <families title="Families and companions">
     <p>Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the language guide, the server that serves its tools, and a small bundle that pins both at one version. This is a *family*. Requiring the bundle installs the family, and a change to any member bumps every member to one shared version, so the pieces can never drift apart.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
-    <p>The bundle itself is the smallest package there is: a manifest and a README, no code and no boot snippet. Its one job is to name the family's members at one version.</p>
+    <p>The bundle itself is the smallest package there is: a manifest and a README, no code and no [boot snippet](../glossary/index.xml#boot-snippet). Its one job is to name the family's members at one version.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR"/>
-    <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line. A fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
+    <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line. A fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its [subject](../glossary/index.xml#subject) it describes, and the site picks the newest manual that fits.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
   </families>
   <on-disk title="How a package lands on disk">
-    <p>`[package].materialization` says how a package arrives in a consumer's tree. `copy` is the default and all an ordinary package needs; `hardlink` is the same content sharing bytes with the store. Both are vendored: the folder is committed with the project and restores offline from it. `in-place` keeps a live git checkout with its own `.git`, ignored by git and restored by a fresh clone at the locked commit, so it needs the network and a git source. Anything destructive on such a slot, an uninstall, a forced reinstall or a version switch, asks first, or needs `--force` when nobody can answer.</p>
+    <p>`[package].materialization` says how a package arrives in a consumer's tree. `copy` is the default and all an ordinary package needs; `hardlink` is the same content sharing bytes with the [store](../glossary/index.xml#store). Both are vendored: the folder is committed with the project and restores offline from it. `in-place` keeps a live git checkout with its own `.git`, ignored by git and restored by a fresh clone at the locked commit, so it needs the network and a [git source](../glossary/index.xml#git-source). Anything destructive on such a slot, an uninstall, a forced reinstall or a version switch, asks first, or needs `--force` when nobody can answer.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#MODE-FIELD"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#SNAPSHOT-DEFAULT"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#VENDORED-COPY-MODES"/>

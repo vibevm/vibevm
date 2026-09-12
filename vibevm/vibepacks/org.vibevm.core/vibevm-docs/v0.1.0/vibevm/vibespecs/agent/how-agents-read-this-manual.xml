@@ -16,7 +16,7 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"/>
-    <p>The site also serves the page manifest as JSON at `/doc/manifest.json`, with statuses, languages, audiences and anchors, and resolves a `spec://` address at `/doc/resolve?uri=…`.</p>
+    <p>The site also serves the page manifest, a JSON list of every page with its statuses, languages, audiences and anchors, at `/doc/manifest.json`, and resolves a `spec://` address at `/doc/resolve?uri=…`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"/>
   </the-files>
   <offline title="Without a network">
@@ -26,13 +26,13 @@
   <citing title="Citing a place">
     <p>Every block on a page carries a number, `p12` and so on, assigned when the page is built and the same in the web page, the Markdown and the XML. A citation is the page address plus that number: `spec://org.vibevm.core/vibevm-docs/model/boot-lane#p7`. Headings keep their named [anchors](../glossary/index.xml#anchor) as well, and a named anchor never changes once published; a [block number](../glossary/index.xml#block-number) names the current text and may shift after an edit, like a line number.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"/>
-    <p>Rules on a page are quoted from the specification by address and shown in the specification's own language. Prefer the address of the specification over the address of the manual when you tell a user what a rule says; prefer the manual's page when you explain why.</p>
+    <p>Rules on a page are quoted from the [specification](../glossary/index.xml#specification) by address and shown in the specification's own language. Prefer the address of the specification over the address of the manual when you tell a user what a rule says; prefer the manual's page when you explain why.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
   </citing>
   <procedure title="The procedure the skill teaches">
     <p>1. On an error, read the address the message names, then the page the diagnostics page maps it to.</p>
     <p>2. On a question, answer from one page: the first paragraph is the plain answer, the rule blocks carry the exact wording.</p>
-    <p>3. On a task, take the page's request block as your task, substitute the user's names and paths, run it, then run the asserts; the task is done when every assert exits zero.</p>
+    <p>3. On a task, take the page's request block as your task and substitute the user's names and paths. Run it, then run the asserts. The task is done when every assert exits zero.</p>
     <p>4. When choosing among documentations of one package, prefer the one marked official and name the publisher of a community one.</p>
     <p>5. Never load the full corpus when one page answers.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"/>

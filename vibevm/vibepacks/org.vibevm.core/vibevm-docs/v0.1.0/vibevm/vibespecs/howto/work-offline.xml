@@ -56,7 +56,7 @@ Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING"/>
   </switching-it-on>
   <air-gapped title="A whole team without a network">
-    <p>For a machine that never sees the registry, `vibe registry vendor` writes a folder holding every package the [lock file](../glossary/index.xml#lock-file) references, ready to be used as a mirror with a `file://` address on the other side. The fingerprints travel with it, so the mirror is verified like any other.</p>
+    <p>For a machine that never sees the registry, `vibe registry vendor` writes a folder holding every package the [lock file](../glossary/index.xml#lock-file) references, ready to be used as a [mirror](../glossary/index.xml#mirror) with a `file://` address on the other side. The fingerprints travel with it, so the mirror is verified like any other.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
   </air-gapped>
   <edge-cases title="Edge cases and rules">

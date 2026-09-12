@@ -68,7 +68,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-ARRAY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION"/>
-    <p>A localised file sits beside the canonical one with a language tag before the extension, `README.ru.md` next to `README.md`. Every package ships the canonical form of every file it lists, and translations only add to it, so a project with no translation in its preferred language installs without an error. `vibe install --language ru` overrides the preference for one run.</p>
+    <p>A localised file sits beside the canonical one with a language tag before the extension, `README.ru.md` next to `README.md`. Every package ships the canonical form of every file it lists, and translations only add to it, so a project with no translation in its preferred language installs without an error. `vibe install --language ru` sets the preference for one run.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SIDECAR-PATTERN"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
@@ -77,7 +77,7 @@
     <table>
       <tr><td>Table</td><td>Meaning</td><td>Legal in</td></tr>
       <tr><td>`[boot_snippet]`</td><td>`source`, the snippet file inside the package, and `category` for its place in the boot order; optional `when` and a suggested `link`</td><td>every kind but `doc`</td></tr>
-      <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, optional target `agents`: a skill an agent may install</td><td>every kind</td></tr>
+      <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, optional target `agents`: a [skill](../glossary/index.xml#skill) an agent may install</td><td>every kind</td></tr>
       <tr><td>`[[binary]]`</td><td>`name` and `crate`: a tool vibe builds on install and runs through `vibe bin exec`</td><td>code-bearing kinds; not `doc`</td></tr>
       <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: a server registered into agents</td><td>`mcp` only</td></tr>
       <tr><td>`[hooks]`</td><td>`pre-install` and `post-install` script base paths</td><td>packages</td></tr>
@@ -86,7 +86,7 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
-    <p>A skill is a manifest section, never a kind of its own. `include` narrows which files of `path` are projected into an agent's skill folder, and its absence projects the whole tree. A skill may take its body from a declared `[[embedded_source]]` and add resources below a `references/` folder, under the same include selection and traversal checks.</p>
+    <p>A [skill](../glossary/index.xml#skill) is a manifest section, never a kind of its own. `include` narrows which files of `path` are projected into an agent's skill folder, and its absence projects the whole tree. A skill may take its body from a declared `[[embedded_source]]` and add resources below a `references/` folder, under the same include selection and traversal checks.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-SHAPE"/>
@@ -99,7 +99,7 @@
   <documentation-tables title="Documentation and its subjects">
     <table>
       <tr><td>Table</td><td>Meaning</td><td>Legal in</td></tr>
-      <tr><td>`[[documents]]`</td><td>`package` and a `version` constraint: a subject this documentation describes; required, repeatable</td><td>`doc`</td></tr>
+      <tr><td>`[[documents]]`</td><td>`package` and a `version` constraint: a [subject](../glossary/index.xml#subject) this documentation describes; required, repeatable</td><td>`doc`</td></tr>
       <tr><td>`[documentation]`</td><td>`primary` (at most one coordinate) and `official` (any number): the documentation a package names as its own</td><td>every kind</td></tr>
       <tr><td>`[translates]`</td><td>`package` and `version` of the documentation this translation mirrors</td><td>`doc`</td></tr>
       <tr><td>`[media]`</td><td>`icon`, `banner`, `preview`: source image files within the card limits</td><td>every kind</td></tr>
@@ -111,6 +111,6 @@
   </documentation-tables>
   <example-manifest title="A complete example">
     <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs"/>
-    <p>The manifest of this manual, generated from the package itself, shows a `doc` package with a card, a subject and a [skill](../glossary/index.xml#skill).</p>
+    <p>The manifest of this manual, generated from the package itself, shows a `doc` package with a card, a [subject](../glossary/index.xml#subject) and a [skill](../glossary/index.xml#skill).</p>
   </example-manifest>
 </spec>

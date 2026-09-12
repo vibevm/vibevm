@@ -19,7 +19,7 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE"/>
-    <p>`root_dependencies` mirrors the manifest's `[requires.packages]`, so the lock file is a self-contained snapshot that needs no manifest to read. Removing a root with `vibe uninstall` drops it from both files; removing a package that is only a transitive dependency is refused with an explanation.</p>
+    <p>`root_dependencies` copies the manifest's `[requires.packages]`, so the [lock file](../glossary/index.xml#lock-file) is a self-contained snapshot that needs no manifest to read. Removing a root with `vibe uninstall` drops it from both files; removing a package that is only a transitive dependency is refused with an explanation.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCKFILE-V2"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-ROOT-DEPENDENCIES"/>
   </meta>
@@ -43,7 +43,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIR-CANONICAL-IN-LOCKFILE"/>
   </package-entries>
   <reading-a-diff title="Reading a diff">
-    <p>A changed `version` with a changed `content_hash` is an update. A changed `content_hash` with the same version is impossible in a healthy world: vibe refuses it at fetch time, so if you see it in a diff someone edited the file. A changed `source_url` alone is a mirror or a host migration and means nothing for the project. A new entry with `source_kind = "override"` is a patch someone applied on purpose and should carry a reason in the commit message.</p>
+    <p>A changed `version` with a changed `content_hash` is an update. A changed `content_hash` with the same version is impossible in a healthy world: vibe refuses it at fetch time, so if you see it in a diff someone edited the file. A changed `source_url` alone is a [mirror](../glossary/index.xml#mirror) or a host migration and means nothing for the project. A new entry with `source_kind = "override"` is a patch someone applied on purpose and should carry a reason in the commit message.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-LOCKFILE-STABLE"/>
   </reading-a-diff>
   <edge-cases title="Edge cases and rules">

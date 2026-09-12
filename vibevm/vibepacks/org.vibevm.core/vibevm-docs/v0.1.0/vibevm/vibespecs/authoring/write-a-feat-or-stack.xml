@@ -24,7 +24,7 @@
     <p>In the manifest: `[requires] capabilities = ["ui:page-host@^1"]` and, for a feat that needs a stack at all, `[compatibility] requires_kinds = ["stack"]`.</p>
   </a-feat>
   <a-stack title="A stack">
-    <p>A stack is a technology context: it says how the abstract abilities a feat asks for are realised with one set of tools, and it may bind the [lifecycle](../glossary/index.xml#lifecycle)'s build and test phases to that toolchain. Its manifest declares what it provides, `[provides] capabilities = ["ui:page-host@1.0"]`, and its specification documents describe each provided capability in a file of its own, plus conventions, tooling and deployment.</p>
+    <p>A stack is a technology context: it says how the abstract abilities a feat asks for are realised with one set of tools, and it may bind the [lifecycle](../glossary/index.xml#lifecycle)'s build and test [phases](../glossary/index.xml#phase) to that toolchain. Its manifest declares what it provides, `[provides] capabilities = ["ui:page-host@1.0"]`, and its specification documents describe each provided capability in a file of its own, plus conventions, tooling and deployment.</p>
     <table>
       <tr><td>Path</td><td>Purpose</td></tr>
       <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/STACK.md`</td><td>what the stack is and when to choose it</td></tr>
@@ -40,7 +40,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
   </capabilities>
   <edge-cases title="Edge cases and rules">
-    <p>The word `stack` also names a family bundle: a package of kind `stack` with nothing but exact pins of a language family's members. Both are stacks in the register; the description tells them apart.</p>
+    <p>The word `stack` also names a [family](../glossary/index.xml#family) bundle: a package of kind `stack` with nothing but exact pins of a language family's members. Both are stacks in the register; the description tells them apart.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR"/>
     <p>A feat's acceptance criteria are what the agent checks after a build; write them as observable [facts](../glossary/index.xml#fact), not as wishes.</p>
     <p>Two feats requiring the same capability may be satisfied by one stack; a project with several stacks marks one as active for a build.</p>

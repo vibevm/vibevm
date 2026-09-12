@@ -10,7 +10,7 @@
 1 of 1 applicable target(s) would be deployed; 0 skipped; nothing was read, built or changed</expect>
   </example>
   <the-phases title="The nine phases">
-    <p>vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one phase and removes derived state. `default` has nine phases in a fixed order: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Naming a phase runs every phase before it as well: `vibe test` validates, installs, generates, builds and tests.</p>
+    <p>vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one [phase](../glossary/index.xml#phase) and removes derived state. `default` has nine phases in a fixed order: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Naming a phase runs every phase before it as well: `vibe test` validates, installs, generates, builds and tests.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"/>
     <table>
       <tr><td>Phase</td><td>What it does</td></tr>
@@ -41,7 +41,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL"/>
   </the-plan>
   <where-steps-come-from title="Where the steps come from">
-    <p>The phases are fixed; what runs inside them is contributed by packages. A stack package binds the language's build and test runners, a discipline package binds its gates, a project may bind its own scripts. Installing a package is the consent for its contributions to run, and the [manifest](../glossary/index.xml#manifest) of the project can switch a contribution off or override it by its id.</p>
+    <p>The phases are fixed; what runs inside them is contributed by packages. A stack package binds the language's build and test runners, a discipline package binds its gates, a project may bind its own scripts. Installing a package is the consent for its contributions to run, and the [manifest](../glossary/index.xml#manifest) of the project can switch a contribution off or replace it by its id.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INSTALL-IS-CONSENT"/>
     <p>The lifecycle is a framework, not a universal coding agent: it runs deterministic mechanics and hands agentic work to whatever agent hosts it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLE-IS-FRAMEWORK"/>

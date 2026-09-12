@@ -35,7 +35,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL"/>
   </the-shell>
   <edge-cases title="Edge cases and rules">
-    <p>Warming a documentation package warms its subjects too, so the rules a page quotes resolve without a network.</p>
+    <p>Warming a documentation package warms its [subjects](../glossary/index.xml#subject) too, so the rules a page quotes resolve without a network.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-WARMUP-CLOSURE"/>
     <p>Inside a project whose local registry holds the package in-tree, `vibe cache add --offline` warms it without a network. The reader's language comes from the project's `[i18n].preferred` or from a flag at launch.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP"/>

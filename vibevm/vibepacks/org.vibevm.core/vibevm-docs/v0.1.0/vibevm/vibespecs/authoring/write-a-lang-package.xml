@@ -19,7 +19,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAM-CORE"/>
   </what-a-lang-is>
   <families title="When a language brings tools">
-    <p>A language guide that also ships tools, a checker, a formatter, a type oracle, becomes a family. The guide package is `&lt;family&gt;-lang`; a server package `&lt;family&gt;-mcp` serves the same tools to agents; a bundle `&lt;family&gt;` pins both at one version. The members move in unison; a consumer requires the bundle and gets a tested set.</p>
+    <p>A language guide that also ships tools, a checker, a formatter, a type oracle, becomes a [family](../glossary/index.xml#family). The guide package is `&lt;family&gt;-lang`; a server package `&lt;family&gt;-mcp` serves the same tools to agents; a bundle `&lt;family&gt;` pins both at one version. The members move in unison; a consumer requires the bundle and gets a tested set.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
     <p>The family stem leads every named surface: crates, binaries, [skills](../glossary/index.xml#skill) and the server all carry the `&lt;family&gt;` prefix, so everything of one language sorts and reads together.</p>

@@ -21,7 +21,7 @@
 
 vibe registry add: `acme` registered (1 total registry).</expect>
     </example>
-    <p>2. Choose the authentication regime with `--auth`. The values are `none` for public read, `ssh` for keys, `token-env` for a token in an environment variable named after the host, and `credential-helper` for the system's git helper.</p>
+    <p>2. Choose the authentication regime with `--auth`. The values are `none` for public read, `ssh` for keys and `credential-helper` for the system's git helper. `token-env` reads a token from an environment variable named after the host.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>
     <p>3. Probe with `vibe registry test`: it reports, per registry, whether the organisation answered and which authentication it accepted, without fetching anything.</p>
   </by-hand>
@@ -48,7 +48,7 @@ vibe registry add: `acme` registered (1 total registry).</expect>
   <edge-cases title="Edge cases and rules">
     <p>A private registry without an [index](../glossary/index.xml#index-registry) still works; searches skip it and installs clone what they need. Add an index repository beside the packages and point `VIBEVM_INDEX_URL_ACME` at it to make searches and cold installs fast.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
-    <p>A mirror is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same [fingerprints](../glossary/index.xml#fingerprint); use `registry add` for a different source of packages.</p>
+    <p>A [mirror](../glossary/index.xml#mirror) is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same [fingerprints](../glossary/index.xml#fingerprint); use `registry add` for a different source of packages.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
     <p>In a script that must notice a private registry being down, pass `--auth-required` to `vibe install`: an authentication error then stops the install instead of walking on to the public fallback.</p>
   </edge-cases>

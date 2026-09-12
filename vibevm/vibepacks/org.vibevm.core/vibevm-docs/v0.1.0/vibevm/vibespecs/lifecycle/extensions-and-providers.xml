@@ -10,10 +10,10 @@
 1 extension declaration(s), 1 effective</expect>
   </example>
   <points-and-contributions title="Points and contributions">
-    <p>The [lifecycle](../glossary/index.xml#lifecycle) exposes named *[extension points](../glossary/index.xml#extension-point)*, strings of the form `family:name`. The `phase:` family is the nine phases. The `slot:` family names places inside a phase where a stack or a discipline expects to plug something. The `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *[contribution](../glossary/index.xml#contribution)* binds a handler to a point and is declared in a [manifest](../glossary/index.xml#manifest) as an `[[extension]]` table, in a package or in the project itself.</p>
+    <p>The [lifecycle](../glossary/index.xml#lifecycle) exposes named *[extension points](../glossary/index.xml#extension-point)*, strings of the form `family:name`. The `phase:` family, the group of points that share one prefix, is the nine [phases](../glossary/index.xml#phase). The `slot:` family names places inside a phase where a stack or a discipline expects to plug something. The `compile:` family is the boot compiler's own pipeline, where a package may transform the text an agent will read. A *[contribution](../glossary/index.xml#contribution)* binds a [handler](../glossary/index.xml#handler) to a point and is declared in a [manifest](../glossary/index.xml#manifest) as an `[[extension]]` table, in a package or in the project itself.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
-    <p>A contribution carries an id, which is also the key a project uses to disable or override it; the same handler may be bound several times under different ids with different configuration.</p>
+    <p>A contribution carries an id, which is also the key a project uses to disable or replace it; the same handler may be bound several times under different ids with different configuration.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS"/>
   </points-and-contributions>
   <handlers title="Five kinds of handler">
@@ -36,7 +36,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG"/>
   </handlers>
   <activation title="Switching contributions on">
-    <p>Installing a package is the consent to run its contributions: a dependency's phase and slot contributions are active as soon as the package is installed. The consuming manifest can activate a contribution that is not automatic, disable one by its id, or override its configuration. There are no consent dialogs at run time; there is total transparency instead.</p>
+    <p>Installing a package is the consent to run its contributions: a dependency's phase and slot contributions are active as soon as the package is installed. The consuming manifest can activate a contribution that is not automatic, disable one by its id, or [override](../glossary/index.xml#override) its configuration. There are no consent dialogs at run time; there is total transparency instead.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LAW"/>
     <p>Within one point, contributions run in a fixed order: the built-in bindings of the effective preset first, then the packages' contributions in dependency order, then the project's own; the order is derived, never negotiated.</p>
