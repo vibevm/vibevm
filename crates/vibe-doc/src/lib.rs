@@ -82,6 +82,9 @@ pub mod derived;
 pub mod error;
 pub mod examples;
 pub mod html;
+pub mod md;
+pub mod numbering;
 pub mod pages;
+pub mod xml;
 
 pub use error::{DocError, Result};
