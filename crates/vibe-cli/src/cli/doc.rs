@@ -181,6 +181,28 @@ pub struct DocCheckArgs {
     #[arg(long)]
     pub coverage: bool,
 
+    /// Hand every documented `prompt` to the configured agent in a clean
+    /// sandbox, then run the page's own asserts on what it left. An
+    /// agent says something different every time, so the page states
+    /// what must be TRUE afterwards and this checks that. Not part of
+    /// the panel: it calls a real agent and takes real time.
+    #[arg(long)]
+    pub prompts: bool,
+
+    /// With `--prompts`, the command the prompt text is handed to,
+    /// overriding the package's own `[doc.prompts] runner`. One corpus
+    /// through two agents is how a prompt that only works on one of them
+    /// is caught.
+    #[arg(long, value_name = "COMMAND")]
+    pub runner: Option<String>,
+
+    /// With `--prompts`, take this many prompts instead of all of them.
+    /// The choice is random in the sense that it is not the first N of
+    /// the corpus, and fixed in the sense that two runs a month apart
+    /// take the same prompts.
+    #[arg(long, value_name = "N")]
+    pub sample: Option<usize>,
+
     /// Lint the prose against the style law: the tics on the package's
     /// list for its language, sentence and paragraph length by block
     /// kind, a glossary term used before anybody introduced it, three

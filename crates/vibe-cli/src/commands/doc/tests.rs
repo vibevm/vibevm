@@ -9,6 +9,9 @@ fn args() -> DocCheckArgs {
         media: false,
         coverage: false,
         style: false,
+        prompts: false,
+        runner: None,
+        sample: None,
         min: vibe_doc::coverage::FULL_COVERAGE,
         accept: false,
         force: false,
@@ -27,7 +30,34 @@ fn a_check_with_no_check_named_says_which_ones_exist() {
     assert!(e.to_string().contains("--translations"), "{e}");
     assert!(e.to_string().contains("--coverage"), "{e}");
     assert!(e.to_string().contains("--style"), "{e}");
+    assert!(e.to_string().contains("--prompts"), "{e}");
     assert!(e.to_string().contains("PROP-057#PIPE-LIBRARY"), "{e}");
+}
+
+/// The prompt check calls a real agent, so a run with no agent to call
+/// refuses rather than printing the green nothing «0 prompts run» would
+/// be.
+#[test]
+fn the_prompt_check_reaches_the_library_and_asks_for_an_agent() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n",
+    )
+    .expect("write");
+    std::fs::write(
+        tmp.path().join("prompts.toml"),
+        "schema = 1\n\n[doc.prompts]\nfixture = \"empty\"\n",
+    )
+    .expect("write");
+    let checked = DocCheckArgs {
+        prompts: true,
+        path: tmp.path().to_path_buf(),
+        ..args()
+    };
+    let e = run_check(checked, DocEnv::default()).expect_err("refused");
+    assert!(e.to_string().contains("--runner"), "{e}");
+    assert!(e.to_string().contains("STYLE-PROMPT-FIRST"), "{e}");
 }
 
 /// The linter gates by PAGE and shares `--min` with the coverage

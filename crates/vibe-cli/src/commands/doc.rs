@@ -23,6 +23,7 @@ use vibe_doc::examples::{self, RunnerEnv};
 use vibe_doc::llms;
 use vibe_doc::manifest;
 use vibe_doc::media;
+use vibe_doc::prompts;
 use vibe_doc::style;
 use vibe_doc::translations;
 
@@ -217,11 +218,12 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         && !args.coverage
         && !args.media
         && !args.style
+        && !args.prompts
     {
         bail!(
             "`vibe doc check` needs a check to run: `--examples`, `--derived`, \
              `--citations`, `--translations`, `--coverage`, `--media`, `--style`, \
-             or any combination \
+             `--prompts`, or any combination \
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
@@ -288,6 +290,31 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
                 "a translation does not mirror the documentation it adapts (violates \
                  spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR; \
                  fix: repair the translation against its source — never the other way round)"
+            );
+        }
+    }
+
+    if args.prompts {
+        let report = prompts::check(
+            &args.path,
+            &runner,
+            &prompts::Options {
+                runner: args.runner.clone(),
+                sample: args.sample,
+                only: args.only.clone(),
+            },
+        )?;
+        print!("{}", report.render());
+        if !report.ok() {
+            let counts = report.counts();
+            bail!(
+                "a documented prompt no longer gets the result the page promises: {} broke, \
+                 {} could not run, {} page(s) unreadable (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST; \
+                 fix: repair the product, or the prompt — never the assert)",
+                counts.broke,
+                counts.failed,
+                report.unreadable.len()
             );
         }
     }
