@@ -130,7 +130,7 @@ pub struct ProgressReportArgs {
     #[arg(long)]
     pub view: Option<String>,
 
-    /// Filter markers by audience: user | author | dev.
+    /// Filter markers by audience: user | author | dev | agent.
     #[arg(long)]
     pub audience: Option<String>,
 }

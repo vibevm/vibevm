@@ -118,6 +118,14 @@ include = [
     "vibevm/vibepacks/org.vibevm.world/**/*.xml",
     "vibevm/vibepacks/org.vibevm.ai-native/**/*.md",
     "vibevm/vibepacks/org.vibevm.ai-native/**/*.xml",
+    # The core manual's namespace (PROP-057). Observed so `vibe facts` sees
+    # its pages and their statuses, and freed from judging debt by the
+    # `[judging] exempt` glob at the bottom of this file — the third answer
+    # the corpus gained for documentation: marked, never verified. Order
+    # matters only to a reader: the exemption is a separate key and applies
+    # whatever this list says.
+    "vibevm/vibepacks/org.vibevm.core/**/*.md",
+    "vibevm/vibepacks/org.vibevm.core/**/*.xml",
 ]
 
 # Enumerated exclusions, applied after the includes above (DRIFT-024 §4.2).

@@ -143,7 +143,17 @@ fn parse_audience(s: Option<&str>) -> Result<Option<Audience>> {
         None => Ok(None),
         Some(v) => match Audience::parse(v) {
             Some(a) => Ok(Some(a)),
-            None => bail!("unknown --audience `{v}` (expected user|author|dev)"),
+            // The known set is read from the vocabulary itself, so the
+            // message cannot lag behind it again: `agent` was admitted
+            // in 2026-09 and this line still promised three values.
+            None => bail!(
+                "unknown --audience `{v}` (expected {})",
+                Audience::ALL
+                    .iter()
+                    .map(|a| a.as_str())
+                    .collect::<Vec<_>>()
+                    .join("|")
+            ),
         },
     }
 }
