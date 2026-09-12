@@ -25,6 +25,8 @@ import type {
   VersionChoice,
 } from "@vibe-docs/design";
 
+import type { DocumentationStatus } from "../generated/doc-manifest.ts";
+
 import {
   catalogueHref,
   docHref,
@@ -42,7 +44,9 @@ import {
   coordinate,
   documentOf,
   editions,
+  libraryAt,
   resolvePage,
+  siteLanguages,
   sourceEdition,
   type Edition,
   type Library,
@@ -112,41 +116,56 @@ export function languageChoices(
  * The header stands over the landing and over every documentation page,
  * and a selector that led to the catalogue from a page would lose the
  * reader's place on every switch. So it reads the address back: on a
- * page it offers the same page in each language, and anywhere else the
- * catalogue. The fragment is added by the behaviour on the way out —
- * markup cannot know where a reader is standing.
+ * page it offers the same page in each language OF THAT DOCUMENTATION,
+ * and anywhere else the catalogue of each language the site carries. The
+ * fragment is added by the behaviour on the way out — markup cannot know
+ * where a reader is standing.
  */
 export function headerLanguageChoices(
-  library: Library,
+  libraries: readonly Library[],
   pathname: string,
 ): LanguageChoice[] {
   const segments = docSegments(pathname);
-  if (segments === null) return catalogueChoices(library, null);
+  if (segments === null) return catalogueChoices(libraries, null);
   const target = parseDocTarget(segments);
-  if (target === null) return catalogueChoices(library, null);
-  if (target.kind === "page") {
-    return languageChoices(
-      library,
-      target.address.document,
-      target.address.lang,
-    );
+  if (target === null) return catalogueChoices(libraries, null);
+  if (target.kind === "catalogue") {
+    return catalogueChoices(libraries, target.lang);
   }
-  return catalogueChoices(
-    library,
-    target.kind === "catalogue" ? target.lang : target.address.lang,
+  const library = libraryAt(
+    libraries,
+    target.address.group,
+    target.address.name,
   );
+  if (library === null) return catalogueChoices(libraries, null);
+  if (target.kind === "package") {
+    return catalogueChoices(libraries, target.address.lang);
+  }
+  return languageChoices(library, target.address.document, target.address.lang);
 }
 
-/** The catalogue in every language the library has, for the site header. */
+/**
+ * The catalogue in every language the site has, for the site header.
+ *
+ * One entry per language and never one per edition: the address
+ * `vibevm.org/doc/ru/` is the site's Russian shelf, and three
+ * documentations adapted into Russian are three cards on it rather than
+ * three entries here. Where a language
+ * carries exactly one documentation the entry is that edition's, star
+ * and publisher and all; where it carries several, «published by» is
+ * answered with how many there are, because the publisher of a shelf is
+ * not a fact and the catalogue behind the entry names every one of them.
+ */
 export function catalogueChoices(
-  library: Library,
+  libraries: readonly Library[],
   at: string | null,
 ): LanguageChoice[] {
-  return editions(library).map((one) => ({
+  return siteLanguages(libraries).map((one) => ({
     tag: one.tag,
     label: endonym(one.tag),
-    publisher: one.publisher,
-    official: one.official,
+    publisher:
+      one.count === 1 ? one.edition.publisher : `${one.count} documentations`,
+    official: one.count === 1 && one.edition.official,
     source: one.segment === null,
     href: catalogueHref(one.segment),
     current: one.segment === at,
@@ -214,6 +233,56 @@ export function navItems(
       current: document === currentDocument,
     };
   });
+}
+
+/** One card of the catalogue: one edition of one library the site carries. */
+export type CatalogueEntry = {
+  readonly tag: string;
+  readonly segment: string | null;
+  readonly title: string;
+  readonly href: string;
+  readonly publisher: string;
+  readonly coordinate: string;
+  readonly description?: string;
+  readonly abstract: string;
+  readonly status: DocumentationStatus;
+};
+
+/**
+ * The shelf behind the door: every edition of every library, in the
+ * libraries' own order and, inside each, D-19's.
+ *
+ * One card per EDITION and not per documentation, because a reader
+ * looking for a language is looking for a text they can read. The
+ * standing on a card is the standing of the thing it names: a source
+ * card carries the documentation's own — primary, official or community
+ * for its subject — and an adaptation's carries whether the source's
+ * author named it, which is a different question with the same three
+ * words (`##REL-OFFICIAL-IS-CONVERGENCE`, `##LOC-OFFICIAL-TRANSLATION`).
+ */
+export function catalogueEntries(
+  libraries: readonly Library[],
+): readonly CatalogueEntry[] {
+  return libraries.flatMap((library) =>
+    editions(library).map((one) => ({
+      tag: one.tag,
+      segment: one.segment,
+      title: one.title,
+      href: packageHref(coordinate(library, one.segment)),
+      publisher: one.publisher,
+      coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
+      ...(one.card.description === undefined
+        ? {}
+        : { description: one.card.description }),
+      abstract: one.card.abstract,
+      status:
+        one.segment === null
+          ? one.card.status
+          : one.official
+            ? "official"
+            : "community",
+    })),
+  );
 }
 
 /** The machine surfaces that lie beside a page, as the meta row shows them. */
@@ -381,18 +450,37 @@ function packageView(
 /**
  * Read the catch-all route's path into everything the page will show.
  *
- * `null` is «this is not an address of this library» — which the route
- * shows as such rather than as an empty page, because a shell that
+ * The address says which library answers for it: every address is built
+ * on a source documentation's coordinate, so the group and the name in
+ * it name one library out of however many this build carries, and no
+ * search of the others follows.
+ *
+ * `null` is «this is not an address this build carries» — which the
+ * route shows as such rather than as an empty page, because a shell that
  * renders nothing when it does not understand an address is a shell that
  * cannot be debugged from the outside.
  */
-export function viewOf(library: Library, raw: string): DocView | null {
+export function viewOf(
+  libraries: readonly Library[],
+  raw: string,
+): DocView | null {
   const target = parseDocTarget(raw.split("/"));
   if (target === null) return null;
   if (target.kind === "catalogue") {
-    const known = editions(library).some((one) => one.segment === target.lang);
+    /* A catalogue is a language of the SITE, so it exists when any
+       library was adapted into it — the shelf it shows is every
+       documentation, not one. */
+    const known = siteLanguages(libraries).some(
+      (one) => one.segment === target.lang,
+    );
     return known ? { kind: "catalogue", lang: target.lang } : null;
   }
+  const library = libraryAt(
+    libraries,
+    target.address.group,
+    target.address.name,
+  );
+  if (library === null) return null;
   return target.kind === "page"
     ? pageView(library, target.address)
     : packageView(library, target.address);

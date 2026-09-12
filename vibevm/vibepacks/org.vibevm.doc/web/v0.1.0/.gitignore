@@ -2,9 +2,9 @@
 # writes may enter it, and nothing here is a build input either.
 node_modules/
 dist/
-dist-embedded/
+dist-*/
 server/
-server-embedded/
+server-*/
 tmp/
 .vite/
 *.tsbuildinfo

@@ -30,6 +30,7 @@ import {
   documentOf,
   editions,
   sourceEdition,
+  type Library,
 } from "../lib/library.ts";
 import { BUILT } from "../lib/library-source.ts";
 import { LATEST } from "./editions.ts";
@@ -41,21 +42,21 @@ function paramOf(path: string): { path: string } | null {
 }
 
 /**
- * Every `latest` address: each edition's package page, and each page of
- * the source in each edition — the same set as the numbered addresses,
- * with one segment changed.
+ * One library's `latest` addresses: each edition's package page, and
+ * each page of the source in each edition — the same set as the numbered
+ * addresses, with one segment changed.
  *
  * The catalogues are not in it. `vibevm.org/doc/ru/` names a language and no
  * version at all, so there is nothing for `latest` to spell.
  */
-export function latestAliasParams(): { path: string }[] {
+function aliasesOf(library: Library): { path: string }[] {
   const out: { path: string }[] = [];
-  const documents = sourceEdition(BUILT).pages.map((page) =>
+  const documents = sourceEdition(library).pages.map((page) =>
     documentOf(page.path),
   );
 
-  for (const edition of editions(BUILT)) {
-    const at = { ...coordinate(BUILT, edition.segment), version: LATEST };
+  for (const edition of editions(library)) {
+    const at = { ...coordinate(library, edition.segment), version: LATEST };
     const pkg = paramOf(packageHref(at));
     if (pkg !== null) out.push(pkg);
     for (const document of documents) {
@@ -64,4 +65,9 @@ export function latestAliasParams(): { path: string }[] {
     }
   }
   return out;
+}
+
+/** Every `latest` address of every library this build carries. */
+export function latestAliasParams(): { path: string }[] {
+  return BUILT.flatMap((library) => aliasesOf(library));
 }

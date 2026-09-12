@@ -26,6 +26,7 @@ import {
   documentOf,
   type Address,
   type Edition,
+  type Library,
 } from "./editions.ts";
 import { RESOLVER_PAGE } from "./resolve.ts";
 
@@ -63,8 +64,7 @@ function addressOf(
  */
 export function catalogueLlmsTxt(
   origin: string,
-  editions: readonly Edition[],
-  addresses: readonly Address[],
+  libraries: readonly Library[],
 ): string {
   const lines: string[] = [
     "# Documentation on vibevm.org",
@@ -75,34 +75,34 @@ export function catalogueLlmsTxt(
     "",
   ];
 
-  const source = editions.find((edition) => edition.segment === null);
-  const whole = source?.manifest.pages.length ?? 0;
-
-  for (const edition of editions) {
-    const card = edition.manifest.package;
-    const at = addressOf(addresses, edition, "package");
-    const mine = edition.manifest.pages.length;
-    lines.push(
-      `### ${card.title} — ${standing(edition)}`,
-      "",
-      `- Address: [${origin}${at}](${origin}${at})`,
-      `- Publisher: ${card.publisher}`,
-      `- Language: ${card.lang}`,
-      `- Documents: ${card.subjects.map((subject) => `${subject.package} ${subject.version}`).join(", ")}`,
-      `- Audiences: ${card.audiences.join(", ")}`,
-      /* An adaptation in progress is not a smaller manual: every page of
-         the source answers at its address, in the source's words where
-         the adaptation has not reached it yet. The count says which of
-         the two a reader is choosing between. */
-      edition.segment === null
-        ? `- Pages: ${mine}`
-        : `- Pages: ${mine} adapted of ${whole}; the rest are served in the source language`,
-      `- Rendered: ${card.rendered_at.slice(0, 10)}`,
-      `- Agent index: [${origin}${at}llms.txt](${origin}${at}llms.txt)`,
-      "",
-      card.abstract.trim(),
-      "",
-    );
+  for (const library of libraries) {
+    const whole = library.source.manifest.pages.length;
+    for (const edition of library.editions) {
+      const card = edition.manifest.package;
+      const at = addressOf(library.addresses, edition, "package");
+      const mine = edition.manifest.pages.length;
+      lines.push(
+        `### ${card.title} — ${standing(edition)}`,
+        "",
+        `- Address: [${origin}${at}](${origin}${at})`,
+        `- Publisher: ${card.publisher}`,
+        `- Language: ${card.lang}`,
+        `- Documents: ${card.subjects.map((subject) => `${subject.package} ${subject.version}`).join(", ")}`,
+        `- Audiences: ${card.audiences.join(", ")}`,
+        /* An adaptation in progress is not a smaller manual: every page of
+           the source answers at its address, in the source's words where
+           the adaptation has not reached it yet. The count says which of
+           the two a reader is choosing between. */
+        edition.segment === null
+          ? `- Pages: ${mine}`
+          : `- Pages: ${mine} adapted of ${whole}; the rest are served in the source language`,
+        `- Rendered: ${card.rendered_at.slice(0, 10)}`,
+        `- Agent index: [${origin}${at}llms.txt](${origin}${at}llms.txt)`,
+        "",
+        card.abstract.trim(),
+        "",
+      );
+    }
   }
 
   const file = (name: string): string => `${origin}${docFileHref(name)}`;
@@ -147,50 +147,52 @@ type ManifestPage = {
  * version number is a contract and the site shows nothing behind it
  * (D-27).
  */
-export function siteManifest(
-  editions: readonly Edition[],
-  addresses: readonly Address[],
-): unknown {
+export function siteManifest(libraries: readonly Library[]): unknown {
   return {
     schema_version: 1,
-    documentations: editions.map((edition) => {
-      const pages: ManifestPage[] = addresses
-        .filter(
-          (address) =>
-            address.edition === edition &&
-            address.kind === "page" &&
-            address.version !== LATEST,
-        )
-        .map((address) => {
-          const document = address.document ?? "";
-          const latest = addressOf(addresses, edition, "page", document);
-          const page = address.page;
-          return {
-            document,
-            href: address.href,
-            latest_href: latest,
-            markdown: `${address.href.slice(0, -1)}.md`,
-            xml: `${address.href.slice(0, -1)}.xml`,
-            fallback: address.fallback,
-            title: page?.title ?? document,
-            summary: page?.summary ?? "",
-            genre: page?.genre ?? "concept",
-            audiences: page?.audiences ?? [],
-            anchors: page?.anchors ?? [],
-            reading_time_min: page?.reading_time_min ?? 1,
-          };
-        });
+    documentations: libraries.flatMap((library) =>
+      library.editions.map((edition) => one(library.addresses, edition)),
+    ),
+  };
+}
 
+/** One edition of one library, as the site's manifest describes it. */
+function one(addresses: readonly Address[], edition: Edition): unknown {
+  const pages: ManifestPage[] = addresses
+    .filter(
+      (address) =>
+        address.edition === edition &&
+        address.kind === "page" &&
+        address.version !== LATEST,
+    )
+    .map((address) => {
+      const document = address.document ?? "";
+      const latest = addressOf(addresses, edition, "page", document);
+      const page = address.page;
       return {
-        language: edition.tag,
-        language_segment: edition.segment,
-        source: edition.segment === null,
-        official: edition.official,
-        href: addressOf(addresses, edition, "package"),
-        package: edition.manifest.package,
-        pages,
+        document,
+        href: address.href,
+        latest_href: latest,
+        markdown: `${address.href.slice(0, -1)}.md`,
+        xml: `${address.href.slice(0, -1)}.xml`,
+        fallback: address.fallback,
+        title: page?.title ?? document,
+        summary: page?.summary ?? "",
+        genre: page?.genre ?? "concept",
+        audiences: page?.audiences ?? [],
+        anchors: page?.anchors ?? [],
+        reading_time_min: page?.reading_time_min ?? 1,
       };
-    }),
+    });
+
+  return {
+    language: edition.tag,
+    language_segment: edition.segment,
+    source: edition.segment === null,
+    official: edition.official,
+    href: addressOf(addresses, edition, "package"),
+    package: edition.manifest.package,
+    pages,
   };
 }
 

@@ -49,7 +49,14 @@ import {
   projectionHref,
   type DocAddress,
 } from "../lib/href.ts";
-import { editions, resolvePage, sourceEdition } from "../lib/library.ts";
+import {
+  editions,
+  libraryAt,
+  resolvePage,
+  siteLanguages,
+  sourceEdition,
+  type Library,
+} from "../lib/library.ts";
 import { BUILT } from "../lib/library-source.ts";
 import type { DocView, PackageView, PageView } from "../lib/view.ts";
 import { analytics } from "./analytics.ts";
@@ -90,17 +97,18 @@ function absolute(path: string): string {
  * number: `latest` is an address, not a publication, and the card belongs
  * to the publication.
  */
-function cardOf(): string {
-  const card = sourceEdition(BUILT).card;
+function cardOf(library: Library): string {
+  const card = sourceEdition(library).card;
   const preview = previewOf(card.group, card.name, card.version);
   return absolute(preview ?? href("og.png"));
 }
 
 /** The same address in every language the library has, at this version. */
 function alternates(
+  library: Library,
   address: DocAddress,
 ): NonNullable<DocumentHeadValue["links"]> {
-  const links = editions(BUILT).map((edition) => ({
+  const links = editions(library).map((edition) => ({
     rel: "alternate",
     hreflang: edition.tag,
     href: absolute(docHref({ ...address, lang: edition.segment })),
@@ -182,15 +190,19 @@ function ogLocale(tag: string): string {
 }
 
 /** The head of one documentation page. */
-function pageHead(view: PageView, local: boolean): DocumentHeadValue {
+function pageHead(
+  library: Library,
+  view: PageView,
+  local: boolean,
+): DocumentHeadValue {
   const address = view.address;
   if (local) return localHead();
   const latest: DocAddress = { ...address, version: LATEST };
-  const source = resolvePage(BUILT, address.lang, address.document);
+  const source = resolvePage(library, address.lang, address.document);
   const canonical = view.fallback
     ? docHref({ ...address, lang: null })
     : docHref(latest);
-  const card = cardOf();
+  const card = cardOf(library);
 
   return {
     title: view.title,
@@ -207,7 +219,7 @@ function pageHead(view: PageView, local: boolean): DocumentHeadValue {
     ],
     links: [
       { rel: "canonical", href: canonical },
-      ...alternates(address),
+      ...alternates(library, address),
       ...projections(address),
     ],
     scripts: [
@@ -223,7 +235,7 @@ function pageHead(view: PageView, local: boolean): DocumentHeadValue {
           audiences: view.audiences,
           ...(source === null ? {} : { genre: source.page.genre }),
           image: card,
-          packageTitle: sourceEdition(BUILT).card.title,
+          packageTitle: sourceEdition(library).card.title,
           packageAbsolute: absolute(packageHref(latest)),
           doorAbsolute: absolute(catalogueHref(null)),
         }),
@@ -234,7 +246,11 @@ function pageHead(view: PageView, local: boolean): DocumentHeadValue {
 }
 
 /** The head of a package's own page — the shelf and the card. */
-function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
+function packageHead(
+  library: Library,
+  view: PackageView,
+  local: boolean,
+): DocumentHeadValue {
   const address = view.address;
   const description = view.description ?? view.abstract;
   const agentIndex = {
@@ -246,7 +262,7 @@ function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
   if (local) return localHead();
 
   const canonical = packageHref({ ...address, version: LATEST });
-  const card = cardOf();
+  const card = cardOf(library);
 
   return {
     title: view.title,
@@ -265,7 +281,7 @@ function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
       /* At the version this address is spelled with, exactly as a page's
          are: an annotation that crossed spellings would name a page that
          names a different one back. */
-      ...editions(BUILT).map((edition) => ({
+      ...editions(library).map((edition) => ({
         rel: "alternate",
         hreflang: edition.tag,
         href: absolute(packageHref({ ...address, lang: edition.segment })),
@@ -302,6 +318,11 @@ function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
  * the two share everything except which of them is canonical: the door
  * is, and a language's catalogue points at itself — it is a different
  * list, not the same one at another address.
+ *
+ * Its `hreflang` set is the site's languages and not one library's: a
+ * catalogue lists every documentation, so the address that answers for
+ * it in another language is that language's catalogue, whichever
+ * libraries happen to stand on it.
  */
 export function catalogueHead(
   lang: string | null,
@@ -327,15 +348,15 @@ export function catalogueHead(
         "Documentation — VibeVM",
         description,
         absolute(href("og.png")),
-        ogLocale(lang ?? sourceEdition(BUILT).tag),
+        ogLocale(lang ?? siteLanguages(BUILT)[0]?.tag ?? "en"),
       ),
     ],
     links: [
       { rel: "canonical", href: canonical },
-      ...editions(BUILT).map((edition) => ({
+      ...siteLanguages(BUILT).map((language) => ({
         rel: "alternate",
-        hreflang: edition.tag,
-        href: absolute(catalogueHref(edition.segment)),
+        hreflang: language.tag,
+        href: absolute(catalogueHref(language.segment)),
       })),
       {
         rel: "alternate",
@@ -360,7 +381,12 @@ export function documentationHead(
   local: boolean,
 ): DocumentHeadValue {
   if (view.kind === "catalogue") return catalogueHead(view.lang, local);
+  /* The address names its library, exactly as it does for the page
+     itself: every address is built on a source documentation's
+     coordinate, and a view the route rendered has one behind it. */
+  const library = libraryAt(BUILT, view.address.group, view.address.name);
+  if (library === null) return { title: view.title };
   return view.kind === "page"
-    ? pageHead(view, local)
-    : packageHead(view, local);
+    ? pageHead(library, view, local)
+    : packageHead(library, view, local);
 }

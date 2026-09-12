@@ -30,7 +30,7 @@
  * asked for, per request, which is what `##LOCAL-SERVE` says it does.
  */
 
-import { parseLibrary, type Library } from "../lib/library.ts";
+import { parseLibraries, type Library } from "../lib/library.ts";
 import {
   cataloguePath,
   href,
@@ -91,6 +91,10 @@ function addressIn(pathname: string, base: string): string | null {
  * translation is another package with a manifest of its own. The
  * language selector therefore offers the one language there is, which is
  * the truth about a machine store rather than a missing feature.
+ *
+ * A package that IS a translation is its own library here, for the same
+ * reason: the source it names is on somebody else's machine, so this
+ * reader serves the pages it has under the coordinate it has.
  */
 async function libraryAt(base: string): Promise<Library | null> {
   const at = `${base}manifest.json`;
@@ -103,7 +107,7 @@ async function libraryAt(base: string): Promise<Library | null> {
       return null;
     }
     const body: unknown = await response.json();
-    return parseLibrary([{ name: at, value: body }]);
+    return parseLibraries([{ name: at, value: body }])[0] ?? null;
   } catch (reason) {
     /* The parser fails with the path of the field that failed in it, and
        that sentence is the whole value of failing here rather than
@@ -135,7 +139,7 @@ export async function readServedPage(
 
   const library = await libraryAt(base);
   if (library === null) return null;
-  const view = viewOf(library, address);
+  const view = viewOf([library], address);
   return view === null ? null : { base, library, view };
 }
 

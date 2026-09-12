@@ -42,7 +42,6 @@ import {
   LATEST,
   coordinateOf,
   documentOf,
-  sourceOf,
 } from "../site/src/seo/editions.ts";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -160,8 +159,7 @@ function previewIn(trees) {
 }
 
 /** Where an edition's surfaces are served, at one spelling of the version. */
-function baseOf(editions, edition, version) {
-  const source = sourceOf(editions);
+function baseOf(source, edition, version) {
   return href(packagePath(coordinateOf(source, edition.segment, version)));
 }
 
@@ -173,17 +171,19 @@ function baseOf(editions, edition, version) {
  * for itself: the name is a content hash the manifest does not carry
  * (X-042, `seo/media.ts`).
  */
-export function mediaMapOf(trees, editions) {
+export function mediaMapOf(trees, libraries) {
   const map = {};
-  for (const edition of editions) {
-    const mine = treesOf(trees, edition);
-    if (mine.length === 0) continue;
-    const preview = previewIn(mine);
-    if (preview === undefined) continue;
-    const card = edition.manifest.package;
-    map[`${card.group}/${card.name}@${card.version}`] = {
-      preview: `${baseOf(editions, edition, card.version)}${preview}`,
-    };
+  for (const library of libraries) {
+    for (const edition of library.editions) {
+      const mine = treesOf(trees, edition);
+      if (mine.length === 0) continue;
+      const preview = previewIn(mine);
+      if (preview === undefined) continue;
+      const card = edition.manifest.package;
+      map[`${card.group}/${card.name}@${card.version}`] = {
+        preview: `${baseOf(library.source, edition, card.version)}${preview}`,
+      };
+    }
   }
   return map;
 }
@@ -236,53 +236,58 @@ function outPath(outDir, address) {
  *     silently dropping a rendered package would be the worst of the
  *     three possible answers.
  */
-export function copySurfaces(trees, editions, outDir) {
-  const source = sourceOf(editions);
-  const sourceTrees = treesOf(trees, source);
-  const documents = source.manifest.pages.map((page) => documentOf(page.path));
+export function copySurfaces(trees, libraries, outDir) {
   const report = { files: 0, editions: 0, fallbacks: 0, unplaced: [] };
   const placed = new Set();
 
-  for (const edition of editions) {
-    const own = treesOf(trees, edition);
-    for (const tree of own) placed.add(tree.root);
-    if (own.length === 0 && sourceTrees.length === 0) continue;
-    report.editions += 1;
+  for (const library of libraries) {
+    const source = library.source;
+    const sourceTrees = treesOf(trees, source);
+    const documents = source.manifest.pages.map((page) =>
+      documentOf(page.path),
+    );
 
-    for (const version of [source.manifest.package.version, LATEST]) {
-      const base = baseOf(editions, edition, version);
+    for (const edition of library.editions) {
+      const own = treesOf(trees, edition);
+      for (const tree of own) placed.add(tree.root);
+      if (own.length === 0 && sourceTrees.length === 0) continue;
+      report.editions += 1;
 
-      for (const document of documents) {
-        const carries = own.some((tree) =>
-          tree.files.includes(`${tree.prefix}${document}.md`),
-        );
-        const from = carries ? own : sourceTrees;
-        if (from.length === 0) continue;
-        if (!carries && version === source.manifest.package.version) {
-          report.fallbacks += 1;
+      for (const version of [source.manifest.package.version, LATEST]) {
+        const base = baseOf(source, edition, version);
+
+        for (const document of documents) {
+          const carries = own.some((tree) =>
+            tree.files.includes(`${tree.prefix}${document}.md`),
+          );
+          const from = carries ? own : sourceTrees;
+          if (from.length === 0) continue;
+          if (!carries && version === source.manifest.package.version) {
+            report.fallbacks += 1;
+          }
+          const prefix = from[0]?.prefix ?? "";
+          for (const suffix of ["md", "xml"]) {
+            const file = fileIn(from, `${prefix}${document}.${suffix}`);
+            if (file === undefined) continue;
+            copy(file, outPath(outDir, `${base}${document}.${suffix}`));
+            report.files += 1;
+          }
         }
-        const prefix = from[0]?.prefix ?? "";
-        for (const suffix of ["md", "xml"]) {
-          const file = fileIn(from, `${prefix}${document}.${suffix}`);
+
+        const from = own.length > 0 ? own : sourceTrees;
+        if (from.length === 0) continue;
+        for (const name of LLMS_FILES) {
+          const file = fileIn(from, name);
           if (file === undefined) continue;
-          copy(file, outPath(outDir, `${base}${document}.${suffix}`));
+          copy(file, outPath(outDir, `${base}${name}`));
           report.files += 1;
         }
-      }
-
-      const from = own.length > 0 ? own : sourceTrees;
-      if (from.length === 0) continue;
-      for (const name of LLMS_FILES) {
-        const file = fileIn(from, name);
-        if (file === undefined) continue;
-        copy(file, outPath(outDir, `${base}${name}`));
-        report.files += 1;
-      }
-      for (const media of filesIn(from, (one) => one.startsWith("media/"))) {
-        const file = fileIn(from, media);
-        if (file === undefined) continue;
-        copy(file, outPath(outDir, `${base}${media}`));
-        report.files += 1;
+        for (const media of filesIn(from, (one) => one.startsWith("media/"))) {
+          const file = fileIn(from, media);
+          if (file === undefined) continue;
+          copy(file, outPath(outDir, `${base}${media}`));
+          report.files += 1;
+        }
       }
     }
   }
@@ -311,18 +316,20 @@ export function copySurfaces(trees, editions, outDir) {
 }
 
 /** The `llms-full.txt` of the whole documentation half: one per package. */
-export function fullCorpus(trees, editions, origin) {
+export function fullCorpus(trees, libraries, origin) {
   const parts = [];
-  for (const edition of editions) {
-    const mine = treesOf(trees, edition);
-    if (mine.length === 0) continue;
-    const file = fileIn(mine, "llms-full.txt");
-    if (file === undefined) continue;
-    const card = edition.manifest.package;
-    const at = baseOf(editions, edition, card.version);
-    parts.push(
-      `\n\n---\n## Documentation: ${card.title} (${card.lang})\n## URL: ${origin}${at}\n---\n\n${readFileSync(file, "utf8").trim()}\n`,
-    );
+  for (const library of libraries) {
+    for (const edition of library.editions) {
+      const mine = treesOf(trees, edition);
+      if (mine.length === 0) continue;
+      const file = fileIn(mine, "llms-full.txt");
+      if (file === undefined) continue;
+      const card = edition.manifest.package;
+      const at = baseOf(library.source, edition, card.version);
+      parts.push(
+        `\n\n---\n## Documentation: ${card.title} (${card.lang})\n## URL: ${origin}${at}\n---\n\n${readFileSync(file, "utf8").trim()}\n`,
+      );
+    }
   }
   if (parts.length === 0) return null;
   return `${[
