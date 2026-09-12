@@ -29,7 +29,7 @@ flow  wal  1.0.0    package  —
   <edge-cases title="Edge cases and rules">
     <p>A package's folder in the dependency tree is named by its group, its name and its version, so two versions of one package can sit side by side during an update and nothing is overwritten in place.</p>
     <p>If you develop packages inside the same repository, their sources live in a third tree, `vibevm/vibepacks/`, which is yours to edit. When a project in that repository requires one of them, vibe still copies it into the dependency tree like any other package.</p>
-    <p>Two files in the boot folder are yours by law: `vibevm/vibespecs/boot/00-core.xml` and `90-user.xml`. No install, update or removal ever writes them.</p>
+    <p>Two files in the boot folder are yours by law: `vibevm/vibespecs/boot/00-core` and `90-user`, Markdown in a project `vibe init` creates and XML in a project written in the dialect. No install, update or removal ever writes them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#INV-USER-FILES"/>
     <p>The managed block in an instruction file stays where you put it: vibe rewrites the text between the markers and never moves the markers, so whatever you wrote before or after the block keeps its place.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#POSITION-USERS"/>

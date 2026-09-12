@@ -13,9 +13,9 @@ columns: load  T=transitive  C=condition  S=in STATIC.md
 org.vibevm.world/wal  dynamic  .  .  .</expect>
   </example>
   <the-order title="The order of reading">
-    <p>An [agent session](../glossary/index.xml#agent-session) begins with the instruction file its vendor reads, `CLAUDE.md`, `AGENTS.md` or `GEMINI.md`. At the end of that file sits a short block vibe maintains, and the block says: read `vibevm/vibespecs/boot/STATIC.xml` first and in full, then open `vibevm/vibespecs/boot/INDEX.md` and read every file it names, in order. That is the whole boot: three steps, all of them reading.</p>
+    <p>An [agent session](../glossary/index.xml#agent-session) begins with the instruction file its vendor reads, `CLAUDE.md`, `AGENTS.md` or `GEMINI.md`. At the end of that file sits a short block vibe maintains, and the block says: read `vibevm/vibespecs/boot/STATIC.md` first and in full, then open `vibevm/vibespecs/boot/INDEX.md` and read every file it names, in order. That is the whole boot: three steps, all of them reading.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
-    <p>`STATIC.xml` is the priority lane. It holds the text that must be in front of the agent before anything else, assembled from the packages that asked to be read that way, each package's text exactly once. It changes only when the set of packages or their versions change, which is what makes it cheap: an agent host can keep it cached across sessions.</p>
+    <p>`STATIC.md` is the priority lane. It holds the text that must be in front of the agent before anything else, assembled from the packages that asked to be read that way, each package's text exactly once. The file exists only when some package asked for it; a project whose packages are all read on demand has no priority lane, and `vibe tree` prints `STATIC.md: (none)`, as above. A project that keeps its own boot files in the XML dialect gets `STATIC.xml` instead, with the same content. It changes only when the set of packages or their versions change, which is what makes it cheap: an agent host can keep it cached across sessions.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-ROLE"/>
     <p>`INDEX.md` is a [manifest](../glossary/index.xml#manifest), not a payload. Each entry names a file and says whether it is *static*, to be read directly, or *dynamic*, an include the agent resolves as it goes. An entry can carry a condition; then the agent reads it only when the condition holds for the current session, for example one operating system.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-INDEX-MD"/>
@@ -46,7 +46,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#WHEN-FORCES-DYNAMIC"/>
     <p>A cycle among requirements is a hard error when the lane is generated, reported with the offending path; the lane is never written half linked.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-034#STEP-REJECT-CYCLES"/>
-    <p>The generated lane is never a citation target. Rules are cited by the address of their source document, never by their position in `STATIC.xml`, because the lane is compiler output and changes whenever the dependency set changes.</p>
+    <p>The generated lane is never a citation target. Rules are cited by the address of their source document, never by their position in `STATIC.md`, because the lane is compiler output and changes whenever the dependency set changes.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
     <p>Documentation never enters the lane. A documentation package has no boot snippet by definition; an agent reaches this manual through a [skill](../glossary/index.xml#skill) or by address, when it needs it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"/>

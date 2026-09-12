@@ -19,7 +19,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"/>
   </block-number>
   <boot-lane title="boot lane">
-    <p>The ordered reading list an agent follows at the start of a session: the managed block in the instruction file, then `STATIC.xml` in full, then the entries of `INDEX.md`. Computed by vibe from the dependency graph, never written by hand.</p>
+    <p>The ordered reading list an agent follows at the start of a session: the managed block in the instruction file, then `STATIC.md` in full, then the entries of `INDEX.md`. Computed by vibe from the dependency graph, never written by hand.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
   </boot-lane>
   <boot-snippet title="boot snippet">
@@ -111,7 +111,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
   </lifecycle>
   <link-type title="link type">
-    <p>How a dependency's boot snippet enters a consumer's lane: `static`, compiled into `STATIC.xml`, or `dynamic`, listed in `INDEX.md` and read on demand; set by the consumer, suggested by the package.</p>
+    <p>How a dependency's boot snippet enters a consumer's lane: `static`, compiled into `STATIC.md`, or `dynamic`, listed in `INDEX.md` and read on demand; set by the consumer, suggested by the package.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUSION-TYPES"/>
   </link-type>
   <lock-file title="lock file">
