@@ -197,6 +197,17 @@ pub enum Audience {
     User,
     Author,
     Dev,
+    /// A session reading on a user's behalf — the boot snippet, a skill's
+    /// instructions, the machine-facing corpus. Admitted 2026-09-11 by the
+    /// vocabulary's own amendment-only law (PROP-043 `##AUDIENCE-VALUES`,
+    /// on the ruling of PROP-057 `##OBS-AUDIENCE-AGENT`).
+    ///
+    /// The grammar knows nothing of lanes: that text for this audience
+    /// obeys a token budget, carries no narration and never enters a boot
+    /// prefix is PROP-057's rule about *where such text may appear*, not a
+    /// property this value carries. Here it is one more name a promise can
+    /// be owed to.
+    Agent,
 }
 
 /// Syntactic form a marker was written in.
@@ -322,13 +333,19 @@ impl Action {
 }
 
 impl Audience {
-    pub const ALL: [Audience; 3] = [Audience::User, Audience::Author, Audience::Dev];
+    pub const ALL: [Audience; 4] = [
+        Audience::User,
+        Audience::Author,
+        Audience::Dev,
+        Audience::Agent,
+    ];
 
     pub fn as_str(self) -> &'static str {
         match self {
             Audience::User => "user",
             Audience::Author => "author",
             Audience::Dev => "dev",
+            Audience::Agent => "agent",
         }
     }
 
@@ -454,6 +471,21 @@ mod tests {
         for a in Audience::ALL {
             assert_eq!(Audience::parse(a.as_str()), Some(a));
         }
+    }
+
+    /// The audience vocabulary spelled out, not merely round-tripped: it is
+    /// closed and amendment-only (PROP-043 `##VOCAB-AMENDMENT-ONLY`), so a
+    /// value that appears here without a line in §3.6 is the defect this
+    /// assertion exists to catch. `agent` joined the other three on
+    /// 2026-09-11 (PROP-057 `##OBS-AUDIENCE-AGENT`).
+    #[test]
+    fn the_audience_vocabulary_is_exactly_the_four_amended_names() {
+        assert_eq!(
+            Audience::ALL.map(Audience::as_str),
+            ["user", "author", "dev", "agent"]
+        );
+        assert_eq!(Audience::parse("agent"), Some(Audience::Agent));
+        assert_eq!(Audience::parse("agents"), None);
     }
 
     #[test]
