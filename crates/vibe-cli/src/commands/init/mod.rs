@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization");
 
+mod doc;
 mod helpers;
 mod package;
 mod prompts;

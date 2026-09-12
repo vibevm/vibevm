@@ -1,15 +1,45 @@
 //! Package + group creation for `vibe init package` / `vibe init group`.
 
+use super::doc::{self, Translation};
 use super::helpers::*;
 use super::prompts::{self, ProjectFields};
 use crate::cli::InitArgs;
 use crate::output;
 use std::fs;
 use std::path::Path;
+use std::str::FromStr;
+use vibe_core::PackageKind;
 use vibe_core::manifest::Manifest;
 use vibe_core::user_config::UserConfig;
 
-use anyhow::{Result, bail};
+use anyhow::{Context, Result, bail};
+
+/// The kind `--kind` asks for, or `tool` when it is silent.
+///
+/// Until B-134 this was read nowhere: every slot was minted `tool`
+/// whatever the flag said, while the flag's own `--help` promised
+/// otherwise. The parse is `vibe-core`'s, so an unknown kind is refused
+/// by the one list that defines the set.
+pub(super) fn requested_kind(args: &InitArgs) -> Result<PackageKind> {
+    match args.kind.as_deref() {
+        None => Ok(PackageKind::Tool),
+        Some(raw) => PackageKind::from_str(raw)
+            .with_context(|| format!("`--kind {raw}` is not a package kind")),
+    }
+}
+
+/// The boot-snippet category a kind contributes under. Only four kinds
+/// have a category of their own (PROP-009); the rest contribute as
+/// tools, which is what the lane already assumed back when every slot
+/// was minted `tool` regardless.
+fn boot_category(kind: PackageKind) -> &'static str {
+    match kind {
+        PackageKind::Flow => "flow",
+        PackageKind::Stack => "stack",
+        PackageKind::App => "app",
+        _ => "tool",
+    }
+}
 
 /// Create a package in an existing project root (dynamic link).
 pub(super) fn create_package_in_project(
@@ -42,10 +72,36 @@ pub(super) fn create_package_in_project(
         path.display()
     ));
 
-    let mut outcomes =
-        create_package_dirs_from_fields(ctx, &path, group, name, "dynamic", &fields)?;
+    let kind = requested_kind(args)?;
+    let translation = match args.translates.as_deref() {
+        None => None,
+        Some(coordinate) => {
+            if kind != PackageKind::Doc {
+                bail!(
+                    "`--translates` scaffolds a translation, and a translation is a `doc` \
+                     package — pass `--kind doc` as well \
+                     (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE)"
+                );
+            }
+            Some(doc::resolve_translation(&path, coordinate, name)?)
+        }
+    };
 
-    // Regenerate boot artifacts.
+    let mut outcomes = create_package_dirs_from_fields(
+        ctx,
+        &path,
+        group,
+        name,
+        "dynamic",
+        &fields,
+        kind,
+        translation.as_ref(),
+    )?;
+
+    // Regenerate boot artifacts. Documentation contributes none — it
+    // never enters a boot lane (PROP-057 `##KIND-DOC-MUST-NOT-EXECUTE`)
+    // — but the project's own lane is recomposed anyway, because the
+    // project may hold other packages that do.
     outcomes.extend(generate_boot_artifacts(ctx, &path)?);
 
     report(
@@ -96,10 +152,20 @@ pub(super) fn create_package_dirs(
         description: args.description.clone().unwrap_or_default(),
         format: args.format.clone().unwrap_or_else(|| "normal".to_string()),
     };
-    create_package_dirs_from_fields(ctx, project_root, group, name, default_link, &fields)
+    create_package_dirs_from_fields(
+        ctx,
+        project_root,
+        group,
+        name,
+        default_link,
+        &fields,
+        requested_kind(args)?,
+        None,
+    )
 }
 
 /// Create the package directory tree from explicit fields.
+#[allow(clippy::too_many_arguments)]
 fn create_package_dirs_from_fields(
     ctx: &output::Context,
     project_root: &Path,
@@ -107,8 +173,10 @@ fn create_package_dirs_from_fields(
     name: &str,
     link: &str,
     fields: &ProjectFields,
+    package_kind: PackageKind,
+    translation: Option<&Translation>,
 ) -> Result<Vec<Outcome>> {
-    let kind = "tool";
+    let kind = package_kind.as_str();
     let version = &fields.version;
     let pkg_dir = project_root
         .join(vibe_core::layout::current_packages_root())
@@ -116,6 +184,21 @@ fn create_package_dirs_from_fields(
         .join(name)
         .join(format!("v{version}"));
 
+    // Documentation is not a tool package with other words in it: no
+    // boot lane, no snippet, and a card its siblings do not owe.
+    if package_kind == PackageKind::Doc {
+        return doc::create_doc_package(
+            ctx,
+            project_root,
+            &pkg_dir,
+            group,
+            name,
+            fields,
+            translation,
+        );
+    }
+
+    let category = boot_category(package_kind);
     let mut outcomes = Vec::new();
 
     let manifest_path = pkg_dir.join(Manifest::FILENAME);
@@ -141,13 +224,14 @@ fn create_package_dirs_from_fields(
             format!("authors = [{}]\n", quoted.join(", "))
         };
         let boot_source = display_pathbuf(
-            &vibe_core::layout::current_boot_dir().join(format!("10-tool-{name}.md")),
+            &vibe_core::layout::current_boot_dir().join(format!("10-{kind}-{name}.md")),
         );
         let manifest_text = format!(
             "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
              version = \"{version}\"\nepoch = 1\n{authors_line}\
              license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
-             [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"tool\"\nlink = \"{link}\"\n",
+             [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
+             link = \"{link}\"\n",
             license = fields.license,
             description = fields.description,
             format = fields.format,
@@ -164,7 +248,7 @@ fn create_package_dirs_from_fields(
     // The package's boot lane, on the live layout.
     let boot_dir = pkg_dir.join(vibe_core::layout::current_boot_dir());
     ensure_dir(&boot_dir)?;
-    let boot_file = boot_dir.join(format!("10-tool-{name}.md"));
+    let boot_file = boot_dir.join(format!("10-{kind}-{name}.md"));
     let boot_rel = display_pathbuf(boot_file.strip_prefix(project_root).unwrap_or(&boot_file));
     if !boot_file.exists() {
         let content = format!(

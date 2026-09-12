@@ -54,6 +54,13 @@ pub struct InitArgs {
     #[arg(long)]
     pub kind: Option<String>,
 
+    /// Scaffold a translation of the documentation at `<group>/<name>`:
+    /// mirrors the source's pages and copies its `[[documents]]`.
+    /// Requires `--kind doc`; the language comes from this package's own
+    /// name, which a translation spells `<docname>-<lang>`.
+    #[arg(long = "translates", value_name = "COORDINATE")]
+    pub translates: Option<String>,
+
     /// Package/project version. Default: 0.1.0 for packages, 0.0.1 for projects.
     #[arg(long)]
     pub version: Option<String>,
