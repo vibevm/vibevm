@@ -113,7 +113,7 @@ fn an_adaptation_that_never_names_its_language_is_an_error() {
 #[test]
 fn an_i18n_table_without_canonical_is_still_silence() {
     let project = tempdir().unwrap();
-    write_translation(project.path(), "\n[i18n]\navailable = [\"ru\"]\n", SUBJECT);
+    write_translation(project.path(), "\n[i18n]\npreferred = \"ru\"\n", SUBJECT);
     write_source(project.path(), "0.1.0", SUBJECT);
     let report = check_project(project.path(), &opts());
     assert!(
@@ -202,8 +202,8 @@ fn a_source_outside_the_constraint_is_not_the_source() {
     );
 }
 
-/// A package that adapts nothing is not this cell's business at all —
-/// the whole cell is gated on `[translates]`.
+/// A package that adapts nothing is not the mirror half's business at
+/// all — that half is gated on `[translates]`.
 #[test]
 fn a_package_that_adapts_nothing_is_untouched() {
     let project = tempdir().unwrap();
@@ -214,4 +214,80 @@ fn a_package_that_adapts_nothing_is_untouched() {
     .unwrap();
     let report = check_project(project.path(), &opts());
     assert!(translation_findings(&report).is_empty());
+}
+
+/// A documentation package that lists languages is claiming to hold text
+/// it does not hold: a translation is another package, and the site
+/// computes the available languages from the `translates` edges at every
+/// render. The two would then disagree about what exists.
+#[test]
+fn a_documentation_package_that_lists_languages_is_an_error() {
+    let project = tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        format!(
+            "[package]\ngroup = \"org.vibevm.core\"\nname = \"vibevm-docs\"\nkind = \"doc\"\n\
+             version = \"0.1.0\"\ntitle = \"VibeVM Manual\"\nabstract = \"Four answers.\"\n\
+             [i18n]\ncanonical = \"en\"\navailable = [\"en\", \"ru\"]\n\n{SUBJECT}"
+        ),
+    )
+    .unwrap();
+    fs::write(project.path().join("README.md"), "# manual\n").unwrap();
+
+    let report = check_project(project.path(), &opts());
+    let found = translation_findings(&report);
+    assert_eq!(found.len(), 1, "{report:#?}");
+    assert_eq!(found[0].severity, Severity::Error);
+    assert!(
+        found[0].message.contains("\"en\", \"ru\""),
+        "{}",
+        found[0].message
+    );
+    assert!(
+        found[0].message.contains("LOC-LANGUAGE-FIELD"),
+        "{}",
+        found[0].message
+    );
+}
+
+/// The rule is the `doc` kind's. Every other kind localises inside one
+/// package, which is what the field is for.
+#[test]
+fn an_ordinary_package_may_list_its_languages() {
+    let project = tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"1.0.0\"\n\
+         [i18n]\ncanonical = \"en\"\navailable = [\"en\", \"ru\"]\n",
+    )
+    .unwrap();
+    let report = check_project(project.path(), &opts());
+    assert!(translation_findings(&report).is_empty(), "{report:#?}");
+}
+
+/// The source is looked for in the checked root's ANCESTORS too. An
+/// adaptation under development is checked both from the project root
+/// and with `--path <its own slot>`, and only the first has the package
+/// root beneath it; without the walk the second warned that a package in
+/// the same tree was unreachable.
+#[test]
+fn a_source_above_the_checked_slot_is_found() {
+    let project = tempdir().unwrap();
+    write_source(project.path(), "0.1.0", SUBJECT);
+
+    // The adaptation, checked at its own slot rather than at the root.
+    let slot = project
+        .path()
+        .join(vibe_core::layout::current_packages_root())
+        .join("org.vibevm.core")
+        .join("vibevm-docs-ru")
+        .join("v0.1.0");
+    fs::create_dir_all(&slot).unwrap();
+    write_translation(&slot, "[i18n]\ncanonical = \"ru\"", SUBJECT);
+
+    let report = check_project(&slot, &opts());
+    assert!(
+        translation_findings(&report).is_empty(),
+        "the source sits three levels up, in this project's own registry: {report:#?}"
+    );
 }
