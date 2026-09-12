@@ -5,7 +5,9 @@
   <p>Building software has a fixed order of steps, and vibe names them: check the tree, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed.</p>
   <example id="deploy-plan" fixture="hello-deploy">
     <run>vibe deploy --plan --profile local --path hello-deploy</run>
-    <expect></expect>
+    <expect>Deploy plan — profile `local` on `windows`
+  → local [planned] provider=org.vibevm/vibe#vibe-bin via=the shipped builtin default — artifact `hello` has no record yet, so producing it is planned work
+1 of 1 applicable target(s) would be deployed; 0 skipped; nothing was read, built or changed</expect>
   </example>
   <the-phases title="The nine phases">
     <p>vibe has two [lifecycles](../glossary/index.xml#lifecycle). `clean` has one phase and removes derived state. `default` has nine phases in a fixed order: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Naming a phase runs every phase before it as well: `vibe test` validates, installs, generates, builds and tests.</p>

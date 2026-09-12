@@ -16,7 +16,7 @@
   <by-hand title="By hand">
         <p>1. Declare what to build, what to deploy and where. A target names an artifact and the mechanism that places it; a profile is an ordered list of targets:</p>
     <fence lang="toml">[[artifacts.build]]
-id = "hello"
+id = "build-hello"
 mechanism = "build:cargo"
 outputs = [{ id = "hello", kind = "executable", select = { package = "hello", bin = "hello" } }]
 config = { offline = true }
@@ -36,12 +36,26 @@ targets = ["local"]</fence>
     <p>2. Assemble the distributables without touching any destination:</p>
     <example id="package" fixture="hello-deploy">
       <run>vibe package --path hello-deploy --assume-yes</run>
-      <expect></expect>
+      <expect>  → will run `@vibe/package/skill/org.vibevm.world/wal/wal-status` — point=phase:package, handler=builtin:package-skill-project, provider=org.vibevm.world/wal tier=preset
+  → package binding [org.vibevm.world/wal]: projected skill `wal-status` (claude=created, codex=created, opencode=created)
+lifecycle `package`:
+  → validate: ok
+  → install: fresh
+  → generate: no-op
+  → build: no-op
+  → test: no-op
+  → create: no-op
+  → verify: no-op
+  → package: ok
+  → verification: unavailable (0 input(s), 0 artifact(s))
+vibe lifecycle: package completed (8 phases, 1 contribution(s) selected, 1 executed, 1 ok, 0 fresh, 0 notice(s))</expect>
     </example>
     <p>3. See the plan for a profile, then deploy it:</p>
     <example id="deploy-plan" fixture="hello-deploy">
       <run>vibe deploy --plan --profile local --path hello-deploy</run>
-      <expect></expect>
+      <expect>Deploy plan — profile `local` on `windows`
+  → local [planned] provider=org.vibevm/vibe#vibe-bin via=the shipped builtin default — artifact `hello` has no record yet, so producing it is planned work
+1 of 1 applicable target(s) would be deployed; 0 skipped; nothing was read, built or changed</expect>
     </example>
     <p>4. List what this machine holds, and take a profile down:</p>
     <example id="deployments" fixture="hello-vibe">
