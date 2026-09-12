@@ -41,7 +41,18 @@ axum = { workspace = true }
 tokio = { workspace = true, features = ["signal", "sync", "time", "fs"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
-flate2 = "1"
+# The catalog's `primary.jsonl.gz` is a PROJECTION: `repomd.json` records its
+# size and sha256, and `rebuild --check` byte-compares it against a fresh fold
+# of the journal. So its bytes must be a function of the journal alone — never
+# of whoever links this crate. flate2 picks its DEFLATE backend by a cfg
+# cascade (`any_c_zlib` > `zlib-rs` > `miniz_oxide`) over the features Cargo
+# unified across the WHOLE build graph, and features only ever add: a consumer
+# that also pulls `zip` (pinned workspace-wide to `deflate-flate2-zlib-rs`)
+# silently switched this crate's encoder and moved the compressed bytes for
+# identical input. Pinning one backend here removes the choice from the graph.
+# `zlib-rs` is that backend: pure Rust, no C toolchain, and the codec the
+# distribution surface already carries, so one implementation serves both.
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 # The library's types ARE the wire's types: `crate::types` re-exports the
 # JTD-generated definitions this crate carries, so the edge is runtime, not
 # test-only. The behaviour they used to carry on the hand-written side
