@@ -2,7 +2,8 @@
 
 Пакет: `campaigns/docs-2026-09/findings/PACKET-P3-M3.md` (атом A3.13, доля M3).
 Общая часть: `campaigns/docs-2026-09/findings/PACKET-P3-M-COMMON.md`.
-Ветка `main` в дереве `vibevm-docs`, без push. Дата: 2026-09-12.
+Ветка `research-preview-1-docs` в дереве `vibevm-docs`, без push.
+Дата: 2026-09-12.
 
 ## Коротко для оркестратора
 
