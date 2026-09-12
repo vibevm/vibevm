@@ -22,6 +22,19 @@ use crate::{Check, CheckId, CheckOptions, CheckReport};
 #[cell(seam = "Check", variant = "boot-directory")]
 pub struct BootDirectoryCheck;
 
+/// `true` when the node's own manifest declares `kind = "doc"`.
+///
+/// An unreadable or absent manifest answers `false`: this cell is not
+/// the place that diagnoses a broken manifest, and answering `true`
+/// there would silence a real missing-directory finding on the strength
+/// of a file nobody could read.
+fn is_doc_package(project_root: &Path) -> bool {
+    Manifest::read(project_root.join(Manifest::FILENAME))
+        .ok()
+        .and_then(|manifest| manifest.package)
+        .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc)
+}
+
 impl Check for BootDirectoryCheck {
     fn id(&self) -> CheckId {
         CheckId::BootDirectory
@@ -37,8 +50,12 @@ impl Check for BootDirectoryCheck {
         if !boot.is_dir() {
             // Empty / fresh project — `vibe init` creates it. If the
             // project's vibe.toml exists but boot/ doesn't, that's a
-            // structural error.
-            if project_root.join(Manifest::FILENAME).exists() {
+            // structural error — unless the package is documentation,
+            // for which the ABSENCE is the required state: a `doc`
+            // package declares no boot snippet and never enters a boot
+            // lane, so demanding the directory would demand exactly
+            // what the kind forbids (PROP-057 `##KIND-DOC-MUST-NOT-EXECUTE`).
+            if project_root.join(Manifest::FILENAME).exists() && !is_doc_package(project_root) {
                 // The message names the project-relative boot dir (the
                 // seam's name, so the R4 flip re-labels it for free) —
                 // computed before `boot_rel` moves into the finding.
@@ -303,6 +320,63 @@ mod tests {
                 report.findings
             );
         }
+    }
+
+    /// A documentation package owns no boot directory, and the cell
+    /// must not ask for one: `doc` declares no boot snippet and never
+    /// enters a boot lane, so the absence is the required state, not a
+    /// structural defect (PROP-057 ##KIND-DOC-MUST-NOT-EXECUTE). Every
+    /// other kind still owes the directory.
+    #[test]
+    fn a_doc_package_owes_no_boot_directory() {
+        let doc = tempdir().unwrap();
+        fs::write(
+            doc.path().join("vibe.toml"),
+            "[package]
+name = \"vibevm-docs\"
+group = \"org.vibevm.core\"
+kind = \"doc\"
+             version = \"0.1.0\"
+title = \"VibeVM Manual\"
+abstract = \"Four answers.\"
+             
+[[documents]]
+package = \"org.vibevm.core/vibevm\"
+version = \"^1.0\"
+",
+        )
+        .unwrap();
+        let report = check_project(doc.path(), &opts());
+        assert!(
+            !report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::BootDirectory),
+            "documentation owes no boot directory; got: {:?}",
+            report.findings
+        );
+
+        // The control: the same tree as a `flow` still owes it.
+        let flow = tempdir().unwrap();
+        fs::write(
+            flow.path().join("vibe.toml"),
+            "[package]
+name = \"wal\"
+group = \"org.vibevm\"
+kind = \"flow\"
+             version = \"0.1.0\"
+",
+        )
+        .unwrap();
+        let report = check_project(flow.path(), &opts());
+        assert!(
+            report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::BootDirectory && f.severity == Severity::Error),
+            "every other kind still owes the directory; got: {:?}",
+            report.findings
+        );
     }
 
     /// PROP-045 ##LOADER-LAW: a dialect-XML boot file is a first-class

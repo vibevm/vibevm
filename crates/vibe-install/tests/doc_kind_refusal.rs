@@ -116,11 +116,22 @@ fn project_requiring(kind: &str, name: &str) -> (TempDir, PathBuf, FixtureSource
     let fixtures = outer.path().to_path_buf();
     let slot = fixtures.join(name);
     fs::create_dir_all(&slot).unwrap();
+    // Documentation owes a card and a subject (PROP-057 §§4, 7), so the
+    // fixture is a manifest that would PASS validation — the refusal
+    // under test must come from the kind, never from a half-written
+    // manifest that would have been refused anyway.
+    let card = if kind == "doc" {
+        "title = \"A Manual\"\nabstract = \"What it covers, for whom, what it assumes known, \
+         what it leaves out.\"\n\n[[documents]]\npackage = \"org.vibevm.core/vibevm\"\n\
+         version = \"^1.0\"\n"
+    } else {
+        ""
+    };
     fs::write(
         slot.join("vibe.toml"),
         format!(
             "[package]\ngroup = \"org.vibevm.core\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
-             version = \"0.1.0\"\n"
+             version = \"0.1.0\"\n{card}"
         ),
     )
     .unwrap();

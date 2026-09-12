@@ -19,9 +19,10 @@ use crate::manifest::project::{
 };
 
 use super::{
-    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, EmbeddedSourceDecl,
-    FeaturesTable, HooksDecl, McpServerDecl, Obsoletes, PackageMeta, Provides, Recommends,
-    Requires, RequiresAny, SkillDecl, Suggests,
+    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
+    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, McpServerDecl, MediaDecl,
+    Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests,
+    TranslatesDecl,
 };
 
 /// Per-edge seepage level: how far the target travels toward consumers.
@@ -331,6 +332,23 @@ pub(crate) struct ManifestWire {
     binaries: Vec<BinaryDecl>,
     #[serde(default, rename = "mcp_server", skip_serializing_if = "Vec::is_empty")]
     mcp_servers: Vec<McpServerDecl>,
+    #[serde(default, rename = "documents", skip_serializing_if = "Vec::is_empty")]
+    documents: Vec<DocumentsDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    documentation: Option<DocumentationDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    translates: Option<TranslatesDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    media: Option<MediaDecl>,
+    /// `[translations]` — **refused, and read only so the refusal can
+    /// say why.** A source stores no list of its translations: which
+    /// adaptations a manual has is computed from the `translates`
+    /// edges at every render, exactly as officiality is computed from
+    /// `documents` and `documentation`. A stored list would be a
+    /// second source of truth that goes stale the moment someone
+    /// publishes a translation (PROP-057 `##LOC-NO-TRANSLATIONS-TABLE`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    translations: Option<toml::Value>,
     #[serde(default, skip_serializing_if = "HooksDecl::is_empty")]
     hooks: HooksDecl,
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
@@ -385,6 +403,16 @@ impl TryFrom<ManifestWire> for Manifest {
     type Error = String;
 
     fn try_from(wire: ManifestWire) -> Result<Self, Self::Error> {
+        if wire.translations.is_some() {
+            return Err(
+                "[translations] is not a manifest table — a source stores no list of its \
+                 translations, and which adaptations exist is computed from the [translates] \
+                 edges of the translation packages themselves \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NO-TRANSLATIONS-TABLE; \
+                  fix: delete the table — each translation declares [translates] pointing here)"
+                    .to_string(),
+            );
+        }
         if let Some(meta) = &wire.visibility {
             validate_visibility(meta)?;
         }
@@ -425,6 +453,10 @@ impl TryFrom<ManifestWire> for Manifest {
             skills: wire.skills,
             binaries: wire.binaries,
             mcp_servers: wire.mcp_servers,
+            documents: wire.documents,
+            documentation: wire.documentation,
+            translates: wire.translates,
+            media: wire.media,
             hooks: wire.hooks,
             extensions,
             extension_controls: wire.extension_controls.into(),
@@ -499,6 +531,11 @@ impl TryFrom<Manifest> for ManifestWire {
             skills: manifest.skills,
             binaries: manifest.binaries,
             mcp_servers: manifest.mcp_servers,
+            documents: manifest.documents,
+            documentation: manifest.documentation,
+            translates: manifest.translates,
+            media: manifest.media,
+            translations: None,
             hooks: manifest.hooks,
             extensions,
             extension_controls: manifest.extension_controls.into(),
