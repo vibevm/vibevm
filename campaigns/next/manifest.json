@@ -91,6 +91,11 @@
       "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
       "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
       "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+    ],
+    "NEXT-PREVIEW": [
+      "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
     ]
   },
   "units": [
@@ -1374,6 +1379,36 @@
       ],
       "retire_after": [
         "M-16"
+      ]
+    },
+    {
+      "id": "NEXT-A26",
+      "kind": "architecture",
+      "source_section": "owner-addendum:preview-transition",
+      "title": "DP1 to DP2 change accounting, migration and documentation",
+      "path": "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+      "owner": "NEXT-PREVIEW",
+      "anchors": [
+        "NEXT-A26-U001",
+        "NEXT-A26-U002",
+        "NEXT-A26-U003",
+        "NEXT-A26-U004",
+        "NEXT-A26-U005",
+        "NEXT-A26-U006",
+        "NEXT-A26-U007",
+        "NEXT-A26-U008",
+        "NEXT-A26-U009",
+        "NEXT-A26-U010",
+        "NEXT-A26-U011",
+        "NEXT-A26-U012"
+      ],
+      "canonical_candidates": [
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "retire_after": [
+        "NEXT-PREVIEW-RELEASE"
       ]
     }
   ],
@@ -2919,272 +2954,380 @@
   "refinements": [],
   "extra_dependencies": {
     "M-01-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-01-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-01-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-01-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-01-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-02-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-02-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-02-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-02-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-03-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-03-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-03-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-03-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-03-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-04-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-04-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-04-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-04-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-04-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-F.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-05-G.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-06-F.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-B.1": [
       "NEXT-P0-GATE",
-      "NEXT-NATIVE-RESOURCES"
+      "NEXT-NATIVE-RESOURCES",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-08-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-08-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-08-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-08-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-08-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-09-A.1": [
       "NEXT-P0-GATE",
-      "NEXT-EXTERNAL-CHECKOUTS"
+      "NEXT-EXTERNAL-CHECKOUTS",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-09-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-09-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-09-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-09-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-10-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-10-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-10-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-10-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-11-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-11-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-11-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-11-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-11-E.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-12-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-12-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-12-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-12-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-13-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-13-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-13-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-13-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-14-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-14-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-14-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-K.1": [
       "NEXT-P0-GATE",
-      "NEXT-DOCKER-RESOURCE"
+      "NEXT-DOCKER-RESOURCE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-E.1": [
       "NEXT-P0-GATE",
-      "NEXT-DECISION-D022"
+      "NEXT-DECISION-D022",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-F.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-G.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-H.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-I.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-15-J.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-16-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-16-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-16-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-16-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-17-A.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-17-B.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-17-C.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-17-D.1": [
-      "NEXT-P0-GATE"
+      "NEXT-P0-GATE",
+      "NEXT-PREVIEW-BASE.3"
     ],
     "M-07-C.3": [
       "NEXT-CI-AUTHORITY"
     ],
     "M-12-D.2": [
       "NEXT-PUBLISH-AUTHORITY"
+    ],
+    "NEXT-PREVIEW-DOCS.1": [
+      "NEXT-PREVIEW-DOCS-INPUT"
+    ],
+    "NEXT-PREVIEW-DOCS.2": [
+      "M-13",
+      "M-01",
+      "M-02",
+      "M-03",
+      "M-04",
+      "M-05",
+      "M-06",
+      "M-07",
+      "M-08",
+      "M-09",
+      "M-10",
+      "M-11",
+      "M-12",
+      "M-14",
+      "M-15",
+      "M-16",
+      "M-17"
     ]
   },
   "optional_nodes": [
@@ -3309,9 +3452,16 @@
     "NEXT-HORIZON-AUTONOMY",
     "NEXT-HORIZON-EXTRAS",
     "NEXT-HORIZON-TRACKER",
-    "NEXT-EXECUTION-AUTHORITY"
+    "NEXT-EXECUTION-AUTHORITY",
+    "NEXT-PREVIEW",
+    "NEXT-PREVIEW-BASE",
+    "NEXT-PREVIEW-BIND",
+    "NEXT-PREVIEW-DOCS",
+    "NEXT-PREVIEW-RELEASE",
+    "NEXT-PREVIEW-DOCS-INPUT",
+    "RETIRE-NEXT-A26"
   ],
-  "task_count": 201,
+  "task_count": 212,
   "task_files_sha256": {
     "M-01-A": "bb141e979649b97d6718b85310bdce01cff84b7b2b47ff605f0c49ce61427a0f",
     "M-01-B": "c7a886e1362a37cf156f55549c8dfe45699c1de3a37cc1c511217b0ca9a6cfe5",
@@ -3398,6 +3548,66 @@
     "M-17-A": "2964ab4c8c2cb7c34a855a9632bd1af04f3b2acf57e21c9af6c74514f4b39611",
     "M-17-B": "05d5f959726193f921e9c6d9993a82aaf8139349dba6f273aada836942b03e56",
     "M-17-C": "1a41def177a610dfe9726e05eafdc50a933ecb99104938782a848285296cf0fd",
-    "M-17-D": "347e9cfa6cb0c7867eb471cad7d0c2d201ca879d6b1d04f4c472a19446b2c9bb"
-  }
+    "M-17-D": "347e9cfa6cb0c7867eb471cad7d0c2d201ca879d6b1d04f4c472a19446b2c9bb",
+    "NEXT-PREVIEW-BASE": "47464d2cfb2a61fb0967d11bbaad2a418a6f1ae12d907e0f46109f631be99691",
+    "NEXT-PREVIEW-BIND": "7d32b2db2bdde102033c1ee5a9d59e5ee1c84a87b018233d3bc0c5d2faeef27c",
+    "NEXT-PREVIEW-DOCS": "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d",
+    "NEXT-PREVIEW-RELEASE": "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+  },
+  "preview_control": "campaigns/next/preview-control.json",
+  "supplemental_work_packages": [
+    {
+      "id": "NEXT-PREVIEW-BASE",
+      "owner": "NEXT-PREVIEW",
+      "depends_on": [
+        "NEXT-P0-GATE"
+      ],
+      "tasks_file": "campaigns/next/tasks/NEXT-PREVIEW-BASE.json"
+    },
+    {
+      "id": "NEXT-PREVIEW-BIND",
+      "owner": "NEXT-PREVIEW",
+      "depends_on": [
+        "NEXT-PREVIEW-BASE",
+        "M-02-C",
+        "M-13-C",
+        "M-16-C"
+      ],
+      "tasks_file": "campaigns/next/tasks/NEXT-PREVIEW-BIND.json"
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS",
+      "owner": "NEXT-PREVIEW",
+      "depends_on": [
+        "NEXT-PREVIEW-BASE"
+      ],
+      "tasks_file": "campaigns/next/tasks/NEXT-PREVIEW-DOCS.json"
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE",
+      "owner": "NEXT-PREVIEW",
+      "depends_on": [
+        "M-13",
+        "M-01",
+        "M-02",
+        "M-03",
+        "M-04",
+        "M-05",
+        "M-06",
+        "M-07",
+        "M-08",
+        "M-09",
+        "M-10",
+        "M-11",
+        "M-12",
+        "M-14",
+        "M-15",
+        "M-16",
+        "M-17",
+        "NEXT-PREVIEW-BIND",
+        "NEXT-PREVIEW-DOCS"
+      ],
+      "tasks_file": "campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json"
+    }
+  ]
 }

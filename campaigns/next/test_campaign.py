@@ -20,8 +20,12 @@ class CampaignChecks(unittest.TestCase):
     def test_real_seed_has_complete_acyclic_coverage(self):
         result = MODULE["check"](MANIFEST, None)
         self.assertEqual(result["baseline_work_packages"], 86)
-        self.assertEqual(result["implementation_tasks"], 201)
+        self.assertEqual(result["baseline_implementation_tasks"], 201)
+        self.assertEqual(result["supplemental_tasks"], 11)
+        self.assertEqual(result["implementation_tasks"], len(self.tasks))
+        self.assertGreaterEqual(result["implementation_tasks"], 212)
         self.assertFalse(result["product_gates_executed"])
+        self.assertFalse(result["preview_change_records_verified"])
 
     def test_missing_task_cannot_be_hidden_by_short_local_plan(self):
         self.plan["node"] = [n for n in self.plan["node"] if n["id"] != "M-01-A.1"]
@@ -86,6 +90,142 @@ class CampaignChecks(unittest.TestCase):
     def test_dotted_alias_cannot_hide_temporary_target(self):
         self.assertTrue(MODULE["temporary"]("./campaigns/next/README.md", MANIFEST))
         self.assertTrue(MODULE["temporary"]("campaigns/next/../next/README.md", MANIFEST))
+
+    def test_missing_parent_is_rejected_independently_of_dependencies(self):
+        next(n for n in self.plan["node"] if n["id"] == "M-01-A.1")["parent"] = "MISSING-PARENT"
+        with self.assertRaises(MODULE["Refusal"]):
+            MODULE["validate_state"](self.plan)
+
+    def test_parent_cycle_is_rejected_independently_of_dependencies(self):
+        next(n for n in self.plan["node"] if n["id"] == "M-01")["parent"] = "M-01-A"
+        with self.assertRaises(MODULE["Refusal"]):
+            MODULE["validate_state"](self.plan)
+
+    def test_missing_supplemental_task_is_not_hidden_by_baseline_coverage(self):
+        self.plan["node"] = [n for n in self.plan["node"] if n["id"] != "NEXT-PREVIEW-BASE.1"]
+        with self.assertRaises(MODULE["Refusal"]):
+            MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_supplemental_task_cannot_start_during_planning_hold(self):
+        next(n for n in self.plan["node"] if n["id"] == "NEXT-PREVIEW-BASE.1")["state"] = "active"
+        with self.assertRaisesRegex(MODULE["Refusal"], "planning-only hold"):
+            MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_bootstrap_dependency_cannot_disappear_from_both_plan_and_extra_map(self):
+        manifest = copy.deepcopy(MANIFEST)
+        key, gate = "M-13-A.1", "NEXT-PREVIEW-BASE.3"
+        next(n for n in self.plan["node"] if n["id"] == key)["depends_on"].remove(gate)
+        manifest["extra_dependencies"][key].remove(gate)
+        with self.assertRaisesRegex(MODULE["Refusal"], "bootstrap prerequisite"):
+            MODULE["validate_coverage"](manifest, self.tasks, self.plan)
+
+    def test_supplemental_packet_preserves_old_task_contracts(self):
+        before = copy.deepcopy(self.tasks["M-13-A.1"])
+        packet = MODULE["task_packet"](MANIFEST, "NEXT-PREVIEW-BASE.1", None)
+        self.assertEqual(packet["supplemental_parent"]["owner"], "NEXT-PREVIEW")
+        self.assertFalse(packet["ready"])
+        self.assertEqual(packet["change_control"]["protocol"]["id"], "NEXT-A26")
+        old_packet = MODULE["task_packet"](MANIFEST, "M-13-A.1", None)
+        self.assertEqual({key: old_packet[key] for key in MODULE["TASK_FIELDS"]}, before)
+        self.assertEqual(old_packet["change_control"]["to_release"], "developer-preview-2")
+        self.assertEqual(MODULE["load_tasks"](MANIFEST)["M-13-A.1"], before)
+
+    def test_phase_zero_and_closure_packets_include_change_control(self):
+        for key in ("NEXT-P0.1", "NEXT-CLOSE.3"):
+            with self.subTest(key=key):
+                packet = MODULE["task_packet"](MANIFEST, key, None)
+                self.assertEqual(packet["change_control"]["bootstrap_gate"], "NEXT-PREVIEW-BASE.3")
+                self.assertIn("planned obligations", packet["change_control"]["status_note"])
+
+    def test_refined_task_resolves_its_declared_baseline_or_supplemental_owner(self):
+        self.assertEqual(MODULE["package_ancestor"](MANIFEST, "M-17-A.2.1")["milestone"], "M-17")
+        self.assertEqual(MODULE["package_ancestor"](MANIFEST, "NEXT-PREVIEW-BIND.2.1")["owner"], "NEXT-PREVIEW")
+        with self.assertRaisesRegex(MODULE["Refusal"], "no declared"):
+            MODULE["package_ancestor"](MANIFEST, "UNKNOWN.1.1")
+
+    def test_refinement_still_requires_an_existing_task_parent(self):
+        manifest = copy.deepcopy(MANIFEST)
+        manifest["refinements"] = [{"id": "MISSING-TASK", "tasks_file": "campaigns/next/tasks/missing.json"}]
+        with self.assertRaisesRegex(MODULE["Refusal"], "already declared task"):
+            MODULE["load_tasks"](manifest)
+
+    def test_ordered_refinement_still_loads_after_supplemental_packages(self):
+        manifest = copy.deepcopy(MANIFEST)
+        parent = "NEXT-PREVIEW-BIND.2"
+        group = {"id": parent, "tasks": []}
+        for number in (1, 2):
+            task = copy.deepcopy(self.tasks[parent])
+            task["id"] = f"{parent}.{number}"
+            group["tasks"].append(task)
+        payload = json.dumps(group).encode()
+        path = ROOT / "campaigns/next/tasks/fixture-refinement.json"
+        manifest["refinements"] = [{"id": parent, "tasks_file": path.relative_to(ROOT).as_posix()}]
+        manifest["task_files_sha256"][parent] = MODULE["digest"](payload)
+        original_read = Path.read_bytes
+
+        def read_bytes(candidate):
+            return payload if candidate == path else original_read(candidate)
+
+        with patch.object(Path, "read_bytes", read_bytes):
+            tasks = MODULE["load_tasks"](manifest)
+        self.assertEqual(len(tasks), len(self.tasks) + 2)
+        self.assertEqual(tasks[parent], self.tasks[parent])
+        self.assertEqual(tasks[parent + ".1"]["id"], parent + ".1")
+
+    def test_retired_preview_protocol_resolves_only_to_permanent_targets(self):
+        unit = next(unit for unit in MANIFEST["units"] if unit["id"] == "NEXT-A26")
+        target = {"path": "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml", "anchor": "root"}
+        clauses = {anchor: {"targets": [target]} for anchor in unit["anchors"]}
+        states = {unit["id"]: {"state": "retired"}}
+        with patch.dict(MODULE["resolved_contract_units"].__globals__,
+                        {"source_contracts": lambda manifest, ledger: ({}, states, clauses)}):
+            resolved = MODULE["resolved_contract_units"](MANIFEST, [unit])[0]
+        self.assertNotIn("path", resolved)
+        self.assertEqual(resolved["state"], "retired")
+        self.assertEqual(resolved["permanent_targets"], [target] * len(unit["anchors"]))
+
+    def assert_bad_preview_control(self, control, message):
+        nodes = {node["id"]: node for node in self.plan["node"]}
+        with patch.dict(MODULE["preview_control"].__globals__, {"read_json": lambda path: control}):
+            with self.assertRaisesRegex(MODULE["Refusal"], message):
+                MODULE["validate_preview_control"](MANIFEST, nodes, self.tasks)
+
+    def test_dangling_preview_gate_is_rejected(self):
+        control = MODULE["preview_control"](MANIFEST)
+        control["final_gate"] = "MISSING-PREVIEW-GATE"
+        self.assert_bad_preview_control(control, "preview gate missing")
+
+    def test_preview_permanent_home_cannot_escape_or_target_scaffolding(self):
+        for path, reason in (("../release.json", "outside repository"),
+                             ("campaigns/next/release.json", "targets scaffolding"),
+                             ("./campaigns/next/../next/release.json", "targets scaffolding")):
+            with self.subTest(path=path):
+                control = MODULE["preview_control"](MANIFEST)
+                control["permanent_homes"]["transition_index"] = path
+                self.assert_bad_preview_control(control, reason)
+
+    def test_future_permanent_homes_need_not_exist_during_planning(self):
+        control = MODULE["preview_control"](MANIFEST)
+        control["permanent_homes"]["transition_index"] = "docs/releases/future-uncreated-transition/index.json"
+        nodes = {node["id"]: node for node in self.plan["node"]}
+        with patch.dict(MODULE["preview_control"].__globals__, {"read_json": lambda path: control}):
+            self.assertEqual(MODULE["validate_preview_control"](MANIFEST, nodes, self.tasks), control)
+
+    def test_documentation_input_can_arrive_without_starting_implementation(self):
+        gate = next(n for n in self.plan["node"] if n["id"] == "NEXT-PREVIEW-DOCS-INPUT")
+        self.assertEqual(gate["state"], "blocked")
+        gate["state"], gate["evidence"] = "accepted", ["Reviewed exact owner-supplied documentation subject"]
+        MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+        self.assertNotIn("NEXT-PREVIEW-DOCS.1", {n["id"] for n in MODULE["ready_nodes"](self.plan)})
+
+    def test_original_frozen_inputs_keep_exact_revision_four_bytes(self):
+        expected = {
+            "campaigns/next/inputs/REFINED-IMPLEMENTATION-PLAN.md": "11cd76253638800fc90897220984912eb7d737ad12a423f9207299f2b70cb9e7",
+            "campaigns/next/inputs/PROJECT-REVIEW.md": "084cf62c72427b65dd8b41241a841ca7b5ac521c7936333d9662d78b70986486",
+        }
+        self.assertEqual({row["path"]: row["sha256"] for row in MANIFEST["baseline_files"]}, expected)
+        for path, sha256 in expected.items():
+            self.assertEqual(MODULE["digest"]((ROOT / path).read_bytes()), sha256)
 
 
 if __name__ == "__main__":

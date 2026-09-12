@@ -1,0 +1,170 @@
+{
+  "id": "NEXT-PREVIEW-DOCS",
+  "tasks": [
+    {
+      "id": "NEXT-PREVIEW-DOCS.1",
+      "title": "Bind the incoming documentation source and topic census",
+      "goal": "Preserve the separately authored documentation as an exact input before planning its product-driven update.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "docs/releases/developer-preview-1-to-2/",
+        "tools/preview-transition/"
+      ],
+      "write_paths": [
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "Dispatch only after NEXT-PREVIEW-DOCS-INPUT provides the exact repository, commit or retained overlay, source root, build entrypoint and generated-source inventory, relation to the captured DP1 product, and a bounded writer scope. The owner will supply this input; do not inspect or adopt another live worker directory by inference.",
+        "Resolve and retain the exact incoming documentation capture and, where the documentation already changed since its DP1-related base, both the base and current authored state. Record uncertainties about source/product correspondence instead of calling newer documentation an exact DP1 baseline.",
+        "Create documentation-map.json entries with stable topic IDs, authored page/source locations, generated output origins, mapped capability/format/change IDs, audience/workflow, product claims and build/example checks. Inventory new-topic requirements even when no current page exists.",
+        "Record the actual build toolchain and non-writing discovery results permitted by the input binding. Preserve existing worker-authored content and identify generated pages that must be regenerated from source later.",
+        "Bind a future exact update perimeter inside docs/** and the permanent release homes. If supplied sources live in another repository or outside that envelope, root refines the task packet and isolation/binding explicitly before any write; missing input blocks this lane only."
+      ],
+      "positive_cases": [
+        "A separately authored document set is preserved with its exact source history and relation to DP1.",
+        "A generated reference page maps to its authored generator/schema source.",
+        "An unrepresented new capability creates a pending topic rather than disappearing from the map."
+      ],
+      "negative_cases": [
+        "A filename, URL or an uncommitted live worker directory alone cannot identify the documentation baseline.",
+        "Silently treating post-DP1 documentation as DP1 truth, overwriting another worker's files or guessing the documentation framework is refused.",
+        "Missing documentation input cannot block unrelated implementation work already ready under the DAG."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode documentation --stage intake --format json",
+        "git diff --check",
+        "Run only the exact read-only inventory/build discovery commands supplied by the accepted documentation intake; record them before invocation."
+      ],
+      "acceptance": [
+        "Exact documentation source/current captures, topic/page/generated-source inventory and bounded future write authority are retained.",
+        "NEXT-PREVIEW-DOCS-INPUT is satisfied by actual supplied facts; absent facts remain a specific blocker, not an invented format choice."
+      ],
+      "safe_stop": "Stop after intake and map creation; do not apply DP2 documentation edits before the root-bound final implementation frontier.",
+      "commit_subject": "docs(release): bind the documentation migration baseline",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "The initial packet deliberately grants no read/write access to the separate worker's checkout. The accepted intake must name additional exact read roots before this task is dispatch-ready.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The documentation/intake check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS.2",
+      "title": "Apply the accepted product delta to documentation",
+      "goal": "Update existing and missing documentation topics from the net product changes while preserving concurrent authored work.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/changes/",
+        "docs/releases/developer-preview-1-to-2/",
+        "docs/",
+        "tools/preview-transition/"
+      ],
+      "write_paths": [
+        "docs/",
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "After all 17 required milestone outcomes and the bound documentation intake, capture the actual DP2 product candidate and current documentation sources. Compute the change-to-topic delta from permanent accepted impact records and reconcile added/removed/renamed capabilities with the current inventories.",
+        "For each mapped topic perform a three-way comparison of the retained documentation base, current worker-authored documentation and the intended product delta. Preserve independent edits, show genuine overlap conflicts and resolve only within the bound authority; do not replace the entire tree with generated prose.",
+        "Update commands, defaults, formats, configuration, installation/HOME/Docker workflows, boot and machine interfaces according to their actual delivered semantics. Add missing topics, remove or redirect obsolete topics and preserve explicit unsupported or pending platform qualifications.",
+        "Modify authored sources for generated documentation, then run their actual bound generation/build commands. Keep human editorial content outside reproducible generated sections; update documentation-map entries with exact changed sources, retained topic IDs and associated change/capability evidence.",
+        "Re-read the resulting user journeys against implemented commands and permanent contracts. Retain unresolved product/documentation discrepancies as blockers instead of marking a topic updated because its file changed."
+      ],
+      "positive_cases": [
+        "A concurrent clarification survives while the same page receives a product-driven command update.",
+        "A new installation or machine-interface capability receives a new topic and navigation links.",
+        "Generated reference pages are reproducible from their changed authoritative source."
+      ],
+      "negative_cases": [
+        "Blind overwrite, framework guessing, updating only pre-existing pages or editing generated output by hand is refused.",
+        "A task marked implemented cannot justify documenting behavior absent from the actual candidate.",
+        "An unresolved three-way conflict or unmapped product claim prevents completion of its topic."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode documentation --stage updated --format json",
+        "Run the exact generation, documentation build and changed-topic checks bound by DOCS.1; report actual exit status and subject captures.",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every changed or new topic has a reviewed disposition backed by current product evidence, and all independent incoming documentation edits are preserved.",
+        "The update is a concrete reviewable documentation diff with exact source provenance; unresolved topics remain explicit."
+      ],
+      "safe_stop": "Stop with the documentation delta reviewable; DOCS.3 validates the resulting claims and workflows.",
+      "commit_subject": "docs(release): update documentation for Developer Preview 2",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "docs/** is an outer envelope, not permission to bulk-edit all documentation. DOCS.1 supplies the exact authored source set and any external isolated checkout refinement.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The documentation/updated check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS.3",
+      "title": "Verify updated documentation against the exact candidate",
+      "goal": "Prove the revised documentation describes executable behavior and honest platform limits.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "docs/",
+        "docs/releases/developer-preview-1-to-2/",
+        "vibevm/vibespecs/changes/",
+        "tools/preview-transition/"
+      ],
+      "write_paths": [
+        "docs/",
+        "docs/releases/developer-preview-1-to-2/",
+        "tools/preview-transition/tests/"
+      ],
+      "steps": [
+        "Bind the exact product candidate, documentation commit/tree, generated-source captures and toolchain that the validation will cover. Use documentation-map to enumerate all pages/claims/examples affected by actual changes plus newly introduced topics.",
+        "Run the bound documentation build, internal links, generated-output consistency and example checks. Execute affected command workflows in isolated fixtures covering fresh installation and existing authored projects, with representative HOME/Docker and client/machine examples when applicable to their documented claims.",
+        "Test default changes, unsupported targets, invalid inputs and expected failures alongside successful paths. Mark unexecuted platform cases unavailable and narrow claims accordingly; a Windows or Docker result is not native coverage of every target.",
+        "Reconcile each claimed automatic/manual/rebuild action with its actual implementation and source-preservation behavior. Record exact evidence references and results in documentation-map, repairing authored documentation within its bound perimeter.",
+        "Compare the final map to the product capability/topic denominator so that new pages, deleted claims and no-impact conclusions are all accounted. Any product change needed to fix an example returns to root as an accounted implementation repair and invalidates only affected evidence."
+      ],
+      "positive_cases": [
+        "Fresh-install and existing-project examples match the same candidate documented by the pages.",
+        "A platform limitation appears in both the user guidance and machine evidence.",
+        "Changing a command or generated schema invalidates the affected page/example evidence."
+      ],
+      "negative_cases": [
+        "A successful doc build alone cannot certify runtime claims.",
+        "Skipped commands, zero selected tests, stale candidate hashes and unsupported behavior labelled passed fail the documentation gate.",
+        "A product defect is not silently patched outside this documentation task's perimeter."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode documentation --stage verified --format json",
+        "Run the exact bound documentation build, link/example and applicable isolated workflow commands; record nonzero cases and actual platform coverage.",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "All delivered documentation topics have current build/link/claim evidence or explicit truthful limitations consistent with supported product scope.",
+        "documentation-map is mechanically readable and bound to the exact candidate; unresolved required workflows block the release lane."
+      ],
+      "safe_stop": "Stop after documentation validation; migration guide assembly and rehearsal remain separate release tasks.",
+      "commit_subject": "test(docs): verify preview documentation against the candidate",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The documentation/verified check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    }
+  ]
+}

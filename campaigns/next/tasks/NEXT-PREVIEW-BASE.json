@@ -1,0 +1,190 @@
+{
+  "id": "NEXT-PREVIEW-BASE",
+  "tasks": [
+    {
+      "id": "NEXT-PREVIEW-BASE.1",
+      "title": "Capture the actual Developer Preview 1 starting state",
+      "goal": "Retain the exact source, package and interface baseline from which the authorized implementation starts.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibe.toml",
+        "vibe.lock",
+        "Cargo.toml",
+        "Cargo.lock",
+        "formats/REGISTRY.toml",
+        "formats/EPOCHS.toml",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "campaigns/next/README.md"
+      ],
+      "write_paths": [
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "After NEXT-P0-GATE and before any milestone implementation or accounting edit that changes product bytes, resolve the actual source commit/tree and exact repository/worktree scope. Capture this boundary first; the baseline is not automatically b1291b06, an old research tag, the planning commit or a version string.",
+        "Retain a raw before-state inventory under evidence/ and a provisional transition.json with DP1 captured, DP2 pending and documentation input pending. Distinguish source truth from measured executable evidence; BASE.2 validates this authored provisional record after creating the registered schema.",
+        "Inventory authored sources/specs, lock and recipe identities, package coordinates with exact content hashes and available immutable provider locators, externally sourced captures, CLI/MCP registrations, durable formats, configuration/boot/installation surfaces and supported capability families. Record explicit inclusion and reasoned exclusion sets; a mutable 1.0.0 coordinate alone never identifies a package.",
+        "Record artifact digests/provenance only for available measured builds, with toolchain, host/target/platform, applicable commands and actual results. For unavailable artifacts or resources retain the reason and reproduction requirements; preserve the captured source even if later native proof is pending.",
+        "Review the capture against the actual Git tree and existing Phase 0 evidence. Retain the product-scope census and account separately for planning/accounting-only files so that adding the capture cannot shift its own baseline."
+      ],
+      "positive_cases": [
+        "Two captures of the unchanged selected boundary agree on source/package/content identity.",
+        "A package whose bytes changed under 1.0.0 is distinguishable from its old capture.",
+        "Missing native artifacts remain explicitly unavailable while source capture is retained."
+      ],
+      "negative_cases": [
+        "A current branch name or version string without exact source/content identity cannot close capture.",
+        "An untracked product file, nested owned package or external input is not silently omitted.",
+        "DP2, publication, freeze or prototype graduation cannot be inferred from writing a release index."
+      ],
+      "checks": [
+        "git diff --check",
+        "Manual exact-tree and package-capture reconciliation against retained Phase 0 evidence; this is a review, not an existing executable validator."
+      ],
+      "acceptance": [
+        "DP1 refers to the actual pre-implementation boundary and each included source/package is exactly identifiable or explicitly unrecoverable with a blocker.",
+        "The initial capability/surface denominator and scope exclusions are retained in permanent evidence; no unavailable run is marked passed.",
+        "Provisional capture has not been presented as schema-validated before BASE.2."
+      ],
+      "safe_stop": "Stop after retaining the baseline capture; do not start milestone work until BASE.3 is accepted.",
+      "commit_subject": "docs(release): capture the Developer Preview 1 baseline",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "A clean capture may use a committed tree; any deliberate dirty input requires an exact retained overlay and an explicit source-scope disposition before implementation. Do not erase dirty work to make capture convenient.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-BASE.2",
+      "title": "Define permanent release accounting and deterministic validators",
+      "goal": "Create the permanent contract and generated machine-readable formats independently of future change and migration runtimes.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "formats/REGISTRY.toml",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "xtask/src/codegen/",
+        "xtask/src/main.rs",
+        "tools/preview-transition/",
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "Create PROP-068 as ordinary release/change-accounting law, including the DP1/DP2 identity model, evidence semantics, prototype policy, documentation intake, exact-scope reconciliation and post-retirement proof. Check the proposed filename against the actual tree before minting it.",
+        "Place release-impact records at changes/<immutable-id>/release-impact.json under the configured spec root. Define these as ordinary versioned JSON data and non-normative change evidence. Define versioned transition.json, documentation-map.json and validator report/request formats in the existing format registry with canonical schemas, generated bindings/readers and round-trip fixtures.",
+        "Define immutable change identity, before/after capture references, affected capability/topic and permanent contract anchors, user impact and documentation impact with separate explicit no-impact reasons, migration action class, evidence, introduced/reverted/superseded relationships and acceptance provenance. Distinguish individual contribution records from net transition conclusions.",
+        "Define a permanent read-only checker and deterministic draft assembler under tools/preview-transition/. Establish and document the exact proposed checker grammar: check.py --transition <path> --mode capture|contribution|bindings|documentation|release|retired --format json. Bindings mode requires --stage roles|linked; documentation mode requires --stage intake|updated|verified; release mode requires --stage reviewed|verified. Other modes reject --stage. Each stage validates only its completed obligations and reports later required proof as pending, never passed. Establish assemble.py --transition <path> --output-dir <bound-path>; assembling never accepts work or overwrites reviewed prose without an explicit owned output path.",
+        "Use existing schema/codegen entrypoints and generated readers for owned wire formats; no independent handwritten wire parser or duplicate vocabulary. Generate machine reports with exact subject IDs, missing evidence, unavailable/unsupported distinctions and stable ordering, independent of clocks and absolute checkout paths.",
+        "Implement semantic cases for stable capture identity, unknown record epochs, malformed references, equivalent no-op transitions, additions/removals, same-version different content, deterministic assembly and preservation of human editorial prose. Validate the provisional BASE.1 capture without rewriting its historical facts.",
+        "Define stage predicates and test their boundaries: bindings/roles proves native role adoption and identity preservation, linked additionally proves migration/capability linkage; documentation/intake requires exact supplied capture/binding/topic census, updated additionally requires reviewed topic delta, verified additionally requires actual current build/link/claim proof; release/reviewed requires independent net reconciliation and guidance, verified additionally requires migration rehearsal. Retired mode checks real scaffold absence and all permanent finalization prerequisites; candidate eligibility is distinct from an already recorded final attestation. Missing future proof cannot fail an earlier valid stage or be counted as completed by that success."
+      ],
+      "positive_cases": [
+        "A consumer reads the retained formats through generated readers and can enumerate every unresolved migration/documentation obligation.",
+        "Deterministic assembly gives identical drafts from identical captures and records in different checkout paths.",
+        "An explicit user-no-impact record can still require documentation updates."
+      ],
+      "negative_cases": [
+        "Unknown epoch, wrong field type, duplicate immutable ID or dangling capture fails with a machine diagnosis.",
+        "Handwritten parsing, clock-derived output changes or a generated draft presented as accepted documentation fails review.",
+        "The bootstrap tools must work before M-02 change runtime, M-13 migration runtime and M-16 facade completion.",
+        "An intake or reviewed-stage PASS must not imply verified documentation, completed rehearsal or finalized DP2; unsupported mode/stage combinations and omitted required stages refuse."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode capture --format json",
+        "cargo xtask check-codegen",
+        "cargo xtask wire-diff",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Permanent laws, registered schemas, generated readers, tested command grammar and meaningful nonzero semantic tests are available before BASE.3.",
+        "The bootstrap dependency direction is acyclic: later domain services adopt these records; these tools do not depend on their future implementation.",
+        "Schema/codegen work and application behavior are committed separately under PROP-044; generated files are never edited by hand."
+      ],
+      "safe_stop": "Stop with validated capture and independently usable accounting tools; contribution enforcement remains BASE.3.",
+      "commit_subject": "feat(release): define permanent preview transition accounting",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "Root must bind any additional existing codegen registration/module owner discovered during inspection before dispatch; the perimeter allows only registration required by these exact formats. This task may require two atomic commits despite its single proposed subject.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-BASE.3",
+      "title": "Require contribution records before central acceptance",
+      "goal": "Make missing release and documentation accounting visible from the first implementation contribution.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "campaigns/next/manifest.json",
+        "campaigns/next/plan.seed.toml",
+        "docs/releases/developer-preview-1-to-2/",
+        "tools/preview-transition/"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/changes/",
+        "campaigns/next/change-coverage.json",
+        "tools/preview-transition/",
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "Initialize the temporary task-to-change coverage bridge using existing stable task IDs without changing their identity or acceptance state. Treat it as one routing view over permanent change records, not a new task scheduler or a permanent source of release semantics.",
+        "Define the central acceptance procedure: every actual contribution commit and out-of-plan repair receives permanent release-impact record(s), or separate reasoned user-no-impact and documentation-no-impact dispositions. One task may map to several changes and several tasks may implement one immutable change; record actual before/after subjects and acceptance provenance.",
+        "Require capability/topic membership and permanent source anchors before accepting a claimed effect. Amend the denominator for newly introduced API/configuration/format/installation behavior; finding an unplanned delta expands accounting instead of silently reducing scope.",
+        "Implement read-only checks over the selected contribution's exact commit/tree delta and bridge references. Document and invoke the accepted contribution-mode command as an ordinary required step before every central acceptance, recording its exact subject and result; bind any CI hook only in a separately authorized CI task. Preserve candidate evidence across retries and reject stale captures. The central reviewer still decides semantic adequacy; a worker-written record or passing shape check is not acceptance.",
+        "Test missing contribution records, missing either no-impact reason, dangling capability/topic IDs, unaccounted new API, duplicate change IDs, one-to-many mappings, explicit reverts/supersedes and metadata-only record maintenance. Keep all milestone first children gated on this accepted foundation through root-owned DAG wiring."
+      ],
+      "positive_cases": [
+        "A legitimate internal refactor has distinct supported no-impact reasons and exact commit evidence.",
+        "A later corrective contribution joins the same immutable change or an explicit related change without reusing an ID with new meaning.",
+        "An unplanned repair is accounted even though it has no original implementation task row."
+      ],
+      "negative_cases": [
+        "A task count of 201 or all-green bridge rows cannot prove actual diff coverage.",
+        "An omitted new public registration, dangling capability or missing documentation disposition blocks acceptance.",
+        "A revert cannot erase the original contribution or be reported as a delivered feature without net reconciliation."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode contribution --format json",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every future milestone acceptance has an executable accounting check and a central semantic review obligation tied to actual contributions.",
+        "Temporary task references and permanent release facts are explicitly separated and removal of the bridge does not lose change identity.",
+        "All nonzero semantic cases pass; the preserved original implementation task contracts remain unchanged."
+      ],
+      "safe_stop": "Stop after contribution enforcement is accepted; root may dispatch only authorized dependency-ready work.",
+      "commit_subject": "test(release): require contribution impact before acceptance",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "The default spec-root write envelope is vibevm/vibespecs/changes/. A non-default configured root must be bound and the exact packet perimeter refined before writes; never reinterpret a request path as authority.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution."
+      ]
+    }
+  ]
+}

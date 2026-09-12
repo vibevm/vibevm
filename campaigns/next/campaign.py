@@ -154,9 +154,12 @@ def load_plan(context):
 
 def load_tasks(manifest):
     result = {}
-    for parent in manifest["atoms"] + manifest.get("refinements", []):
+    groups = work_packages(manifest)
+    refinements = manifest.get("refinements", [])
+    require_unique(groups + refinements, "work-package")
+    for parent in groups + refinements:
         path = within(parent["tasks_file"]) if "tasks_file" in parent else HOME / "tasks" / (parent["id"] + ".json")
-        if "tasks_file" in parent:
+        if parent in refinements:
             need(parent["id"] in result, "refinement parent must be an already declared task")
         raw = path.read_bytes()
         need(digest(raw) == manifest["task_files_sha256"][parent["id"]], "task contract changed; update shared/local plan witnesses explicitly")
@@ -178,6 +181,47 @@ def load_tasks(manifest):
             need(task["id"] not in result, f"duplicate task {task['id']}")
             result[task["id"]] = task
     return result
+
+
+def work_packages(manifest):
+    """Additional campaign obligations do not rewrite the frozen baseline graph."""
+    supplements = manifest.get("supplemental_work_packages", [])
+    need(isinstance(supplements, list), "supplemental work packages must be a list")
+    for group in supplements:
+        need(isinstance(group, dict) and
+             all(isinstance(group.get(key), str) and group[key].strip()
+                 for key in ("id", "owner", "tasks_file")),
+             "invalid supplemental work package")
+        need(isinstance(group.get("depends_on"), list) and
+             all(isinstance(key, str) and key for key in group["depends_on"]),
+             "invalid supplemental prerequisites")
+    return manifest["atoms"] + supplements
+
+
+def package_ancestor(manifest, task_id):
+    """Resolve a refined child through its declared baseline/supplemental owner."""
+    groups = {row["id"]: row for row in work_packages(manifest)}
+    key = task_id
+    while "." in key:
+        key = key.rsplit(".", 1)[0]
+        if key in groups:
+            return groups[key]
+    raise Refusal(f"task has no declared work-package ancestor: {task_id}")
+
+
+def prerequisite_reachable(nodes, key, prerequisite):
+    """A dependency on a group also waits for that group's required children."""
+    graph = combined_graph(nodes)
+    pending, seen = list(graph[key]), set()
+    while pending:
+        current = pending.pop()
+        if current == prerequisite:
+            return True
+        if current not in seen:
+            need(current in graph, f"missing prerequisite {current}")
+            seen.add(current)
+            pending.extend(graph[current])
+    return False
 
 
 def source_contracts(manifest, ledger):
@@ -246,10 +290,13 @@ def validate_coverage(manifest, tasks, plan):
     expected_nodes = set(tasks) | parents | {m["id"] for m in manifest["milestones"]} | set(manifest["auxiliary_nodes"])
     need(set(nodes) == expected_nodes, "local/shared node inventory differs; merge/replan by stable IDs")
     need(set(manifest["baseline_graph"]) == parents and len(parents) == 86, "baseline parent coverage lost")
-    for parent in manifest["atoms"]:
-        need(parent["id"] in nodes, f"baseline parent missing: {parent['id']}")
-        need(nodes[parent["id"]]["depends_on"] == parent["depends_on"], f"baseline prerequisites changed: {parent['id']}")
+    for parent in work_packages(manifest):
+        need(parent["id"] in nodes, f"work-package parent missing: {parent['id']}")
+        need(nodes[parent["id"]]["depends_on"] == parent["depends_on"], f"work-package prerequisites changed: {parent['id']}")
         need(nodes[parent["id"]].get("contract_sha256") == manifest["task_files_sha256"][parent["id"]], "work-package contract witness stale")
+        owner = parent.get("owner", parent.get("milestone"))
+        need(owner in nodes and nodes[parent["id"]]["parent"] == owner,
+             f"wrong work-package owner: {parent['id']}")
     for key in tasks:
         parent, suffix = key.rsplit(".", 1)
         need(nodes[key]["parent"] == parent, f"wrong task parent: {key}")
@@ -268,7 +315,100 @@ def validate_coverage(manifest, tasks, plan):
             if key in tasks or key.startswith("NEXT-P0"):
                 need(node["state"] not in {"active", "candidate", "accepted"},
                      f"planning-only hold forbids started campaign work: {key}")
+    if any(group["owner"] == "NEXT-PREVIEW" for group in manifest.get("supplemental_work_packages", [])):
+        need(manifest.get("preview_control"), "preview-control binding missing")
+    if manifest.get("preview_control"):
+        validate_preview_control(manifest, nodes, tasks)
     return nodes
+
+
+def preview_control(manifest):
+    path = manifest.get("preview_control")
+    need(isinstance(path, str) and path.strip(), "preview-control path missing")
+    control = read_json(within(path))
+    need(isinstance(control, dict) and type(control.get("schema")) is int and control["schema"] == 1,
+         "unsupported preview-control schema")
+    need(control.get("state") == "planned", "preview control is a planning contract")
+    need(control.get("from_release") == "developer-preview-1" and
+         control.get("to_release") == "developer-preview-2", "preview release pair differs")
+    for key, policy in (("baseline", "capture_before_first_implementation"),
+                        ("target", "seal_after_scaffold_removal")):
+        row = control.get(key)
+        need(isinstance(row, dict) and row.get("state") == "pending_capture" and
+             row.get("policy") == policy, f"invalid preview {key} capture policy")
+    docs = control.get("documentation")
+    need(isinstance(docs, dict) and docs.get("state") == "awaiting_owner_source" and
+         isinstance(docs.get("gate"), str) and docs["gate"],
+         "invalid preview documentation binding")
+    for key in ("contract_unit", "bootstrap_gate", "final_gate", "retirement_node",
+                "post_removal_gate", "workstream_acceptance", "closure_acceptance"):
+        need(isinstance(control.get(key), str) and control[key].strip(),
+             f"invalid preview-control {key}")
+    rules = control.get("task_rules")
+    need(isinstance(rules, list) and rules and
+         all(isinstance(rule, str) and rule.strip() for rule in rules),
+         "preview task rules missing")
+    homes = control.get("permanent_homes")
+    need(isinstance(homes, dict) and homes, "preview permanent homes missing")
+    for label, path in homes.items():
+        need(isinstance(label, str) and label and isinstance(path, str) and path.strip(),
+             "invalid preview permanent home")
+        need(not Path(path).is_absolute() and not re.match(r"^[A-Za-z]:", path),
+             "preview permanent home must be repository-relative")
+        need(not temporary(path, manifest), f"preview permanent home targets scaffolding: {label}")
+    return control
+
+
+def validate_preview_control(manifest, nodes, tasks):
+    """Prove scheduled obligations only, never actual release/change-record truth."""
+    control = preview_control(manifest)
+    units = {unit["id"]: unit for unit in manifest["units"]}
+    unit_id = control["contract_unit"]
+    need(unit_id in units, "preview contract unit missing")
+    unit = units[unit_id]
+    owner = unit["owner"]
+    need(owner in nodes and nodes[owner]["parent"] == "NEXT", "preview workstream missing")
+    for key in ("bootstrap_gate", "final_gate", "retirement_node", "post_removal_gate"):
+        need(control[key] in nodes, f"preview gate missing: {key}")
+    docs_gate = control["documentation"]["gate"]
+    need(docs_gate in nodes, "preview documentation gate missing")
+    need(control["retirement_node"] == "RETIRE-" + unit_id,
+         "preview retirement identity differs")
+    for gate in unit.get("retire_after", [owner]):
+        need(gate in nodes and gate in nodes[control["retirement_node"]]["depends_on"],
+             "preview retirement does not wait for its declared workstream gate")
+    for workstream in [owner] + [row["id"] for row in manifest["milestones"]]:
+        need(control["workstream_acceptance"] in nodes[workstream]["acceptance"],
+             f"preview workstream acceptance obligation missing: {workstream}")
+    for closing in ("NEXT", "NEXT-CLOSE", control["post_removal_gate"]):
+        need(control["closure_acceptance"] in nodes[closing]["acceptance"],
+             f"preview closure acceptance obligation missing: {closing}")
+    mandate = "NEXT-PREVIEW-MIGRATION-DOCS"
+    need(all(mandate in nodes[key]["mandates"] for key in (owner, "NEXT")),
+         "preview owner mandate missing from root/workstream")
+    for parent in manifest["atoms"]:
+        first = parent["id"] + ".1"
+        need(control["bootstrap_gate"] in effective_dependencies(nodes, first),
+             f"preview bootstrap prerequisite missing: {first}")
+    supplements = manifest.get("supplemental_work_packages", [])
+    need(supplements and all(group["owner"] == owner for group in supplements),
+         "preview supplemental owner differs")
+    for group in supplements:
+        for key in tasks:
+            if key.startswith(group["id"] + "."):
+                need(prerequisite_reachable(nodes, key, "NEXT-EXECUTION-AUTHORITY"),
+                     f"preview task lacks execution authority prerequisite: {key}")
+    bootstrap_parent = control["bootstrap_gate"].rsplit(".", 1)[0]
+    need(bootstrap_parent + ".1" in tasks, "preview baseline setup task missing")
+    need("NEXT-P0-GATE" in effective_dependencies(nodes, bootstrap_parent + ".1"),
+         "preview baseline setup must wait for Phase 0")
+    closing = effective_dependencies(nodes, "NEXT-CLOSE.1")
+    need(control["retirement_node"] in closing and control["final_gate"] in closing,
+         "preview final/retirement gate missing from closure")
+    need(control["post_removal_gate"] == "NEXT-CLOSE.3" and
+         "NEXT-CLOSE.2" in effective_dependencies(nodes, control["post_removal_gate"]),
+         "preview target seal must follow scaffold removal")
+    return control
 
 
 def check(manifest, context):
@@ -287,10 +427,16 @@ def check(manifest, context):
     ledger = tomllib.loads((HOME / "promotion.toml").read_text(encoding="utf-8"))
     units, status, clauses = source_contracts(manifest, ledger)
     return {"ok": True, "mode": "authoring-structure", "product_gates_executed": False,
-            "baseline_work_packages": len(parents), "implementation_tasks": len(tasks),
+            "baseline_work_packages": len(parents),
+            "baseline_implementation_tasks": sum(key.rsplit(".", 1)[0] in parents for key in tasks),
+            "supplemental_tasks": sum(key.rsplit(".", 1)[0] in
+                                      {row["id"] for row in manifest.get("supplemental_work_packages", [])}
+                                      for key in tasks),
+            "implementation_tasks": len(tasks),
             "plan_nodes": len(nodes), "contract_units": len(units), "source_clauses": len(clauses),
             "retired_units": sum(x["state"] == "retired" for x in status.values()),
             "execution_hold": nodes["NEXT-EXECUTION-AUTHORITY"]["state"],
+            "preview_change_records_verified": False,
             "open_owner_decisions": [d["id"] for d in manifest["decisions"] if d["owner_state"] == "open"]}
 
 
@@ -307,23 +453,28 @@ def ready_nodes(plan):
     return sorted(ready, key=lambda n: (n["order"], n["id"]))
 
 
+def resolved_contract_units(manifest, selected):
+    ledger = tomllib.loads((HOME / "promotion.toml").read_text(encoding="utf-8"))
+    _, states, clauses = source_contracts(manifest, ledger)
+    resolved = []
+    for unit in selected:
+        if states[unit["id"]]["state"] == "active":
+            resolved.append({"id": unit["id"], "state": "active", "path": unit["path"], "anchors": unit["anchors"]})
+        else:
+            resolved.append({"id": unit["id"], "state": "retired",
+                             "permanent_targets": [t for a in unit["anchors"] for t in clauses[a]["targets"]]})
+    return resolved
+
+
 def task_packet(manifest, task_id, context):
     tasks = load_tasks(manifest)
     if task_id in tasks:
         result = dict(tasks[task_id])
-        parent = next(a["id"] for a in manifest["atoms"] if task_id.startswith(a["id"] + "."))
-        result["baseline_parent"] = next(a for a in manifest["atoms"] if a["id"] == parent)
-        result["contract_units"] = [u for u in manifest["units"] if u["owner"] == parent[:4]]
-        ledger = tomllib.loads((HOME / "promotion.toml").read_text(encoding="utf-8"))
-        _, states, clauses = source_contracts(manifest, ledger)
-        resolved = []
-        for unit in result["contract_units"]:
-            if states[unit["id"]]["state"] == "active":
-                resolved.append({"id": unit["id"], "state": "active", "path": unit["path"], "anchors": unit["anchors"]})
-            else:
-                resolved.append({"id": unit["id"], "state": "retired",
-                                 "permanent_targets": [t for a in unit["anchors"] for t in clauses[a]["targets"]]})
-        result["contract_units"] = resolved
+        parent = package_ancestor(manifest, task_id)
+        supplemental = parent in manifest.get("supplemental_work_packages", [])
+        result["supplemental_parent" if supplemental else "baseline_parent"] = parent
+        owner = parent["owner"] if supplemental else parent["milestone"]
+        result["contract_units"] = resolved_contract_units(manifest, [u for u in manifest["units"] if u["owner"] == owner])
         result["standing_contract"] = "vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml"
         if task_id in manifest.get("dispatch_bindings", {}):
             result["dispatch_binding_required"] = manifest["dispatch_bindings"][task_id]
@@ -337,6 +488,20 @@ def task_packet(manifest, task_id, context):
         plan = load_plan(context)
         result = next((n for n in plan["node"] if n["id"] == task_id), None)
         need(result is not None, f"unknown task: {task_id}")
+        result = dict(result)
+    if manifest.get("preview_control"):
+        control = preview_control(manifest)
+        units = [unit for unit in manifest["units"] if unit["id"] == control["contract_unit"]]
+        need(len(units) == 1, "preview contract unit missing/ambiguous")
+        result["change_control"] = {
+            "from_release": control["from_release"], "to_release": control["to_release"],
+            "protocol": resolved_contract_units(manifest, units)[0],
+            "permanent_homes": control["permanent_homes"],
+            "bootstrap_gate": control["bootstrap_gate"], "final_gate": control["final_gate"],
+            "documentation_input_gate": control["documentation"]["gate"],
+            "post_removal_gate": control["post_removal_gate"],
+            "task_rules": control["task_rules"],
+            "status_note": "These are planned obligations. Actual captures, change records and documentation evidence belong to the permanent transition index; this packet verifies none of them."}
     result["ready"] = task_id in {n["id"] for n in ready_nodes(load_plan(context))}
     result["status_note"] = "Readiness is a dependency check, not authorization or verification of physical inputs."
     return result

@@ -2,7 +2,7 @@
 
 The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml). This is an implementation plan, not implemented product behavior. The owner's current instruction is planning only: Phase 0 and implementation are unstarted. NEXT-EXECUTION-AUTHORITY must remain blocked until a later explicit instruction starts execution; a generated GOAL is not authorization.
 
-The baseline is refined plan revision 4 at commit b1291b06d5704ee32f7486c86e1fae617fcbbddf. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The complete seed has 407 nodes, including the execution hold, probes, gates, promotion/removal tasks and explicit future horizons. Sixty temporary XML units contain 229 source clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges.
+The baseline is refined plan revision 4 at commit b1291b06d5704ee32f7486c86e1fae617fcbbddf. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributes four supplemental groups and 11 tasks, for 212 tasks and 425 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
 
 ## Start in an exact local context
 
@@ -31,6 +31,28 @@ One work package may need another workstream's early group before its own parent
 M-13-D.2 requires the accepted exact per-file ownership/version census before dispatch. M-17-A.2 requires finite handler-family batches from the accepted M-16 census; convert its local node to a group and register those additional task files in manifest.json refinements before execution. Each refinement has id equal to its parent task and tasks_file pointing to a JSON group with sequential .1… children. The checker retains the original denominator and validates the added contracts.
 
 The core task metadata is the canonical recipe. Shared XML stages product laws; permanent PROP/FEAT anchors are created before code/tests cite them. Final retirement is a separate evidence gate, not a reason to defer permanent source contracts.
+
+## Change accounting, migration and documentation
+
+[preview-control.json](preview-control.json) binds the cross-task obligations in [NEXT-A26.xml](../../vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml). These are planning artifacts. Their pending-capture/input fields describe what authoring has not measured; actual release state belongs in the future permanent transition index.
+
+| Step | Result | When it can run |
+|---|---|---|
+| NEXT-PREVIEW-BASE.1 | Exact DP1 product/package/source capture | After Phase 0, before any surviving implementation |
+| NEXT-PREVIEW-BASE.2/.3 | Registered record format, tools and contribution checks | Establish the accounting bootstrap; all original M-tasks wait for BASE.3 |
+| NEXT-PREVIEW-BIND | Adopt the same records in native change roles and link migrations/capabilities | After the named M-02/M-13/M-16 prerequisites |
+| NEXT-PREVIEW-DOCS.1 | Bind the independently supplied documentation | As soon as the input gate and BASE are ready |
+| NEXT-PREVIEW-DOCS.2/.3 | Apply and verify documentation changes | After all 17 workstreams |
+| NEXT-PREVIEW-RELEASE | Reconcile the full delta, review guidance and rehearse migration | After implementation, binding and documentation proof |
+| NEXT-CLOSE.3 | Seal final DP2 and retain permanent evidence | After all campaign scaffolding is removed |
+
+Every accepted contribution must name permanent change records or separate reviewed reasons for no user impact and no documentation impact. Record before/after behavior, affected users/interfaces/platforms, exact evidence, migration actions and documentation topics. Include unplanned fixes, generated surfaces, reverts and supersession. At workstream and release gates compare the actual commit range and interface/capability census with the records; one row per task is insufficient.
+
+The future permanent homes are configured-spec-root `changes/<immutable-change-id>/release-impact.json` and `docs/releases/developer-preview-1-to-2/`. The latter retains `transition.json`, the reviewed `MIGRATION.md`, `documentation-map.json` and evidence. Existing format break notes and M-13 migration descriptors remain authoritative. The early records do not require M-02's parser; that parser later adopts their existing identities and non-normative payloads.
+
+The owner has not supplied the independent documentation yet. `NEXT-PREVIEW-DOCS-INPUT` binds its exact source/revision and allowed scope when delivered; that input may be accepted during planning without starting the campaign. Pending input blocks only its dependents. Update documentation by comparing the supplied baseline, current authored documentation and accepted product changes; include new topics and preserve concurrent edits. Future checker stages distinguish intake, edited documentation and verified claims so an early success cannot imply later proof.
+
+No migration tool, release capture or updated documentation is claimed by this planning change. The supplemental tasks explicitly mark prospective commands TO CREATE. Final DP2 includes updated product/documentation and scaffold removal; a separate evidence/index attestation names that verified commit without self-referential hashes. The guide, recipes, records and proof remain usable after `campaigns/next/` is deleted.
 
 ## Authority and resource boundaries
 
