@@ -17,7 +17,9 @@
     <p>1. Add the registry to the project. The address is the organisation root, not a package repository:</p>
     <example id="registry-add" fixture="hello-vibe">
       <run>vibe registry add acme git@github.com:acme-specs --path hello-vibe --position primary</run>
-      <expect></expect>
+      <expect>  → Added `[[registry]]` `acme` as primary → git@github.com:acme-specs on host github.com (adapter: github)
+
+vibe registry add: `acme` registered (1 total registry).</expect>
     </example>
     <p>2. Choose the authentication regime with `--auth`. The values are `none` for public read, `ssh` for keys, `token-env` for a token in an environment variable named after the host, and `credential-helper` for the system's git helper.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>

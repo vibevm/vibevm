@@ -207,6 +207,21 @@ fn main() -> ExitCode {
             commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)
         }
         Command::Check(args) => commands::check::run(&ctx, args),
+        Command::Doc(args) => commands::doc::run(
+            args,
+            // The documentation library reads no ambient environment of
+            // its own: the settings dir, the operator's home, the temp
+            // root, the tree and the running binary are resolved HERE and
+            // travel down as data (PROP-057 ##PIPE-EXAMPLE-RUNNER).
+            commands::doc::DocEnv {
+                settings: std::env::var_os("VIBE_SETTINGS"),
+                home: std::env::var_os(if cfg!(windows) { "USERPROFILE" } else { "HOME" }),
+                temp: std::env::temp_dir(),
+                cwd: std::env::current_dir().ok(),
+                current_exe: std::env::current_exe().ok(),
+                pid: std::process::id(),
+            },
+        ),
         Command::Facts(args) => commands::facts::run(&ctx, args),
         Command::Requirements(args) => commands::requirements::run(&ctx, args),
         Command::Why(args) => commands::why::run(&ctx, args),

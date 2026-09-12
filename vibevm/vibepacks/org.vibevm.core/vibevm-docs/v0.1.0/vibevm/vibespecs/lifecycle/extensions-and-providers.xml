@@ -43,7 +43,7 @@
     <p>`vibe tools` lists the binaries and servers the installed packages brought, which is the [registry](../glossary/index.xml#registry) of what a contribution of kind `binary` may name.</p>
     <example id="tools" fixture="hello-vibe-cwd">
       <run>vibe tools</run>
-      <expect></expect>
+      <expect>vibe tools: nothing installed declares a binary or an MCP server</expect>
     </example>
   </seeing>
   <providers title="Providers">

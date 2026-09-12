@@ -1,0 +1,35 @@
+# A copy of the built project under the name the deploy pages use, with
+# the artifact, target and profile tables those pages print in step 1
+# appended to its manifest.
+schema = 1
+
+[fixture]
+from = "hello-cargo"
+
+[[fixture.step]]
+copy = { from = "work/hello-vibe", to = "work/hello-deploy" }
+
+[[fixture.step]]
+
+[fixture.step.append]
+path = "work/hello-deploy/vibe.toml"
+text = """
+
+[[artifacts.build]]
+id = "hello"
+mechanism = "build:cargo"
+outputs = [{ id = "hello", kind = "executable", select = { package = "hello", bin = "hello" } }]
+config = { offline = true }
+
+[[deploy.target]]
+id = "local"
+artifact = "hello"
+mechanism = "deploy:vibe-bin"
+config = { command = "hello" }
+
+[deploy]
+default_profile = "local"
+
+[deploy.profiles.local]
+targets = ["local"]
+"""

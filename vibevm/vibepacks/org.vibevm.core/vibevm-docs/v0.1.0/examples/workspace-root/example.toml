@@ -1,0 +1,17 @@
+# The project turned into a workspace root by the table the page prints in
+# step 1. Appended rather than hand-written, so the rest of the manifest
+# stays exactly what `vibe init` produced.
+schema = 1
+
+[fixture]
+from = "project"
+
+[[fixture.step]]
+
+[fixture.step.append]
+path = "work/vibe.toml"
+text = """
+
+[workspace]
+members = ["packages/*"]
+"""

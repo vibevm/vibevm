@@ -1,0 +1,7 @@
+# The same tree as `hello-vibe`, entered: the working directory is the
+# project itself, for the pages whose commands take no `--path`.
+schema = 1
+
+[fixture]
+from = "hello-vibe"
+cwd = "work/hello-vibe"

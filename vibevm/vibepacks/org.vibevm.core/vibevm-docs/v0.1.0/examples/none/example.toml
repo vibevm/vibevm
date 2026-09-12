@@ -1,0 +1,8 @@
+# The root state every fixture grows out of: an empty project folder, a
+# machine settings directory with a neutral author, and a LOCAL registry
+# that is a copy of exactly the packages these examples install (X-025).
+#
+# The copy is what makes the corpus hermetic. Pointing the registry at the
+# host checkout would make every install depend on the tree the runner is
+# checking, and the paths of that tree would reach the goldens.
+schema = 1

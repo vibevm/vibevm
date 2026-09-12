@@ -4434,6 +4434,7 @@ dependencies = [
  "vibe-agent-projection",
  "vibe-check",
  "vibe-core",
+ "vibe-doc",
  "vibe-facts",
  "vibe-graph",
  "vibe-install",

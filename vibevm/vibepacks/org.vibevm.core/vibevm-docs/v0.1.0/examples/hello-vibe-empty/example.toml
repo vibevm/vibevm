@@ -1,0 +1,8 @@
+# A project scaffolded and nothing installed yet.
+schema = 1
+
+[fixture]
+from = "empty"
+
+[[fixture.step]]
+run = "vibe init hello-vibe"
