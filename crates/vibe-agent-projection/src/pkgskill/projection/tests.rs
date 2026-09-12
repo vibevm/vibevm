@@ -1,5 +1,7 @@
 use std::fs;
 
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
+
 use super::*;
 
 fn project_with_skill(agents: &[&str], include: &[&str]) -> tempfile::TempDir {
@@ -248,10 +250,11 @@ path = "skills/root"
 
     fs::write(
         project.path().join("vibe.lock"),
-        r#"[meta]
+        format!(
+            r#"[meta]
 generated_by = "test"
 generated_at = "2026-08-26T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "tool"
@@ -276,7 +279,8 @@ name = "locked-z"
 version = "0.2.0"
 source_url = "file:///locked-z"
 content_hash = "sha256:cccc"
-"#,
+"#
+        ),
     )
     .unwrap();
 

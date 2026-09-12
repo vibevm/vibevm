@@ -143,6 +143,7 @@ mod tests {
     use std::path::{Path, PathBuf};
 
     use tempfile::tempdir;
+    use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, Severity, check_project};
@@ -160,7 +161,7 @@ mod tests {
     fn write_local_lock(project: &Path, source_url: &str, content_hash: &str) {
         let lockfile = format!(
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-08-05T00:00:00Z\"\n\
-             schema_version = 7\n\
+             schema_version = {CURRENT_SCHEMA_VERSION}\n\
              \n[[package]]\n\
              kind = \"flow\"\n\
              group = \"org.vibevm\"\n\
@@ -262,7 +263,7 @@ mod tests {
         // recorded one — must NOT be flagged: only `local` is reconciled here.
         let lockfile = format!(
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-08-05T00:00:00Z\"\n\
-             schema_version = 7\n\
+             schema_version = {CURRENT_SCHEMA_VERSION}\n\
              \n[[package]]\n\
              kind = \"flow\"\n\
              group = \"org.vibevm\"\n\

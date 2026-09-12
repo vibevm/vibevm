@@ -15,11 +15,19 @@ fn org() -> Group {
     Group::parse("org.vibevm").unwrap()
 }
 
-const FIXTURE: &str = r#"
+/// The two-package lockfile three tests below parse. The schema number
+/// is read from [`CURRENT_SCHEMA_VERSION`] rather than written out: a
+/// fixture that spells today's version as a digit is a fixture that
+/// turns red on the day the version moves, for no reason connected to
+/// what it tests.
+#[cfg(test)]
+fn fixture() -> String {
+    format!(
+        r#"
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T12:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 solver = "resolvo-0.x"
 root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]
 
@@ -54,7 +62,9 @@ source_ref = "v0.1.0"
 resolved_commit = "999888777666"
 content_hash = "sha256:def"
 source_kind = "registry"
-"#;
+"#
+    )
+}
 
 #[test]
 #[verifies(
@@ -66,8 +76,8 @@ source_kind = "registry"
     r = 1
 )]
 fn parses_fully() {
-    let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
-    assert_eq!(lf.meta.schema_version, 7);
+    let lf: Lockfile = toml::from_str(&fixture()).unwrap();
+    assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
     assert_eq!(lf.meta.solver.as_deref(), Some("resolvo-0.x"));
     assert_eq!(lf.meta.root_dependencies.len(), 2);
     assert_eq!(lf.packages.len(), 2);
@@ -91,7 +101,7 @@ fn parses_fully() {
 
 #[test]
 fn roundtrip() {
-    let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
+    let lf: Lockfile = toml::from_str(&fixture()).unwrap();
     let rendered = toml::to_string_pretty(&lf).unwrap();
     let back: Lockfile = toml::from_str(&rendered).unwrap();
     assert_eq!(lf, back);
@@ -99,11 +109,12 @@ fn roundtrip() {
 
 #[test]
 fn embedded_source_provenance_round_trips_without_machine_state() {
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-09-11T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "tool"
@@ -126,8 +137,9 @@ upstream_license = "MIT"
 license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
 license_file_sha256 = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-"#;
-    let lock: Lockfile = toml::from_str(raw).unwrap();
+"#
+    );
+    let lock: Lockfile = toml::from_str(&raw).unwrap();
     let source = &lock.packages[0].embedded_sources[0];
     assert_eq!(lock.packages[0].authors, ["Bridge Package Maintainer"]);
     assert_eq!(source.name, "upstream");
@@ -154,11 +166,12 @@ license_file_sha256 = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccc
 
 #[test]
 fn embedded_source_lock_rejects_cache_paths_and_credentials() {
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-09-11T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "tool"
@@ -181,18 +194,20 @@ license_path = "LICENSE"
 license_url = "https://github.com/example/upstream/blob/0123456789abcdef0123456789abcdef01234567/LICENSE"
 license_file_sha256 = "sha256:cccc"
 cache_path = "C:/secret/cache"
-"#;
-    assert!(toml::from_str::<Lockfile>(raw).is_err());
+"#
+    );
+    assert!(toml::from_str::<Lockfile>(&raw).is_err());
     assert!(toml::from_str::<Lockfile>(&raw.replace("cache_path", "auth")).is_err());
 }
 
 #[test]
 fn absent_visibility_provenance_is_not_serialized() {
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-08-23T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -201,8 +216,9 @@ group = "org.vibevm"
 version = "1.0.0"
 source_url = "file:///plain"
 content_hash = "sha256:abc"
-"#;
-    let lock: Lockfile = toml::from_str(raw).unwrap();
+"#
+    );
+    let lock: Lockfile = toml::from_str(&raw).unwrap();
     assert!(lock.packages[0].admitted_by.is_none());
     assert!(lock.packages[0].via_override.is_none());
     let rendered = toml::to_string_pretty(&lock).unwrap();
@@ -270,11 +286,12 @@ fn read_rejects_non_current_version() {
 fn path_source_kind_round_trips() {
     // A path-source member: source_kind = "path", and source_url is the
     // workspace-root-relative path, not a URL. PROP-007 §2.5.
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -284,8 +301,9 @@ version ="0.1.0"
 source_url = "packages/flow-wal"
 content_hash = "sha256:abc"
 source_kind = "path"
-"#;
-    let lf: Lockfile = toml::from_str(raw).unwrap();
+"#
+    );
+    let lf: Lockfile = toml::from_str(&raw).unwrap();
     let wal = lf.find(&org(), "wal").unwrap();
     assert_eq!(wal.source_kind, Some(SourceKind::Path));
     assert_eq!(wal.source_url, "packages/flow-wal");
@@ -304,7 +322,7 @@ fn rejects_missing_schema_version() {
 
 #[test]
 fn remove_drops_entry() {
-    let mut lf: Lockfile = toml::from_str(FIXTURE).unwrap();
+    let mut lf: Lockfile = toml::from_str(&fixture()).unwrap();
     assert_eq!(lf.packages.len(), 2);
     let removed = lf.remove(&org(), "wal").unwrap();
     assert_eq!(removed.name, "wal");
@@ -314,11 +332,12 @@ fn remove_drops_entry() {
 
 #[test]
 fn override_flag_round_trips() {
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -330,8 +349,9 @@ source_ref = "my-fix"
 content_hash = "sha256:abc"
 source_kind = "override"
 overridden = true
-"#;
-    let lf: Lockfile = toml::from_str(raw).unwrap();
+"#
+    );
+    let lf: Lockfile = toml::from_str(&raw).unwrap();
     assert!(lf.packages[0].overridden);
 
     let rendered = toml::to_string_pretty(&lf).unwrap();
@@ -351,11 +371,12 @@ overridden = true
 fn materialization_round_trips() {
     // An `in-place` package records its mode so uninstall / the destructive
     // guard (PROP-022 §2.6) recognise the slot as a non-vendored git clone.
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "feat"
@@ -366,8 +387,9 @@ source_url = "https://example.test/giant.git"
 content_hash = "sha256:abc"
 source_kind = "git"
 materialization = "in-place"
-"#;
-    let lf: Lockfile = toml::from_str(raw).unwrap();
+"#
+    );
+    let lf: Lockfile = toml::from_str(&raw).unwrap();
     let p = lf.find(&org(), "giant").unwrap();
     assert!(p.materialization.is_in_place());
     assert!(!p.materialization.is_default());
@@ -387,11 +409,12 @@ materialization = "in-place"
 
 #[test]
 fn rejects_unknown_package_field() {
-    let raw = r#"
+    let raw = format!(
+        r#"
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -401,6 +424,7 @@ version ="0.1.0"
 source_url = "file:///x"
 content_hash = "sha256:abc"
 mystery = true
-"#;
-    assert!(toml::from_str::<Lockfile>(raw).is_err());
+"#
+    );
+    assert!(toml::from_str::<Lockfile>(&raw).is_err());
 }

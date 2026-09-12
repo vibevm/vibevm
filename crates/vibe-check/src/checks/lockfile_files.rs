@@ -139,6 +139,7 @@ mod tests {
 
     use tempfile::tempdir;
     use vibe_core::layout;
+    use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, Severity, check_project};
@@ -147,10 +148,11 @@ mod tests {
     fn lockfile_files_missing_slot_is_an_error() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let lockfile = r#"[meta]
+        let lockfile = format!(
+            r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-05-04T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -160,7 +162,8 @@ version = "0.1.0"
 source_url = "file:///fake"
 content_hash = "sha256:00"
 files_written = []
-"#;
+"#
+        );
         fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
         // No vibedeps/org.vibevm.wal/0.1.0/ slot on disk — the error.
         let report = check_project(project.path(), &opts());
@@ -183,7 +186,9 @@ files_written = []
         // An empty lockfile, but a vibedeps/ slot on disk — orphan.
         fs::write(
             project.path().join("vibe.lock"),
-            "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 7\n",
+            format!(
+                "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = {CURRENT_SCHEMA_VERSION}\n"
+            ),
         )
         .unwrap();
         fs::create_dir_all(
@@ -210,10 +215,11 @@ files_written = []
     fn embedded_source_kind_entry_warns_as_non_portable() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let lockfile = r#"[meta]
+        let lockfile = format!(
+            r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-13T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -224,7 +230,8 @@ source_url = "file:///checkout/packages"
 content_hash = "sha256:00"
 files_written = []
 source_kind = "embedded"
-"#;
+"#
+        );
         fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
@@ -249,10 +256,11 @@ source_kind = "embedded"
     fn local_source_kind_entry_is_portable_no_warn() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let lockfile = r#"[meta]
+        let lockfile = format!(
+            r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-13T00:00:00Z"
-schema_version = 7
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -263,7 +271,8 @@ source_url = "file:///project/packages"
 content_hash = "sha256:00"
 files_written = []
 source_kind = "local"
-"#;
+"#
+        );
         fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
