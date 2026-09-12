@@ -1,6 +1,7 @@
 # WORKER-REPORT-P4-O3 — статический адаптер, SEO документации, агентские файлы сайта
 
-Пакет: `campaigns/docs-2026-09/findings/PACKET-P4-O3.md` (A4.4, A4.5).
+Пакет: `campaigns/docs-2026-09/findings/PACKET-P4-O3.md` (A4.4, A4.5)
+плюс два хвостовых атома по указанию оркестратора (раздел «## Хвост»).
 Ветка `research-preview-1-docs`, без push. Дата: 2026-09-12.
 
 ## Коротко для оркестратора
@@ -536,10 +537,11 @@ not offered to a crawler in the sitemap» читал корневой `/sitemap.
 **`tools/root-files.mjs` (P4-O5)** правился в пределах, которые назвал
 пакет: запись о `/doc/sitemap.xml` вместо перечисления страниц
 документации, `Sitemap:` через общую константу, и переезд фильтра
-`noindex` из `build.mjs`. Опечатку в строке отчёта CLI (`result.preloaded`,
-которого нет, печатается как `undefined` при прямом запуске
-`node tools/root-files.mjs`) **не трогал** — не мой периметр; кандидат в
-находки.
+`noindex` из `build.mjs`. Опечатку в строке отчёта CLI
+(`result.preloaded`, которого нет: при прямом запуске
+`node tools/root-files.mjs` печаталось `undefined`) в этих двух коммитах
+**не трогал** — не мой периметр; исправлена отдельным хвостовым атомом
+по указанию оркестратора, см. «## Хвост».
 
 Чужого незакоммиченного не стейджил: `git status` перед каждым коммитом
 проверялся, в обоих коммитах только пути
@@ -561,13 +563,8 @@ not offered to a crawler in the sitemap» читал корневой `/sitemap.
   вопрос к A4.14); одно значение на странице, которая слушается темы
   читателя, врало бы на половине показов. Пара тегов с `media` — правка
   содержания, вопрос ревью.
-- **SEO-теги во встраиваемой сборке не подавляются.** Те же маршруты
-  собираются для локального читателя, и он теперь несёт canonical,
-  `hreflang` и Open Graph с адресом публичного домена. Ничего никуда не
-  ходит (это текст), тег аналитики отсутствует сам по себе — без
-  website-id в окружении, — но `##SEO-LOCAL-EXEMPT` говорит «локальный
-  режим не публикует ничего из этого». Вход в A4.7: либо признак сборки,
-  либо решение, что для неиндексируемого выхода это безразлично.
+- ~~**SEO-теги во встраиваемой сборке не подавляются.**~~ — **закрыто
+  хвостовым атомом**, см. «## Хвост».
 - **Ни один `latest`-адрес не получает внутренних ссылок, кроме
   переключателя версий.** Навигация, полки и `llms.txt` конвейера ведут
   на нумерованные адреса, то есть канонический адрес страницы сегодня
@@ -581,6 +578,155 @@ not offered to a crawler in the sitemap» читал корневой `/sitemap.
 - **Всю панель `tools/self-check.sh`** не гонял — только шаг 8b, как и
   просил пакет. **`cargo` не запускал**, выход `vibe doc build` собирал
   готовым `target/debug/vibe.exe`.
+
+## Хвост
+
+Два атома по указанию оркестратора, два коммита.
+
+| Что | Коммит | Subject |
+|---|---|---|
+| публичная голова не попадает в локального читателя | `39c9c850` | `feat(web): keep the public head out of the local reader` |
+| опечатка в строке отчёта `root-files` | `a3580a72` | `fix(web): print the real font count when run by hand` |
+
+### Где живёт признак сборки
+
+`site/src/seo/mode.ts`, одна строка:
+
+```ts
+export const IS_LOCAL_READER: boolean = ISLAND_HTML === ISLAND_PLACEHOLDER;
+```
+
+Это **тот самый `define`, которым уже различаются сборки**, а не новый:
+`__VIBE_ISLAND_HTML__` подставляет каждая конфигурация Vite —
+статическая кладёт отрендеренный остров, встраиваемая кладёт
+`<!--vibe-doc-island-->`, который `vibe doc serve` заменяет на остров
+запрошенной страницы (`lib/island-source.ts`, `lib/island-placeholder.ts`).
+Эта подстановка **и есть** определение сборки локального читателя, так
+что и узнавать её честнее по ней: второго флага, который пришлось бы
+держать в согласии с первым, нет, переменной окружения, которую выкладка
+могла бы выставить по ошибке, — тоже. Обе стороны сравнения к моменту
+бандлера литералы, поэтому оно сворачивается в константу, и невыбранная
+ветка выбрасывается вместе с ней.
+
+Флаг **передаётся аргументом**, а не читается модулем головы:
+`documentationHead(view, local)`, `catalogueHead(lang, local)`. Причина
+прикладная — `seo/head.ts` должен оставаться импортируемым тестом, у
+которого нет за спиной сборки, а `mode.ts` тянет за собой
+`__VIBE_ISLAND_HTML__`, которого вне Vite не существует. Значение
+подставляют два маршрута: `routes/doc/index.tsx` и
+`routes/doc/[...path]/index.tsx`.
+
+### Что несёт и чего не несёт страница во встраиваемой сборке
+
+Проверено на `dist-embedded/com.example.docs/fixture-manual/latest/guide/every-block/index.html`:
+
+```
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every block once</title>
+<meta name="description" content="This page uses every block of the documentation genre **once**, …">
+<link rel="alternate" type="text/markdown"    href="/doc/com.example.docs/fixture-manual/latest/guide/every-block.md">
+<link rel="alternate" type="application/xml"  href="/doc/com.example.docs/fixture-manual/latest/guide/every-block.xml">
+<link rel="alternate" type="text/plain"       href="/doc/com.example.docs/fixture-manual/latest/llms.txt">
+--- inline scripts: 3   (тема, отключение восстановления прокрутки, один загрузчик фреймворка)
+```
+
+Нет ни одного: `canonical`, `hreflang`, `og:*`, `twitter:*`,
+`application/ld+json`, `meta robots`, тега аналитики. Последний —
+**структурно**: `analytics()` во встраиваемой ветке не вызывается вовсе,
+потому что короткую голову пишет `seo/local.ts`, а не фильтр поверх
+длинной. Фильтр пришлось бы сначала построить публичную голову — позвать
+тег аналитики, чтобы его выбросить, — и утверждение «локальный режим
+этого не публикует» стало бы утверждением «публикует и стирает».
+
+**Выбор теста назван: оба.** Node-тест `site/src/seo/local.test.ts` (три
+теста, пол вырос 26 → 29) утверждает структурно, что короткая голова
+несёт и чего не несёт, и что каждый из семи шаблонов гейта находит тот
+тег, который называет (шаблон, тихо переставший совпадать, хуже
+отсутствующего гейта). И шаг сборки `checkLocalHead` в `tools/build.mjs`
+читает **байты** `dist-embedded` и краснеет на любом из семи тегов:
+обещание — про то, что записано на диск, и спросить об этом можно только
+выход. Список шаблонов живёт рядом с построителями в `seo/local.ts` —
+одно утверждение, прочитанное с двух концов.
+
+Число встраиваемых страниц не изменилось: **14 из 14**.
+
+### Гейты хвоста, дословно
+
+```
+$ node tools/floor.mjs
+=== prettier --check (floor perimeter: design/src, site/src) ===   OK
+=== tsc --noEmit ===                                               OK
+=== tests (node --test) ===   ℹ pass 29   ℹ fail 0
+=== eslint (floor perimeter: design/src, site/src) ===             OK
+=== typescript-ai-native-conform check ===
+typescript-ai-native-conform check: 0 finding(s) in scope <workspace> ({}), 0 frozen in baseline, 0 new
+=== typescript-ai-native-specmap --check ===
+typescript-ai-native-specmap --check: clean (0 spec units, 91 tagged code items, 91 edges, 0 suspects, 91 warnings).
+typescript-ai-native-specmap: ratchet gate — 0 orphan(s) (0 root(s) exempt).
+=== test-gate (xfail-strict) ===
+test-gate: 29 results parsed (0 failed, 0 skipped), baseline entries: 0
+test-gate: green (xfail-strict).
+floor: all green (7 step(s) run, 0 disabled by policy).
+```
+
+```
+$ node tools/build.mjs embedded
+build (embedded): generated 14 page(s), expected 14
+build (embedded): removed dist-embedded/q-manifest.json from the output
+build (embedded): 14 page(s) carry none of the 7 public-only tags
+build (embedded): ok
+```
+
+```
+$ node tools/build.mjs static
+build (static): generated 18 page(s), expected 18
+build (static): removed dist/q-manifest.json from the output
+build (static): 24 file(s) copied from 1 documentation tree(s) for 2 edition(s) (2 page(s) in a language that does not carry them); 13 written — catalogue, manifests, 3 sitemap part(s) over 7 address(es), resolver
+build (static): root files robots.txt, llms.txt, llms-full.txt, sitemap.xml, feed.xml, og.png; 8 font file(s) at /fonts/, 3 page(s) repointed at the bundled faces, 17 crawler name(s) from 9 provider page(s)
+build (static): csp.txt — 47 inline script hash(es) over 119 occurrence(s), no external source
+documentation links — every address against the files behind it
+    ok        19 page(s), 223 file(s) in the output
+    ok        738 link(s) followed, 18 hreflang pair(s) checked
+    ok        9 page(s) name another page canonical and are read as it
+    ok        12x github.com — the canonical source repository, linked by the landing
+    ok        11x gitverse.ru — the source mirror, linked by the landing
+    note      1 citation(s) into documentation this site does not carry:
+              /doc/com.example/subject/latest/common/PROP-001/
+    L-01      8x — The island golden cites `media/diagram.svg` relative to the page, …
+links: green — 738 checked, 0 broken.
+build (static): ok
+STATIC_EXIT=0
+```
+
+```
+$ node tools/parity.mjs <reference-dist>
+parity: green — 31 deliberate difference(s), 0 unexplained.
+```
+
+Статическая страница документации после хвоста по-прежнему несёт
+`rel="canonical"` (1) и `og:image` (1) — ветка `local` на неё не влияет;
+Playwright — 29 из 29.
+
+```
+$ node tools/root-files.mjs dist
+root-files: wrote robots.txt, llms.txt, llms-full.txt, sitemap.xml, feed.xml, og.png; 8 font file(s) published, 0 page(s) pointed at the bundled faces
+```
+
+(Ноль — правильный ответ: preload-ссылки в этом `dist` сборка уже
+переписала, и второй прогон переписывать нечего. До правки эта строка
+печатала `undefined preload(s)`.)
+
+### А-2 наблюдалась ещё дважды, и у неё нашёлся дешёвый признак
+
+Во время хвоста аномалия А-2 (двойная шапка на лендинге) сработала ещё
+раз и снова ушла на следующей сборке **того же коммита**: 4 наблюдения
+за сессию, примерно поровну. Полезное следствие: её видно по числу в
+линтере ссылок — **738 проверенных ссылок при одной шапке и 750 при
+двух** (лишняя документационная шапка добавляет по 4 ссылки на каждую из
+трёх лендинговых страниц). То есть приёмке не нужен паритет, чтобы
+заметить: расхождение в строке `link(s) followed` статической сборки —
+уже сигнал, и пересборка его снимает.
 
 ## `git status --short` на момент сдачи (мои пути)
 
