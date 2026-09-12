@@ -12,10 +12,22 @@
 //! The fence emitter is run-aware: a fence whose text contains a
 //! three-backtick line is re-emitted with a longer opening run — the same
 //! run-matching law progress-core's scanner reads.
+//!
+//! For the DOCUMENTATION genre the projection is ONE WAY by law, not by
+//! defect (##DOC-VOCAB-MD-ONE-WAY): `example` becomes adjacent fences,
+//! `rule` a quoted address, `derived` a marked fence, `note` a labelled
+//! quote, `figure` an image with its caption, `prompt` a `prompt` fence
+//! with its needs, outcome and asserts, and a slot's `when` a sub-heading
+//! naming the condition. Re-parsing that projection yields a DIFFERENT IR
+//! — fences, quotes and paragraphs, never the genre's blocks — and the
+//! expectation is pinned by a test rather than discovered. The projection
+//! exists because the host scanners read XML only through it
+//! (##PROJECTION-READ), so documentation stays observed; authoring is XML
+//! only.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
 
-use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Unit};
+use crate::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 
 /// Emit a document as house-style Markdown.
 pub fn to_markdown(doc: &SpecDoc) -> String {
@@ -32,7 +44,7 @@ pub fn to_markdown(doc: &SpecDoc) -> String {
         out.push_str(&status_element_md(s));
         out.push_str("\n\n");
     }
-    blocks_md(&doc.preamble, &mut out);
+    blocks_md(&doc.preamble, 1, &mut out);
     for s in &doc.sections {
         section_md(s, 2, &mut out);
     }
@@ -45,6 +57,12 @@ fn section_md(s: &Section, level: usize, out: &mut String) {
     }
     out.push(' ');
     out.push_str(&s.title);
+    // A guarded section's own heading is the sub-heading that names the
+    // condition (##ROW-DOCVOCAB-WHEN): the platform rides in the heading
+    // text, where a reader and a scanner both see it.
+    if let Some(c) = &s.when {
+        out.push_str(&format!(" ({c})"));
+    }
     if let Some(id) = &s.id {
         out.push_str(&format!(" {{#{id}}}"));
     }
@@ -53,30 +71,42 @@ fn section_md(s: &Section, level: usize, out: &mut String) {
         out.push_str(&status_element_md(st));
         out.push_str("\n\n");
     }
-    blocks_md(&s.blocks, out);
+    blocks_md(&s.blocks, level, out);
     for sub in &s.sections {
         section_md(sub, level + 1, out);
     }
 }
 
 /// Blocks separated by one blank line, the section's body closed by one
-/// blank line.
-fn blocks_md(blocks: &[Block], out: &mut String) {
-    for (i, b) in blocks.iter().enumerate() {
+/// blank line. `level` is the enclosing heading level, which a guarded
+/// slot needs for its sub-heading.
+fn blocks_md(blocks: &[BlockNode], level: usize, out: &mut String) {
+    for (i, node) in blocks.iter().enumerate() {
         if i > 0 {
             out.push_str("\n\n");
         }
         // A typed fact spells `@fact/code:` — the binding lives on the
         // NEXT block, so look ahead before emitting this one.
-        let typed_id = match blocks.get(i + 1) {
+        let typed_id = match blocks.get(i + 1).map(|n| &n.block) {
             Some(Block::Fence { fact: Some(id), .. }) => Some(id.as_str()),
             _ => None,
         };
-        block_md(b, typed_id, out);
+        if let Some(c) = &node.when {
+            out.push_str(&when_heading_md(c, level));
+        }
+        block_md(&node.block, typed_id, out);
     }
     if !blocks.is_empty() {
         out.push_str("\n\n");
     }
+}
+
+/// A guarded slot's sub-heading, one level under the enclosing section and
+/// never past H6 (##ROW-DOCVOCAB-WHEN: «a sub-heading named after the
+/// platform»).
+fn when_heading_md(c: &Cond, level: usize) -> String {
+    let hashes = "#".repeat((level + 1).min(6));
+    format!("{hashes} {c}\n\n")
 }
 
 fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
@@ -98,19 +128,7 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
                 }
             }
         }
-        Block::Fence { lang, text, .. } => {
-            let run = fence_run_for(text);
-            out.push_str(&run);
-            if let Some(l) = lang {
-                out.push_str(l);
-            }
-            out.push('\n');
-            if !text.is_empty() {
-                out.push_str(text);
-                out.push('\n');
-            }
-            out.push_str(&run);
-        }
+        Block::Fence { lang, text, .. } => fenced_md(lang.as_deref(), text, out),
         Block::List { ordered, items } => {
             for (i, item) in items.iter().enumerate() {
                 if i > 0 {
@@ -155,7 +173,113 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
                 }
             }
         }
+        // --- the documentation genre (PROP-045 §7) ----------------------
+        Block::Example {
+            lang,
+            run,
+            expect,
+            stderr,
+            ..
+        } => {
+            // Two adjacent fences, `sh` and `output`, and a third for
+            // stderr when the page spells one (##ROW-DOCVOCAB-EXAMPLE-MD).
+            fenced_md(Some(lang.as_deref().unwrap_or("sh")), run, out);
+            out.push_str("\n\n");
+            fenced_md(Some("output"), expect, out);
+            if let Some(err) = stderr {
+                out.push_str("\n\n");
+                fenced_md(Some("stderr"), err, out);
+            }
+        }
+        Block::ExampleRef { id } => {
+            // The pivot holds no source page, so the projection names the
+            // example it defers to; the pipeline copies the source's own
+            // fences when it has the source in hand
+            // (##ROW-DOCVOCAB-EXAMPLE-REF-MD).
+            out.push_str(&format!(
+                "Example `{id}` is copied from the source page at projection time."
+            ));
+        }
+        Block::Rule { uri, .. } => {
+            // A quote carrying the address as a link, and the address is
+            // the unpinned one — a citation is live
+            // (##ROW-DOCVOCAB-RULE-MD, ##DOC-VOCAB-RULE-ADDRESS).
+            out.push_str(&format!("> <{uri}>"));
+        }
+        Block::Derived { kind, reference } => {
+            // The text is not stored, so what projects is the provenance
+            // line, marked «generated from …» (##ROW-DOCVOCAB-DERIVED-MD).
+            fenced_md(
+                Some("text"),
+                &format!("generated from {kind}: {reference}"),
+                out,
+            );
+        }
+        Block::Note { kind, body } => {
+            // A quote with the kind label on its first line
+            // (##ROW-DOCVOCAB-NOTE-MD).
+            let mut inner = String::new();
+            unit_md(body, typed_id, &mut inner);
+            out.push_str(&format!("> **{}**", kind.label()));
+            for line in inner.lines() {
+                out.push('\n');
+                if line.is_empty() {
+                    out.push('>');
+                } else {
+                    out.push_str("> ");
+                    out.push_str(line);
+                }
+            }
+        }
+        Block::Figure { src, alt, caption } => {
+            // An inline image plus a caption paragraph — two Markdown
+            // blocks out of one IR block (##ROW-DOCVOCAB-FIGURE-MD).
+            out.push_str(&format!("![{alt}]({src})\n\n"));
+            unit_md(caption, typed_id, out);
+        }
+        Block::Prompt {
+            text,
+            needs,
+            outcome,
+            asserts,
+            ..
+        } => {
+            // A `prompt` fence, a «needs» list, an «outcome» paragraph and
+            // an assert list (##ROW-DOCVOCAB-PROMPT-MD). The fence is the
+            // same one `llms*.txt` carries, which is why the body projects
+            // verbatim.
+            fenced_md(Some("prompt"), text, out);
+            if let Some(n) = needs {
+                out.push_str(&format!("\n\n- needs: {n}"));
+            }
+            if let Some(o) = outcome {
+                out.push_str(&format!("\n\noutcome: {o}"));
+            }
+            if asserts.is_empty() {
+                out.push_str("\n\n- assert: none");
+            } else {
+                out.push('\n');
+                for a in asserts {
+                    out.push_str(&format!("\n- assert: `{a}`"));
+                }
+            }
+        }
     }
+}
+
+/// One fenced block with a run long enough to quote its own content.
+fn fenced_md(lang: Option<&str>, text: &str, out: &mut String) {
+    let run = fence_run_for(text);
+    out.push_str(&run);
+    if let Some(l) = lang {
+        out.push_str(l);
+    }
+    out.push('\n');
+    if !text.is_empty() {
+        out.push_str(text);
+        out.push('\n');
+    }
+    out.push_str(&run);
 }
 
 /// One unit as MD: `[@fact[/code]:ID ]text[ status]` joined with single
@@ -334,7 +458,7 @@ mod tests {
     #[test]
     fn a_fence_quoting_a_fence_widens_its_run() {
         let ir = from_markdown("# T {#t}\n\n````\nouter\n```\n````\n").unwrap();
-        match &ir.preamble[0] {
+        match &ir.preamble[0].block {
             Block::Fence { text, .. } => assert_eq!(text, "outer\n```"),
             other => panic!("{other:?}"),
         }

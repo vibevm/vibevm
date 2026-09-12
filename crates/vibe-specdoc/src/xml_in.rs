@@ -16,16 +16,42 @@
 //!
 //! One shared id namespace (the DuplicateId law, progress-core's message
 //! verbatim): the title anchor, section ids and fact ids all mint into it.
+//!
+//! The DOCUMENTATION genre rides on the same descent behind one parameter
+//! ([`crate::doc::Vocabulary`], ##DOC-VOCAB-BY-KIND): with `Doc` open, the
+//! seven documentation elements and the slot attribute `when` are read; with
+//! the default `Spec` they are the same loud error as any foreign name, now
+//! naming the genre instead of pretending the name is unknown
+//! (##DOC-VOCAB-LOUD-IN-SPEC). Names collide with the corpus — `example`,
+//! `rule`, `derived` and `run` already live there as named sections — and
+//! the discriminator settles it without touching either vocabulary: a
+//! documentation block never carries `title=`, a named section always does
+//! (##DOC-VOCAB-DISCRIMINATOR).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
 use super::xml_support::{
-    decode_attrs, kind, last_unit_fact_id, name_of, only_attrs, pos_of, push_text,
+    decode_attrs, kind, last_unit_fact_id, name_of, only_attrs, only_attrs_slot, pos_of, push_text,
+    take_when,
 };
-use crate::doc::{Block, Section, SpecDoc, Title};
+use crate::doc::{Block, BlockNode, Section, SpecDoc, Title, Vocabulary};
 use crate::{Error, Result};
 use quick_xml::events::Event;
 use quick_xml::reader::Reader;
+
+/// The documentation genre's block element names (PROP-045 §7). Every one
+/// of them is also a legal section anchor, so the name alone decides
+/// nothing — see `is_doc_block` for the discriminator.
+pub(super) const DOC_BLOCK_ELEMENTS: &[&str] =
+    &["example", "rule", "derived", "note", "figure", "prompt"];
+
+/// Whether this element opening is a documentation BLOCK rather than a
+/// named section: a documentation block never carries `title=`
+/// (##DOC-VOCAB-DISCRIMINATOR). Name-only, vocabulary-blind — the caller
+/// decides what to do under which vocabulary.
+pub(super) fn is_doc_block(name: &str, attrs: &[(String, String)]) -> bool {
+    DOC_BLOCK_ELEMENTS.contains(&name) && !attrs.iter().any(|(k, _)| k == "title")
+}
 
 /// One collected event: elements carry their decoded attributes, text and
 /// CDATA are separate (CDATA is legal only inside `<fence>`), adjacent
@@ -43,9 +69,32 @@ pub(super) enum Ev {
 /// whether the element spelled itself `<e/>`.
 pub(super) type StartEl = (String, Vec<(String, String)>, (usize, usize), bool);
 
-/// Parse dialect XML into the pivot IR.
+/// Parse dialect XML into the pivot IR, spec vocabulary — the reader every
+/// host consumer of spec sources holds.
 pub fn from_xml(xml: &str) -> Result<SpecDoc> {
-    let mut p = Parser::collect(xml)?;
+    from_xml_with(xml, Vocabulary::Spec)
+}
+
+/// Parse dialect XML into the pivot IR with `vocab` open
+/// (##DOC-VOCAB-BY-KIND).
+///
+/// [`Vocabulary::Doc`] belongs to a caller that knows the containing
+/// package is of kind `doc`; the pivot never decides that itself, and the
+/// document declares nothing.
+///
+/// ```
+/// use vibe_specdoc::{from_xml, from_xml_with, doc::Vocabulary};
+///
+/// let xml = "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+///            <note kind=\"tip\">Read this first.</note>\n</spec>\n";
+/// // Open only in a documentation package…
+/// assert!(from_xml_with(xml, Vocabulary::Doc).is_ok());
+/// // …and a loud, genre-naming error everywhere else.
+/// let err = from_xml(xml).unwrap_err();
+/// assert!(err.message.contains("documentation vocabulary"));
+/// ```
+pub fn from_xml_with(xml: &str, vocab: Vocabulary) -> Result<SpecDoc> {
+    let mut p = Parser::collect(xml, vocab)?;
     p.skip_ws_text()?;
     let (name, attrs, at, was_empty) = p.take_start()?;
     if name != "spec" {
@@ -76,13 +125,15 @@ pub(super) struct Parser<'a> {
     /// (1-based line, byte column) per event, parallel to `evs`.
     pub(super) poss: Vec<(usize, usize)>,
     pub(super) i: usize,
+    /// Which element set this reader has open (##DOC-VOCAB-BY-KIND).
+    vocab: Vocabulary,
     /// Every minted id in document order, with its position.
     ids: Vec<(String, (usize, usize))>,
     _src: &'a str,
 }
 
 impl<'a> Parser<'a> {
-    fn collect(xml: &'a str) -> Result<Parser<'a>> {
+    fn collect(xml: &'a str, vocab: Vocabulary) -> Result<Parser<'a>> {
         let mut reader = Reader::from_str(xml);
         let mut evs: Vec<Ev> = Vec::new();
         let mut poss: Vec<(usize, usize)> = Vec::new();
@@ -169,6 +220,7 @@ impl<'a> Parser<'a> {
             evs,
             poss,
             i: 0,
+            vocab,
             ids: Vec::new(),
             _src: xml,
         })
@@ -176,6 +228,25 @@ impl<'a> Parser<'a> {
 
     pub(super) fn err(&self, at: (usize, usize), message: String) -> Error {
         Error::at(at.0, format!("{message} (line {}, column {})", at.0, at.1))
+    }
+
+    /// The element set this reader has open.
+    pub(super) fn vocab(&self) -> Vocabulary {
+        self.vocab
+    }
+
+    /// The refusal a documentation element earns under the spec vocabulary:
+    /// loud, and naming the genre rather than pretending the element is
+    /// unknown (##DOC-VOCAB-LOUD-IN-SPEC).
+    pub(super) fn doc_genre_closed(&self, element_name: &str, at: (usize, usize)) -> Error {
+        self.err(
+            at,
+            format!(
+                "<{element_name}> belongs to the documentation vocabulary, which is open only \
+                 in packages of kind `doc` — see \
+                 spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND"
+            ),
+        )
     }
 
     /// Skip whitespace-only text events; non-ws text outside a leaf is an
@@ -257,7 +328,7 @@ impl<'a> Parser<'a> {
 
     fn spec_children(&mut self) -> Result<SpecDoc> {
         let mut doc = SpecDoc::default();
-        let mut blocks: Vec<(Block, (usize, usize))> = Vec::new();
+        let mut blocks: Vec<(BlockNode, (usize, usize))> = Vec::new();
         let mut have_content = false;
         let mut have_section = false;
         loop {
@@ -329,8 +400,26 @@ impl<'a> Parser<'a> {
                         ));
                     }
                     have_content = true;
-                    let b = self.block(&name, &attrs, at, was_empty)?;
-                    blocks.push((b, at));
+                    let node = self.block_node(&name, &attrs, at, was_empty)?;
+                    blocks.push((node, at));
+                }
+                // The documentation genre, before the named-section arm:
+                // the discriminator (no `title=`) already told them apart.
+                other if is_doc_block(other, &attrs) => {
+                    if self.vocab != Vocabulary::Doc {
+                        return Err(self.doc_genre_closed(other, at));
+                    }
+                    if have_section {
+                        return Err(self.err(
+                            at,
+                            format!(
+                                "<{other}> cannot follow a top-level <section> — Markdown preamble blocks come before sections"
+                            ),
+                        ));
+                    }
+                    have_content = true;
+                    let node = self.block_node(other, &attrs, at, was_empty)?;
+                    blocks.push((node, at));
                 }
                 other
                     if super::xml_out::anchor_is_elementable(other)
@@ -371,15 +460,16 @@ impl<'a> Parser<'a> {
             ));
         }
         let id = if element_name == "section" {
-            only_attrs(attrs, &["id", "title"], "section", at, self)?;
+            only_attrs_slot(attrs, &["id", "title"], "section", at, self)?;
             attrs
                 .iter()
                 .find(|(k, _)| k == "id")
                 .map(|(_, v)| v.clone())
         } else {
-            only_attrs(attrs, &["title"], element_name, at, self)?;
+            only_attrs_slot(attrs, &["title"], element_name, at, self)?;
             Some(element_name.to_string())
         };
+        let when = take_when(attrs, at, self)?;
         let Some((_, title)) = attrs.iter().find(|(k, _)| k == "title") else {
             return Err(self.err(
                 at,
@@ -390,6 +480,7 @@ impl<'a> Parser<'a> {
             id: id.clone(),
             title: title.clone(),
             status: None,
+            when,
             blocks: Vec::new(),
             sections: Vec::new(),
         };
@@ -399,7 +490,7 @@ impl<'a> Parser<'a> {
         if was_empty {
             return Ok(s);
         }
-        let mut blocks: Vec<(Block, (usize, usize))> = Vec::new();
+        let mut blocks: Vec<(BlockNode, (usize, usize))> = Vec::new();
         let mut first = true;
         let mut have_subsection = false;
         loop {
@@ -442,8 +533,23 @@ impl<'a> Parser<'a> {
                             ),
                         ));
                     }
-                    let b = self.block(&name, &attrs, at, was_empty)?;
-                    blocks.push((b, at));
+                    let node = self.block_node(&name, &attrs, at, was_empty)?;
+                    blocks.push((node, at));
+                }
+                other if is_doc_block(other, &attrs) => {
+                    if self.vocab != Vocabulary::Doc {
+                        return Err(self.doc_genre_closed(other, at));
+                    }
+                    if have_subsection {
+                        return Err(self.err(
+                            at,
+                            format!(
+                                "<{other}> cannot follow a nested <section> — Markdown parent blocks come before child sections"
+                            ),
+                        ));
+                    }
+                    let node = self.block_node(other, &attrs, at, was_empty)?;
+                    blocks.push((node, at));
                 }
                 other
                     if super::xml_out::anchor_is_elementable(other)
@@ -514,17 +620,33 @@ impl<'a> Parser<'a> {
         Ok(())
     }
 
+    /// One block in its slot: the block itself plus the slot's `when`
+    /// (##DOC-VOCAB-WHEN-SLOT). The attribute is validated inside
+    /// `block` (which knows the element's own attribute set) and read
+    /// back out here, so the condition never becomes a per-variant field.
+    fn block_node(
+        &mut self,
+        name: &str,
+        attrs: &[(String, String)],
+        at: (usize, usize),
+        was_empty: bool,
+    ) -> Result<BlockNode> {
+        let block = self.block(name, attrs, at, was_empty)?;
+        let when = take_when(attrs, at, self)?;
+        Ok(BlockNode { when, block })
+    }
+
     /// `@fact/code` adjacency (the markup contract's binding law): the
     /// fence's `fact=` names the fact carried by the LAST unit of the
     /// immediately preceding block.
-    fn validate_fence_bindings(&mut self, blocks: &[(Block, (usize, usize))]) -> Result<()> {
-        for (i, (b, at)) in blocks.iter().enumerate() {
-            let Block::Fence { fact: Some(id), .. } = b else {
+    fn validate_fence_bindings(&mut self, blocks: &[(BlockNode, (usize, usize))]) -> Result<()> {
+        for (i, (node, at)) in blocks.iter().enumerate() {
+            let Block::Fence { fact: Some(id), .. } = &node.block else {
                 continue;
             };
             let bound = blocks
                 .get(i.wrapping_sub(1))
-                .and_then(|(p, _)| last_unit_fact_id(p));
+                .and_then(|(p, _)| last_unit_fact_id(&p.block));
             if bound != Some(id.as_str()) {
                 return Err(self.err(
                     *at,

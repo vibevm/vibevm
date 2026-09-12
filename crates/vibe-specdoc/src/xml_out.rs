@@ -5,10 +5,18 @@
 //! re-indented, so unit text round-trips verbatim). With the reader this
 //! gives the idempotence law: `from_xml(to_xml(d)) == d`, hence
 //! XML→IR→XML is byte-in-byte.
+//!
+//! The writer is VOCABULARY-BLIND (##DOC-VOCAB-DISCRIMINATOR): one IR
+//! serialises to the same bytes whichever vocabulary read it, the
+//! elementability blacklist does not grow for the documentation genre, and
+//! a documentation block is told from a named section by the same
+//! discriminator the reader uses — a block never carries `title=`. The
+//! slot condition `when` is emitted last on the element it guards, and
+//! only ever appears on an IR that a `Doc` reader produced.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
 
-use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Unit};
+use crate::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 use quick_xml::Writer;
 use quick_xml::events::attributes::Attribute;
 use quick_xml::events::{BytesDecl, BytesEnd, BytesStart, BytesText, Event};
@@ -83,7 +91,7 @@ pub fn to_xml(doc: &SpecDoc) -> String {
         empty(&mut w, 1, "status", status_attrs(s).as_slice());
     }
     for b in &doc.preamble {
-        block(&mut w, 1, b);
+        block_node(&mut w, 1, b);
     }
     for s in &doc.sections {
         section(&mut w, 1, s);
@@ -105,12 +113,13 @@ fn section(w: &mut W, depth: usize, s: &Section) {
         attrs.push(("id", id.clone()));
     }
     attrs.push(("title", s.title.clone()));
+    push_when(&mut attrs, s.when.as_ref());
     start(w, depth, tag, &attrs);
     if let Some(st) = &s.status {
         empty(w, depth + 1, "status", status_attrs(st).as_slice());
     }
     for b in &s.blocks {
-        block(w, depth + 1, b);
+        block_node(w, depth + 1, b);
     }
     for sub in &s.sections {
         section(w, depth + 1, sub);
@@ -176,10 +185,22 @@ fn fact_attrs(f: &Fact, named: bool) -> Attrs<'_> {
     out
 }
 
-fn block(w: &mut W, depth: usize, b: &Block) {
+/// The slot's condition, appended last so every element's own attribute
+/// order stays exactly as it was before the genre existed.
+fn push_when(attrs: &mut Attrs<'static>, when: Option<&Cond>) {
+    if let Some(c) = when {
+        attrs.push(("when", c.to_string()));
+    }
+}
+
+fn block_node(w: &mut W, depth: usize, node: &BlockNode) {
+    block(w, depth, &node.block, node.when.as_ref());
+}
+
+fn block(w: &mut W, depth: usize, b: &Block, when: Option<&Cond>) {
     match b {
-        Block::Paragraph(u) => unit(w, depth, "p", u),
-        Block::Quote(u) => unit(w, depth, "quote", u),
+        Block::Paragraph(u) => unit_el(w, depth, "p", Vec::new(), u, when),
+        Block::Quote(u) => unit_el(w, depth, "quote", Vec::new(), u, when),
         Block::Fence { lang, fact, text } => {
             let mut attrs: Attrs = Vec::new();
             if let Some(l) = lang {
@@ -188,6 +209,7 @@ fn block(w: &mut W, depth: usize, b: &Block) {
             if let Some(f) = fact {
                 attrs.push(("fact", f.clone()));
             }
+            push_when(&mut attrs, when);
             if text.is_empty() {
                 empty(w, depth, "fence", &attrs);
             } else {
@@ -200,8 +222,10 @@ fn block(w: &mut W, depth: usize, b: &Block) {
                 && items
                     .iter()
                     .all(|u| u.fact.as_ref().is_some_and(|f| f.is_meaningful()));
+            let mut attrs: Attrs = vec![("ordered", ord.to_string())];
+            push_when(&mut attrs, when);
             if all_facts {
-                start(w, depth, "facts", &[("ordered", ord.to_string())]);
+                start(w, depth, "facts", &attrs);
                 for item in items {
                     if let Some(f) = &item.fact {
                         indent(w, depth + 1);
@@ -210,7 +234,7 @@ fn block(w: &mut W, depth: usize, b: &Block) {
                 }
                 end(w, depth, "facts");
             } else {
-                start(w, depth, "list", &[("ordered", ord.to_string())]);
+                start(w, depth, "list", &attrs);
                 for item in items {
                     unit(w, depth + 1, "item", item);
                 }
@@ -218,7 +242,9 @@ fn block(w: &mut W, depth: usize, b: &Block) {
             }
         }
         Block::Table { rows } => {
-            start(w, depth, "table", &[]);
+            let mut attrs: Attrs = Vec::new();
+            push_when(&mut attrs, when);
+            start(w, depth, "table", &attrs);
             for row in rows {
                 start(w, depth + 1, "tr", &[]);
                 for cell in row {
@@ -228,25 +254,152 @@ fn block(w: &mut W, depth: usize, b: &Block) {
             }
             end(w, depth, "table");
         }
+        // --- the documentation genre (PROP-045 §7) ----------------------
+        Block::Example {
+            id,
+            fixture,
+            lang,
+            exit,
+            run,
+            expect,
+            stderr,
+        } => {
+            let mut attrs: Attrs = vec![("id", id.clone()), ("fixture", fixture.clone())];
+            if let Some(l) = lang {
+                attrs.push(("lang", l.clone()));
+            }
+            if let Some(code) = exit {
+                attrs.push(("exit", code.to_string()));
+            }
+            push_when(&mut attrs, when);
+            start(w, depth, "example", &attrs);
+            // The verbatim children always take the start/end pair, never
+            // the self-closing form: `<expect></expect>` is how the dialect
+            // spells «this command prints nothing», and an assertion is not
+            // an absence.
+            verbatim(w, depth + 1, "run", run);
+            verbatim(w, depth + 1, "expect", expect);
+            if let Some(err) = stderr {
+                verbatim(w, depth + 1, "stderr", err);
+            }
+            end(w, depth, "example");
+        }
+        Block::ExampleRef { id } => {
+            let mut attrs: Attrs = vec![("ref", id.clone())];
+            push_when(&mut attrs, when);
+            empty(w, depth, "example", &attrs);
+        }
+        Block::Rule { uri, rev } => {
+            // The recorded `~rN` rides back out so the author's bytes
+            // survive; the citation itself is `uri`, unpinned
+            // (##DOC-VOCAB-RULE-ADDRESS).
+            let address = match rev {
+                Some(n) => format!("{uri}~r{n}"),
+                None => uri.clone(),
+            };
+            let mut attrs: Attrs = vec![("ref", address)];
+            push_when(&mut attrs, when);
+            empty(w, depth, "rule", &attrs);
+        }
+        Block::Derived { kind, reference } => {
+            let mut attrs: Attrs = vec![("kind", kind.to_string()), ("ref", reference.clone())];
+            push_when(&mut attrs, when);
+            empty(w, depth, "derived", &attrs);
+        }
+        Block::Note { kind, body } => {
+            unit_el(
+                w,
+                depth,
+                "note",
+                vec![("kind", kind.to_string())],
+                body,
+                when,
+            );
+        }
+        Block::Figure { src, alt, caption } => {
+            let mut attrs: Attrs = vec![("src", src.clone()), ("alt", alt.clone())];
+            push_when(&mut attrs, when);
+            start(w, depth, "figure", &attrs);
+            unit(w, depth + 1, "caption", caption);
+            end(w, depth, "figure");
+        }
+        Block::Prompt {
+            id,
+            text,
+            needs,
+            outcome,
+            asserts,
+        } => {
+            let mut attrs: Attrs = vec![("id", id.clone())];
+            if asserts.is_empty() {
+                attrs.push(("assert", "none".to_string()));
+            }
+            push_when(&mut attrs, when);
+            indent(w, depth);
+            let _ = w.write_event(Event::Start(bytes_start("prompt", &attrs)));
+            // The body sits inline against its own start tag, so the
+            // indentation before the first child is the writer's alone —
+            // which is why the reader trims the body's outer whitespace.
+            let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(text))));
+            if let Some(n) = needs {
+                inline(w, depth + 1, "needs", &[], n);
+            }
+            if let Some(o) = outcome {
+                inline(w, depth + 1, "outcome", &[], o);
+            }
+            for a in asserts {
+                verbatim(w, depth + 1, "assert", a);
+            }
+            if needs.is_none() && outcome.is_none() && asserts.is_empty() {
+                // A childless prompt is a leaf, and a leaf closes on its
+                // own line exactly like `<p>` — the indent belongs to the
+                // children, so with none there is nothing to indent from.
+                let _ = w.write_event(Event::End(BytesEnd::new("prompt")));
+            } else {
+                end(w, depth, "prompt");
+            }
+        }
     }
 }
 
-/// One unit-bearing leaf (`p`, `item`, `quote`, `td`): either bare text or
-/// one wrapping `<fact>` element. Empty text and no fact collapses to an
-/// empty element (the empty table cell).
+/// One unit-bearing leaf (`p`, `item`, `quote`, `td`, `caption`): either
+/// bare text or one wrapping `<fact>` element. Empty text and no fact
+/// collapses to an empty element (the empty table cell).
 fn unit(w: &mut W, depth: usize, tag: &str, u: &Unit) {
+    unit_el(w, depth, tag, Vec::new(), u, None);
+}
+
+/// [`unit`] for a carrier that has attributes of its own (`<note kind>`) or
+/// a slot condition.
+fn unit_el(
+    w: &mut W,
+    depth: usize,
+    tag: &str,
+    mut attrs: Attrs<'static>,
+    u: &Unit,
+    when: Option<&Cond>,
+) {
+    push_when(&mut attrs, when);
     let Some(f) = u.fact.as_ref().filter(|f| f.is_meaningful()) else {
         if u.text.is_empty() {
-            empty(w, depth, tag, &[]);
+            empty(w, depth, tag, &attrs);
         } else {
-            inline(w, depth, tag, &[], &u.text);
+            inline(w, depth, tag, &attrs, &u.text);
         }
         return;
     };
     indent(w, depth);
-    let _ = w.write_event(Event::Start(BytesStart::new(tag)));
+    let _ = w.write_event(Event::Start(bytes_start(tag, &attrs)));
     fact_element(w, f, &u.text);
     let _ = w.write_event(Event::End(BytesEnd::new(tag)));
+}
+
+/// A verbatim child of the documentation genre: the start/end PAIR always
+/// — never the fence's empty-collapse, because `<expect></expect>` is the
+/// assertion «this command prints nothing» and must survive as one — with
+/// the text exactly as the IR holds it (##DOC-VOCAB-VERBATIM-TEXTS).
+fn verbatim(w: &mut W, depth: usize, tag: &str, text: &str) {
+    inline(w, depth, tag, &[], text);
 }
 
 /// One generic or named fact element, without a carrier wrapper or indent.
@@ -483,6 +636,19 @@ mod tests {
             "éclair",
         ] {
             assert!(!anchor_is_elementable(anchor), "{anchor}");
+        }
+        // The documentation genre does NOT enter this blacklist
+        // (##DOC-VOCAB-DISCRIMINATOR). Were it to, a section anchored
+        // `#example` would emit as `<section id="example">` in a
+        // documentation package and as `<example title=…>` everywhere
+        // else, and one IR would have two spellings. The discriminator
+        // carries that weight instead: a section always has `title=`, a
+        // documentation block never does.
+        for anchor in ["example", "rule", "derived", "note", "figure", "prompt"] {
+            assert!(
+                anchor_is_elementable(anchor),
+                "{anchor}: the genre's names stay elementable"
+            );
         }
     }
 }

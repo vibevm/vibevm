@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#laws");
 
-use vibe_specdoc::doc::{Block, Section, SpecDoc, Unit};
+use vibe_specdoc::doc::{Block, BlockNode, Section, SpecDoc, Unit};
 
 use crate::{FactOrigin, FactStatus, Registry};
 
@@ -63,9 +63,9 @@ fn collect_section(section: &Section, prefix: &str, out: &mut Vec<AuthoredFact>)
     }
 }
 
-fn collect_blocks(blocks: &[Block], prefix: &str, out: &mut Vec<AuthoredFact>) {
-    for block in blocks {
-        match block {
+fn collect_blocks(blocks: &[BlockNode], prefix: &str, out: &mut Vec<AuthoredFact>) {
+    for node in blocks {
+        match &node.block {
             Block::Paragraph(unit) | Block::Quote(unit) => collect_unit(unit, prefix, out),
             Block::List { items, .. } => {
                 for unit in items {
@@ -78,6 +78,16 @@ fn collect_blocks(blocks: &[Block], prefix: &str, out: &mut Vec<AuthoredFact>) {
                 }
             }
             Block::Fence { .. } => {}
+            // The documentation genre's own units: a `note` body and a
+            // `figure` caption are units like any other, so an anchor on
+            // one is an authored fact. The rest carry no unit.
+            Block::Note { body, .. } => collect_unit(body, prefix, out),
+            Block::Figure { caption, .. } => collect_unit(caption, prefix, out),
+            Block::Example { .. }
+            | Block::ExampleRef { .. }
+            | Block::Rule { .. }
+            | Block::Derived { .. }
+            | Block::Prompt { .. } => {}
         }
     }
 }

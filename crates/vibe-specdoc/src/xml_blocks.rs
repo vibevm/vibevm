@@ -2,9 +2,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
-use super::xml_in::{Ev, Parser};
-use super::xml_support::{kind, only_attrs, status_from_attrs};
-use crate::doc::{Block, Fact, StatusEl, Unit};
+use super::xml_in::{DOC_BLOCK_ELEMENTS, Ev, Parser};
+use super::xml_support::{kind, only_attrs, only_attrs_slot, status_from_attrs};
+use crate::doc::{Block, Fact, StatusEl, Unit, Vocabulary};
 use crate::{Error, Result};
 
 impl<'a> Parser<'a> {
@@ -17,7 +17,7 @@ impl<'a> Parser<'a> {
     ) -> Result<Block> {
         match name {
             "p" | "quote" => {
-                only_attrs(attrs, &[], name, at, self)?;
+                only_attrs_slot(attrs, &[], name, at, self)?;
                 let u = self.unit(name, was_empty, false)?;
                 Ok(if name == "p" {
                     Block::Paragraph(u)
@@ -28,7 +28,7 @@ impl<'a> Parser<'a> {
             "fence" => self.fence(attrs, at, was_empty),
             "facts" => self.facts_block(attrs, at, was_empty),
             "list" => {
-                only_attrs(attrs, &["ordered"], "list", at, self)?;
+                only_attrs_slot(attrs, &["ordered"], "list", at, self)?;
                 let Some((_, v)) = attrs.iter().find(|(k, _)| k == "ordered") else {
                     return Err(self.err(
                         at,
@@ -87,7 +87,7 @@ impl<'a> Parser<'a> {
                 Ok(Block::List { ordered, items })
             }
             "table" => {
-                only_attrs(attrs, &[], "table", at, self)?;
+                only_attrs_slot(attrs, &[], "table", at, self)?;
                 let mut rows = Vec::new();
                 if !was_empty {
                     'rows: loop {
@@ -160,6 +160,12 @@ impl<'a> Parser<'a> {
                 }
                 Ok(Block::Table { rows })
             }
+            other if DOC_BLOCK_ELEMENTS.contains(&other) => {
+                if self.vocab() != Vocabulary::Doc {
+                    return Err(self.doc_genre_closed(other, at));
+                }
+                self.doc_block(other, attrs, at, was_empty)
+            }
             other => Err(self.err(
                 at,
                 format!("the dialect has no <{other}> element — the vocabulary is closed"),
@@ -175,7 +181,7 @@ impl<'a> Parser<'a> {
         at: (usize, usize),
         was_empty: bool,
     ) -> Result<Block> {
-        only_attrs(attrs, &["lang", "fact"], "fence", at, self)?;
+        only_attrs_slot(attrs, &["lang", "fact"], "fence", at, self)?;
         let lang = attrs
             .iter()
             .find(|(k, _)| k == "lang")
@@ -226,7 +232,7 @@ impl<'a> Parser<'a> {
     /// exactly one wrapping fact element. The generic form is `<fact>`;
     /// the named form is selected by `fact="true"`. `in_cell` permits the
     /// id-less marked cell in the generic form.
-    fn unit(&mut self, tag: &str, was_empty: bool, in_cell: bool) -> Result<Unit> {
+    pub(super) fn unit(&mut self, tag: &str, was_empty: bool, in_cell: bool) -> Result<Unit> {
         let mut text = String::new();
         let mut fact: Option<Fact> = None;
         if !was_empty {
@@ -262,7 +268,7 @@ impl<'a> Parser<'a> {
                     }
                     Some(Ev::CData(_)) => {
                         let at = self.poss[self.i];
-                        return Err(self.err(at, "CDATA is allowed only inside <fence>".into()));
+                        return Err(self.err(at, self.cdata_sites()));
                     }
                     Some(Ev::Start(n, a)) if fact.is_none() => {
                         let at = self.poss[self.i];
@@ -354,6 +360,19 @@ impl<'a> Parser<'a> {
             ));
         }
         Ok(Unit { fact: None, text })
+    }
+
+    /// Where CDATA is legal, named (##DOC-VOCAB-VERBATIM-TEXTS): the
+    /// fence always, and — with the documentation genre open — exactly the
+    /// verbatim elements of that genre, by an explicit list rather than by
+    /// dropping the check.
+    pub(super) fn cdata_sites(&self) -> String {
+        match self.vocab() {
+            Vocabulary::Spec => "CDATA is allowed only inside <fence>".to_string(),
+            Vocabulary::Doc => "CDATA is allowed only inside <fence> and the verbatim \
+                 documentation elements <run>, <expect>, <stderr>, <assert> and a <prompt> body"
+                .to_string(),
+        }
     }
 
     /// The text of a bare-text leaf (`<title>`): text-only content,

@@ -131,7 +131,7 @@ fn requirements_survive_both_pivot_polygons_in_canonical_order() {
     let md = "# T {#t}\n\n\
               @fact:A body @requires:external,verification,specification <status stage=\"test\" state=\"done\" ref=\"proof:1\"/>\n";
     let ir = from_markdown(md).expect("requirements Markdown");
-    let fact = match &ir.preamble[0] {
+    let fact = match &ir.preamble[0].block {
         crate::doc::Block::Paragraph(unit) => unit.fact.as_ref().unwrap(),
         other => panic!("{other:?}"),
     };

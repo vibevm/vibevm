@@ -34,6 +34,29 @@
 //! Inline content stays Markdown (##INLINE-STAYS-MARKDOWN): the pivot does
 //! not model inline grammar, and unit text round-trips verbatim.
 //!
+//! ## The documentation genre — one reopening, by the reader's choice
+//!
+//! Exactly one consumer needs what Markdown cannot say: documentation
+//! packages, which carry verifiable examples with their golden output,
+//! live citations of specification rules, generated references, call-outs,
+//! figures and agent prompts. PROP-045 §7 therefore gives the dialect a
+//! SECOND, additive vocabulary for that genre rather than widening the
+//! first one:
+//!
+//! * [`doc::Vocabulary`] selects the element set, and it is a parameter of
+//!   the READER — [`from_xml_with`], [`load_spec_text_with`],
+//!   [`project_spec_text_with`], [`convert_with`]. A document declares
+//!   nothing; the mapping «package kind `doc` → the genre» belongs to the
+//!   caller, since the pivot knows no `PackageKind` (separability).
+//! * The spec vocabulary is unchanged and stays the default, so every
+//!   existing caller keeps its contract to the byte, and a documentation
+//!   element met there is a loud, genre-naming refusal.
+//! * `when` is a property of the SLOT ([`doc::BlockNode`]), not of a block
+//!   kind, so one condition rule covers a paragraph and an `example` alike.
+//! * The genre's Markdown projection is ONE WAY by law: authoring
+//!   documentation is XML only, and [`from_markdown`] is not widened —
+//!   the Markdown block kinds are closed in progress-core.
+//!
 //! ```
 //! use vibe_specdoc::{from_markdown, to_xml, from_xml, to_markdown};
 //!
@@ -61,6 +84,7 @@ mod md_in;
 mod md_out;
 mod xml_blocks;
 mod xml_comment;
+mod xml_doc;
 mod xml_facts;
 mod xml_in;
 mod xml_out;
@@ -73,12 +97,16 @@ mod md_in_tests;
 #[cfg(test)]
 mod xml_comment_tests;
 #[cfg(test)]
+mod xml_doc_tests;
+#[cfg(test)]
 mod xml_in_tests;
 
-pub use convert::{Conversion, Direction, convert};
+pub use convert::{Conversion, Direction, convert, convert_with};
+pub use doc::Vocabulary;
 pub use load::{
     LoadError, PROJECTION_NOTICE, PairCollision, SourceKind, discover_pair_collision,
-    is_spec_source, load_spec_text, pair_collisions_in, project_spec_text,
+    is_spec_source, load_spec_text, load_spec_text_with, pair_collisions_in, project_spec_text,
+    project_spec_text_with,
 };
 pub use md_in::from_markdown;
 pub use md_out::to_markdown;
@@ -86,7 +114,7 @@ pub use xml_comment::{
     XmlCommentCodecError, decode_generated_xml_comment, decode_generated_xml_comment_payload,
     encode_generated_xml_comment,
 };
-pub use xml_in::from_xml;
+pub use xml_in::{from_xml, from_xml_with};
 pub use xml_out::to_xml;
 
 /// Versioned deterministic-converter identity recorded in every transformed

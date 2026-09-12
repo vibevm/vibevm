@@ -91,7 +91,7 @@ fn predefined_entities_and_char_refs_resolve() {
     let d = ok(&format!(
         "<spec {NS_ATTR}>\n  <fence lang=\"txt\">a &amp; b &lt; c &#65;</fence>\n</spec>"
     ));
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Fence { text, .. } => assert_eq!(text, "a & b < c A"),
         other => panic!("{other:?}"),
     }
@@ -146,7 +146,7 @@ fn named_fact_reads_and_is_the_canonical_writer_form() {
     let d = ok(&format!(
         "<spec {NS_ATTR}><p><THE-LAW fact=\"true\" status=\"impl/done\">one law</THE-LAW></p></spec>"
     ));
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Paragraph(unit) => {
             assert_eq!(unit.text, "one law");
             assert_eq!(
@@ -261,7 +261,7 @@ fn canonical_named_facts_group_round_trips_byte_for_byte() {
          </spec>\n"
     );
     let doc = ok(&xml);
-    match &doc.preamble[0] {
+    match &doc.preamble[0].block {
         Block::List { ordered, items } => {
             assert!(!ordered);
             assert_eq!(items.len(), 2);
@@ -372,7 +372,7 @@ fn empty_fact_with_an_id_is_a_valid_unit() {
     let d = ok(&format!(
         "<spec {NS_ATTR}>\n  <p><fact id=\"EMPTY\"/></p>\n</spec>"
     ));
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Paragraph(unit) => {
             assert_eq!(unit.text, "");
             assert_eq!(

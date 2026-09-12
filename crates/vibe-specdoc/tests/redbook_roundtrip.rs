@@ -132,9 +132,10 @@ impl Stats {
         }
     }
 
-    fn blocks(&mut self, blocks: &[vibe_specdoc::doc::Block]) {
+    fn blocks(&mut self, blocks: &[vibe_specdoc::doc::BlockNode]) {
         use vibe_specdoc::doc::Block;
-        for b in blocks {
+        for node in blocks {
+            let b = &node.block;
             match b {
                 Block::Paragraph(u) | Block::Quote(u) => {
                     self.unit(u);
@@ -157,6 +158,20 @@ impl Stats {
                     }
                 }
                 Block::Fence { .. } => self.fences += 1,
+                // The redbook is a `flow` package: its corpus is read
+                // under the spec vocabulary, where none of the
+                // documentation genre's blocks can exist at all. The arms
+                // stay explicit (never `_ =>`) so that widening the genre
+                // again comes back through this counter.
+                Block::Note { .. }
+                | Block::Figure { .. }
+                | Block::Example { .. }
+                | Block::ExampleRef { .. }
+                | Block::Rule { .. }
+                | Block::Derived { .. }
+                | Block::Prompt { .. } => {
+                    unreachable!("the spec vocabulary cannot read a documentation block")
+                }
             }
         }
     }
@@ -284,8 +299,11 @@ fn redbook_corpus_shape_is_counted() {
 }
 
 /// The `when`-like corner: a dynamic-entry conditional reads as ordinary
-/// prose in both serialisations — the dialect has no conditional
-/// vocabulary, and none is silently invented.
+/// prose in both serialisations. The SPEC vocabulary has no conditional
+/// vocabulary and none is silently invented — the slot attribute `when`
+/// belongs to the documentation genre alone (PROP-045 §7
+/// ##DOC-VOCAB-WHEN-SLOT), which is why a `flow` package's prose about
+/// `when` stays prose here.
 #[test]
 fn when_guarded_text_is_ordinary_prose() {
     let md = "# T {#t}\n\n## Boot\n\nRead this `when = \"windows\"` line only on Windows.\n";
@@ -317,7 +335,7 @@ fn table_with_empty_cells_round_trips() {
     let md = "# T {#t}\n\n| A | B | C |\n|---|---|---|\n| a |  | c |\n";
     let ir = from_markdown(md).unwrap();
     use vibe_specdoc::doc::Block;
-    match &ir.preamble[0] {
+    match &ir.preamble[0].block {
         Block::Table { rows } => {
             assert_eq!(rows.len(), 2);
             assert_eq!(rows[1].len(), 3);

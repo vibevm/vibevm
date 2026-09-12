@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
-use crate::doc::{Block, StatusEl};
+use crate::doc::{Block, Cond, StatusEl, Vocabulary};
 use crate::{Error, Result};
 use progress_core::model::{Action, Audience, Stage, State, nearest};
 use quick_xml::escape::unescape;
@@ -82,6 +82,53 @@ pub(super) fn only_attrs(
         }
     }
     Ok(())
+}
+
+/// [`only_attrs`] for an element that occupies a BLOCK OR SECTION SLOT:
+/// under the documentation vocabulary every such element additionally
+/// accepts `when`, because the condition is a property of the slot
+/// (##DOC-VOCAB-WHEN-SLOT). Under the spec vocabulary nothing widens — a
+/// `when` there is the closed-vocabulary error it has always been.
+pub(super) fn only_attrs_slot(
+    attrs: &[(String, String)],
+    allowed: &[&str],
+    el: &str,
+    at: (usize, usize),
+    p: &Parser<'_>,
+) -> Result<()> {
+    if p.vocab() == Vocabulary::Doc {
+        let mut widened: Vec<&str> = allowed.to_vec();
+        widened.push("when");
+        only_attrs(attrs, &widened, el, at, p)
+    } else {
+        only_attrs(attrs, allowed, el, at, p)
+    }
+}
+
+/// The slot's `when` condition, parsed against the closed list with a
+/// nearest-legal hint. Absent ⇒ `None`; present under the spec vocabulary
+/// is impossible, because [`only_attrs_slot`] refused it first.
+pub(super) fn take_when(
+    attrs: &[(String, String)],
+    at: (usize, usize),
+    p: &Parser<'_>,
+) -> Result<Option<Cond>> {
+    let Some((_, value)) = attrs.iter().find(|(k, _)| k == "when") else {
+        return Ok(None);
+    };
+    match Cond::parse(value) {
+        Some(cond) => Ok(Some(cond)),
+        None => Err(p.err(
+            at,
+            match Cond::hint(value) {
+                Some(h) => format!("unknown `when` condition `{value}` — did you mean `{h}`?"),
+                None => format!(
+                    "unknown `when` condition `{value}` — the vocabulary is \
+                     `os:<name>` and `agent:<name>`"
+                ),
+            },
+        )),
+    }
 }
 
 pub(super) fn last_unit_fact_id(b: &Block) -> Option<&str> {

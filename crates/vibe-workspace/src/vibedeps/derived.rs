@@ -12,7 +12,7 @@ use vibe_core::layout;
 use vibe_core::manifest::SpecFormat;
 use vibe_core::{ContentHash, Group};
 use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
-use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
+use vibe_specdoc::doc::{Block, BlockNode, Section, SpecDoc, StatusEl, Unit};
 
 use super::slot_diff::{
     MaterialiseReport, PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot,
@@ -474,9 +474,9 @@ fn apply_section(section: &mut Section, address_prefix: &str, overlay: &PackageO
     }
 }
 
-fn apply_blocks(blocks: &mut [Block], address_prefix: &str, overlay: &PackageOverlay) {
-    for block in blocks {
-        match block {
+fn apply_blocks(blocks: &mut [BlockNode], address_prefix: &str, overlay: &PackageOverlay) {
+    for node in blocks {
+        match &mut node.block {
             Block::Paragraph(unit) | Block::Quote(unit) => {
                 apply_unit(unit, address_prefix, overlay);
             }
@@ -491,6 +491,15 @@ fn apply_blocks(blocks: &mut [Block], address_prefix: &str, overlay: &PackageOve
                 }
             }
             Block::Fence { .. } => {}
+            // The documentation genre's own units take the overlay by the
+            // same address rule; its other blocks carry no unit.
+            Block::Note { body, .. } => apply_unit(body, address_prefix, overlay),
+            Block::Figure { caption, .. } => apply_unit(caption, address_prefix, overlay),
+            Block::Example { .. }
+            | Block::ExampleRef { .. }
+            | Block::Rule { .. }
+            | Block::Derived { .. }
+            | Block::Prompt { .. } => {}
         }
     }
 }

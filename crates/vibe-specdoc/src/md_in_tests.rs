@@ -18,7 +18,7 @@ fn title_status_and_preamble() {
     );
     assert!(d.sections.is_empty());
     assert_eq!(d.preamble.len(), 1);
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Paragraph(u) => {
             assert_eq!(u.text, "First.");
             let f = u.fact.as_ref().expect("fact");
@@ -39,7 +39,7 @@ fn heading_without_h1_is_all_preamble() {
 #[test]
 fn legacy_anchor_spelling_is_stripped_too() {
     let d = doc("# H {#h}\n\n##OLD Legacy claim. @impl/done\n");
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Paragraph(u) => {
             assert_eq!(u.text, "Legacy claim.");
             assert_eq!(
@@ -79,7 +79,7 @@ fn second_h1_is_a_top_level_section() {
 #[test]
 fn task_box_rides_at_the_head_of_the_item_text() {
     let d = doc("# H {#h}\n\n- [x] done thing\n- [ ] open thing\n");
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::List { ordered, items } => {
             assert!(!ordered);
             assert_eq!(items[0].text, "[x] done thing");
@@ -92,7 +92,7 @@ fn task_box_rides_at_the_head_of_the_item_text() {
 #[test]
 fn marker_at_first_token_moves_to_clean_text() {
     let d = doc("# H {#h}\n\n@fact:FIRST @impl/plan Words later.\n");
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Paragraph(u) => {
             assert_eq!(u.text, "Words later.");
             assert_eq!(
@@ -107,7 +107,7 @@ fn marker_at_first_token_moves_to_clean_text() {
 #[test]
 fn quote_unit_strips_the_prefix_keeps_the_fact() {
     let d = doc("# H {#h}\n\n> ##Q A quoted norm. @spec/done\n");
-    match &d.preamble[0] {
+    match &d.preamble[0].block {
         Block::Quote(u) => {
             assert_eq!(u.text, "A quoted norm.");
             assert_eq!(u.fact.as_ref().and_then(|f| f.id.clone()), Some("Q".into()));
@@ -120,7 +120,7 @@ fn quote_unit_strips_the_prefix_keeps_the_fact() {
 fn typed_fact_binds_the_fence_below_it() {
     let d = doc("# H {#h}\n\n@fact/code:RUN run this @impl/done\n\n```bash\ncargo test\n```\n");
     let blocks = &d.preamble;
-    match &blocks[1] {
+    match &blocks[1].block {
         Block::Fence { lang, fact, text } => {
             assert_eq!(lang.as_deref(), Some("bash"));
             assert_eq!(fact.as_deref(), Some("RUN"));
@@ -128,7 +128,7 @@ fn typed_fact_binds_the_fence_below_it() {
         }
         other => panic!("{other:?}"),
     }
-    match &blocks[0] {
+    match &blocks[0].block {
         Block::Paragraph(u) => assert_eq!(u.fact.as_ref().unwrap().id.as_deref(), Some("RUN")),
         other => panic!("{other:?}"),
     }

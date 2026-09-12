@@ -6,8 +6,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-051#convert-source");
 
-use crate::doc::SpecDoc;
-use crate::{Result, from_markdown, from_xml, to_markdown, to_xml};
+use crate::doc::{SpecDoc, Vocabulary};
+use crate::{Result, from_markdown, from_xml_with, to_markdown, to_xml};
 
 /// Target serialisation for a conversion.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -35,16 +35,28 @@ pub enum Conversion {
 /// format. Failures after that point are reported as [`Conversion::IrDivergent`]
 /// so callers can distinguish a bad input from a broken pivot round-trip.
 pub fn convert(source: &str, direction: Direction) -> Result<Conversion> {
+    convert_with(source, direction, Vocabulary::Spec)
+}
+
+/// [`convert`] with `vocab` open (##DOC-VOCAB-BY-KIND).
+///
+/// For the documentation genre the honest verdict is
+/// [`Conversion::IrDivergent`] and that is the LAW, not a defect
+/// (##DOC-VOCAB-MD-ONE-WAY): the Markdown projection of an `example` or a
+/// `prompt` re-parses as fences, so the reverse projection cannot return
+/// the same IR. A caller converting a documentation page to Markdown is
+/// asking for a reading projection, not a source migration.
+pub fn convert_with(source: &str, direction: Direction, vocab: Vocabulary) -> Result<Conversion> {
     match direction {
-        Direction::ToXml => convert_markdown(source),
-        Direction::ToMarkdown => convert_xml(source),
+        Direction::ToXml => convert_markdown(source, vocab),
+        Direction::ToMarkdown => convert_xml(source, vocab),
     }
 }
 
-fn convert_markdown(source: &str) -> Result<Conversion> {
+fn convert_markdown(source: &str, vocab: Vocabulary) -> Result<Conversion> {
     let ir = from_markdown(source)?;
     let output = to_xml(&ir);
-    let back_ir = match from_xml(&output) {
+    let back_ir = match from_xml_with(&output, vocab) {
         Ok(doc) => doc,
         Err(error) => {
             return Ok(Conversion::IrDivergent {
@@ -63,8 +75,8 @@ fn convert_markdown(source: &str) -> Result<Conversion> {
     ))
 }
 
-fn convert_xml(source: &str) -> Result<Conversion> {
-    let ir = from_xml(source)?;
+fn convert_xml(source: &str, vocab: Vocabulary) -> Result<Conversion> {
+    let ir = from_xml_with(source, vocab)?;
     let output = to_markdown(&ir);
     let back_ir = match from_markdown(&output) {
         Ok(doc) => doc,
@@ -75,9 +87,9 @@ fn convert_xml(source: &str) -> Result<Conversion> {
         }
     };
     let back = to_xml(&back_ir);
-    Ok(classify_projection(
-        source, &back, &ir, &back_ir, output, from_xml,
-    ))
+    Ok(classify_projection(source, &back, &ir, &back_ir, output, {
+        move |text| from_xml_with(text, vocab)
+    }))
 }
 
 /// Pure seam for the class-3 proof: tests can supply genuinely distinct IRs
@@ -88,7 +100,7 @@ pub(crate) fn classify_projection(
     ir: &SpecDoc,
     back_ir: &SpecDoc,
     output: String,
-    parse_back: fn(&str) -> Result<SpecDoc>,
+    parse_back: impl Fn(&str) -> Result<SpecDoc>,
 ) -> Conversion {
     if ir != back_ir {
         return Conversion::IrDivergent {
