@@ -23,11 +23,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http");
 
 mod auth;
+mod catalog;
 mod handshake;
 mod locate;
 mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
+pub use catalog::{PRIMARY, REPOMD};
 pub use locate::{IndexUrlResolution, IndexUrlSource, index_url_for, resolve_index_url};
 pub use wire::{
     BindingSite, IndexVersion, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,

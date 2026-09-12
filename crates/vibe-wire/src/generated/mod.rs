@@ -22,6 +22,7 @@ pub mod distribution;
 pub mod doc_manifest;
 pub mod doc_reviews;
 pub mod doc_site_config;
+pub mod doc_site_state;
 pub mod doc_surface;
 pub mod doc_surface_diff;
 pub mod doc_todo;
