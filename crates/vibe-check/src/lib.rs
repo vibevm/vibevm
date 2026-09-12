@@ -59,11 +59,11 @@ use specmark::spec;
 pub mod checks;
 
 pub use checks::{
-    ActivationConflictCheck, BootDirectoryCheck, BridgeProvenanceCheck, FactsSyncCheck,
-    FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck,
-    ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck,
-    SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck,
-    WalWellformedCheck,
+    ActivationConflictCheck, BootDirectoryCheck, BridgeProvenanceCheck, DocMediaCheck,
+    DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck, FeaturesGraphCheck,
+    I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck,
+    ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, SnippetPresuppositionCheck,
+    SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -132,6 +132,20 @@ pub enum CheckId {
     /// bridge and upstream licence surfaces, and carries an inspectable
     /// provenance form without requiring network access.
     BridgeProvenance,
+    /// PROP-057 §3 — a `doc` package ships a `README.md` and declares
+    /// none of `[boot_snippet]`, `[[binary]]`, `[[mcp_server]]`
+    /// (`##KIND-DOC-MUST-NOT-EXECUTE`); a subject's
+    /// `[documentation].primary` pointing into a foreign group warns.
+    DocPackageContract,
+    /// PROP-057 §5 — a translation writes its own `[i18n].canonical`
+    /// (`##LOC-LANGUAGE-FIELD`) and documents exactly the subjects its
+    /// source documents (`##LOC-DOCUMENTS-MATCH`); a source unreachable
+    /// offline leaves the second rule unchecked, with a warning saying so.
+    DocTranslation,
+    /// PROP-057 §7 / D-20 — every `[media]` image exists, carries a PNG,
+    /// JPEG or WebP signature (SVG is refused — it can carry script),
+    /// and fits its role's proportions and byte ceiling.
+    DocMedia,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -158,6 +172,9 @@ impl CheckId {
             CheckId::SnippetPresupposition => "snippet_presupposition",
             CheckId::VisibilityHygiene => "visibility_hygiene",
             CheckId::BridgeProvenance => "bridge_provenance",
+            CheckId::DocPackageContract => "doc_package_contract",
+            CheckId::DocTranslation => "doc_translation",
+            CheckId::DocMedia => "doc_media",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -185,6 +202,9 @@ impl CheckId {
             CheckId::SnippetPresupposition,
             CheckId::VisibilityHygiene,
             CheckId::BridgeProvenance,
+            CheckId::DocPackageContract,
+            CheckId::DocTranslation,
+            CheckId::DocMedia,
         ]
     }
 }
@@ -408,7 +428,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 17);
+/// assert_eq!(checks.len(), 20);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -430,6 +450,9 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(SnippetPresuppositionCheck),
         Box::new(VisibilityHygieneCheck),
         Box::new(BridgeProvenanceCheck),
+        Box::new(DocPackageContractCheck),
+        Box::new(DocTranslationCheck),
+        Box::new(DocMediaCheck),
     ]
 }
 
@@ -513,7 +536,9 @@ mod tests {
     fn registration_matches_the_historical_dispatch_order() {
         // The seam refactor must not reorder findings: the report's
         // emission order is observable output, pinned to the order
-        // `check_project` hardcoded before `all_checks` existed.
+        // `check_project` hardcoded before `all_checks` existed. A new
+        // cell is APPENDED — never inserted — so the pin grows at its
+        // tail and every existing position is untouched.
         let ids: Vec<CheckId> = all_checks().iter().map(|c| c.id()).collect();
         assert_eq!(
             ids,
@@ -535,6 +560,9 @@ mod tests {
                 CheckId::SnippetPresupposition,
                 CheckId::VisibilityHygiene,
                 CheckId::BridgeProvenance,
+                CheckId::DocPackageContract,
+                CheckId::DocTranslation,
+                CheckId::DocMedia,
             ]
         );
     }
