@@ -1,0 +1,41 @@
+/* The documentation address's own layout: the strip of switches above a
+   page, and the small things a package page needs that no component
+   owns. Everything with a colour in it reads a token; the audit gates
+   the tokens, not this file. */
+
+.doc-view {
+  display: block;
+}
+
+.doc-view__switches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+}
+
+.doc-view__unaddressed {
+  padding: 1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-2);
+}
+
+.doc-package__llms {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.doc-package__llms:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

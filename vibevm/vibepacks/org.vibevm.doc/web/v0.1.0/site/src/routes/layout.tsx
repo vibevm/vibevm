@@ -1,9 +1,16 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE */
 
 import { Slot, component$ } from "@qwik.dev/core";
-import { DocsHeader, Footer, SearchBox } from "@vibe-docs/design";
+import { useLocation } from "@qwik.dev/router";
+import {
+  DocsHeader,
+  Footer,
+  LanguageSelector,
+  SearchBox,
+} from "@vibe-docs/design";
 
 import { href } from "../lib/href.ts";
+import { headerLanguageChoices } from "../lib/view.ts";
 
 /**
  * The chrome of the public site — the header and the footer the landing
@@ -25,6 +32,7 @@ import { href } from "../lib/href.ts";
  * finishes rendering.
  */
 export default component$(() => {
+  const location = useLocation();
   return (
     <>
       <DocsHeader brand="VibeVM" homeHref={href("")}>
@@ -32,6 +40,10 @@ export default component$(() => {
           label="Search the documentation"
           placeholder="Search"
           shortcut="Ctrl K"
+        />
+        <LanguageSelector
+          label="Language"
+          items={headerLanguageChoices(location.url.pathname)}
         />
       </DocsHeader>
       <main>
