@@ -253,6 +253,7 @@ mod tests {
     use std::cell::Cell;
 
     use clap::Parser;
+    use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
     use super::*;
 
@@ -271,7 +272,7 @@ mod tests {
         fs::write(
             root.path().join("vibe.lock"),
             format!(
-                "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-09-11T00:00:00Z\"\nschema_version = 7\n\n{lock_packages}"
+                "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-09-11T00:00:00Z\"\nschema_version = {CURRENT_SCHEMA_VERSION}\n\n{lock_packages}"
             ),
         )
         .unwrap();
