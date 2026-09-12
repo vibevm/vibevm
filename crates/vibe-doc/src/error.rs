@@ -195,6 +195,32 @@ pub enum DocError {
          fix: declare `[doc.prompts] runner` in the package, or pass `--runner`)"
     )]
     Prompt { message: String },
+
+    /// A surface snapshot could not be recorded or read — the product
+    /// would not answer, or a file under `maintenance/surface/` is not a
+    /// snapshot. The version number itself is never at fault: it is an
+    /// input, and any string the owner declares is a legitimate one
+    /// (PROP-057 `##OBS-VERSION-CONTRACT`).
+    #[error(
+        "the surface snapshot cannot be taken: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS; \
+         fix: record the snapshot against a binary that answers `--help`, or repair \
+         the file under `maintenance/surface/`)"
+    )]
+    Surface { message: String },
+
+    /// The maintenance queue has nothing to read the package's own data
+    /// from: `maintenance/reviews.toml` does not parse, or the debt file
+    /// it was pointed at cannot be read. The queue reports numbers and
+    /// never gates, so this is reserved for the state where it would have
+    /// to INVENT one (PROP-057 `##OBS-MAINTENANCE-TOOLS`).
+    #[error(
+        "the maintenance queue cannot read this package: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS; \
+         fix: repair `maintenance/reviews.toml`, or leave it out — a package with no \
+         readings recorded is reported as one, never as a clean one)"
+    )]
+    Todo { message: String },
 }
 
 impl DocError {

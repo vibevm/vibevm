@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "description": "What changed between two declared versions of the product, translated into the pages somebody has to update (PROP-057 `##OBS-SURFACE-SNAPSHOTS`). `vibe doc diff <old> <new>` compares two surface snapshots member by member and then, through the citation graph, the `derived` sources and the coverage map, names the pages each change reaches and why. A change no page answers to becomes a request for a NEW page rather than silence; an empty document is an answer too. It is the documentation developers' kitchen and nothing of it reaches a reader: the human changelog between versions is written by hand from this output (`##OBS-NOTHING-LEAKS`). Source of truth for `crates/vibe-wire/src/generated/doc_surface_diff/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_surface_diff"
+    }
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "from": {
+      "type": "string",
+      "metadata": {
+        "description": "The version number of the older snapshot, as its own file declares it."
+      }
+    },
+    "to": {
+      "type": "string",
+      "metadata": {
+        "description": "The version number of the newer snapshot."
+      }
+    },
+    "changes": {
+      "elements": { "ref": "surface_change" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every difference between the two surfaces, in a stable order: by kind, then by subject."
+      }
+    },
+    "pages": {
+      "elements": { "ref": "page_to_update" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The pages to update, each with the reasons that reached it. This is the whole point of the document: a writer updates what is listed here instead of re-reading the manual."
+      }
+    },
+    "needs_pages": {
+      "elements": { "ref": "unplaced_change" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Changes no page answers to. They are listed rather than dropped, because «nothing cites the new command» is the state a new page exists to end."
+      }
+    }
+  },
+  "definitions": {
+    "surface_change": {
+      "metadata": {
+        "description": "One difference between the two surfaces."
+      },
+      "properties": {
+        "kind": { "ref": "change_kind" },
+        "change": { "ref": "change_verb" },
+        "subject": {
+          "type": "string",
+          "metadata": {
+            "description": "What changed, named the way the surface names it — `vibe doc build`, `vibe doc build --format`, `package.title`, `doc-manifest`, `PROP-057#CARD-FIELDS`."
+          }
+        },
+        "detail": {
+          "type": "string",
+          "metadata": {
+            "description": "What about it changed, in one line. Empty for a plain addition or removal, where the subject already says everything."
+          }
+        }
+      }
+    },
+    "change_kind": {
+      "enum": ["command", "flag", "manifest-field", "lock-field", "schema", "fact", "format"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which half of the surface the change sits in. Closed because the snapshot has exactly these halves: a kind nobody records cannot change."
+      }
+    },
+    "change_verb": {
+      "enum": ["added", "removed", "changed"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Whether the subject appeared, vanished, or stayed and differs."
+      }
+    },
+    "page_to_update": {
+      "metadata": {
+        "description": "One page and why the diff reached it."
+      },
+      "properties": {
+        "page": {
+          "type": "string",
+          "metadata": {
+            "description": "The page's address inside the documentation package — `reference/cli.xml`."
+          }
+        },
+        "reasons": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "unplaced_change": {
+      "metadata": {
+        "description": "A change with no page behind it."
+      },
+      "properties": {
+        "subject": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

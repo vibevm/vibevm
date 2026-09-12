@@ -888,6 +888,40 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# ── Documentation maintenance (2 records, 2 JTD), PROP-057 §10 ──────────────
+# The kitchen of the documentation developers (`##OBS-SURFACE-SNAPSHOTS`).
+# None of it reaches a reader, and none of it is read by a parser this project
+# does not own — so both state `ours`, in contrast with the two records above,
+# which crawlers and the site's shell read. They are inventoried all the same:
+# `##M-FORMAT-REGISTRY` asks whether a surface is a contract, not whether a
+# stranger reads it, and these are read by a `vibe` that may be months newer
+# than the one that wrote them.
+#
+# `doc-surface` is the structural snapshot of the product on one declared
+# version, kept at `maintenance/surface/<version>.json` in a documentation
+# package. NOT recoverable, and that is the whole reason it is committed:
+# rebuilding the surface of version 1 from a tree that now holds version 2 is
+# exactly the history this project refuses to keep (`##OBS-VERSION-CONTRACT`).
+#
+# `doc-surface-diff` is what `vibe doc diff` prints — the changes between two
+# snapshots, already translated into the pages to update. Recoverable: two
+# snapshots reproduce it exactly.
+[format.doc-surface]
+epoch = 1
+schema = "schemas/doc_surface.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+[format.doc-surface-diff]
+epoch = 1
+schema = "schemas/doc_surface_diff.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

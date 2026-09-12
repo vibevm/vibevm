@@ -89,6 +89,15 @@
 //!   could rewrite a sentence is a linter authors write FOR
 //!   (`##STYLE-LINT`).
 //!
+//! * [`surface`] — the pseudo-history of versions. A version is a
+//!   behavioural contract and the product inside one changes invisibly,
+//!   so the only difference this library computes between versions is
+//!   between two DECLARED ones: a structural snapshot of the command
+//!   tree, the manifest keys, the schemas and the obligations per version
+//!   number, and a diff that turns what moved into the list of pages to
+//!   update, each with its reason (`##OBS-SURFACE-SNAPSHOTS`). No hashes,
+//!   no build dates, nothing a reader ever sees.
+//!
 //! * [`prompts`] — «the docs cannot lie» for the half of the manual a
 //!   reader does not type. A task page opens with a request in the user's
 //!   voice, and an agent says something different every time it answers
@@ -156,6 +165,7 @@ pub mod numbering;
 pub mod pages;
 pub mod prompts;
 pub mod style;
+pub mod surface;
 pub mod translations;
 pub mod xml;
 

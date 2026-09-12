@@ -180,6 +180,24 @@ pub fn coordinate_of(package_dir: &Path) -> Result<String> {
     }
 }
 
+/// Which page names which `derived` reference, WITHOUT building any of
+/// them — page address, kind, reference, in page order.
+///
+/// The version diff asks this question and only this one: a command that
+/// gained a flag reaches the pages whose `cli-help` block quotes that
+/// command, and answering it by generating the blocks would run the whole
+/// product to learn something already written on the page.
+pub fn references(package_dir: &Path) -> Result<Vec<(String, DerivedKind, String)>> {
+    let set = pages::read_package(package_dir)?;
+    let mut out = Vec::new();
+    for page in &set.pages {
+        for (kind, reference) in collect(page) {
+            out.push((page.rel.clone(), kind, reference));
+        }
+    }
+    Ok(out)
+}
+
 /// Generate every `derived` block of a package, in page order.
 pub fn generate(package_dir: &Path, env: &DerivedEnv) -> Result<Vec<Generated>> {
     let set = pages::read_package(package_dir)?;
