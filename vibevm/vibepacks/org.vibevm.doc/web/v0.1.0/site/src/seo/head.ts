@@ -28,6 +28,13 @@
  * address. It carries `noindex`, and its `canonical` names the source's
  * page at the same version: one axis changes at a time, and the page a
  * crawler is sent to is the one whose words these actually are.
+ *
+ * None of it is built for the reader `vibe` serves from a machine's own
+ * store: `##SEO-LOCAL-EXEMPT` says the local mode publishes none of this,
+ * and `local.ts` writes the short head it gets instead. The flag is an
+ * argument rather than a module constant so that this file stays free of
+ * the build-time island — which is what lets the head be read by a test
+ * at all.
  */
 
 import type { DocumentHeadValue } from "@qwik.dev/router";
@@ -46,6 +53,7 @@ import { editions, resolvePage, sourceEdition } from "../lib/library.ts";
 import type { DocView, PackageView, PageView } from "../lib/view.ts";
 import { analytics } from "./analytics.ts";
 import { docFileHref, LATEST } from "./editions.ts";
+import { localPageHead, localShelfHead } from "./local.ts";
 import { previewOf } from "./media.ts";
 import { articleData, collectionData } from "./structured-data.ts";
 
@@ -173,8 +181,11 @@ function ogLocale(tag: string): string {
 }
 
 /** The head of one documentation page. */
-function pageHead(view: PageView): DocumentHeadValue {
+function pageHead(view: PageView, local: boolean): DocumentHeadValue {
   const address = view.address;
+  if (local) {
+    return localPageHead(view.title, view.summary, projections(address));
+  }
   const latest: DocAddress = { ...address, version: LATEST };
   const source = resolvePage(address.lang, address.document);
   const canonical = view.fallback
@@ -224,10 +235,18 @@ function pageHead(view: PageView): DocumentHeadValue {
 }
 
 /** The head of a package's own page — the shelf and the card. */
-function packageHead(view: PackageView): DocumentHeadValue {
+function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
   const address = view.address;
-  const canonical = packageHref({ ...address, version: LATEST });
   const description = view.description ?? view.abstract;
+  const agentIndex = {
+    rel: "alternate",
+    type: "text/plain",
+    href: llmsHref(address),
+    title: "llms.txt of this documentation",
+  };
+  if (local) return localShelfHead(view.title, description, [agentIndex]);
+
+  const canonical = packageHref({ ...address, version: LATEST });
   const card = cardOf();
 
   return {
@@ -257,12 +276,7 @@ function packageHead(view: PackageView): DocumentHeadValue {
         hreflang: "x-default",
         href: absolute(packageHref({ ...address, lang: null })),
       },
-      {
-        rel: "alternate",
-        type: "text/plain",
-        href: llmsHref(address),
-        title: "llms.txt of this documentation",
-      },
+      agentIndex,
     ],
     scripts: [
       {
@@ -290,10 +304,21 @@ function packageHead(view: PackageView): DocumentHeadValue {
  * is, and a language's catalogue points at itself — it is a different
  * list, not the same one at another address.
  */
-export function catalogueHead(lang: string | null): DocumentHeadValue {
-  const canonical = catalogueHref(lang);
+export function catalogueHead(
+  lang: string | null,
+  local: boolean,
+): DocumentHeadValue {
   const description =
     "Every documentation this site carries, in every language it has been adapted into.";
+  const agentIndex = {
+    rel: "alternate",
+    type: "text/plain",
+    href: docFileHref("llms.txt"),
+    title: "The catalogue for an agent",
+  };
+  if (local) return localShelfHead("Documentation", description, [agentIndex]);
+
+  const canonical = catalogueHref(lang);
   return {
     title: "Documentation",
     meta: [
@@ -318,19 +343,25 @@ export function catalogueHead(lang: string | null): DocumentHeadValue {
         hreflang: "x-default",
         href: absolute(catalogueHref(null)),
       },
-      {
-        rel: "alternate",
-        type: "text/plain",
-        href: docFileHref("llms.txt"),
-        title: "The catalogue for an agent",
-      },
+      agentIndex,
     ],
     scripts: [...analytics()],
   };
 }
 
-/** The head of whichever address the catch-all route matched. */
-export function documentationHead(view: DocView): DocumentHeadValue {
-  if (view.kind === "catalogue") return catalogueHead(view.lang);
-  return view.kind === "page" ? pageHead(view) : packageHead(view);
+/**
+ * The head of whichever address the catch-all route matched.
+ *
+ * `local` is passed in and never read from a module of its own: the flag
+ * is derived from the island this build baked in (`mode.ts`), and this
+ * file must stay importable by a test that has no build behind it.
+ */
+export function documentationHead(
+  view: DocView,
+  local: boolean,
+): DocumentHeadValue {
+  if (view.kind === "catalogue") return catalogueHead(view.lang, local);
+  return view.kind === "page"
+    ? pageHead(view, local)
+    : packageHead(view, local);
 }

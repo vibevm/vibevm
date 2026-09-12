@@ -48,6 +48,7 @@ import {
   editionsOf,
   sourceOf,
 } from "../site/src/seo/editions.ts";
+import { PUBLIC_ONLY } from "../site/src/seo/local.ts";
 import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
 import { resolveTableOf, resolverPage } from "../site/src/seo/resolve.ts";
 import { sitemapOf } from "../site/src/seo/sitemap.ts";
@@ -281,6 +282,46 @@ function writeDocumentationSurfaces(outDirName) {
 }
 
 /**
+ * The embedded output, read back for what it must not contain.
+ *
+ * `##SEO-LOCAL-EXEMPT` is a promise about pages on a reader's own
+ * machine: they publish none of the public head. The head builder makes
+ * that true by never building it, and this says so about the bytes —
+ * which is the only place the promise can actually be broken. The
+ * patterns are the ones `seo/local.ts` keeps beside the builders, so the
+ * statement and its check cannot drift apart.
+ */
+function checkLocalHead(outDirName) {
+  const out = join(SITE_ROOT, outDirName);
+  const offences = [];
+  const pages = htmlFiles(out);
+  for (const file of pages) {
+    const html = readFileSync(file, "utf8");
+    for (const rule of PUBLIC_ONLY) {
+      if (rule.pattern.test(html)) {
+        offences.push(`${file.slice(out.length + 1)} carries ${rule.what}`);
+      }
+    }
+  }
+  if (offences.length > 0) {
+    process.stderr.write(
+      [
+        `build (${mode}): the local reader's pages publish what only the domain may:`,
+        ...offences.map((one) => `  ${one}`),
+        "",
+        "A page served from a machine's own store must not declare itself a",
+        "copy of a page on the public site (##SEO-LOCAL-EXEMPT).",
+        "",
+      ].join("\n"),
+    );
+    process.exit(1);
+  }
+  process.stdout.write(
+    `build (${mode}): ${pages.length} page(s) carry none of the ${PUBLIC_ONLY.length} public-only tags\n`,
+  );
+}
+
+/**
  * The policy line, from the bytes that were actually written.
  *
  * Every inline script of every page is hashed and the union goes into
@@ -426,6 +467,10 @@ if (plan.countsLanding) {
     );
     process.exit(1);
   }
+} else {
+  // 6. The other build is read back for the opposite reason: a page of
+  //    the local reader must publish none of the public head.
+  checkLocalHead(plan.outDir);
 }
 
 process.stdout.write(`build (${mode}): ok\n`);

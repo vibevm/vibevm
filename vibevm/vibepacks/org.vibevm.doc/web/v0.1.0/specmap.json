@@ -590,10 +590,31 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/seo/local.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/local.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/local.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/local.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/seo/media.ts",
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/seo/media.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/mode.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/mode.ts"
     },
     {
       "crate_name": "src",
@@ -1291,11 +1312,35 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/seo/local.test.ts",
+      "from_symbol": "site/src/seo/local.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LOCAL-EXEMPT",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/local.ts",
+      "from_symbol": "site/src/seo/local.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LOCAL-EXEMPT",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/seo/media.ts",
       "from_symbol": "site/src/seo/media.ts",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PREVIEW-COMPOSED",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/mode.ts",
+      "from_symbol": "site/src/seo/mode.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-ONE-BASE",
       "verb": "implements"
     },
     {
@@ -1833,9 +1878,27 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/seo/local.test.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/local.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LOCAL-EXEMPT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/local.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/local.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LOCAL-EXEMPT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/seo/media.ts",
       "line": 1,
       "message": "edge `site/src/seo/media.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PREVIEW-COMPOSED`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/mode.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/mode.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-ONE-BASE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

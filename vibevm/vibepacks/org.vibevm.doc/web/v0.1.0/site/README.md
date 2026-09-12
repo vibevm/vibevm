@@ -124,6 +124,20 @@ The build then reads it back and compares the set against a second pass
 over `dist/`. It is an input to the deployment atom; nothing on the site
 fetches it.
 
+**None of it is built for the local reader.** `##SEO-LOCAL-EXEMPT` says
+the local mode publishes none of this, and a page served out of a
+machine's own store has no business declaring itself a copy of a page on
+a public domain, naming addresses there, or reporting to an analytics
+property. So the embedded build's pages carry the title, the summary and
+the three machine surfaces beside them, and nothing else: `seo/local.ts`
+writes that head rather than filtering the public one, which is why
+`analytics()` is not called there at all. Which build this is comes from
+the island — the static build bakes a rendered one in, the embedded build
+bakes the placeholder `vibe doc serve` replaces (`seo/mode.ts`) — so
+there is no second flag to keep in step with the first. `tools/build.mjs`
+reads the embedded output back and fails on any of the seven public-only
+tags, because the promise is about bytes on disk.
+
 ## The agent surfaces
 
 Under every package address lie the files a machine reads: `<page>.md` and
