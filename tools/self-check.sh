@@ -688,6 +688,19 @@ run_step "typescript-ai-native floor + APCA audit (org.vibevm.doc/web pkg)" \
 run_step "the reader's shell matches its pin" \
   cargo run --quiet -p vibe-cli -- doc shell status || OVERALL=$?
 
+# 8c-bis. Island parity across the two adapters (PROP-057
+# ##SHELL-PARITY-TEST, campaign atom A4.8 and prediction 6).
+#
+# The island the static path writes and the island the server glues into
+# its template are compared BYTE FOR BYTE over a fixture package. Step 1
+# already runs it with the rest of the workspace; it is named here as well
+# because it is a gate somebody decided on, and a gate that exists only
+# inside a `--workspace` run is a gate nobody can see fail. The second run
+# costs nothing — the crate is built and the test is microseconds.
+run_step "island parity across the shell adapters" \
+  cargo test --quiet -p vibe-doc-server \
+    the_island_is_the_same_bytes_through_both_adapters || OVERALL=$?
+
 
 # 9. The packages' own traceability self-traces (Traceability Relocation Plan
 # Phase 4; the authored-engine half moved with the consolidation). Every gated

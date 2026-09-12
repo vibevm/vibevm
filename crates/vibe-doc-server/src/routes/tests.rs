@@ -159,3 +159,205 @@ async fn the_resolver_refuses_what_it_does_not_serve() {
         assert_eq!(actual, status, "{address}: {body}");
     }
 }
+
+/// A4.8 — the parity the two adapters have to keep
+/// (`##SHELL-PARITY-TEST`).
+///
+/// The island the STATIC path writes (`vibe doc build --format html`) and
+/// the island the SERVER glues into its template are compared byte for
+/// byte, and the comparison is made by subtraction rather than by
+/// rendering twice: the served page is split on the template's own two
+/// halves, and what is between them must be exactly the bytes the build
+/// wrote. Prediction 6 of the campaign plan says this is the test that
+/// catches the first drift of the shell, and it only earns that if it
+/// compares bytes — a test that asked whether both contained some
+/// substring would pass through any amount of divergence.
+#[tokio::test]
+async fn the_island_is_the_same_bytes_through_both_adapters() {
+    let tmp = tempfile::tempdir().unwrap();
+    let reader = reader(&tmp);
+    let marker = reader.shell.index().island_marker.clone();
+
+    // The template this page would wear, with the marker still standing
+    // where the island goes: the two halves the served page must be
+    // wrapped in.
+    let pages = vibe_doc::pages::read_package(tmp.path()).expect("the fixture reads");
+    let dressed = crate::routes::in_shell(&reader, &pages.pages[0], &marker);
+    let (before, after) = dressed
+        .split_once(&marker)
+        .map(|(a, b)| (a.to_string(), b.to_string()))
+        .expect("the template has a hole");
+
+    let built = vibe_doc::build::build(
+        tmp.path(),
+        &SpecSources::new(),
+        &vibe_doc::build::Options {
+            format: vibe_doc::build::Format::Html,
+            base: reader.base.clone(),
+            manifest: vibe_doc::manifest::Options::at(reader.rendered_at),
+            derived: std::collections::BTreeMap::new(),
+        },
+    )
+    .expect("the fixture builds");
+    let island = built
+        .files
+        .iter()
+        .find(|file| file.path.ends_with("model/boot-lane/index.html"))
+        .map(|file| String::from_utf8_lossy(&file.bytes).into_owned())
+        .expect("the build wrote the page");
+
+    let app = build_app(std::sync::Arc::new(reader));
+    let response = app
+        .oneshot(
+            Request::builder()
+                .method(Method::GET)
+                .uri("/doc/com.example/thing-docs/0.2.0/model/boot-lane/")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    let bytes = axum::body::to_bytes(response.into_body(), 8 * 1024 * 1024)
+        .await
+        .unwrap();
+    let served = String::from_utf8_lossy(&bytes).into_owned();
+
+    let middle = served
+        .strip_prefix(before.as_str())
+        .and_then(|rest| rest.strip_suffix(after.as_str()))
+        .expect("the served page is the template with something in its hole");
+    assert_eq!(
+        middle, island,
+        "the island the server glued in is not the island the build wrote"
+    );
+}
+
+/// Both projections lie beside the page as files, and each says what it
+/// is (`##SITE-TRAILING-SLASH`).
+#[tokio::test]
+async fn the_projections_answer_beside_the_page() {
+    for (suffix, content_type, marker) in [
+        (".md", "text/markdown; charset=utf-8", "[p01]"),
+        (".xml", "application/xml; charset=utf-8", "p=\"1\""),
+    ] {
+        let (status, headers, body) = get_path(&format!(
+            "/doc/com.example/thing-docs/0.2.0/model/boot-lane{suffix}"
+        ))
+        .await;
+        assert_eq!(status, StatusCode::OK, "{suffix}");
+        assert_eq!(headers[header::CONTENT_TYPE], content_type);
+        assert!(body.contains(marker), "{suffix}: {body}");
+    }
+}
+
+/// An address that lost its slash is repaired once, permanently, rather
+/// than on every visit.
+#[tokio::test]
+async fn a_page_address_without_its_slash_redirects_to_the_one_with_it() {
+    let (status, headers, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/boot-lane").await;
+    assert_eq!(status, StatusCode::PERMANENT_REDIRECT);
+    assert_eq!(
+        headers[header::LOCATION],
+        "/doc/com.example/thing-docs/0.2.0/model/boot-lane/"
+    );
+}
+
+/// The machine files the agent endpoints promise, at the mount's root.
+#[tokio::test]
+async fn the_manifest_and_the_llms_tiers_are_served() {
+    let (status, headers, body) = get_path("/doc/manifest.json").await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(
+        headers[header::CONTENT_TYPE],
+        "application/json; charset=utf-8"
+    );
+    assert!(body.contains("\"thing-docs\""), "{body}");
+
+    for tier in [
+        "llms.txt",
+        "llms-small.txt",
+        "llms-medium.txt",
+        "llms-full.txt",
+    ] {
+        let (status, headers, body) = get_path(&format!("/doc/{tier}")).await;
+        assert_eq!(status, StatusCode::OK, "{tier}");
+        assert_eq!(headers[header::CONTENT_TYPE], "text/plain; charset=utf-8");
+        assert!(body.contains("Thing Manual"), "{tier}: {body}");
+    }
+}
+
+/// The form `##LOCAL-STATIC` forbids, in the three spellings the
+/// phase-0 probe found a live server falling to. Every one of them must
+/// be refused BEFORE anything touches the filesystem, and none of them
+/// may return a file.
+#[tokio::test]
+async fn no_spelling_of_a_traversal_reaches_the_filesystem() {
+    for attempt in [
+        "/doc/com.example/thing-docs/0.2.0/../../../../vibe.toml",
+        "/doc/com.example/thing-docs/0.2.0/..%2F..%2Fvibe.toml",
+        "/doc/com.example/thing-docs/0.2.0/%2e%2e%2fvibe.toml",
+        "/doc/com.example/thing-docs/0.2.0/model/../../../vibe.toml.md",
+    ] {
+        let (status, _, body) = get_path(attempt).await;
+        assert!(
+            status == StatusCode::NOT_FOUND || status == StatusCode::BAD_REQUEST,
+            "{attempt} answered {status}"
+        );
+        assert!(!body.contains("[package]"), "{attempt} served a file");
+    }
+}
+
+/// An escape that decodes to nothing is a refusal, not a guess.
+#[tokio::test]
+async fn a_malformed_escape_is_refused() {
+    let (status, _, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/%zz/").await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+}
+
+/// Every response carries the policy and the sniff guard — including
+/// the refusals, which is where a policy with a hole in it would show.
+#[tokio::test]
+async fn every_response_carries_the_policy_and_the_sniff_guard() {
+    for path in [
+        "/doc/com.example/thing-docs/0.2.0/model/boot-lane/",
+        "/doc/com.example/thing-docs/0.2.0/nothing-here/",
+        "/somewhere/else",
+    ] {
+        let (_, headers, _) = get_path(path).await;
+        let csp = headers[header::CONTENT_SECURITY_POLICY].to_str().unwrap();
+        assert!(csp.contains("default-src 'self'"), "{path}: {csp}");
+        assert!(csp.contains("frame-ancestors 'none'"), "{path}: {csp}");
+        assert!(!csp.contains("unsafe-inline"), "{path}: {csp}");
+        assert_eq!(headers[header::X_CONTENT_TYPE_OPTIONS], "nosniff");
+    }
+}
+
+/// The reader has no CORS layer at all — which is stricter than any
+/// setting of one, and the state `##LOCAL-CSP` asks for.
+#[tokio::test]
+async fn the_reader_sends_no_cross_origin_permission() {
+    let (_, headers, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/boot-lane/").await;
+    assert!(headers.get("access-control-allow-origin").is_none());
+}
+
+/// A page this documentation does not carry is a 404 that says so, not a
+/// blank 200.
+#[tokio::test]
+async fn an_unknown_page_is_a_refusal_that_names_it() {
+    let (status, _, body) = get_path("/doc/com.example/thing-docs/0.2.0/model/nope/").await;
+    assert_eq!(status, StatusCode::NOT_FOUND);
+    assert!(body.contains("model/nope.xml"), "{body}");
+}
+
+/// The decoder's own law: it reads an escape or it refuses, and it never
+/// guesses.
+#[test]
+fn the_decoder_reads_or_refuses() {
+    assert_eq!(decode("/doc/a%20b"), Some("/doc/a b".to_string()));
+    assert_eq!(decode("/doc/plain"), Some("/doc/plain".to_string()));
+    assert_eq!(decode("/doc/%2"), None);
+    assert_eq!(decode("/doc/%zz"), None);
+    // A separator smuggled through an escape decodes to a separator, and
+    // that is exactly why the segment check runs on the DECODED path.
+    assert_eq!(decode("/a%2Fb"), Some("/a/b".to_string()));
+}
