@@ -1,0 +1,89 @@
+<article class="doc-page" data-status="impl/done" data-audience="user,dev">
+  <h1 id="root">Every block once</h1>
+  <p data-fact="LEAD" data-status="impl/done">This page uses every block of the documentation genre <strong>once</strong>, so the island backend has a subject with no gaps.</p>
+  <p>Inline conventions ride inside a unit: <code>code</code>, <strong>strong</strong>, <em>emphasis</em> and <a href="/doc/com.example.docs/fixture-manual/latest/guide/every-block/">a link</a>.</p>
+  <section id="prose">
+    <h2>Prose blocks</h2>
+    <ul>
+      <li>A plain item.</li>
+      <li data-fact="ANCHORED-ITEM" data-status="impl/done">An item that carries a fact.</li>
+    </ul>
+    <ol>
+      <li>First.</li>
+      <li>Second.</li>
+    </ol>
+    <table>
+      <thead>
+        <tr>
+          <th>Verb</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>list</code></td>
+          <td>lists what is installed</td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote>
+      <p>A quotation from nowhere in particular.</p>
+    </blockquote>
+    <pre><code class="language-rust">let answer = 42;</code></pre>
+    <pre><code>a bare fence, no language claimed</code></pre>
+    <aside class="note" data-note="warning">
+      <p>A call-out the reader should not skip.</p>
+    </aside>
+    <figure>
+      <img src="media/diagram.svg" alt="Two boxes and an arrow" />
+      <figcaption>The caption, which is a unit like any other.</figcaption>
+    </figure>
+  </section>
+  <section id="verifiable">
+    <h2>Blocks that are checked</h2>
+    <blockquote class="rule">
+      <a class="rule" href="/doc/com.example/subject/latest/common/PROP-001/#A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>.</a>
+    </blockquote>
+    <blockquote class="rule" data-unresolved="true">
+      <a class="rule" href="/doc/com.example/subject/latest/common/PROP-001/#UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
+    </blockquote>
+    <pre class="derived" data-derived="cli-help" data-ref="vibe list --help"><code class="language-text">Usage: vibe list [OPTIONS]
+
+Options:
+      --json  Machine-readable output
+</code></pre>
+    <div class="example" data-example="version" data-fixture="none">
+      <pre class="example-run"><code class="language-sh">vibe --version</code></pre>
+      <pre class="example-output"><code>vibe 1.0.0</code></pre>
+    </div>
+    <div class="example" data-example="missing" data-fixture="none" data-exit="2">
+      <pre class="example-run"><code class="language-sh">vibe nope</code></pre>
+      <pre class="example-output"><code></code></pre>
+      <pre class="example-stderr"><code>error: unrecognized subcommand `nope`</code></pre>
+    </div>
+    <div class="example" data-example="version" data-example-ref="version">
+      <pre class="example-run"><code class="language-sh">vibe --version</code></pre>
+      <pre class="example-output"><code>vibe 1.0.0</code></pre>
+    </div>
+    <div class="prompt" data-prompt="install">
+      <pre class="prompt-text"><code class="language-prompt">Install vibe on this machine and show me the version.</code></pre>
+      <p class="prompt-needs">a terminal and a network connection</p>
+      <p class="prompt-outcome"><code>vibe --version</code> prints a version number</p>
+      <ul class="prompt-asserts">
+        <li><code>vibe --version</code></li>
+      </ul>
+    </div>
+    <div class="prompt" data-prompt="anything" data-assert="none">
+      <pre class="prompt-text"><code class="language-prompt">Ask the agent for anything at all.</code></pre>
+    </div>
+  </section>
+  <section id="varying">
+    <h2>Blocks that vary</h2>
+    <p data-when="os:windows">On Windows the path separator is a backslash.</p>
+    <p data-when="os:linux">On Linux it is a slash.</p>
+    <section id="for-codex" data-when="agent:codex">
+      <h3>For one agent</h3>
+      <p>A whole section that only one agent sees.</p>
+    </section>
+  </section>
+</article>

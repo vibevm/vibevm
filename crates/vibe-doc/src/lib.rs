@@ -27,7 +27,15 @@
 //!   mints carries no pin, so a citation can never go «suspect»
 //!   (`##OBS-RULE-EDGE-UNPINNED`).
 //!
-//! Below all three sits [`pages`], the one place that reads a
+//! * [`html`] — the island. A page's content as finished HTML, with no
+//!   script, no style and no page furniture: the public site's shell and
+//!   the local reader receive the same bytes, which is what keeps the two
+//!   renders from drifting apart (`##PIPE-SHELL-PARSES-NOTHING`). What a
+//!   backend needs beside the document — the cited rules, the generated
+//!   `derived` text, a translation's borrowed examples — travels in
+//!   [`content::Content`].
+//!
+//! Below all four sits [`pages`], the one place that reads a
 //! documentation package: the pivot's documentation vocabulary is a
 //! parameter of the READER, and choosing it from the package's kind is
 //! precisely the job the pivot refuses to do for separability (PROP-045
@@ -69,9 +77,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod citations;
+pub mod content;
 pub mod derived;
 pub mod error;
 pub mod examples;
+pub mod html;
 pub mod pages;
 
 pub use error::{DocError, Result};
