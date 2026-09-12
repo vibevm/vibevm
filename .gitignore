@@ -4,6 +4,14 @@
 Cargo.lock.bak
 *.pdb
 
+# The built documentation shell (PROP-057 ##SHELL-XTASK-EMBED). It is the
+# output of `cargo xtask embed-doc-shell` — a megabyte of content-hashed
+# chunks, fonts and one route template, produced by building the web
+# package with the embeddable adapter. A build product of another package
+# has no business in this history; the pin that names it,
+# `crates/vibe-doc-shell/doc-shell.lock`, is committed instead.
+/crates/vibe-doc-shell/shell/
+
 # Node — the TypeScript toolchain's resolved installs (ts-extract dev
 # deps, the ts-demo's devDependencies). Lockfiles ARE committed; the
 # shippable-tree filter excludes node_modules from package hashes too

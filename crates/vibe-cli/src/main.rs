@@ -220,6 +220,16 @@ fn main() -> ExitCode {
                 cwd: std::env::current_dir().ok(),
                 current_exe: std::env::current_exe().ok(),
                 pid: std::process::id(),
+                // The reader's shell is kept in the VVM store, so the
+                // root is the one `vibe self` resolves — the running
+                // version's own when managed, else the install base.
+                install_root: commands::vvm::resolve_root(
+                    self_loc.as_ref().map(|l| l.root.clone()),
+                    read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(PathBuf::from),
+                    dirs::home_dir(),
+                ),
+                unattended: ctx.is_unattended(),
+                json: ctx.is_json(),
             },
         ),
         Command::Facts(args) => commands::facts::run(&ctx, args),

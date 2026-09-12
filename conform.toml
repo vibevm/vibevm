@@ -58,6 +58,7 @@ gated = [
     "vibe-core",
     "vibe-doc",
     "vibe-doc-server",
+    "vibe-doc-shell",
     "vibe-ext",
     "vibe-extension-registry",
     "vibe-facts",

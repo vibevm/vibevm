@@ -1,0 +1,41 @@
+[package]
+name = "vibe-doc-shell"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish = false
+repository.workspace = true
+homepage.workspace = true
+description = "The documentation reader's shell: one type over three sources — built into this binary, downloaded into the machine store, or the bare fallback"
+
+[features]
+# Off by default, and that is the release/source split (##SHELL-RELEASE-BUILD):
+# a plain `cargo build` on a machine with no Node compiles and ships the bare
+# fallback shell; a release build turns this on and the build script refuses
+# to produce a binary whose shell directory is empty.
+embedded-shell = ["dep:include_dir"]
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+# The CSP source expression naming an inline script is `'sha256-<base64>'`,
+# and the base64 is the audited codec rather than a handwritten one.
+base64.workspace = true
+# The pin beside `vibe` is TOML, like every other authored record here.
+toml.workspace = true
+include_dir = { workspace = true, optional = true }
+
+[build-dependencies]
+# The build script reads one field out of the shell's own index — it does
+# not compute anything about the bytes. What the binary actually carries
+# is measured at run time, by the crate itself, in one place
+# ([`digest::of`]).
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

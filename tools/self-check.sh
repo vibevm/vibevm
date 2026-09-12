@@ -672,6 +672,23 @@ check_web_floor() {
 run_step "typescript-ai-native floor + APCA audit (org.vibevm.doc/web pkg)" \
   check_web_floor || OVERALL=$?
 
+# 8c. The reader's shell, and the pin beside it (PROP-057 ##SHELL-PIN).
+#
+# `vibe doc shell status` prints three digests — the bytes the binary is
+# carrying now, the digest the shell's own index records, and the one the
+# build compiled in — and compares them against `doc-shell.lock`. It is
+# non-zero when they disagree.
+#
+# This panel builds WITHOUT `--features vibe-doc-shell/embedded-shell`, so
+# the honest answer here is «the bare shell», and the step is green saying
+# so: a build with no Node ships the fallback by design, and a step that
+# went red for the designed state would be a step everyone learns to
+# ignore. It earns its keep on a release build, where the same command
+# answers about a real shell and a mismatch stops the release.
+run_step "the reader's shell matches its pin" \
+  cargo run --quiet -p vibe-cli -- doc shell status || OVERALL=$?
+
+
 # 9. The packages' own traceability self-traces (Traceability Relocation Plan
 # Phase 4; the authored-engine half moved with the consolidation). Every gated
 # package crate's public surface must carry a scope!/#[spec] tag, so no

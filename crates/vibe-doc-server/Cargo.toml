@@ -21,6 +21,10 @@ vibe-doc.workspace = true
 # The coordinate a served address must match, and the package kind the
 # placeholder glyph is drawn from.
 vibe-core.workspace = true
+# The shell a page is glued into, and the hashes its inline scripts need
+# in the policy. The `embedded-shell` feature is not turned on here: a
+# release build turns it on from the outside (##SHELL-RELEASE-BUILD).
+vibe-doc-shell.workspace = true
 # The form of `vibe-index`'s server, repeated rather than imported
 # (##PIPE-CRATES): axum 0.8, one router builder, `oneshot` tests.
 axum.workspace = true
