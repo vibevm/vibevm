@@ -80,13 +80,13 @@ should be the same object, made installable:</project-shape></p>
   <decisions title="2. Decisions">
     <package-is-project title="2.1 A package is a project — `spec/` for prompts, the root for code">
       <p><req-package-is-project fact="true" status="spec/done">`req r1`</req-package-is-project></p>
-      <p><PKG-PROJECT-LAW fact="true" status="spec/done">**Decision.** A package has the identical on-disk shape as a consumer project:</PKG-PROJECT-LAW></p>
+      <p><PKG-PROJECT-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Decision.** A package has the identical on-disk shape as a consumer project:</PKG-PROJECT-LAW></p>
       <facts ordered="false">
-        <SPEC-SUBTREE fact="true" status="spec/done">**Prompt/spec content lives under the package's `spec/` subtree** — boot
+        <SPEC-SUBTREE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Prompt/spec content lives under the package's `spec/` subtree** — boot
   snippets (`vibevm/vibespecs/boot/`), cards, guides, manifesto, appendix — laid out exactly
   as an ordinary project's `spec/` (`VIBEVM-SPEC.md` §4.2). `[boot_snippet].source`
   is a `spec/`-relative path (e.g. `spec/boot/20-stack-rust-ai-native.md`).</SPEC-SUBTREE>
-        <ROOT-CODE fact="true" status="spec/done">**The package root holds arbitrary code** (e.g. `Cargo.toml` + `crates/`) and
+        <ROOT-CODE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**The package root holds arbitrary code** (e.g. `Cargo.toml` + `crates/`) and
   `vibe.toml`, exactly as a project root does. Code is optional — a prompt-only
   package (e.g. `discipline-core`) simply has no code at its root.</ROOT-CODE>
       </facts>
@@ -104,7 +104,7 @@ package's content under `spec/`.</RETIRES-FLAT-LAYOUT></p>
     </package-is-project>
     <shippable-tree title="2.2 The shippable tree excludes build output">
       <p><req-shippable-tree fact="true" status="spec/done">`req r1`</req-shippable-tree></p>
-      <p><SHIPPABLE-TREE-DEF fact="true" status="spec/done">**Decision.** A package's **shippable tree** is its directory minus a
+      <p><SHIPPABLE-TREE-DEF fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Decision.** A package's **shippable tree** is its directory minus a
 build-output denylist:</SHIPPABLE-TREE-DEF></p>
       <fence>.git/        .vibe/        target/        node_modules/</fence>
       <facts ordered="false">
@@ -167,10 +167,10 @@ build-output denylist:</SHIPPABLE-TREE-DEF></p>
     <consume title="2.4 Consuming shipped code — external-path-dep, no nested workspace">
       <p><req-consume fact="true" status="spec/done">`req r1`</req-consume></p>
       <facts ordered="false">
-        <OWN-WORKSPACE fact="true" status="spec/done">**Decision.** A code-bearing package carries its **own** workspace manifest
+        <OWN-WORKSPACE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Decision.** A code-bearing package carries its **own** workspace manifest
   (for Rust, a root `Cargo.toml` with `[workspace]`) — it is a standalone,
   independently-buildable project.</OWN-WORKSPACE>
-        <PATH-DEP-LAW fact="true" status="spec/done">A language-native consumer that needs a shipped
+        <PATH-DEP-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">A language-native consumer that needs a shipped
   crate — a proc-macro that compiles *into* the consumer's own code (the
   `specmark` case), or a binary it invokes (the `conform`/`specmap` case) —
   references it **by path into the materialised slot**:</PATH-DEP-LAW>
@@ -182,7 +182,7 @@ specmark = { path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.
 [workspace]
 exclude = ["vibevm/vibedeps", "vibevm/vibepacks"]   # disclaim the package's own workspaces</fence>
       <facts ordered="false">
-        <WORKSPACE-EXCLUDE fact="true" status="spec/done">The consumer **excludes** `vibevm/vibedeps/` (and, for a self-hosting repo, the
+        <WORKSPACE-EXCLUDE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The consumer **excludes** `vibevm/vibedeps/` (and, for a self-hosting repo, the
   in-repo `vibevm/vibepacks/` source) from its `[workspace]`, so the slot's crates
   belong to the *package's* workspace, not the consumer's — Cargo forbids a
   directory living in two workspaces, and this is the standard resolution for a
@@ -285,7 +285,7 @@ L4 (implemented checkers) ships in the package whose language they check.</PLACE
       <SURF-NO-NEW-FIELD fact="true" status="spec/done">**No new required manifest field.** `[boot_snippet].source` becomes
   `spec/`-relative (a value change, not a schema change). `[package].materialization`
   stays `snapshot` for a vendored code-bearing package.</SURF-NO-NEW-FIELD>
-      <SURF-VIBEIGNORE fact="true" status="spec/done">**Optional `.vibeignore`** at the package root — newline-delimited globs added
+      <SURF-VIBEIGNORE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Optional `.vibeignore`** at the package root — newline-delimited globs added
   to the §2.2 build-output denylist.</SURF-VIBEIGNORE>
       <SURF-HOOKS fact="true" status="spec/done">**`[hooks].post-install`** (PROP-020) is the build lever; **`VIBE_PROJECT_ROOT`**
   is added to the hook environment (§2.3).</SURF-HOOKS>

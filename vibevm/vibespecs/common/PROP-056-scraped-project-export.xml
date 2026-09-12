@@ -69,36 +69,36 @@
     specifications may share a tree with generated boot output. A path name
     alone cannot decide disposition.</SCRAPE-PROBLEM></p>
     <facts ordered="false">
-      <SCRAPED-TREE fact="true" status="spec/done">A scraped tree is a project
+      <SCRAPED-TREE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">A scraped tree is a project
       tree for which every contract-selected Vibe path, dependency, managed
       marker, source annotation, tool script and environment reference is absent
       or explicitly retained under a neutral identity, and whose required
       native health panel is accepted after scraping under the declared strict
       or no-regression baseline policy. A retained non-pass verdict is never
       described as an unconditional pass.</SCRAPED-TREE>
-      <PRODUCT-PRESERVATION fact="true" status="spec/done">Product preservation means:
+      <PRODUCT-PRESERVATION fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Product preservation means:
       all untouched files are byte-identical; every authored source rewrite is
       metadata erasure-equivalent; every declared relocation preserves exact
       bytes and mode; native manifests and lockfiles describe the scraped
       dependency graph; the health oracle accepts the result.</PRODUCT-PRESERVATION>
-      <ZERO-RESIDUAL-SCOPE fact="true" status="spec/done">Zero residue means zero
+      <ZERO-RESIDUAL-SCOPE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Zero residue means zero
       registered Vibe identities, paths and markers selected by this contract.
       It does not mean deleting an ordinary word such as “vibe” from prose, nor
       undoing architectural choices learned while using a discipline.</ZERO-RESIDUAL-SCOPE>
-      <ALGORITHMIC-BOUNDARY fact="true" status="spec/done">The owner supplies policy:
+      <ALGORITHMIC-BOUNDARY fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The owner supplies policy:
       delete, keep, relocate, strip, retain, required checks and acceptable
       baseline mode. The engine supplies all mechanics and verdicts. Any state
       not decidable from the sealed contract and observed tree is a blocker,
       never a guess or best-effort success.</ALGORITHMIC-BOUNDARY>
     </facts>
-    <p><NON-GOALS fact="true" status="spec/done">Schema 1 does not reverse the historical
+    <p><NON-GOALS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Schema 1 does not reverse the historical
     influence of VibeVM on product architecture, infer replacements for arbitrary
     runtime libraries, mutate Git history, publish artifacts, or silently remove
     user-global deployments. Schema 1 does not discover, report or remove
     receipt-owned user-global deployments; the operator runs the existing
     explicit undeploy operation separately when external removal is
     desired.</NON-GOALS></p>
-    <p><SCRAPE-EXECUTION-PLATFORM-E1 fact="true" status="spec/done">Epoch-1 contract
+    <p><SCRAPE-EXECUTION-PLATFORM-E1 fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Epoch-1 contract
     parsing, planning and contract checking are portable. Mutating
     &#96;--output&#96;, &#96;--in-place&#96; and &#96;--recover&#96; execution is enabled only
     on Windows, where the implementation proves handle-relative exclusive
@@ -123,24 +123,24 @@
 
   <surface title="4. Command surface">
     <facts ordered="false">
-      <SCRAPE-PLAN-COMMAND fact="true" status="impl/done">&#96;vibe scrape --plan
+      <SCRAPE-PLAN-COMMAND fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">&#96;vibe scrape --plan
       [--contract &lt;path&gt;] [--output &lt;dir&gt; | --in-place]&#96; is read-only.
       With neither execution mode, it plans the in-place form because that is the
       larger risk surface; it writes no project, journal, quarantine or report
       file.</SCRAPE-PLAN-COMMAND>
-      <SCRAPE-EXPORT-COMMAND fact="true" status="impl/done">&#96;vibe scrape --output
+      <SCRAPE-EXPORT-COMMAND fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">&#96;vibe scrape --output
       &lt;absent-dir&gt; [--contract &lt;path&gt;]&#96; creates a scraped export and
       never changes the source tree. The destination must be absent; adoption of
       an existing directory is forbidden.</SCRAPE-EXPORT-COMMAND>
-      <SCRAPE-INPLACE-COMMAND fact="true" status="impl/done">&#96;vibe scrape --in-place
+      <SCRAPE-INPLACE-COMMAND fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">&#96;vibe scrape --in-place
       [--contract &lt;path&gt;]&#96; executes the journaled in-place transaction.
       Interactive use shows the exact modified-file and deletion census;
       unattended use requires &#96;--assume-yes&#96; after a green plan.</SCRAPE-INPLACE-COMMAND>
-      <SCRAPE-RECOVER-COMMAND fact="true" status="impl/done">&#96;vibe scrape --recover
+      <SCRAPE-RECOVER-COMMAND fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">&#96;vibe scrape --recover
       --path &lt;project&gt;&#96; settles the one pending user-local transaction.
       Recovery reads the journaled contract and plan, never the possibly removed
       project contract. A new scrape refuses while recovery is pending.</SCRAPE-RECOVER-COMMAND>
-      <SCRAPE-CONTRACT-COMMANDS fact="true" status="impl/done">&#96;vibe scrape contract
+      <SCRAPE-CONTRACT-COMMANDS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">&#96;vibe scrape contract
       init&#96; writes a conservative default contract only when absent;
       &#96;vibe scrape contract check&#96; parses and plans it read-only. Existing
       contracts are never silently refreshed by install or a language
@@ -152,7 +152,7 @@
   </surface>
 
   <contract title="5. Contract discovery, schema and snapshot">
-    <p><DEFAULT-CONTRACT fact="true" status="spec/done">The default is the project-root
+    <p><DEFAULT-CONTRACT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The default is the project-root
     literal &#96;vibevm/scrape/contract.toml&#96;. Every operand inside it is
     project-root-relative regardless of where an alternate contract lives.
     Contract location never changes mutation authority.</DEFAULT-CONTRACT></p>
@@ -164,7 +164,7 @@
       deleted or make any external path writable. Absolute selection walks and
       pins every parent no-follow; contained/external identity is decided by
       capability ancestry, never lexical prefix.</ALTERNATE-CONTRACT>
-      <CONTRACT-STRICTNESS fact="true" status="spec/done">The TOML schema rejects unknown
+      <CONTRACT-STRICTNESS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">The TOML schema rejects unknown
       tables, fields, tagged kinds and enum values. &#96;schema&#96; must equal 1;
       every id is a unique portable token across classification, rewrite,
       relocation, assertion and health rows.</CONTRACT-STRICTNESS>
@@ -577,12 +577,12 @@ timeout_seconds = 120</fence>
         baseline and therefore yields unknown. Refuse rejects modified and
         unknown; keep preserves either; delete accepts either only as the
         owner's explicit lossy disposition. Not-applicable belongs only to keep.</MODIFICATION-STATE>
-        <AUTHORED-SPECS fact="true" status="spec/done">Authored files under
+        <AUTHORED-SPECS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Authored files under
         &#96;vibevm/vibespecs&#96; are not generated merely because of their
         directory. A full zero-residue contract must explicitly delete them or
         relocate them to a neutral home. No built-in policy silently decides
         their value.</AUTHORED-SPECS>
-        <PRODUCT-CODE-SURVIVES fact="true" status="spec/done">Generated cells, seams,
+        <PRODUCT-CODE-SURVIVES fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Generated cells, seams,
         tests, models and other useful application source are authored product
         once accepted into the project. They remain unless an exact contract
         relocation or deletion row names them. Origin in a discipline is not
@@ -606,7 +606,7 @@ timeout_seconds = 120</fence>
   </paths>
 
   <rewrites title="7. Typed rewrite algebra">
-    <p><TYPED-ONLY fact="true" status="spec/done">Globs select candidates; they never
+    <p><TYPED-ONLY fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Globs select candidates; they never
     rewrite bytes. Authored source and structural manifests are changed only by a
     closed typed adapter. Generic regex replacement, shell rewrite hooks,
     implicit format conversion and whole-document reserialization are

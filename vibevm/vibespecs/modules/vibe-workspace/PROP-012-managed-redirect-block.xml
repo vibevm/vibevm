@@ -37,9 +37,9 @@
   <decisions title="2. Decisions">
     <co-tenant title="2.1 vibevm owns one delimited block, nothing else">
       <p><req-co-tenant fact="true" status="impl/done">`req r1`</req-co-tenant></p>
-      <p><ONE-BLOCK-LAW fact="true" status="impl/done">**Decision.** `vibe` owns exactly one **managed block** inside each agent instruction file — a contiguous region bounded by an opening and a closing marker.</ONE-BLOCK-LAW></p>
+      <p><ONE-BLOCK-LAW fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** `vibe` owns exactly one **managed block** inside each agent instruction file — a contiguous region bounded by an opening and a closing marker.</ONE-BLOCK-LAW></p>
       <facts ordered="false">
-        <OUTSIDE-PRESERVED fact="true" status="impl/done">`vibe` reads and rewrites only the content *between* the markers; every byte outside the block is treated as another tenant's property and preserved verbatim across every `vibe` operation.</OUTSIDE-PRESERVED>
+        <OUTSIDE-PRESERVED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe` reads and rewrites only the content *between* the markers; every byte outside the block is treated as another tenant's property and preserved verbatim across every `vibe` operation.</OUTSIDE-PRESERVED>
       </facts>
       <facts ordered="false">
         <SHARED-FILE-REFRAME fact="true" status="impl/done">The instruction file ceases to be "a vibevm-generated file." It is a **shared file with a vibevm-managed block in it**.</SHARED-FILE-REFRAME>
@@ -68,7 +68,7 @@
       <p><req-create fact="true" status="impl/done">`req r1`</req-create></p>
       <p><CLASSIFY-FIRST fact="true" status="impl/done">**Decision.** On every operation that would write the block, `vibe` first classifies each instruction file:</CLASSIFY-FIRST></p>
       <facts ordered="false">
-        <CLASS-MALFORMED fact="true" status="impl/done">**Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call.</CLASS-MALFORMED>
+        <CLASS-MALFORMED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call.</CLASS-MALFORMED>
         <CLASS-ABSENT fact="true" status="impl/done">**Absent** (zero markers) — `vibe` appends a fresh block at the end of the file, preceded by one blank line. If the file itself does not exist, `vibe` creates it containing only the block.</CLASS-ABSENT>
         <CLASS-PRESENT fact="true" status="impl/done">**Present** (one well-formed pair) — `vibe` replaces the content *between* the markers with freshly-generated content; the markers themselves and all text outside them are untouched. If the new inter-marker content is byte-identical to the old, `vibe` writes nothing — no git churn.</CLASS-PRESENT>
       </facts>
@@ -76,7 +76,7 @@
     <placement title="2.4 Placement is the user&apos;s — vibevm never moves the block">
       <p><req-placement fact="true" status="impl/done">`req r1`</req-placement></p>
       <p><PLACEMENT-ONCE fact="true" status="impl/done">**Decision.** vibevm decides the block's position **exactly once** — when it first creates the block (§2.3, absent → create) it is appended at the **end of the file**.</PLACEMENT-ONCE></p>
-      <p><POSITION-USERS fact="true" status="impl/done">From then on the position is the **user's**: `vibe` rewrites the content between the markers and **never relocates the markers**; whatever text precedes or follows the block stays exactly where it is, across every `vibe` operation.</POSITION-USERS></p>
+      <p><POSITION-USERS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">From then on the position is the **user's**: `vibe` rewrites the content between the markers and **never relocates the markers**; whatever text precedes or follows the block stays exactly where it is, across every `vibe` operation.</POSITION-USERS></p>
       <p><humble-default fact="true" status="impl/done">The end-of-file default is the humble, co-tenant choice — vibevm does not claim the attention-priority opening of a shared file, so the developer's own instructions and any other tool's content load first.</humble-default></p>
       <p><POSITION-KNOB fact="true" status="impl/done">The position is then a deliberate, user-owned knob. Because vibevm honours wherever the block sits, the user controls how strongly its redirect weighs in a session:</POSITION-KNOB></p>
       <facts ordered="false">

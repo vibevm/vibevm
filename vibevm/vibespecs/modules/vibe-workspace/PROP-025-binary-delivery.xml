@@ -24,15 +24,15 @@ specified v2 surface.** Module: `vibe-workspace` / `vibe-install` / `vibe-cli`.<
   </problem>
   <manifest title="2. Manifest surface">
     <p><req-manifest fact="true" status="impl/done">`req r1`</req-manifest></p>
-    <p><BINARY-TABLE fact="true" status="impl/done">A code-bearing package declares each shipped tool in its `vibe.toml`:</BINARY-TABLE></p>
+    <p><BINARY-TABLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A code-bearing package declares each shipped tool in its `vibe.toml`:</BINARY-TABLE></p>
     <fence lang="toml">[[binary]]
 name = "rust-ai-native"             # the PATH-facing name (the family
                                     # prefix keeps it collision-safe)
 crate = "crates/rust-ai-native-cli" # package-relative crate directory</fence>
     <facts ordered="false">
-      <NAME-CONSTRAINTS fact="true" status="impl/done">Constraints: `name` MUST be unique within the package and SHOULD be
+      <NAME-CONSTRAINTS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Constraints: `name` MUST be unique within the package and SHOULD be
   globally collision-safe (the family-prefix convention, PROP-028 §2.4).</NAME-CONSTRAINTS>
-      <CRATE-CONSTRAINT fact="true" status="impl/done">`crate` MUST name a directory inside the shippable tree carrying a
+      <CRATE-CONSTRAINT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`crate` MUST name a directory inside the shippable tree carrying a
   `[[bin]]`-bearing (or default-bin) Cargo package whose bin name equals
   `name`.</CRATE-CONSTRAINT>
       <LINTER-VALIDATES fact="true" status="impl/done">The linter (`vibe check`) validates both.</LINTER-VALIDATES>
@@ -45,11 +45,11 @@ crate = "crates/rust-ai-native-cli" # package-relative crate directory</fence>
   <build title="3. Install-time build">
     <p><req-build fact="true" status="impl/done">`req r1`</req-build></p>
     <facts ordered="false">
-      <BUILD-TIMING fact="true" status="impl/done">After materialising a slot whose manifest declares `[[binary]]` entries,
+      <BUILD-TIMING fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">After materialising a slot whose manifest declares `[[binary]]` entries,
   `vibe install` MAY build them (v1: on `vibe bin sync`, see §4 — the
   install itself only RECORDS the declarations; an install-time
   `--build-bins` opt-in flag is v2 surface).</BUILD-TIMING>
-      <BUILD-CONSENT fact="true" status="impl/done">**Successor to the historical first-build prompt.** Building executes package build scripts and proc-macros, so installation plus explicit target/route selection is the authorisation and the engine narrates the exact provider and target before execution. Lifecycle build does not add an allow-list, first-run prompt or `--allow-hooks` analogue; provider identity, artifact records and outcomes supply the audit trail. Existing direct `vibe bin` compatibility remains routed through its declared package rather than silently choosing ambient code.</BUILD-CONSENT>
+      <BUILD-CONSENT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Successor to the historical first-build prompt.** Building executes package build scripts and proc-macros, so installation plus explicit target/route selection is the authorisation and the engine narrates the exact provider and target before execution. Lifecycle build does not add an allow-list, first-run prompt or `--allow-hooks` analogue; provider identity, artifact records and outcomes supply the audit trail. Existing direct `vibe bin` compatibility remains routed through its declared package rather than silently choosing ambient code.</BUILD-CONSENT>
     </facts>
     <facts ordered="false">
       <SLOT-RESIDENT fact="true" status="impl/done">Artifacts are **provider-root resident**: the builtin Cargo mechanism runs under the exact materialised dependency slot or authored package root and uses that workspace's gitignored `target/`. The shared artifact record, not a guessed `target/release/&lt;name&gt;`, names the selected output.</SLOT-RESIDENT>
@@ -64,10 +64,10 @@ crate = "crates/rust-ai-native-cli" # package-relative crate directory</fence>
       <BIN-LIST fact="true" status="impl/done">`vibe bin list` — every `[[binary]]` declared by the project's
   installed packages, with build state (built / not built) and the
   artifact path.</BIN-LIST>
-      <BIN-BUILD fact="true" status="impl/done">`vibe bin build [&lt;name&gt;…]` — release build of the named tools (default: all declared) through their exact installed package and Cargo declaration; installation is the consent and the selected work is narrated.</BIN-BUILD>
+      <BIN-BUILD fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe bin build [&lt;name&gt;…]` — release build of the named tools (default: all declared) through their exact installed package and Cargo declaration; installation is the consent and the selected work is narrated.</BIN-BUILD>
       <BIN-PATH fact="true" status="impl/done">`vibe bin path &lt;name&gt;` — the artifact path (non-zero when not built);
   scripts compose with it.</BIN-PATH>
-      <BIN-EXEC fact="true" status="impl/done">`vibe bin exec &lt;name&gt; [--] &lt;args…&gt;` — resolve `name` through the
+      <BIN-EXEC fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe bin exec &lt;name&gt; [--] &lt;args…&gt;` — resolve `name` through the
   CURRENT project's lockfile → its slot → the slot-resident artifact
   (building the declared package target if absent), then execute with the exit
   code passed through. This is the rustup dispatch model: the project's
@@ -90,7 +90,7 @@ crate = "crates/rust-ai-native-cli" # package-relative crate directory</fence>
       <TRUST-CURRENT-SLOT fact="true" status="impl/done">Current-slot existence alone is not trust. The selected artifact must belong to the current resolved provider root and pass the shared record's exact source/config/platform/provider/output-path/digest revalidation. A same-slot refresh preserves unrecorded build output; a version change moves current-root identity and cannot reuse the old slot's record.</TRUST-CURRENT-SLOT>
       <WARM-NOOP fact="true" status="impl/done">`vibe bin build` on a warm artifact is a cargo
   no-op (~seconds).</WARM-NOOP>
-      <OFFLINE-HONESTY fact="true" status="impl/done">Cargo needs crates.io for third-party deps unless the
+      <OFFLINE-HONESTY fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Cargo needs crates.io for third-party deps unless the
   local cargo cache is warm: offline boxes get the same honest failure
   cargo gives, plus the hint that `cargo install --path &lt;slot&gt;/crates/…`
   (the documented degraded path, which stays valid indefinitely) has the
