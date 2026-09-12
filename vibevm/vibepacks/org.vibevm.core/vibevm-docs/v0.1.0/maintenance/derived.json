@@ -50,8 +50,8 @@
       "bytes": 3358
     },
     "reference/commands.xml#cli-help:vibe doc --help": {
-      "sha256": "89eca41f4802d2e87f645bfb6dd0171e21b805e8b3ff1c79bc698d4f72e6a5ce",
-      "bytes": 3636
+      "sha256": "1146ffda9188190d46d92ae000edb5b58e25d6b67473271c2026cdf8e668abd2",
+      "bytes": 4386
     },
     "reference/commands.xml#cli-help:vibe explain --help": {
       "sha256": "59ac9c5190c56d753f61060a63fd00ba9ebb49d1164390bb83999c613db5c2be",
@@ -78,8 +78,8 @@
       "bytes": 4975
     },
     "reference/commands.xml#cli-help:vibe init --help": {
-      "sha256": "99405e0b1b2d2efb80def833f49c59250cc2552336ea071df908e44d88505656",
-      "bytes": 5145
+      "sha256": "35bc2298e8761612f7d33388df998851d14692b7479e25dc0c761ac4207a82d8",
+      "bytes": 5430
     },
     "reference/commands.xml#cli-help:vibe install --help": {
       "sha256": "09d20d6e26c3be5abcacf8e57eb7a7b3480b129165ec1e1eeeb9980b7003ac77",
