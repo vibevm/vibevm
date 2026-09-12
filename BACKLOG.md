@@ -1640,3 +1640,13 @@ structure, and it goes when the file does.
 | @fact:B142-SEVERITY **severity** | P3 |
 | @fact:B142-DISPOSITION **disposition** | `open` — колонка `BOOT SNIPPET` у `vibe list` читает то же поле lock-файла, что и `tree` |
 | @fact:B142-FILED **filed by** | кампания документации, PP-O1 аномалия A15, 2026-09-12 |
+
+## B-143 — `vibe scrape contract check` на Rust-проекте: «no applicable required check» и отказ от hard-linked `cargo.exe`
+
+| поле | значение |
+|---|---|
+| @fact:B143-WHAT **what** | на проекте с `Cargo.toml` и `Cargo.lock` дефолтный контракт (`[[healthcheck]] kind = "cargo"`) даёт два блокера: `health-no-applicable-required-check: the health panel has no applicable required check` и `health-preparation-failed: reading health asset C:\Users\<user>\.cargo\bin\cargo.exe stably: … has 14 names (hard link); refusing to treat it as exclusively owned` — rustup ставит `cargo.exe` жёсткими ссылками на каждой Windows-машине |
+| @fact:B143-EFFECT **effect** | scrape не проходит health-проверку ни на одной машине с rustup под Windows; примеры `lifecycle/scrape` отложены (`examples/deferred.toml`) |
+| @fact:B143-SEVERITY **severity** | P2 — флагманская операция недоступна на основной платформе разработчика |
+| @fact:B143-DISPOSITION **disposition** | `open` — для инструментов из PATH проверять стабильность содержимого (хэш) вместо эксклюзивного владения; «required after check» дефолтного контракта должен быть применим, когда `Cargo.toml` есть |
+| @fact:B143-FILED **filed by** | кампания документации, PP-C2c-подготовка и прогон раннера P2-O4 §3, 2026-09-12 |
