@@ -119,9 +119,12 @@ export function headerLanguageChoices(pathname: string): LanguageChoice[] {
   if (segments === null) return catalogueChoices(null);
   const target = parseDocTarget(segments);
   if (target === null) return catalogueChoices(null);
-  return target.kind === "page"
-    ? languageChoices(target.address.document, target.address.lang)
-    : catalogueChoices(target.address.lang);
+  if (target.kind === "page") {
+    return languageChoices(target.address.document, target.address.lang);
+  }
+  return catalogueChoices(
+    target.kind === "catalogue" ? target.lang : target.address.lang,
+  );
 }
 
 /** The catalogue in every language the library has, for the site header. */
@@ -170,13 +173,22 @@ export function versionChoices(address: DocAddress): VersionChoice[] {
   ];
 }
 
-/** The documentation's own navigation, in the manifest's order. */
+/**
+ * The documentation's own navigation, in the manifest's order.
+ *
+ * It lists the SOURCE's pages in every language, not the pages the
+ * chosen edition happens to have. The reason is that an adaptation in
+ * progress is not a smaller manual: every page exists at every language's
+ * address, and one an adaptation has not reached yet is served in the
+ * source's words with a notice. A navigation built from the edition's own
+ * manifest would silently hide the pages a reader most needs to be told
+ * about.
+ */
 export function navItems(
   at: string | null,
   currentDocument: string | null,
 ): DocsNavItem[] {
-  const edition = editions().find((one) => one.segment === at);
-  const pages = (edition ?? sourceEdition()).pages;
+  const pages = sourceEdition().pages;
   return pages.map((page) => {
     const document = documentOf(page.path);
     return {
@@ -219,6 +231,8 @@ export type PageView = {
   /** The source page's own address, which a fallback is canonical to. */
   readonly canonical: string;
   readonly packageAt: string;
+  /** Where the documentation is mounted, in this build's own base. */
+  readonly mount: string;
   readonly links: readonly MetaLink[];
   readonly languages: readonly LanguageChoice[];
   readonly versions: readonly VersionChoice[];
@@ -251,7 +265,13 @@ export type PackageView = {
   }[];
 };
 
-export type DocView = PageView | PackageView;
+/** The catalogue of one language — the same shelf, at its own address. */
+export type LanguageCatalogueView = {
+  readonly kind: "catalogue";
+  readonly lang: string;
+};
+
+export type DocView = PageView | PackageView | LanguageCatalogueView;
 
 function pageView(address: DocAddress): PageView | null {
   const resolved = resolvePage(address.lang, address.document);
@@ -281,6 +301,7 @@ function pageView(address: DocAddress): PageView | null {
     uri: specUri({ ...address, version: newest }),
     canonical: docHref(addressOf(source.segment, address.document)),
     packageAt: packageHref(address),
+    mount: catalogueHref(null),
     links: projectionLinks(address),
     languages: languageChoices(address.document, address.lang),
     versions: versionChoices(address),
@@ -348,6 +369,10 @@ function packageView(address: PackageAddress): PackageView | null {
 export function viewOf(raw: string): DocView | null {
   const target = parseDocTarget(raw.split("/"));
   if (target === null) return null;
+  if (target.kind === "catalogue") {
+    const known = editions().some((one) => one.segment === target.lang);
+    return known ? { kind: "catalogue", lang: target.lang } : null;
+  }
   return target.kind === "page"
     ? pageView(target.address)
     : packageView(target.address);

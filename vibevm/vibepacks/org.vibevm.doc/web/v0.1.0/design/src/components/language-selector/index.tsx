@@ -74,6 +74,7 @@ export const LanguageSelector = component$<LanguageSelectorProps>((props) => {
               }
               href={item.href}
               hreflang={item.tag}
+              data-lang-choice={item.tag}
               {...(item.current ? { "aria-current": "true" as const } : {})}
             >
               <span class="language-selector__name">

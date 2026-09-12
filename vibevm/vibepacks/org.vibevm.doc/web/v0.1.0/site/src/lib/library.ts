@@ -191,7 +191,7 @@ export function resolvePage(
 export type SiteAddress = {
   /** The catch-all route's `path` parameter — no leading or trailing slash. */
   readonly path: string;
-  readonly kind: "page" | "package";
+  readonly kind: "page" | "package" | "catalogue";
   /** True when the page is the source's text under another language's address. */
   readonly fallback: boolean;
 };
@@ -215,14 +215,28 @@ function prefix(segment: string | null): string {
  */
 export function siteAddresses(): readonly SiteAddress[] {
   const out: SiteAddress[] = [];
+  const source = sourceEdition();
   for (const one of editions()) {
     const at = prefix(one.segment);
+    // Every language has a catalogue of its own; the source's is the
+    // door itself, which is a route file rather than an address of
+    // this list.
+    if (one.segment !== null) {
+      out.push({ path: one.segment, kind: "catalogue", fallback: false });
+    }
     out.push({ path: at, kind: "package", fallback: false });
-    for (const page of one.pages) {
+    // Every edition materialises every page of the SOURCE, not only the
+    // ones it has. A page an adaptation is missing is written anyway,
+    // with the source's text under the adaptation's address: that is the
+    // fallback, and it is what makes a language never 404
+    // (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). A missing page is a fact
+    // about the adaptation's progress, not a hole in the site.
+    for (const page of source.pages) {
+      const document = documentOf(page.path);
       out.push({
-        path: `${at}/${documentOf(page.path)}`,
+        path: `${at}/${document}`,
         kind: "page",
-        fallback: false,
+        fallback: findPage(one, document) === null,
       });
     }
   }

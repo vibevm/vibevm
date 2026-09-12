@@ -25,7 +25,9 @@ import { startAgentSurface } from "./agent.ts";
 import { startCodeChrome } from "./code.ts";
 import { startOverlay } from "./overlay.ts";
 import { startToc } from "./toc.ts";
+import { startCatalogue, type CatalogueEdition } from "./catalogue.ts";
 import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
+import { startFallback } from "./fallback.ts";
 import { startLanguageSwitch } from "./language.ts";
 import { startPlatformSwitch } from "./platform.ts";
 import { startPosition } from "./position.ts";
@@ -60,6 +62,8 @@ export type ReaderContext = {
   readonly fallback: boolean;
   /** The source page this one falls back to, as an address. */
   readonly sourceHref: string;
+  /** Where the documentation is mounted, so links can be re-languaged. */
+  readonly mount: string;
 };
 
 /** Start every behaviour; the returned function stops all of them. */
@@ -84,6 +88,11 @@ export function startReader(context: ReaderContext): () => void {
     startRuleTransclusion(),
     startAnchors(),
     startLanguageSwitch(),
+    startFallback({
+      addressLanguage: context.addressLanguage,
+      fallback: context.fallback,
+      mount: context.mount,
+    }),
     startPosition(),
     startReadingMode(),
     startAgentSurface(context.uri),
@@ -93,6 +102,24 @@ export function startReader(context: ReaderContext): () => void {
     }),
   ];
 
+  return () => {
+    for (const stop of stops) stop();
+  };
+}
+
+/**
+ * The catalogue's much smaller reader: the language pill, and the one
+ * decision the door has to take.
+ *
+ * It shares nothing with the page's reader because it has nothing to
+ * share — there is no island, no block to cite and no place to return
+ * to. What it does have is the choice of language, which is why the
+ * selector's behaviour and the door's decision are both here.
+ */
+export function startCatalogueReader(
+  editions: readonly CatalogueEdition[],
+): () => void {
+  const stops = [startLanguageSwitch(), startCatalogue(editions)];
   return () => {
     for (const stop of stops) stop();
   };

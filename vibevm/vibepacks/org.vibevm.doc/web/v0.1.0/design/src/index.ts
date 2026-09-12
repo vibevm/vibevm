@@ -114,3 +114,7 @@ export {
 export { Toc, type TocProps } from "./components/toc/index.tsx";
 export { Lightbox, type LightboxProps } from "./components/lightbox/index.tsx";
 export { CodeChrome } from "./components/code-block/index.tsx";
+export {
+  FallbackNotice,
+  type FallbackNoticeProps,
+} from "./components/fallback-notice/index.tsx";

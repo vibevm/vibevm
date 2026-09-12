@@ -181,18 +181,23 @@ export function docSegments(pathname: string): string[] | null {
   return parts.slice(1);
 }
 
-/** What the catch-all route matched: one page, or one package's own page. */
+/** What the catch-all route matched, in order of how much it says. */
 export type DocTarget =
   | { readonly kind: "page"; readonly address: DocAddress }
-  | { readonly kind: "package"; readonly address: PackageAddress };
+  | { readonly kind: "package"; readonly address: PackageAddress }
+  /** `/doc/<lang>/` — the catalogue of one language. */
+  | { readonly kind: "catalogue"; readonly lang: string };
 
 /**
- * Read the catch-all route's segments as either address it may be.
+ * Read the catch-all route's segments as whichever address they are.
  *
- * `/doc/<group>/<name>/<version>/` and `/doc/<group>/<name>/<version>/<document>/`
- * are the same address one segment apart, so one parser reads both and
- * says which it found. A second parser would be a second opinion about
- * where a language ends and a group begins.
+ * `/doc/<lang>/`, `/doc/<group>/<name>/<version>/` and the same with a
+ * document behind it are the same address at three lengths, so ONE
+ * parser reads all three and says which it found. A second parser would
+ * be a second opinion about where a language ends and a group begins —
+ * and that question is settled by what the two things ARE: a group is a
+ * reverse-DNS coordinate and always has a dot, a language tag never
+ * does.
  */
 export function parseDocTarget(segments: readonly string[]): DocTarget | null {
   const page = parseDocAddress(segments);
@@ -203,6 +208,9 @@ export function parseDocTarget(segments: readonly string[]): DocTarget | null {
   if (first === undefined) return null;
   const hasLang = !first.includes(".");
   if (hasLang && !/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(first)) return null;
+
+  if (hasLang && parts.length === 1) return { kind: "catalogue", lang: first };
+
   const rest = hasLang ? parts.slice(1) : parts;
   if (rest.length !== 3) return null;
   const [group, name, version] = rest;
