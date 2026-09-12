@@ -4,6 +4,14 @@
 //! gzip output is deterministic (level 6, `mtime=0`, no filename in
 //! the header) so its sha256 stays stable across machines for
 //! identical input.
+//!
+//! Determinism here needs a fourth thing the header cannot express: one
+//! encoder. Two DEFLATE implementations at the same level emit different
+//! (equally valid) streams, and flate2 chooses its backend from features
+//! Cargo unified across the whole build graph — so the same input
+//! compressed by the same source could land on different bytes depending
+//! on which binary linked this crate. `crates/vibe-index/Cargo.toml` pins
+//! that backend; the comment on the dependency carries the reasoning.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
@@ -60,9 +68,10 @@ pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<(WrittenFile, W
 }
 
 /// gzip-encode `bytes` deterministically: header `mtime=0`, no
-/// filename, level 6 (the zlib default that gzip-1.x ships). Same
-/// input → same output across machines so the sha256 in
-/// `repomd.json` stays stable.
+/// filename, level 6 (the zlib default that gzip-1.x ships), through
+/// the one backend the manifest pins. Same input → same output across
+/// machines AND across consumers, so the sha256 in `repomd.json` stays
+/// stable.
 pub fn gzip_deterministic(bytes: &[u8]) -> Result<Vec<u8>> {
     let mut encoder = GzEncoder::new(Vec::new(), Compression::new(6));
     encoder
@@ -233,6 +242,13 @@ mod tests {
         assert!(dir.path().join("primary.jsonl.gz").is_file());
     }
 
+    /// Self-equality within one build is the weak half of determinism and
+    /// on its own it is a trap: it stayed green through the whole period
+    /// when a consumer's feature unification was silently swapping this
+    /// crate's DEFLATE backend and moving the committed catalog's bytes.
+    /// The half that matters — the same bytes in every build graph — is
+    /// held by the backend pin in `Cargo.toml`, and proven end to end by
+    /// `tests/golden_corpus.rs` reprojecting the committed corpus.
     #[test]
     fn gzip_is_deterministic() {
         let bytes = b"vibevm primary.jsonl bytes go here\n";
