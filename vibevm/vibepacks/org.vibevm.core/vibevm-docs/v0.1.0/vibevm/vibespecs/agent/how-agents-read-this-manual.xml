@@ -38,7 +38,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"/>
   </procedure>
   <the-tools title="The tools of the server">
-    <p>`vibe mcp serve` offers the same operations as tools. `explain` looks at one node of the map by address; `query` finds nodes, and the two are separate verbs on purpose. `select` takes up to seven predicates, `uri:`, `symbol:`, `kind:`, `scope:`, `has:`, `lacks:` and `depth:`, whitespace separated and joined by AND, with no operators; an unknown predicate, a repeated one or an empty query is an error that names the token and lists what was expected.</p>
+    <p>`vibe mcp serve` offers the same operations as tools. `explain` looks at one node of the map by address; `query` finds nodes, and the two are separate verbs on purpose. `select` takes up to seven predicates, `uri:`, `symbol:`, `kind:`, `scope:`, `has:`, `lacks:` and `depth:`, whitespace separated and joined by AND, with no operators. An unknown predicate, a repeated one or an empty query is an error that names the token and lists what was expected.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-SEVEN-PREDICATES-JOINED-BY-AND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR"/>
