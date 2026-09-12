@@ -1,0 +1,101 @@
+/* The table of contents in both of its shapes. The sidebar is the same
+   `<details>`, forced open with its summary taken away; nothing switches
+   elements, only how one is laid out. */
+
+.toc {
+  margin: 0 0 1.6rem;
+  font-size: 0.85rem;
+}
+
+.toc__summary {
+  padding: 0.35rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.toc__summary:hover {
+  color: var(--accent);
+}
+
+.toc__list {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.toc__item a {
+  display: block;
+  padding: 0.16rem 0 0.16rem 0.7rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--text-2);
+  line-height: 1.35;
+  transition:
+    color var(--speed) ease,
+    border-color var(--speed) ease;
+}
+
+.toc__item a:hover {
+  color: var(--text);
+}
+
+.toc__item--h3 a {
+  padding-left: 1.5rem;
+  font-size: 0.94em;
+}
+
+.toc__item a.is-active {
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+
+.toc__rules {
+  margin-top: 1.2rem;
+}
+
+.toc__rules-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.toc__rules-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc__rules-list a {
+  display: block;
+  padding: 0.14rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+  overflow-wrap: anywhere;
+}
+
+.toc__rules-list a:hover {
+  color: var(--accent);
+}
+
+/* The sidebar shape. The class is put on the page by the behaviour, from
+   the window's width and the reader's own column width together. */
+.has-sidebar .toc {
+  position: sticky;
+  top: 5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  margin: 0;
+}
+
+.has-sidebar .toc__summary {
+  display: none;
+}

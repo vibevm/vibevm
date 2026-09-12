@@ -109,14 +109,38 @@ export function startPosition(): () => void {
     save();
   };
 
+  /**
+   * Going to the contents is LEAVING a place, so the offer to come back
+   * is made there and then rather than on the next visit. It is the one
+   * moment the page moves a reader on purpose, and it is their own
+   * click that asks for it.
+   */
+  const onTocButton = (event: Event): void => {
+    const node = event.target;
+    if (!(node instanceof Element)) return;
+    if (node.closest("[data-quick-toc]") === null) return;
+    const at = nearestAbove(region);
+    if (at !== null) {
+      target = at;
+      writeLocal(key, at);
+      show();
+    }
+    tracking = false;
+    const contents = document.querySelector("[data-toc]");
+    if (contents instanceof HTMLDetailsElement) contents.open = true;
+    contents?.scrollIntoView({ block: "start" });
+  };
+
   window.addEventListener("scroll", onScroll, { passive: true });
   for (const button of buttons) button.addEventListener("click", onReturn);
   document.addEventListener("click", onTocPick);
+  document.addEventListener("click", onTocButton);
 
   return () => {
     window.removeEventListener("scroll", onScroll);
     for (const button of buttons) button.removeEventListener("click", onReturn);
     document.removeEventListener("click", onTocPick);
+    document.removeEventListener("click", onTocButton);
     if (timer !== null) window.clearTimeout(timer);
   };
 }

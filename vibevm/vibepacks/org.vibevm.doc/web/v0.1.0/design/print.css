@@ -1,0 +1,105 @@
+/* print.css — what a documentation page is on paper.
+   ---------------------------------------------------------------------
+   Two rules decide everything here.
+
+   Nothing that can be clicked survives. A settings panel, a floating
+   button, a language pill, a search box and a return-to-place button are
+   all offers to do something, and paper accepts none of them; printed,
+   they are ink spent on controls that will never work.
+
+   Everything that can be CITED survives, and is made louder rather than
+   quieter. The block numbers stay — they are the addresses a reader
+   quotes, and a printed page without them cannot be discussed with
+   anyone looking at the screen version. Link addresses, which the screen
+   keeps under the words, are printed after them: a paper reference that
+   says «see here» is not a reference at all. */
+
+@media print {
+  /* The controls. */
+  .docs-header,
+  .footer,
+  .settings,
+  .fab,
+  .return-to-place,
+  .lightbox,
+  .search-box,
+  .language-selector,
+  .version-switch,
+  .tab-pills,
+  .code-toolbar,
+  .table-toolbar,
+  .docs-nav {
+    display: none !important;
+  }
+
+  /* The page itself: one column, on white, at a size meant for paper. */
+  html,
+  body {
+    background: white;
+    color: black;
+  }
+
+  .prose {
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  .doc-view.has-sidebar {
+    display: block;
+  }
+
+  /* The contents print once, at the front, fully open. */
+  .toc {
+    position: static !important;
+    max-height: none;
+    margin: 0 0 1.5em;
+    break-after: avoid;
+  }
+
+  .toc__summary {
+    display: none;
+  }
+
+  /* The numbers are the addresses; they print at full strength and in
+     the margin, where they do not interrupt a line of text. */
+  .prose .p-anchor {
+    opacity: 1;
+    color: black;
+  }
+
+  .prose.no-anchors .p-anchor {
+    display: inline;
+  }
+
+  /* Every link says where it goes. Fragment-only links are left alone —
+     their destination is on the same sheet of paper. */
+  .prose a[href^="http"]::after,
+  .prose a[href^="/"]::after {
+    content: " (" attr(href) ")";
+    font-family: monospace;
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  /* Nothing that a reader would have to scroll to reach. */
+  .table-scroll,
+  .prose pre {
+    overflow: visible !important;
+  }
+
+  .prose table,
+  .prose pre,
+  .prose figure,
+  .prose blockquote,
+  .prose .example {
+    break-inside: avoid;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    break-after: avoid;
+  }
+}

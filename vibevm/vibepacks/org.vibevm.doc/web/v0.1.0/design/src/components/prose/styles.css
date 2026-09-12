@@ -191,9 +191,12 @@
 
 /* ---- Generated and executed blocks --------------------------------- */
 
-.prose pre.derived::after,
+/* An executed example carries its own name in the corner. What GENERATED
+   a block, and from what, is a sentence rather than a corner note — the
+   behaviour writes it above the block, where it is read before the text
+   it explains rather than after it. */
 .prose .example::after {
-  content: attr(data-ref);
+  content: attr(data-example);
   position: absolute;
   top: 0.35rem;
   right: 0.6rem;
@@ -305,6 +308,52 @@
   color: var(--text-2);
   font-weight: 600;
   border-bottom-color: var(--line-strong);
+}
+
+/* Zebra and a bold first column. Both are about finding one cell in a
+   row of eight: the stripe keeps the eye on the line, and the first
+   column is what the row is ABOUT, so it reads as a label rather than as
+   one more value. */
+.prose tbody tr:nth-child(even) {
+  background: var(--bg-raise);
+}
+
+.prose tbody td:first-child,
+.prose tbody th:first-child {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ---- Footnotes ------------------------------------------------------
+   Apparatus rather than flow: set smaller and quieter than the text they
+   belong to, and given the rule above them that says where the page's
+   argument ended. The back-reference arrow is the pipeline's; this is
+   what it looks like. */
+
+.prose section#footnotes {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.88em;
+  color: var(--text-2);
+}
+
+.prose section#footnotes h2 {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.prose .fn-backref {
+  margin-left: 0.3rem;
+  color: var(--text-3);
+  text-decoration: none;
+}
+
+.prose .fn-backref:hover {
+  color: var(--accent);
 }
 
 /* ---- Platform-conditional blocks ------------------------------------

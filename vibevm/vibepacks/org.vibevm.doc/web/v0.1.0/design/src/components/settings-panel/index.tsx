@@ -36,6 +36,14 @@ export const SettingsPanel = component$<SettingsPanelProps>((props) => {
         <button
           class="settings__quick-button"
           type="button"
+          data-quick-toc
+          aria-label="Contents"
+        >
+          ≡
+        </button>
+        <button
+          class="settings__quick-button"
+          type="button"
           data-step="font"
           data-delta="-1"
           aria-label="Smaller text"

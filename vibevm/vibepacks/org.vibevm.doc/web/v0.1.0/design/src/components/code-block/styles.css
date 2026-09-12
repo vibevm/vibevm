@@ -1,0 +1,109 @@
+/* What the reader attaches to the island: a toolbar over a fence, an
+   expand control over a wide table, the label under an executed example
+   and the note over a generated block. None of it is rendered by a
+   component; all of it reads the same tokens. */
+
+.code-toolbar {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  opacity: 0;
+  transition: opacity var(--speed) ease;
+}
+
+.prose pre:hover .code-toolbar,
+.code-toolbar:focus-within {
+  opacity: 1;
+}
+
+.code-toolbar__lang {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.code-toolbar__copy {
+  padding: 0.08rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.code-toolbar__copy:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.code-toolbar__copy.copied::after {
+  content: " ✓";
+  color: var(--accent);
+}
+
+/* ---- The table's own toolbar ---------------------------------------- */
+
+/* The block a table is put into by the reader: the control above, the
+   scrolling region below, so the control never scrolls away from the
+   reader looking for it. */
+.table-block {
+  margin: 0 0 1.3rem;
+}
+
+.table-block .table-scroll {
+  margin: 0;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.3rem;
+}
+
+.table-toolbar__expand {
+  padding: 0.12rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.table-toolbar__expand:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- What an executed example and a generated block say -------------- */
+
+.block-note {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.block-note code {
+  font-size: 1em;
+  text-transform: none;
+  letter-spacing: 0;
+  background: none;
+  padding: 0;
+}

@@ -8,11 +8,25 @@
 
 @import "./tokens.css";
 @import "./fonts.css";
+/* Last, so its `@media print` block can override anything above it
+   without a single `!important` that is not about hiding a control. */
+@import "./print.css";
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* `hidden` means hidden. The attribute is only a UA-stylesheet
+   `display: none`, so ANY class rule that sets a display — and a panel,
+   an overlay or a floating button always sets one — silently outranks
+   it. The symptom is not a visible panel but an invisible one that still
+   takes clicks: a full-screen overlay eating every click on the page
+   while showing nothing at all. Every component here hides with the
+   attribute, so the attribute is made to win once, here. */
+[hidden] {
+  display: none !important;
 }
 
 html {
