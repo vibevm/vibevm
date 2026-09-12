@@ -31,6 +31,8 @@ import { Island } from "../../../components/island/index.tsx";
 import { ISLAND_HTML } from "../../../lib/island-source.ts";
 import { documentationParams } from "../../../lib/pages.ts";
 import { startReader } from "../../../reader/mount.ts";
+import { latestAliasParams } from "../../../seo/addresses.ts";
+import { documentationHead } from "../../../seo/head.ts";
 import {
   DOC_GLYPH,
   viewOf,
@@ -97,7 +99,12 @@ const FALLBACK_GIVEN =
  */
 const MANUAL_SCROLL = {
   key: "scroll-restoration",
-  script: [
+  /* `dangerouslySetInnerHTML` and not `script`: both put the lines
+     inside the element, but the latter also writes them out a second
+     time as an attribute of the same tag — the same duplication the
+     structured data hit, and here it is a script's source sitting in an
+     attribute where a policy cannot account for it. */
+  dangerouslySetInnerHTML: [
     "(function(){",
     "var n=performance.getEntriesByType('navigation')[0];",
     "if(n&&n.type==='back_forward')return;",
@@ -318,47 +325,19 @@ export default component$(() => {
 /**
  * What the document's head says about this address.
  *
- * The description is the page's own leading fact, taken and never
- * composed: a summary the pipeline wrote would be a second description
- * of the page that nobody proofreads.
+ * Which of several addresses is canonical, which languages answer for
+ * the same page, what a share of it looks like and what a machine is
+ * told about it are all one question about one address, and `seo/head.ts`
+ * answers it for every shape the catch-all matches. The route adds the
+ * one thing that is not about the address at all: the two lines that
+ * keep the router from moving the reader.
  */
 export const head: DocumentHead = ({ params }) => {
   const view = viewOf(params["path"] ?? "");
   if (view === null) return { title: "Not a documentation address" };
-  if (view.kind === "catalogue") return { title: "Documentation" };
-  if (view.kind === "package") {
-    return {
-      title: view.title,
-      meta:
-        view.description === undefined
-          ? []
-          : [{ name: "description", content: view.description }],
-    };
-  }
-  /**
-   * A fallback page is one text at two addresses, and the head is where
-   * that is said out loud. `canonical` points at the source page, so a
-   * search engine keeps one of them; `noindex` keeps this one out of the
-   * index entirely, because an adaptation's address showing the source's
-   * words is useful to a reader who asked for it and misleading to
-   * anyone who finds it in a result list.
-   */
-  if (view.fallback) {
-    return {
-      title: view.title,
-      meta: [
-        { name: "description", content: view.summary },
-        { name: "robots", content: "noindex" },
-      ],
-      links: [{ rel: "canonical", href: view.canonical }],
-      scripts: [MANUAL_SCROLL],
-    };
-  }
-  return {
-    title: view.title,
-    meta: [{ name: "description", content: view.summary }],
-    scripts: [MANUAL_SCROLL],
-  };
+  const seo = documentationHead(view);
+  if (view.kind !== "page") return seo;
+  return { ...seo, scripts: [...(seo.scripts ?? []), MANUAL_SCROLL] };
 };
 
 /**
@@ -366,8 +345,11 @@ export const head: DocumentHead = ({ params }) => {
  *
  * It answers from the library rather than from a list, so the build
  * gate's two numbers — addresses declared, pages generated — cannot
- * drift apart by someone editing one of them.
+ * drift apart by someone editing one of them. The `latest` aliases are
+ * the same addresses with one segment changed: they exist because the
+ * version switch, a citation without a version and every numbered page's
+ * `rel=canonical` all name them (`##SITE-CANONICAL-LATEST`).
  */
 export const onStaticGenerate: StaticGenerateHandler = () => {
-  return { params: documentationParams() };
+  return { params: [...documentationParams(), ...latestAliasParams()] };
 };

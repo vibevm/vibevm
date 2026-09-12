@@ -59,6 +59,13 @@ const DIFFERENCES = [
     matches: (address) => address === "/og.png",
   },
   {
+    id: "D-15",
+    where: "addresses",
+    reason:
+      "`/csp.txt` is new: the policy line, with the `sha256` of every inline script in the output, written from the bytes that were built rather than typed anywhere (X-035). It is an input to the deployment atom, which serves it as a header; nothing on the site fetches it.",
+    matches: (address) => address === "/csp.txt",
+  },
+  {
     id: "D-04",
     where: "addresses",
     reason:

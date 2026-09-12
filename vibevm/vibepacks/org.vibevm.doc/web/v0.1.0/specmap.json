@@ -541,6 +541,20 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/seo/addresses.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/addresses.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/analytics.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/analytics.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/seo/catalogue.ts",
       "item_kind": "module",
       "line": 1,
@@ -548,10 +562,31 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/seo/csp.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/csp.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/csp.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/csp.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/seo/editions.ts",
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/seo/editions.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/head.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/head.ts"
     },
     {
       "crate_name": "src",
@@ -566,6 +601,20 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/seo/resolve.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/sitemap.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/sitemap.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/structured-data.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/structured-data.ts"
     }
   ],
   "edges": [
@@ -1186,6 +1235,22 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/seo/addresses.ts",
+      "from_symbol": "site/src/seo/addresses.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CANONICAL-LATEST",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/analytics.ts",
+      "from_symbol": "site/src/seo/analytics.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/seo/catalogue.ts",
       "from_symbol": "site/src/seo/catalogue.ts",
       "line": 1,
@@ -1194,11 +1259,35 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/seo/csp.test.ts",
+      "from_symbol": "site/src/seo/csp.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/csp.ts",
+      "from_symbol": "site/src/seo/csp.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/seo/editions.ts",
       "from_symbol": "site/src/seo/editions.ts",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/head.ts",
+      "from_symbol": "site/src/seo/head.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CANONICAL-HREFLANG",
       "verb": "implements"
     },
     {
@@ -1215,6 +1304,22 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/sitemap.ts",
+      "from_symbol": "site/src/seo/sitemap.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SITEMAP",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/structured-data.ts",
+      "from_symbol": "site/src/seo/structured-data.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-STRUCTURED-DATA",
       "verb": "implements"
     }
   ],
@@ -1686,15 +1791,45 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/seo/addresses.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/addresses.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CANONICAL-LATEST`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/analytics.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/analytics.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/seo/catalogue.ts",
       "line": 1,
       "message": "edge `site/src/seo/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/seo/csp.test.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/csp.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/csp.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/csp.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/seo/editions.ts",
       "line": 1,
       "message": "edge `site/src/seo/editions.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/head.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/head.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CANONICAL-HREFLANG`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -1707,6 +1842,18 @@
       "file": "site/src/seo/resolve.ts",
       "line": 1,
       "message": "edge `site/src/seo/resolve.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/sitemap.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/sitemap.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SITEMAP`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/structured-data.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/structured-data.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-STRUCTURED-DATA`: no spec unit carries this anchor"
     }
   ]
 }

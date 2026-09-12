@@ -4,6 +4,7 @@ import { component$ } from "@qwik.dev/core";
 import type { DocumentHead } from "@qwik.dev/router";
 
 import { Catalogue } from "../../components/catalogue/index.tsx";
+import { catalogueHead } from "../../seo/head.ts";
 
 /**
  * The door: every documentation this build carries, with no language
@@ -20,13 +21,10 @@ export default component$(() => {
   return <Catalogue lang={null} />;
 });
 
-export const head: DocumentHead = {
-  title: "Documentation",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Every documentation package this site carries, and every language it is published in.",
-    },
-  ],
-};
+/**
+ * The door's head is the catalogue's head, and the catalogue of a
+ * language is this page at that language's address: one function
+ * answers for both, so the `hreflang` set they publish about each other
+ * cannot disagree.
+ */
+export const head: DocumentHead = catalogueHead(null);

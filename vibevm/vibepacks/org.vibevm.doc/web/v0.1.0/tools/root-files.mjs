@@ -31,6 +31,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { siteConfig } from "../site/src/config.ts";
+import { DOC_SITEMAP } from "../site/src/seo/sitemap.ts";
 import { writeOgCard } from "./og-card.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -148,11 +149,57 @@ function landingPages(pages) {
     .sort((a, b) => a.address.localeCompare(b.address));
 }
 
-/** The documentation's own pages, which the root sitemap also lists. */
-function documentationPages(pages) {
-  return pages
-    .filter((page) => page.address.startsWith("/doc/"))
-    .sort((a, b) => a.address.localeCompare(b.address));
+/**
+ * A page that asks not to be indexed does not stand in a sitemap.
+ *
+ * The two say opposite things otherwise: a sitemap is «index this» and
+ * `noindex` is «do not», and a crawler handed both spends a fetch to be
+ * turned away. The pages this is about are the translation fallbacks —
+ * the source's text materialised under an adaptation's address so a
+ * language never 404s (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`) — and
+ * they carry `canonical` to the source as well, so what a crawler should
+ * keep is named rather than merely implied.
+ *
+ * It reads the built HTML rather than being told, and it runs over every
+ * sitemap in the output rather than one: this file writes the domain's
+ * sitemap and the documentation writes its own, and the rule belongs to
+ * whatever writes a sitemap rather than to any one of them. It is
+ * idempotent — a second pass over a pruned file removes nothing.
+ */
+function pruneSitemaps(outDir) {
+  let removed = 0;
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!entry.endsWith(".xml")) continue;
+      const xml = readFileSync(full, "utf8");
+      if (!xml.includes("<urlset")) continue;
+      let dropped = 0;
+      const kept = xml.replace(/[ \t]*<url>[\s\S]*?<\/url>\n?/g, (one) => {
+        const loc = /<loc>([^<]*)<\/loc>/.exec(one);
+        if (loc === null) return one;
+        const path = new URL(loc[1]).pathname;
+        const file = join(outDir, path.replace(/^\/+/, ""), "index.html");
+        if (!existsSync(file)) return one;
+        const html = readFileSync(file, "utf8");
+        if (!/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i.test(html)) {
+          return one;
+        }
+        dropped += 1;
+        return "";
+      });
+      if (dropped > 0) {
+        writeFileSync(full, kept, "utf8");
+        removed += dropped;
+      }
+    }
+  };
+  walk(outDir);
+  return removed;
 }
 
 /** A page's `<title>`, decoded. */
@@ -230,7 +277,7 @@ function robotsTxt(config) {
   }
   lines.push("User-agent: *", "Allow: /", "");
   lines.push(`Sitemap: ${config.origin}/sitemap.xml`);
-  lines.push(`Sitemap: ${config.origin}/doc/sitemap.xml`);
+  lines.push(`Sitemap: ${config.origin}${DOC_SITEMAP}`);
   const text = `${lines.join("\n")}\n`;
   const offender = [...text].find((ch) => ch.codePointAt(0) > 0x7f);
   if (offender !== undefined) {
@@ -243,7 +290,6 @@ function robotsTxt(config) {
 
 function sitemapXml(config, pages) {
   const landing = landingPages(pages);
-  const documentation = documentationPages(pages);
   const entry = (address, priority) =>
     [
       "  <url>",
@@ -261,7 +307,17 @@ function sitemapXml(config, pages) {
     ...landing.map((page) =>
       entry(page.address, page.address === "/" ? "1" : "0.9"),
     ),
-    ...documentation.map((page) => entry(page.address, "0.8")),
+    /* The documentation's own addresses are not here: they are in
+       `/doc/sitemap.xml`, an index by package and language written from
+       the page manifests (`##SEO-SITEMAP`), which is the file that knows
+       which of them are `latest` and which are translation fallbacks.
+       What stands here is the record of that file, so the root sitemap
+       names the whole domain even for a crawler that reads it without
+       reading `robots.txt` — where the second `Sitemap:` line is the
+       proper declaration. A url set cannot hold a sitemap reference, so
+       the record is an ordinary entry; it costs one fetch of a file that
+       is the point of the fetch. */
+    entry(DOC_SITEMAP, "0.8"),
   ];
 
   return [
@@ -536,6 +592,7 @@ export function writeRootFiles(outDirName = "dist") {
     rewritten: rewrittenPages,
     crawlers: CRAWLERS.length,
     sources: SOURCES.length,
+    unindexed: pruneSitemaps(outDir),
   };
 }
 
