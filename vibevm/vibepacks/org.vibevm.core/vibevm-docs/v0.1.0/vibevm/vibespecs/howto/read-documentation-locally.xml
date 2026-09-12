@@ -31,7 +31,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE"/>
   </private-packages>
   <the-shell title="The reader's shell">
-    <p>A released `vibe` carries the reader's interface inside the binary. A `vibe` you built from source carries a plain fallback; on the first `vibe doc serve` it offers to download the full interface for its version from the release assets, verified by digest, and stores it under `~/.vibe/opt/`. It never downloads without your yes, and it works, plainly, without it.</p>
+    <p>A released `vibe` carries the reader's interface inside the binary. A `vibe` you built from source carries a plain fallback; `vibe doc shell install` fetches the full interface for its version from the release assets, verified by size and digest, into `~/.vibe/opt/`, and only when you ask. The reader works, plainly, without it, and `vibe doc serve --print-shell` says which of the two it holds.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL"/>
   </the-shell>
   <edge-cases title="Edge cases and rules">

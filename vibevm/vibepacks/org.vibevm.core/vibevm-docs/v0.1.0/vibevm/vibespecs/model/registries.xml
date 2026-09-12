@@ -26,7 +26,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GLOBAL-REGISTRY-FILE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MERGE-PROJECT-FIRST"/>
-    <p>A new project trusts exactly two roots by default, `https://github.com/vibespecs` and `https://gitverse.ru/vibespecs`, which `vibe init` writes into the manifest unless you pass `--no-registry` or name another with `--registry-url`. Every other registry is trusted only because you added it.</p>
+    <p>The default trust set the specification names is exactly two roots, `https://github.com/vibespecs` and `https://gitverse.ru/vibespecs`. A project `vibe init` creates today carries no registry block at all, so before the first install add one with `vibe registry add`, or let the machine-wide file supply it. Every other registry is trusted only because you added it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#DEFAULT-TRUSTED-REGISTRIES"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#INIT-DEFAULT-REGISTRY"/>
   </what-a-registry-is>

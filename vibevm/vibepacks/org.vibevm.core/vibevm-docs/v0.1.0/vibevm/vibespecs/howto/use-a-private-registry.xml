@@ -26,7 +26,7 @@ vibe registry add: `acme` registered (1 total registry).</expect>
     <p>3. Probe with `vibe registry test`: it reports, per registry, whether the organisation answered and which authentication it accepted, without fetching anything.</p>
   </by-hand>
   <machine-wide title="For every project on a machine">
-    <p>Put the same registry block into `~/.vibe/registry.toml`. It is merged after each project's own list, so projects that name their registries are unaffected and projects that do not inherit the machine's. `vibe init` seeds a new project's registries from this file, which is how a company's default becomes every new project's default.</p>
+    <p>Put the same registry block into `~/.vibe/registry.toml`. It is merged after each project's own list, so projects that name their registries are unaffected and projects that do not inherit the machine's. A project that names no registry, as `vibe init` creates them today, uses the machine's list, which is how a company's default becomes every new project's default.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
   </machine-wide>
   <redirects title="Delegating a package to another registry">
