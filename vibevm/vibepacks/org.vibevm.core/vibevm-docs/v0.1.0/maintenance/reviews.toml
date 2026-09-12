@@ -2,6 +2,7 @@
 # Authored data: a date and a reader, never a revision or a hash. Row order is the
 # reading rota; a page without a row has never been read aloud.
 schema = 1
+reconciled = "2026-09-12"
 
 [[page]]
 path = "start/what-vibevm-is.xml"
