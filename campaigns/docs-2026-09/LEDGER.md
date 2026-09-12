@@ -73,7 +73,7 @@ A0.27 в плане отсутствует.
 | — | `69053551` `chore(wire): raise the derive baseline for non-wire types` | J-048: ratchet держал не-wire типы; `release_manifest.rs` — настоящий wire, схема JTD у воркера P1-O3 |
 | — | `bb6320b1` `refactor(wire): generate the distribution manifests from a JTD schema` | P1-O3: одна схема с `x-wire-order`, поведение в `vibe-wire::behaviour` (правило сироты), байты голденов не сдвинулись; шаг 3 панели зелёный |
 | — | `03f01007` `chore(panel): clear the inherited test fixture and clippy reds` | P1-O4: фикстура `upstream_authors`, clippy по существу (замыкание в `fetch.rs`, `PinArgs` в `bridge.rs`); третий красный — перелом провода корпуса `index/e1` (J-069, review-маркер); ещё 11 фикстур `schema_version = 6` (J-070) — пакет P1-O5 |
-| — | `findings/PACKET-P1-O5.md` | в работе | 11 фикстур lock-файлов берут номер схемы из константы (J-070) |
+| — | `b73195fd` `test: take the lock schema version from the constant in every fixture` | P1-O5: 10 фикстур на константе, каскад зелёный; красные — `golden_corpus` (J-069), `cli_search` ×2, ещё 16 литералов `7` (J-075) — пакет P1-O6 после фазы 2 |
 | A1.1 + A1.2 | `ed75ce00` `docs(spec): admit doc and app kinds so documentation ships as packages` | под целью сессии владельца, с датированной пометкой «pending ratification» в тексте поправки; `VIBEVM-SPEC.md` §4.1 и PROP-000 `KIND-SET`/`INV-VOCABULARY` одним коммитом; ратификация — при слиянии (review-маркер) |
 | A1.11 | локальный файл, не коммитится | план стюарда r2: DOCS-SPIKES принят, current_node DOCS-CONTRACT; `GOAL.md` перерисован |
 
@@ -119,7 +119,7 @@ A0.27 в плане отсутствует.
 | A2.8 | `findings/PACKET-P2-O2.md` | `a7bff252` `feat(specdoc): give the documentation genre its seven elements`; отчёт `6422ec88` | словарь — параметр читателя, `when` в слоте (J-071); корпусный тест прибивает 43 читаемые страницы; `audience="agent"` ждёт A2.12 |
 | A2.0, A2.9, A2.10 | `findings/PACKET-P2-O4.md` | `f8220dd1` `feat(doc): open the vibe-doc crate`; `5c472381` `feat(doc): run documented examples so the docs cannot lie`; `e2a05ce9` `feat(doc): derive command, schema and manifest references at build time`; отчёт `b02703e5` | 52 из 59 примеров совпадают/сняты, 7 отложены в `examples/deferred.toml` (релиз, B-133, фаза 2 store/serve, scrape B-143); `derived` 72/72; правка страницы деплоя и снятие трёх примеров — коммит центральной сессии (J-074) |
 | A2.12, A2.21 | `findings/PACKET-P2-O5.md` | `d608a797` `feat(progress): admit the agent audience`; `b9be9f3b` `chore(facts): keep documentation observed but unjudged`; отчёт `98a91500` | X-024 решён: `[judging] exempt` освобождает и от `--exhaustive`; читатель `vibe facts check` пока не выбирает словарь по виду пакета — хвост в P2-O3 |
-| A2.3, A2.5, A2.6, A2.7 | `findings/PACKET-P2-O3.md` | в работе | индекс, гейт, скаффолд, прогрев для `doc`; хвост P2-O5 (словарь читателя `facts check` по виду пакета) |
+| A2.3, A2.5, A2.6, A2.7 | `findings/PACKET-P2-O3.md` | `cb041f5d` `feat(index): index doc packages with their relations and cards`; остальное в работе | индекс сел; гейт, скаффолд, прогрев и хвост P2-O5 — в работе |
 
 ## Фаза 3 — ранние атомы {#phase-3-early}
 
