@@ -61,6 +61,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+pub mod derived;
 pub mod error;
 pub mod examples;
 pub mod pages;

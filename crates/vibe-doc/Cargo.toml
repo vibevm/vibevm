@@ -26,6 +26,9 @@ serde_json.workspace = true
 regex.workspace = true
 # Page discovery inside a documentation package.
 walkdir.workspace = true
+# The `derived` record keeps a hash of what each block last produced —
+# never the text, which is the whole point of generating it.
+sha2.workspace = true
 # The pivot: pages are read through the documentation vocabulary, never
 # by a second parser of our own (PROP-045 ##PIVOT-MODEL).
 vibe-specdoc.workspace = true
