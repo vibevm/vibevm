@@ -1,0 +1,26 @@
+.footer {
+  margin-top: 4rem;
+  background: var(--bg-sink);
+  border-top: 1px solid var(--line);
+}
+
+.footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 2rem;
+}
+
+.footer__columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-2);
+}
+
+.footer__copyright {
+  margin: 2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-3);
+}

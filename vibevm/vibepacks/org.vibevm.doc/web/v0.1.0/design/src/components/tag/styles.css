@@ -1,0 +1,10 @@
+.tag {
+  display: inline-block;
+  padding: 0.08rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  white-space: nowrap;
+}

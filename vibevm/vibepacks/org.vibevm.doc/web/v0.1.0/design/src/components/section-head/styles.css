@@ -1,0 +1,28 @@
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.section-head__more {
+  font-size: 0.88rem;
+  color: var(--accent-hover);
+  white-space: nowrap;
+  transition: color var(--speed) ease;
+}
+
+.section-head__more:hover {
+  color: var(--accent);
+}
