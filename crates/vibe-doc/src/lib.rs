@@ -42,6 +42,12 @@
 //!   the question a table of contents cannot answer and a navigation
 //!   must never be built from (`##OBS-COVERAGE-GATE`).
 //!
+//! * [`build`] — one walk, every artefact. The page in the projection
+//!   the caller asked for, the manifest, the four `llms` tiers and the
+//!   card's pictures, all folded out of ONE page set at the addresses
+//!   `##SITE-MOUNT` fixes — so the site and the local reader write the
+//!   same shapes from the same function.
+//!
 //! * [`media`] — the card's pictures. What an author ships is judged
 //!   from its first bytes and published under a name taken from its
 //!   content; what an author ships NOTHING for is computed from the hash
@@ -111,6 +117,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+pub mod build;
 pub mod citations;
 pub mod content;
 pub mod coverage;

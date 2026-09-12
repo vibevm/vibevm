@@ -9,18 +9,26 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+use std::collections::BTreeMap;
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
+use chrono::Utc;
+use vibe_doc::build;
 use vibe_doc::citations::{self, SpecSources};
 use vibe_doc::coverage;
 use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
+use vibe_doc::llms;
+use vibe_doc::manifest;
 use vibe_doc::media;
 use vibe_doc::translations;
 
-use crate::cli::{DocArgs, DocCheckArgs, DocCommand, ProgressCommonArgs};
+use crate::cli::{
+    DocArgs, DocBuildArgs, DocCheckArgs, DocCommand, DocManifestArgs, DocServeArgs,
+    ProgressCommonArgs,
+};
 
 /// The ambient values the composition root resolves and hands down, so no
 /// module below `main` reads the environment (the conform ambient-env
@@ -45,8 +53,150 @@ pub struct DocEnv {
 /// Run `vibe doc …`.
 pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
     match args.command {
+        DocCommand::Build(build) => run_build(build, env),
         DocCommand::Check(check) => run_check(check, env),
+        DocCommand::Manifest(manifest) => run_manifest(manifest, env),
+        DocCommand::Serve(serve) => run_serve(serve, env),
     }
+}
+
+/// `vibe doc build` — render the package into a directory that can be
+/// served as it stands.
+fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
+    if let Some(lang) = &args.lang {
+        build::expect_language(&args.path, lang)?;
+    }
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let format =
+        build::Format::parse(&args.format).expect("clap admits only the three the parser lists");
+    let derived = if args.no_derived {
+        BTreeMap::new()
+    } else {
+        generated_derived(&args.path, &env, args.binary.clone())?
+    };
+    let options = build::Options {
+        format,
+        base: args.base.clone(),
+        // The clock is called HERE and nowhere below: the library
+        // renders the same bytes from the same tree, and the instant is
+        // an input to that (PROP-044 `##M-CANONICAL-BYTES`).
+        manifest: manifest::Options::at(Utc::now()),
+        derived,
+    };
+    let built = build::build(&args.path, &sources, &options)?;
+    build::write(&built, &args.out)?;
+    print!("{}", built.render());
+    println!("  written under {}", args.out.display());
+    Ok(())
+}
+
+/// `vibe doc manifest` — the machine's view of the package.
+fn run_manifest(args: DocManifestArgs, env: DocEnv) -> Result<()> {
+    if let Some(lang) = &args.lang {
+        build::expect_language(&args.path, lang)?;
+    }
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let options = manifest::Options::at(Utc::now());
+    let built = manifest::build(&args.path, &sources, &options)?;
+
+    if let Some(tier) = &args.llms {
+        let tier = match tier.as_str() {
+            "index" => llms::Tier::Index,
+            "small" => llms::Tier::Small,
+            "medium" => llms::Tier::Medium,
+            _ => llms::Tier::Full,
+        };
+        let (set, content) = build::content(&args.path, &sources, &args.base, BTreeMap::new())?;
+        let bodies = llms::bodies(&set, &content);
+        print!(
+            "{}",
+            llms::render(tier, &built.manifest, &bodies, &args.base)
+        );
+        return Ok(());
+    }
+
+    if args.json {
+        print!("{}", manifest::to_json(&built.manifest));
+        return Ok(());
+    }
+
+    // The human form, which is a summary and not a second document:
+    // anything that wants the whole thing asks for `--json`.
+    let card = &built.manifest.package;
+    println!(
+        "{} {}/{}@{} ({}, {})",
+        card.title,
+        card.group.as_str(),
+        card.name,
+        card.version,
+        card.lang,
+        llms::status_word(&card.status)
+    );
+    println!("  {} page(s)", built.manifest.pages.len());
+    for page in &built.manifest.pages {
+        println!(
+            "  {:<44} {} min  {}",
+            page.path,
+            page.reading_time_min,
+            llms::audience_list(&page.audiences)
+        );
+    }
+    for page in &built.unreadable {
+        println!("  unreadable {page}");
+    }
+    Ok(())
+}
+
+/// `vibe doc serve` — the local reader.
+fn run_serve(args: DocServeArgs, env: DocEnv) -> Result<()> {
+    let config = vibe_doc_server::Config {
+        package_dir: args.path.clone(),
+        base: args.base.clone(),
+        port: args.port,
+        frame_ancestor: args.frame_ancestor.clone(),
+        lang: args.lang.clone(),
+    };
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let reader = vibe_doc_server::Reader::open(&config, sources, Utc::now())?;
+    let derived = if args.no_derived {
+        BTreeMap::new()
+    } else {
+        generated_derived(&args.path, &env, args.binary.clone())?
+    };
+    vibe_doc_server::serve(reader.with_derived(derived), args.port)?;
+    Ok(())
+}
+
+/// Generate the `derived` blocks once, from the product this run is.
+///
+/// A block's text is a function of the binary, and the binary does not
+/// move while a build runs or a reader is up — so it is generated once
+/// here and handed down, rather than per page or per request.
+fn generated_derived(
+    package_dir: &Path,
+    env: &DocEnv,
+    binary: Option<PathBuf>,
+) -> Result<BTreeMap<String, String>> {
+    let derived_env = derived::DerivedEnv {
+        binary: binary
+            .or_else(|| env.current_exe.clone())
+            .unwrap_or_else(|| PathBuf::from("vibe")),
+        repo_root: env.cwd.clone().unwrap_or_else(|| package_dir.to_path_buf()),
+        coordinate: derived::coordinate_of(package_dir)?,
+        timeout_secs: 300,
+    };
+    // Keyed the way a backend asks for it — by kind and reference, not
+    // by the record's per-page row id: one `vibe list --help` is one
+    // text however many pages show it.
+    Ok(derived::generate(package_dir, &derived_env)?
+        .into_iter()
+        .map(|block| {
+            (
+                vibe_doc::content::Content::derived_key(block.kind, &block.reference),
+                block.text,
+            )
+        })
+        .collect())
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {

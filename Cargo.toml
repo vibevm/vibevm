@@ -13,6 +13,7 @@ members = [
     "crates/vibe-cli",
     "crates/vibe-core",
     "crates/vibe-doc",
+    "crates/vibe-doc-server",
     "crates/vibe-extension-registry",
     "crates/vibe-ext",
     "crates/vibe-facts",
@@ -48,6 +49,7 @@ default-members = [
     "crates/vibe-cli",
     "crates/vibe-core",
     "crates/vibe-doc",
+    "crates/vibe-doc-server",
     "crates/vibe-extension-registry",
     "crates/vibe-ext",
     "crates/vibe-facts",
@@ -100,6 +102,7 @@ vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
 # The PROP-057 documentation pipeline: the example runner and the
 # `derived` generators every documentation surface projects.
 vibe-doc = { path = "crates/vibe-doc", version = "1.0.0" }
+vibe-doc-server = { path = "crates/vibe-doc-server", version = "1.0.0" }
 # The R4.0 pure registry kernel: the one extension declaration/activation/
 # ordering/selector/view collector below lifecycle, workspace and spec.
 vibe-extension-registry = { path = "crates/vibe-extension-registry", version = "1.0.0" }

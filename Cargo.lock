@@ -4437,6 +4437,7 @@ dependencies = [
  "vibe-check",
  "vibe-core",
  "vibe-doc",
+ "vibe-doc-server",
  "vibe-facts",
  "vibe-graph",
  "vibe-install",
@@ -4505,6 +4506,22 @@ dependencies = [
  "vibe-wire",
  "vibe-workspace",
  "walkdir",
+]
+
+[[package]]
+name = "vibe-doc-server"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "chrono",
+ "core-ai-native-specmark",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tower",
+ "vibe-core",
+ "vibe-doc",
 ]
 
 [[package]]

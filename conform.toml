@@ -57,6 +57,7 @@ gated = [
     "progress-core",
     "vibe-core",
     "vibe-doc",
+    "vibe-doc-server",
     "vibe-ext",
     "vibe-extension-registry",
     "vibe-facts",

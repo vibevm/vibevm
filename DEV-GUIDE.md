@@ -391,14 +391,33 @@ The user-facing documentation of vibevm is being rebuilt as a *documentation pac
 
 - The pages: `vibevm/vibepacks/org.vibevm.core/vibevm-docs/` — opened by phase P of the campaign.
 - The old `docs/` tree moves to `docs-legacy/` in phase 3 and stays readable; nothing cites it as normative.
-- The machinery — `vibe doc build | serve | check | manifest | todo | surface | diff` — lands with phase 2. Until then the campaign checks examples and citations by hand, as its plan describes.
+- The machinery: `vibe doc build | check | manifest | serve` ships now. The maintenance verbs (`todo`, `surface`, `diff`) and the reader's shell are later phases of the same campaign.
 
-**How to check the documentation** once the machinery exists:
+**The four verbs.** Each is a thin surface over the `vibe-doc` library, which is where everything with content in it lives ([PROP-057 §10](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml)); nothing below duplicates a rule, and `--path` defaults to the current directory everywhere.
 
 ```sh
-cargo run -p vibe-cli -- doc check --examples --citations --derived --translations --coverage --media --style
+# Check it. Every flag is independent; ask for the ones you want.
+cargo run -p vibe-cli -- doc check --examples --citations --derived \
+    --translations --coverage --media \
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0
+
+# Render it into a directory that can be served as it stands.
+cargo run -p vibe-cli -- doc build --out .vibe/doc --format html
+
+# What a machine reads: the page manifest, or one `llms` tier.
+cargo run -p vibe-cli -- doc manifest --json
+cargo run -p vibe-cli -- doc manifest --llms index
+
+# Read it locally. Loopback only; bare islands until the shell ships.
+cargo run -p vibe-cli -- doc serve --port 8413
 ```
 
-Examples run against the debug binary in a sandbox and compare exact output after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests. A red example is fixed in the normalisation rules or in the product, never by loosening the comparison.
+`--style` joins `doc check` with the prose linter, later in the same phase.
+
+**What each check asks.** `--examples` runs every documented command against the debug binary in a sandbox and compares the output exactly, after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests, and a red example is fixed in the normalisation rules or in the product, never by loosening the comparison. `--citations` asks one question of every `spec://` a page cites — does the anchor exist. `--derived` rebuilds every generated block and compares it with the record in the package; the cure for a red one is `--derived --accept`. `--translations` checks an adaptation against the documentation it adapts, structure only. `--coverage` requires every spec fact marked `actionstage="doc"` with an audience to be cited by a page for that same audience, and `--min <percent>` lowers the bar for an intermediate run. `--media` judges the card's images by their bytes.
+
+**Two things `doc build` will do that may surprise you.** It runs the product — `derived` blocks are generated from `vibe … --help` and the schemas, one process per block — so a build takes a few seconds; `--no-derived` skips that and marks the blocks as the gaps they are. And it writes the site's own address map (`<group>/<name>/<version>/<document>/index.html`, the projections beside it, `manifest.json` and the four `llms` files at the root), so the output directory is servable as it stands.
+
+**The local reader binds `127.0.0.1` and only that.** There is no host flag and there is not going to be one: the reader serves proprietary packages' documentation, and one reachable from another machine is serving it to them. It sends a content policy naming no external source, no CORS header at all, and `frame-ancestors 'none'` unless `--frame-ancestor <origin>` names an editor's webview.
 
 Node is not needed for any of this. The site package `org.vibevm.doc/web` (Qwik 2.0) is built only on the server; its Node and pnpm pins and the MSYS path caveat are recorded in PROP-057 §12 and join this guide together with the package, in phase 4.
