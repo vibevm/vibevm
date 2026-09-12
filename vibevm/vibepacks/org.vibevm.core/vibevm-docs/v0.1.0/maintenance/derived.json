@@ -1,6 +1,10 @@
 {
   "schema": 1,
   "derived": {
+    "architecture/how-this-manual-is-maintained.xml#cli-help:vibe doc todo --help": {
+      "sha256": "84e83b75a490955d7165307f599142d9d2a0c054e8f0c90fc9922d82e6109b8b",
+      "bytes": 4967
+    },
     "reference/commands.xml#cli-help:vibe --help": {
       "sha256": "150f0ba20ff558ca58a49c4edd1b3f15341e3382e4df2951dd4e89caa849f937",
       "bytes": 14964

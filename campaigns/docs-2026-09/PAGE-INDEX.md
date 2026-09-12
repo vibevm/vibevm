@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 48; секций с якорями: 310; примеров: 62; промптов: 20; ссылок `rule`: 759; блоков `derived`: 72; фигур: 0.
+Страниц: 49; секций с якорями: 316; примеров: 62; промптов: 20; ссылок `rule`: 781; блоков `derived`: 73; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -25,6 +25,13 @@
 | `agent/how-agents-read-this-manual` | `procedure` | The procedure the skill teaches | 1. On an error, read the address the message names, then the |
 | `agent/how-agents-read-this-manual` | `the-tools` | The tools of the server | `vibe mcp serve` offers the same operations as tools. `explain` looks at |
 | `agent/how-agents-read-this-manual` | `edge-cases` | Edge cases and rules | Text written for agents is never part of a project's [boot lane](../glossary/index.xml#boot-lane); |
+| `architecture/how-this-manual-is-maintained` | `root` | How this manual is maintained | |
+| `architecture/how-this-manual-is-maintained` | `no-lock` | No lock between the product and the manual | The product ships many times a day and merges many pull requests; |
+| `architecture/how-this-manual-is-maintained` | `what-you-owe` | What you owe when you change the product | A change a user can see carries its page in the same |
+| `architecture/how-this-manual-is-maintained` | `the-loops` | The loops | The weekly loop takes under an hour. A cheap model runs the |
+| `architecture/how-this-manual-is-maintained` | `what-is-kept` | What the package keeps for this | `maintenance/reviews.toml` records when each page was last read aloud and by whom. |
+| `architecture/how-this-manual-is-maintained` | `changing-the-tools` | Changing the tools | The queue, the checks, the surface snapshots and the generators are code, |
+| `architecture/how-this-manual-is-maintained` | `edge-cases` | Edge cases and rules | A small edit is one commit with a concrete description; the fifth |
 | `architecture/how-vibe-is-built` | `root` | How vibe is built | |
 | `architecture/how-vibe-is-built` | `five-layers` | Five layers | Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a |
 | `architecture/how-vibe-is-built` | `the-crates` | The crates | The dependency direction is fixed: a surface calls an orchestrator, an orchestrator |
@@ -104,7 +111,7 @@
 | `authoring/write-documentation` | `what-happens` | What happens | The agent creates the package with the `doc` kind, fills the card, |
 | `authoring/write-documentation` | `the-manifest` | The manifest | A `doc` package must name at least one subject and carry a |
 | `authoring/write-documentation` | `the-vocabulary` | The vocabulary of a page | Pages are written in the project's XML dialect, extended for documentation with |
-| `authoring/write-documentation` | `the-shape` | The shape of a page | A concept page has a noun as its title, opens with a |
+| `authoring/write-documentation` | `the-shape` | The shape of a page | A concept page has a noun as its title and opens with |
 | `authoring/write-documentation` | `checks` | Checking and publishing | `vibe doc check --examples --citations --derived --media --style` runs every check; the |
 | `authoring/write-documentation` | `edge-cases` | Edge cases and rules | Any group may document any package; the site shows such a manual |
 | `diagnostics/errors` | `root` | From an error message to the rule | |
@@ -362,5 +369,5 @@
 | `start/what-vibevm-is` | `the-problem` | The problem it solves | Every serious project has rules that never make it into the code: |
 | `start/what-vibevm-is` | `how-it-works` | How it works | The unit vibe installs is a *package*: a folder with a short |
 | `start/what-vibevm-is` | `what-it-is-not` | What it is not | VibeVM is not an agent and has no model inside it. It |
-| `start/what-vibevm-is` | `where-next` | Where to go next | To see it on your own machine, install vibe and create a |
+| `start/what-vibevm-is` | `where-next` | Where to go next | To see it on your own machine, [install vibe](install-vibe.xml) and [create a |
 | `start/what-vibevm-is` | `the-licence` | The licence | vibe is open source under the Universal Permissive License 1.0. The licence |
