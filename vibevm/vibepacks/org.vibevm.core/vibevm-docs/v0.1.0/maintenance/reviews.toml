@@ -7,3 +7,38 @@ schema = 1
 path = "start/what-vibevm-is.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "start/install-vibe.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "start/first-project.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "start/what-a-project-contains.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "start/index.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/boot-lane.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/two-trees.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/packages-and-kinds.xml"
+read = "2026-09-12"
+by = "central session"
