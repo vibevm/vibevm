@@ -344,10 +344,15 @@ pub fn check(
         let key = canonical_key(&corpus_root.join(&obligation.path), &obligation.anchor);
         let citing = key.and_then(|k| cited.get(&k)).cloned().unwrap_or_default();
         for audience in &obligation.audiences {
-            let tally = tallies
-                .iter_mut()
-                .find(|t| t.audience == *audience)
-                .expect("the vocabulary is closed and every value has a row");
+            // The rows were built from `Audience::ALL` a few lines up,
+            // so every value of the closed vocabulary has one and this
+            // arm cannot be taken. `continue` is its total spelling:
+            // there is nothing to count against a row that is not there,
+            // and a panic here would be a refusal to report the other
+            // ninety obligations over an impossibility.
+            let Some(tally) = tallies.iter_mut().find(|t| t.audience == *audience) else {
+                continue;
+            };
             tally.owed += 1;
             let covered = citing.iter().any(|page| {
                 page_audiences

@@ -17,12 +17,136 @@ pub struct DocArgs {
 /// The `vibe doc` subcommands.
 #[derive(Debug, clap::Subcommand)]
 pub enum DocCommand {
+    /// Render a documentation package: every page in the projection you
+    /// ask for, the page manifest, the four `llms` tiers and the card's
+    /// images, at the addresses the site mounts them under.
+    Build(DocBuildArgs),
+
     /// Check a documentation package against the product it documents:
     /// run every documented example and compare its output exactly,
     /// rebuild every `derived` block and compare it with the last build,
-    /// resolve every `rule` citation against the current specs, and check
-    /// a translation against the documentation it adapts.
+    /// resolve every `rule` citation against the current specs, check a
+    /// translation against the documentation it adapts, measure how much
+    /// of what the specifications promised is told, and judge the card's
+    /// images.
     Check(DocCheckArgs),
+
+    /// Print what a machine reads about a documentation package: the
+    /// page manifest, or one tier of `llms.txt`.
+    Manifest(DocManifestArgs),
+
+    /// Read the documentation locally: an HTTP server on the loopback
+    /// that renders a page on every request. Until the reader's shell
+    /// ships it serves bare islands — the same content HTML the public
+    /// site glues into its own frame.
+    Serve(DocServeArgs),
+}
+
+/// `vibe doc build` — render the package.
+#[derive(Debug, clap::Args)]
+pub struct DocBuildArgs {
+    /// The documentation package to render. Defaults to the current
+    /// directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Where the rendered tree goes. It is written in the site's own
+    /// address map, so the directory can be served as-is.
+    #[arg(long, default_value = ".vibe/doc", value_name = "DIR")]
+    pub out: PathBuf,
+
+    /// Which projection each page is written in: the island (`html`),
+    /// the Markdown an agent reads, or the dialect XML that keeps a
+    /// citation's address instead of its text.
+    #[arg(long, default_value = "html", value_parser = ["html", "md", "xml"])]
+    pub format: String,
+
+    /// The path the result will be served under. The site mounts at
+    /// `/doc/`; a reader elsewhere passes its own, and the links inside
+    /// the pages come out right.
+    #[arg(long, default_value = vibe_doc::content::SITE_BASE, value_name = "PATH")]
+    pub base: String,
+
+    /// The language you expect the package to be in. One documentation
+    /// package is one language, so this states which one you want and
+    /// refuses a package written in another, naming the one that holds
+    /// it.
+    #[arg(long, value_name = "TAG")]
+    pub lang: Option<String>,
+
+    /// Do not run the product to generate `derived` blocks. A build from
+    /// a warmed store on a machine that compiled nothing still produces
+    /// every page; the generated blocks are marked as the gaps they are.
+    #[arg(long)]
+    pub no_derived: bool,
+
+    /// The `vibe` binary the `derived` generators run. Defaults to the
+    /// running one.
+    #[arg(long, value_name = "PATH")]
+    pub binary: Option<PathBuf>,
+}
+
+/// `vibe doc manifest` — what a machine reads about the package.
+#[derive(Debug, clap::Args)]
+pub struct DocManifestArgs {
+    /// The documentation package. Defaults to the current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Print the page manifest as JSON — the same document the site
+    /// serves at `/doc/manifest.json`.
+    #[arg(long)]
+    pub json: bool,
+
+    /// Print one `llms` tier instead: the index, or the corpus cut to a
+    /// token budget.
+    #[arg(long, value_name = "TIER", value_parser = ["index", "small", "medium", "full"])]
+    pub llms: Option<String>,
+
+    /// The base the links are built on.
+    #[arg(long, default_value = vibe_doc::content::SITE_BASE, value_name = "PATH")]
+    pub base: String,
+
+    /// The language you expect the package to be in.
+    #[arg(long, value_name = "TAG")]
+    pub lang: Option<String>,
+}
+
+/// `vibe doc serve` — the local reader.
+#[derive(Debug, clap::Args)]
+pub struct DocServeArgs {
+    /// The documentation package to read. Defaults to the current
+    /// directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// The port on the loopback. The host is not a setting: the reader
+    /// binds `127.0.0.1` and nothing else.
+    #[arg(long, default_value_t = vibe_doc_server::DEFAULT_PORT, value_name = "PORT")]
+    pub port: u16,
+
+    /// The path the documentation is mounted at.
+    #[arg(long, default_value = vibe_doc::content::SITE_BASE, value_name = "PATH")]
+    pub base: String,
+
+    /// The language you expect the package to be in.
+    #[arg(long, value_name = "TAG")]
+    pub lang: Option<String>,
+
+    /// The origin allowed to frame the reader, for an editor's webview.
+    /// Absent means no origin at all, which is right for a reader
+    /// started from a terminal.
+    #[arg(long, value_name = "ORIGIN")]
+    pub frame_ancestor: Option<String>,
+
+    /// Do not run the product to generate `derived` blocks at start-up.
+    #[arg(long)]
+    pub no_derived: bool,
+
+    /// The `vibe` binary the `derived` generators run. Defaults to the
+    /// running one.
+    #[arg(long, value_name = "PATH")]
+    pub binary: Option<PathBuf>,
 }
 
 /// `vibe doc check` — the checks that keep a manual from lying.

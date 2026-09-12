@@ -22,6 +22,9 @@ specmark.workspace = true
 vibe-core.workspace = true
 # The PROP-057 documentation pipeline behind `vibe doc`.
 vibe-doc.workspace = true
+# The local reader `vibe doc serve` starts: axum lives there and never
+# in the pipeline (PROP-057 ##PIPE-CRATES).
+vibe-doc-server.workspace = true
 vibe-facts.workspace = true
 vibe-actions.workspace = true
 vibe-graph.workspace = true

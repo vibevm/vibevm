@@ -1,0 +1,37 @@
+[package]
+name = "vibe-doc-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish = false
+repository.workspace = true
+homepage.workspace = true
+description = "The local documentation reader: an HTTP surface over the vibe-doc pipeline, bound to the loopback and serving nothing it was not pointed at"
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+# The pipeline. Everything with content in it lives there; this crate
+# knows routes, status codes and headers (PROP-057 ##PIPE-LIBRARY).
+vibe-doc.workspace = true
+# The coordinate a served address must match, and the package kind the
+# placeholder glyph is drawn from.
+vibe-core.workspace = true
+# The form of `vibe-index`'s server, repeated rather than imported
+# (##PIPE-CRATES): axum 0.8, one router builder, `oneshot` tests.
+axum.workspace = true
+# `signal` for the Ctrl-C the reader stops on; the rest is the workspace
+# set the listener needs.
+tokio = { workspace = true, features = ["signal"] }
+
+[dev-dependencies]
+# The doctests build the package they open; rustdoc compiles them with
+# the dev set, so the temporary tree never reaches a shipped binary.
+tempfile.workspace = true
+# `ServiceExt::oneshot` — the routes are exercised against the router
+# itself, with no TCP listener bound, exactly as `vibe-index` does.
+tower = "0.5"
