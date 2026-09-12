@@ -79,6 +79,15 @@ md/xml, язык) в `vibe-mcp`. Коммит: `feat(mcp): serve documentation p
 skill list` видит скилл руководства после `vibe cache add` (или через
 in-tree реестр). Коммит: `feat(skill): point agents from errors to rules and docs`.
 
+## Хвост от P2-O3 (тем же коммитом, что A2.16)
+
+После `153e68d9` `vibe facts check --exhaustive` наблюдает руководство —
+и вместе с ним копии спек пакета `wal` внутри фикстур раннера
+(`examples/none/tree/registry/org.vibevm.world/wal/**` — 10 файлов в счёте
+«380 files»). Фикстуры — не документация: исключи `examples/**` doc-пакета
+из наблюдения в `facts.toml` (или в правиле, которое ввёл `153e68d9`) и
+убедись, что счёт вернулся к 325 + страницы руководства и README.
+
 ## Гейты
 
 `cargo fmt --all --check`, `cargo build -p vibe-doc -p vibe-doc-server -p
