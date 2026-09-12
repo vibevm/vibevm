@@ -1,0 +1,62 @@
+/** @scope spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS */
+
+/**
+ * The reader: every behaviour the documentation page has, started once
+ * and taken down once.
+ *
+ * It is plain TypeScript and not a set of Qwik components, and that is
+ * forced rather than chosen. The page a reader reads is an ISLAND —
+ * finished HTML the Rust pipeline rendered, inserted as a string, never
+ * turned into a component tree and never re-rendered, because a second
+ * renderer would be a second opinion about the same bytes. Nothing
+ * inside it can carry a framework handler. So the behaviour reaches it
+ * the way any script would: one listener per region, delegation over
+ * what was clicked, and no state the framework has to serialize.
+ *
+ * The route calls this from a visible task and returns what it gives
+ * back. Every module here follows the same contract — start, return the
+ * teardown — so a page that is left never keeps a listener on the
+ * document, and the whole reader can be switched off by dropping one
+ * call.
+ */
+
+import { startPlatformSwitch } from "./platform.ts";
+import { startRuleTransclusion } from "./rules.ts";
+
+/**
+ * What the reader needs to know about the page it is on, worked out at
+ * build time and handed over as plain values.
+ *
+ * The reader computes no addresses of its own. The `spec://` citation,
+ * the projections beside the page and the source page a fallback points
+ * at are all decided by the site's one address function and arrive here
+ * already spelled — so the behaviour cannot disagree with the links the
+ * page renders.
+ */
+export type ReaderContext = {
+  /** The `spec://…@<version>/<document>` citation of this page. */
+  readonly uri: string;
+  /** The page's `.md` projection, beside it as a file. */
+  readonly md: string;
+  /** The page's `.xml` projection. */
+  readonly xml: string;
+  /** The package's agent index. */
+  readonly llms: string;
+  /** The language of the TEXT — the source's when this is a fallback. */
+  readonly textLanguage: string;
+  /** The language segment of the ADDRESS, or `null` for the source. */
+  readonly addressLanguage: string | null;
+  /** True when the source's text is being served under another language. */
+  readonly fallback: boolean;
+  /** The source page this one falls back to, as an address. */
+  readonly sourceHref: string;
+};
+
+/** Start every behaviour; the returned function stops all of them. */
+export function startReader(context: ReaderContext): () => void {
+  void context;
+  const stops = [startPlatformSwitch(), startRuleTransclusion()];
+  return () => {
+    for (const stop of stops) stop();
+  };
+}
