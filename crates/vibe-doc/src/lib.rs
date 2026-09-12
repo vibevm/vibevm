@@ -89,6 +89,15 @@
 //!   could rewrite a sentence is a linter authors write FOR
 //!   (`##STYLE-LINT`).
 //!
+//! * [`prompts`] — «the docs cannot lie» for the half of the manual a
+//!   reader does not type. A task page opens with a request in the user's
+//!   voice, and an agent says something different every time it answers
+//!   one — so the page states what must be TRUE afterwards, and this runs
+//!   the request through the configured agent in a clean fixture and then
+//!   runs those asserts (`##STYLE-PROMPT-FIRST`). Outside the panel, by
+//!   the norm's own instruction: it calls a real agent and costs real
+//!   money.
+//!
 //! Below all four sits [`pages`], the one place that reads a
 //! documentation package: the pivot's documentation vocabulary is a
 //! parameter of the READER, and choosing it from the package's kind is
@@ -145,6 +154,7 @@ pub mod md;
 pub mod media;
 pub mod numbering;
 pub mod pages;
+pub mod prompts;
 pub mod style;
 pub mod translations;
 pub mod xml;

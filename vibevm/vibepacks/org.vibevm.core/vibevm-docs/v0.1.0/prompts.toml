@@ -1,0 +1,159 @@
+# What `vibe doc check --prompts` runs, and against what
+# (spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST).
+#
+# A task page opens with a request in the user's voice, and that request
+# is documentation like any other: it goes stale in silence unless
+# something runs it. The example runner cannot help — an agent says
+# something different every time it answers, so there is no golden output
+# to compare. The page states instead what must be TRUE afterwards, and
+# this check builds a clean sandbox from the fixture named below, hands
+# the request to an agent, and then runs the page's own asserts.
+#
+# It is NOT part of `tools/self-check.sh`. It calls a real agent, it takes
+# minutes, and it costs money; it runs in the prose phase before
+# acceptance, as a sample in the monthly loop, and in full at a
+# reconciliation.
+schema = 1
+
+[doc.prompts]
+# The command the prompt text is handed to. Deliberately absent: the
+# central session passes `--runner "<command>"`, because the same corpus
+# is meant to go through two different agents. A prompt that only works
+# on one of them is a prompt this check exists to catch, and naming one
+# here would quietly make it the only one anybody runs.
+#
+# The command is a PROGRAM and its arguments, not a shell line. It is
+# started in the sandbox's working directory, with the request on its
+# standard input and these variables set:
+#
+#   VIBE_DOC_PROMPT_FILE  the same request, as a file
+#   VIBE_DOC_DIR          the working directory
+#   VIBE_DOC_BINARY       the `vibe` under test
+#   VIBE_DOC_NEEDS        what the page says the agent must have
+#
+# runner = "<agent> --some-flag"
+
+# Agents are slow and a documented task is a real task. Bounded all the
+# same: a hung child must fail a run, never own it.
+timeout = 900
+
+# Every prompt, unless the caller asks for fewer with `--sample`.
+sample = 0
+
+# Where a prompt starts when its own row below names nothing: an empty
+# folder, which is where most task pages start the reader.
+fixture = "empty"
+
+# The skill is left unset on purpose. For a real agent the `vibevm` skill
+# is part of ITS environment — installed once on the machine that runs
+# it — and this check has no business writing there. The setting exists
+# for a runner that is a script.
+# skill = "vibevm"
+
+# Per prompt: the state it starts from, and why it does not run yet when
+# it does not. The rows are in page order.
+
+[[doc.prompts.prompt]]
+page = "agent/give-your-agent-the-skill.xml"
+id = "give-your-agent-the-skill"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "authoring/bridge-a-repository.xml"
+id = "bridge-a-repository"
+fixture = "host"
+skip = "the prompt bridges this checkout, and the fixture that owns the checkout is read-only"
+
+[[doc.prompts.prompt]]
+page = "authoring/ship-tools-and-mcp-servers.xml"
+id = "ship-tools"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "authoring/translate-documentation.xml"
+id = "translate-documentation"
+fixture = "package-spec"
+
+[[doc.prompts.prompt]]
+page = "authoring/write-a-feat-or-stack.xml"
+id = "write-a-feat-or-stack"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "authoring/write-a-flow.xml"
+id = "write-a-flow"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "authoring/write-a-lang-package.xml"
+id = "write-a-lang-package"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "authoring/write-documentation.xml"
+id = "write-documentation"
+fixture = "package-spec"
+
+[[doc.prompts.prompt]]
+page = "howto/install-a-package.xml"
+id = "install-a-package"
+fixture = "hello-vibe-empty"
+
+[[doc.prompts.prompt]]
+page = "howto/publish-a-package.xml"
+id = "publish-a-package"
+fixture = "hello-vibe"
+skip = "publishing reaches a registry, and the assert's `--dry-run` is the only half a sandbox can hold"
+
+[[doc.prompts.prompt]]
+page = "howto/read-documentation-locally.xml"
+id = "read-docs-locally"
+fixture = "empty"
+skip = "warming the manual into the store reaches the network, and the store is the machine's"
+
+[[doc.prompts.prompt]]
+page = "howto/remove-a-package.xml"
+id = "remove-a-package"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "howto/set-up-a-workspace.xml"
+id = "set-up-a-workspace"
+fixture = "empty"
+
+[[doc.prompts.prompt]]
+page = "howto/update-packages.xml"
+id = "update-packages"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "howto/use-a-private-registry.xml"
+id = "private-registry"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "howto/work-offline.xml"
+id = "work-offline"
+fixture = "hello-vibe"
+
+[[doc.prompts.prompt]]
+page = "lifecycle/build-package-deploy.xml"
+id = "build-package-deploy"
+fixture = "hello-cargo"
+
+[[doc.prompts.prompt]]
+page = "lifecycle/scrape.xml"
+id = "scrape"
+fixture = "hello-vibe"
+skip = "the scrape contract needs a health panel this machine cannot prepare (P2-O4, anomaly 3)"
+
+[[doc.prompts.prompt]]
+page = "start/first-project.xml"
+id = "first-project"
+fixture = "empty"
+
+[[doc.prompts.prompt]]
+page = "start/install-vibe.xml"
+id = "install-vibe"
+fixture = "empty"
+skip = "installing vibe itself changes the machine, which is the one thing the sandbox forbids"
