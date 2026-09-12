@@ -1,0 +1,9 @@
+# When each page was last read aloud and by whom (PROP-057 OBS-MAINTENANCE-TOOLS).
+# Authored data: a date and a reader, never a revision or a hash. Row order is the
+# reading rota; a page without a row has never been read aloud.
+schema = 1
+
+[[page]]
+path = "start/what-vibevm-is.xml"
+read = "2026-09-12"
+by = "central session"
