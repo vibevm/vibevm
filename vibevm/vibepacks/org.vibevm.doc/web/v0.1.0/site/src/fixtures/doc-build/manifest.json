@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "package": {
+    "group": "com.example.docs",
+    "name": "fixture-manual",
+    "version": "0.1.0",
+    "publisher": "com.example.docs",
+    "title": "Fixture Manual",
+    "description": "One page carrying every block of the documentation genre, for the island golden.",
+    "abstract": "What it covers: one page that uses every block of the documentation genre once, so the island backend has a subject with no gaps.\nFor whom: whoever changes the renderer and needs to see what changed.\nWhat it assumes known: nothing; it documents nothing real.\nWhat it leaves out: prose worth reading.",
+    "lang": "en",
+    "status": "community",
+    "subjects": [
+      {
+        "package": "com.example/subject",
+        "version": "^1.0",
+        "status": "community"
+      }
+    ],
+    "audiences": [
+      "user",
+      "dev"
+    ],
+    "published_at": "2026-09-01T12:00:00Z",
+    "rendered_at": "2026-09-12T09:00:00Z"
+  },
+  "pages": [
+    {
+      "path": "reference/addresses.xml",
+      "title": "Addresses",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "ADDRESS-SHAPE",
+        "language"
+      ],
+      "summary": "The shape of a documentation address, which nothing in the product is allowed to invent.",
+      "reading_time_min": 1,
+      "reviewed_at": "2026-09-05T00:00:00Z"
+    },
+    {
+      "path": "guide/every-block.xml",
+      "title": "Every block once",
+      "genre": "task",
+      "audiences": [
+        "user",
+        "dev"
+      ],
+      "anchors": [
+        "root",
+        "LEAD",
+        "prose",
+        "ANCHORED-ITEM",
+        "verifiable",
+        "varying",
+        "for-codex",
+        "footnotes"
+      ],
+      "summary": "This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps.",
+      "reading_time_min": 1
+    }
+  ]
+}

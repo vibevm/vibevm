@@ -33,6 +33,7 @@ import { fileURLToPath } from "node:url";
 
 import { siteConfig } from "../site/src/config.ts";
 import { packagePath, href } from "../site/src/lib/href.ts";
+import { ISLAND_PLACEHOLDER } from "../site/src/lib/island-placeholder.ts";
 import { catalogueLlmsTxt, siteManifest } from "../site/src/seo/catalogue.ts";
 import {
   cspPolicy,
@@ -52,6 +53,7 @@ import { PUBLIC_ONLY } from "../site/src/seo/local.ts";
 import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
 import { resolveTableOf, resolverPage } from "../site/src/seo/resolve.ts";
 import { sitemapOf } from "../site/src/seo/sitemap.ts";
+import { islandsOf } from "./doc-library.mjs";
 import {
   copySurfaces,
   fullCorpus,
@@ -59,6 +61,7 @@ import {
   readTrees,
   treePaths,
 } from "./doc-surfaces.mjs";
+import { buildLibrary, fixtureLibrary } from "./library-source.mjs";
 import { lintLinks } from "./lint-links.mjs";
 import { writeRootFiles } from "./root-files.mjs";
 
@@ -93,22 +96,24 @@ if (plan === undefined) {
   process.exit(2);
 }
 
-/** Every page manifest this build renders from, read as data. */
+/**
+ * Every page manifest this build renders from, read as data.
+ *
+ * The same set the Vite configuration substitutes into the bundle, out
+ * of the same module — the deployment's trees for the site, the fixture
+ * pair for the shell `vibe` embeds — because a gate that counted one
+ * library against a build of another would be measuring nothing. What
+ * stays independent is the COUNTING: below, this driver does arithmetic
+ * over the manifests, while the site walks its own address map, and the
+ * two numbers meet only in the comparison (`##STACK-PAGE-COUNT-GATE`).
+ */
 function manifests() {
-  const dir = join(SITE_ROOT, "src", "fixtures");
-  const files = readdirSync(dir).filter(
-    (entry) => entry.startsWith("manifest") && entry.endsWith(".json"),
-  );
-  if (files.length === 0) {
-    throw new Error(`${dir}: no page manifest to build from`);
-  }
-  return files.map((entry) => {
-    const file = join(dir, entry);
-    const manifest = JSON.parse(readFileSync(file, "utf8"));
-    if (!Array.isArray(manifest.pages)) {
-      throw new Error(`${file}: the manifest declares no pages array`);
+  const named = mode === "static" ? buildLibrary() : fixtureLibrary();
+  return named.map((one) => {
+    if (!Array.isArray(one.value?.pages)) {
+      throw new Error(`${one.name}: the manifest declares no pages array`);
     }
-    return manifest;
+    return one.value;
   });
 }
 
@@ -195,6 +200,67 @@ function landingRouteCount() {
 const TREES = mode === "static" ? readTrees(treePaths()) : [];
 const EDITIONS = editionsOf(manifests());
 const MEDIA = mode === "static" ? mediaMapOf(TREES, EDITIONS) : {};
+
+/**
+ * The island of every page, put where the marker stands.
+ *
+ * This is the site's half of «one content path». `vibe doc build` has
+ * already turned each page into finished HTML — numbered blocks,
+ * resolved citations, executed examples — and the site publishes those
+ * bytes unchanged; `vibe doc serve` does the same thing with the same
+ * bytes at request time, into the same marker, which is what the parity
+ * test measures. Neither of them re-renders a page, because a second
+ * renderer disagrees with the first the first time either changes.
+ *
+ * It is done to the generated FILES rather than through the framework
+ * on purpose. A page handed to the framework as a prop is serialised
+ * into the document a second time, in the state the framework writes at
+ * the end of it — the manual's pages average twenty-five kilobytes, so
+ * that is the whole documentation shipped twice — and it would put every
+ * island of every edition into the bundle that any one of them is
+ * rendered from.
+ *
+ * Only the first occurrence is replaced, for the same reason the server
+ * replaces only the first: the hole in the document comes before the
+ * serialised state that mentions the marker as a string (finding P4-O4,
+ * anomaly A-4).
+ *
+ * A page whose tree carries no island keeps the package's own fixture
+ * page. A build given no tree is exactly that case for every address,
+ * which is how a clone with nothing installed still renders a site whose
+ * pages have something in them.
+ */
+function fillIslands(outDirName) {
+  const out = join(SITE_ROOT, outDirName);
+  const islands = islandsOf(TREES, EDITIONS, addressesOf(EDITIONS));
+  const standIn = readFileSync(
+    join(SITE_ROOT, "src", "fixtures", "island.html"),
+    "utf8",
+  );
+  let rendered = 0;
+  let fixture = 0;
+  for (const file of htmlFiles(out)) {
+    const html = readFileSync(file, "utf8");
+    const at = html.indexOf(ISLAND_PLACEHOLDER);
+    if (at === -1) continue;
+    const address = `/${file
+      .slice(out.length + 1)
+      .split(sep)
+      .join("/")}`.replace(/index\.html$/, "");
+    const island = islands.get(address);
+    if (island === undefined) fixture += 1;
+    else rendered += 1;
+    writeFileSync(
+      file,
+      `${html.slice(0, at)}${island ?? standIn}${html.slice(at + ISLAND_PLACEHOLDER.length)}`,
+      "utf8",
+    );
+  }
+  process.stdout.write(
+    `build (${mode}): ${rendered} island(s) from the documentation trees, ${fixture} from the package's own fixture page
+`,
+  );
+}
 
 /** Every `.html` under a directory, as absolute paths. */
 function htmlFiles(dir, found = []) {
@@ -436,7 +502,7 @@ if (existsSync(stray)) {
   );
 }
 
-// 5. The machine files at the root of the domain: `robots.txt`, the two
+// 6. The machine files at the root of the domain: `robots.txt`, the two
 //    llms indexes, the sitemap, the feed, the IndexNow key file, the
 //    social card and the public copies of the fonts. They describe the
 //    pages that were just built, so they are written from what is on
@@ -446,6 +512,14 @@ if (existsSync(stray)) {
 //    route template `vibe` fills in on a reader's own machine: it has no
 //    domain to describe, and a sitemap of it would name addresses that
 //    exist nowhere.
+// 5. The island of every page, where the marker stands. Before every
+//    step that reads the output: the policy hashes what a page carries,
+//    the link check follows what a page links to, and until this runs a
+//    page carries and links to nothing.
+if (mode === "static") {
+  fillIslands(plan.outDir);
+}
+
 if (plan.countsLanding) {
   writeDocumentationSurfaces(plan.outDir);
 
@@ -468,7 +542,7 @@ if (plan.countsLanding) {
     process.exit(1);
   }
 } else {
-  // 6. The other build is read back for the opposite reason: a page of
+  // 7. The other build is read back for the opposite reason: a page of
   //    the local reader must publish none of the public head.
   checkLocalHead(plan.outDir);
 }

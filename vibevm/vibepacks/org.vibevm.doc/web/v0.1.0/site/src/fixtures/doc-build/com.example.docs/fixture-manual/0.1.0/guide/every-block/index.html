@@ -1,0 +1,101 @@
+<article class="doc-page" data-status="impl/done" data-audience="user,dev">
+  <h1 id="root">Every block once</h1>
+  <p data-p="1" data-fact="LEAD" data-status="impl/done"><a class="p-anchor" id="p01" href="#p01">01</a>This page uses every block of the documentation genre <strong>once</strong>, so the island backend has a subject with no gaps.</p>
+  <p data-p="2"><a class="p-anchor" id="p02" href="#p02">02</a>Inline conventions ride inside a unit: <code>code</code>, <strong>strong</strong>, <em>emphasis</em> and <a href="/doc/com.example.docs/fixture-manual/latest/guide/every-block/">a link</a>.</p>
+  <section id="prose">
+    <h2>Prose blocks</h2>
+    <ul data-p="3">
+      <li><a class="p-anchor" id="p03" href="#p03">03</a>A plain item.</li>
+      <li data-fact="ANCHORED-ITEM" data-status="impl/done">An item that carries a fact.</li>
+    </ul>
+    <ol data-p="4">
+      <li><a class="p-anchor" id="p04" href="#p04">04</a>First.</li>
+      <li>Second.</li>
+    </ol>
+    <table data-p="5">
+      <caption><a class="p-anchor" id="p05" href="#p05">05</a></caption>
+      <thead>
+        <tr>
+          <th>Verb</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>list</code></td>
+          <td>lists what is installed</td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote data-p="6">
+      <a class="p-anchor" id="p06" href="#p06">06</a>
+      <p>A quotation from nowhere in particular.</p>
+    </blockquote>
+    <pre data-p="7"><a class="p-anchor" id="p07" href="#p07">07</a><code class="language-rust">let answer = 42;</code></pre>
+    <pre data-p="8"><a class="p-anchor" id="p08" href="#p08">08</a><code>a bare fence, no language claimed</code></pre>
+    <aside data-p="9" class="note" data-note="warning">
+      <a class="p-anchor" id="p09" href="#p09">09</a>
+      <p>A call-out the reader should not skip.</p>
+    </aside>
+    <figure data-p="10">
+      <a class="p-anchor" id="p10" href="#p10">10</a>
+      <img src="media/diagram.svg" alt="Two boxes and an arrow" />
+      <figcaption>The caption, which is a unit like any other.</figcaption>
+    </figure>
+  </section>
+  <section id="verifiable">
+    <h2>Blocks that are checked</h2>
+    <blockquote data-p="11" class="rule">
+      <a class="p-anchor" id="p11" href="#p11">11</a>
+      <a class="rule" href="/doc/com.example/subject/latest/common/PROP-001/#A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>.</a>
+    </blockquote>
+    <blockquote data-p="12" class="rule" data-unresolved="true">
+      <a class="p-anchor" id="p12" href="#p12">12</a>
+      <a class="rule" href="/doc/com.example/subject/latest/common/PROP-001/#UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
+    </blockquote>
+    <pre data-p="13" class="derived" data-derived="cli-help" data-ref="vibe list --help"><a class="p-anchor" id="p13" href="#p13">13</a><code class="language-text">Usage: vibe list [OPTIONS]
+</code></pre>
+    <div data-p="14" class="example" data-example="version" data-fixture="none">
+      <a class="p-anchor" id="p14" href="#p14">14</a>
+      <pre class="example-run"><code class="language-sh">vibe --version</code></pre>
+      <pre class="example-output"><code>vibe 1.0.0</code></pre>
+    </div>
+    <div data-p="15" class="example" data-example="missing" data-fixture="none" data-exit="2">
+      <a class="p-anchor" id="p15" href="#p15">15</a>
+      <pre class="example-run"><code class="language-sh">vibe nope</code></pre>
+      <pre class="example-output"><code></code></pre>
+      <pre class="example-stderr"><code>error: unrecognized subcommand `nope`</code></pre>
+    </div>
+    <div data-p="16" class="example" data-example="version" data-example-ref="version">
+      <a class="p-anchor" id="p16" href="#p16">16</a>
+      <pre class="example-run"><code class="language-sh">vibe --version</code></pre>
+      <pre class="example-output"><code>vibe 1.0.0</code></pre>
+    </div>
+    <div data-p="17" class="prompt" data-prompt="install">
+      <a class="p-anchor" id="p17" href="#p17">17</a>
+      <pre class="prompt-text"><code class="language-prompt">Install vibe on this machine and show me the version.</code></pre>
+      <p class="prompt-needs">a terminal and a network connection</p>
+      <p class="prompt-outcome"><code>vibe --version</code> prints a version number</p>
+      <ul class="prompt-asserts">
+        <li><code>vibe --version</code></li>
+      </ul>
+    </div>
+    <div data-p="18" class="prompt" data-prompt="anything" data-assert="none">
+      <a class="p-anchor" id="p18" href="#p18">18</a>
+      <pre class="prompt-text"><code class="language-prompt">Ask the agent for anything at all.</code></pre>
+    </div>
+  </section>
+  <section id="varying">
+    <h2>Blocks that vary</h2>
+    <p data-when="os:windows" data-p="19"><a class="p-anchor" id="p19" href="#p19">19</a>On Windows the path separator is a backslash.</p>
+    <p data-when="os:linux" data-p="20"><a class="p-anchor" id="p20" href="#p20">20</a>On Linux it is a slash.</p>
+    <section id="for-codex" data-when="agent:codex">
+      <h3>For one agent</h3>
+      <p data-p="21"><a class="p-anchor" id="p21" href="#p21">21</a>A whole section that only one agent sees.</p>
+    </section>
+  </section>
+  <section id="footnotes">
+    <h2>Footnotes</h2>
+    <p>Apparatus, not flow: these blocks take no numbers, because their count changes whenever a reference above them does.</p>
+  </section>
+</article>

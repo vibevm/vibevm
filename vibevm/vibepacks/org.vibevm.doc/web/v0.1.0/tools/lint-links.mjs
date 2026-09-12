@@ -20,13 +20,19 @@
 //   4. is every external address one of the handful the site is allowed
 //      to name, and is nothing fetched from any of them (R-09)?
 //
-// Two kinds of miss are NOT failures, and both are named rather than
+// Three kinds of miss are NOT failures, and each is named rather than
 // waved through. A `/doc/` link into a package this site does not carry
 // is a citation leaving the library — the address map is deterministic,
 // so a page can cite documentation nobody has published here, and that is
-// a fact about the citation graph rather than a broken link. And the
-// EXCEPTIONS table below carries the misses that are known, filed and
-// deliberate; anything not in it is red.
+// a fact about the citation graph rather than a broken link. A link
+// written INSIDE the island is the pipeline's writing and not the site's:
+// `vibe doc build` resolved it from the package's own source and the site
+// publishes those bytes unchanged, so a form the address map does not
+// carry is a finding about the renderer — counted and printed by shape,
+// because the site cannot rewrite it without becoming a second renderer,
+// and filing it in the table below would record a live defect as a
+// deliberate one. And the EXCEPTIONS table carries the misses that are
+// known, filed and deliberate; anything not in it is red.
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
@@ -155,8 +161,33 @@ const FETCHING = new Set([
   "link:manifest",
 ]);
 
+/**
+ * Where the rendered page sits inside the document.
+ *
+ * The island is one `<article class="doc-page">` written by `vibe doc
+ * build` and put into the hole the shell left; everything outside it is
+ * the site's own markup. Which of the two wrote a link is the difference
+ * between a build that must stop and a number somebody has to act on
+ * somewhere else, so the region is measured once per page and every link
+ * is asked whether it falls inside it.
+ *
+ * `null` when the page carries no island — a catalogue, a package page,
+ * the landing.
+ */
+function islandRegion(html) {
+  const marker = html.indexOf("data-island");
+  if (marker === -1) return null;
+  const opens = html.indexOf(">", marker);
+  if (opens === -1) return null;
+  const closes = html.indexOf("</article>", opens);
+  if (closes === -1) return null;
+  return { from: opens, to: closes + "</article>".length };
+}
+
 /** The links one HTML page writes, with what wrote each of them. */
 function linksIn(html) {
+  const island = islandRegion(html);
+  const inside = (at) => island !== null && at >= island.from && at < island.to;
   const found = [];
   for (const match of html.matchAll(/<link\b[^>]*>/g)) {
     const tag = match[0];
@@ -166,18 +197,23 @@ function linksIn(html) {
     found.push({
       kind: `link:${(rel?.[1] ?? "").toLowerCase()}`,
       target: at[1] ?? "",
+      island: inside(match.index),
     });
   }
   for (const match of html.matchAll(/<(a|img|script|source|iframe)\b[^>]*>/g)) {
     const tag = match[0];
     const at = /\b(href|src)="([^"]*)"/.exec(tag);
     if (at === null) continue;
-    found.push({ kind: at[1] ?? "", target: at[2] ?? "" });
+    found.push({
+      kind: at[1] ?? "",
+      target: at[2] ?? "",
+      island: inside(match.index),
+    });
   }
   for (const match of html.matchAll(
     /<meta[^>]+(?:property|name)="(og:image|og:url|twitter:image)"[^>]+content="([^"]*)"/g,
   )) {
-    found.push({ kind: match[1] ?? "", target: match[2] ?? "" });
+    found.push({ kind: match[1] ?? "", target: match[2] ?? "", island: false });
   }
   return found;
 }
@@ -221,6 +257,8 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
   const failures = [];
   const excused = new Map();
   const citations = new Set();
+  /** Island links the address map does not carry, by the name they end in. */
+  const islandForms = new Map();
   const foreign = new Map();
   const outbound = new Map();
   let checked = 0;
@@ -239,7 +277,7 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
       .map((match) => `${match[1]}/${match[2]}`),
   );
 
-  const miss = (page, kind, target) => {
+  const miss = (page, kind, target, island) => {
     const entry = { page, kind, target };
     const excuse = EXCEPTIONS.find((rule) => rule.matches(entry));
     if (excuse !== undefined) {
@@ -254,6 +292,24 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
       !coordinates.has(`${citation[1]}/${citation[2]}`)
     ) {
       citations.add(target);
+      return;
+    }
+    /* Inside the island the site is not the author. `vibe doc build`
+       wrote this link out of the package's own source and the site
+       publishes the bytes unchanged (`##PIPE-ONE-CONTENT-PATH`), so a
+       form the address map does not carry is a fact about the renderer
+       and is counted by the shape it takes — a page's sibling as
+       `<document>/index.xml`, say, where the site serves `<document>/`
+       and `<document>.xml`. Rewriting it here would make the site a
+       second renderer; failing on it would stop a build over
+       documentation the site renders correctly. */
+    if (island === true) {
+      const name =
+        target
+          .split("/")
+          .filter((one) => one.length > 0)
+          .pop() ?? target;
+      islandForms.set(name, (islandForms.get(name) ?? 0) + 1);
       return;
     }
     failures.push(`${page}: ${kind} -> ${target} is not in the output`);
@@ -283,7 +339,7 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
     return null;
   };
 
-  const check = (page, kind, target) => {
+  const check = (page, kind, target, island = false) => {
     if (target.length === 0) return;
     if (/^(mailto|data|javascript|spec):/i.test(target)) return;
     checked += 1;
@@ -291,13 +347,13 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
       const inside = external(page, kind, target);
       if (inside === null) return;
       if (!carried(decodeURI(inside.replace(/[?#].*$/, "")))) {
-        miss(page, kind, decodeURI(inside));
+        miss(page, kind, decodeURI(inside), island);
       }
       return;
     }
     const address = resolveLink(page, target);
     if (address === null) return;
-    if (!carried(address)) miss(page, kind, address);
+    if (!carried(address)) miss(page, kind, address, island);
   };
 
   // 1. Every page: its links, its canonical, its annotations.
@@ -310,7 +366,9 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
       join(outDir, file.slice(1).split("/").join(sep)),
       "utf8",
     );
-    for (const link of linksIn(html)) check(page, link.kind, link.target);
+    for (const link of linksIn(html)) {
+      check(page, link.kind, link.target, link.island);
+    }
     const canonical = canonicalIn(html);
     if (canonical !== null) check(page, "canonical", canonical);
     const mine = alternatesIn(html);
@@ -412,6 +470,17 @@ export function lintLinks(outDirName = "dist", write = process.stdout) {
       .join(", ");
     say(
       `    ok        ${total} outbound link(s) to ${outbound.size} host(s) the prose cites, fetched by nothing: ${named}`,
+    );
+  }
+  if (islandForms.size > 0) {
+    const total = [...islandForms.values()].reduce((sum, one) => sum + one, 0);
+    const named = [...islandForms]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => `${name} (${count})`)
+      .join(", ");
+    say(
+      `    note      ${total} link(s) the pipeline wrote inside an island in a form this site does not carry: ${named}`,
     );
   }
   if (citations.size > 0) {

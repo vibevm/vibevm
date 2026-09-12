@@ -45,6 +45,7 @@ import {
   resolvePage,
   sourceEdition,
   type Edition,
+  type Library,
 } from "./library.ts";
 
 /**
@@ -85,10 +86,11 @@ export function addressLanguage(target: PackageAddress): string | null {
  * where they were.
  */
 export function languageChoices(
+  library: Library,
   document: string,
   at: string | null,
 ): LanguageChoice[] {
-  return editions().map((one) => {
+  return editions(library).map((one) => {
     const reviewed = reviewedAt(one, document);
     return {
       tag: one.tag,
@@ -96,7 +98,7 @@ export function languageChoices(
       publisher: one.publisher,
       official: one.official,
       source: one.segment === null,
-      href: docHref(addressOf(one.segment, document)),
+      href: docHref(addressOf(library, one.segment, document)),
       current: one.segment === at,
       ...(reviewed === undefined ? {} : { reviewedAt: reviewed }),
     };
@@ -114,22 +116,33 @@ export function languageChoices(
  * catalogue. The fragment is added by the behaviour on the way out —
  * markup cannot know where a reader is standing.
  */
-export function headerLanguageChoices(pathname: string): LanguageChoice[] {
+export function headerLanguageChoices(
+  library: Library,
+  pathname: string,
+): LanguageChoice[] {
   const segments = docSegments(pathname);
-  if (segments === null) return catalogueChoices(null);
+  if (segments === null) return catalogueChoices(library, null);
   const target = parseDocTarget(segments);
-  if (target === null) return catalogueChoices(null);
+  if (target === null) return catalogueChoices(library, null);
   if (target.kind === "page") {
-    return languageChoices(target.address.document, target.address.lang);
+    return languageChoices(
+      library,
+      target.address.document,
+      target.address.lang,
+    );
   }
   return catalogueChoices(
+    library,
     target.kind === "catalogue" ? target.lang : target.address.lang,
   );
 }
 
 /** The catalogue in every language the library has, for the site header. */
-export function catalogueChoices(at: string | null): LanguageChoice[] {
-  return editions().map((one) => ({
+export function catalogueChoices(
+  library: Library,
+  at: string | null,
+): LanguageChoice[] {
+  return editions(library).map((one) => ({
     tag: one.tag,
     label: endonym(one.tag),
     publisher: one.publisher,
@@ -155,8 +168,11 @@ function reviewedAt(one: Edition, document: string): string | undefined {
  * content of that number — so the switch offers both and says what each
  * of them means.
  */
-export function versionChoices(address: DocAddress): VersionChoice[] {
-  const newest = coordinate(address.lang).version;
+export function versionChoices(
+  library: Library,
+  address: DocAddress,
+): VersionChoice[] {
+  const newest = coordinate(library, address.lang).version;
   return [
     {
       label: newest,
@@ -185,15 +201,16 @@ export function versionChoices(address: DocAddress): VersionChoice[] {
  * about.
  */
 export function navItems(
+  library: Library,
   at: string | null,
   currentDocument: string | null,
 ): DocsNavItem[] {
-  const pages = sourceEdition().pages;
+  const pages = sourceEdition(library).pages;
   return pages.map((page) => {
     const document = documentOf(page.path);
     return {
       label: page.title,
-      href: docHref(addressOf(at, document)),
+      href: docHref(addressOf(library, at, document)),
       current: document === currentDocument,
     };
   });
@@ -273,13 +290,13 @@ export type LanguageCatalogueView = {
 
 export type DocView = PageView | PackageView | LanguageCatalogueView;
 
-function pageView(address: DocAddress): PageView | null {
-  const resolved = resolvePage(address.lang, address.document);
+function pageView(library: Library, address: DocAddress): PageView | null {
+  const resolved = resolvePage(library, address.lang, address.document);
   if (resolved === null) return null;
   const { edition, page, fallback } = resolved;
-  const text = fallback ? sourceEdition() : edition;
-  const newest = coordinate(address.lang).version;
-  const source = sourceEdition();
+  const text = fallback ? sourceEdition(library) : edition;
+  const newest = coordinate(library, address.lang).version;
+  const source = sourceEdition(library);
 
   return {
     kind: "page",
@@ -299,18 +316,21 @@ function pageView(address: DocAddress): PageView | null {
     audiences: page.audiences,
     readingMinutes: page.reading_time_min,
     uri: specUri({ ...address, version: newest }),
-    canonical: docHref(addressOf(source.segment, address.document)),
+    canonical: docHref(addressOf(library, source.segment, address.document)),
     packageAt: packageHref(address),
     mount: catalogueHref(null),
     links: projectionLinks(address),
-    languages: languageChoices(address.document, address.lang),
-    versions: versionChoices(address),
-    nav: navItems(address.lang, address.document),
+    languages: languageChoices(library, address.document, address.lang),
+    versions: versionChoices(library, address),
+    nav: navItems(library, address.lang, address.document),
   };
 }
 
-function packageView(address: PackageAddress): PackageView | null {
-  const all = editions();
+function packageView(
+  library: Library,
+  address: PackageAddress,
+): PackageView | null {
+  const all = editions(library);
   const here = all.find((one) => one.segment === address.lang);
   if (here === undefined) return null;
   const card = here.card;
@@ -333,10 +353,10 @@ function packageView(address: PackageAddress): PackageView | null {
       publisher: one.publisher,
       official: one.official,
       source: one.segment === null,
-      href: packageHref(coordinate(one.segment)),
+      href: packageHref(coordinate(library, one.segment)),
       current: one.segment === address.lang,
     })),
-    nav: navItems(address.lang, null),
+    nav: navItems(library, address.lang, null),
     llms: llmsHref(address),
     subjects: card.subjects.map((subject) => ({
       package: subject.package,
@@ -346,7 +366,7 @@ function packageView(address: PackageAddress): PackageView | null {
       .filter((one) => one.segment !== null)
       .map((one) => ({
         title: one.title,
-        href: packageHref(coordinate(one.segment)),
+        href: packageHref(coordinate(library, one.segment)),
         publisher: one.publisher,
         coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
         ...(one.card.description === undefined
@@ -366,14 +386,14 @@ function packageView(address: PackageAddress): PackageView | null {
  * renders nothing when it does not understand an address is a shell that
  * cannot be debugged from the outside.
  */
-export function viewOf(raw: string): DocView | null {
+export function viewOf(library: Library, raw: string): DocView | null {
   const target = parseDocTarget(raw.split("/"));
   if (target === null) return null;
   if (target.kind === "catalogue") {
-    const known = editions().some((one) => one.segment === target.lang);
+    const known = editions(library).some((one) => one.segment === target.lang);
     return known ? { kind: "catalogue", lang: target.lang } : null;
   }
   return target.kind === "page"
-    ? pageView(target.address)
-    : packageView(target.address);
+    ? pageView(library, target.address)
+    : packageView(library, target.address);
 }

@@ -31,6 +31,7 @@ import {
   editions,
   sourceEdition,
 } from "../lib/library.ts";
+import { BUILT } from "../lib/library-source.ts";
 import { LATEST } from "./editions.ts";
 
 /** The catch-all route's parameter for one address, or nothing. */
@@ -49,10 +50,12 @@ function paramOf(path: string): { path: string } | null {
  */
 export function latestAliasParams(): { path: string }[] {
   const out: { path: string }[] = [];
-  const documents = sourceEdition().pages.map((page) => documentOf(page.path));
+  const documents = sourceEdition(BUILT).pages.map((page) =>
+    documentOf(page.path),
+  );
 
-  for (const edition of editions()) {
-    const at = { ...coordinate(edition.segment), version: LATEST };
+  for (const edition of editions(BUILT)) {
+    const at = { ...coordinate(BUILT, edition.segment), version: LATEST };
     const pkg = paramOf(packageHref(at));
     if (pkg !== null) out.push(pkg);
     for (const document of documents) {

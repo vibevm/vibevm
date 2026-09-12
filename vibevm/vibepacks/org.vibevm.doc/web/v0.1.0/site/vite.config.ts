@@ -14,29 +14,27 @@
  * turned off it produced one page out of seven and still exited 0. A
  * default whose other value silently breaks the build is worth one line
  * of config and a sentence saying so.
+ *
+ * The one thing this configuration decides is WHICH DOCUMENTATION the
+ * build renders: the manifests of the trees `VIBE_DOC_OUT` names, or the
+ * package's own fixture pair when it names none. A bundler cannot import
+ * a file whose path only the deployment knows, so the manifests arrive
+ * as a substituted value — the same channel the card addresses take.
  */
-
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 
 import { qwikVite } from "@qwik.dev/core/optimizer";
 import { qwikRouter } from "@qwik.dev/router/vite";
 import { defineConfig, type UserConfig } from "vite";
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-
-/**
- * The page this build shows. Today it is the pipeline's own golden, so
- * the shell can be built and measured before a documentation package is
- * on the machine; the shape does not change when a real one arrives.
- */
-const ISLAND = readFileSync(join(HERE, "src", "fixtures", "island.html"), "utf8");
+import { buildLibrary } from "../tools/library-source.mjs";
 
 export default defineConfig((): UserConfig => {
   return {
     base: "/",
-    define: { __VIBE_ISLAND_HTML__: JSON.stringify(ISLAND) },
+    define: {
+      __VIBE_DOC_MANIFESTS__: JSON.stringify(buildLibrary()),
+      __VIBE_LOCAL_READER__: "false",
+    },
     plugins: [
       qwikRouter({ trailingSlash: true }),
       qwikVite({ client: { outDir: "dist" }, ssr: { outDir: "server" } }),

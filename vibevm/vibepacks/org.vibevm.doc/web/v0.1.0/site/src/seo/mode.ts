@@ -1,24 +1,29 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#STACK-ONE-BASE */
 
 /**
- * Which of the two builds this is, asked of the one thing that already
- * differs between them.
+ * Which of the two builds this is.
  *
- * The static build bakes a rendered island into the page; the embedded
- * build bakes the placeholder that `vibe doc serve` replaces with the
- * island it rendered for the page a reader asked for
- * (`lib/island-source.ts`). That substitution is the definition of the
- * local reader's build, so it is also the honest way to recognise it —
- * no second `define` to keep in step with the first, and no environment
- * variable a deployment could set by mistake.
+ * It used to be derived rather than declared: the static build baked a
+ * rendered island into the page and the embedded one baked the
+ * placeholder, so comparing the two told you which build you were in
+ * without a second value to keep in step with the first.
  *
- * Both sides of the comparison are string literals by the time the
- * bundler sees them, so it folds to a constant and the branch the build
- * does not take is dropped with it.
+ * That derivation is gone because the thing it read is gone. The site
+ * now carries a documentation of many pages, and a page's island is the
+ * bytes of its own `<document>/index.html` — so BOTH builds ship the
+ * placeholder, and the difference is who fills it: the build driver,
+ * once, over the pages it just generated, or `vibe doc serve`, per
+ * request, out of the machine store. One marker, two fillers, and the
+ * bytes around the hole provably the same in both.
+ *
+ * So the build says which it is, in the same `define` channel the
+ * library and the card addresses arrive on. Both sides of the comparison
+ * are literals by the time the bundler sees them, so the branch this
+ * build does not take is dropped with the constant.
  */
 
-import { ISLAND_PLACEHOLDER } from "../lib/island-placeholder.ts";
-import { ISLAND_HTML } from "../lib/island-source.ts";
+/** Replaced at build time by each adapter's Vite configuration. */
+declare const __VIBE_LOCAL_READER__: boolean;
 
 /** True in the shell `vibe` serves from a machine's own store. */
-export const IS_LOCAL_READER: boolean = ISLAND_HTML === ISLAND_PLACEHOLDER;
+export const IS_LOCAL_READER: boolean = __VIBE_LOCAL_READER__;

@@ -28,7 +28,8 @@ import {
 
 import { Catalogue } from "../../../components/catalogue/index.tsx";
 import { Island } from "../../../components/island/index.tsx";
-import { ISLAND_HTML } from "../../../lib/island-source.ts";
+import { ISLAND_PLACEHOLDER } from "../../../lib/island-placeholder.ts";
+import { BUILT } from "../../../lib/library-source.ts";
 import { documentationParams } from "../../../lib/pages.ts";
 import { startReader } from "../../../reader/mount.ts";
 import { latestAliasParams } from "../../../seo/addresses.ts";
@@ -164,7 +165,7 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
           links={[...view.links]}
         />
         <CodeChrome>
-          <Island html={ISLAND_HTML} />
+          <Island html={ISLAND_PLACEHOLDER} />
         </CodeChrome>
         <ForAgent
           title="For an agent"
@@ -303,7 +304,7 @@ export default component$(() => {
   useStyles$(styles);
   const location = useLocation();
   const raw = location.params["path"] ?? "";
-  const view = viewOf(raw);
+  const view = viewOf(BUILT, raw);
 
   if (view === null) {
     return (
@@ -334,7 +335,7 @@ export default component$(() => {
  * keep the router from moving the reader.
  */
 export const head: DocumentHead = ({ params }) => {
-  const view = viewOf(params["path"] ?? "");
+  const view = viewOf(BUILT, params["path"] ?? "");
   if (view === null) return { title: "Not a documentation address" };
   const seo = documentationHead(view, IS_LOCAL_READER);
   if (view.kind !== "page") return seo;

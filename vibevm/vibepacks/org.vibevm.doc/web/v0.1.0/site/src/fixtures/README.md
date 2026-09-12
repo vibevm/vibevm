@@ -26,10 +26,23 @@ build:static`.
 
 | File | Where it comes from |
 | --- | --- |
+| `manifest.json` | byte copy of `manifest.json` beside it — the card and page list the tree is the rendering of |
 | `com.example.docs/fixture-manual/0.1.0/guide/every-block.md` | copy of `crates/vibe-doc/tests/golden/guide-every-block.md` |
 | `com.example.docs/fixture-manual/0.1.0/guide/every-block.xml` | copy of `crates/vibe-doc/tests/golden/guide-every-block.xml` |
+| `com.example.docs/fixture-manual/0.1.0/guide/every-block/index.html` | copy of `crates/vibe-doc/tests/golden/guide-every-block.numbered.html` — the same bytes as `island.html` |
 | `com.example.docs/fixture-manual/0.1.0/reference/addresses.{md,xml}` | the site's own, for the second page `manifest.json` declares |
+| `com.example.docs/fixture-manual/0.1.0/reference/addresses/index.html` | the site's own, in the shape the pipeline renders that page's `.xml` into |
 | `llms.txt`, `llms-full.txt` | the site's own, in the shape `vibe doc build` writes them |
+
+A tree is a whole edition and not only its agent surfaces. Its
+`manifest.json` is the card, the language and the page list the site
+builds its addresses, shelves and navigation from, and each page's
+`<document>/index.html` is the island the site publishes at that
+address — the same bytes `vibe doc serve` glues into the same marker
+per request. A deployment names its real trees in `VIBE_DOC_OUT` and
+this one is never read then; a build told nothing renders the two
+manifests beside this file and shows `island.html` on every page, which
+is what it did before the trees carried a library at all.
 
 The two budgeted tiers — `llms-small.txt` and `llms-medium.txt` — are not
 here. Nothing on the site links them, the real trees carry them, and a
