@@ -270,28 +270,33 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             new_graph,
         )?;
         *visibility_analysis = effective.analysis;
-        sync_fetched_to_graph(
-            source,
-            &effective.graph,
-            lockfile,
-            store_root,
-            root_features,
-            workspace_root,
-            offline,
-            fetched,
-        )?;
+        sync_fetched_to_graph(&effective.graph, fetched, |node| {
+            fetch_or_defer(
+                source,
+                node,
+                lockfile,
+                store_root,
+                root_features,
+                workspace_root,
+                offline,
+            )
+        })?;
     }
 }
 
-fn sync_fetched_to_graph<S: InstallSource + ?Sized>(
-    source: &S,
+/// Re-seat `fetched` onto `graph`: a node an earlier pass already fetched is
+/// carried over untouched, a node new to this pass is obtained through
+/// `acquire`, and every retained node's edges are refreshed from the solved
+/// graph.
+///
+/// Acquisition is a parameter, not six more borrows of the planning context:
+/// the re-seating itself only needs to know WHICH nodes are new, never how
+/// one is fetched. That keeps the arity real rather than renamed — the
+/// context the caller already holds stays in the caller.
+fn sync_fetched_to_graph(
     graph: &vibe_resolver::ResolvedGraph,
-    lockfile: &Lockfile,
-    store_root: &Path,
-    root_features: &FeatureRequest,
-    workspace_root: &Path,
-    offline: bool,
     fetched: &mut Vec<Fetched>,
+    mut acquire: impl FnMut(&ResolvedNode) -> Result<Fetched>,
 ) -> Result<()> {
     let mut existing = std::mem::take(fetched);
     let mut next = Vec::with_capacity(graph.packages.len());
@@ -303,15 +308,7 @@ fn sync_fetched_to_graph<S: InstallSource + ?Sized>(
         });
         let mut item = match retained {
             Some(index) => existing.remove(index),
-            None => fetch_or_defer(
-                source,
-                node,
-                lockfile,
-                store_root,
-                root_features,
-                workspace_root,
-                offline,
-            )?,
+            None => acquire(node)?,
         };
         item.meta.dependencies.clone_from(&node.dependencies);
         item.meta.is_root = node.is_root;

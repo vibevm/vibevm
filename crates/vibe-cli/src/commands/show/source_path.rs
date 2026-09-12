@@ -284,7 +284,7 @@ mod tests {
         );
         if embedded {
             text.push_str(&format!(
-                "\n[[package.embedded_source]]\nname = \"upstream\"\nsource_url = \"https://github.com/example/upstream.git\"\nsource_ref = \"refs/tags/v1.2.3\"\nresolved_commit = \"{COMMIT}\"\ntree_oid = \"{TREE}\"\ncontent_hash = \"{HASH}\"\nupstream_license = \"MIT\"\nlicense_path = \"LICENSE\"\nlicense_url = \"https://github.com/example/upstream/blob/{COMMIT}/LICENSE\"\nlicense_file_sha256 = \"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"\n"
+                "\n[[package.embedded_source]]\nname = \"upstream\"\nsource_url = \"https://github.com/example/upstream.git\"\nsource_ref = \"refs/tags/v1.2.3\"\nresolved_commit = \"{COMMIT}\"\ntree_oid = \"{TREE}\"\ncontent_hash = \"{HASH}\"\nupstream_authors = [\"Example Upstream Authors\"]\nupstream_license = \"MIT\"\nlicense_path = \"LICENSE\"\nlicense_url = \"https://github.com/example/upstream/blob/{COMMIT}/LICENSE\"\nlicense_file_sha256 = \"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"\n"
             ));
         }
         text
