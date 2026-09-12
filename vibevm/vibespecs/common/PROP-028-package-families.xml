@@ -33,10 +33,10 @@ name it replaced), [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml)
   <decision title="2. Decision">
     <roles title="2.1 Three roles, one family stem">
       <p><req-roles fact="true" status="impl/done">`req r2`</req-roles></p>
-      <p><FAMILY-DEF fact="true" status="impl/done">A **package family** is a set of packages sharing a `&lt;family&gt;` stem and
+      <p><FAMILY-DEF fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A **package family** is a set of packages sharing a `&lt;family&gt;` stem and
 delivering one coherent capability across three roles:</FAMILY-DEF></p>
       <facts ordered="false">
-        <ROLE-AGGREGATOR fact="true" status="impl/done">**`&lt;family&gt;`** — the *aggregator*. `kind = "stack"`, content-minimal: a
+        <ROLE-AGGREGATOR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**`&lt;family&gt;`** — the *aggregator*. `kind = "stack"`, content-minimal: a
   `vibe.toml` and a `README.md`, and nothing else — no code, no boot snippet,
   no `specmap.toml` / `conform.toml`. Its whole job is to name the family's
   members at one resolved version set through exact `=X.Y.Z` pins in
@@ -77,7 +77,7 @@ the aggregator holds its members equal.</AGGREGATOR-PINS-DELIBERATE></p>
   its aggregator line ABOVE that history, never at or below it.</AGGREGATOR-ABOVE-HISTORY>
       </facts>
       <facts ordered="false">
-        <UNISON-LAW fact="true" status="impl/done">Within a family the members move in **unison**: a content change to any member
+        <UNISON-LAW fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">Within a family the members move in **unison**: a content change to any member
   bumps EVERY member of that family to one shared version, and the aggregator's
   version IS that family version.</UNISON-LAW>
         <NO-MIXED-NUMBERS fact="true" status="impl/done">A family is a *tested set*, so its members never
@@ -114,7 +114,7 @@ the aggregator holds its members equal.</AGGREGATOR-PINS-DELIBERATE></p>
     </families>
     <surface-naming title="2.4 Naming below the package: crates, binaries, skills, servers">
       <p><req-surface-naming fact="true" status="impl/done">`req r1`</req-surface-naming></p>
-      <p><SURFACE-NAMING-LAW fact="true" status="impl/done">The family stem is language-FIRST and reaches every named surface a family
+      <p><SURFACE-NAMING-LAW fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The family stem is language-FIRST and reaches every named surface a family
 ships, not only the package identities. Each crate, binary, agent skill, and
 MCP server carries the `&lt;family&gt;` prefix:</SURFACE-NAMING-LAW></p>
       <facts ordered="false">

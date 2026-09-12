@@ -21,7 +21,7 @@
   <decisions title="2. Decisions">
     <workspace-section title="2.1 The `[workspace]` section">
       <p><req-workspace-section fact="true" status="impl/done">`req r1`</req-workspace-section></p>
-      <p><WORKSPACE-TABLE fact="true" status="impl/done">**Decision.** A `vibe.toml` may carry a `[workspace]` table declaring member packages:</WORKSPACE-TABLE></p>
+      <p><WORKSPACE-TABLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** A `vibe.toml` may carry a `[workspace]` table declaring member packages:</WORKSPACE-TABLE></p>
       <fence lang="toml">[workspace]
 members = [
   "packages/flow-wal",
@@ -31,12 +31,12 @@ members = [
       <facts ordered="false">
         <MEMBERS-PATHS fact="true" status="impl/done">`members` — paths relative to the manifest. Glob patterns are permitted (`packages/*`).</MEMBERS-PATHS>
         <MEMBER-IS-NODE fact="true" status="impl/done">Each member is a directory carrying its own `vibe.toml` (§2.2).</MEMBER-IS-NODE>
-        <EXPLICIT-MEMBERSHIP fact="true" status="impl/done">Membership is **explicit** — there is no auto-discovery of directories that happen to carry a `vibe.toml`. The structure is declared, per the owner's "the whole structure is in the project description" requirement.</EXPLICIT-MEMBERSHIP>
+        <EXPLICIT-MEMBERSHIP fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Membership is **explicit** — there is no auto-discovery of directories that happen to carry a `vibe.toml`. The structure is declared, per the owner's "the whole structure is in the project description" requirement.</EXPLICIT-MEMBERSHIP>
       </facts>
     </workspace-section>
     <unified-manifest title="2.2 Unified manifest — one `vibe.toml`">
       <p><req-unified-manifest fact="true" status="impl/done">`req r1`</req-unified-manifest></p>
-      <p><ONE-MANIFEST fact="true" status="impl/done">**Decision.** `vibe-package.toml` is **retired as a distinct filename**. Every node — project root, workspace member, published package — carries a single `vibe.toml`; the role is expressed by which sections are present. This is the cargo model: one `Cargo.toml` carries `[package]` and/or `[workspace]`.</ONE-MANIFEST></p>
+      <p><ONE-MANIFEST fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**Decision.** `vibe-package.toml` is **retired as a distinct filename**. Every node — project root, workspace member, published package — carries a single `vibe.toml`; the role is expressed by which sections are present. This is the cargo model: one `Cargo.toml` carries `[package]` and/or `[workspace]`.</ONE-MANIFEST></p>
       <p><section-roles-lead fact="true" status="impl/done">Section roles:</section-roles-lead></p>
       <table>
         <tr>
@@ -66,7 +66,7 @@ members = [
         </tr>
       </table>
       <facts ordered="false">
-        <PACKAGE-XOR-PROJECT fact="true" status="impl/done">`[package]` and `[project]` are **mutually exclusive** in one file — a node is either a publishable package or a plain project, not both. (Decision 7-α from the design session: keep the two sections distinct rather than folding `[project]` into a `[package]` with optional `kind`. Explicitness wins; `kind` stays strictly mandatory wherever `[package]` appears.)</PACKAGE-XOR-PROJECT>
+        <PACKAGE-XOR-PROJECT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">`[package]` and `[project]` are **mutually exclusive** in one file — a node is either a publishable package or a plain project, not both. (Decision 7-α from the design session: keep the two sections distinct rather than folding `[project]` into a `[package]` with optional `kind`. Explicitness wins; `kind` stays strictly mandatory wherever `[package]` appears.)</PACKAGE-XOR-PROJECT>
         <WORKSPACE-COMPOSES fact="true" status="impl/done">`[workspace]` composes with `[package]`, with `[project]`, or with neither (a virtual workspace root — just a coordinator).</WORKSPACE-COMPOSES>
       </facts>
       <facts ordered="false">
@@ -79,7 +79,7 @@ members = [
       <p><req-nesting fact="true" status="impl/done">`req r1`</req-nesting></p>
       <p><NESTED-WORKSPACES fact="true" status="impl/done">**Decision.** Nested workspaces are permitted to arbitrary depth — a member may itself carry a `[workspace]` section.</NESTED-WORKSPACES></p>
       <p><nesting-principle-lead fact="true" status="impl/done">The load-bearing principle that keeps this from becoming chaos:</nesting-principle-lead></p>
-      <p><NESTING-PRINCIPLE fact="true" status="impl/done">Nesting is **hierarchical grouping**, not independent resolution domains. The lockfile and unified resolution always live at the *absolute root* of the workspace tree. A nested `[workspace]` provides (a) the `[workspace.versions]` matryoshka (§2.6) and (b) logical grouping of members — never its own lockfile, never its own resolution pass.</NESTING-PRINCIPLE></p>
+      <p><NESTING-PRINCIPLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Nesting is **hierarchical grouping**, not independent resolution domains. The lockfile and unified resolution always live at the *absolute root* of the workspace tree. A nested `[workspace]` provides (a) the `[workspace.versions]` matryoshka (§2.6) and (b) logical grouping of members — never its own lockfile, never its own resolution pass.</NESTING-PRINCIPLE></p>
       <facts ordered="false">
         <ROOT-DISCOVERY fact="true" status="impl/done">**Root discovery.** A command run inside a node walks up the directory tree, collects every `vibe.toml` carrying `[workspace]`, and selects the *topmost one that transitively includes the current node*. The lockfile lives there.</ROOT-DISCOVERY>
         <STANDALONE-NODE fact="true" status="impl/done">**Standalone node.** If no enclosing `[workspace]` exists above a node (it was cloned on its own — e.g. it is just a published package), the node is its own absolute root. This is the same rule as §2.4's command-bubbling and matches cargo's behaviour for a crate cloned outside any workspace.</STANDALONE-NODE>
@@ -89,21 +89,21 @@ members = [
     </nesting>
     <lockfile title="2.4 Single lockfile at the absolute root">
       <p><req-lockfile fact="true" status="impl/done">`req r1`</req-lockfile></p>
-      <p><ONE-LOCKFILE fact="true" status="impl/done">**Decision.** One `vibe.lock`, at the absolute root of the workspace tree (§2.3). No per-member lockfiles.</ONE-LOCKFILE></p>
+      <p><ONE-LOCKFILE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** One `vibe.lock`, at the absolute root of the workspace tree (§2.3). No per-member lockfiles.</ONE-LOCKFILE></p>
       <facts ordered="false">
         <UNIFIED-RESOLUTION fact="true" status="impl/done">**Unified resolution.** All members resolve together: one version of each external dependency across the whole workspace. A "diamond" inside a workspace is impossible by construction. This is the cargo model; Maven's nearest equivalent is `&lt;dependencyManagement&gt;` in the parent POM (Maven has no lockfile at all — a known reproducibility gap vibevm does not inherit, since the lockfile is already load-bearing for content-hash integrity per PROP-002 §2.1).</UNIFIED-RESOLUTION>
-        <COMMAND-BUBBLING fact="true" status="impl/done">**Command bubbling.** A command (`vibe install`, `vibe build`) run inside a member's directory walks up to the absolute root, finds `vibe.lock`, and operates against it. The member "does not notice" it is part of something larger — this realises the owner's requirement that a developer can work inside a sub-project unaware of the surrounding workspace.</COMMAND-BUBBLING>
+        <COMMAND-BUBBLING fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Command bubbling.** A command (`vibe install`, `vibe build`) run inside a member's directory walks up to the absolute root, finds `vibe.lock`, and operates against it. The member "does not notice" it is part of something larger — this realises the owner's requirement that a developer can work inside a sub-project unaware of the surrounding workspace.</COMMAND-BUBBLING>
       </facts>
     </lockfile>
     <path-source title="2.5 Cross-member dependencies — the `path` source">
       <p><req-path-source fact="true" status="impl/done">`req r1`</req-path-source></p>
-      <p><PATH-SOURCE fact="true" status="impl/done">**Decision.** A third dependency source-kind joins registry-resolved (PROP-002 §2.2) and git-source (PROP-002 §2.4.1): **path-source**.</PATH-SOURCE></p>
+      <p><PATH-SOURCE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** A third dependency source-kind joins registry-resolved (PROP-002 §2.2) and git-source (PROP-002 §2.4.1): **path-source**.</PATH-SOURCE></p>
       <fence lang="toml">[requires.packages]
 "org.vibevm.world/wal" = { path = "../flow-wal" }
 # dual-form (recommended for any member that is itself published):
 "org.vibevm.world/wal" = { path = "../flow-wal", version = "^0.1" }</fence>
       <facts ordered="false">
-        <DUAL-FORM fact="true" status="impl/done">**Dual-form.** `path` is used during local development inside the workspace; `version` takes effect when the consuming node is itself published — the published copy references `org.vibevm.world/wal@^0.1` from a registry, not `../flow-wal` (which an external consumer does not have). This is cargo's `{ path = ..., version = ... }` shape. Dual-form is **required** for any path-dep whose consumer is publishable.</DUAL-FORM>
+        <DUAL-FORM fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**Dual-form.** `path` is used during local development inside the workspace; `version` takes effect when the consuming node is itself published — the published copy references `org.vibevm.world/wal@^0.1` from a registry, not `../flow-wal` (which an external consumer does not have). This is cargo's `{ path = ..., version = ... }` shape. Dual-form is **required** for any path-dep whose consumer is publishable.</DUAL-FORM>
         <PATH-PRIORITY fact="true" status="impl/done">**Resolution priority.** `[[override]]` &gt; path &gt; git-source &gt; registry-walk. Path sits below override (override is a deliberate patch) and above git-source (path is the most local, most authoritative declaration).</PATH-PRIORITY>
         <PATH-LOCKFILE fact="true" status="impl/done">**Lockfile.** New `source_kind = "path"`. For a workspace-member path-dep the lockfile records a reference to the member by id within the workspace, not an external `source_url` — so the lockfile stays portable across machines (an absolute path would not).</PATH-LOCKFILE>
         <PATH-OUTSIDE fact="true" status="impl/done">**path outside the workspace.** A `path` pointing at a directory that is not a member of this workspace is permitted, but a node depending on it via path-only (no `version`) is not publishable — the published copy would dangle.</PATH-OUTSIDE>
@@ -111,7 +111,7 @@ members = [
     </path-source>
     <versions title="2.6 Version placeholders — `[workspace.versions]`">
       <p><req-versions fact="true" status="impl/done">`req r1`</req-versions></p>
-      <p><VERSION-PLACEHOLDERS fact="true" status="impl/done">**Decision.** Named version placeholders, the equivalent of Maven `&lt;properties&gt;`:</VERSION-PLACEHOLDERS></p>
+      <p><VERSION-PLACEHOLDERS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** Named version placeholders, the equivalent of Maven `&lt;properties&gt;`:</VERSION-PLACEHOLDERS></p>
       <fence lang="toml"># in a [workspace] manifest:
 [workspace.versions]
 core = "0.0.1"
@@ -127,7 +127,7 @@ ui   = "^0.3"</fence>
     </versions>
     <selective-publish title="2.7 Selective publish">
       <p><req-selective-publish fact="true" status="impl/done">`req r1`</req-selective-publish></p>
-      <p><PUBLISH-POSTURE fact="true" status="impl/done">**Decision.** Each publishable node declares its publish posture in `[package]`:</PUBLISH-POSTURE></p>
+      <p><PUBLISH-POSTURE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**Decision.** Each publishable node declares its publish posture in `[package]`:</PUBLISH-POSTURE></p>
       <fence lang="toml">[package]
 publish = false                 # never published — workspace-internal
 # or
@@ -135,14 +135,14 @@ publish = true                  # default
 # or
 publish = ["vibespecs"]         # only into these named registries</fence>
       <facts ordered="false">
-        <PUBLISH-TOPOLOGICAL fact="true" status="impl/done">`vibe workspace publish [--member &lt;m&gt;]` walks members in **topological order** (dependency-first) and skips `publish = false`.</PUBLISH-TOPOLOGICAL>
-        <PUBLISH-NOT-ATOMIC fact="true" status="impl/done">Publish is **not atomic**: on the first failure the command stops and reports what was already published and what remains. (Distributed publishing across N independent host repos has no transaction; a rollback would be a worse lie than a clear partial-progress report.)</PUBLISH-NOT-ATOMIC>
+        <PUBLISH-TOPOLOGICAL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe workspace publish [--member &lt;m&gt;]` walks members in **topological order** (dependency-first) and skips `publish = false`.</PUBLISH-TOPOLOGICAL>
+        <PUBLISH-NOT-ATOMIC fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Publish is **not atomic**: on the first failure the command stops and reports what was already published and what remains. (Distributed publishing across N independent host repos has no transaction; a rollback would be a worse lie than a clear partial-progress report.)</PUBLISH-NOT-ATOMIC>
         <PUBLISH-EXTREMES fact="true" status="impl/done">Extremes: every member `publish = false` → the project is entirely invisible, nothing leaves the machine. Every member `publish = true` → the whole project, root included (§2.9), is published.</PUBLISH-EXTREMES>
       </facts>
     </selective-publish>
     <published-repos title="2.8 Published package repositories">
       <p><req-published-repos fact="true" status="impl/done">`req r1`</req-published-repos></p>
-      <p><ONE-SOURCE-TREE fact="true" status="impl/done">**Decision.** The development tree is **one** source tree (one git repository, or not in git at all if the project is private). Workspace members are subdirectories; the split into packages is logical, at the vibevm resolver level. **Publishing is a separate operation that copies the content of a package's directory into a new, separate repository** in the registry org and tags the version — exactly what `vibe registry publish` does today for one package, repeated per self-published member by `vibe workspace publish`.</ONE-SOURCE-TREE></p>
+      <p><ONE-SOURCE-TREE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** The development tree is **one** source tree (one git repository, or not in git at all if the project is private). Workspace members are subdirectories; the split into packages is logical, at the vibevm resolver level. **Publishing is a separate operation that copies the content of a package's directory into a new, separate repository** in the registry org and tags the version — exactly what `vibe registry publish` does today for one package, repeated per self-published member by `vibe workspace publish`.</ONE-SOURCE-TREE></p>
       <fence>DEVELOPMENT — one tree, one git repo (or no git):
   my-project/
   ├── vibe.toml             [workspace] members = ["packages/X", "packages/Y"]

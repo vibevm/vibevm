@@ -71,7 +71,7 @@
         <STEP-ASSIGN-MODES fact="true" status="spec/done">**Assign effective modes** to every node (§2.2).</STEP-ASSIGN-MODES>
         <STEP-DEDUP fact="true" status="spec/done">**Deduplicate.** Each node contributes its boot **exactly once**, in its effective mode — regardless of how many paths reach it.</STEP-DEDUP>
         <STEP-TOPO-SORT fact="true" status="spec/done">**Topologically sort.** Order the nodes so that **every dependency precedes every dependent**. Independent nodes (no path between them) are ordered by a deterministic tie-break — category, then boot-snippet slot, then fully-qualified name — so the emitted sequence is byte-stable across runs.</STEP-TOPO-SORT>
-        <STEP-REJECT-CYCLES fact="true" status="spec/done">**Reject cycles.** `requires` is expected acyclic; a cycle is a **hard error at generate time**, reported with the offending cycle path. The boot is never emitted half-linked. (This is the one place cycle detection lives; the agent-side read is a flat, recursion-free parse per PROP-009 §2.)</STEP-REJECT-CYCLES>
+        <STEP-REJECT-CYCLES fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**Reject cycles.** `requires` is expected acyclic; a cycle is a **hard error at generate time**, reported with the offending cycle path. The boot is never emitted half-linked. (This is the one place cycle detection lives; the agent-side read is a flat, recursion-free parse per PROP-009 §2.)</STEP-REJECT-CYCLES>
       </facts>
     </link-graph>
     <emission title="2.4 Emission — a dependency-ordered priority lane and index">
