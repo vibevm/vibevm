@@ -1,0 +1,30 @@
+.return-to-place {
+  position: fixed;
+  left: 50%;
+  bottom: 1.4rem;
+  z-index: 31;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transform: translateX(-50%);
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-hover);
+  transition:
+    background var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.return-to-place:hover {
+  background: var(--accent-soft);
+}
+
+.return-to-place__mark {
+  color: var(--accent);
+}

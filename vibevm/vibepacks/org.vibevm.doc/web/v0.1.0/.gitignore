@@ -10,3 +10,9 @@ tmp/
 *.tsbuildinfo
 # The structural gate writes its SARIF report here on every run.
 target/
+# What the end-to-end run leaves behind: traces, screenshots and the
+# HTML report. The browser itself lives in the user's own cache, never
+# in the tree.
+test-results/
+playwright-report/
+.playwright/

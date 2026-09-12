@@ -13,9 +13,11 @@
     "floor:discipline": "node tools/floor.mjs",
     "audit:contrast": "node design/audit/contrast.mjs",
     "build:static": "node tools/build.mjs static",
-    "build:embedded": "node tools/build.mjs embedded"
+    "build:embedded": "node tools/build.mjs embedded",
+    "test:e2e": "playwright test -c site/tests/playwright.config.ts"
   },
   "devDependencies": {
+    "@playwright/test": "1.58.2",
     "@qwik.dev/core": "2.0.0-beta.43",
     "@qwik.dev/router": "2.0.0-beta.43",
     "@types/node": "26.5.1",
