@@ -21,8 +21,8 @@
 //! | `<base><coordinate>/<version>/<document>.xml` | `application/xml` |
 //! | `<base><coordinate>/<version>/` | the package's own page: the card, the shelf, the agent surfaces |
 //! | `<base>media/<name>`, `<base><coordinate>/<version>/media/<name>` | the card's pictures |
-//! | `<base>manifest.json` | the page manifest |
-//! | `<base>llms.txt`, `llms-small.txt`, `llms-medium.txt`, `llms-full.txt` | the agent files |
+//! | `<base>manifest.json`, `<base><coordinate>/<version>/manifest.json` | the page manifest |
+//! | `<base>llms.txt`, `llms-small.txt`, `llms-medium.txt`, `llms-full.txt`, and the same under the edition | the agent files |
 //! | `<base>resolve?uri=spec://…` | a citation, followed |
 //! | `<base>assets/…`, `<base>build/…` | the shell's own files |
 //! | `/healthz` | `{"status":"ok"}` |
@@ -220,8 +220,20 @@ fn package_page(reader: &Reader) -> Result<Response, ApiError> {
     Ok(text(dressed, "text/html; charset=utf-8"))
 }
 
-/// The files that describe the whole mount rather than one page.
+/// The files that describe the documentation rather than one page.
+///
+/// They answer at the mount's root AND under the edition, because that is
+/// where the site publishes them: `copySurfaces` copies the pipeline's
+/// four `llms` tiers into `<coordinate>/<version>/`, and the build
+/// re-serialises the page manifest beside them (`##SEO-LLMS-FILES`,
+/// A4.5). A reader is pointed at one package, so the two places hold the
+/// same five files, and an agent that learned an address from the site
+/// finds it here.
+///
+/// The `latest` spelling costs nothing: the address arrives already read
+/// into the number ([`as_numbered`]).
 fn machine_file(reader: &Reader, rest: &str) -> Result<Option<Response>, ApiError> {
+    let rest = rest.strip_prefix(&reader.prefix).unwrap_or(rest);
     if rest == "manifest.json" {
         let built = manifest::build(&reader.package_dir, &reader.sources, &options(reader))
             .map_err(|e| ApiError::internal(e.to_string()))?;
@@ -271,6 +283,9 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             )));
         }
     }
+    let set = vibe_doc::pages::read_package(&reader.package_dir)
+        .map_err(|e| ApiError::internal(e.to_string()))?;
+    let carries = |rel: &str| set.pages.iter().any(|page| page.rel == rel);
     let (rel, format) = match address.strip_suffix('/') {
         Some(stem) => (format!("{stem}.xml"), Format::Html),
         None => match address.rsplit_once('.') {
@@ -280,14 +295,26 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             // (`##SITE-TRAILING-SLASH`); the redirect is permanent so a
             // link that lost the slash is repaired once and not on every
             // visit.
-            _ => {
+            //
+            // Only for an address that IS a page, though. The repair used
+            // to fire on any name with a dot in it, which sent a request
+            // for a file this reader does not serve — `llms.txt` under the
+            // edition, before it was served there — off to `…/llms.txt/`
+            // and a 404 one hop further on. A name nobody carries is a
+            // refusal where it was asked for.
+            _ if carries(&format!("{address}.xml")) => {
                 let target = format!("{}{}{address}/", reader.base, reader.prefix);
                 return Ok(redirect(&target));
             }
+            _ => {
+                return Err(ApiError::not_found(format!(
+                    "this documentation carries neither a page `{address}` nor a file of that \
+                     name — a page's address ends in a slash and its projections are `.md` and \
+                     `.xml`"
+                )));
+            }
         },
     };
-    let set = vibe_doc::pages::read_package(&reader.package_dir)
-        .map_err(|e| ApiError::internal(e.to_string()))?;
     let Some(found) = set.pages.iter().find(|p| p.rel == rel) else {
         if let Some(bad) = set.unreadable.iter().find(|p| p.rel == rel) {
             return Err(ApiError::internal(format!(
