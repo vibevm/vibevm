@@ -151,6 +151,9 @@ A0.27 в плане отсутствует.
 | A4.10 | `3e0efc08` `feat(web): lay down the semantic tokens and both themes`; `90f21883` `feat(web): build the shell components on the tokens` | палитра с источниками построчно, тринадцать семантических имён в трёх блоках, шрифты 476 КБ под OFL; аудит APCA — собственная реализация, 40 гейтуемых пар, 0 ниже порога после минта; минт схлопнул `--text-2`/`--text-3` в один тон и сдвинул тёмный `--accent` с `#D97757` на `#DC8264` — вопросы дизайн-ревью A4.14; тринадцать компонентов без поведения |
 | A4.2, A4.9 | `8ed08eca` `feat(web): fix the island contract against the doc manifest` | TypeScript-типы из JTD целью `xtask codegen` (`check-codegen` диффит и их); один код — две конфигурации (`base` `/` и `/doc/`, `routesDir`), остров через `define`; `href()` единственный источник адресов, тест ловит литералы; страницы считаются по манифесту против вывода генератора (3 и 1); шаг панели 50; баг беты Qwik: `<RouterOutlet />` в layout — вечный цикл (X-034) |
 | — | отчёт `findings/WORKER-REPORT-P4-O1.md` | инлайн-скрипт темы требует `sha256` в CSP сайта (X-035, атом развёртывания) |
+| A4.16 | `2780ba06` `feat(web): port the landing onto the shared design system` | лендинг `/` и `/ru/` на компонентах `design/`, тексты `i18n.ts` дословно, мета-теги один к одному, `og.png` рисует сборка, корневые файлы генерирует `tools/root-files.mjs`; website-id Umami и ключ IndexNow — из окружения сборки, в репозитории пустые умолчания; статическая сборка 10 из 10 страниц; правило годового кеша nginx всё ещё на `/_astro/`, а ассеты теперь в `/assets/` и `/build/` (X-040) |
+| A4.17 | `131bdd1d` `test(web): pin landing parity against the Astro build` | 17 общих адресов, 35 осознанных отличий по 14 правилам, 0 необъяснённых; тест поймал два настоящих дефекта до сдачи (`/ru/` с `lang="en"`, двойная шапка) — предсказание 13 подтверждено в обе стороны; скриншоты 1440/390 обеих тем — `findings/P4-O5-shots/` |
+| — | отчёт `findings/WORKER-REPORT-P4-O5.md` | два общих файла (`design/src/index.ts`, `tools/build.mjs`) закоммичены со строками соседнего воркера — без них не собирались (J-090) |
 
 ## Обновления плана стюарда {#steward}
 
@@ -173,7 +176,15 @@ A0.27 в плане отсутствует.
 
 | Дата проверки | Провайдер | Источник | Имена |
 |---|---|---|---|
-| — | — | проверяется на сборке сайта (фаза 4); эталон — `robots.txt` лендинга (A0.26) | — |
+| 2026-09-12 | OpenAI | `developers.openai.com/api/docs/bots` | `GPTBot`, `ChatGPT-User`, `OAI-SearchBot` (`OAI-AdsBot` документирован, не включён — рекламы на сайте нет) |
+| 2026-09-12 | Anthropic | `support.claude.com` (статья 8896518) | `ClaudeBot`, `Claude-User`, `Claude-SearchBot`; `anthropic-ai` и `Claude-Web` документацией не названы — сняты (попадают под `User-agent: *`) |
+| 2026-09-12 | Google | `developers.google.com/search/docs/crawling-indexing/google-common-crawlers` | `Google-Extended` и набор Googlebot |
+| 2026-09-12 | Perplexity | `docs.perplexity.ai/guides/bots` | `PerplexityBot`, `Perplexity-User` |
+| 2026-09-12 | Common Crawl | `commoncrawl.org/ccbot` | `CCBot` |
+| 2026-09-12 | Apple | `support.apple.com/en-us/119829` (по цитатам в поиске: прямая выборка трижды оборвана) | `Applebot`, `Applebot-Extended` |
+| 2026-09-12 | Amazon | `developer.amazon.com/amazonbot` | `Amazonbot`, `Amzn-SearchBot`, `Amzn-User` |
+| 2026-09-12 | Meta | `developers.facebook.com/docs/sharing/webmasters/web-crawlers/` | `meta-externalagent`, `meta-externalfetcher` |
+| 2026-09-12 | Yandex | `yandex.com/support/webmaster/robot-workings/check-yandex-robots.html` | `YandexBot` |
 
 ## Покрытие обязательств {#coverage}
 
