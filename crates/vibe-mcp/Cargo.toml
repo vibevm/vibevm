@@ -32,6 +32,10 @@ vibe-package-source.workspace = true
 # `InstallSource`/`NullObserver` names the hosted ports adapt.
 vibe-install.workspace = true
 vibe-wire.workspace = true
+# The `read_doc` tool is a thin surface over the documentation
+# pipeline's page reader — the same four sources a citation resolves
+# through, and no second reading of a page (PROP-057 ##PIPE-LIBRARY).
+vibe-doc.workspace = true
 # The `explain` MCP tool is a thin surface over the shared `vibe-trace`
 # capability, which both the MCP tool and the `vibe explain` CLI call;
 # `requirements_query` injects the same crate's read-only

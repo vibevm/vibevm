@@ -28,7 +28,7 @@ use std::path::Path;
 
 use specmap_core::config::Config;
 use specmap_core::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Warning};
-use specmap_core::scanner::CodeScanner;
+use specmap_core::scanner::{CodeScanner, CompositeScanner, DefaultScanner};
 
 /// A page is not a crate. The sentinel says so plainly, exactly as the
 /// JTD scanner's `<schema>` does for a schema file.
@@ -119,6 +119,141 @@ impl CodeScanner for DocScanner {
         }
         (items, edges, Vec::new())
     }
+}
+
+/// The host's documentation pages — every in-tree package of kind `doc`,
+/// scanned where it lies.
+///
+/// A host's own `spec_roots` do not reach a documentation package: the
+/// pages sit inside a package slot under the project's package root, and
+/// the engine's dialect could not read them there anyway
+/// (`##PIPE-EDGES-HOST-SIDE`). So the policy for WHERE pages live is a
+/// host file — this one — and it is a walk rather than a list: a list of
+/// documentation packages is a list that goes stale the day somebody
+/// opens a translation, and the tree already says which packages are
+/// documentation.
+///
+/// What it buys is that `vibe explain`, `vibe query` and `vibe select`
+/// answer «who documents this rule» — over a map built fresh, which is
+/// the posture those three already take.
+pub struct HostDocScanner {
+    /// `(package directory relative to the root, its coordinate)`.
+    packages: Vec<(String, String)>,
+}
+
+impl HostDocScanner {
+    /// Find the in-tree documentation packages of the project at `root`.
+    pub fn of(root: &Path) -> HostDocScanner {
+        HostDocScanner {
+            packages: doc_packages(root),
+        }
+    }
+
+    /// Whether this project holds any documentation at all. A tree with
+    /// none needs no composition, and saying so lets a caller keep the
+    /// plain build.
+    pub fn is_empty(&self) -> bool {
+        self.packages.is_empty()
+    }
+}
+
+impl CodeScanner for HostDocScanner {
+    fn id(&self) -> &'static str {
+        "vibe-doc-pages-host"
+    }
+
+    fn scan(&self, root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
+        let mut items = Vec::new();
+        let mut edges = Vec::new();
+        let mut warnings = Vec::new();
+        for (rel, coordinate) in &self.packages {
+            let (mut found, mut minted, mut said) =
+                DocScanner::new(coordinate.clone()).scan(&root.join(rel), cfg);
+            // The package scanned itself at its own root, so every path it
+            // produced is package-relative; the host map addresses files
+            // from the project root.
+            for item in &mut found {
+                item.file = format!("{rel}/{}", item.file);
+            }
+            for edge in &mut minted {
+                edge.file = format!("{rel}/{}", edge.file);
+            }
+            for warning in &mut said {
+                warning.file = format!("{rel}/{}", warning.file);
+            }
+            items.append(&mut found);
+            edges.append(&mut minted);
+            warnings.append(&mut said);
+        }
+        (items, edges, warnings)
+    }
+}
+
+/// Build the project's traceability map in memory, with its documentation
+/// in it.
+///
+/// This is what the three read-only queries build from. A project with no
+/// documentation gets exactly the map it got before — the composition is
+/// skipped rather than made empty, so nothing about the plain case moves.
+pub fn host_map(root: &Path, cfg: &Config) -> specmap_core::generated::specmap::Specmap {
+    let pages = HostDocScanner::of(root);
+    if pages.is_empty() {
+        return specmap_core::index::build(root, cfg);
+    }
+    let default = DefaultScanner::new();
+    let composite = CompositeScanner::new(vec![&default as &dyn CodeScanner, &pages]);
+    specmap_core::index::build_with_scanner(root, cfg, &composite)
+}
+
+/// Walk the project's package root for slots declaring `kind = "doc"`.
+///
+/// Read as TOML data and not through the typed manifest: the question is
+/// «does this slot call itself documentation», and a strict parse would
+/// drop a package over a field this walk never looks at — leaving its
+/// pages silently out of the map, which is the one failure mode a
+/// coverage answer must not have.
+fn doc_packages(root: &Path) -> Vec<(String, String)> {
+    let packages_root = root.join(vibe_core::layout::current_packages_root());
+    let mut found = Vec::new();
+    let Ok(groups) = std::fs::read_dir(&packages_root) else {
+        return found;
+    };
+    for group in groups.flatten().map(|e| e.path()).filter(|p| p.is_dir()) {
+        let Ok(names) = std::fs::read_dir(&group) else {
+            continue;
+        };
+        for name in names.flatten().map(|e| e.path()).filter(|p| p.is_dir()) {
+            let Ok(versions) = std::fs::read_dir(&name) else {
+                continue;
+            };
+            for slot in versions.flatten().map(|e| e.path()).filter(|p| p.is_dir()) {
+                if let Some(coordinate) = doc_coordinate(&slot)
+                    && let Ok(rel) = slot.strip_prefix(root)
+                {
+                    found.push((forward_slashed(rel), coordinate));
+                }
+            }
+        }
+    }
+    found.sort();
+    found
+}
+
+/// `<group>/<name>` when the slot's manifest declares kind `doc`.
+fn doc_coordinate(slot: &Path) -> Option<String> {
+    let text = std::fs::read_to_string(slot.join("vibe.toml")).ok()?;
+    let value: toml::Value = toml::from_str(&text).ok()?;
+    let package = value.get("package")?;
+    if package.get("kind")?.as_str()? != "doc" {
+        return None;
+    }
+    let group = package.get("group")?.as_str()?;
+    let name = package.get("name")?.as_str()?;
+    Some(format!("{group}/{name}"))
+}
+
+fn forward_slashed(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
 }
 
 /// The symbol a page takes in the map: its address inside the package,

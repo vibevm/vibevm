@@ -210,7 +210,10 @@ pub fn search(map: &Specmap, filters: &Filters) -> SearchOut {
 /// no build logic of their own.
 pub fn query(root: &Path, filters: &Filters) -> Result<SearchOut> {
     let cfg = specmap_core::config::Config::load(root)?.unwrap_or_default();
-    let map = specmap_core::index::build(root, &cfg);
+    // The documentation is in the map the three queries build, so a
+    // `kind:doc-page` filter finds pages and `lacks:documents` finds the
+    // rules nobody explains.
+    let map = crate::docscan::host_map(root, &cfg);
     Ok(search(&map, filters))
 }
 

@@ -330,7 +330,7 @@ fn reach(key: NodeKey, step: u32, visited: &mut HashMap<NodeKey, u32>, next: &mu
 /// shared entry both surfaces call; the CLI/MCP add no build logic of their own.
 pub fn query(root: &Path, parsed: &ParsedQuery, limit: usize) -> Result<SelectOut> {
     let cfg = specmap_core::config::Config::load(root)?.unwrap_or_default();
-    let map = specmap_core::index::build(root, &cfg);
+    let map = crate::docscan::host_map(root, &cfg);
     Ok(select(&map, parsed, limit))
 }
 
