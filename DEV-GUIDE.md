@@ -420,4 +420,4 @@ cargo run -p vibe-cli -- doc serve --port 8413
 
 **The local reader binds `127.0.0.1` and only that.** There is no host flag and there is not going to be one: the reader serves proprietary packages' documentation, and one reachable from another machine is serving it to them. It sends a content policy naming no external source, no CORS header at all, and `frame-ancestors 'none'` unless `--frame-ancestor <origin>` names an editor's webview.
 
-Node is not needed for any of this. The site package `org.vibevm.doc/web` (Qwik 2.0) is built only on the server; its Node and pnpm pins and the MSYS path caveat are recorded in PROP-057 §12 and join this guide together with the package, in phase 4.
+Node is not needed for any of this. The site package `org.vibevm.doc/web` (Qwik 2.0) is built only on the server; its Node and pnpm pins, the floor and the MSYS path caveat are in [§2.6](#26-node-and-pnpm-for-the-site).
