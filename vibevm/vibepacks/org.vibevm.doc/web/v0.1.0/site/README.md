@@ -80,6 +80,35 @@ decision is taken once per session and never against an explicit click.
 Served one day by something that can read a header, it becomes a 302 and
 `src/reader/catalogue.ts` goes away.
 
+## The agent surfaces
+
+Under every package address lie the files a machine reads: `<page>.md` and
+`<page>.xml` beside each page, the four `llms` tiers, `manifest.json` and
+the card images. **They are copied, never computed** — the pipeline wrote
+them from the package's own source, with the block numbers it assigned
+(R-26) and the citations it resolved, and a site build producing its own
+Markdown out of a rendered island would be a second renderer disagreeing
+with the first.
+
+`VIBE_DOC_OUT` names the `vibe doc build` outputs to copy, separated by
+the platform's path delimiter; one package rendered in three projections
+is three directories sharing a coordinate, and all of them are read. A
+tree for a language is placed under the SOURCE package's coordinate with
+the language segment in front (D-06); a page an adaptation does not carry
+takes the source's surfaces, exactly as its page takes the source's text.
+The default, when the environment names nothing, is
+`src/fixtures/doc-build` — which is what makes a plain `pnpm build:static`
+produce a site whose every link resolves.
+
+Two documents are the SITE's own rather than any package's, and are
+composed from the manifests: `/doc/llms.txt`, the arXiv-shaped catalogue
+of the editions carried, and `/doc/manifest.json`, the same for a machine
+that will act on it. `/doc/resolve/` is the resolver: on a static host a
+citation cannot be answered with a 302, so the build publishes the map as
+`/doc/resolve.json` and one hand-written page that reads it in the browser
+and follows it (F-15). The local reader, which has a server, keeps the
+route instead.
+
 ## The landing
 
 `/` and `/ru/` are the landing the domain has served since it opened, moved

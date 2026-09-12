@@ -21,15 +21,36 @@
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  mkdirSync,
   readdirSync,
   readFileSync,
   rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { siteConfig } from "../site/src/config.ts";
+import { packagePath, href } from "../site/src/lib/href.ts";
+import { catalogueLlmsTxt, siteManifest } from "../site/src/seo/catalogue.ts";
+import {
+  LATEST,
+  addressesOf,
+  coordinateOf,
+  docFileHref,
+  editionsOf,
+  sourceOf,
+} from "../site/src/seo/editions.ts";
+import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
+import { resolveTableOf, resolverPage } from "../site/src/seo/resolve.ts";
+import {
+  copySurfaces,
+  fullCorpus,
+  mediaMapOf,
+  readTrees,
+  treePaths,
+} from "./doc-surfaces.mjs";
 import { writeRootFiles } from "./root-files.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -145,6 +166,92 @@ function landingRouteCount() {
 }
 
 /**
+ * The documentation trees this build publishes the surfaces of, read
+ * before anything is rendered.
+ *
+ * Before, because one thing in them is needed by the pages themselves:
+ * the address of the composed card a page names in `og:image`. The
+ * pipeline writes it under a content hash and the manifest does not
+ * carry the name (X-042), so the build finds it in the tree and hands
+ * the map to both Vite runs through the environment — the same channel
+ * the origin and the analytics id arrive on (`site/src/config.ts`).
+ */
+const TREES = mode === "static" ? readTrees(treePaths()) : [];
+const EDITIONS = editionsOf(manifests());
+const MEDIA = mode === "static" ? mediaMapOf(TREES, EDITIONS) : {};
+
+/**
+ * Everything the documentation half of the domain publishes beside its
+ * pages: the projections and `llms` tiers copied from the pipeline, the
+ * catalogue and manifest composed from the page manifests, the sitemap
+ * index, and the resolver with its table.
+ *
+ * One step, after the pages and before the root files, because all of it
+ * describes the pages that were just written and the root files describe
+ * it in turn: `robots.txt` names the sitemap, the root `llms.txt` names
+ * the catalogue.
+ */
+function writeDocumentationSurfaces(outDirName) {
+  const out = join(SITE_ROOT, outDirName);
+  const config = siteConfig(process.env);
+  const source = sourceOf(EDITIONS);
+  const addresses = addressesOf(EDITIONS);
+  const number = source.manifest.package.version;
+  let written = 0;
+
+  const write = (address, contents) => {
+    const file = join(out, address.replace(/^\/+/, "").split("/").join(sep));
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, contents, "utf8");
+    written += 1;
+  };
+
+  const copied = copySurfaces(TREES, EDITIONS, out);
+
+  /* The page manifest of each edition, at both spellings of the version.
+     It is the manifest the pipeline wrote, re-serialised rather than
+     re-derived: the site never recomputes what Rust computed, and the
+     one thing it adds is the address the bytes are served at. */
+  for (const edition of EDITIONS) {
+    for (const version of [number, LATEST]) {
+      const base = href(
+        packagePath(coordinateOf(source, edition.segment, version)),
+      );
+      write(
+        `${base}manifest.json`,
+        `${JSON.stringify(edition.manifest, null, 2)}\n`,
+      );
+    }
+  }
+
+  write(
+    docFileHref("manifest.json"),
+    `${JSON.stringify(siteManifest(EDITIONS, addresses), null, 2)}\n`,
+  );
+  write(
+    docFileHref("llms.txt"),
+    catalogueLlmsTxt(config.origin, EDITIONS, addresses),
+  );
+  const corpus = fullCorpus(TREES, EDITIONS, config.origin);
+  if (corpus !== null) write(docFileHref("llms-full.txt"), corpus);
+
+  write(
+    docFileHref("resolve.json"),
+    `${JSON.stringify(resolveTableOf(addresses), null, 2)}\n`,
+  );
+  write(docFileHref("resolve/index.html"), resolverPage());
+
+  process.stdout.write(
+    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, resolver\n`,
+  );
+  if (copied.unplaced.length > 0) {
+    process.stdout.write(
+      `build (${mode}): ${copied.unplaced.length} tree(s) the page library does not carry — their surfaces are published at their own coordinate and nothing on the site links them: ${copied.unplaced.join(", ")}\n`,
+    );
+  }
+}
+
+/**
  * A page that asks not to be indexed does not belong in the sitemap.
  *
  * The two say opposite things otherwise: a sitemap is «index this» and
@@ -193,6 +300,7 @@ function vite(configRelative) {
       cwd: SITE_ROOT,
       encoding: "utf8",
       shell: false,
+      env: { ...process.env, [DOC_MEDIA_ENV]: JSON.stringify(MEDIA) },
     },
   );
   process.stdout.write(run.stdout ?? "");
@@ -265,6 +373,8 @@ if (existsSync(stray)) {
 //    domain to describe, and a sitemap of it would name addresses that
 //    exist nowhere.
 if (plan.countsLanding) {
+  writeDocumentationSurfaces(plan.outDir);
+
   const roots = writeRootFiles(plan.outDir);
   process.stdout.write(
     `build (${mode}): root files ${roots.written.join(", ")}; ${roots.faces} font file(s) at /fonts/, ${roots.rewritten} page(s) repointed at the bundled faces, ${roots.crawlers} crawler name(s) from ${roots.sources} provider page(s)\n`,
