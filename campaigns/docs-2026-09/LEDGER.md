@@ -118,7 +118,7 @@ A0.27 в плане отсутствует.
 | A2.1, A2.2, A2.4 | `findings/PACKET-P2-O1.md` | в работе | виды `doc`/`app`, wire-словарь, поля связи/локализации/карточки |
 | A2.8 | `findings/PACKET-P2-O2.md` | `a7bff252` `feat(specdoc): give the documentation genre its seven elements`; отчёт `6422ec88` | словарь — параметр читателя, `when` в слоте (J-071); корпусный тест прибивает 43 читаемые страницы; `audience="agent"` ждёт A2.12 |
 | A2.0, A2.9, A2.10 | `findings/PACKET-P2-O4.md` | в работе | крейт `vibe-doc`, раннер примеров (снимает 15 ждущих `--accept`), генераторы `derived` |
-| A2.12, A2.21 | `findings/PACKET-P2-O5.md` | в работе | аудитория `agent`, doc-пакеты вне долга судейства (X-024) |
+| A2.12, A2.21 | `findings/PACKET-P2-O5.md` | `d608a797` `feat(progress): admit the agent audience`; `b9be9f3b` `chore(facts): keep documentation observed but unjudged`; отчёт `98a91500` | X-024 решён: `[judging] exempt` освобождает и от `--exhaustive`; читатель `vibe facts check` пока не выбирает словарь по виду пакета — хвост в P2-O3 |
 | A2.3, A2.5, A2.6, A2.7 | `findings/PACKET-P2-O3.md` | ждёт P2-O1 | индекс, гейт, скаффолд, прогрев для `doc` |
 
 ## Фаза 3 — ранние атомы {#phase-3-early}

@@ -73,6 +73,19 @@ A0.21 на стороне сайта, в индексе не делать, ес�
 (REL-WARMUP-CLOSURE). Коммит:
 `feat(cache): warm a doc package's subjects and source so citations resolve offline`.
 
+## Хвост от P2-O5 (тот же коммит, что A2.5, или отдельный `chore(cli)`)
+
+Воркер P2-O5 (`d608a797`, `b9be9f3b`) оставил на границе своего периметра
+две правки в `crates/vibe-cli/src`, которые твои: (1) строки
+`(expected user|author|dev)` в сообщениях об аудитории устарели — теперь
+четыре значения; (2) `crates/vibe-cli/src/commands/progress/grounding.rs`
+(около строки 122) выбирает словарь читателя пивота — для пакета вида
+`doc` он обязан брать `Vocabulary::Doc` (`from_xml_with`), иначе `vibe
+facts check` отказывает первой же странице руководства. После (2) добавь
+пакет руководства в наблюдение `facts.toml` так, как решил P2-O5 (X-024:
+`[judging] exempt` освобождает и от `--exhaustive`), и убедись, что
+`vibe facts check --exhaustive` остаётся clean.
+
 ## Гейты каждого атома
 
 `cargo fmt --all --check`, `cargo build --workspace`, тесты тронутых крейтов,
