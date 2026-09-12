@@ -349,6 +349,38 @@ fn relation(parsed: &toml::Value, key: &str) -> Vec<(String, String)> {
     }
 }
 
+/// The language a documentation package is written in — `[i18n]
+/// canonical`, or the project default when the manifest declares none.
+///
+/// One documentation package is one language
+/// (PROP-057 `##LOC-PACKAGE-PER-LANGUAGE`),
+/// so this is a property of the PACKAGE and never of a page. The style
+/// linter asks it to pick the banned list; the build asks it to refuse a
+/// `--lang` the package does not hold.
+///
+/// ```
+/// let dir = tempfile::tempdir().unwrap();
+/// std::fs::write(
+///     dir.path().join("vibe.toml"),
+///     "[package]\nname = \"m-ru\"\n\n[i18n]\ncanonical = \"ru\"\n",
+/// )
+/// .unwrap();
+///
+/// assert_eq!(vibe_doc::manifest::language(dir.path()).unwrap(), "ru");
+/// ```
+pub fn language(package_dir: &Path) -> Result<String> {
+    let path = package_dir.join(crate::derived::manifest::MANIFEST);
+    let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
+    let parsed: toml::Value = toml::from_str(&text)
+        .map_err(|e| DocError::manifest(&path, format!("does not parse: {e}")))?;
+    Ok(parsed
+        .get("i18n")
+        .and_then(|i| i.get("canonical"))
+        .and_then(toml::Value::as_str)
+        .unwrap_or(vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE)
+        .to_owned())
+}
+
 /// Every audience of a manifest, as the wire spells them — the order the
 /// vocabulary is declared in, which is the order a card shows them.
 pub const AUDIENCES: &[Audience] = &[

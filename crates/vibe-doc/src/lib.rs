@@ -81,6 +81,14 @@
 //!   `derived` text, a translation's borrowed examples — travels in
 //!   [`content::Content`].
 //!
+//! * [`style`] — the mechanical half of the style law. Tics from a list
+//!   the package ships per language, sentence and paragraph length by
+//!   block kind, a glossary term used before anybody introduced it, three
+//!   terms in one sentence, a heading the law forbids by name. It reports
+//!   and never edits: prose is written by a person, and a linter that
+//!   could rewrite a sentence is a linter authors write FOR
+//!   (`##STYLE-LINT`).
+//!
 //! Below all four sits [`pages`], the one place that reads a
 //! documentation package: the pivot's documentation vocabulary is a
 //! parameter of the READER, and choosing it from the package's kind is
@@ -137,6 +145,7 @@ pub mod md;
 pub mod media;
 pub mod numbering;
 pub mod pages;
+pub mod style;
 pub mod translations;
 pub mod xml;
 
