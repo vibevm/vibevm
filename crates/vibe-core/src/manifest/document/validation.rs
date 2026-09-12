@@ -4,7 +4,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 
 use crate::error::{Error, Result};
 use crate::manifest::extension::validate_extension_declarations;
-use crate::manifest::package::{MCP_ARG_VARS, validate_visibility};
+use crate::manifest::package::{
+    ABSTRACT_LIMIT, MCP_ARG_VARS, coordinate_form_is_valid, media_path_is_inside_package,
+    validate_visibility, version_constraint_is_valid,
+};
 use crate::manifest::plane::validate_plane;
 
 use super::Manifest;
@@ -162,6 +165,7 @@ impl Manifest {
         // that will not parse can never be serialised either.
         validate_plane(self).map_err(|reason| Error::InvalidManifest { reason })?;
         self.validate_mcp_kind()?;
+        self.validate_documentation()?;
         Ok(())
     }
 
@@ -253,4 +257,215 @@ impl Manifest {
         }
         Ok(())
     }
+
+    /// The documentation laws of PROP-057: what a `doc` package owes,
+    /// what only a `doc` package may say, and the two keys that read
+    /// only so the refusal can name the thing that works.
+    ///
+    /// Every edge here is a coordinate, never a resolved package. The
+    /// subject of the core manual is the host's own project coordinate,
+    /// which no registry can hand back, so the form is what is checked
+    /// and selectability is left to the gate (`##REL-HOST-SUBJECT`).
+    fn validate_documentation(&self) -> Result<()> {
+        use crate::package_ref::PackageKind;
+
+        let kind = self.package.as_ref().map(|p| p.kind);
+        let is_doc = kind == Some(PackageKind::Doc);
+
+        // The two keys an author will reach for and must not find.
+        // `[translations]` is refused at the wire boundary, where the
+        // table physically arrives; `lang` is refused here, because it
+        // rides on `[package]`, the one table both halves share.
+        if let Some(meta) = &self.package
+            && meta.lang.is_some()
+        {
+            return Err(Error::InvalidManifest {
+                reason: "`lang` is not a [package] field — a package's language is \
+                         `[i18n].canonical` (PROP-003 §2.7), and two fields for one fact \
+                         is how they drift apart \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD; \
+                          fix: write `canonical = \"<BCP-47 tag>\"` under [i18n] instead)"
+                    .to_string(),
+            });
+        }
+
+        // `[[documents]]` — required in documentation, meaningless
+        // anywhere else: declaring a subject is what makes a package
+        // documentation, so the kind and the table cannot disagree.
+        if is_doc && self.documents.is_empty() {
+            return Err(Error::InvalidManifest {
+                reason: "a `doc`-kind package must declare at least one [[documents]] subject — \
+                         documentation that documents nothing has no place to be shown \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED; \
+                          fix: add [[documents]] with the subject's `package` and a `version` \
+                          constraint)"
+                    .to_string(),
+            });
+        }
+        if !is_doc && !self.documents.is_empty() {
+            return Err(Error::InvalidManifest {
+                reason: format!(
+                    "[[documents]] is legal only in `doc`-kind packages (this manifest is {}) \
+                     — the table IS the claim to be documentation \
+                     (violates spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-DOCUMENT; \
+                      fix: set [package] kind = \"doc\", or drop the [[documents]] table)",
+                    kind.map_or("not a package".to_string(), |k| format!("kind = \"{k}\"")),
+                ),
+            });
+        }
+        for subject in &self.documents {
+            check_coordinate("[[documents]].package", &subject.package)?;
+            check_constraint("[[documents]].version", &subject.version)?;
+        }
+
+        // `[translates]` — an adaptation is a package of its own, so
+        // only a documentation package can be one.
+        if let Some(translates) = &self.translates {
+            if !is_doc {
+                return Err(Error::InvalidManifest {
+                    reason: format!(
+                        "[translates] is legal only in `doc`-kind packages (this manifest is {}) \
+                         — a translation of documentation is itself documentation \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE; \
+                          fix: set [package] kind = \"doc\", or drop the [translates] table)",
+                        kind.map_or("not a package".to_string(), |k| format!("kind = \"{k}\"")),
+                    ),
+                });
+            }
+            check_coordinate("[translates].package", &translates.package)?;
+            check_constraint("[translates].version", &translates.version)?;
+        }
+
+        // `[documentation]` — the subject's pointer, legal in any kind,
+        // and deliberately unversioned.
+        if let Some(documentation) = &self.documentation {
+            if let Some(primary) = &documentation.primary {
+                check_coordinate("[documentation].primary", primary)?;
+                if documentation.official.iter().any(|c| c == primary) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[documentation] names `{primary}` as both `primary` and `official` \
+                             — `primary` is already official, and the repetition would show the \
+                             same package twice \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED; \
+                              fix: remove it from the `official` list)"
+                        ),
+                    });
+                }
+            }
+            for coordinate in &documentation.official {
+                check_coordinate("[documentation].official", coordinate)?;
+            }
+        }
+
+        // `[media]` — paths inside this package's own tree. The gate
+        // opens the files; this only refuses a shape that could point
+        // outside the package at all.
+        if let Some(media) = &self.media {
+            for (field, path) in media.declared() {
+                if !media_path_is_inside_package(path) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[media].{field} `{}` is not a path inside this package — images are \
+                             source files of the package tree, never absolute paths, parent \
+                             escapes or foreign addresses \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE; \
+                              fix: commit the image under the package and name it relatively, \
+                              e.g. `media/icon.png`)",
+                            path.display()
+                        ),
+                    });
+                }
+            }
+        }
+
+        // The card. Required of documentation because the index and the
+        // shelf must show a name and a paragraph without downloading
+        // the package.
+        let Some(meta) = &self.package else {
+            return Ok(());
+        };
+        if is_doc && meta.title.as_ref().is_none_or(|t| t.trim().is_empty()) {
+            return Err(Error::InvalidManifest {
+                reason: "a `doc`-kind package must carry a `title` — the coordinate is its \
+                         identity, but the title is what a reader sees on a shelf, in the \
+                         language selector and in the page heading \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-TITLE; \
+                          fix: add `title = \"…\"` under [package])"
+                    .to_string(),
+            });
+        }
+        match &meta.abstract_text {
+            None => {
+                if is_doc {
+                    return Err(Error::InvalidManifest {
+                        reason: "a `doc`-kind package must carry an `abstract` — four answers, \
+                                 not a slogan: what it covers, for whom, what it assumes known, \
+                                 what it leaves out \
+                                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT; \
+                                  fix: add `abstract = \"\"\"…\"\"\"` under [package]; `description` \
+                                  stays the one-line subtitle)"
+                            .to_string(),
+                    });
+                }
+            }
+            Some(text) => {
+                if is_doc && text.trim().is_empty() {
+                    return Err(Error::InvalidManifest {
+                        reason: "a `doc`-kind package's `abstract` is empty — four answers, not \
+                                 an empty string \
+                                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT; \
+                                  fix: say what it covers, for whom, what it assumes known, and \
+                                  what it leaves out)"
+                            .to_string(),
+                    });
+                }
+                let length = text.chars().count();
+                if length > ABSTRACT_LIMIT {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "`abstract` is {length} characters, over the {ABSTRACT_LIMIT} the card \
+                             allows — the abstract is read on a shelf card, and past that length \
+                             it stops being one \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT; \
+                              fix: keep the four answers and move the rest onto the entry page)"
+                        ),
+                    });
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+/// One subject/documentation coordinate: `<group>/<name>`, no version,
+/// no `kind:` prefix (PROP-057 `##REL-DOCUMENTATION-UNVERSIONED`).
+fn check_coordinate(field: &str, value: &str) -> Result<()> {
+    if coordinate_form_is_valid(value) {
+        return Ok(());
+    }
+    Err(Error::InvalidManifest {
+        reason: format!(
+            "{field} `{value}` is not a coordinate — a documentation edge names \
+             `<group>/<name>` and nothing else: no version, no `kind:` prefix \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED; \
+              fix: write the coordinate alone, e.g. `org.vibevm.core/vibevm`)"
+        ),
+    })
+}
+
+/// One subject-version constraint — the same grammar a dependency's
+/// version takes, so one documentation version can serve a range.
+fn check_constraint(field: &str, value: &str) -> Result<()> {
+    if version_constraint_is_valid(value) {
+        return Ok(());
+    }
+    Err(Error::InvalidManifest {
+        reason: format!(
+            "{field} `{value}` is not a semver constraint — the edge carries a RANGE, because \
+             one documentation version serves many subject versions \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED; \
+              fix: write a constraint such as `^1.0`, `>=1, <2` or `=1.2.3`)"
+        ),
+    })
 }

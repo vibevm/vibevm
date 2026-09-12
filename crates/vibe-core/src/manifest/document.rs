@@ -47,9 +47,10 @@ use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
 use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
-    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, EmbeddedSourceDecl,
-    FeaturesTable, HooksDecl, LinkType, ManifestWire, McpServerDecl, Obsoletes, OverrideTable,
-    PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, VisibilityMeta,
+    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
+    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, LinkType, ManifestWire,
+    McpServerDecl, MediaDecl, Obsoletes, OverrideTable, PackageMeta, Provides, Recommends,
+    Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl, VisibilityMeta,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -151,6 +152,31 @@ pub struct Manifest {
     /// together with the exact-pin law on the package's requirements.
     #[serde(default, rename = "mcp_server", skip_serializing_if = "Vec::is_empty")]
     pub mcp_servers: Vec<McpServerDecl>,
+
+    /// `[[documents]]` — the subjects this documentation documents
+    /// (PROP-057 §4). REQUIRED and non-empty in a `doc` package,
+    /// forbidden in every other kind: declaring a subject is what makes
+    /// a package documentation, so the two cannot disagree.
+    #[serde(default, rename = "documents", skip_serializing_if = "Vec::is_empty")]
+    pub documents: Vec<DocumentsDecl>,
+
+    /// `[documentation]` — the pointer a SUBJECT writes at its own
+    /// documentation, legal in a package of any kind (PROP-057 §4).
+    /// The edge from above is what makes documentation official: three
+    /// contributors cannot fight over the word, because the subject
+    /// assigns it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub documentation: Option<DocumentationDecl>,
+
+    /// `[translates]` — the documentation this package adapts into
+    /// another language (PROP-057 §5). Legal only in a `doc` package.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub translates: Option<TranslatesDecl>,
+
+    /// `[media]` — the card's images, as source files in this package's
+    /// own tree (PROP-057 §7). Optional for every kind.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub media: Option<MediaDecl>,
 
     /// `[hooks]` — pre/post-install scripts this package runs in its slot
     /// (PROP-020). Universal, not bridge-only (package-role).
@@ -471,6 +497,9 @@ impl Manifest {
 #[cfg(test)]
 #[path = "document/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "document/tests_documentation.rs"]
+mod tests_documentation;
 #[cfg(test)]
 #[path = "document/tests_extension_controls.rs"]
 mod tests_extension_controls;

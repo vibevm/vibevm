@@ -35,6 +35,7 @@ use super::purl::Purl;
 
 mod binary;
 mod deps;
+mod documentation;
 mod embedded_source;
 mod features;
 mod hooks;
@@ -46,6 +47,12 @@ mod wire;
 
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
+pub use documentation::{
+    ABSTRACT_LIMIT, DocumentationDecl, DocumentsDecl, MediaDecl, TranslatesDecl,
+};
+pub(crate) use documentation::{
+    coordinate_form_is_valid, media_path_is_inside_package, version_constraint_is_valid,
+};
 pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind};
 pub use features::FeaturesTable;
 pub use hooks::HooksDecl;
@@ -120,6 +127,36 @@ pub struct PackageMeta {
     pub license: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    /// `[package].title` — the human-readable display name: what the
+    /// site's shelves, the language selector, the page heading and the
+    /// catalogue show. Uniqueness is not checked and identity stays the
+    /// coordinate; the publisher is shown beside it, so two `VibeVM
+    /// Manual`s never become one thing (PROP-057 `##CARD-TITLE`).
+    /// REQUIRED for `kind = "doc"`, optional everywhere else.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+    /// `[package].abstract` — the four answers a reader needs before
+    /// opening anything: what it covers, for whom, what it assumes
+    /// known, what it leaves out. `description` stays the one-line
+    /// subtitle beside it; this is the paragraph, bounded at
+    /// [`ABSTRACT_LIMIT`] characters, and the entry page inserts it
+    /// rather than restating it (PROP-057
+    /// `##CARD-DESCRIPTION-AND-ABSTRACT`). REQUIRED for `kind = "doc"`.
+    #[serde(default, rename = "abstract", skip_serializing_if = "Option::is_none")]
+    pub abstract_text: Option<String>,
+    /// `[package].lang` — **refused, and read only so the refusal can
+    /// say why.**
+    ///
+    /// A documentation package does have a language, and an author will
+    /// reach for this key: the campaign plan that preceded PROP-057
+    /// named it. But the manifest already had a field for «what
+    /// language is this written in» — `[i18n].canonical` of PROP-003 —
+    /// and two fields for one fact is how they drift. So the key parses
+    /// and `validate` refuses it by name, pointing at the one that
+    /// works (PROP-057 `##LOC-LANGUAGE-FIELD`). It is never serialised:
+    /// no valid manifest carries it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lang: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub homepage: Option<String>,
     #[serde(default)]
