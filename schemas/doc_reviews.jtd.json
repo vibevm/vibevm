@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "description": "`maintenance/reviews.toml` — when each page of a documentation package was last READ ALOUD and by whom, plus the date of the last full reconciliation (PROP-057 `##OBS-MAINTENANCE-TOOLS`, `MAINTENANCE.md` §2.2 and §3). It is authored data and never a generated record: a machine can tell that a citation resolves, and only a person can tell that the prose around it still reads. The file states «when somebody read this», never «what it was checked against» — there are no revisions, hashes or version marks in it, because the seventh edition removed every shape that needed a history (`##OBS-NOTHING-LEAKS`). The order of its rows is also the order of the «page of the week». Source of truth for `crates/vibe-wire/src/generated/doc_reviews/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_reviews"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "page": {
+      "elements": { "ref": "page_review" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One row per page that has been read aloud at least once, in the order the reading rota visits them. A page with no row has never been read aloud, which the queue reports as exactly that rather than as an age."
+      }
+    }
+  },
+  "optionalProperties": {
+    "reconciled": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The date of the last full reconciliation, `YYYY-MM-DD`. Absent until the first one happens; the queue then counts the days since, against the quarterly promise the team made itself (`MAINTENANCE.md` §2.4)."
+      }
+    }
+  },
+  "definitions": {
+    "page_review": {
+      "metadata": {
+        "description": "One page's last reading."
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The page's address inside the package, forward-slashed and relative to the spec root — `model/boot-lane.xml`."
+          }
+        },
+        "read": {
+          "type": "string",
+          "metadata": {
+            "description": "The date it was last read aloud, `YYYY-MM-DD`. A date and not a timestamp: the fact recorded is that somebody sat down with the page on that day, and an hour would be precision nobody has."
+          }
+        },
+        "by": {
+          "type": "string",
+          "metadata": {
+            "description": "Who read it — a name a person recognises, so a queue row can be discussed with the reader."
+          }
+        }
+      }
+    }
+  }
+}

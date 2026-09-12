@@ -10,6 +10,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod surface;
+pub mod todo;
 
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -63,6 +64,7 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
         DocCommand::Serve(serve) => run_serve(serve, env),
         DocCommand::Surface(record) => surface::run_surface(record, env),
         DocCommand::Diff(diff) => surface::run_diff(diff, env),
+        DocCommand::Todo(queue) => todo::run_todo(queue, env),
     }
 }
 
