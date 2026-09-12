@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "package": {
+    "group": "com.example.docs",
+    "name": "fixture-manual-ru",
+    "version": "0.1.0",
+    "publisher": "com.example.docs",
+    "title": "Фикстурное руководство",
+    "description": "Адаптация фикстурного руководства, в которой одной страницы намеренно нет.",
+    "abstract": "Что покрывает: одну страницу источника из двух — вторая намеренно не переведена, чтобы фоллбэк было на чём собрать.\nДля кого: для того, кто меняет оболочку сайта.\nЧто предполагает известным: ничего.\nЧего не покрывает: всё остальное.",
+    "lang": "ru",
+    "status": "community",
+    "subjects": [
+      {
+        "package": "com.example/subject",
+        "version": "^1.0",
+        "status": "community"
+      }
+    ],
+    "translation": {
+      "package": "com.example.docs/fixture-manual",
+      "version": "^0.1",
+      "status": "official"
+    },
+    "audiences": [
+      "user",
+      "dev"
+    ],
+    "published_at": "2026-09-02T12:00:00Z",
+    "rendered_at": "2026-09-12T09:00:00Z"
+  },
+  "pages": [
+    {
+      "path": "guide/every-block.xml",
+      "title": "Каждый блок по разу",
+      "genre": "task",
+      "audiences": [
+        "user",
+        "dev"
+      ],
+      "anchors": [
+        "root",
+        "LEAD",
+        "prose",
+        "ANCHORED-ITEM",
+        "verifiable",
+        "varying",
+        "for-codex",
+        "footnotes"
+      ],
+      "summary": "Эта страница использует каждый блок жанра документации **по разу**, чтобы у бэкенда острова был предмет без пропусков.",
+      "reading_time_min": 1,
+      "reviewed_at": "2026-09-08T00:00:00Z"
+    }
+  ]
+}

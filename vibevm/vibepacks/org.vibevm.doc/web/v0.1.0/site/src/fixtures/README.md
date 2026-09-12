@@ -1,20 +1,32 @@
 # Fixtures
 
-Two files, both **copies**, both taken from the Rust pipeline's own
-goldens. They are here so the site can be built and its page count
-checked before any real documentation package is on the machine.
+Three files. One is a **copy** taken from the Rust pipeline's own golden;
+two are the site's own library, written here. They exist so the site can
+be built, its page count checked and its language machinery exercised
+before any real documentation package is on the machine.
 
-| File | Copied from | Refreshed by |
+| File | Where it comes from | Refreshed by |
 | --- | --- | --- |
-| `island.html` | `crates/vibe-doc/tests/golden/guide-every-block.numbered.html` | `VIBE_DOC_BLESS=1 cargo test -p vibe-doc --test island`, then copy |
-| `manifest.json` | `formats/corpora/doc-manifest/e1/manual.json` | `VIBE_DOC_BLESS=1 cargo test -p vibe-doc --test doc_manifest_wire`, then copy |
+| `island.html` | copy of `crates/vibe-doc/tests/golden/guide-every-block.numbered.html` | `VIBE_DOC_BLESS=1 cargo test -p vibe-doc --test island`, then copy |
+| `manifest.json` | the site's own: the pipeline's `formats/corpora/doc-manifest/e1/manual.json` with a **second page** added | edited here, kept parseable by `manifest.test.ts` |
+| `manifest-ru.json` | the site's own: an **official adaptation** of `manifest.json` that carries only one of its two pages | edited here |
 
-They are inputs, not output: nothing in the site build writes them, and
-nothing here edits them. The island is one page carrying every block of
-the documentation genre once — which is what makes it the right subject
-for the prose stylesheet, since a rule the pipeline can emit and the
-stylesheet has never seen would show up here first.
+The island stays a byte copy, and when it and the golden drift apart the
+golden is right: a page that renders differently from the pipeline's own
+snapshot is the one failure that arrangement exists to catch.
 
-When the two drift apart, the golden is right. Copy it over and look at
-what changed: a page that renders differently from the pipeline's own
-snapshot is the one failure this whole arrangement exists to catch.
+The two manifests are not copies, and the reason is in what they have to
+show. A wire corpus is written to exercise the wire — one package, one
+page, no translation — while the shell has to show a language selector, a
+shelf, a fallback and a page count that is more than one. A second page
+gives the navigation an order to be wrong about; an adaptation that is
+missing that page is what a translation fallback is built and measured
+on (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). Neither invents a field: both
+are the same schema the generator emits, and `manifest.test.ts` parses
+them with the same parser the site uses at build time.
+
+The addresses are the source's. A translation is served under the source
+package's coordinate with a language segment in front of it, never under
+its own name (D-06) — which is exactly what lets the language selector
+lead to the same page with the same fragment. The adaptation's own
+coordinate is what the selector prints as its publisher.
