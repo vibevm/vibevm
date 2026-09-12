@@ -1800,3 +1800,13 @@ structure, and it goes when the file does.
 | @fact:B158-SEVERITY **severity** | P3 — перейти на `.gz`, когда каталог перерастёт мегабайт; бэкенд `flate2` уже прибит к `zlib-rs` (J-069) |
 | @fact:B158-DISPOSITION **disposition** | `open` |
 | @fact:B158-FILED **filed by** | кампания docs-2026-09 (P5-O1, «не сделано» 4; DEFERRALS X-057), 2026-09-12 |
+
+## B-159 — web: каждый `<script>` из `DocumentHead.scripts` несёт пустой атрибут `:`
+
+| поле | значение |
+|---|---|
+| @fact:B159-WHAT **what** | в отрендеренном HTML сайта каждый скрипт головы страницы заканчивается атрибутом с именем `:` и пустым значением: `<script type="application/ld+json" q:container="html" :>` и `<script defer src="/u/s.js" … data-host-url="https://vibevm.org" :>`; так сериализует `@qwik.dev/router` 2.0.0-beta.43 для записей `scripts` без `key` |
+| @fact:B159-EFFECT **effect** | браузеры атрибут игнорируют, скрипты грузятся; это мусор в разметке, который ловит любой строгий HTML-валидатор, и он не наш, а фреймворка |
+| @fact:B159-SEVERITY **severity** | P4 — проверить при пересмотре пина Qwik (X-020, X-034): задать `key` каждой записи или переписать записи через `props`, если стабильная 2.0 не уберёт атрибут сама |
+| @fact:B159-DISPOSITION **disposition** | `open` |
+| @fact:B159-FILED **filed by** | кампания docs-2026-09, выкладка A5.6 (2026-09-12) |
