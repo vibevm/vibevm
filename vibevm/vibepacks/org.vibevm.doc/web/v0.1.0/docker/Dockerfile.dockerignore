@@ -1,0 +1,63 @@
+# What of the repository enters the renderer's build context.
+#
+# It is an allow-list, and it has to be: the root of a working checkout
+# carries a Rust build directory of hundreds of gigabytes, and a deny-list
+# that forgot one of them would send it all to the daemon before the first
+# instruction ran.
+#
+# BuildKit reads this file because it sits beside the Dockerfile and
+# carries its name; the repository root keeps no `.dockerignore` of its
+# own, so the site package stays self-contained and no other build in the
+# tree inherits these rules (R-10).
+
+# Nothing, unless named below.
+**
+
+# ── The Rust workspace `cargo build -p vibe-cli` resolves ──────────────
+# Every member, plus what the manifest path-depends on and what the
+# production code embeds at compile time.
+!Cargo.toml
+!Cargo.lock
+!crates/**
+!xtask/**
+!formats/**
+!schemas/**
+!vibevm/vibepacks/org.vibevm.ai-native/**
+
+# ── The site package ───────────────────────────────────────────────────
+!vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/**
+
+# ── The checkout the render reads as its second source ─────────────────
+# The project's own card and text, the specifications its citations
+# resolve against, and the documentation packages it carries in tree —
+# which is exactly what `feed::host_feed` hashes and renders. The walk
+# that finds those packages reads a `vibe.toml` per slot, so every slot's
+# manifest comes along and nothing else of the other packages does.
+!vibe.toml
+!vibe.lock
+!README.md
+!AGENTS.md
+!CLAUDE.md
+!vibevm/vibespecs/**
+!vibevm/vibepacks/**/vibe.toml
+!vibevm/vibepacks/org.vibevm.core/**
+
+# ── And never, whatever named it back ──────────────────────────────────
+# Build output, installed dependencies and version-control state: all
+# reproducible, all large, none of it an input.
+#
+# The site package's output directories are written out in full rather
+# than matched by name anywhere: `server` and `dist` are also the names of
+# two ordinary source directories in this tree, and a pattern that read
+# them as build output would delete half a crate from the context and
+# fail the compile three minutes later with a missing module.
+**/node_modules
+**/target
+**/.git
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/dist
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/dist-embedded
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/server
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/server-embedded
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/test-results
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/test-results
+vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/tmp

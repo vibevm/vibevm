@@ -240,6 +240,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/config.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/config.test.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/config.ts",
       "item_kind": "module",
       "line": 1,
@@ -349,6 +356,20 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/lib/pages.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/lib/theme-init.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/theme-init.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/lib/theme-init.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/theme-init.ts"
     },
     {
       "crate_name": "src",
@@ -590,6 +611,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/seo/deployment.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/deployment.test.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/seo/editions.ts",
       "item_kind": "module",
       "line": 1,
@@ -643,6 +671,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/seo/resolve.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/serving.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/serving.test.ts"
     },
     {
       "crate_name": "src",
@@ -933,6 +968,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/config.test.ts",
+      "from_symbol": "site/src/config.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/config.ts",
       "from_symbol": "site/src/config.ts",
       "line": 1,
@@ -1058,6 +1101,22 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-PAGE-COUNT-GATE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/lib/theme-init.test.ts",
+      "from_symbol": "site/src/lib/theme-init.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/lib/theme-init.ts",
+      "from_symbol": "site/src/lib/theme-init.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
       "verb": "implements"
     },
     {
@@ -1333,6 +1392,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/seo/deployment.test.ts",
+      "from_symbol": "site/src/seo/deployment.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-CONTAINERS",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/seo/editions.ts",
       "from_symbol": "site/src/seo/editions.ts",
       "line": 1,
@@ -1394,6 +1461,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/serving.test.ts",
+      "from_symbol": "site/src/seo/serving.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CONTAINER-NGINX",
       "verb": "implements"
     },
     {
@@ -1623,6 +1698,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/config.test.ts",
+      "line": 1,
+      "message": "edge `site/src/config.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/config.ts",
       "line": 1,
       "message": "edge `site/src/config.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS`: no spec unit carries this anchor"
@@ -1716,6 +1797,18 @@
       "file": "site/src/lib/pages.ts",
       "line": 1,
       "message": "edge `site/src/lib/pages.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-PAGE-COUNT-GATE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/lib/theme-init.test.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/theme-init.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/lib/theme-init.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/theme-init.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -1923,6 +2016,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/seo/deployment.test.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/deployment.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-CONTAINERS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/seo/editions.ts",
       "line": 1,
       "message": "edge `site/src/seo/editions.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT`: no spec unit carries this anchor"
@@ -1968,6 +2067,12 @@
       "file": "site/src/seo/resolve.ts",
       "line": 1,
       "message": "edge `site/src/seo/resolve.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/serving.test.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/serving.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CONTAINER-NGINX`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

@@ -106,6 +106,8 @@ node vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/design/audit/contrast.mjs
 
 **Building the site.** `pnpm build:static` prerenders every route for the server; `pnpm build:embedded` builds only the documentation routes for the shell `vibe` embeds. Both count the pages the generator reports against the pages the manifest declares and fail on a mismatch — the static generator under-generates silently and still exits 0 ([`##STACK-PAGE-COUNT-GATE`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack)).
 
+Neither is how the deployment builds the site: there the renderer runs `vibe doc build-site`, which hands the rendered documentation to this same build and moves its output into place. Node is therefore needed on a build machine and in one container, and nowhere else — see [§8.1](#81-building-the-site-in-docker).
+
 **Windows caveat.** Git Bash (MSYS2) rewrites anything that looks like a POSIX path, in arguments and in environment variables alike — a base path passed as `/doc/` reached the generator as `/Program Files/Git/doc/`. When a path or a base has to be passed to a build script from Git Bash, prefix the command with `MSYS_NO_PATHCONV=1`, or pass a value with no leading slash. PowerShell and `cmd` are unaffected.
 
 ## 3. Build / test / lint
@@ -439,6 +441,30 @@ Nothing in that file authorises anything. The site reads every source anonymousl
 **What a run does, in order.** It polls both sources for the set of «coordinate · version · content hash» they hold *now*; compares that with `<out>/.vibe-site/state.json`, which records what was rendered and what it was rendered from; and rebuilds only the pairs that are new, moved or last failed. Each rebuilt pair is warmed into the machine store the way `vibe cache add` warms one — subjects and all, so its `spec://` citations resolve offline — then composed into a documentation package and built in all three projections under `<out>/.vibe-site/trees/`. Finally the site package is run over every standing tree and its output replaces everything in `<out>` except `.vibe-site`.
 
 Two consequences worth knowing before you point it at a directory. **The state file is inside the output**, because the question it answers is «what is in *this* directory»; a serving configuration has to refuse `/.vibe-site/` the way it refuses any other kitchen. And **a package that will not render becomes a page** rather than a failure: the reason is composed into a card and a page at the same address, the row records the failure, and the next run tries again — a registry of hundreds will always hold one broken package, and a builder that stopped for it would publish nothing at all.
+
+### 8.1 Building the site in Docker
+
+The deployment is two containers and a directory between them ([PROP-057 `##SITE-TWO-CONTAINERS`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#site)): a **renderer**, which carries `vibe` built from this checkout and the site package with its dependencies, runs `doc build-site` into the directory and exits; and a **serving** container, stock nginx with `docker/nginx.conf`, which serves that directory and knows nothing else. A new render is a new directory, never a new image.
+
+Both are stages of one file, `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile`, and its build context is **the repository root** — the renderer needs the binary built from this source, the site package, and the checkout itself, which is one of the two sources it reads. What of the root actually enters the context is an allow-list in `docker/Dockerfile.dockerignore` beside it; a working tree's `target/` alone is hundreds of gigabytes, so a deny-list that forgot one entry would send it all to the daemon.
+
+To build and run the whole stack locally:
+
+```sh
+cd vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
+docker compose -f docker/compose.yaml up --build   # renders, then serves on 127.0.0.1:8080
+docker compose -f docker/compose.yaml down
+```
+
+The service names and the published port in that file are **placeholders**: the real ones belong to the server's own arrangement and are never written here ([`##SITE-WHO-COMMITS-WHAT`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#site)). What is not a placeholder is everything below them — one volume, the renderer filling it, the serving side waiting for the render to finish rather than racing it.
+
+The renderer's own configuration is `docker/site.toml`: the two public sources and the domain, with an empty analytics website id, because that id names a live property and belongs to the deployment rather than to the repository. A deployment that needs different values mounts its own file over `/site.toml`.
+
+Three things about the build worth knowing before the first one.
+
+- **The first build is slow and the rest are not.** It compiles `vibe` from source and installs the site package's dependencies; both are cached layers afterwards, and editing a page recompiles nothing.
+- **The render needs the network** — it reads the package registry and warms what it renders — and it needs a resolver its containers can actually reach. On a machine whose resolver answers containers with addresses they cannot route, the symptom is every fetch failing at connect time inside the build; a throwaway `docker buildx` builder configured with a public resolver is enough to get past it.
+- **`docker compose build --no-cache` is for the site's services only.** Nothing in this repository rebuilds anybody else's.
 
 **Level 0 is every package, from its own bytes.** A package that ships no documentation still gets pages: the manifest as a reference page, the README, and the boot snippet when it declares one, beside every specification it carries — copied at its own path, because the path is the address a `spec://` citation resolves to. A `doc` package gets the same treatment and its authored pages besides, which is why there is one rendering path and not two.
 
