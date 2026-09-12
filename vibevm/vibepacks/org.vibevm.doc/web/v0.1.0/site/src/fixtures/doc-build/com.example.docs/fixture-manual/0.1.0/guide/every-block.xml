@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Every block once</title>
+  <status stage="impl" state="done" audience="user,dev"/>
+  <p p="1"><fact id="LEAD" status="impl/done">This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps.</fact></p>
+  <p p="2">Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/).</p>
+  <section id="prose" title="Prose blocks">
+    <list ordered="false" p="3">
+      <item>A plain item.</item>
+      <item><fact id="ANCHORED-ITEM" status="impl/done">An item that carries a fact.</fact></item>
+    </list>
+    <list ordered="true" p="4">
+      <item>First.</item>
+      <item>Second.</item>
+    </list>
+    <table p="5">
+      <tr>
+        <td>Verb</td>
+        <td>What it does</td>
+      </tr>
+      <tr>
+        <td>`list`</td>
+        <td>lists what is installed</td>
+      </tr>
+    </table>
+    <quote p="6">A quotation from nowhere in particular.</quote>
+    <fence lang="rust" p="7">let answer = 42;</fence>
+    <fence p="8">a bare fence, no language claimed</fence>
+    <note kind="warning" p="9">A call-out the reader should not skip.</note>
+    <figure src="media/diagram.svg" alt="Two boxes and an arrow" p="10">
+      <caption>The caption, which is a unit like any other.</caption>
+    </figure>
+  </section>
+  <section id="verifiable" title="Blocks that are checked">
+    <rule ref="spec://com.example/subject/common/PROP-001#A-RULE" p="11"/>
+    <rule ref="spec://com.example/subject/common/PROP-001#UNRESOLVED" p="12"/>
+    <derived kind="cli-help" ref="vibe list --help" p="13"/>
+    <example id="version" fixture="none" p="14">
+      <run>vibe --version</run>
+      <expect>vibe 1.0.0</expect>
+    </example>
+    <example id="missing" fixture="none" exit="2" p="15">
+      <run>vibe nope</run>
+      <expect></expect>
+      <stderr>error: unrecognized subcommand `nope`</stderr>
+    </example>
+    <example ref="version" p="16"/>
+    <prompt id="install" p="17">
+      Install vibe on this machine and show me the version.
+      <needs>a terminal and a network connection</needs>
+      <outcome>`vibe --version` prints a version number</outcome>
+      <assert>vibe --version</assert>
+    </prompt>
+    <prompt id="anything" assert="none" p="18">
+      Ask the agent for anything at all.
+    </prompt>
+  </section>
+  <section id="varying" title="Blocks that vary">
+    <p when="os:windows" p="19">On Windows the path separator is a backslash.</p>
+    <p when="os:linux" p="20">On Linux it is a slash.</p>
+    <section id="for-codex" title="For one agent" when="agent:codex">
+      <p p="21">A whole section that only one agent sees.</p>
+    </section>
+  </section>
+  <section id="footnotes" title="Footnotes">
+    <p>Apparatus, not flow: these blocks take no numbers, because their count changes whenever a reference above them does.</p>
+  </section>
+</spec>

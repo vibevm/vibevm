@@ -1,0 +1,16 @@
+# Fixture Manual
+
+> One page carrying every block of the documentation genre, for the island golden.
+
+The community documentation of com.example/subject, published by com.example.docs, in en.
+Read it at /doc/com.example.docs/fixture-manual/0.1.0/. Rendered 2026-09-12.
+
+What it covers: one page that uses every block of the documentation genre once, so the island backend has a subject with no gaps.
+For whom: whoever changes the renderer and needs to see what changed.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: prose worth reading.
+
+## Pages
+
+- [Addresses](/doc/com.example.docs/fixture-manual/0.1.0/reference/addresses/): The shape of a documentation address, which nothing in the product is allowed to invent. (1 min · user)
+- [Every block once](/doc/com.example.docs/fixture-manual/0.1.0/guide/every-block/): This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps. (1 min · user, dev)
