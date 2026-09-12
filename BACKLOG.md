@@ -1660,3 +1660,13 @@ structure, and it goes when the file does.
 | @fact:B144-SEVERITY **severity** | P3 — обход: цитировать секцию, а не строку; но табличные факты — законная форма PROP-045 |
 | @fact:B144-DISPOSITION **disposition** | `open` — движок карты чеканит юнит для любого элемента с `fact="true"`, включая ячейки таблиц (авторский движок, R-21: правка в движке, не в вендоре) |
 | @fact:B144-FILED **filed by** | кампания документации, P2-O6 (A2.11), 2026-09-12 |
+
+## B-145 — `vibe check` требует boot-каталог от всякого пакета, кроме `doc`
+
+| поле | значение |
+|---|---|
+| @fact:B145-WHAT **what** | проверка `boot_directory` (`crates/vibe-check/src/checks/boot_directory.rs`) освобождает ровно один вид — `doc` — и отказывает любому другому пакету без `vibevm/vibespecs/boot/`: `app` `org.vibevm.doc/web`, `stack` `typescript-ai-native`, `tool` `jtd-codegen` |
+| @fact:B145-EFFECT **effect** | `vibe check --path <пакет>` красный для пакетов, которым boot-каталог не нужен по норме; гейт web-пакета кампании не может опираться на него |
+| @fact:B145-SEVERITY **severity** | P2 — обход: хостовый `vibe check --path .` зелёный; но вид `app` по норме `KIND-APP-VS-TOOL` не участвует в boot ни одного проекта |
+| @fact:B145-DISPOSITION **disposition** | `open` — освободить `app` по той же норме, что `doc`, и решить, требует ли гейт boot-каталог от пакетов без boot-сниппета вообще |
+| @fact:B145-FILED **filed by** | кампания документации, P4-O1 (A4.1), 2026-09-12 |
