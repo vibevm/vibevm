@@ -17,7 +17,10 @@
       <expect>spec unit spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET
   unmarked — `kind ∈ {flow, feat, stack, tool, mcp, lang, doc, app}` — eight kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml); `doc` and `app` admitted by [PROP-057](PROP-057-documentation-packages-and-site.xml) through the `VIBEVM-SPEC.md` §4.1 amendment of 2026-09-12 (pending the owner's ratification at the merge of the docs-2026-09 branch; the code learns the two kinds in that campaign's phase 2). (§Invariants `INV-VOCABULARY` in this file carries the same list.) &lt;status stage="spec" state="done" action="continue" actionstage="impl"/&gt; (vibevm/vibespecs/common/PROP-000.xml:75)
   hash sha256:1effee7da317e236ec9b0745d0e02f922cd93134fd731a758428dce62db2a81f
-  edges: none (uncovered unit)</expect>
+  edges in:
+    documents ← `authoring::write-a-lang-package` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml:14)
+    documents ← `glossary::index` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/glossary/index.xml:107)
+    documents ← `model::packages-and-kinds` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/packages-and-kinds.xml:45)</expect>
     </example>
   </the-address>
   <the-unit title="The unit">
