@@ -85,9 +85,15 @@ mod md_out;
 mod xml_blocks;
 mod xml_comment;
 mod xml_doc;
+mod xml_doc_callouts;
+mod xml_doc_citations;
+mod xml_doc_verbatim;
 mod xml_facts;
 mod xml_in;
+mod xml_in_descent;
+mod xml_in_ids;
 mod xml_out;
+mod xml_out_emit;
 mod xml_support;
 
 #[cfg(test)]
@@ -97,9 +103,15 @@ mod md_in_tests;
 #[cfg(test)]
 mod xml_comment_tests;
 #[cfg(test)]
+mod xml_doc_element_tests;
+#[cfg(test)]
+mod xml_doc_markdown_tests;
+#[cfg(test)]
 mod xml_doc_tests;
 #[cfg(test)]
 mod xml_in_tests;
+#[cfg(test)]
+mod xml_out_tests;
 
 pub use convert::{Conversion, Direction, convert, convert_with};
 pub use doc::Vocabulary;
