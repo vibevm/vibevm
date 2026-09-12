@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">How this manual is maintained</title>
+  <status stage="doc" state="work" audience="dev,author"/>
+  <p>This manual is a package, and it drifts like any code the day after it ships: the product adds a flag, a reader asks a question no page answers, a paragraph patched five times stops reading well. Nothing stops that on its own, so the manual is kept by a small set of loops with named triggers, a queue that measures the gaps, and a journal that records what each loop found. This page says what the loops are, what runs them, and what you owe when you change the product.</p>
+  <derived kind="cli-help" ref="vibe doc todo --help"/>
+  <no-lock title="No lock between the product and the manual">
+    <p>The product ships many times a day and merges many pull requests; the manual cannot follow every one of them, and that is accepted. No gate holds a product release for the documentation, and no step of the self-check panel turns red because the product moved ahead of a page. The panel is red only when the manual is broken on the inside: an example whose output changed, a `derived` block that no longer builds, a citation whose [anchor](../glossary/index.xml#anchor) vanished.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#GATE-INTERNAL-RED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#MAINT-MANDATE"/>
+    <p>Instead of a lock there is a measure. The queue command prints the gaps as numbers: obligations no page tells, examples that no longer match, citations that do not resolve, pages nobody has read aloud, debt lines, the linter's count. It never fails a build, and it distinguishes «nothing found» from «nobody looked»: a section that did not run prints `null`, not zero.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-TODO"/>
+  </no-lock>
+  <what-you-owe title="What you owe when you change the product">
+    <p>A change a user can see carries its page in the same commit: a new or changed command or flag, a [manifest](../glossary/index.xml#manifest) or lock-file field, a report format, an error message with an address, a spec [fact](../glossary/index.xml#fact) marked for documentation, a new [specification](../glossary/index.xml#specification). The developer guides already work this way, and the pull-request template keeps the habit with one checkbox: documentation updated, debt recorded, or not needed.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-COMMIT"/>
+    <p>When the page cannot come with the commit, the commit brings a debt line instead: a row in the host's `BACKLOG.md` prefixed `docs:`, with a severity and the address of the change. A line without an address is not accepted. The monthly loop drains the list.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#DEBT-LINE"/>
+    <p>Before any edit, look at `git status` and make sure no other session is writing in the same tree. In a tree shared with parallel workers, commit only with explicit paths, so that nobody's staged files travel inside your commit.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-COMMIT-FIRST-ACTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-SHARED-TREE"/>
+  </what-you-owe>
+  <the-loops title="The loops">
+    <p>The weekly loop takes under an hour. A cheap model runs the queue and the checks over the whole package and files the report. The maintainer sorts the queue: what takes five minutes is fixed now, at most five edits per loop; what is bigger becomes a debt line; what is disputable becomes a one-line question to the owner. One page is read aloud, the next one along the reading rota, and every stumble becomes an edit or a debt line. A journal entry closes the loop.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-WEEKLY"/>
+    <p>The monthly loop takes half a day with the owner: eight metrics with their trend, an audit of the corpus, the debt list drained, the linter's lists fed with the ticks that slipped past it, every journal entry given its decision, three pages read aloud, and a minor version of the package with a changelog written by hand.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-MONTHLY"/>
+    <p>The full reconciliation is a promise the team makes itself, once a quarter and before a major milestone: the manual is checked against the current release binary, every page is reread against the product with the help text and the specification open beside it, [adaptations](../glossary/index.xml#adaptation) are reread against their sources, and the package ships a version that matches the release. Its only gate is its own: zero gaps and no reading date older than the reconciliation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-RECONCILE"/>
+    <p>The version change starts only when the owner bumps the product version. A snapshot of the product's surface is recorded for the new version, the difference between two snapshots names the pages to update with a reason each, and only those pages are touched. Readers see a version number and a changelog, never the diff.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-VERSION"/>
+  </the-loops>
+  <what-is-kept title="What the package keeps for this">
+    <p>`maintenance/reviews.toml` records when each page was last read aloud and by whom. It is written by hand, holds a date and a reader, and knows nothing about revisions or hashes: the fact it keeps is that somebody sat down with a page on a day. A page without a row has never been read aloud, and the queue says so. The order of the rows is the reading rota.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-REVIEWS"/>
+    <p>`JOURNAL.md` is the journal of the loops. An entry is written in the atom where the event happened, never at the end of the week from memory; it names the evidence and the rule it confirms, changes or creates. A rule of the regulation that no entry produced is a hypothesis until a loop confirms it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-SAME-ATOM"/>
+    <p>`CHANGELOG.md` says what changed for the reader, by version, in plain text. The checklists under `maintenance/` are the loops as lists: `weekly.md`, `monthly.md`, `release.md`, and after the first reconciliation `reconcile.md`, written from what was lived.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-CHECKLISTS"/>
+  </what-is-kept>
+  <changing-the-tools title="Changing the tools">
+    <p>The queue, the checks, the surface snapshots and the generators are code, and the campaign that built them left rules for anyone who changes them. Two of them bite first: never stop a process you did not start, even to free a binary the build needs, and never take before-and-after measurements while another packet regenerates code in the same tree.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-NO-FOREIGN-PROCESS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-PAIRED-MEASUREMENTS"/>
+    <p>A step that reads the output of `vibe doc build` runs at least once over the real manual before it is committed, and a number written into a task is a guess until it is measured on the built output. Both rules exist because fixtures were green while the real output lost two projections of three and a policy expected two inline scripts where the output carried forty-seven.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-LIVE-RUN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-NUMBERS-ARE-MEASURED"/>
+  </changing-the-tools>
+  <edge-cases title="Edge cases and rules">
+    <p>A small edit is one commit with a concrete description; the fifth small edit of a page since it was last read aloud sends the page to the front of the reading rota. A small edit that pulls other pages after it is not small and becomes a debt line with an atom.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-ONE-COMMIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-NOT-SMALL"/>
+    <p>The journal ships with the package. An entry therefore names no private infrastructure, no unconfirmed defect of a neighbouring product and no path of somebody's machine; the same gate that guards the campaign records runs over it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-PUBLISHABLE"/>
+    <p>The cadences, who is on duty for the weekly loop, whether small edits ship weekly or monthly, and whether an agent may write a `docs-gap:` line into a project's backlog are the owner's open questions; until his word the loops run as written here and the [skill](../glossary/index.xml#skill) only proposes.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-CADENCE"/>
+  </edge-cases>
+</spec>
