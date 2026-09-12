@@ -15,15 +15,22 @@
 //! projection code changed; the failure names the file and the first
 //! diverging line so the reader can tell which.
 //!
-//! What the corpus covers, and why it is shaped the way it is: three
-//! packages and five standing versions, carrying every dictionary of
+//! What the corpus covers, and why it is shaped the way it is: six
+//! packages and eight standing versions, carrying every dictionary of
 //! the catalog's wire (including one package kind and one delivery
 //! mode unknown to this build — the open vocabularies of PROP-044
 //! §4.2a), every per-version slot both filled and empty, every
 //! optional projection both present and absent, a short-name
 //! collision across groups, a prerelease that loses `latest_stable`
 //! to an older stable, and all six projectable journal event
-//! variants. The one slot the corpus cannot carry — a name-level
+//! variants. Three of the packages are the documentation shape of
+//! PROP-057: a `doc` manual carrying the card and the `documents`
+//! edge, its Russian adaptation carrying `translates` (and a
+//! non-ASCII `abstract`, so the escaped `abstract_` identifier is
+//! proven to reach the wire under its own name), and an `app` that
+//! points back with `documentation` — so the reverse questions and
+//! officiality can be folded out of these committed bytes exactly as
+//! the site folds them (`##REL-REVERSE-QUERIES-SITE-SIDE`). The one slot the corpus cannot carry — a name-level
 //! tombstone — is a measured gap, not an oversight: no projectable
 //! journal event produces one, so a catalog born by projection cannot
 //! contain one without breaking the very contract this test guards.

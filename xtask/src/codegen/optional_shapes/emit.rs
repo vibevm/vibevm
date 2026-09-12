@@ -534,7 +534,7 @@ fn field_parts(text: &str) -> Option<(&str, &str)> {
 /// (the wire half of the stitch key).
 fn rename_wire(text: &str) -> Option<&str> {
     let rest = text.strip_prefix("#[serde(rename = \"")?;
-    let end = rest.find("\"]")?;
+    let end = rest.find("\")]")?;
     Some(&rest[..end])
 }
 

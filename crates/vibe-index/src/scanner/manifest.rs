@@ -28,17 +28,18 @@ use vibe_core::PackageKind as CorePackageKind;
 use vibe_core::manifest::i18n::I18nDecl;
 use vibe_core::manifest::{
     ActivationRules, BootCategory, BootSnippet, Compatibility, ConflictsList,
-    DeliveryMode as CoreDeliveryMode, EmbeddedSourceDecl, EmbeddedSourceKind, FeaturesTable,
-    Manifest, Obsoletes, OriginSection, PackageMeta, Provides, Requires, RequiresAny,
-    SubskillManifest,
+    DeliveryMode as CoreDeliveryMode, DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl,
+    EmbeddedSourceKind, FeaturesTable, Manifest, MediaDecl, Obsoletes, OriginSection, PackageMeta,
+    Provides, Requires, RequiresAny, SubskillManifest, TranslatesDecl,
 };
 use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
 use crate::types::{
-    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, EmbeddedSourceEntry,
-    FeaturesEntry, I18nEntry, ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry,
-    RequiresEntry, SubskillEntry, WorkspaceOriginEntry,
+    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, DocumentationEntry,
+    DocumentsEntry, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, MediaEntry, ObsoletesEntry,
+    PackageKind, ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry, TranslatesEntry,
+    WorkspaceOriginEntry,
 };
 
 /// Parse a `vibe.toml` byte buffer into the canonical `vibe-core`
@@ -162,6 +163,62 @@ pub fn i18n_from(i: &I18nDecl) -> Option<I18nEntry> {
         default: Some(i.canonical.clone()),
     };
     (!entry.is_empty()).then_some(entry)
+}
+
+/// Project `[[documents]]` — the subjects a `doc` package documents
+/// (PROP-057 `##REL-INDEX-FIELDS`). The list rides into the index so
+/// that «who documents X» is a fold over `primary.jsonl` and never a
+/// download (`##REL-REVERSE-QUERIES-SITE-SIDE`); an empty list is
+/// absence, like every sibling here.
+pub fn documents_from(list: &[DocumentsDecl]) -> Vec<DocumentsEntry> {
+    list.iter()
+        .map(|d| DocumentsEntry {
+            package: d.package.clone(),
+            version: d.version.clone(),
+        })
+        .collect()
+}
+
+/// Project `[documentation]` — the other end of the same edge, written
+/// by the SUBJECT and legal in a package of any kind. Officiality is the
+/// convergence of the two ends, computed at render time, so nothing here
+/// is a stored flag (PROP-057 `##REL-NO-OFFICIAL-FLAG`).
+pub fn documentation_from(d: &Option<DocumentationDecl>) -> Option<DocumentationEntry> {
+    let entry = DocumentationEntry {
+        primary: d.as_ref().and_then(|d| d.primary.clone()),
+        official: d.as_ref().map(|d| d.official.clone()).unwrap_or_default(),
+    };
+    (!entry.is_empty()).then_some(entry)
+}
+
+/// Project `[translates]` — the source this adaptation follows. The
+/// source stores no list of its translations, so this edge is the only
+/// one there is and the language selector is built by folding it
+/// (PROP-057 `##LOC-NO-TRANSLATIONS-TABLE`).
+pub fn translates_from(t: &Option<TranslatesDecl>) -> Option<TranslatesEntry> {
+    t.as_ref().map(|t| TranslatesEntry {
+        package: t.package.clone(),
+        version: t.version.clone(),
+    })
+}
+
+/// Project `[media]` — the card's images as package-relative paths.
+/// Separators are normalised to `/` for the same reason `boot_snippet`
+/// normalises its own: the wire is one path grammar, not the scanning
+/// host's.
+pub fn media_from(m: &Option<MediaDecl>) -> Option<MediaEntry> {
+    let entry = MediaEntry {
+        icon: m.as_ref().and_then(|m| m.icon.as_deref()).map(wire_path),
+        banner: m.as_ref().and_then(|m| m.banner.as_deref()).map(wire_path),
+        preview: m.as_ref().and_then(|m| m.preview.as_deref()).map(wire_path),
+    };
+    (!entry.is_empty()).then_some(entry)
+}
+
+/// A package-relative path as the wire spells it: `/` separators
+/// whatever the scanning host uses.
+fn wire_path(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
 }
 
 pub fn boot_snippet_from(b: &Option<BootSnippet>) -> Option<BootSnippetEntry> {
@@ -468,6 +525,111 @@ capabilities = ["ui:landing-page"]
         v.provides = provides_from(&m.provides);
         let json = serde_json::to_string(&v).unwrap();
         assert!(json.contains("\"provides\""), "{json}");
+    }
+
+    /// A `doc` package's manifest carries the card and both directions
+    /// of the documentation edge into its index entry, so the site and
+    /// the local reader answer «who documents X» and «which languages
+    /// are there» by folding `primary.jsonl` instead of downloading
+    /// packages (PROP-057 `##REL-INDEX-FIELDS`,
+    /// `##REL-REVERSE-QUERIES-SITE-SIDE`).
+    #[test]
+    fn a_doc_manifest_projects_its_card_and_its_relations() {
+        // A raw `str`, not a byte string: the title of a Russian
+        // adaptation is the realistic case, and a byte-string literal
+        // cannot hold it.
+        let body = r#"
+[package]
+group = "org.vibevm"
+name = "vibevm-docs-ru"
+kind = "doc"
+version = "0.1.0"
+title = "Руководство VibeVM"
+abstract = "Что покрывает, для кого, что предполагает известным."
+
+[i18n]
+canonical = "ru"
+
+[[documents]]
+package = "org.vibevm.core/vibevm"
+version = "^0.1"
+
+[documentation]
+primary = "org.vibevm/vibevm-docs"
+official = ["org.vibevm/vibevm-tutorials"]
+
+[translates]
+package = "org.vibevm/vibevm-docs"
+version = "^0.1"
+
+[media]
+icon = "media/icon.png"
+banner = 'media\banner.jpg'
+"#;
+        let m = parse_manifest(body.as_bytes()).unwrap();
+        let pkg = require_package(&m).unwrap();
+        assert_eq!(package_kind(pkg.kind), PackageKind::Doc);
+        assert_eq!(pkg.title.as_deref(), Some("Руководство VibeVM"));
+        assert!(pkg.abstract_text.is_some());
+
+        let documents = documents_from(&m.documents);
+        assert_eq!(documents.len(), 1);
+        assert_eq!(documents[0].package, "org.vibevm.core/vibevm");
+        assert_eq!(documents[0].version, "^0.1");
+
+        let documentation = documentation_from(&m.documentation).expect("the subject pointer");
+        assert_eq!(
+            documentation.primary.as_deref(),
+            Some("org.vibevm/vibevm-docs")
+        );
+        assert_eq!(documentation.official, vec!["org.vibevm/vibevm-tutorials"]);
+
+        let translates = translates_from(&m.translates).expect("the source edge");
+        assert_eq!(translates.package, "org.vibevm/vibevm-docs");
+
+        // The language of a documentation is `[i18n].canonical`, never a
+        // field of its own (PROP-057 `##LOC-LANGUAGE-FIELD`), and it
+        // already had a home in the entry.
+        let i18n = i18n_from(&m.i18n).expect("the canonical locale");
+        assert_eq!(i18n.default.as_deref(), Some("ru"));
+
+        // Separators are the wire's, not the scanning host's.
+        let media = media_from(&m.media).expect("the card's images");
+        assert_eq!(media.icon.as_deref(), Some("media/icon.png"));
+        assert_eq!(media.banner.as_deref(), Some("media/banner.jpg"));
+        assert!(media.preview.is_none());
+    }
+
+    /// The same law the sibling projections obey: an empty table is
+    /// absence on the wire, never `{}` or `[]`. A package of an ordinary
+    /// kind declares none of this and its entry says nothing about it.
+    #[test]
+    fn a_package_without_documentation_says_nothing_about_it() {
+        let body = br#"
+[package]
+group = "org.vibevm"
+name = "wal"
+kind = "flow"
+version = "0.1.0"
+
+[documentation]
+"#;
+        let m = parse_manifest(body).unwrap();
+        let mut v = VersionEntry::minimal(
+            PackageKind::Flow,
+            m.package.as_ref().unwrap().group.clone(),
+            "wal",
+            "0.1.0".parse().unwrap(),
+            chrono::Utc::now(),
+        );
+        v.documents = documents_from(&m.documents);
+        v.documentation = documentation_from(&m.documentation);
+        v.translates = translates_from(&m.translates);
+        v.media = media_from(&m.media);
+        let json = serde_json::to_string(&v).unwrap();
+        for key in ["documents", "documentation", "translates", "media"] {
+            assert!(!json.contains(&format!("\"{key}\"")), "{key}: {json}");
+        }
     }
 
     #[test]

@@ -12,8 +12,9 @@
 //! `is_empty`/`Default` family, `new`/`finalise`) moved with the
 //! orphan rule into `vibe_wire::behaviour`. The per-version
 //! projections are split by concern as before — dependency relations
-//! in `relations`, content and delivery in `content`, the aggregate
-//! records in `aggregate` — and all are re-exported here, so every
+//! in `relations`, content and delivery in `content`, the documentation
+//! relations and the card in `documentation`, the aggregate records in
+//! `aggregate` — and all are re-exported here, so every
 //! `crate::types::*` path is unchanged.
 //!
 //! Reader tolerance (PROP-044 §4.4) is the generated form's own law
@@ -25,6 +26,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entr
 
 mod aggregate;
 mod content;
+mod documentation;
 mod relations;
 
 pub use aggregate::{NameEntry, PackageEntry, Tombstone};
@@ -32,6 +34,7 @@ pub use content::{
     BootSnippetEntry, DeliveryMode, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, SubskillEntry,
     WorkspaceOriginEntry,
 };
+pub use documentation::{DocumentationEntry, DocumentsEntry, MediaEntry, TranslatesEntry};
 pub use relations::{
     CompatibilityEntry, ConflictsEntry, ObsoletesEntry, ProvidesEntry, RequiresAnyEntry,
     RequiresEntry,

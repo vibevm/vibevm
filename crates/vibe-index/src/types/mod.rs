@@ -20,9 +20,10 @@ pub mod repomd;
 pub(crate) mod wire_decimal;
 
 pub use entry::{
-    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, EmbeddedSourceEntry,
-    FeaturesEntry, I18nEntry, NameEntry, ObsoletesEntry, PackageEntry, ProvidesEntry,
-    RequiresAnyEntry, RequiresEntry, SubskillEntry, Tombstone, VersionEntry, WorkspaceOriginEntry,
+    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, DocumentationEntry,
+    DocumentsEntry, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, MediaEntry, NameEntry,
+    ObsoletesEntry, PackageEntry, ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry,
+    Tombstone, TranslatesEntry, VersionEntry, WorkspaceOriginEntry,
 };
 pub use kinds::{NamingConvention, PackageKind};
 pub use repomd::{Repomd, RepomdFileEntry};

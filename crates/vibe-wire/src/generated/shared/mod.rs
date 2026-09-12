@@ -951,6 +951,28 @@ pub struct DocumentSubject {
     pub provider: DocumentProvider,
 }
 
+/// The subject's pointer at its own documentation (PROP-057 §4). Carries no
+/// versions: documentation almost always ships after the code it describes.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DocumentationEntry {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub official: Vec<String>,
+
+    /// Coordinate of the documentation a reader is sent to first; absent when
+    /// the subject names none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub primary: Option<String>,
+}
+
+/// One subject a `doc` package documents (PROP-057 §4): the subject's
+/// `<group>/<name>` coordinate and the semver constraint on its version.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DocumentsEntry {
+    pub package: String,
+
+    pub version: String,
+}
+
 /// One measured duration: microseconds plus an explicit saturation marker.
 /// `micros` saturates at u32::MAX rather than wrapping; `saturated` is true
 /// when the measurement hit that ceiling (or contributed to a total that did)
@@ -1842,6 +1864,26 @@ pub struct LinkStateLinked {
 #[serde(deny_unknown_fields)]
 pub struct LinkStateUnlinked {}
 
+/// The card's images as paths inside the package tree (PROP-057 §7). Never
+/// URLs: the local reader serves a proprietary package's images exactly as
+/// they are.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct MediaEntry {
+    /// Wide image heading the package page; absent when the package declares
+    /// none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub banner: Option<String>,
+
+    /// Square image for the page header and shelf cards; absent when the
+    /// package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+
+    /// Link-preview image; absent when the package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preview: Option<String>,
+}
+
 /// Repository naming convention mapping a pkgref to a repo name (PROP-008
 /// §2.5). Closed vocabulary: repository paths are built from these values, so
 /// an unfamiliar one has no safe behaviour. The four wire strings are explicit
@@ -2469,6 +2511,16 @@ pub enum TraceReportStatus {
     Unavailable,
 }
 
+/// The documentation this package adapts into another language (PROP-057 §5):
+/// the source's `<group>/<name>` coordinate and the semver constraint on its
+/// version.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TranslatesEntry {
+    pub package: String,
+
+    pub version: String,
+}
+
 /// The ONE generated verification-evidence member (PROP-054 §14.7, `##EVIDENCE-
 /// WIRE-AND-SURFACES`): the lifecycle library produces it, the existing
 /// generated `LifecycleReport` carries it, and `vibe verify --json` and
@@ -2548,6 +2600,13 @@ pub struct VersionEntry {
 
     pub version: Version,
 
+    /// The four answers a reader needs before opening anything — what it
+    /// covers, for whom, what it assumes known, what it leaves out (PROP-057
+    /// §7); absent when the package declares none.
+    #[serde(rename = "abstract")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub abstract_: Option<String>,
+
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub authors: Vec<String>,
 
@@ -2573,6 +2632,12 @@ pub struct VersionEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub documentation: Option<DocumentationEntry>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub documents: Vec<DocumentsEntry>,
+
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub embedded_sources: Vec<EmbeddedSourceEntry>,
 
@@ -2596,6 +2661,9 @@ pub struct VersionEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license: Option<String>,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub media: Option<MediaEntry>,
+
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub must_understand: Vec<String>,
 
@@ -2617,6 +2685,15 @@ pub struct VersionEntry {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub subskills: Vec<SubskillEntry>,
+
+    /// Display name of the package (PROP-057 §7); absent when the package
+    /// declares none. Required in the manifest of a `doc` package, optional for
+    /// every other kind.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub translates: Option<TranslatesEntry>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub workspace_origin: Option<WorkspaceOriginEntry>,

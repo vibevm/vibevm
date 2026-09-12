@@ -1,0 +1,48 @@
+{
+  "indexed_at": "2026-08-07T10:00:00Z",
+  "name": "wal-docs",
+  "packages": [
+    {
+      "group": "org.vibevm",
+      "indexed_at": "2026-08-07T10:00:00Z",
+      "name": "wal-docs",
+      "versions": [
+        {
+          "content_hash": "sha256:d0c5a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e",
+          "files_count": 12,
+          "group": "org.vibevm",
+          "indexed_at": "2026-08-07T10:00:00Z",
+          "indexed_by": "vibe-index 0.1.0-dev",
+          "kind": "doc",
+          "name": "wal-docs",
+          "registry": "vibespecs",
+          "schema_version": 1,
+          "source_ref": "v0.1.0",
+          "source_url": "https://gitverse.ru/vibevm/org.vibevm.wal-docs.git",
+          "version": "0.1.0",
+          "abstract": "What a write-ahead log is for, who keeps one, what it assumes about the tree, and what it leaves to review.",
+          "description": "The operator's guide to the write-ahead log",
+          "documents": [
+            {
+              "package": "org.vibevm/wal",
+              "version": "^1.0"
+            }
+          ],
+          "i18n": {
+            "available": [
+              "en"
+            ],
+            "default": "en"
+          },
+          "license": "UPL-1.0",
+          "media": {
+            "banner": "media/banner.jpg",
+            "icon": "media/icon.png"
+          },
+          "title": "The WAL Manual"
+        }
+      ],
+      "latest_stable": "0.1.0"
+    }
+  ]
+}

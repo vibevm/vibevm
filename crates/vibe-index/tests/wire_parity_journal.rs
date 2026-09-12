@@ -152,6 +152,12 @@ fn fully_populated_entry() -> Box<VersionEntry> {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
+        title: None,
+        abstract_: None,
+        documents: vec![],
+        documentation: None,
+        translates: None,
+        media: None,
         bridge: false,
         embedded_sources: vec![],
         compatibility: Some(CompatibilityEntry {

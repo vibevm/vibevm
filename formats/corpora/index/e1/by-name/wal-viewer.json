@@ -1,0 +1,35 @@
+{
+  "indexed_at": "2026-08-09T10:00:00Z",
+  "name": "wal-viewer",
+  "packages": [
+    {
+      "group": "org.vibevm",
+      "indexed_at": "2026-08-09T10:00:00Z",
+      "name": "wal-viewer",
+      "versions": [
+        {
+          "content_hash": "sha256:a99e0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2",
+          "files_count": 5,
+          "group": "org.vibevm",
+          "indexed_at": "2026-08-09T10:00:00Z",
+          "indexed_by": "vibe-index 0.1.0-dev",
+          "kind": "app",
+          "name": "wal-viewer",
+          "registry": "vibespecs",
+          "schema_version": 1,
+          "source_ref": "v0.1.0",
+          "source_url": "https://gitverse.ru/vibevm/org.vibevm.wal-viewer.git",
+          "version": "0.1.0",
+          "description": "A standalone reader for a WAL checkpoint",
+          "documentation": {
+            "official": [
+              "org.vibevm/wal-docs-ru"
+            ],
+            "primary": "org.vibevm/wal-docs"
+          }
+        }
+      ],
+      "latest_stable": "0.1.0"
+    }
+  ]
+}
