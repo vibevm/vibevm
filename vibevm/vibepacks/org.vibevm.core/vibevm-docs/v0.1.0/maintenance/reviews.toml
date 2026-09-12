@@ -187,3 +187,43 @@ by = "central session"
 path = "architecture/traceability.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "authoring/write-a-flow.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/write-a-feat-or-stack.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/write-a-lang-package.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/ship-tools-and-mcp-servers.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/write-documentation.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/translate-documentation.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/facts-and-status-markers.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "authoring/specs-agents-can-cite.xml"
+read = "2026-09-12"
+by = "central session"
