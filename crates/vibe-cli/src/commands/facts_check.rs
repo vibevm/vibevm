@@ -55,7 +55,17 @@ pub(crate) fn run(ctx: &Context, args: &ProgressCheckArgs) -> Result<()> {
                 println!("{}:{}: {severity} [FoldLossy] {fold}", doc.path, fold.line);
             }
         }
-        if args.exhaustive {
+        // `--exhaustive` asks every prose unit for a marker, which is the
+        // same demand as a verdict one step earlier — so an exempt file
+        // is exempt from it too (PROP-057 `##OBS-NOT-JUDGED`). Without
+        // this the third answer would only be half an answer: the
+        // manual would stay out of the judging debt and still fail the
+        // gate that counts the debt's raw material, and «observed, never
+        // judged» would be unusable for the genre it was written for.
+        let exempt = grounded
+            .judging_exemption
+            .covers(std::path::Path::new(&doc.path));
+        if args.exhaustive && !exempt {
             for &(block_index, fact_index) in &doc.unmarked_facts {
                 errors += 1;
                 if !ctx.is_quiet() {

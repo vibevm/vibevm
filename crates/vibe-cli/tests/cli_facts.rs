@@ -403,6 +403,67 @@ fn facts_check_and_progress_alias_match_on_valid_and_broken_markup() {
     assert_check_spellings_match(&user, broken.path(), false);
 }
 
+/// `[judging] exempt` frees a file from `--exhaustive` too, not only
+/// from the judging debt (PROP-057 `##OBS-NOT-JUDGED`, X-024).
+///
+/// The two are one demand a step apart: `--exhaustive` asks every prose
+/// unit for a marker, and the debt asks every marker for a verdict. An
+/// exemption that freed only the second would leave documentation
+/// failing the gate that counts the first — «observed, never judged»
+/// would be unusable for the genre it was written for. The control is
+/// the same tree without the exemption, so what is proven is the
+/// exemption and not the fixture.
+#[test]
+fn a_judging_exemption_frees_a_file_from_exhaustive_too() {
+    let user = UserScratch::new();
+    let unmarked = "# Manual {#root}\n\nA paragraph carrying no marker at all.\n";
+
+    let judged = tempfile::tempdir().expect("judged tree");
+    markup_fixture(judged.path(), unmarked);
+    let output = user
+        .vibe()
+        .args(["facts", "check", "--exhaustive", "--path"])
+        .arg(judged.path())
+        .output()
+        .expect("vibe facts check");
+    assert!(
+        !output.status.success(),
+        "an unmarked paragraph must fail --exhaustive without an exemption: {output:?}"
+    );
+    assert!(
+        String::from_utf8_lossy(&output.stdout).contains("[unmarked]"),
+        "{output:?}"
+    );
+
+    let exempt = tempfile::tempdir().expect("exempt tree");
+    markup_fixture(exempt.path(), unmarked);
+    fs::write(
+        exempt.path().join("progress.toml"),
+        format!(
+            "include = [\"{specs}/**/*.md\"]\n\n[judging]\nexempt = [\"{specs}/**\"]\n",
+            specs = common::specs_str()
+        ),
+    )
+    .expect("progress config with an exemption");
+    let output = user
+        .vibe()
+        .args(["facts", "check", "--exhaustive", "--path"])
+        .arg(exempt.path())
+        .output()
+        .expect("vibe facts check");
+    assert!(
+        output.status.success(),
+        "an exempt file owes no marker: {output:?}"
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(!stdout.contains("[unmarked]"), "{stdout}");
+    assert!(
+        stdout.contains("1 files"),
+        "and stays OBSERVED — an exemption changes what is judged, never \
+         what is in the corpus: {stdout}"
+    );
+}
+
 #[test]
 fn progress_check_json_suppresses_the_transition_note() {
     let user = UserScratch::new();

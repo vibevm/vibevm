@@ -21,6 +21,55 @@ use vibe_registry::ShellGit;
 use crate::cli::ProgressCommonArgs;
 use crate::commands::progress_evidence::EvidenceSnapshot;
 
+/// Which dialect vocabulary a file is read under, memoised by the
+/// package directory that decides it.
+///
+/// The decision is the containing package's `kind` and nothing about the
+/// file itself (PROP-045 `##DOC-VOCAB-BY-KIND`), so it is asked once per
+/// package rather than once per page: a manual is hundreds of files and
+/// one manifest.
+#[derive(Default)]
+struct VocabularyByPackage {
+    seen: BTreeMap<PathBuf, vibe_specdoc::Vocabulary>,
+}
+
+impl VocabularyByPackage {
+    /// The vocabulary `file` is read under: walk up to the nearest
+    /// `vibe.toml` at or below `root` and take its kind. No manifest, an
+    /// unreadable one, or any kind but `doc` answers the spec dialect —
+    /// the closed default, which is the right answer for everything that
+    /// is not documentation and the safe answer for anything unclear.
+    fn of(&mut self, root: &Path, file: &Path) -> vibe_specdoc::Vocabulary {
+        let mut dir = file.parent();
+        while let Some(current) = dir {
+            if let Some(known) = self.seen.get(current) {
+                return *known;
+            }
+            let manifest_path = current.join(vibe_core::manifest::Manifest::FILENAME);
+            if manifest_path.is_file() {
+                let vocab = match vibe_core::manifest::Manifest::read(&manifest_path) {
+                    Ok(manifest)
+                        if manifest
+                            .package
+                            .as_ref()
+                            .is_some_and(|p| p.kind == vibe_core::PackageKind::Doc) =>
+                    {
+                        vibe_specdoc::Vocabulary::Doc
+                    }
+                    _ => vibe_specdoc::Vocabulary::Spec,
+                };
+                self.seen.insert(current.to_path_buf(), vocab);
+                return vocab;
+            }
+            if current == root {
+                break;
+            }
+            dir = current.parent();
+        }
+        vibe_specdoc::Vocabulary::Spec
+    }
+}
+
 /// The observed tree + campaign zone, resolved once per invocation.
 pub(crate) struct Ground {
     pub(super) root: PathBuf,
@@ -53,6 +102,12 @@ pub(crate) struct Ground {
     /// projection notice rather than letting the numbers pass as
     /// source-relative.
     pub(crate) xml_sources: BTreeSet<String>,
+    /// The compiled `[judging] exempt` globs — "observed, never judged"
+    /// (PROP-057 `##OBS-NOT-JUDGED`). Resolved here with the rest of the
+    /// grounding so every consumer reads one compilation of one config,
+    /// and carried on `Ground` rather than asked for again: a second
+    /// read would be a second opinion about the same file.
+    pub(crate) judging_exemption: scope::JudgingExemption,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -111,6 +166,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     }
     let mut docs = Vec::new();
     let mut xml_sources = BTreeSet::new();
+    let mut vocabularies = VocabularyByPackage::default();
     for rel in files {
         let full = root.join(&rel);
         // The projection dispatch (PROP-045 ##PROJECTION-READ): `.md` (and
@@ -119,7 +175,16 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         // the projection — which S1's emitter makes deterministic, so the
         // cache/verdict mechanics are unchanged: an edit moves the
         // projection exactly when it moves meaning.
-        let (text, kind) = vibe_specdoc::load_spec_text(&full)
+        //
+        // WHICH vocabulary the `.xml` branch reads under is decided by
+        // the kind of the package the file lives in, never by the file
+        // (PROP-045 `##DOC-VOCAB-BY-KIND`): the documentation genre is
+        // open only inside a `doc` package. Without this the pivot
+        // refuses the first page of any manual it observes — a legal
+        // `example` or `derived` block is simply not in the spec
+        // dialect.
+        let vocab = vocabularies.of(&root, &full);
+        let (text, kind) = vibe_specdoc::load_spec_text_with(&full, vocab)
             .map_err(|e| anyhow::Error::msg(e.to_string()))
             .with_context(|| format!("reading {}", full.display()))?;
         if kind == vibe_specdoc::SourceKind::XmlProjected {
@@ -135,6 +200,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             None => progress_core::parse::parse_document(&path, &text),
         });
     }
+    let judging_exemption = cfg.judging_exemption()?;
     Ok(Ground {
         root,
         docs,
@@ -144,6 +210,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         payloads,
         excluded: excludes.dropped,
         xml_sources,
+        judging_exemption,
     })
 }
 
