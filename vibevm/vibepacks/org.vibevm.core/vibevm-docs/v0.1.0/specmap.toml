@@ -1,0 +1,54 @@
+# specmap.toml — the manual's traceability policy.
+#
+# The presence of this file is the opt-in: `vibe specmap --path <pkg>` builds
+# `package.specmap.json` for a package that carries one and is a silent no-op
+# for a package that does not. What this package contributes is one relation
+# and one only — `documents`, minted from the `<rule>` citations on its pages
+# (spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EDGES-HOST-SIDE).
+
+# The local nickname. `vibe specmap` remaps every own-namespace address to the
+# package coordinate `org.vibevm.core/vibevm-docs` before writing the carried
+# map, so a nickname collision between two publishers cannot reach it.
+namespace = "vibevm-docs"
+
+# No Rust in a manual.
+scan_roots = []
+
+# **Deliberately empty, and this is load-bearing.** The pages under
+# `vibevm/vibespecs/` are written in the DOCUMENTATION vocabulary — `<rule>`,
+# `<example>`, `<prompt>` — and the engine's dialect is closed and knows none
+# of them (PROP-045 ##DOC-VOCAB-REOPENING). A page inside `spec_roots` would
+# meet the engine's XML reader and be refused as a dialect violation. The
+# pages are read instead by the host-side page scanner, which the `vibe
+# specmap` command composes with the engine's built-in set.
+spec_roots = []
+root_spec_docs = []
+spec_exclude = []
+
+exempt = []
+dispositioned = []
+
+# The `overloaded-item` warning is off (`0` disables it). It asks whether one
+# code element realises too many spec points, and a documentation page is not
+# a code element: a page that quotes eight rules is the genre working, not an
+# element doing too much. Left at the default threshold of three it fires on
+# almost every page and buries the two warnings that mean something.
+max_connections_per_item = 0
+
+# The specifications this manual quotes, read for ADDRESS RESOLUTION only:
+# their units never enter this package's map, they only stop its `documents`
+# edges from dangling. The path is relative to this package's root inside the
+# repository that authors it — a published copy standing on its own resolves
+# nothing here and says so once, which is honest: the manual does not carry
+# the specifications, it points at them.
+[[external_specs]]
+namespace = "org.vibevm.core/vibevm"
+root = "../../../../../vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.ai-native/core-ai-native"
+root = "../../../../../vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs"
+
+[[external_specs]]
+namespace = "org.vibevm.world/addressable-specs"
+root = "../../../../../vibevm/vibedeps/org.vibevm.world.addressable-specs/1.0.0/vibevm/vibespecs"

@@ -1,0 +1,3384 @@
+{
+  "code_items": [
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "agent::ask-your-agent"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "agent::give-your-agent-the-skill"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "agent::how-agents-read-this-manual"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "architecture::how-vibe-is-built"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "architecture::traceability"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "architecture::what-the-lifecycle-epic-delivered"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::ship-tools-and-mcp-servers"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::specs-agents-can-cite"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::translate-documentation"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::write-a-feat-or-stack"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::write-a-flow"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::write-a-lang-package"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "authoring::write-documentation"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/diagnostics/errors.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "diagnostics::errors"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "faq::index"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "glossary::index"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::install-a-package"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::publish-a-package"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::read-documentation-locally"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::remove-a-package"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::set-up-a-workspace"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::update-packages"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::use-a-private-registry"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "howto::work-offline"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "lifecycle::build-package-deploy"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "lifecycle::extensions-and-providers"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "lifecycle::phases"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "lifecycle::scrape"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::boot-lane"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::lock-and-store"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::packages-and-kinds"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::registries"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/two-trees.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::two-trees"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "model::versions"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "reference::lock-file"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "reference::machine-formats"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "reference::manifest"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "reference::settings-and-environment"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/start/first-project.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "start::first-project"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/start/index.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "start::index"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "start::install-vibe"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "start::what-a-project-contains"
+    },
+    {
+      "crate_name": "<doc>",
+      "file": "vibevm/vibespecs/start/what-vibevm-is.xml",
+      "item_kind": "doc-page",
+      "line": 1,
+      "symbol": "start::what-vibevm-is"
+    }
+  ],
+  "edges": [
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#EMPTY-SLOT-OK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#MODE-INFERRED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#NO-WRITE-BACK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#ONE-OP-TWO-TRANSPORTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/ask-your-agent.xml",
+      "from_symbol": "agent::ask-your-agent",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "from_symbol": "agent::give-your-agent-the-skill",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-UNINSTALL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "from_symbol": "agent::give-your-agent-the-skill",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "from_symbol": "agent::give-your-agent-the-skill",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-TRUST-ACT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "from_symbol": "agent::give-your-agent-the-skill",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-WRITE-SCOPE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "from_symbol": "agent::how-agents-read-this-manual",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#jtd",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#prod-arch",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#surfaces",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SOLVER-TWO-IMPLS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "from_symbol": "architecture::how-vibe-is-built",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#TWO-PHASES-SPLIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#CONSEQUENCE-MAPPING-IS-CARRIED-NOT-GENERATED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#DECISION-FOUR-UNIT-KINDS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-EDGES-TRAVEL-WITH-THE-ARTEFACTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-INVARIANTS-ARE-MACHINE-CHECKED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#INVALIDATION-SPEC-BUMP-MAKES-EDGES-SUSPECT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-GENERATED-CODE-IS-EXCLUDED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-IMPLEMENTS-IS-A-CLAIM-ABOUT-CODE-THAT-RUNS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#RULE-VERBS-AND-MANDATORY-REASON",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/traceability.xml",
+      "from_symbol": "architecture::traceability",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EDGES-HOST-SIDE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WASM-DEFERRED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "from_symbol": "architecture::what-the-lifecycle-epic-delivered",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OWN-WORKSPACE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ROOT-CODE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#WHY-SOURCE-IDENTITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#EXACT-PIN-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#MCP-KIND-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#VIBE-FREE-SERVING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-MUST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#HASHES-STABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "from_symbol": "authoring::ship-tools-and-mcp-servers",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#TRUST-CURRENT-SLOT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 63,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-VERSION-OPTIONAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#FOR-POINT-CORRECTIONS-THE-URI-WINS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#URI-SCHEME-IS-THE-FULL-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#CONTRACT-STATEMENTS-USE-RFC-2119-VERBS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "from_symbol": "authoring::specs-agents-can-cite",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#ONE-UNIT-CARRIES-ONE-DECISION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-TRANSLATION-INHERITS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-DOCUMENTS-MATCH",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NO-REVISION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NORMATIVE-STAYS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/translate-documentation.xml",
+      "from_symbol": "authoring::translate-documentation",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DOC-PACKAGES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "from_symbol": "authoring::write-a-feat-or-stack",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "from_symbol": "authoring::write-a-feat-or-stack",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "from_symbol": "authoring::write-a-feat-or-stack",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "from_symbol": "authoring::write-a-feat-or-stack",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 82,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SPEC-SUBTREE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 86,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-flow.xml",
+      "from_symbol": "authoring::write-a-flow",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "from_symbol": "authoring::write-a-lang-package",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "from_symbol": "authoring::write-a-lang-package",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#FAM-CORE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "from_symbol": "authoring::write-a-lang-package",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "from_symbol": "authoring::write-a-lang-package",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#SURFACE-NAMING-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "from_symbol": "authoring::write-a-lang-package",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-CITES-NEVER-COPIES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-DOCUMENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-NOT-EXECUTE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EXAMPLE-RUNNER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-DEFAULT-CONVENTION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PAGE-SKELETON",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/authoring/write-documentation.xml",
+      "from_symbol": "authoring::write-documentation",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/diagnostics/errors.xml",
+      "from_symbol": "diagnostics::errors",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#root",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/diagnostics/errors.xml",
+      "from_symbol": "diagnostics::errors",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#SURF-EXIT-CODE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CF-EXACT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-IS-AN-ENHANCEMENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#RELATED-CLEAN",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-MIRROR-SUBSTITUTION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-NO-DEGRADE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-UNIFIED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PLAN-UNIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/faq/index.xml",
+      "from_symbol": "faq::index",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 191,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-INVARIANTS-ARE-MACHINE-CHECKED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 199,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 99,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 171,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 163,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 139,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 63,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 87,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 143,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 103,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 151,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 167,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 195,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 131,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-NO-OFFICIAL-FLAG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-SOURCE-LANGUAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#MCP-KIND-DEF",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 127,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 135,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 159,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 75,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HASH-UNCHANGED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 179,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 187,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-ON-SUBSKILLS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 119,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 203,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#WORKSPACE-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 107,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUSION-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 115,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#WHAT-HOOKS-ARE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/glossary/index.xml",
+      "from_symbol": "glossary::index",
+      "line": 175,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-QUALIFIED-KIND-BEHAVIOUR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HOLD-THE-LOCK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-RESOLUTION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "from_symbol": "howto::install-a-package",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#INSTALLATION-CONSENT-SUCCESSOR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "from_symbol": "howto::publish-a-package",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "from_symbol": "howto::publish-a-package",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "from_symbol": "howto::publish-a-package",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "from_symbol": "howto::publish-a-package",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/publish-a-package.xml",
+      "from_symbol": "howto::publish-a-package",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#TOKEN-NEVER-IN-ENV",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-CSP",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "from_symbol": "howto::read-documentation-locally",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-WARMUP-CLOSURE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "from_symbol": "howto::remove-a-package",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "from_symbol": "howto::remove-a-package",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-AUTHORED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "from_symbol": "howto::remove-a-package",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "from_symbol": "howto::remove-a-package",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/remove-a-package.xml",
+      "from_symbol": "howto::remove-a-package",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 63,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCOPE-FLAG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "from_symbol": "howto::set-up-a-workspace",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-VIBEDEPS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "from_symbol": "howto::update-packages",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "from_symbol": "howto::update-packages",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "from_symbol": "howto::update-packages",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "from_symbol": "howto::update-packages",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#UPDATE-MOVES-LOCK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-STEP-HOP-LIMIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-MARKER-FILE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-STUB",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-TAG-VISIBILITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "from_symbol": "howto::use-a-private-registry",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "from_symbol": "howto::work-offline",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "from_symbol": "howto::work-offline",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "from_symbol": "howto::work-offline",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "from_symbol": "howto::work-offline",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/howto/work-offline.xml",
+      "from_symbol": "howto::work-offline",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "from_symbol": "lifecycle::build-package-deploy",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-CREATE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "from_symbol": "lifecycle::build-package-deploy",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "from_symbol": "lifecycle::build-package-deploy",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "from_symbol": "lifecycle::build-package-deploy",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "from_symbol": "lifecycle::build-package-deploy",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PLATFORM-APPLICABILITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-PROVIDER-SEAM",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-BUDGET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLM-ENHANCEMENT-MODES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "from_symbol": "lifecycle::extensions-and-providers",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EXISTING-VERBS-STAY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FRESHNESS-IS-PER-CONTRIBUTION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INSTALL-IS-CONSENT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLE-IS-FRAMEWORK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/phases.xml",
+      "from_symbol": "lifecycle::phases",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DEFAULT-CONTRACT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-PRESERVATION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#RELATED-CLEAN",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-MODE-EXCLUSIVITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/lifecycle/scrape.xml",
+      "from_symbol": "lifecycle::scrape",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-ROLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-INDEX-MD",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#CATEGORY-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUSION-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/boot-lane.xml",
+      "from_symbol": "model::boot-lane",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#WHEN-FORCES-DYNAMIC",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#EXPLICIT-RECLAIM",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#LAYOUT-EXTRACTED-DIRECTORIES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/lock-and-store.xml",
+      "from_symbol": "model::lock-and-store",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#PACKAGES-CARRY-THE-LAYOUT-TOO",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-CHANGE-NEW-PACKAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "from_symbol": "model::packages-and-kinds",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-SHORT-BEHAVIOUR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-016#ORTHOGONALITY-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-INTEGRITY-MANDATORY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "from_symbol": "model::registries",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/two-trees.xml",
+      "from_symbol": "model::two-trees",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/two-trees.xml",
+      "from_symbol": "model::two-trees",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/two-trees.xml",
+      "from_symbol": "model::two-trees",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/two-trees.xml",
+      "from_symbol": "model::two-trees",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-AUTHORED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACTIVATION-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-LATEST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-STABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-028#AGGREGATOR-PINS-DELIBERATE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-VERSION-CONTRACT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-CONSEQUENCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/model/versions.xml",
+      "from_symbol": "model::versions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#TRAIT-PIN-PREFERENCES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-LOCKFILE-STABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIR-CANONICAL-IN-LOCKFILE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SOURCE-KIND-VALUES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/lock-file.xml",
+      "from_symbol": "reference::lock-file",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "from_symbol": "reference::machine-formats",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#jtd",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "from_symbol": "reference::machine-formats",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "from_symbol": "reference::machine-formats",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "from_symbol": "reference::machine-formats",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/machine-formats.xml",
+      "from_symbol": "reference::machine-formats",
+      "line": 82,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 87,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 86,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 85,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 84,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-ARRAY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-MANDATORY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LINK-FIELD",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 73,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOKS-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/manifest.xml",
+      "from_symbol": "reference::manifest",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-ENV-ADVISORY",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-ENV-DEFAULTING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REGISTRIES-KEEP-THEIR-OWN-FILE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L2-REPO-SHARED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-ARRAYS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/reference/settings-and-environment.xml",
+      "from_symbol": "reference::settings-and-environment",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-SCALARS",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/first-project.xml",
+      "from_symbol": "start::first-project",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/first-project.xml",
+      "from_symbol": "start::first-project",
+      "line": 86,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#CLASS-MALFORMED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/first-project.xml",
+      "from_symbol": "start::first-project",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/index.xml",
+      "from_symbol": "start::index",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/index.xml",
+      "from_symbol": "start::index",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/index.xml",
+      "from_symbol": "start::index",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/index.xml",
+      "from_symbol": "start::index",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/index.xml",
+      "from_symbol": "start::index",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACE-ACCEPTED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-NEVER-CLOBBER",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-LIST",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/install-vibe.xml",
+      "from_symbol": "start::install-vibe",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#NO-LEGACY-LAYOUT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-a-project-contains.xml",
+      "from_symbol": "start::what-a-project-contains",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#OUTSIDE-PRESERVED",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-vibevm-is.xml",
+      "from_symbol": "start::what-vibevm-is",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#TOKENOMICS-IS-A-DESIGN-PRESSURE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-vibevm-is.xml",
+      "from_symbol": "start::what-vibevm-is",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE",
+      "verb": "documents"
+    },
+    {
+      "file": "vibevm/vibespecs/start/what-vibevm-is.xml",
+      "from_symbol": "start::what-vibevm-is",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING",
+      "verb": "documents"
+    }
+  ],
+  "schema": 3,
+  "spec_units": [],
+  "suspects": [],
+  "warnings": [
+    {
+      "code": "dangling-edge",
+      "file": "vibevm/vibespecs/howto/install-a-package.xml",
+      "line": 54,
+      "message": "edge `howto::install-a-package` --documents--> `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-QUALIFIED-KIND-BEHAVIOUR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "vibevm/vibespecs/howto/update-packages.xml",
+      "line": 48,
+      "message": "edge `howto::update-packages` --documents--> `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "vibevm/vibespecs/model/packages-and-kinds.xml",
+      "line": 48,
+      "message": "edge `model::packages-and-kinds` --documents--> `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-SHORT-BEHAVIOUR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "vibevm/vibespecs/model/registries.xml",
+      "line": 32,
+      "message": "edge `model::registries` --documents--> `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING`: no spec unit carries this anchor"
+    }
+  ]
+}

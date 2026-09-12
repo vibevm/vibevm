@@ -18,8 +18,9 @@ pub struct DocArgs {
 #[derive(Debug, clap::Subcommand)]
 pub enum DocCommand {
     /// Check a documentation package against the product it documents:
-    /// run every documented example and compare its output exactly, and
-    /// rebuild every `derived` block and compare it with the last build.
+    /// run every documented example and compare its output exactly,
+    /// rebuild every `derived` block and compare it with the last build,
+    /// and resolve every `rule` citation against the current specs.
     Check(DocCheckArgs),
 }
 
@@ -36,6 +37,11 @@ pub struct DocCheckArgs {
     /// changed since the last build.
     #[arg(long)]
     pub derived: bool,
+
+    /// Resolve every `<rule>` citation against the specifications that
+    /// exist now. One question and no other: does the anchor exist.
+    #[arg(long)]
+    pub citations: bool,
 
     /// Record a capture on the page when the example has no golden yet.
     /// Never replaces a golden that already holds text — see `--force`.

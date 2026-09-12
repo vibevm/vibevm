@@ -37,6 +37,11 @@ vibe-safefs.workspace = true
 # file hasher (`vibedeps::read_slot_record` / `sha256_file`) — the
 # lock-selected slot's durable identity and footprint.
 vibe-workspace.workspace = true
+# The documentation pipeline reads pages and classifies their addresses;
+# this crate only ADAPTS its `rule` citations to the engine's scanner
+# seam, so no second reading of a page exists (PROP-057
+# ##PIPE-EDGES-HOST-SIDE).
+vibe-doc.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

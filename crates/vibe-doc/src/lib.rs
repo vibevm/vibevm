@@ -20,10 +20,17 @@
 //!   documentation starts lying (`##PIPE-DERIVED`,
 //!   `##INV-DERIVED-NEVER-HAND-KEPT`).
 //!
-//! Below both sits [`pages`], the one place that reads a documentation
-//! package: the pivot's documentation vocabulary is a parameter of the
-//! READER, and choosing it from the package's kind is precisely the job
-//! the pivot refuses to do for separability (PROP-045
+//! * [`citations`] — the `rule` resolver. A page names an address and the
+//!   pipeline puts the fact's CURRENT text on it at every render, so a
+//!   quoted rule has no stored copy that could go stale. The check asks
+//!   one question — does the anchor exist — and the `documents` edge it
+//!   mints carries no pin, so a citation can never go «suspect»
+//!   (`##OBS-RULE-EDGE-UNPINNED`).
+//!
+//! Below all three sits [`pages`], the one place that reads a
+//! documentation package: the pivot's documentation vocabulary is a
+//! parameter of the READER, and choosing it from the package's kind is
+//! precisely the job the pivot refuses to do for separability (PROP-045
 //! `##DOC-VOCAB-BY-KIND`).
 //!
 //! ## What this crate will not do
@@ -61,6 +68,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+pub mod citations;
 pub mod derived;
 pub mod error;
 pub mod examples;

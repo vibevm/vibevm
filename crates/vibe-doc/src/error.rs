@@ -119,6 +119,22 @@ pub enum DocError {
         message: String,
     },
 
+    /// A `rule` cites an address that no source resolves, or an anchor
+    /// that no longer exists. The check knows nothing else about a
+    /// citation — no revision, no hash, no «the spec moved ahead»
+    /// (PROP-057 `##OBS-RULE-EDGE-UNPINNED`).
+    #[error(
+        "`{page}`:{line} cites `{uri}`: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED; \
+         fix: correct the address, or leave a tombstone where the rule was renamed)"
+    )]
+    Citation {
+        page: String,
+        line: u32,
+        uri: String,
+        message: String,
+    },
+
     /// A `derived` reference names something the generators cannot build.
     #[error(
         "derived {kind} reference `{reference}`: {message} \
