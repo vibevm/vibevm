@@ -14,7 +14,7 @@
   (545 строк, 54 155 байт, UTF-8 без BOM, LF, 211 фактов) и закоммичен.
 
 Scratch (промежуточные файлы и скрипт):
-`C:\Users\olegc\AppData\Local\Temp\claude\C--Users-olegc-git-v-vibevm\ab0a6173-074b-4107-8481-3df9593b6bb0\scratchpad\p6c2\`.
+`<scratch>/p6c2/`.
 
 Откат к Markdown не понадобился: конвертер принял документ, файл создан как
 `.xml`.

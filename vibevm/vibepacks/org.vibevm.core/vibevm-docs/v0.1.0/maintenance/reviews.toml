@@ -227,3 +227,23 @@ by = "central session"
 path = "authoring/specs-agents-can-cite.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "authoring/bridge-a-repository.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "glossary/index.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/dependency-visibility.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "architecture/how-this-manual-is-maintained.xml"
+read = "2026-09-12"
+by = "central session"
