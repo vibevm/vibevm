@@ -56,11 +56,11 @@ borrow the two cost-avoidance primitives VVM already proved
   <decisions title="2. Decisions">
     <modes title="2.1 Three modes, declared in the descriptor">
       <p><req-modes fact="true" status="impl/done">`req r1`</req-modes></p>
-      <p><MODE-FIELD fact="true" status="impl/done">`[package].materialization` selects how the package lands on disk:</MODE-FIELD></p>
+      <p><MODE-FIELD fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`[package].materialization` selects how the package lands on disk:</MODE-FIELD></p>
       <fence lang="toml">[package]
 materialization = "copy"       # default | "hardlink" | "in-place"</fence>
       <facts ordered="false">
-        <SNAPSHOT-DEFAULT fact="true" status="impl/done">`copy` is the default and the only mode an ordinary package needs. (It was named `snapshot` until the owner's 2026-08-13 terminology ruling reserved that word for the unfrozen version — PROP-044 §2b; the legacy spelling is refused with the rename recipe, never aliased.)</SNAPSHOT-DEFAULT>
+        <SNAPSHOT-DEFAULT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`copy` is the default and the only mode an ordinary package needs. (It was named `snapshot` until the owner's 2026-08-13 terminology ruling reserved that word for the unfrozen version — PROP-044 §2b; the legacy spelling is refused with the rename recipe, never aliased.)</SNAPSHOT-DEFAULT>
         <MODE-IN-DESCRIPTOR fact="true" status="impl/done">The
   mode is published in the descriptor so a consumer sees, before installing, how
   a package will be placed.</MODE-IN-DESCRIPTOR>
@@ -111,7 +111,7 @@ full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
   `vibedeps/&lt;group&gt;.&lt;name&gt;/` (no `/&lt;version&gt;/`): one working clone whose version
   is the current git ref. Versioning the path would mean two on-disk copies of
   the giant — the opposite of the goal.</IP-UNVERSIONED-PATH>
-        <IP-REQUIRES-GIT fact="true" status="impl/done">**Requires a git source.** Incremental update and `git clean` reset both need
+        <IP-REQUIRES-GIT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Requires a git source.** Incremental update and `git clean` reset both need
   git; a non-git source has no `in-place` story (§4).</IP-REQUIRES-GIT>
       </facts>
     </in-place>
@@ -128,7 +128,7 @@ full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
     <destructive-guard title="2.6 Destructive operations on an `in-place` slot need confirmation">
       <p><req-destructive fact="true" status="impl/done">`req r1`</req-destructive></p>
       <facts ordered="false">
-        <DESTRUCTIVE-CONFIRM fact="true" status="impl/done">An `in-place` slot may be a multi-hour download. Any **destructive** operation
+        <DESTRUCTIVE-CONFIRM fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">An `in-place` slot may be a multi-hour download. Any **destructive** operation
   on it — `uninstall`, `reinstall --force`, a version switch that requires a
   re-clone, or slot removal — must be confirmed: interactively a `y/n`, and in a
   non-interactive run it requires an explicit flag (`--force`) or it **aborts**
@@ -143,10 +143,10 @@ full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
     <vendoring title="2.7 Vendoring differs by mode">
       <p><req-vendoring fact="true" status="impl/done">`req r1`</req-vendoring></p>
       <facts ordered="false">
-        <VENDORED-COPY-MODES fact="true" status="impl/done">**`copy` / `hardlink`** are vendored — the slot is committed into the
+        <VENDORED-COPY-MODES fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**`copy` / `hardlink`** are vendored — the slot is committed into the
   project's git and is offline-reproducible from it (a `hardlink` slot's bytes
   are materialised into git on `git add` like any file); a `copy` slot trivially so.</VENDORED-COPY-MODES>
-        <IN-PLACE-NOT-VENDORED fact="true" status="impl/done">**`in-place`** is **not** vendored — the slot (a nested `.git` plus possibly
+        <IN-PLACE-NOT-VENDORED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**`in-place`** is **not** vendored — the slot (a nested `.git` plus possibly
   millions of files) is `.gitignore`d in the project; restoration is a re-clone
   at the lockfile's `resolved_commit`. The honest trade: `in-place` packages
   need the network to restore, where `snapshot` packages do not.</IN-PLACE-NOT-VENDORED>

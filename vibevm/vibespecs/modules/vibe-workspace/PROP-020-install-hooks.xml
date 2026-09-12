@@ -51,7 +51,7 @@ token a hook never sees).</related></p>
         <WHAT-HOOKS-ARE fact="true" status="impl/done">A package may declare `pre-install` / `post-install` scripts in its manifest.
   vibevm runs them at fixed points in the install pipeline, in the package's own
   materialised slot, choosing the right interpreter for the host OS.</WHAT-HOOKS-ARE>
-        <EFFECTS-EPHEMERAL fact="true" status="impl/done">Only a hook's edits
+        <EFFECTS-EPHEMERAL fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Only a hook's edits
   to materialiser-owned recorded payload are ephemeral: reinstall, update or
   integrity repair restores those bytes per
   [PROP-022](PROP-022-materialization-modes.xml), then reruns hooks exactly
@@ -67,17 +67,17 @@ token a hook never sees).</related></p>
       <p><req-phases fact="true" status="impl/done">`req r1`</req-phases></p>
       <p><ONE-PER-PHASE fact="true" status="impl/done">A package declares at most one script per phase:</ONE-PER-PHASE></p>
       <facts ordered="false">
-        <PHASE-PRE-INSTALL fact="true" status="impl/done">**`pre-install`** — runs immediately after the package's slot is fully
+        <PHASE-PRE-INSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**`pre-install`** — runs immediately after the package's slot is fully
   populated (content materialised, submodules fetched per
   [PROP-021](../vibe-registry/PROP-021-submodule-sources.xml)) and **before**
   vibevm uses the slot (before boot regeneration, before any later
   `vibe skill` projection reads it). This is the "bring the tree into order"
   hook.</PHASE-PRE-INSTALL>
-        <PHASE-POST-INSTALL fact="true" status="impl/done">**`post-install`** — runs after the install run is durable for that package
+        <PHASE-POST-INSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**`post-install`** — runs after the install run is durable for that package
   (lockfile written, boot artefacts regenerated). For finalisation that needs
   the package already registered.</PHASE-POST-INSTALL>
       </facts>
-      <p><CWD-IS-SLOT fact="true" status="impl/done">The hook's **working directory is the package's materialised slot**; it sees
+      <p><CWD-IS-SLOT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The hook's **working directory is the package's materialised slot**; it sees
 exactly the tree vibevm will use.</CWD-IS-SLOT></p>
       <facts ordered="false">
         <RESET-THEN-RERUN fact="true" status="impl/done">**On update, reinstall or integrity repair, the materialiser restores its recorded payload, then hooks rerun if and only if that payload diff is nonempty.** For `copy`/`hardlink`, restoration is the PROP-054 §9.3 record diff: an unrecorded hook-created path survives and may be changed again by the rerun. `in-place` remains a separate git-native reset whose `git clean -dfx` removes untracked hook output. The landed `cli_hook_rerun::reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff` proof records the copy-slot boundary directly: `.hook-count` is `1` after install, remains `1` after empty reinstall, and becomes `2` after a recorded-payload repair. Copy/hardlink hooks therefore remain responsible for idempotence until a separate hook-output ownership contract exists.</RESET-THEN-RERUN>
@@ -90,7 +90,7 @@ exactly the tree vibevm will use.</CWD-IS-SLOT></p>
     </phases>
     <script-selection title="2.2 Interpreter selection is OS-derived">
       <p><req-interpreter fact="true" status="impl/done">`req r1`</req-interpreter></p>
-      <p><SCRIPT-FORMS fact="true" status="impl/done">A package ships a phase script as `&lt;base&gt;.sh` (portable, POSIX shell) and/or
+      <p><SCRIPT-FORMS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A package ships a phase script as `&lt;base&gt;.sh` (portable, POSIX shell) and/or
 `&lt;base&gt;.ps1` (PowerShell). The runner picks per host:</SCRIPT-FORMS></p>
       <facts ordered="false">
         <UNIX-SELECTION fact="true" status="impl/done">**Unix (macOS / Linux):** run `&lt;base&gt;.sh` via `bash`. A `.ps1` is ignored.</UNIX-SELECTION>
@@ -101,7 +101,7 @@ exactly the tree vibevm will use.</CWD-IS-SLOT></p>
   hint — never a silent skip.</WINDOWS-SELECTION>
       </facts>
       <facts ordered="false">
-        <HOOK-ENV fact="true" status="impl/done">The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
+        <HOOK-ENV fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
   `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,
   `VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.
   ([PROP-024 §2.3](../../common/PROP-024-code-bearing-packages.xml#build) adds
@@ -137,7 +137,7 @@ that permission model for every extension handler.</TRUST-CHEAP></p>
   or pass an explicit `--allow-hooks` opt-in. A script must never execute
   unseen third-party code by default.</NON-INTERACTIVE-SAFETY>
       </facts>
-      <p><INSTALLATION-CONSENT-SUCCESSOR fact="true" status="impl/done">**Current law.** Installing the package is the consent to run its declared
+      <p><INSTALLATION-CONSENT-SUCCESSOR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Current law.** Installing the package is the consent to run its declared
 hooks. There is no `[hooks].allowed_groups`, first-run prompt, or
 `--allow-hooks` permission layer. Safety is the PROP-054 observability model:
 the manifest is statically inspectable, selected contributions are narrated,
@@ -145,12 +145,12 @@ and durable run evidence identifies what ran and which package supplied it.</INS
     </trust-gate>
     <manifest title="2.4 Hooks are declared in the manifest">
       <p><req-manifest-hooks fact="true" status="impl/done">`req r1`</req-manifest-hooks></p>
-      <p><HOOKS-TABLE fact="true" status="impl/done">Hooks live in a package-role `[hooks]` table in `vibe.toml`:</HOOKS-TABLE></p>
+      <p><HOOKS-TABLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Hooks live in a package-role `[hooks]` table in `vibe.toml`:</HOOKS-TABLE></p>
       <fence lang="toml">[hooks]
 pre-install  = "hooks/prepare"   # base path, relative to package root
 post-install = "hooks/finalise"</fence>
       <facts ordered="false">
-        <BASE-PATH-VALUE fact="true" status="impl/done">The value is a **base path without extension**; the runner resolves `.sh` /
+        <BASE-PATH-VALUE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The value is a **base path without extension**; the runner resolves `.sh` /
   `.ps1` beside it per §2.2.</BASE-PATH-VALUE>
         <PACKAGE-ONLY-TABLE fact="true" status="impl/done">The table is package-only (its presence on a
   `[project]`-role manifest is a validation error, like the other package-only

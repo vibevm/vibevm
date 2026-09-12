@@ -62,7 +62,7 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       <facts ordered="false">
         <INSTALL-IS-PACKAGES fact="true" status="spec/done">`vibe install` is the **package** manager (PROP-003 / PROP-017): it resolves
   packages a *project* depends on into that project.</INSTALL-IS-PACKAGES>
-        <VVM-IS-TOOL fact="true" status="spec/done">VVM manages *the vibevm tool itself* on *the machine* — a user-global
+        <VVM-IS-TOOL fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">VVM manages *the vibevm tool itself* on *the machine* — a user-global
   prefix, not a project's `vibedeps/`.</VVM-IS-TOOL>
         <NO-SHARED-PATHS fact="true" status="spec/done">The two never share code paths; `vibe self` is its own command group so the
   package verbs stay uncontaminated.</NO-SHARED-PATHS>
@@ -76,7 +76,7 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
         <NO-LLM-NO-AGENT fact="true" status="spec/done">VVM needs no LLM and no host agent.</NO-LLM-NO-AGENT>
         <STANDALONE-CLASS fact="true" status="spec/done">In PROP-018's terms it is a **standalone-mode** capability — the second
   after `vibe skill` — behaving identically with or without an agent.</STANDALONE-CLASS>
-        <FULLY-SCRIPTABLE fact="true" status="spec/done">It is fully scriptable: every interactive prompt has a non-interactive flag
+        <FULLY-SCRIPTABLE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">It is fully scriptable: every interactive prompt has a non-interactive flag
   equivalent, so VVM works from a bare terminal, CI, or an agent transcript.</FULLY-SCRIPTABLE>
       </facts>
     </standalone>
@@ -85,12 +85,12 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       <p><SELF-NAMING fact="true" status="spec/done">`vibe self` — named after rustup's `self` (a tool that manages its own
 versions), and unambiguous where `man` collided with the Unix manual page:</SELF-NAMING></p>
       <facts ordered="false">
-        <CMD-INSTALL fact="true" status="impl/done">`self install &lt;selector&gt;` — from a source execution, build the selected
+        <CMD-INSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self install &lt;selector&gt;` — from a source execution, build the selected
   ref; from a managed binary execution, an explicit `X.Y.Z` installs that
   native release. Flags: `--release` / `--profile &lt;debug|release&gt;` (source
   lane); `--mirror &lt;gitverse|github&gt;` (force the source lane); `--force`
   (always allocate a fresh immutable `#N`).</CMD-INSTALL>
-        <CMD-UPDATE fact="true" status="impl/done">`self update` follows the running origin. A source/worktree execution rebuilds
+        <CMD-UPDATE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self update` follows the running origin. A source/worktree execution rebuilds
   its exact source root at `latest`; a binary execution refreshes its **current
   logical SemVer** from the mutable release and never jumps versions.
   `--force` redownloads/reinstalls even when the bundle digest is unchanged.</CMD-UPDATE>
@@ -110,11 +110,11 @@ versions), and unambiguous where `man` collided with the Unix manual page:</SELF
   the temporary bootstrap against the aggregate, downloads one bounded native
   bundle anonymously, verifies/extracts it, and activates it; `--force` makes
   another generation.</CMD-BOOTSTRAP>
-        <CMD-USE fact="true" status="impl/done">`self use &lt;selector&gt;` — make a version active by repointing the live
+        <CMD-USE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self use &lt;selector&gt;` — make a version active by repointing the live
   `current` file — **no console reload** (§2.5). `--eval` prints the shell
   line for an integrity-checked shell-local override instead of touching the
   durable environment.</CMD-USE>
-        <CMD-ROLLBACK fact="true" status="impl/done">`self rollback` atomically swaps to the immediate `previous` instance;
+        <CMD-ROLLBACK fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self rollback` atomically swaps to the immediate `previous` instance;
   repeating it toggles the two pointers without deleting either generation.</CMD-ROLLBACK>
         <CMD-LS fact="true" status="impl/done">`self ls` (alias `list`) prints copyable `&lt;kind&gt;:&lt;id&gt;#N` selectors and
   provenance. `*` marks the active pointer; `&gt;` independently marks the
@@ -187,7 +187,7 @@ the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-
        └─ src/.mirror/           shared managed source clone; external developer
                                  worktrees stay outside and are referenced</fence>
       <facts ordered="false">
-        <ROOT-DEFAULT fact="true" status="impl/done">`$VIBEVM_INSTALL_ROOT` (the install BASE) defaults to `~/.vibe` → root
+        <ROOT-DEFAULT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`$VIBEVM_INSTALL_ROOT` (the install BASE) defaults to `~/.vibe` → root
   `~/.vibe/opt` in normal use (owner ruling 2026-08-20, the release-1.0
   install path; until then the default base was the bare home dir → `~/opt`).
   An explicit override keeps its meaning — `&lt;override&gt;/opt` — and one env var
@@ -205,7 +205,7 @@ the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-
     </layout>
     <activation title="2.5 Activation — live `current` file + `current_exe` truth">
       <p><req-activation fact="true" status="spec/done">`req r2`</req-activation></p>
-      <p><ACTIVATION-LAW fact="true" status="spec/done">**Switching must not reload the console and must not overwrite a running
+      <p><ACTIVATION-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**Switching must not reload the console and must not overwrite a running
 file.** (v1's "env is truth" violated the first; see §9.1.) The model has
 four layers:</ACTIVATION-LAW></p>
       <facts ordered="true">
@@ -224,7 +224,7 @@ four layers:</ACTIVATION-LAW></p>
    `$shimdir/../vibevm/current` on **every** launch and execs that instance.
    `self use` rewrites `current` → the **next** `vibe` in the **same shell**
    uses it. No reload (the shim reads a file, not the shell's frozen env).</LAYER-CURRENT-FILE>
-        <LAYER-ENV-ADVISORY fact="true" status="spec/done">**`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set
+        <LAYER-ENV-ADVISORY fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set
    durably for external `JAVA_HOME`-style tools, but no longer the source of
    truth. They may lag (new shells only); `vibe vars` (§2.14) reconciles,
    and a managed `vibe` whose `current_exe`-derived home disagrees with the
@@ -244,7 +244,7 @@ four layers:</ACTIVATION-LAW></p>
       <p><req-path fact="true" status="spec/done">`req r2`</req-path></p>
       <p><ENV-MGMT-LEAD fact="true" status="spec/done">VVM detects OS and shell and manages durable settings under strict rules:</ENV-MGMT-LEAD></p>
       <facts ordered="false">
-        <PATH-SHIM-DIR fact="true" status="spec/done">**The shim dir on `PATH`** (stable; set once).</PATH-SHIM-DIR>
+        <PATH-SHIM-DIR fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**The shim dir on `PATH`** (stable; set once).</PATH-SHIM-DIR>
         <ENV-ADVISORY fact="true" status="spec/done">**`VIBEVM_HOME` / `VIBEVM_INSTALL_ROOT`** as *advisory* env (§2.5) —
   repointed on `self use` for external tools; truth lives in `current` +
   `current_exe`.</ENV-ADVISORY>
@@ -340,7 +340,7 @@ DLL, on any OS (§9.3).</NO-OVERWRITE-EVER></p>
     <tools title="2.8 Required toolchain — a single source of truth">
       <p><req-tools fact="true" status="spec/done">`req r2`</req-tools></p>
       <facts ordered="false">
-        <TOOLS-LIST fact="true" status="impl/done">A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,
+        <TOOLS-LIST fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,
   stable ≥ 1.93, edition 2024 — via rustup so the pin resolves), and a
   **system linker / C toolchain** (Windows: VS Build Tools; macOS: Xcode CLT;
   Linux: `build-essential`). A native binary install needs none of those;
@@ -365,7 +365,7 @@ DLL, on any OS (§9.3).</NO-OVERWRITE-EVER></p>
         <RM-PICKER fact="true" status="spec/done">`self remove` with no selector — an **interactive picker**; a non-
   interactive context errors with a hint, never a wipe.</RM-PICKER>
         <RM-ALL fact="true" status="spec/done">`self remove --all` — every version, behind the flag **and** a re-confirm.</RM-ALL>
-        <RM-PROTECTED fact="true" status="impl/done">The **active** version and the **running** instance are protected:
+        <RM-PROTECTED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">The **active** version and the **running** instance are protected:
   removing an active but non-running instance needs `--force`; the actually
   running instance is never removable, even with that flag.</RM-PROTECTED>
       </facts>
@@ -416,11 +416,11 @@ their provenance record; the managed `src/.mirror` clone is VVM's to drop.</EXTE
     <bootstrap title="2.12 Cold-start (bootstrap)">
       <p><req-bootstrap fact="true" status="spec/done">`req r2`</req-bootstrap></p>
       <facts ordered="false">
-        <COLD-START-PATH fact="true" status="impl/done">Stable endpoints provide one-line native cold start: Bash for Linux/macOS/WSL
+        <COLD-START-PATH fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Stable endpoints provide one-line native cold start: Bash for Linux/macOS/WSL
   and PowerShell for Windows. Each bounded script downloads
   `DISTRIBUTIONS.json`, verifies a small raw `vibe` bootstrap by size/SHA-256,
   then that Rust binary verifies and atomically installs the full bundle.</COLD-START-PATH>
-        <BOOTSTRAP-SCRIPT-LATER fact="true" status="impl/done">The scripts are shipped release assets `install.sh` and `install.ps1` and
+        <BOOTSTRAP-SCRIPT-LATER fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">The scripts are shipped release assets `install.sh` and `install.ps1` and
   are exposed by stable `https://vibevm.org/install.*` redirects. Homebrew,
   WinGet, and CMD installers remain outside this slice.</BOOTSTRAP-SCRIPT-LATER>
       </facts>
@@ -447,7 +447,7 @@ tool the user invokes deliberately, and accepted.</ACE-ACCEPTED></p>
       <facts ordered="false">
         <VARS-PURPOSE fact="true" status="spec/done">Scripts must know the **real** runtime context even when `$VIBEVM_HOME` is
   stale (§9.1).</VARS-PURPOSE>
-        <VARS-CONTENT fact="true" status="spec/done">`vibe vars` prints the project's env-configurable variables —
+        <VARS-CONTENT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">`vibe vars` prints the project's env-configurable variables —
   `VIBEVM_INSTALL_ROOT`, `VIBEVM_HOME` (whose *actual* values are derived from
   `current_exe`, §2.5), plus `VIBE_INVOKED_BY`, `VIBE_UNATTENDED`, `VIBE_LOG`
   — in `NAME=VALUE` form. The publish token is deliberately excluded.</VARS-CONTENT>

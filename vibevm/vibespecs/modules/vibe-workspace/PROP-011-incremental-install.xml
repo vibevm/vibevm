@@ -40,8 +40,8 @@
       </facts>
       <facts ordered="false">
         <drift-wart fact="true" status="impl/done">It also fixes an observable wart. Today `vibe install` always re-resolves, so it silently bumps a package within its constraint on every run (a `^0.3` pin drifts to the newest `0.3.x` available).</drift-wart>
-        <LOCKFILE-RESPECTING fact="true" status="impl/done">With the freshness check, **`vibe install` becomes lockfile-respecting**: unchanged `[requires]` ⇒ the locked versions are honoured verbatim.</LOCKFILE-RESPECTING>
-        <UPDATE-MOVES-LOCK fact="true" status="impl/done">`vibe update` remains the explicit "re-resolve and pick newer" command.</UPDATE-MOVES-LOCK>
+        <LOCKFILE-RESPECTING fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">With the freshness check, **`vibe install` becomes lockfile-respecting**: unchanged `[requires]` ⇒ the locked versions are honoured verbatim.</LOCKFILE-RESPECTING>
+        <UPDATE-MOVES-LOCK fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe update` remains the explicit "re-resolve and pick newer" command.</UPDATE-MOVES-LOCK>
         <CARGO-CONTRACT-ALIGN fact="true" status="impl/done">This aligns `vibe install` with the `cargo build` / `npm install` contract — *install respects the lock; update moves it* — and makes a build reproducible.</CARGO-CONTRACT-ALIGN>
       </facts>
       <facts ordered="false">
@@ -84,7 +84,7 @@
       <p><NO-NEW-FLAG fact="true" status="impl/done">**Decision.** PROP-011 adds **no force flag to `vibe install`**. The two skips (§2.2, §2.3) each already have an explicit, named bypass:</NO-NEW-FLAG></p>
       <facts ordered="false">
         <BYPASS-UPDATE fact="true" status="impl/done">to re-resolve even though `[requires]` is unchanged — `vibe update` (re-resolves and may pick newer versions; PROP-009 §2.7 / FU3);</BYPASS-UPDATE>
-        <BYPASS-REINSTALL fact="true" status="impl/done">to re-materialise even though the slots are present — `vibe reinstall --force` (re-fetches from source and reconciles each materialiser-owned footprint; PROP-009 §2.10).</BYPASS-REINSTALL>
+        <BYPASS-REINSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">to re-materialise even though the slots are present — `vibe reinstall --force` (re-fetches from source and reconciles each materialiser-owned footprint; PROP-009 §2.10).</BYPASS-REINSTALL>
       </facts>
       <facts ordered="false">
         <BYPASSES-MAKE-SAFE fact="true" status="impl/done">The skips are safe precisely *because* these bypasses exist.</BYPASSES-MAKE-SAFE>
@@ -109,7 +109,7 @@
         <IN-PLACE-EXCLUDED fact="true" status="impl/done">It explicitly **excludes `in-place` (PROP-022) packages** (`materialization.is_in_place()`): re-hashing or re-copying a giant working tree on every install is precisely the cost `in-place` materialisation exists to avoid, so an `in-place` package keeps the §2.2/§2.3 fast path and is refreshed only through its dedicated incremental path (`vibe update &lt;pkg&gt;`, the `git fetch` of PROP-022).</IN-PLACE-EXCLUDED>
         <NOT-MTIME fact="true" status="impl/done">The choice is source-and-path-based, **not** mtime-based (§6 rejects mtime — file mtimes do not survive `git clone`).</NOT-MTIME>
       </facts>
-      <p><AUTOMATIC-NO-FLAG fact="true" status="impl/done">**No new flag (consistent with §2.5).** This is automatic and source-aware — the author edits the in-repo source and runs `vibe install`; nothing to remember, and neither `vibe update` nor `reinstall --force` is needed for the local-authoring loop, while those bypasses remain for the immutable case.</AUTOMATIC-NO-FLAG></p>
+      <p><AUTOMATIC-NO-FLAG fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**No new flag (consistent with §2.5).** This is automatic and source-aware — the author edits the in-repo source and runs `vibe install`; nothing to remember, and neither `vibe update` nor `reinstall --force` is needed for the local-authoring loop, while those bypasses remain for the immutable case.</AUTOMATIC-NO-FLAG></p>
     </local-mutable-source>
   </decisions>
   <surface title="3. Command and crate surface">
