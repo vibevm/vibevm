@@ -34,7 +34,7 @@ commit = "0123456789abcdef0123456789abcdef01234567"
 content_hash = "sha256:…"
 upstream_authors = ["The Spec Kit contributors"]
 upstream_license = "MIT"</fence>
-    <p>A declared source is authenticated twice when it arrives: the checkout must be at the declared commit, and the hash of its tree must equal the declared one; a `ref_hint` such as a tag name is only for people to read and never chooses bytes.</p>
+    <p>A declared source is authenticated twice when it arrives: the checkout must be at the declared commit, and the hash of its tree must equal the declared one. A `ref_hint` such as a tag name is only for people to read and never chooses bytes.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#FORM-DEPENDENCY-DECLARED"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-AUTH"/>
   </three-classes>
