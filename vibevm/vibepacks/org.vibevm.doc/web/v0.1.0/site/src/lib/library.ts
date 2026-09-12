@@ -1,8 +1,8 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE */
 
 /**
- * The library this build ships: one source documentation and every
- * adaptation of it, as the shell is allowed to see them.
+ * The library a shell is showing: one source documentation and every
+ * adaptation of it, as manifests turned into addresses.
  *
  * Two rules shape this file and nothing else does.
  *
@@ -21,10 +21,13 @@
  * shell's whole part in it is to print the value it was handed beside
  * the word and the order that agree with it (D-19).
  *
- * Until a real package is on the machine the library is the site's own
- * fixture pair — a manual of two pages and an adaptation that carries
- * one of them. The shape of what replaces it is the same: manifests in,
- * addresses out.
+ * Nothing here reaches for a library of its own. Every function takes
+ * the one it is answering about, because there are two and they arrive
+ * by different roads: the public site's is baked in at build time out of
+ * the documentation trees the deployment rendered, and the local
+ * reader's is fetched from `<base>manifest.json` while the page is being
+ * read. A module-level library would have made the second impossible to
+ * express and the first impossible to test.
  */
 
 import type {
@@ -32,30 +35,8 @@ import type {
   DocPage,
   DocPackage,
 } from "../generated/doc-manifest.ts";
-import sourceFixture from "../fixtures/manifest.json";
-import adaptationFixture from "../fixtures/manifest-ru.json";
 import { parseDocManifest } from "./manifest.ts";
 import type { DocAddress, PackageAddress } from "./href.ts";
-
-/**
- * A manifest is bytes until it is looked at. Failing here fails the
- * build with the path that failed in the message, which is the only
- * useful moment to learn that a manifest is not one.
- */
-function read(input: unknown, name: string): DocManifest {
-  const parsed = parseDocManifest(input);
-  if (!parsed.ok) {
-    throw new Error(
-      `${name} is not a page manifest: ${parsed.error.path} — ${parsed.error.reason}`,
-    );
-  }
-  return parsed.value;
-}
-
-const SOURCE = read(sourceFixture, "fixtures/manifest.json");
-const ADAPTATIONS: readonly DocManifest[] = [
-  read(adaptationFixture, "fixtures/manifest-ru.json"),
-];
 
 /** One language this documentation can be read in. */
 export type Edition = {
@@ -83,6 +64,21 @@ export type Edition = {
   readonly pages: readonly DocPage[];
 };
 
+/**
+ * One documentation, in every language a shell was given it in.
+ *
+ * It is a value and not a module, so the same code answers for the site
+ * and for the reader `vibe` serves — which is the whole reason the local
+ * reader can show the package it was pointed at rather than the fixture
+ * its shell was built from.
+ */
+export type Library = {
+  /** The source edition, then the starred adaptations, then the rest. */
+  readonly editions: readonly Edition[];
+  /** The source — the coordinate every address in this library is built on. */
+  readonly source: Edition;
+};
+
 /** The extension a manifest path carries is part of the file, not of the address. */
 export function documentOf(path: string): string {
   return path.replace(/\.(xml|md)$/, "");
@@ -102,31 +98,95 @@ function edition(manifest: DocManifest, segment: string | null): Edition {
 }
 
 /**
- * Every edition, source first and then the adaptations in the order
- * D-19 puts them in: the starred ones before the community ones.
+ * The library a set of manifests describes, in D-19's order: the source,
+ * then the starred adaptations, then the community ones.
  *
  * The order is not decoration. Three signals have to agree — the star,
  * the word, and the place in the list — and the only way to keep them
  * agreeing is to sort by the same value the star is drawn from.
+ *
+ * A set with no source is refused rather than guessed at: every address
+ * of every edition is built on the source's coordinate (D-06), so a
+ * library of translations alone has nothing to be served under.
  */
-export function editions(): readonly Edition[] {
-  const source = edition(SOURCE, null);
-  const adapted = ADAPTATIONS.map((manifest) =>
-    edition(manifest, manifest.package.lang),
+export function libraryOf(manifests: readonly DocManifest[]): Library {
+  const sources = manifests.filter(
+    (manifest) => manifest.package.translation === undefined,
   );
-  const official = adapted.filter((one) => one.official);
-  const community = adapted.filter((one) => !one.official);
-  return [source, ...official, ...community];
+  const found = sources[0];
+  if (found === undefined) {
+    throw new Error("no source manifest: every one of them is a translation");
+  }
+  /* One documentation and its adaptations, and not two documentations.
+     Every address of every edition is built on the SOURCE's coordinate
+     with a language segment in front of it (D-06), so a second source
+     has nothing to be served under: it would be read as an adaptation
+     of the first and would collide with any real one in its language.
+     The site that carries many documentations is the registry build,
+     which gives each its own library. */
+  if (sources.length > 1) {
+    const named = sources
+      .map((one) => `${one.package.group}/${one.package.name}`)
+      .join(", ");
+    throw new Error(
+      `${sources.length} source manifests in one library (${named}): this build renders one documentation and the adaptations of it`,
+    );
+  }
+  const source = edition(found, null);
+  const adapted = manifests
+    .filter((manifest) => manifest !== found)
+    .map((manifest) => edition(manifest, manifest.package.lang));
+  return {
+    source,
+    editions: [
+      source,
+      ...adapted.filter((one) => one.official),
+      ...adapted.filter((one) => !one.official),
+    ],
+  };
+}
+
+/**
+ * A library out of manifests that are still bytes.
+ *
+ * Failing here fails with the name of the manifest that failed, which is
+ * the only useful moment to learn that a manifest is not one — at build
+ * time it stops the build, and in the local reader it is the difference
+ * between «the store holds something this shell cannot read» and a page
+ * that renders half a shelf.
+ */
+export function parseLibrary(
+  inputs: readonly { readonly name: string; readonly value: unknown }[],
+): Library {
+  return libraryOf(
+    inputs.map((one) => {
+      const parsed = parseDocManifest(one.value);
+      if (!parsed.ok) {
+        throw new Error(
+          `${one.name} is not a page manifest: ${parsed.error.path} — ${parsed.error.reason}`,
+        );
+      }
+      return parsed.value;
+    }),
+  );
+}
+
+/** Every edition, source first. */
+export function editions(library: Library): readonly Edition[] {
+  return library.editions;
 }
 
 /** The source documentation — the coordinate every address is built on. */
-export function sourceEdition(): Edition {
-  return edition(SOURCE, null);
+export function sourceEdition(library: Library): Edition {
+  return library.source;
 }
 
 /** The coordinate of the documentation, in one language or another. */
-export function coordinate(lang: string | null): PackageAddress {
-  const card = SOURCE.package;
+export function coordinate(
+  library: Library,
+  lang: string | null,
+): PackageAddress {
+  const card = library.source.card;
   return {
     lang,
     group: card.group,
@@ -136,8 +196,12 @@ export function coordinate(lang: string | null): PackageAddress {
 }
 
 /** The address of one page of the source documentation, in one language. */
-export function addressOf(lang: string | null, document: string): DocAddress {
-  return { ...coordinate(lang), document };
+export function addressOf(
+  library: Library,
+  lang: string | null,
+  document: string,
+): DocAddress {
+  return { ...coordinate(library, lang), document };
 }
 
 /** A page as one edition has it — or as the source has it, when it does not. */
@@ -152,8 +216,8 @@ export type ResolvedPage = {
   readonly fallback: boolean;
 };
 
-function findEdition(segment: string | null): Edition | null {
-  return editions().find((one) => one.segment === segment) ?? null;
+function findEdition(library: Library, segment: string | null): Edition | null {
+  return library.editions.find((one) => one.segment === segment) ?? null;
 }
 
 function findPage(within: Edition, document: string): DocPage | null {
@@ -172,17 +236,17 @@ function findPage(within: Edition, document: string): DocPage | null {
  * whole of the fallback rule and the reason a translation never 404s.
  */
 export function resolvePage(
+  library: Library,
   segment: string | null,
   document: string,
 ): ResolvedPage | null {
-  const chosen = findEdition(segment);
+  const chosen = findEdition(library, segment);
   if (chosen === null) return null;
 
   const own = findPage(chosen, document);
   if (own !== null) return { edition: chosen, page: own, fallback: false };
 
-  const source = sourceEdition();
-  const fallback = findPage(source, document);
+  const fallback = findPage(library.source, document);
   if (fallback === null) return null;
   return { edition: chosen, page: fallback, fallback: true };
 }
@@ -196,8 +260,8 @@ export type SiteAddress = {
   readonly fallback: boolean;
 };
 
-function prefix(segment: string | null): string {
-  const card = SOURCE.package;
+function prefix(library: Library, segment: string | null): string {
+  const card = library.source.card;
   const lang = segment === null ? "" : `${segment}/`;
   return `${lang}${card.group}/${card.name}/${card.version}`;
 }
@@ -213,11 +277,10 @@ function prefix(segment: string | null): string {
  * the manifests itself rather than importing this file
  * (`##STACK-PAGE-COUNT-GATE`).
  */
-export function siteAddresses(): readonly SiteAddress[] {
+export function siteAddresses(library: Library): readonly SiteAddress[] {
   const out: SiteAddress[] = [];
-  const source = sourceEdition();
-  for (const one of editions()) {
-    const at = prefix(one.segment);
+  for (const one of library.editions) {
+    const at = prefix(library, one.segment);
     // Every language has a catalogue of its own; the source's is the
     // door itself, which is a route file rather than an address of
     // this list.
@@ -231,7 +294,7 @@ export function siteAddresses(): readonly SiteAddress[] {
     // fallback, and it is what makes a language never 404
     // (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). A missing page is a fact
     // about the adaptation's progress, not a hole in the site.
-    for (const page of source.pages) {
+    for (const page of library.source.pages) {
       const document = documentOf(page.path);
       out.push({
         path: `${at}/${document}`,

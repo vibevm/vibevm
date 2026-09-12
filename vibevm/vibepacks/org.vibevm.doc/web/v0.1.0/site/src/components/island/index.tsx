@@ -5,7 +5,17 @@ import { fromElement, islandTarget } from "../../lib/island-target.ts";
 import styles from "./styles.css?inline";
 
 export type IslandProps = {
-  /** Finished HTML from the documentation pipeline, inserted verbatim. */
+  /**
+   * What stands where the rendered page goes.
+   *
+   * It is the marker in both builds, and what replaces it is the only
+   * difference between them: the build driver fills every page's hole
+   * once, out of the `<document>/index.html` the pipeline wrote, and
+   * `vibe doc serve` fills one per request out of the machine store.
+   * Passing the bytes through the framework instead would put a page of
+   * the manual into the serialised state of every page that shows it,
+   * and would make the two fillers two mechanisms.
+   */
   readonly html: string;
 };
 

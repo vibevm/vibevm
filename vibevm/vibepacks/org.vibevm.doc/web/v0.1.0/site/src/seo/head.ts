@@ -50,6 +50,7 @@ import {
   type DocAddress,
 } from "../lib/href.ts";
 import { editions, resolvePage, sourceEdition } from "../lib/library.ts";
+import { BUILT } from "../lib/library-source.ts";
 import type { DocView, PackageView, PageView } from "../lib/view.ts";
 import { analytics } from "./analytics.ts";
 import { docFileHref, LATEST } from "./editions.ts";
@@ -90,7 +91,7 @@ function absolute(path: string): string {
  * to the publication.
  */
 function cardOf(): string {
-  const card = sourceEdition().card;
+  const card = sourceEdition(BUILT).card;
   const preview = previewOf(card.group, card.name, card.version);
   return absolute(preview ?? href("og.png"));
 }
@@ -99,7 +100,7 @@ function cardOf(): string {
 function alternates(
   address: DocAddress,
 ): NonNullable<DocumentHeadValue["links"]> {
-  const links = editions().map((edition) => ({
+  const links = editions(BUILT).map((edition) => ({
     rel: "alternate",
     hreflang: edition.tag,
     href: absolute(docHref({ ...address, lang: edition.segment })),
@@ -187,7 +188,7 @@ function pageHead(view: PageView, local: boolean): DocumentHeadValue {
     return localPageHead(view.title, view.summary, projections(address));
   }
   const latest: DocAddress = { ...address, version: LATEST };
-  const source = resolvePage(address.lang, address.document);
+  const source = resolvePage(BUILT, address.lang, address.document);
   const canonical = view.fallback
     ? docHref({ ...address, lang: null })
     : docHref(latest);
@@ -224,7 +225,7 @@ function pageHead(view: PageView, local: boolean): DocumentHeadValue {
           audiences: view.audiences,
           ...(source === null ? {} : { genre: source.page.genre }),
           image: card,
-          packageTitle: sourceEdition().card.title,
+          packageTitle: sourceEdition(BUILT).card.title,
           packageAbsolute: absolute(packageHref(latest)),
           doorAbsolute: absolute(catalogueHref(null)),
         }),
@@ -266,7 +267,7 @@ function packageHead(view: PackageView, local: boolean): DocumentHeadValue {
       /* At the version this address is spelled with, exactly as a page's
          are: an annotation that crossed spellings would name a page that
          names a different one back. */
-      ...editions().map((edition) => ({
+      ...editions(BUILT).map((edition) => ({
         rel: "alternate",
         hreflang: edition.tag,
         href: absolute(packageHref({ ...address, lang: edition.segment })),
@@ -328,12 +329,12 @@ export function catalogueHead(
         "Documentation — VibeVM",
         description,
         absolute(href("og.png")),
-        ogLocale(lang ?? sourceEdition().tag),
+        ogLocale(lang ?? sourceEdition(BUILT).tag),
       ),
     ],
     links: [
       { rel: "canonical", href: canonical },
-      ...editions().map((edition) => ({
+      ...editions(BUILT).map((edition) => ({
         rel: "alternate",
         hreflang: edition.tag,
         href: absolute(catalogueHref(edition.segment)),

@@ -5,6 +5,7 @@ import { Card, Prose, SectionHead, Shelf } from "@vibe-docs/design";
 
 import { catalogueHref, packageHref } from "../../lib/href.ts";
 import { coordinate, editions } from "../../lib/library.ts";
+import { BUILT } from "../../lib/library-source.ts";
 import { startCatalogueReader } from "../../reader/mount.ts";
 import { DOC_GLYPH } from "../../lib/view.ts";
 
@@ -32,7 +33,7 @@ export type CatalogueProps = {
  * at it IS the choice.
  */
 export const Catalogue = component$<CatalogueProps>((props) => {
-  const all = editions();
+  const all = editions(BUILT);
   const doors = all.map((one) => ({
     tag: one.tag,
     href: catalogueHref(one.segment),
@@ -46,7 +47,7 @@ export const Catalogue = component$<CatalogueProps>((props) => {
     <Prose measure={MEASURE}>
       <SectionHead
         title="Documentation"
-        moreHref={packageHref(coordinate(props.lang))}
+        moreHref={packageHref(coordinate(BUILT, props.lang))}
         moreLabel="the package"
       />
       <Shelf
@@ -59,7 +60,7 @@ export const Catalogue = component$<CatalogueProps>((props) => {
           <Card
             key={one.tag}
             title={one.title}
-            href={packageHref(coordinate(one.segment))}
+            href={packageHref(coordinate(BUILT, one.segment))}
             publisher={one.publisher}
             coordinate={`${one.card.group}/${one.card.name}@${one.card.version}`}
             {...(one.card.description === undefined

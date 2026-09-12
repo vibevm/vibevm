@@ -126,7 +126,7 @@ export function readTrees(paths) {
  * publish whichever projection happened to be named first and silently
  * drop the others.
  */
-function treesOf(trees, edition) {
+export function treesOf(trees, edition) {
   const card = edition.manifest.package;
   return trees.filter(
     (tree) => tree.group === card.group && tree.name === card.name,
@@ -194,7 +194,7 @@ function copy(from, to) {
 }
 
 /** One file, looked for in each of a package's trees in turn. */
-function fileIn(trees, relative) {
+export function fileIn(trees, relative) {
   for (const tree of trees) {
     const full = join(tree.root, relative.split("/").join(sep));
     if (existsSync(full)) return full;

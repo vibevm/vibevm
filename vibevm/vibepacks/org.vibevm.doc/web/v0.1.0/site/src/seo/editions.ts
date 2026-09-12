@@ -104,6 +104,17 @@ export function editionsOf(
   if (source === undefined) {
     throw new Error("no source manifest: every one of them is a translation");
   }
+  const sources = manifests.filter(
+    (manifest) => manifest.package.translation === undefined,
+  );
+  if (sources.length > 1) {
+    const named = sources
+      .map((each) => `${each.package.group}/${each.package.name}`)
+      .join(", ");
+    throw new Error(
+      `${sources.length} source manifests in one library (${named}): this build renders one documentation and the adaptations of it`,
+    );
+  }
   const adapted = manifests
     .filter((manifest) => manifest !== source)
     .map((manifest) => one(manifest, manifest.package.lang));

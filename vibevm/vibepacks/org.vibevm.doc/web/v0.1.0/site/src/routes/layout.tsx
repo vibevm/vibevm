@@ -10,6 +10,7 @@ import {
 } from "@vibe-docs/design";
 
 import { href } from "../lib/href.ts";
+import { BUILT } from "../lib/library-source.ts";
 import { headerLanguageChoices } from "../lib/view.ts";
 
 /**
@@ -43,7 +44,7 @@ export default component$(() => {
         />
         <LanguageSelector
           label="Language"
-          items={headerLanguageChoices(location.url.pathname)}
+          items={headerLanguageChoices(BUILT, location.url.pathname)}
         />
       </DocsHeader>
       <main>

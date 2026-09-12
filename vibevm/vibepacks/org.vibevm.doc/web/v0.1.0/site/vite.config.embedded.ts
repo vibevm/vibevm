@@ -13,8 +13,19 @@
  *     this build produces. The two builds arrive at the same public
  *     address from opposite directions, which is why every link on the
  *     site is written through one function instead of by hand.
- *  3. The island is a placeholder. The server renders the real one per
- *     request out of the machine store and puts it where the marker is.
+ *  3. The library is the package's own fixture pair and never the trees
+ *     a deployment rendered. This build produces ONE route template that
+ *     `vibe doc serve` dresses every page of every package in, and the
+ *     shell reads the library it is actually serving from
+ *     `<base>manifest.json` while the page is being read — so
+ *     prerendering a deployment's ninety-nine addresses here would be
+ *     ninety-eight templates thrown away, and a shell whose weight
+ *     depended on what happened to be in the environment when it was
+ *     embedded.
+ *
+ * The island is a placeholder in BOTH builds now, so it is no longer one
+ * of the differences: what changes is who fills the hole — the build
+ * driver over the pages it generated, or the server per request.
  *
  * Everything else — the components, the routes, the styles, the entry —
  * is the same source. That is the whole claim of «one shell, two
@@ -25,15 +36,21 @@ import { qwikVite } from "@qwik.dev/core/optimizer";
 import { qwikRouter } from "@qwik.dev/router/vite";
 import { defineConfig, type UserConfig } from "vite";
 
-import { ISLAND_PLACEHOLDER } from "./src/lib/island-placeholder.ts";
+import { fixtureLibrary } from "../tools/library-source.mjs";
 
 export default defineConfig((): UserConfig => {
   return {
     base: "/doc/",
-    define: { __VIBE_ISLAND_HTML__: JSON.stringify(ISLAND_PLACEHOLDER) },
+    define: {
+      __VIBE_DOC_MANIFESTS__: JSON.stringify(fixtureLibrary()),
+      __VIBE_LOCAL_READER__: "true",
+    },
     plugins: [
       qwikRouter({ routesDir: "src/routes/doc", trailingSlash: true }),
-      qwikVite({ client: { outDir: "dist-embedded" }, ssr: { outDir: "server-embedded" } }),
+      qwikVite({
+        client: { outDir: "dist-embedded" },
+        ssr: { outDir: "server-embedded" },
+      }),
     ],
   };
 });
