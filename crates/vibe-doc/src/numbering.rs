@@ -191,6 +191,43 @@ fn walk_blocks(blocks: &[BlockNode], path: &[u16], out: &mut Numbering) {
     }
 }
 
+/// The block a [`BlockPath`] names, when the document has one there.
+///
+/// The inverse of the walk [`number_blocks`] takes, and the reason
+/// [`Numbering::path_of`] is worth having: «what is at `p12`» is the
+/// question a reader asks out loud and the one a mirror check asks of two
+/// pages at once.
+///
+/// ```
+/// use vibe_doc::numbering::{block_at, number_blocks};
+///
+/// let doc = vibe_specdoc::from_xml_with(
+///     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+///      <spec xmlns=\"https://vibevm.org/spec/1\">\n\
+///        <title id=\"root\">T</title>\n<p>one</p>\n<quote>two</quote>\n\
+///      </spec>\n",
+///     vibe_specdoc::Vocabulary::Doc,
+/// )
+/// .unwrap();
+///
+/// let numbering = number_blocks(&doc);
+/// let second = numbering.path_of(2).and_then(|p| block_at(&doc, p)).unwrap();
+/// assert!(matches!(second.block, vibe_specdoc::doc::Block::Quote(_)));
+/// ```
+pub fn block_at<'a>(doc: &'a SpecDoc, path: &BlockPath) -> Option<&'a BlockNode> {
+    let blocks = match path.section.split_first() {
+        None => &doc.preamble,
+        Some((first, rest)) => {
+            let mut section = doc.sections.get(*first as usize)?;
+            for step in rest {
+                section = section.sections.get(*step as usize)?;
+            }
+            &section.blocks
+        }
+    };
+    blocks.get(path.block as usize)
+}
+
 /// Replace every `derived` block with the fence its generator built.
 ///
 /// One block in, one block out — which is what makes the numbering the

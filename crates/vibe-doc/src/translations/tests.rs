@@ -52,23 +52,126 @@ fn a_source_no_source_holds_is_an_error_and_not_a_silence() {
     assert!(error.to_string().contains("PROP-057#LOC-MIRROR"), "{error}");
 }
 
-/// The committed fixture pair: two pages, mirrored, with one deliberate
-/// divergence on the second page. The set of pages and the set of anchors
-/// agree — this atom's half of the mirror holds — and the adaptation
-/// borrows its example rather than authoring one.
+/// The committed fixture pair: two pages, mirrored, with ONE deliberate
+/// divergence. Paths, anchors and examples all agree — the adaptation
+/// borrows its example rather than authoring one — and the second page
+/// parts from its source at `p02`, where the source has a list and the
+/// adaptation has a paragraph.
 #[test]
-fn the_fixture_pair_mirrors_its_pages_anchors_and_examples() {
+fn the_fixture_pair_parts_at_one_block_and_nowhere_else() {
     let report = compare(
         &read("translations/source"),
         &read("translations/adaptation"),
     );
     assert_eq!(report.pages, 2);
-    assert!(
-        report.problems.is_empty(),
-        "the pair mirrors paths, anchors and examples: {:?}",
-        report.problems
+    assert_eq!(
+        report.problems,
+        vec![Problem::Block {
+            page: "guide/two.xml".to_owned(),
+            at: "p02".to_owned(),
+            source: "list".to_owned(),
+            translation: "p".to_owned(),
+        }],
+        "the pair mirrors everything else"
     );
     assert!(report.unreadable.is_empty());
+    assert!(!report.ok());
+    let line = report.problems[0].render("com.example.docs/pair");
+    assert!(line.contains("BLOCK p02 guide/two.xml"), "{line}");
+    assert!(
+        line.contains("spec://com.example.docs/pair/guide/two#p02"),
+        "{line}"
+    );
+    assert!(line.contains("translation: guide/two.xml#p02"), "{line}");
+}
+
+/// A paragraph the adaptation merged into its neighbour keeps every
+/// anchor and still moves every number below it. This is the case
+/// matching anchors cannot catch, and the reason the block comparison
+/// exists at all (F-44).
+#[test]
+fn a_merged_paragraph_is_caught_though_every_anchor_still_matches() {
+    let source = package(&[(
+        "a.xml",
+        "  <p><LEAD fact=\"true\" status=\"doc/work\">one</LEAD></p>\n  \
+           <p>two</p>\n  <p>three</p>\n",
+    )]);
+    let translation = package(&[(
+        "a.xml",
+        "  <p><LEAD fact=\"true\" status=\"doc/work\">один</LEAD></p>\n  \
+           <p>два. три</p>\n",
+    )]);
+    let report = compare(&source, &translation);
+    assert_eq!(
+        report.problems,
+        vec![Problem::Block {
+            page: "a.xml".to_owned(),
+            at: "p03".to_owned(),
+            source: "p".to_owned(),
+            translation: "nothing".to_owned(),
+        }]
+    );
+}
+
+/// Only the FIRST divergence on a page is reported: after a block is
+/// added every number below it differs, and listing all of them would
+/// bury the one line that says where to look.
+#[test]
+fn only_the_first_diverging_block_of_a_page_is_reported() {
+    let source = package(&[(
+        "a.xml",
+        "  <p>one</p>\n  <p>two</p>\n  <p>three</p>\n  <p>four</p>\n",
+    )]);
+    let translation = package(&[(
+        "a.xml",
+        "  <p>один</p>\n  <quote>два</quote>\n  <quote>три</quote>\n  <p>четыре</p>\n",
+    )]);
+    let report = compare(&source, &translation);
+    assert_eq!(report.problems.len(), 1);
+    assert_eq!(
+        report.problems[0],
+        Problem::Block {
+            page: "a.xml".to_owned(),
+            at: "p02".to_owned(),
+            source: "p".to_owned(),
+            translation: "quote".to_owned(),
+        }
+    );
+}
+
+/// An authored example and a borrowed one are ONE kind to this
+/// comparison. A translation replaces the first with the second by law,
+/// so telling them apart here would paint every correct adaptation red —
+/// and the real violation has a rule of its own.
+#[test]
+fn a_borrowed_example_matches_the_example_it_borrows() {
+    let source = package(&[(
+        "a.xml",
+        "  <p>one</p>\n  <example id=\"v\" fixture=\"none\"><run>vibe --version</run>\
+           <expect>vibe 1.0.0</expect></example>\n",
+    )]);
+    let translation = package(&[("a.xml", "  <p>один</p>\n  <example ref=\"v\"/>\n")]);
+    let report = compare(&source, &translation);
+    assert!(report.problems.is_empty(), "{:?}", report.problems);
+}
+
+/// The `footnotes` section is numbered in no projection, so it is outside
+/// the mirror too: a translation may carry different apparatus without
+/// moving a single `pNN`.
+#[test]
+fn the_footnotes_section_is_outside_the_block_comparison() {
+    let source = package(&[(
+        "a.xml",
+        "  <p>one</p>\n  <section id=\"footnotes\" title=\"Footnotes\">\n    \
+           <p>a</p>\n    <p>b</p>\n  </section>\n",
+    )]);
+    let translation = package(&[(
+        "a.xml",
+        "  <p>один</p>\n  <section id=\"footnotes\" title=\"Сноски\">\n    \
+           <p>а</p>\n  </section>\n",
+    )]);
+    let report = compare(&source, &translation);
+    assert!(report.problems.is_empty(), "{:?}", report.problems);
 }
 
 /// A mirror is file for file. A page on one side and not the other is a
@@ -134,7 +237,9 @@ fn an_example_the_translation_authored_is_a_problem_by_name() {
         id: "v".to_owned()
     }));
     assert!(
-        report.problems[0].render().contains("example ref="),
+        report.problems[0]
+            .render("org.demo/lib-docs")
+            .contains("example ref="),
         "{:?}",
         report.problems
     );
@@ -158,12 +263,23 @@ fn a_borrowed_example_must_exist_on_the_source_page() {
         ("b.xml", "  <example ref=\"v\"/>\n"),
     ]);
     let report = compare(&source, &translation);
-    assert_eq!(
-        report.problems,
-        vec![Problem::UnknownExampleRef {
+    assert!(
+        report.problems.contains(&Problem::UnknownExampleRef {
             page: "a.xml".to_owned(),
             id: "v".to_owned()
-        }]
+        }),
+        "{:?}",
+        report.problems
+    );
+    // The neighbouring page borrows an example its source page does
+    // carry, so it is not named here.
+    assert!(
+        !report.problems.iter().any(|p| matches!(
+            p,
+            Problem::UnknownExampleRef { page, .. } if page == "b.xml"
+        )),
+        "{:?}",
+        report.problems
     );
 }
 
