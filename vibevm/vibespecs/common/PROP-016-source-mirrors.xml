@@ -36,7 +36,7 @@ region = "us"</fence>
     <p><ADD-HOST fact="true" status="spec/done">Adding a host is one `[[target]]` block, committed — the set is living.</ADD-HOST></p>
   </manifest>
   <registry title="3. Relationship to the package-registry split-host">
-    <p><ORTHOGONALITY-LAW fact="true" status="spec/done">This PROP governs the **source repository**; it is orthogonal to the **package registry**, and the two must not be conflated.</ORTHOGONALITY-LAW></p>
+    <p><ORTHOGONALITY-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">This PROP governs the **source repository**; it is orthogonal to the **package registry**, and the two must not be conflated.</ORTHOGONALITY-LAW></p>
     <facts ordered="false">
       <SPLIT-SOURCE fact="true" status="spec/done">**Source mirrors** (this PROP): the vibevm *source* is multi-homed across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), kept in step by `cargo xtask mirror`. Auth is the maintainer's **per-host SSH keys**.</SPLIT-SOURCE>
       <SPLIT-REGISTRY fact="true" status="spec/done">**Package registry** ([PROP-000 §7](PROP-000.xml#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish)): published *packages* live in the GitHub `vibespecs` org. Auth is the **`~/.vibe/github.publish.token`**, used *only* by `vibe registry publish`, scoped strictly to `vibespecs`.</SPLIT-REGISTRY>

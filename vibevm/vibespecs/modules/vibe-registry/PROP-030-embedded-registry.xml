@@ -27,7 +27,7 @@ records, `origin`, `source_path`), [PROP-009](../vibe-workspace/PROP-009-loading
       <unpublished-state fact="true" status="spec/done">With the packages **not published to any network registry**
   (the current state), that friction is the *only* way to use them at all.</unpublished-state>
     </facts>
-    <p><AMBIENT-DEFAULT fact="true" status="impl/done">This PROP makes the in-tree `packages/` of a source-installed `vibe` an
+    <p><AMBIENT-DEFAULT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">This PROP makes the in-tree `packages/` of a source-installed `vibe` an
 **ambient default registry** — resolved automatically, with zero configuration
 in the consuming project.</AMBIENT-DEFAULT></p>
     <audiences title="1.1 Two audiences, opposite precedence">
@@ -78,7 +78,7 @@ derives from its **own active install**, not from the consuming project:</EMBEDD
     </facts>
   </registry>
   <precedence title="3. Precedence">
-    <p><EXPLICIT-ABOVE fact="true" status="impl/done">Resolution keeps PROP-002's explicit-source short-circuits **above** the
+    <p><EXPLICIT-ABOVE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Resolution keeps PROP-002's explicit-source short-circuits **above** the
 embedded registry — an explicit per-dependency source or pin is always
 deliberate and always wins:</EXPLICIT-ABOVE></p>
     <fence>[[override]]  &gt;  path-source  &gt;  git-source  &gt;  ⟨registry layer⟩</fence>
@@ -98,9 +98,9 @@ an embedded registry is present.</NO-REGISTRY-LIFT></p>
     <knob title="3.1 The knob">
       <facts ordered="false">
         <KNOB-FLAGS fact="true" status="impl/done">`--prefer-embedded` / `--no-prefer-embedded` selects the position explicitly.</KNOB-FLAGS>
-        <KNOB-DEFAULT fact="true" status="impl/done">Its **default follows the install origin**: on for `origin = "external"`, off for
+        <KNOB-DEFAULT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Its **default follows the install origin**: on for `origin = "external"`, off for
   a distribution.</KNOB-DEFAULT>
-        <KNOB-SUPPRESS fact="true" status="impl/done">`--no-default-registry` (env `VIBE_NO_DEFAULT_REGISTRY=1`)
+        <KNOB-SUPPRESS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`--no-default-registry` (env `VIBE_NO_DEFAULT_REGISTRY=1`)
   suppresses the embedded registry entirely for a command.</KNOB-SUPPRESS>
         <KNOB-EXPLICIT-SHADOW fact="true" status="impl/done">An explicit
   `--registry &lt;path&gt;` still shadows everything (PROP-002 M0 exclusivity),
@@ -112,7 +112,7 @@ an embedded registry is present.</NO-REGISTRY-LIFT></p>
   (above) governs which side *wins* a coordinate and which side a package is
   *fetched* from — the fetch path is first-served (embedded-first stops at the
   embedded copy).</enum-precedence-vs-fetch>
-        <ENUM-UNION fact="true" status="impl/done">But **version enumeration** (the candidate set the solver picks
+        <ENUM-UNION fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">But **version enumeration** (the candidate set the solver picks
   from) **unions across embedded *and* declared** by default, so the solver can
   see a newer published version even for a package the embedded registry already
   carries.</ENUM-UNION>
@@ -129,7 +129,7 @@ an embedded registry is present.</NO-REGISTRY-LIFT></p>
   locally fails **without a single network request** (and thus without any
   credential prompt). With no embedded registry and no `--registry`, the command
   bails with an actionable message rather than silently resolving nothing.</FLAG-OFFLINE>
-        <FLAG-EMBEDDED-SHORT-CIRCUIT fact="true" status="impl/done">**`--embedded-short-circuit`** — keep the declared walk available, but
+        <FLAG-EMBEDDED-SHORT-CIRCUIT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**`--embedded-short-circuit`** — keep the declared walk available, but
   short-circuit version enumeration at the embedded registry for any coordinate
   it serves: the network is reached **only** for packages the embedded registry
   lacks. A fully-embedded dependency graph resolves with zero network access
@@ -161,7 +161,7 @@ expansion under a different name.</TERM-LOCAL-HISTORY></p>
     </terminology>
     <project-local title="3.3 Project-local sources">
       <facts ordered="false">
-        <LOCAL-AUTO-OPEN fact="true" status="impl/done">REQ. A project carrying `&lt;project_root&gt;/packages/` (where `project_root` is
+        <LOCAL-AUTO-OPEN fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">REQ. A project carrying `&lt;project_root&gt;/packages/` (where `project_root` is
   the directory holding the project's `vibe.toml`, resolved by
   `resolve_project_root`) gets that directory auto-opened as a `LocalRegistry`
   and composed into the local-registry family alongside the vibe-embedded
@@ -184,13 +184,13 @@ expansion under a different name.</TERM-LOCAL-HISTORY></p>
   carries the same `packages/`), so a project-local lock is reproducible
   across machines and CI. The gate continues to suppress the vibe-embedded
   half (the machine-local one).</LOCAL-CI-GATE>
-        <LOCAL-NO-PREFER-FLAG fact="true" status="impl/done">REQ. `--no-prefer-local` suppresses project-packages discovery for one
+        <LOCAL-NO-PREFER-FLAG fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">REQ. `--no-prefer-local` suppresses project-packages discovery for one
   command (use when a project's `packages/` is stale, broken, or deliberately
   bypassed). It does NOT suppress vibe-embedded — `--no-default-registry`
   remains the knob for that. `--prefer-local` is the explicit affirmation of
   the default (project-local wins the local family); mutually exclusive with
   `--no-prefer-local`.</LOCAL-NO-PREFER-FLAG>
-        <LOCAL-SOURCE-KIND fact="true" status="impl/done">REQ. A package resolved from project-local records `source_kind = "local"`
+        <LOCAL-SOURCE-KIND fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">REQ. A package resolved from project-local records `source_kind = "local"`
   in `vibe.lock` (§4) — distinct from `embedded`. Unlike `embedded`, it is
   **portable** and the reproducibility guard (§5) does NOT warn on it: every
   checkout of the project resolves the same `packages/` to the same content.</LOCAL-SOURCE-KIND>
@@ -198,7 +198,7 @@ expansion under a different name.</TERM-LOCAL-HISTORY></p>
     </project-local>
   </precedence>
   <lock title="4. The lock">
-    <p><LOCK-EMBEDDED fact="true" status="impl/done">A package resolved from the embedded registry records `source_kind = "embedded"`
+    <p><LOCK-EMBEDDED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">A package resolved from the embedded registry records `source_kind = "embedded"`
 in `vibe.lock` (a [PROP-002](PROP-002-decentralized-registry.xml) `SourceKind`
 variant beside `registry` / `git` / `override` / `path`). Its `source_url` is the
 `file://` path into `&lt;source_path&gt;/packages`.</LOCK-EMBEDDED></p>
@@ -223,12 +223,12 @@ variant beside `registry` / `git` / `override` / `path`). Its `source_url` is th
     </facts>
     <p><guard-strength-lead fact="true" status="impl/done">The guard, at the **warn + CI-off** strength the owner chose:</guard-strength-lead></p>
     <facts ordered="false">
-      <GUARD-CI-OFF fact="true" status="impl/done">**CI-off.** In `--frozen` (and any non-interactive CI resolution), the
+      <GUARD-CI-OFF fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**CI-off.** In `--frozen` (and any non-interactive CI resolution), the
   vibe-embedded registry is **disabled by default** — CI must resolve from
   declared registries (and, since §3.3, project-local), so a machine-local lock
   cannot silently pass there. Project-local is NOT suppressed by this gate — it
   is per-project and portable.</GUARD-CI-OFF>
-      <GUARD-WARN fact="true" status="impl/done">**Warn.** `vibe check` **warns** (does not fail) when the lock carries any
+      <GUARD-WARN fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Warn.** `vibe check` **warns** (does not fail) when the lock carries any
   `source_kind = "embedded"` entry: "this lockfile depends on the embedded
   registry of a source install and is not portable; publish or vendor these
   packages before sharing the lock." A `source_kind = "local"` entry is
