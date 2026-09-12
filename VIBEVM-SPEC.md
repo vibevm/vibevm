@@ -556,7 +556,7 @@ A package's identity is the tuple `(group, name, version, content_hash)`:
 - `version` — a semver string.
 - `content_hash` — the sha256 over the package's file tree (§7.4; [PROP-002 §2.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md)).
 
-`kind` (`flow` / `feat` / `stack` / `tool` / `mcp` / `lang`) stays a **mandatory `[package]` field**, but it is **metadata, not identity** — it places content (`spec/flows/` vs `spec/feats/`), drives the `--kind` filter on `vibe list` / `vibe search`, and is a UX signal in a kind-prefixed pkgref. It identifies nothing and names nothing.
+`kind` (`flow` / `feat` / `stack` / `tool` / `mcp` / `lang` / `doc` / `app`) stays a **mandatory `[package]` field**, but it is **metadata, not identity** — it places content (`spec/flows/` vs `spec/feats/`), drives the `--kind` filter on `vibe list` / `vibe search`, and is a UX signal in a kind-prefixed pkgref. It identifies nothing and names nothing.
 
 A **pkgref** (package reference) is:
 
@@ -621,7 +621,7 @@ role**, carrying `[project]` instead.
 [package]
 name = "wal"                        # without the group / kind prefix
 group = "org.vibevm"                # reverse-FQDN qualifier — mandatory; (group, name) is identity
-kind = "flow"                       # one of: flow, feat, stack, tool, mcp, lang — metadata, not identity
+kind = "flow"                       # one of: flow, feat, stack, tool, mcp, lang, doc, app — metadata, not identity
 version = "0.3.0"
 authors = ["Oleg Chirukhin <oleg@example.com>"]
 license = "EULA"
@@ -1509,7 +1509,7 @@ Terms used throughout this document, in alphabetical order. When in doubt, refer
 - **Flow.** An installable kind: a process discipline that modifies how the human-AI development workflow operates.
 - **Head.** The human developer's memory; not vibevm's concern but acknowledged in design.
 - **Install.** The workflow that resolves, fetches, reviews, plans, confirms, and applies a package.
-- **Kind.** One of `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`. The category of a package.
+- **Kind.** One of `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`. The category of a package.
 - **Lifecycle.** An ordered phase table; VibeVM's exact default and clean lifecycles are defined by PROP-054.
 - **Lockfile.** `vibe.lock` at project root, the source of truth for what is installed at exact versions.
 - **LLM provider.** A configured backend that vibevm calls to invoke a language model (Anthropic, OpenAI, etc.).

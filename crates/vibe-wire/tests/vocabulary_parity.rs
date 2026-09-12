@@ -397,7 +397,7 @@ fn package_kind_copies_match_the_declared_domain() {
         &mut drift,
         "boot core terminology list",
         "vibevm/vibespecs/boot/00-core.xml",
-        &format!("only six installable kinds — {ticked}"),
+        &format!("only eight installable kinds — {ticked}"),
     );
 
     unordered(
