@@ -210,13 +210,43 @@ fn a_dependant_is_the_other_end_of_a_requirement() {
     assert_eq!(rows[0].coordinate, "org.example/app");
 }
 
-/// A requirement carries its constraint beside the coordinate, and the
-/// shelf is keyed by the coordinate.
+/// A requirement carries a kind in front and a constraint behind, and a
+/// shelf is keyed by neither.
+///
+/// The kind is the half a live run found missing: every requirement in
+/// the published catalog carries one, and keeping it matched no
+/// coordinate at all — an empty shelf rather than a wrong one, which is
+/// the failure a unit test written from the norm alone would not have
+/// caught.
 #[test]
-fn a_requirement_is_read_past_its_constraint() {
-    assert_eq!(coordinate_of("org.example/wal@^1.0"), "org.example/wal");
-    assert_eq!(coordinate_of("org.example/wal ^1.0"), "org.example/wal");
-    assert_eq!(coordinate_of("org.example/wal"), "org.example/wal");
+fn a_requirement_is_read_past_its_kind_and_its_constraint() {
+    for spelled in [
+        "lang:org.example/wal@=1.0.0",
+        "flow:org.example/wal@^1.0.0",
+        "org.example/wal@^1.0",
+        "org.example/wal ^1.0",
+        "org.example/wal",
+    ] {
+        assert_eq!(coordinate_of(spelled), "org.example/wal", "for `{spelled}`");
+    }
+}
+
+/// The kind's separator is only a kind's separator before the slash.
+#[test]
+fn a_colon_after_the_slash_is_part_of_the_name() {
+    assert_eq!(coordinate_of("org.example/wal:2"), "org.example/wal:2");
+}
+
+/// The whole point of the strip: an edge from a real catalog record has
+/// to land on the shelf its coordinate names.
+#[test]
+fn a_requirement_as_the_published_catalog_spells_it_reaches_the_shelf() {
+    let mut consumer = subject("go-ai-native");
+    consumer.requires = vec![coordinate_of("lang:org.example/go-ai-native-lang@=1.0.0")];
+    let shelves = fold(&[subject("go-ai-native-lang"), consumer]);
+    let rows = shelves.dependants_of("org.example/go-ai-native-lang");
+    assert_eq!(rows.len(), 1, "the kind prefix swallowed the edge");
+    assert_eq!(rows[0].coordinate, "org.example/go-ai-native");
 }
 
 /// Three signals, and they have to agree: the mark, the word and the
