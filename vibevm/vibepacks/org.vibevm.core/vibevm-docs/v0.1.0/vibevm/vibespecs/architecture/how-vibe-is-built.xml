@@ -18,6 +18,7 @@
       <tr><td>the lifecycle</td><td>`vibe-lifecycle`, `vibe-extension-registry`, `vibe-orchestrator`, `vibe-ext`, `vibe-native-loader`, `vibe-llm`, `vibe-scrape`</td><td>the nine-phase model and chaining; the pure extension registry; surface-neutral orchestration; the safe author SDK and the quarantined loader of native extensions; the model provider seam; scrape planning</td></tr>
       <tr><td>agents and preferences</td><td>`vibe-mcp`, `vibe-agent-projection`, `vibe-settings`, `vibe-actions`, `vibe-requirements`</td><td>the MCP server and integration manager; skill projection into agents; three-level preferences; frontend-agnostic actions; the read-only requirements query</td></tr>
       <tr><td>surfaces and checks</td><td>`vibe-cli`, `vibe-check`</td><td>the command line; the deterministic project linter</td></tr>
+      <tr><td>documentation</td><td>`vibe-doc`, `vibe-doc-server`, `vibe-doc-shell`</td><td>the page pipeline behind `vibe doc`: build, check, manifest, surface snapshots, the maintenance queue and the site builder; the local reader's server on the loopback address; the reader's shell carried inside the binary</td></tr>
       <tr><td>reserved and tooling</td><td>`vibe-graph`, `vibe-test-support`, `xtask`</td><td>a reserved task-graph slot; test isolation of the settings home; the maintainer gates: code generation, the traceability map, engine synchronisation, mirroring, the release build</td></tr>
     </table>
     <p>The dependency direction is fixed: a surface calls an orchestrator, an orchestrator calls a library through a seam, a library returns typed values. Domain libraries never prompt, never format terminal output and never decide authentication; those choices are made at the composition root, in the CLI or the [MCP server](../glossary/index.xml#mcp-server).</p>
@@ -51,6 +52,6 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS"/>
   </wire-and-authored>
   <reading-order title="Where to read next">
-    <p>The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for the loading model, `PROP-002` and `PROP-010` for registries and the store, `PROP-054` for the [lifecycle](../glossary/index.xml#lifecycle) and the extension machine, `PROP-045` for the document model. The traceability page of this manual explains how code cites them and how to ask the map which code implements which rule. The developer guide in the repository covers building, testing and the self-check panel.</p>
+    <p>The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for the loading model, `PROP-002` and `PROP-010` for registries and the store, `PROP-054` for the [lifecycle](../glossary/index.xml#lifecycle) and the extension machine, `PROP-045` for the document model, `PROP-057` and `PROP-058` for documentation packages, the site and how this manual is maintained. The traceability page of this manual explains how code cites them and how to ask the map which code implements which rule. The developer guide in the repository covers building, testing and the self-check panel.</p>
   </reading-order>
 </spec>
