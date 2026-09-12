@@ -79657,6 +79657,861 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-INFRA-STAYS-PRIVATE"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:55a89e94873cd3d9ca9c4f1d0058ac5998bb85abf5132880a03d432f4e5d3ba0",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "PROP-058 — Documentation maintenance",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#root"
+    },
+    {
+      "anchor": "self-uri",
+      "content_hash": "sha256:4990e4ed5ed9f66ace30b44e206f12c3464e5ff8c6d2aef8afcd0dd4751843f1",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`spec://org.vibevm.core/vibevm/common/PROP-058` @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#self-uri"
+    },
+    {
+      "anchor": "status-line",
+      "content_hash": "sha256:69cb3d786423e5e120853643121a6cdb054ebc718839d061390f2f1aa7773a96",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**Status:** adopted as the working regulation of the manual `org.vibevm.core/vibevm-docs`; every rule cites the journal entry that produced it (`JOURNAL.md` of the manual package), and a rule without such an entry is marked a hypothesis and stays `spec/work` until a loop confirms or removes it. @status:spec/work",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#status-line"
+    },
+    {
+      "anchor": "related",
+      "content_hash": "sha256:19626e867ef18403e41c305daf4e32270834e3f465a35b5a6156d7fe1e09d8dc",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**Related:** [PROP-057 §14](PROP-057-documentation-packages-and-site.xml) (`##OBS-NO-RELEASE-LOCK`, `##OBS-VERSION-CONTRACT`, `##OBS-SURFACE-SNAPSHOTS`, `##OBS-MAINTENANCE-TOOLS` — the observability contract this regulation operates), [PROP-047](../modules/vibe-progress/PROP-047-progress-campaigns.xml) (`##DOC-COVERAGE-RATCHET`, debt as a list), [PROP-043](../modules/vibe-facts/PROP-043-facts-markup.xml) (obligations and audiences), [PROP-045](PROP-045-xml-spec-sources.xml) (the page dialect the loops edit), [design/documentation-maintenance.xml](../design/documentation-maintenance.xml) (the drafted regulation and its reasoning) and [design/documentation-vision.xml](../design/documentation-vision.xml) (D-26, D-27). @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#related"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:6e5b80c9033393b703866d4af6783790e9ff13410051ae9daf2bf6c66fa9cb20",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "1. Mandate and scope",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#mandate"
+    },
+    {
+      "anchor": "MAINT-MANDATE",
+      "content_hash": "sha256:4fa7f382ebe64d1800ef36dae2a00ebc7452f097a4a90ec46ffe4f442c2cfe60",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The owner set the frame on 2026-09-10 (J-013, J-014): the product ships up to ten times a day and merges up to a hundred pull requests, documentation drifts between checks and that risk is accepted; a version is a contract on behaviour, not a set of files; no technical lock binds a product release to the documentation. The regulation therefore measures drift, shows it to the reader and keeps a team promise to reconcile fully on a calendar. @status:spec/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#MAINT-MANDATE"
+    },
+    {
+      "anchor": "MAINT-SCOPE",
+      "content_hash": "sha256:1308db80b57b317f5daa6f649f8452096424a51425b5aa0bfdb87d3fa8acbd79",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "This regulation binds the manual `org.vibevm.core/vibevm-docs` and every other `doc` package of the `org.vibevm` groups; a second project that wants the same ritual receives it as a flow package later (PROP-057 `##obs-revisit`), not by reading this PROP. @status:spec/done",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#MAINT-SCOPE"
+    },
+    {
+      "anchor": "MAINT-GROWS-FROM-THE-JOURNAL",
+      "content_hash": "sha256:9bd980a2ebd2f1c9de70c5f6f7b1e0d910cc141d378bcc4264fbdb205cd75d26",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The regulation grows only from what happened: each rule below names the journal entries that produced or confirmed it; a rule born without an entry is a hypothesis (J-013, J-014 — twice a rule written from habit turned out to be one). @status:spec/done",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#MAINT-GROWS-FROM-THE-JOURNAL"
+    },
+    {
+      "anchor": "drift",
+      "content_hash": "sha256:045108443367d7d0c2f4e4becdf58681e0b11af19261273a2dc5832582b17e38",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "2. Three sources of drift",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#drift"
+    },
+    {
+      "anchor": "DRIFT-PRODUCT",
+      "content_hash": "sha256:20d0bd478b0795c430bfdf4bfd1ecce81c23151ce9a038136402e307f2448449",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The product changes** — a command, a flag, a manifest field, a behaviour, the text of a spec fact. The machine sees it: `rule` cites the current text of the spec, `derived` blocks regenerate from the current binary, examples run as golden tests, the coverage gate sees commands, fields and obligations without a page (J-001, J-058, J-088). Stale **prose** the machine does not see; a human reads it at full reconciliation (PROP-057 `##OBS-PROSE-STALENESS-IS-HUMAN`). @status:spec/done",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#DRIFT-PRODUCT"
+    },
+    {
+      "anchor": "DRIFT-WORLD",
+      "content_hash": "sha256:57010c7e5b626d2e27478ad25c1e42443469fb89f98e13a06de0421182383a60",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The world changes** — questions without a page, a new scenario, agents that find no answer by anchor. The signals of §6 and the page of the week catch it (hypothesis until the site is deployed: J-112 recorded that before deployment the weekly loop sees only the linter and the reading rota). @status:spec/done",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#DRIFT-WORLD"
+    },
+    {
+      "anchor": "DRIFT-TEXT",
+      "content_hash": "sha256:db001ae2fe50ed490563f01e597addd0bbff2a6e1f6033e48a863236c2790e0d",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The text ages** — the ladder of terms is broken by insertions, a term appears before it is introduced, the tone drifts, a page has not been read for a year. The style linter, the reading dates in `reviews.toml`, reading aloud and the rule of five edits catch it (J-060, J-093, J-112). @status:spec/done",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#DRIFT-TEXT"
+    },
+    {
+      "anchor": "loops",
+      "content_hash": "sha256:d7cfeddb6a6f3374019431de91fe986e616c4beb22d4a036c488e4cede8f58a2",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "3. Five loops",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#loops"
+    },
+    {
+      "anchor": "LOOPS-LEAD",
+      "content_hash": "sha256:6cbc7046591d9fcd637552ed446ad68e5586b0df76a862408ab617c3517aad44",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Five loops with five triggers: a commit, a week, a month, a calendar promise, and the owner's decision to bump the version. Each has an input, an output and a gate; none of them fails a product build. @status:spec/done",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOPS-LEAD"
+    },
+    {
+      "anchor": "LOOP-COMMIT",
+      "content_hash": "sha256:af26800dd5bd00aa3e1259108beef59c01dde441749106cf951f79f040cf2afa",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The commit loop.** A product change a user can see — a new or changed command, flag, manifest or lock-file field, report format, error message with an address, a spec fact marked `actionstage=\"doc\"`, a new PROP — carries its documentation in the same commit, as `DEV-GUIDE.md` and `RUNTIME-GUIDE.md` already do; when that is impossible, the commit carries a debt line (§8). This is a habit kept by the pull-request checkbox «documentation: updated / debt recorded / not needed», never a lock (J-013; PROP-057 `##OBS-NO-RELEASE-LOCK`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-COMMIT"
+    },
+    {
+      "anchor": "LOOP-COMMIT-DOCS-ONLY",
+      "content_hash": "sha256:979505eac7108fa465d1c191e90b34836009e3a444459f0ece7d60a305307129",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A documentation-only change takes the short path: edit → `vibe doc check --style --examples --citations` on the pages touched → one commit `docs(vibevm-docs): …` (J-093: the style linter runs before every commit that adds prose). @status:spec/done",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-COMMIT-DOCS-ONLY"
+    },
+    {
+      "anchor": "LOOP-COMMIT-FIRST-ACTION",
+      "content_hash": "sha256:79e5c16b5cedbe1f4b7e0a22651c9d8da23299a3ae4e9084afbc4dd1282a77d4",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The first action of any edit is `git status` and a check for a live conflicting writer; two central sessions in one tree stop (J-005). In a tree shared with parallel workers, commits name their paths explicitly — `git commit -m … -- <paths>`, never a bare commit or `git add -A` (J-072, J-090). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-COMMIT-FIRST-ACTION"
+    },
+    {
+      "anchor": "LOOP-WEEKLY",
+      "content_hash": "sha256:930952cba6c777d8219d334ef16372adc4de81b760600f65717cc08727b197dd",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The weekly loop**, 30–60 minutes, in this order: a cheap model runs `vibe doc todo --format md` and `vibe doc check` over the whole package and files the report; the central session sorts the queue — what is fixed in five minutes is fixed now, at most five edits per loop, what is bigger becomes a debt line with severity, what is disputable becomes a one-line question to the owner; the signals of the week (§6) each become an edit, a debt line or «observation without action: reason»; the **page of the week** — the next page along `reviews.toml` — is read aloud by the owner or the central session as the reader of the style law, every stumble becomes an edit or a debt line, and the reading date goes into `reviews.toml`; a journal entry closes the loop with what was done, deferred and surprising (J-112: rehearsed 2026-09-12 in 25 minutes). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 29,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-WEEKLY"
+    },
+    {
+      "anchor": "LOOP-MONTHLY",
+      "content_hash": "sha256:db139a9a33bc315cec9f9c1ec43b1d0f77a5c0311601bd8aa6e179636c0fd954",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The monthly loop**, half a day, with the owner: the eight metrics of §9 as a table with their trend; an audit of the corpus — every top-level command, manifest field and kind has a page, the glossary keeps one word to one meaning, terms are introduced where readers look for them, duplicates and dead pages, the `llms` tiers within their budgets, a sample of ten prompts run through an agent; the analytics of the site; the lag of adaptations; the drain of `docs:` debt — every line closed, given an atom or re-rated with a reason; the ticks that slipped past the linter go into its lists and false positives fix the rule; every journal entry of the month still owing a decision gets one, and the regulation is amended with a date and the entries; the owner reads three pages aloud — one new, one most visited, one oldest by `reviews.toml`; the documentation package ships a minor version with a changelog written by hand from the journal (hypothesis until the first monthly rehearsal, A6.3). <status stage=\"spec\" state=\"work\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 30,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-MONTHLY"
+    },
+    {
+      "anchor": "LOOP-RECONCILE",
+      "content_hash": "sha256:46486ef0edb7afcfe7b03545c3641c390018f349798aa91ac9557abc0f4ed7ba",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The full reconciliation**, a day or two, once a quarter and before a major milestone — a promise the team makes itself, never a release condition: a cheap model builds the documentation against the **current release** binary, not a debug one (J-001), runs `vibe doc todo` and `vibe doc check` with every flag, all examples and all prompts through an agent, and files the report; the central session closes the gaps — new pages or debt with an atom, regenerated `derived`, updated golden examples, repaired citations; **every page is reread against the current product** with `--help` and the spec open beside it, in the order of `reviews.toml` from the least recently read, and each page reread gets the date; adaptations are reread against their sources; the package ships a version compatible with the current product release, the site shows it as `latest`, and after publication the root links of the domain to `/doc/sitemap.xml` and `/doc/llms.txt` are checked with `curl` (J-004); the report goes to the journal with the gaps before and after, the pages reread and rewritten, and the time. The only gate is the reconciliation's own: zero gaps and no reading date older than the reconciliation (hypothesis until the first reconciliation, A6.5). <status stage=\"spec\" state=\"work\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-RECONCILE"
+    },
+    {
+      "anchor": "LOOP-RECONCILE-STARTS-GREEN",
+      "content_hash": "sha256:f4e2f74b735ec3b29aec26c512f84ecbb477c6de72828852ca175c4b500c5a0e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A reconciliation starts from a green self-check panel, otherwise documentation drift is indistinguishable from inherited debt (J-026, J-048, J-100). @status:spec/done",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-RECONCILE-STARTS-GREEN"
+    },
+    {
+      "anchor": "LOOP-VERSION",
+      "content_hash": "sha256:16570a28f667ecf461285db001f485326e8b1e17683d7134538a19eb30fa4c82",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The version change**, hours: the owner bumps the product version — no gate on that step; a cheap model records the surface snapshot of the new version against the current release binary, `vibe doc surface --record <new>`, beside the snapshot the last reconciliation or version change left; `vibe doc diff <old> <new>` names the pages to update with a reason each — an empty list is also an answer; the central session updates only the pages named and writes new ones for what appeared without a page, the rest becomes `docs:` debt with an atom; a human changelog between versions is written from the diff by hand and the diff itself is never published; the package ships with the new `[[documents]] version` and the site shows it as `latest`; the journal records how many pages the diff named, how many were updated, and the time (J-017, J-099; PROP-057 `##OBS-SURFACE-SNAPSHOTS`, `##OBS-NOTHING-LEAKS`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-VERSION"
+    },
+    {
+      "anchor": "LOOP-VERSION-KNOWN-LIMIT",
+      "content_hash": "sha256:573b3f6c52f08b98cf0c90358b083ee11d5bfebcccd5b7075ca77c516f915add",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Known limit of the diff: the manual's `derived` blocks show top-level help only, so a changed flag of a subcommand lands in the queue as «needs a new page» rather than as a page to update; whether subcommands get their own `derived` blocks or prose is decided in a weekly loop from the queue, not in advance (J-099). @status:spec/done",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-VERSION-KNOWN-LIMIT"
+    },
+    {
+      "anchor": "tools",
+      "content_hash": "sha256:1fc97a5f39572546c166cfd4c72f49eaa0b75a7d937fb94123e37b439e4c876d",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "4. Tools",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#tools"
+    },
+    {
+      "anchor": "TOOL-TODO",
+      "content_hash": "sha256:21068738240dd1453e17c887d103ba9257c2da5c3b1b130b62096ca41230cc79",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`vibe doc todo` is the maintenance queue by the **current** state, with no «since» comparison: commands, fields and obligations without a page, red examples, unresolvable citations, structural divergences of adaptations, page age by `reviews.toml`, `docs:` debt lines from `BACKLOG.md`, and the linter's statistics; `--format md` for the weekly report, `--format json` for the metrics. It prints numbers and never fails a build; every section carries `measured`, and a metric the run could not take is `null`, never `0` — «no findings» and «nobody looked» must print differently (J-099). Examples run only with `--examples`, because a sandbox per fixture costs minutes and the weekly reading should not. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-TODO"
+    },
+    {
+      "anchor": "TOOL-CHECK",
+      "content_hash": "sha256:2f994949172b9c998329a3d740f702f0caa0ca4bf7ab4feeb6df5ebff705b688",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`vibe doc check` holds the internal checks — examples, citations, `derived`, coverage, media, translations, style — and `--prompts` runs the prompts of scenario pages through an agent and checks their asserts; that flag is expensive and stays out of the panel: by hand, by sample in the monthly loop, in full at reconciliation (J-065: prompts written without a run hid three product defects and three wrong asserts). @status:spec/done",
+      "line": 41,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-CHECK"
+    },
+    {
+      "anchor": "TOOL-SURFACE-DIFF",
+      "content_hash": "sha256:77916a55e3cf23a5e10141b98f1e3ec3f3a1cebba374254fd6a566c41362ecf7",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`vibe doc surface --record <version>` writes the structural snapshot of the product for a declared version to `maintenance/surface/<version>.json` — commands and flags from `--help`, manifest and lock-file fields read from the real parser, schemas, the text of the facts marked `actionstage=\"doc\"`, the format registry — keyed by the version number alone; `vibe doc diff <old> <new>` turns two snapshots into pages with reasons through the citation graph, the `derived` sources and the coverage map. Both are the documentation developers' kitchen; the site renders nothing of it (J-099; PROP-057 `##OBS-SURFACE-SNAPSHOTS`). @status:spec/done",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-SURFACE-DIFF"
+    },
+    {
+      "anchor": "TOOL-REVIEWS",
+      "content_hash": "sha256:334d7f8ddb60894f41443c0e6c664b7f5e85941f85c04d618aca8be8857f2f04",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`maintenance/reviews.toml` records when each page was last read aloud and by whom, and the date of the last full reconciliation; the order of its rows is the reading rota. It is authored data, never a generated record: a date and a reader, never a revision, a hash or «checked against». A page with no row has never been read aloud, and the queue says exactly that. The reader is named by a name people recognise or by a role such as «central session», never by the name of a model (J-112). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 43,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-REVIEWS"
+    },
+    {
+      "anchor": "TOOL-JOURNAL",
+      "content_hash": "sha256:bb6c5edeabed32499146ec5c9a7bbadeb303ed3ed11e93af3799809596e85271",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`JOURNAL.md` of the documentation package is the journal of §5; during the campaign it lived in the campaign zone and moved into the package by consolidation, sorted, cross-linked and shortened where an entry carried private infrastructure, an unconfirmed defect of a neighbouring crate or user-local identifiers (J-111); `vibe doc todo` reads it without a flag. @status:spec/done",
+      "line": 44,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-JOURNAL"
+    },
+    {
+      "anchor": "TOOL-CHANGELOG",
+      "content_hash": "sha256:5060a4ad60617b16e5cb556097369213099f14bcbb0782ff2b4f8c1a95b68bdd",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "`CHANGELOG.md` of the documentation package says what changed for the reader, by version, in human text written from the journal; the output of `vibe doc diff` is its source, never its content (PROP-057 `##OBS-NOTHING-LEAKS`). @status:spec/done",
+      "line": 45,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-CHANGELOG"
+    },
+    {
+      "anchor": "TOOL-BACKLOG",
+      "content_hash": "sha256:a6188a48ede39ce6c231a9d4f856fbfb0df2ebbf1683f680f32b8eee2c28594e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Documentation debt lives in the host's `BACKLOG.md` as lines prefixed `docs:` with a severity and the address of the change (§8); the panel counts them and prints drift as a number (PROP-047 `##DEBT-IS-A-LIST-NOT-A-RATIO`). @status:spec/done",
+      "line": 46,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-BACKLOG"
+    },
+    {
+      "anchor": "TOOL-CHECKLISTS",
+      "content_hash": "sha256:8fca9cfe4048c896dc4c137e4abf28d0055d015324e4c1265ac00228b0d422f0",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The package carries the checklists the loops are run by — `maintenance/weekly.md`, `maintenance/monthly.md`, `maintenance/release.md`, and after the first reconciliation `maintenance/reconcile.md` written from what was lived; a checklist item without a rule here is a hypothesis. @status:spec/done",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOL-CHECKLISTS"
+    },
+    {
+      "anchor": "journal",
+      "content_hash": "sha256:6e3d393f4d823b807a0f1a1c2cd700bc895171512b1ff68ea7fa8157fa5e031b",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "5. The journal and its laws",
+      "line": 51,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#journal"
+    },
+    {
+      "anchor": "JOURNAL-SHAPE",
+      "content_hash": "sha256:2738d68d5b17c807f30fcb30e230ea113e1ce18616bec44f4403bc91d37b317e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The journal is one table that is only appended to: date; type — `успех`, `неудача`, `находка`, `наблюдение`; a stable id `J-NNN`; what happened; the evidence — a command, a commit, an anchor, a file; and «→ регламент» — which rule the entry confirms, changes or creates, or «observation without action: reason». @status:spec/done",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-SHAPE"
+    },
+    {
+      "anchor": "JOURNAL-SAME-ATOM",
+      "content_hash": "sha256:4ee973c3b5506b0c1a85eeb8de63f64bcd418fc19c829bb01028c23da67c5a00",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**Law one.** The entry is written in the same atom where the event happened — a red probe, a false positive of the linter, a refuted prediction, a workaround, a trick that worked — never «at the end of the week from memory» (J-046, J-063, J-066: three entries that would have been lost a day later). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 54,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-SAME-ATOM"
+    },
+    {
+      "anchor": "JOURNAL-NO-EMPTY-REGULATION",
+      "content_hash": "sha256:693b00a0a04e0e867ee66dce477c741484a32f2fab6adf370d587c5d45849ee3",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**Law two.** The «→ регламент» field stays empty no longer than one monthly loop; `vibe doc todo` counts the entries owing a decision as one of the eight metrics (J-099: 0 of 112 at consolidation). @status:spec/done",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-NO-EMPTY-REGULATION"
+    },
+    {
+      "anchor": "JOURNAL-RULE-WITHOUT-ENTRY",
+      "content_hash": "sha256:e5c6dc88140b876fdea181e62adf9edf2b63a06f5968f7b0fb0b3c0ca03dc927",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**Law three.** A rule without an entry is a hypothesis: every rule of the regulation cites the entries that produced it, and a rule without a citation is marked «hypothesis» and checked (J-013, J-014, J-016: the release lock, the version tags and the content-hash pins were all written from habit and all fell to the owner's word). @status:spec/done",
+      "line": 56,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-RULE-WITHOUT-ENTRY"
+    },
+    {
+      "anchor": "JOURNAL-PUBLISHABLE",
+      "content_hash": "sha256:7705bbc29e6a1dc7939162bd835e90cce4cead124b331601690c6074cbf27a13",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The journal ships with the package, so an entry names no private infrastructure, no unconfirmed defect of a neighbouring product, no user-local identifier and no temporary path; the campaign-side gate that checks those patterns runs over the package journal before every commit that touches it (J-046, J-111). @status:spec/done",
+      "line": 57,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-PUBLISHABLE"
+    },
+    {
+      "anchor": "JOURNAL-PREDICTIONS",
+      "content_hash": "sha256:6d2807d1fb94fd2057ecc170baebf39d5c3488891ddd1472cac6800429984561",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Predictions are part of the journal: each is an entry when made and an entry when confirmed or refuted with a number (J-011, J-037, J-036 — the legacy prediction refuted by the inventory, and the campaign's thirteen predictions in the ledger). @status:spec/done",
+      "line": 58,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#JOURNAL-PREDICTIONS"
+    },
+    {
+      "anchor": "signals",
+      "content_hash": "sha256:7a0ae496bb65d0c7315935ed6f708d409c1d8943edb968dafaa5813104a6da46",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "6. Signals",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#signals"
+    },
+    {
+      "anchor": "SIGNAL-BUILD",
+      "content_hash": "sha256:55faa8970f401786d31ca8cf5c9425360dcb4ef67cce5faa338c37ed9163d036",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From the build: unresolvable citations, red examples, coverage holes, structural divergences of adaptations, linter statistics — all in `vibe doc todo` (J-088, J-093). @status:spec/done",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-BUILD"
+    },
+    {
+      "anchor": "SIGNAL-PRODUCT",
+      "content_hash": "sha256:20d34085b3c74b1b12c21b2bcd8be567e9474333a3fb2b17f33ba2838641892c",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From the product: new commands, fields, obligations and PROPs without a page are visible to the coverage gate as current gaps, never as «changes since» (J-084, J-088). @status:spec/done",
+      "line": 65,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-PRODUCT"
+    },
+    {
+      "anchor": "SIGNAL-OWNER",
+      "content_hash": "sha256:7199e2e912ac2be6c1b4755d1ceead7588b2e0e1053d1a68b563e712c8e439cf",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From the owner: the decision to bump the product version — the only event that starts the version loop (J-017). @status:spec/done",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-OWNER"
+    },
+    {
+      "anchor": "SIGNAL-PROMPTS",
+      "content_hash": "sha256:e90edeb8401851960ee112223a5a41219343b7c28d9f74780982422e4848ef05",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From prompts: a red assert when an agent runs them, or an agent that did not understand the prompt — an edit or a `docs:` debt line; two failures in a row — a rewrite (J-065). @status:spec/done",
+      "line": 67,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-PROMPTS"
+    },
+    {
+      "anchor": "SIGNAL-PEOPLE",
+      "content_hash": "sha256:bc89e8c292b3fbe029082c23083dad92c9c832ca151de7f8aa6301b01a20e60e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From people: questions in chat and issues, the owner's remarks when reading aloud — an edit or a debt line (J-112: two stumbles on the first page read). @status:spec/done",
+      "line": 68,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-PEOPLE"
+    },
+    {
+      "anchor": "SIGNAL-AGENTS",
+      "content_hash": "sha256:f53895779078d4908716523c0398e0ef0be2d59e3cf1b4520044cb3faae38e08",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From agents: the skill `vibevm-docs` asks an agent that found no answer by anchor to record the question as a `docs-gap:` line in the consuming project's `BACKLOG.md`, for the host in its own — whether a skill may write into a foreign file is the owner's open question (§12), so until his word the skill only proposes (hypothesis). @status:spec/work",
+      "line": 69,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-AGENTS"
+    },
+    {
+      "anchor": "SIGNAL-SITE",
+      "content_hash": "sha256:65412d424b97d6bae9bf9db865b5bd9aefaab3252c81ed30bd47aab1b78141d9",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From the site: views, exits and reading time per page from the analytics tag, search queries without a result once search exists, the search console — the monthly loop's input (hypothesis until the site is deployed, J-112). @status:spec/work",
+      "line": 70,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-SITE"
+    },
+    {
+      "anchor": "SIGNAL-JOURNAL",
+      "content_hash": "sha256:031515a775e6a5c417558760c9036bddbaa11778b0a1f76caa6fabe60d56fbac",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "From the journal: entries with an empty «→ регламент» field — the monthly loop's input (§5 law two). @status:spec/done",
+      "line": 71,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SIGNAL-JOURNAL"
+    },
+    {
+      "anchor": "small-edits",
+      "content_hash": "sha256:6efff43da4627c09459e0a6ebf2f37bc60e98a2a4d9d0b939a98451f83c98d92",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "7. The discipline of small edits",
+      "line": 75,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#small-edits"
+    },
+    {
+      "anchor": "EDIT-ONE-COMMIT",
+      "content_hash": "sha256:cb7cda5fbafe8f05a36df816c45f26e39cc67ab0e862f5f215627952b8e011ae",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "One edit is one commit `docs(vibevm-docs): …` with a concrete description, so the reading rota and the rule of five can count them (J-112: five edits, five commits). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 77,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-ONE-COMMIT"
+    },
+    {
+      "anchor": "EDIT-STABLE",
+      "content_hash": "sha256:be1c5d82ec41bac031e32c8fb13e57c246e327246818ce7c953ee96dae1875f9",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Anchors do not change; `derived` is never edited by hand; a number or a field name in prose stands only with a `rule` beside it (PROP-057 `##OBS-RULE-EDGE-UNPINNED`; J-058). @status:spec/done",
+      "line": 78,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-STABLE"
+    },
+    {
+      "anchor": "EDIT-TERM-INTRODUCED",
+      "content_hash": "sha256:bfe80a2dc8f4a4409b2af9f632bb6fe51304e495e77a3484fad27b8a01019b2d",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A term inserted by an edit is introduced on the spot — a glossary link, an italic introduction or a gloss — and a term used in another sense is replaced by an ordinary word rather than linked; the style linter is green on the page before the commit (J-060, J-093, J-112). @status:spec/done",
+      "line": 79,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-TERM-INTRODUCED"
+    },
+    {
+      "anchor": "EDIT-FIVE-RULE",
+      "content_hash": "sha256:da2a9b1a2361d97e572b7be74a8b818ae346ed42caddd9c49ca63f59445eb693",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "**The rule of five.** The fifth small edit of one page since its last reading aloud puts the page into the reading rota as the next page of the week: accumulated patches break the ladder invisibly to each patch's author (hypothesis — no page has reached five edits yet). @status:spec/work",
+      "line": 80,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-FIVE-RULE"
+    },
+    {
+      "anchor": "EDIT-NOT-SMALL",
+      "content_hash": "sha256:bc425e8f8a43fffca5ecd84d5b7852bd2865dd6edae169e9fdbad0a8707a2732",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A small edit that pulls other pages after it is not small: it becomes a debt line with an atom (J-062: seven pages described a layout `vibe init` does not create, and the fix was an atom, not a patch). @status:spec/done",
+      "line": 81,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#EDIT-NOT-SMALL"
+    },
+    {
+      "anchor": "debt",
+      "content_hash": "sha256:20460702cbd80938d9018943304060eecf8d94e23663f086d1def40ee532045b",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "8. Documentation debt",
+      "line": 85,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#debt"
+    },
+    {
+      "anchor": "DEBT-LINE",
+      "content_hash": "sha256:a59d233da8bfad097599259e743b2d3275a6ea25453199eb07f711f11572bb34",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A debt line is a row of the host's `BACKLOG.md` prefixed `docs:`, with a severity P1–P3 and the address of the change it owes a page to; a line without an address is not accepted. The monthly loop drains the list; the full reconciliation takes what is left (J-064: «needs an author» was closed by a rule written into a script, not row by row). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 87,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#DEBT-LINE"
+    },
+    {
+      "anchor": "DEBT-IS-A-NUMBER",
+      "content_hash": "sha256:2e29359dcee02a235e5a5f91e2c506b31bb2aa7f664c78a928298c9c1414404a",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Debt is measured as a list and printed as a number — P1 lines are the sixth metric — never as a ratio and never as a red step (PROP-047 `##DEBT-IS-A-LIST-NOT-A-RATIO`; J-013). @status:spec/done",
+      "line": 88,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#DEBT-IS-A-NUMBER"
+    },
+    {
+      "anchor": "metrics",
+      "content_hash": "sha256:43c4a7975b8885246dbd260e820b64d3ab776cfafbb1ab5e268e1922fa5783ee",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "9. The eight metrics of the monthly loop",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#metrics"
+    },
+    {
+      "anchor": "METRICS-LEAD",
+      "content_hash": "sha256:758318d0b89bd2252c96023e5797d7e607725482a8eeecf029084880df87dbd3",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Eight numbers and no more, in a table in the monthly report with the trend beside each; `vibe doc todo --format json` produces them, and a number the run could not take is `null` (J-099). @status:spec/done",
+      "line": 93,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRICS-LEAD"
+    },
+    {
+      "anchor": "METRIC-GAPS",
+      "content_hash": "sha256:5b764ca3a87fc1b14df8d92c12c4c3bc1932f1bf62351c036d62832a294c5ce4",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Gaps at the start of the month — rows of the queue by coverage, examples and citations; towards zero. @status:spec/done",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-GAPS"
+    },
+    {
+      "anchor": "METRIC-AGE",
+      "content_hash": "sha256:279a5e693c236aa8ce31612182b87af1768968485531dca3766f3371b04194cc",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Page age — the median of days since the last reading by `reviews.toml`; below ninety (J-112: the first reading set the median to zero for one page and left forty-seven pages without a row). @status:spec/done",
+      "line": 96,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-AGE"
+    },
+    {
+      "anchor": "METRIC-ADAPTATIONS",
+      "content_hash": "sha256:b85c2119ecb91af9973ed8c2c87c394c060dbe3a708a88bda9e9d2ebe1bd2739",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Adaptation divergences — the structural divergences `--translations` finds, because the project keeps no revisions to sum lag by; towards zero at full reconciliation (P2-O7, J-079). @status:spec/done",
+      "line": 97,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-ADAPTATIONS"
+    },
+    {
+      "anchor": "METRIC-COVERAGE",
+      "content_hash": "sha256:a7f27a5f863807ff55753b9829e5b1df41ae63364946afb0fb8c3fef9a23520a",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Coverage of obligations — `vibe doc check --coverage`; one hundred per cent (J-084, J-088). @status:spec/done",
+      "line": 98,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-COVERAGE"
+    },
+    {
+      "anchor": "METRIC-TICKS",
+      "content_hash": "sha256:1223024d40be78ec32fcfe663a7a22002420ef0151d51dbe6046ae1301f2ec48",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Style findings per thousand words — the linter over the corpus; towards zero (J-093: 4.31 at consolidation, 4.13 after the first weekly loop). @status:spec/done",
+      "line": 99,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-TICKS"
+    },
+    {
+      "anchor": "METRIC-DEBT",
+      "content_hash": "sha256:fc9627cd818f2f63adcec6cdb1ab378121aad786a1c6466801fe23423867d062",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Debt — `docs:` lines in `BACKLOG.md` by severity; P1 equals zero. @status:spec/done",
+      "line": 100,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-DEBT"
+    },
+    {
+      "anchor": "METRIC-DECISIONS",
+      "content_hash": "sha256:3514116b59459a71781c35121e8347c669f47bd4ae4b61b3accb6a49ea9b3260",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Findings owing a decision — journal entries with an empty «→ регламент»; all decided. @status:spec/done",
+      "line": 101,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-DECISIONS"
+    },
+    {
+      "anchor": "METRIC-RECONCILE",
+      "content_hash": "sha256:7077d7602d21cb347db4705a2d0a31afceac36499e86625b0c710f50e431109c",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Days since the last full reconciliation — by the date in `reviews.toml`; at most ninety at the quarterly cadence. @status:spec/done",
+      "line": 102,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#METRIC-RECONCILE"
+    },
+    {
+      "anchor": "gates",
+      "content_hash": "sha256:03b123611d0ddcba5b02ece8388919e807539a48bcd6261366aa100c9e9e2b2e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "10. Gates",
+      "line": 106,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#gates"
+    },
+    {
+      "anchor": "GATE-INTERNAL-RED",
+      "content_hash": "sha256:6ec720a5bc4221860b252af254ab437d91efa2d8baad468d3d9cf1383fe4658c",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Only internal breakage of the documentation is red in the panel: a red example, a `derived` block that no longer builds, a vanished citation anchor, a page the pivot cannot read. Drift and debt are printed as numbers (PROP-057 `##OBS-NO-RELEASE-LOCK`; J-074, J-088). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 108,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#GATE-INTERNAL-RED"
+    },
+    {
+      "anchor": "GATE-NO-LOCK",
+      "content_hash": "sha256:154d890b13f3338a902a3d2233a6d40526f79d34771066179620c2cf118d411a",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "No gate binds a product release to the documentation, and no step of the panel goes red because the product moved ahead of the manual (J-013). @status:spec/done",
+      "line": 109,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#GATE-NO-LOCK"
+    },
+    {
+      "anchor": "GATE-PHASE-BORDER",
+      "content_hash": "sha256:6687ea017891a75878dec6e317c2dc920dd57eb06cce38277615ad32856ddcd3",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A phase border or a reconciliation runs the cross-cutting checks — codegen, the map, `wire-diff`, `conform`, facts — on a warm shared build directory and takes the per-crate evidence from the workers' reports; the full panel runs once before a merge into the mainline (the owner's word of 2026-09-12; J-100, J-104). @status:spec/done",
+      "line": 110,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#GATE-PHASE-BORDER"
+    },
+    {
+      "anchor": "tooling-work",
+      "content_hash": "sha256:cc0b731f8729b2903b6e2131514ca2f3a2544d2ddb50e432f8cf44a483a6b139",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "11. How the tooling is changed",
+      "line": 114,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#tooling-work"
+    },
+    {
+      "anchor": "TOOLING-LEAD",
+      "content_hash": "sha256:e05ba1f89f8f2208efe7d5dcf68c9981ae397ea05512bbe5b5f3a3a9930fa524",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The documentation tools are code, and the campaign that built them left rules for the work packets that change them; they bind the coder tier and the central session alike. @status:spec/done",
+      "line": 115,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-LEAD"
+    },
+    {
+      "anchor": "TOOLING-SHARED-TREE",
+      "content_hash": "sha256:e5beccda4b27b64d5cdf4466e034252f71ddf6ff03c04442f57e6d933830b170",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Parallel packets in one tree commit only with explicit paths and never stage a neighbour's files; packets that share an entry-point file — an export barrel, a build script — get it split in advance or run one after the other (J-072, J-090). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 117,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-SHARED-TREE"
+    },
+    {
+      "anchor": "TOOLING-NO-FOREIGN-PROCESS",
+      "content_hash": "sha256:848df2948eb100720c74866302f52693b8b9fa85875ccc2ca8548887bdaad316",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A worker never stops a process it did not start; a busy binary is waited for or built into a private target directory, and a worker that flips the features of the shared binary returns it to the panel's state or says it could not (J-105, J-110). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "line": 118,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-NO-FOREIGN-PROCESS"
+    },
+    {
+      "anchor": "TOOLING-CONFORM-WHOLE",
+      "content_hash": "sha256:c52ee959b54b97c4dd3f31eafce0c1fa3c6ea9f3cc5fde6ad6e294574386db6a",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The packet gate runs `conform check` over the whole workspace against the baseline, not over the packet's own paths: a worker that extends an old file answers for its budget, and the baseline is frozen only by the owner's word with a reason (J-100). @status:spec/done",
+      "line": 119,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-CONFORM-WHOLE"
+    },
+    {
+      "anchor": "TOOLING-PAIRED-MEASUREMENTS",
+      "content_hash": "sha256:b62bc904b367992a979673a2226ce2583c14728cab3bbc955817539da53f04ae",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Before/after measurements are taken one at a time and with no other packet's codegen in the tree; a test that reads generated code is not measured during parallel work (J-101). @status:spec/done",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-PAIRED-MEASUREMENTS"
+    },
+    {
+      "anchor": "TOOLING-CORPUS-PINS",
+      "content_hash": "sha256:b4922738f3754fccbad4030c8e280297b7ce52992ec0a27183ec79d6e00edf00",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Whatever writes bytes into a golden corpus pins its dependencies explicitly — `default-features = false` and one feature — so a projection is never a function of the build graph; a commit that blesses a corpus runs `wire-diff` and files its output (J-069, J-104). @status:spec/done",
+      "line": 121,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-CORPUS-PINS"
+    },
+    {
+      "anchor": "TOOLING-LIVE-RUN",
+      "content_hash": "sha256:4069a552fbfde67effe6706d7b1e939fcea7599bb55b5adb98afa15ea3ea22db",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A step over the output of `vibe doc build` runs at least once over the real manual before it is committed, and a builder runs once over the real registry: fixtures did not catch a copy step that lost two projections of three, a shelf that stayed empty, or a table that lost its first row (J-097, J-108). @status:spec/done",
+      "line": 122,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-LIVE-RUN"
+    },
+    {
+      "anchor": "TOOLING-DIAGNOSIS-IS-A-HYPOTHESIS",
+      "content_hash": "sha256:9ddf134bf44c492cabb7a9dfad1276c2b99740c1a7b3b53ade1f6d949942577e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A diagnosis of someone else's anomaly written into a packet is a hypothesis marked «verify», never an order «fix it this way»; the worker reproduces first and may change the commit subject to the fact (J-107). @status:spec/done",
+      "line": 123,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-DIAGNOSIS-IS-A-HYPOTHESIS"
+    },
+    {
+      "anchor": "TOOLING-BEHAVIOUR-TESTS",
+      "content_hash": "sha256:020d11fcd2ff06a83fddf760b9b29d9327745ab852080dbc0d1422f6e4232f14",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A test of a surface with behaviour asserts the behaviour — pages in the navigation, a request for the manifest — and not only the addresses of requests; a server edits the head of a shell template in place and never inserts (J-106, J-109). @status:spec/done",
+      "line": 124,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-BEHAVIOUR-TESTS"
+    },
+    {
+      "anchor": "TOOLING-NUMBERS-ARE-MEASURED",
+      "content_hash": "sha256:48f2c67910e2a3c02cec34f6d053d84a3f5aecb777cbc8bc50de79a30e7dce6b",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A number in a packet is a hypothesis until measured on the built output — the content-security policy expected two inline scripts and the output carried forty-seven (J-096); a generator's zero exit code is not evidence, the page count is (J-040). @status:spec/done",
+      "line": 125,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#TOOLING-NUMBERS-ARE-MEASURED"
+    },
+    {
+      "anchor": "self-change",
+      "content_hash": "sha256:c77575644ec34e699febf2fca8f629388fd876e0ce4eb5ced05cd12d63b1d31d",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "12. How the regulation changes, and the open questions",
+      "line": 129,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#self-change"
+    },
+    {
+      "anchor": "SELF-CHANGE-BY-JOURNAL",
+      "content_hash": "sha256:affc43288598d5004cc4a337ad0f21acc3145c4b3f04eb60508e1b60ced396d1",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The regulation is not dogma: it changes in the monthly loop by the journal, each change a dated edit of this PROP citing the entries `J-NNN` that caused it (§5 law three). @status:spec/done",
+      "line": 131,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-CHANGE-BY-JOURNAL"
+    },
+    {
+      "anchor": "SELF-QUARTERLY-PRUNE",
+      "content_hash": "sha256:007372c5bf718cd6ae2db73e62bc9586db836206209dcd43c0612fb3c5f14496",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Once a quarter the owner is asked which loops proved superfluous, which metrics nobody reads and which rules never fired; a rule that did not fire in a quarter is marked «dormant» and leaves the checklists, a rule without an entry stays «hypothesis» — the regulation loses weight rather than gains it (hypothesis until the first quarter). @status:spec/work",
+      "line": 132,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-QUARTERLY-PRUNE"
+    },
+    {
+      "anchor": "SELF-OPEN-CADENCE",
+      "content_hash": "sha256:9bf8e5c1c257624eb2ef94b897f9de3ec7e1c41e956c2ae237857f8d9b64ece1",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Open to the owner: the cadences — week and month as written, or two weeks and a quarter; who is on duty for the weekly loop — the owner with the central session, or the session alone with a report; whether small edits ship as a patch version weekly or accumulate to the monthly release. @status:spec/work",
+      "line": 133,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-CADENCE"
+    },
+    {
+      "anchor": "SELF-OPEN-AGENT-SIGNAL",
+      "content_hash": "sha256:e7c382110d771c53061409c8a83bc60ca90fa7da60aa09b22629c3483851ed73",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Open to the owner: whether the skill may write `docs-gap:` lines into a consuming project's `BACKLOG.md` by its own will, or only propose them (§6). @status:spec/work",
+      "line": 134,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-AGENT-SIGNAL"
+    },
+    {
+      "anchor": "SELF-OPEN-RECONCILE-CADENCE",
+      "content_hash": "sha256:c59b5c4412eae4663f9536651d2afd78b9efd1998eee2938d473903d4c7c8f70",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Open to the owner: the cadence of the full reconciliation — quarterly, before a major milestone, or both; the recommendation is both, with the owner's right to postpone. @status:spec/work",
+      "line": 135,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-RECONCILE-CADENCE"
+    },
+    {
+      "anchor": "SELF-OPEN-EXAMPLES-AS-TESTS",
+      "content_hash": "sha256:c9d2222a7311dc6004999bbf4790f65996cdde8c6d608363f2be72c4a3f7b877",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Open to the owner: whether examples with `expect` stay golden tests in the panel — the one technical link between product and documentation — or become a measurer too; the recommendation is to keep them: they are edited like any golden file and cost minutes (PROP-057 `##OBS-EXAMPLES-GOLDEN`). @status:spec/work",
+      "line": 136,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-EXAMPLES-AS-TESTS"
+    },
+    {
+      "anchor": "SELF-OPEN-DIFF-NOW",
+      "content_hash": "sha256:14015e6e74b0b27c83e3daba7bf1694ed5291976572aedcfd2ffdde4e94db672",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "Open to the owner: whether `vibe doc diff <version> now` — the inner hint of which pages to reread first at reconciliation — is allowed; the command exists behind `--allow-now` and refuses by default until his word. @status:spec/work",
+      "line": 137,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#SELF-OPEN-DIFF-NOW"
+    },
+    {
+      "anchor": "roles",
+      "content_hash": "sha256:db62990b0e6554626788ec4b4aa950daccc91eb2146320ed3c5e518f883676bd",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "13. Roles by tier",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#roles"
+    },
+    {
+      "anchor": "ROLE-OWNER",
+      "content_hash": "sha256:cc8aa148be3a3eb0536eb1f5924bd40d653972bdcd689b5a79dce1114b0df696",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The owner reads the page of the week when he wishes, reads three pages aloud and decides on the regulation in the monthly loop, sets the date of the full reconciliation and accepts its report, bumps the product version and accepts the changelog. @status:spec/done",
+      "line": 143,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#ROLE-OWNER"
+    },
+    {
+      "anchor": "ROLE-CENTRAL",
+      "content_hash": "sha256:4763dcce0804d794c8f7e4814d031d17a622d48c5a5a73c5b02f95afd6967a1e",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The central session edits prose when a commit requires it, sorts the queue and makes the small edits of the week, writes the journal entries, audits the corpus, rewrites pages, amends the regulation, writes changelogs, rereads pages against the product at reconciliation and updates the pages a version diff names. @status:spec/done",
+      "line": 144,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#ROLE-CENTRAL"
+    },
+    {
+      "anchor": "ROLE-CODER",
+      "content_hash": "sha256:9d5af47da02788fdc288602ceb1fb6c191b3f7c10ffb8f9dcd3ea3e4fb6e2917",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "The coder tier changes the tools — `todo`, `check`, `surface`, `diff`, the generators of `derived` — by findings of the loops, under §11. @status:spec/done",
+      "line": 145,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#ROLE-CODER"
+    },
+    {
+      "anchor": "ROLE-CHEAP",
+      "content_hash": "sha256:20e1352cdbb4e1276aff9b75cfe4e2fbca8710e1b4150a44bd04337f665f5cf6",
+      "doc_path": "common/PROP-058",
+      "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
+      "heading": "A cheap model runs `todo` and `check` and files the report, collects metrics and analytics, drafts adaptations, records surface snapshots and runs the diff. @status:spec/done",
+      "line": 146,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#ROLE-CHEAP"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",
