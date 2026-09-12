@@ -42,7 +42,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-CITES-NEVER-COPIES"/>
   </the-vocabulary>
   <the-shape title="The shape of a page">
-    <p>A concept page has a noun as its title, opens with a paragraph that uses no term of the glossary, shows an example before it explains, explains as a ladder where each step uses only the steps before it, and ends with edge cases and questions. A task page has an imperative title, opens the same way, and then gives the request for an agent before anything else: what to ask, what the agent needs, what you will see, and the commands that prove it worked. Manual steps follow only when they are worth walking. No page ends with a conclusion.</p>
+    <p>A concept page has a noun as its title and opens with a paragraph that uses no term of the glossary. It shows an example before it explains, explains as a ladder where each step uses only the steps before it, and ends with edge cases and questions. A task page has an imperative title, opens the same way, and then gives the request for an agent before anything else: what to ask, what the agent needs, what you will see, and the commands that prove it worked. Manual steps follow only when they are worth walking. No page ends with a conclusion.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PAGE-SKELETON"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"/>
     <p>The full writing rules, including the banned words and the limits on sentence length in technical passages, ship with this manual as `AUTHORING.md`; `vibe doc check --style` enforces the mechanical part.</p>
