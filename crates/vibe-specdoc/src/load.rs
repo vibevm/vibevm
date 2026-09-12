@@ -22,7 +22,8 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
-use crate::{from_xml, to_markdown};
+use crate::doc::Vocabulary;
+use crate::{from_xml_with, to_markdown};
 
 /// How a loaded spec source reached the caller — the projection notice's
 /// datum (PROP-045 ##PROJECTION-READ: a diagnostic for an XML source cites
@@ -93,11 +94,25 @@ pub fn is_spec_source(path: &Path) -> bool {
 /// One raw read, then the one dispatch in [`project_spec_text`]; the
 /// extension decision lives only there (R7.5 A2a).
 pub fn load_spec_text(path: &Path) -> Result<(String, SourceKind), LoadError> {
+    load_spec_text_with(path, Vocabulary::Spec)
+}
+
+/// [`load_spec_text`] with `vocab` open — the entry point for a caller that
+/// knows the containing package is of kind `doc` (##DOC-VOCAB-BY-KIND).
+///
+/// The dispatch is unchanged; only the element set the `.xml` branch reads
+/// widens. Under [`Vocabulary::Doc`] the Markdown that rides back out is a
+/// ONE-WAY projection of the genre (##DOC-VOCAB-MD-ONE-WAY) — which is
+/// exactly what the scanners need, since they read XML only through it.
+pub fn load_spec_text_with(
+    path: &Path,
+    vocab: Vocabulary,
+) -> Result<(String, SourceKind), LoadError> {
     let raw = std::fs::read_to_string(path).map_err(|e| LoadError {
         path: path.to_path_buf(),
         message: e.to_string(),
     })?;
-    project_spec_text(path, &raw)
+    project_spec_text_with(path, &raw, vocab)
 }
 
 /// Project caller-read raw text through the ONE extension dispatch — the
@@ -123,8 +138,19 @@ pub fn load_spec_text(path: &Path) -> Result<(String, SourceKind), LoadError> {
 /// );
 /// ```
 pub fn project_spec_text(path: &Path, raw: &str) -> Result<(String, SourceKind), LoadError> {
+    project_spec_text_with(path, raw, Vocabulary::Spec)
+}
+
+/// [`project_spec_text`] with `vocab` open — the pure sibling of
+/// [`load_spec_text_with`] (##DOC-VOCAB-BY-KIND). Pure in the same sense:
+/// nothing but `path`'s extension, `raw`, and the caller's vocabulary.
+pub fn project_spec_text_with(
+    path: &Path,
+    raw: &str,
+    vocab: Vocabulary,
+) -> Result<(String, SourceKind), LoadError> {
     if path.extension().and_then(|e| e.to_str()) == Some("xml") {
-        let doc = from_xml(raw).map_err(|e| LoadError {
+        let doc = from_xml_with(raw, vocab).map_err(|e| LoadError {
             path: path.to_path_buf(),
             message: e.to_string(),
         })?;

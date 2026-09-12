@@ -16,10 +16,17 @@
 //! are layout and do not enter the IR; a `<status>…</status>` fragment
 //! wrapper keeps its literal spelling inside the unit text while its
 //! payload also becomes the unit's status.
+//!
+//! This frontend is NOT widened for the documentation genre, and cannot be
+//! (##DOC-VOCAB-MD-ONE-WAY): the Markdown block kinds are closed in
+//! progress-core's `BlockKind`, so there is no new block kind for an
+//! `example` or a `prompt` to arrive as. Every slot it builds is therefore
+//! unconditional and every block one of the five spec kinds — authoring
+//! documentation is XML only.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
-use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Title, Unit};
+use crate::doc::{Block, BlockNode, Fact, Section, SpecDoc, StatusEl, Title, Unit};
 use crate::{Error, Result};
 use progress_core::doc::{BlockKind, FactKind, ParsedDoc};
 use progress_core::model::{Granularity, Marker, MarkerForm};
@@ -96,6 +103,7 @@ impl<'a> Adapter<'a> {
                                 id: u.anchor.clone(),
                                 title: u.heading.clone(),
                                 status: None,
+                                when: None,
                                 blocks: Vec::new(),
                                 sections: Vec::new(),
                             },
@@ -119,7 +127,7 @@ impl<'a> Adapter<'a> {
                     }
                 }
                 BlockKind::Code => {
-                    let fence = self.fence_block(b)?;
+                    let fence = BlockNode::plain(self.fence_block(b)?);
                     match open {
                         Some(i) => flat[i].1.blocks.push(fence),
                         None => out.preamble.push(fence),
@@ -127,9 +135,10 @@ impl<'a> Adapter<'a> {
                 }
                 BlockKind::Text => {
                     for blk in self.text_blocks(b)? {
+                        let node = BlockNode::plain(blk);
                         match open {
-                            Some(i) => flat[i].1.blocks.push(blk),
-                            None => out.preamble.push(blk),
+                            Some(i) => flat[i].1.blocks.push(node),
+                            None => out.preamble.push(node),
                         }
                     }
                 }

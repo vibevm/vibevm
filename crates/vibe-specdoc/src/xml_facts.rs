@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
 use super::xml_in::{Ev, Parser};
-use super::xml_support::{kind, only_attrs, status_from_attrs};
+use super::xml_support::{kind, only_attrs, only_attrs_slot, status_from_attrs};
 use crate::doc::{Block, Fact, Unit};
 use crate::{Error, Result};
 use progress_core::model::{ArtifactKind, ArtifactRequirements, State};
@@ -15,7 +15,7 @@ impl<'a> Parser<'a> {
         at: (usize, usize),
         was_empty: bool,
     ) -> Result<Block> {
-        only_attrs(attrs, &["ordered"], "facts", at, self)?;
+        only_attrs_slot(attrs, &["ordered"], "facts", at, self)?;
         let Some((_, value)) = attrs.iter().find(|(key, _)| key == "ordered") else {
             return Err(self.err(
                 at,
