@@ -53,6 +53,62 @@ mod readme;
 
 pub use page::{BOOT_SNIPPET_PAGE, MANIFEST_PAGE, README_PAGE};
 
+/// What the rest of the catalog says about this package: the shelves of
+/// `##REL-OFFICIAL-IS-CONVERGENCE` and `##LOC-OFFICIAL-TRANSLATION`,
+/// already ranked.
+///
+/// It arrives as ROWS and not as a catalog to search, because a
+/// composition is about one package and the fold that answered these
+/// three questions was done once for the whole site
+/// (`##REL-REVERSE-QUERIES-SITE-SIDE`). Empty is the honest state of a
+/// package nobody documents, adapts or depends on.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct Related {
+    pub documentation: Vec<crate::site::shelves::Row>,
+    pub translations: Vec<crate::site::shelves::Row>,
+    pub dependants: Vec<crate::site::shelves::Row>,
+    /// How this adaptation stands against the documentation it adapts,
+    /// when it is one.
+    pub adaptation: Option<Adaptation>,
+}
+
+/// What an adaptation's own page says about the mirror.
+///
+/// Structure only, and never «how far behind». A translation stores no
+/// revision and no hash of the source page (`##LOC-NO-REVISION`), so
+/// «behind by» would need a history this project deliberately does not
+/// keep. What CAN be said is whether the two trees still mirror — the
+/// same pages, the same anchors, the same blocks — which is exactly what
+/// `vibe doc check --translations` asks.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Adaptation {
+    /// The documentation this package adapts.
+    pub source: String,
+    /// How many pages the adaptation carries.
+    pub pages: usize,
+    /// How many of them do not mirror.
+    pub divergences: usize,
+}
+
+impl Related {
+    /// Everything the catalog says about one coordinate.
+    pub fn of(shelves: &crate::site::shelves::Shelves, coordinate: &str) -> Related {
+        Related {
+            documentation: shelves.documentation_of(coordinate).to_vec(),
+            translations: shelves.translations_of(coordinate).to_vec(),
+            dependants: shelves.dependants_of(coordinate).to_vec(),
+            adaptation: None,
+        }
+    }
+
+    /// The same, with the mirror of an adaptation measured.
+    #[must_use]
+    pub fn adapting(mut self, adaptation: Option<Adaptation>) -> Related {
+        self.adaptation = adaptation;
+        self
+    }
+}
+
 /// What one composition produced.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Composed {
@@ -76,7 +132,7 @@ pub struct Composed {
 /// bytes and nothing else, and a stale page left behind from an earlier
 /// version would be published under an address its package no longer
 /// claims.
-pub fn compose(source: &Path, work: &Path) -> Result<Composed> {
+pub fn compose(source: &Path, work: &Path, related: &Related) -> Result<Composed> {
     if work.exists() {
         std::fs::remove_dir_all(work).map_err(|e| DocError::io("clearing", work, e))?;
     }
@@ -94,7 +150,7 @@ pub fn compose(source: &Path, work: &Path) -> Result<Composed> {
     card::copy_reviews(source, work)?;
 
     composed.copied = copy_specs(source, work)?;
-    page::compose(source, work, &manifest, &mut composed)?;
+    page::compose(source, work, &manifest, related, &mut composed)?;
     Ok(composed)
 }
 

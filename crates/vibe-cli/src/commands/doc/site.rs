@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use chrono::Utc;
 use vibe_doc::citations::SpecSources;
-use vibe_doc::site::{Site, feed, queue, render, state};
+use vibe_doc::site::{Site, feed, level0, queue, render, state};
 use vibe_wire::generated::doc_site_state::RenderedVersion;
 
 use super::DocEnv;
@@ -69,15 +69,24 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
         &env,
         plan.rebuild.iter().any(|queued| !host(&queued.pair)),
     )?;
-    let options = render::Options {
-        base: &site.base,
-        sources: &sources,
-        work: &work,
-        rendered_at: now,
-    };
+
+    // The reverse edges, folded ONCE over the whole catalog and then
+    // read per package (`##REL-REVERSE-QUERIES-SITE-SIDE`). Folded from
+    // the FEED and not from what is rendered, so a package's shelf shows
+    // what the registry holds now rather than what this run happened to
+    // rebuild.
+    let shelves = vibe_doc::site::shelves::fold(&facts(&polled.pairs));
 
     let mut failures = 0;
     for queued in &plan.rebuild {
+        let related = level0::Related::of(&shelves, &queued.pair.coordinate());
+        let options = render::Options {
+            base: &site.base,
+            sources: &sources,
+            work: &work,
+            rendered_at: now,
+            related: &related,
+        };
         let out = render::render(&queued.pair, &builder, &options)?;
         for note in &out.notes {
             println!("  note   {} — {note}", queued.pair.spelled());
@@ -134,6 +143,34 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
 /// Is this pair the host's?
 fn host(pair: &vibe_doc::site::Pair) -> bool {
     !matches!(pair.origin, vibe_doc::site::Origin::Registry)
+}
+
+/// What every polled version states, in the one shape the reverse fold
+/// reads.
+///
+/// A registry pair carries its catalog record and is read from it; a
+/// host pair has none — its coordinate is in no index — and is read from
+/// the manifest the record would have been made from. Two sources, one
+/// vocabulary: without the second, the host's own documentation would be
+/// invisible on the host's page, which is the one package this project
+/// is certain to want a shelf for.
+fn facts(pairs: &[vibe_doc::site::Pair]) -> Vec<vibe_doc::site::shelves::Facts> {
+    let mut out = Vec::new();
+    for pair in pairs {
+        if let Some(entry) = &pair.entry {
+            out.push(vibe_doc::site::shelves::from_entry(entry));
+            continue;
+        }
+        let dir = match &pair.origin {
+            vibe_doc::site::Origin::HostProject { root } => root,
+            vibe_doc::site::Origin::HostPackage { dir } => dir,
+            vibe_doc::site::Origin::Registry => continue,
+        };
+        if let Some(facts) = vibe_doc::site::shelves::from_manifest(dir) {
+            out.push(facts);
+        }
+    }
+    out
 }
 
 /// Record what one render produced, replacing the row it had.

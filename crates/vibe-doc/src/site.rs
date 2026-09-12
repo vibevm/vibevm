@@ -35,6 +35,7 @@ pub mod feed;
 pub mod level0;
 pub mod queue;
 pub mod render;
+pub mod shelves;
 pub mod state;
 
 pub use config::{Analytics, Host, Registry, Site, Theme};

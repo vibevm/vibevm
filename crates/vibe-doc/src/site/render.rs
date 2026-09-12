@@ -82,6 +82,9 @@ pub struct Options<'a> {
     /// The instant the manifest carries. Supplied, never read from a
     /// clock here: the same sources must render to the same bytes.
     pub rendered_at: DateTime<Utc>,
+    /// What the rest of the catalog says about the package being
+    /// rendered — folded once for the whole site, handed in per pair.
+    pub related: &'a level0::Related,
 }
 
 /// What one pair's render produced.
@@ -152,10 +155,34 @@ fn attempt(
         Origin::HostPackage { dir } => dir.clone(),
         Origin::Registry => prepare.warm(pair)?,
     };
-    let composed = level0::compose(&source, &composed_dir(options.work, pair))?;
+    let related = options.related.clone().adapting(mirror(&source, options));
+    let composed = level0::compose(&source, &composed_dir(options.work, pair), &related)?;
     notes.extend(composed.notes.iter().cloned());
     let derived = prepare.derived(pair, &composed.dir);
     build_projections(pair, &composed.dir, derived, options)
+}
+
+/// Measure an adaptation against the documentation it adapts, when this
+/// package is one.
+///
+/// Asked of the package's own bytes and of the world the citations
+/// resolve in — the same `##LOC-MIRROR` check `vibe doc check
+/// --translations` runs, and the same answer, because the site must not
+/// have a second opinion about whether a translation mirrors.
+///
+/// A package that adapts nothing is not asked, and a check that cannot
+/// reach the source answers nothing rather than a number: «the source is
+/// not here» and «the source and this agree» must not print the same
+/// line.
+fn mirror(source: &Path, options: &Options) -> Option<level0::Adaptation> {
+    let report = crate::translations::check(source, options.sources).ok()?;
+    let adapts = report.adapts?;
+    report.source?;
+    Some(level0::Adaptation {
+        source: adapts,
+        pages: report.pages,
+        divergences: report.problems.len(),
+    })
 }
 
 /// Compose and build the page a refused package shows at its address.

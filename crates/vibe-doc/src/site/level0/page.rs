@@ -19,9 +19,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO");
 
 use std::path::Path;
 
-use super::Composed;
 use super::card::Manifest;
 use super::readme::{self, Block};
+use super::{Composed, Related};
 use crate::error::{DocError, Result};
 use crate::pages::SPEC_ROOT;
 
@@ -39,9 +39,15 @@ pub fn compose(
     source: &Path,
     work: &Path,
     manifest: &Manifest,
+    related: &Related,
     composed: &mut Composed,
 ) -> Result<()> {
-    write(work, MANIFEST_PAGE, manifest_page(manifest), composed)?;
+    write(
+        work,
+        MANIFEST_PAGE,
+        manifest_page(manifest, related),
+        composed,
+    )?;
     if let Some(text) = read_readme(source) {
         write(work, README_PAGE, readme_page(manifest, &text), composed)?;
     }
@@ -93,7 +99,7 @@ fn read_readme(source: &Path) -> Option<String> {
 /// it, under what licence — and the fence answers the one a reader has
 /// after that, which is «show me». A page that only quoted the file
 /// would make every reader parse TOML to learn the licence.
-fn manifest_page(manifest: &Manifest) -> String {
+fn manifest_page(manifest: &Manifest, related: &Related) -> String {
     let mut out = open("Package manifest", "user,dev");
     out.push_str(&paragraph(&format!(
         "What `{}/{}@{}` declares about itself. Everything on this page is the \
@@ -141,6 +147,36 @@ fn manifest_page(manifest: &Manifest) -> String {
         }
     }
 
+    out.push_str(&shelf(
+        "documentation",
+        "Documentation",
+        "Packages that document this one. A ★ means both ends agree — the \
+         package named this subject and this subject named it back; without \
+         one, only the documentation's own side of the edge exists, which is \
+         a state and not a lesser one.",
+        &related.documentation,
+    ));
+    out.push_str(&shelf(
+        "translations",
+        "Other languages",
+        "Adaptations of this documentation. A ★ here means «named by the \
+         author of this documentation», never «approved by the subject».",
+        &related.translations,
+    ));
+    if let Some(adaptation) = &related.adaptation {
+        out.push_str(&section(
+            "adapts",
+            "What this adapts",
+            &paragraph(&mirror(adaptation)),
+        ));
+    }
+    out.push_str(&shelf(
+        "dependants",
+        "Depended on by",
+        "Packages that require this one, as the catalog holds them now.",
+        &related.dependants,
+    ));
+
     out.push_str(&section(
         "the-manifest",
         "The manifest",
@@ -148,6 +184,54 @@ fn manifest_page(manifest: &Manifest) -> String {
     ));
     out.push_str(CLOSE);
     out
+}
+
+/// What an adaptation's page says about its source, in words.
+///
+/// Structure, and never a distance. «Behind by three revisions» would
+/// need a history the project does not keep (`##LOC-NO-REVISION`); «the
+/// same pages, anchors and blocks» is a question a machine can answer,
+/// and whether the prose around them still reads is a question only a
+/// person can (`##OBS-MAINTENANCE-TOOLS`).
+fn mirror(adaptation: &super::Adaptation) -> String {
+    let stands = match adaptation.divergences {
+        0 => "Every page mirrors it: the same paths, the same anchors, the same \
+              blocks."
+            .to_string(),
+        1 => "One page does not mirror it.".to_string(),
+        n => format!("{n} pages do not mirror it."),
+    };
+    format!(
+        "This is an adaptation of `{}` into another language, carrying {} page(s). \
+         {stands} That is a check of STRUCTURE and not of meaning: nothing here \
+         records how far the text has drifted, because nothing in a translation \
+         remembers which revision of the source it was made from.",
+        adaptation.source, adaptation.pages,
+    )
+}
+
+/// One shelf, or nothing at all.
+///
+/// A shelf with no rows is left out rather than printed empty: «nobody
+/// has documented this» is what an absent shelf says on a package page,
+/// and a heading over an empty table says it less clearly while taking
+/// more room.
+fn shelf(id: &str, title: &str, why: &str, rows: &[crate::site::shelves::Row]) -> String {
+    if rows.is_empty() {
+        return String::new();
+    }
+    let mut table = String::from("  <table>\n");
+    for row in rows {
+        table.push_str(&format!(
+            "    <tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
+            escape(format!("{} {}", row.rank.star(), row.rank.word()).trim()),
+            escape(&row.title),
+            escape(format!("`{}@{}`", row.coordinate, row.version)),
+            escape(format!("{} · {}", row.publisher, row.lang)),
+        ));
+    }
+    table.push_str("  </table>\n");
+    section(id, title, &format!("{}{table}", paragraph(why)))
 }
 
 /// The README as a page.
