@@ -870,7 +870,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "doc_manifest",
-      "end_line": 262
+      "end_line": 296
     },
     {
       "crate_name": "<schema>",
@@ -893,16 +893,24 @@
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
       "line": 100,
-      "symbol": "doc_manifest::doc_package",
-      "end_line": 197
+      "symbol": "doc_manifest::card_media",
+      "end_line": 125
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 198,
+      "line": 126,
+      "symbol": "doc_manifest::doc_package",
+      "end_line": 231
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 232,
       "symbol": "doc_manifest::doc_page",
-      "end_line": 260
+      "end_line": 294
     },
     {
       "crate_name": "<schema>",
@@ -3316,28 +3324,55 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/model.rs",
       "item_kind": "mod",
-      "line": 6,
+      "line": 15,
       "symbol": "progress_core::model",
-      "end_line": 6,
+      "end_line": 15,
       "fingerprint": "tok1:7285434a854690b03f7417695d11ee6ddf09b9eb419281d22fbfe573d166310d"
     },
     {
       "crate_name": "progress-core",
-      "file": "crates/progress-core/src/model.rs",
+      "file": "crates/progress-core/src/model/artifacts.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "progress_core::model::artifacts",
+      "end_line": 8,
+      "fingerprint": "tok1:1818fd62652999878f4c9c2303f17f334dbdea4cb1310988efe34e07e2a25739"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/model/artifacts.rs",
       "item_kind": "enum",
-      "line": 12,
-      "symbol": "progress_core::model::ArtifactKind",
-      "end_line": 28,
+      "line": 14,
+      "symbol": "progress_core::model::artifacts::ArtifactKind",
+      "end_line": 30,
       "fingerprint": "tok1:078660b385b56cfa5a510a3542c9ddf876dccad6cad3d3667effb0ae1c6d10e7"
     },
     {
       "crate_name": "progress-core",
-      "file": "crates/progress-core/src/model.rs",
+      "file": "crates/progress-core/src/model/artifacts.rs",
       "item_kind": "struct",
-      "line": 68,
-      "symbol": "progress_core::model::ArtifactRequirements",
-      "end_line": 71,
+      "line": 70,
+      "symbol": "progress_core::model::artifacts::ArtifactRequirements",
+      "end_line": 73,
       "fingerprint": "tok1:07db009ae2e4f8f44aae73d825e221d56724e259a4b30a4966d4ecb8ea7c92c6"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/model/rollup_order.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "progress_core::model::rollup_order",
+      "end_line": 7,
+      "fingerprint": "tok1:7285434a854690b03f7417695d11ee6ddf09b9eb419281d22fbfe573d166310d"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/model/typo_hints.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "progress_core::model::typo_hints",
+      "end_line": 6,
+      "fingerprint": "tok1:7285434a854690b03f7417695d11ee6ddf09b9eb419281d22fbfe573d166310d"
     },
     {
       "crate_name": "progress-core",
@@ -3496,8 +3531,26 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/scope.rs",
       "item_kind": "mod",
-      "line": 9,
+      "line": 16,
       "symbol": "progress_core::scope",
+      "end_line": 16,
+      "fingerprint": "tok1:e2fcd0ddb78271f93475cf2c9ab54800e9d49e55b1cba14a868b24649ece7c74"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/scope/enumerate.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "progress_core::scope::enumerate",
+      "end_line": 9,
+      "fingerprint": "tok1:e2fcd0ddb78271f93475cf2c9ab54800e9d49e55b1cba14a868b24649ece7c74"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/src/scope/judging.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "progress_core::scope::judging",
       "end_line": 9,
       "fingerprint": "tok1:e2fcd0ddb78271f93475cf2c9ab54800e9d49e55b1cba14a868b24649ece7c74"
     },
@@ -6442,6 +6495,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/doc/shell.rs",
+      "item_kind": "mod",
+      "line": 30,
+      "symbol": "vibe_cli::commands::doc::shell",
+      "end_line": 30,
+      "fingerprint": "tok1:e59ce64ec23e6dfafc7a59a4ba5cf75e09b526a106de801d074ec89309348ba0"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/doc/shell/fetch.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "vibe_cli::commands::doc::shell::fetch",
+      "end_line": 24,
+      "fingerprint": "tok1:4be72d457368b2c011926a1b6eed47341f0cbcb33d33ac71df309f90886c5809"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/doc/surface.rs",
       "item_kind": "mod",
       "line": 18,
@@ -9369,9 +9440,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 395,
+      "line": 405,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 520,
+      "end_line": 530,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -12463,6 +12534,15 @@
     },
     {
       "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/media/published.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_doc::media::published",
+      "end_line": 17,
+      "fingerprint": "tok1:026748db20f8ca33e1302d56156d5a69a12c360161ef3ae668a0f0d00908a02b"
+    },
+    {
+      "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/numbering.rs",
       "item_kind": "mod",
       "line": 32,
@@ -12726,9 +12806,9 @@
       "crate_name": "vibe-doc-server",
       "file": "crates/vibe-doc-server/src/lib.rs",
       "item_kind": "mod",
-      "line": 47,
+      "line": 72,
       "symbol": "vibe_doc_server",
-      "end_line": 47,
+      "end_line": 72,
       "fingerprint": "tok1:02599e36033d6f734996c851554bd58bee3056a8dd0bae2fe722a6959075513b"
     },
     {
@@ -12753,10 +12833,100 @@
       "crate_name": "vibe-doc-server",
       "file": "crates/vibe-doc-server/src/routes.rs",
       "item_kind": "mod",
-      "line": 29,
+      "line": 37,
       "symbol": "vibe_doc_server::routes",
-      "end_line": 29,
+      "end_line": 37,
       "fingerprint": "tok1:80f4bfdcffb03d31cecec0fc962364f9cb2be9df9af30db2f3e26c0f7ec9d1b3"
+    },
+    {
+      "crate_name": "vibe-doc-server",
+      "file": "crates/vibe-doc-server/src/routes/resolve.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_doc_server::routes::resolve",
+      "end_line": 17,
+      "fingerprint": "tok1:5599430bd5f11cadfce875025fbb58853122104c167d47fbc791502b53c87b3a"
+    },
+    {
+      "crate_name": "vibe-doc-server",
+      "file": "crates/vibe-doc-server/src/routes/statics.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_doc_server::routes::statics",
+      "end_line": 15,
+      "fingerprint": "tok1:55de85c59c7890fd54c3a670f2911f1f32f123905838f85ec79d969b5169a6ae"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/lib.rs",
+      "item_kind": "mod",
+      "line": 45,
+      "symbol": "vibe_doc_shell",
+      "end_line": 45,
+      "fingerprint": "tok1:9c9ccce6d146a0978cee8268ed960ac3ece242e8b850e1bad18da4dc6f541a86"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/digest.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_doc_shell::digest",
+      "end_line": 17,
+      "fingerprint": "tok1:3a24e3fd4a96ab82351e9c120a9557c4bc5ae22a1b6563a261300cebbdb2fbd5"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/error.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_doc_shell::error",
+      "end_line": 4,
+      "fingerprint": "tok1:9c9ccce6d146a0978cee8268ed960ac3ece242e8b850e1bad18da4dc6f541a86"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/error.rs",
+      "item_kind": "enum",
+      "line": 10,
+      "symbol": "vibe_doc_shell::error::ShellError",
+      "end_line": 56,
+      "fingerprint": "tok1:bdf1c0b49ba9d7390cb0e5e28d8199908075a2059bab1c4396747b9e1e546636"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/fallback.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "vibe_doc_shell::fallback",
+      "end_line": 25,
+      "fingerprint": "tok1:af897cad0478e42c4c3880557b428343738828e3e6b768a1bcdc34029fb01384"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/index.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_doc_shell::index",
+      "end_line": 17,
+      "fingerprint": "tok1:fca47ffa3cf29d997bb9e97a6fdcace62d6b6b03da687381c471ca5ae250cd91"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/pin.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_doc_shell::pin",
+      "end_line": 16,
+      "fingerprint": "tok1:3a24e3fd4a96ab82351e9c120a9557c4bc5ae22a1b6563a261300cebbdb2fbd5"
+    },
+    {
+      "crate_name": "vibe-doc-shell",
+      "file": "crates/vibe-doc-shell/src/template.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "vibe_doc_shell::template",
+      "end_line": 23,
+      "fingerprint": "tok1:e96c83b8f7e7111b9baa061b34c895dedd0d75c586d4cdbf0878f6134b8604fe"
     },
     {
       "crate_name": "vibe-ext",
@@ -14110,6 +14280,24 @@
     },
     {
       "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/index/memory/tests/catalog.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_index::index::memory::tests::catalog",
+      "end_line": 13,
+      "fingerprint": "tok1:2cbda508bf9e1cde586b788e747d9415f1ad4535df60fe6885634a1395b08975"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/index/memory/tests/idempotence.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_index::index::memory::tests::idempotence",
+      "end_line": 12,
+      "fingerprint": "tok1:2cbda508bf9e1cde586b788e747d9415f1ad4535df60fe6885634a1395b08975"
+    },
+    {
+      "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/persistence.rs",
       "item_kind": "mod",
       "line": 7,
@@ -14362,12 +14550,48 @@
     },
     {
       "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/manifest/delivery.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_index::scanner::manifest::delivery",
+      "end_line": 5,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/manifest/documentation.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_index::scanner::manifest::documentation",
+      "end_line": 11,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/scanner/manifest.rs",
       "item_kind": "fn",
-      "line": 45,
+      "line": 46,
       "symbol": "vibe_index::scanner::manifest::parse_manifest",
-      "end_line": 57,
+      "end_line": 58,
       "fingerprint": "tok1:8cce87cc225e8bb7e70f4c889af2ce4df698bdcbab3714ebf54ddcd2d0b75bcf"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/manifest/relations.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_index::scanner::manifest::relations",
+      "end_line": 5,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/manifest/subskills.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_index::scanner::manifest::subskills",
+      "end_line": 6,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
     },
     {
       "crate_name": "vibe-index",
@@ -29097,9 +29321,36 @@
       "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/xml_doc.rs",
       "item_kind": "mod",
-      "line": 22,
+      "line": 30,
       "symbol": "vibe_specdoc::xml_doc",
-      "end_line": 22,
+      "end_line": 30,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_doc_callouts.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_specdoc::xml_doc_callouts",
+      "end_line": 10,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_doc_citations.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_specdoc::xml_doc_citations",
+      "end_line": 11,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_doc_verbatim.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_specdoc::xml_doc_verbatim",
+      "end_line": 11,
       "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
     },
     {
@@ -29115,18 +29366,45 @@
       "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/xml_in.rs",
       "item_kind": "mod",
-      "line": 31,
+      "line": 37,
       "symbol": "vibe_specdoc::xml_in",
-      "end_line": 31,
+      "end_line": 37,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_in_descent.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_specdoc::xml_in_descent",
+      "end_line": 11,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_in_ids.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_specdoc::xml_in_ids",
+      "end_line": 9,
       "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
     },
     {
       "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/xml_out.rs",
       "item_kind": "mod",
-      "line": 17,
+      "line": 22,
       "symbol": "vibe_specdoc::xml_out",
-      "end_line": 17,
+      "end_line": 22,
+      "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_out_emit.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_specdoc::xml_out_emit",
+      "end_line": 10,
       "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
     },
     {
@@ -31221,153 +31499,162 @@
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 188,
+      "line": 190,
       "symbol": "xtask batch-review",
-      "end_line": 224,
+      "end_line": 226,
       "fingerprint": "tok1:00e684f2005ecb848847cf6e1ee7ea1e19253177e110afb38bc835bb1f258d90"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 77,
+      "line": 79,
       "symbol": "xtask bridge",
-      "end_line": 81,
+      "end_line": 83,
       "fingerprint": "tok1:8cfd10eaeceaf70f40a6e5dba5fc8c30b368cda1a5e1d58ad4caa88661af3b58"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 87,
+      "line": 89,
       "symbol": "xtask check-codegen",
-      "end_line": 90,
+      "end_line": 92,
       "fingerprint": "tok1:d800278ef3f770088e10b0ea59143b537c12f916ad3a33cde8b02198dd24b41a"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 83,
+      "line": 85,
       "symbol": "xtask codegen",
-      "end_line": 85,
+      "end_line": 87,
       "fingerprint": "tok1:a8c95198f3d9ea255bd2445ac9b73c21871ea614c1549947e7686f72d174d3ad"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 138,
+      "line": 140,
       "symbol": "xtask codemod",
-      "end_line": 147,
+      "end_line": 149,
       "fingerprint": "tok1:c1502dc23893f8e35cd27740aad23873066ac2bf0effdb366d5aec16cfb076cf"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 131,
+      "line": 133,
       "symbol": "xtask conform",
-      "end_line": 136,
+      "end_line": 138,
       "fingerprint": "tok1:4e941408f9f69f15e7ebc1f9bb5686d4398bcefe20f7885aa90afdc7dc9195ff"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 238,
+      "line": 254,
       "symbol": "xtask dist",
-      "end_line": 242,
+      "end_line": 258,
       "fingerprint": "tok1:fadd4445179ea33d8127982a992ee12d36fb406c36b36c6ad8da4552d38eebee"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 149,
+      "line": 240,
+      "symbol": "xtask embed-doc-shell",
+      "end_line": 252,
+      "fingerprint": "tok1:3db3ce106ed2c87ee9d916b94af6dc3fd0b7256ccdc16ee7b682e945c35b3e42"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/main.rs",
+      "item_kind": "command",
+      "line": 151,
       "symbol": "xtask fast-loop",
-      "end_line": 167,
+      "end_line": 169,
       "fingerprint": "tok1:b683101ef149ce33aab0fd679cbafad95404e35085f5c1d668f81309c85a1360"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 169,
+      "line": 171,
       "symbol": "xtask health",
-      "end_line": 186,
+      "end_line": 188,
       "fingerprint": "tok1:3f9b61e475369cfd2cd41ee7d7d3df8bcd011e8a62192aaf1d70b28f4cf12db6"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 244,
+      "line": 260,
       "symbol": "xtask mirror",
-      "end_line": 259,
+      "end_line": 275,
       "fingerprint": "tok1:6638a2042b3b75d13c49c002a6177d081209e821e781b6025787496ed089ec56"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 261,
+      "line": 277,
       "symbol": "xtask rebuild",
-      "end_line": 280,
+      "end_line": 296,
       "fingerprint": "tok1:5cfb41e1b381215fe1ee383ec7e302eb7f30b1f30aac00dcf8703cf4e6d75472"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 92,
+      "line": 94,
       "symbol": "xtask specmap",
-      "end_line": 99,
+      "end_line": 101,
       "fingerprint": "tok1:fbe6c584e566b7fd87173656bdef1b872922db27e427c512494a9ea4afb78535"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 226,
+      "line": 228,
       "symbol": "xtask sync-engines",
-      "end_line": 236,
+      "end_line": 238,
       "fingerprint": "tok1:c547faf34c7c53c98f0e817d328ba77a2e332e79699bd15623d21d15caed4255"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 101,
+      "line": 103,
       "symbol": "xtask test-gate",
-      "end_line": 108,
+      "end_line": 110,
       "fingerprint": "tok1:9085bdbdfb85320e9fdf4f484410b364700d00459cbaacef9094732519989d36"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 124,
+      "line": 126,
       "symbol": "xtask trace",
-      "end_line": 129,
+      "end_line": 131,
       "fingerprint": "tok1:de63ddcbaf0c10f572c2be2b59c2f0c9381f0a17f23163b8d82191812116fc58"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 110,
+      "line": 112,
       "symbol": "xtask tripwire",
-      "end_line": 122,
+      "end_line": 124,
       "fingerprint": "tok1:8c04426dd6b299c86bb9889ab642fdac03057111c350768e8b110d4d07aff898"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 282,
+      "line": 298,
       "symbol": "xtask wire-diff",
-      "end_line": 300,
+      "end_line": 316,
       "fingerprint": "tok1:33e27340871ff436017c9a6166b256a5a5cb70a6cf12c6f5e66bd4f6c78d9de1"
     }
   ],
@@ -31768,25 +32055,49 @@
     {
       "file": "crates/progress-core/src/model.rs",
       "from_symbol": "progress_core::model",
-      "line": 6,
+      "line": 15,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes",
       "verb": "implements"
     },
     {
-      "file": "crates/progress-core/src/model.rs",
-      "from_symbol": "progress_core::model::ArtifactKind",
-      "line": 15,
+      "file": "crates/progress-core/src/model/artifacts.rs",
+      "from_symbol": "progress_core::model::artifacts",
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
       "verb": "implements"
     },
     {
-      "file": "crates/progress-core/src/model.rs",
-      "from_symbol": "progress_core::model::ArtifactRequirements",
-      "line": 69,
+      "file": "crates/progress-core/src/model/artifacts.rs",
+      "from_symbol": "progress_core::model::artifacts::ArtifactKind",
+      "line": 17,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/model/artifacts.rs",
+      "from_symbol": "progress_core::model::artifacts::ArtifactRequirements",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/model/rollup_order.rs",
+      "from_symbol": "progress_core::model::rollup_order",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/model/typo_hints.rs",
+      "from_symbol": "progress_core::model::typo_hints",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes",
       "verb": "implements"
     },
     {
@@ -31952,6 +32263,22 @@
     {
       "file": "crates/progress-core/src/scope.rs",
       "from_symbol": "progress_core::scope",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/scope/enumerate.rs",
+      "from_symbol": "progress_core::scope::enumerate",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/src/scope/judging.rs",
+      "from_symbol": "progress_core::scope::judging",
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config",
@@ -33319,6 +33646,22 @@
       "line": 10,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/doc/shell.rs",
+      "from_symbol": "vibe_cli::commands::doc::shell",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-INSTALL-COMMAND",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/doc/shell/fetch.rs",
+      "from_symbol": "vibe_cli::commands::doc::shell::fetch",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET",
       "verb": "implements"
     },
     {
@@ -35967,7 +36310,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 473,
+      "line": 483,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -38822,6 +39165,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-doc/src/media/published.rs",
+      "from_symbol": "vibe_doc::media::published",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-SITE-COPIES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-doc/src/numbering.rs",
       "from_symbol": "vibe_doc::numbering",
       "line": 32,
@@ -39056,7 +39407,7 @@
     {
       "file": "crates/vibe-doc-server/src/lib.rs",
       "from_symbol": "vibe_doc_server",
-      "line": 47,
+      "line": 72,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE",
       "verb": "implements"
@@ -39080,9 +39431,89 @@
     {
       "file": "crates/vibe-doc-server/src/routes.rs",
       "from_symbol": "vibe_doc_server::routes",
-      "line": 29,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-server/src/routes/resolve.rs",
+      "from_symbol": "vibe_doc_server::routes::resolve",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-server/src/routes/statics.rs",
+      "from_symbol": "vibe_doc_server::routes::statics",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-STATIC",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/lib.rs",
+      "from_symbol": "vibe_doc_shell",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-SERVE-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/digest.rs",
+      "from_symbol": "vibe_doc_shell::digest",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/error.rs",
+      "from_symbol": "vibe_doc_shell::error",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-SERVE-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/error.rs",
+      "from_symbol": "vibe_doc_shell::error::ShellError",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/fallback.rs",
+      "from_symbol": "vibe_doc_shell::fallback",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-BUILD",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/index.rs",
+      "from_symbol": "vibe_doc_shell::index",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-XTASK-EMBED",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/pin.rs",
+      "from_symbol": "vibe_doc_shell::pin",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-shell/src/template.rs",
+      "from_symbol": "vibe_doc_shell::template",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-CSP",
       "verb": "implements"
     },
     {
@@ -40375,6 +40806,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-index/src/index/memory/tests/catalog.rs",
+      "from_symbol": "vibe_index::index::memory::tests::catalog",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/index/memory/tests/idempotence.rs",
+      "from_symbol": "vibe_index::index::memory::tests::idempotence",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-index/src/index/persistence.rs",
       "from_symbol": "vibe_index::index::persistence",
       "line": 7,
@@ -40604,13 +41051,45 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-index/src/scanner/manifest/delivery.rs",
+      "from_symbol": "vibe_index::scanner::manifest::delivery",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/manifest/documentation.rs",
+      "from_symbol": "vibe_index::scanner::manifest::documentation",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-index/src/scanner/manifest.rs",
       "from_symbol": "vibe_index::scanner::manifest::parse_manifest",
-      "line": 49,
+      "line": 50,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/manifest/relations.rs",
+      "from_symbol": "vibe_index::scanner::manifest::relations",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/manifest/subskills.rs",
+      "from_symbol": "vibe_index::scanner::manifest::subskills",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-index/src/scanner/org_cache.rs",
@@ -54132,7 +54611,31 @@
     {
       "file": "crates/vibe-specdoc/src/xml_doc.rs",
       "from_symbol": "vibe_specdoc::xml_doc",
-      "line": 22,
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_doc_callouts.rs",
+      "from_symbol": "vibe_specdoc::xml_doc_callouts",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_doc_citations.rs",
+      "from_symbol": "vibe_specdoc::xml_doc_citations",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_doc_verbatim.rs",
+      "from_symbol": "vibe_specdoc::xml_doc_verbatim",
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
       "verb": "implements"
@@ -54148,7 +54651,23 @@
     {
       "file": "crates/vibe-specdoc/src/xml_in.rs",
       "from_symbol": "vibe_specdoc::xml_in",
-      "line": 31,
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_in_descent.rs",
+      "from_symbol": "vibe_specdoc::xml_in_descent",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_in_ids.rs",
+      "from_symbol": "vibe_specdoc::xml_in_ids",
+      "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
       "verb": "implements"
@@ -54156,7 +54675,15 @@
     {
       "file": "crates/vibe-specdoc/src/xml_out.rs",
       "from_symbol": "vibe_specdoc::xml_out",
-      "line": 17,
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_out_emit.rs",
+      "from_symbol": "vibe_specdoc::xml_out_emit",
+      "line": 10,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
       "verb": "implements"
