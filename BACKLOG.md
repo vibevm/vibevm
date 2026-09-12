@@ -1710,3 +1710,33 @@ structure, and it goes when the file does.
 | @fact:B149-SEVERITY **severity** | P3 — обход: поправить строку руками; ни один гейт по ней не читает |
 | @fact:B149-DISPOSITION **disposition** | `open` — найти шаблон сниппета в `vibe init package` и убрать лишний префикс; голден примера перебласти тем же коммитом |
 | @fact:B149-FILED **filed by** | кампания документации, первая полная сверка (A6.5), 2026-09-12 |
+
+## B-150 — docs: навигация сайта и ридера идёт в порядке манифеста, а манифест — по закону слоёв
+
+| поле | значение |
+|---|---|
+| @fact:B150-WHAT **what** | `vibe doc manifest` упорядочивает страницы по закону слоёв (стабильное раньше изменчивого): первыми идут `agent/*` и `architecture/*`, `start/what-vibevm-is` стоит 33-й из 49, `start/first-project` — 46-й; навигация сайта и локального ридера берёт порядок манифеста как есть (`site/src/lib/view.ts`), и десять самых частых терминов впервые встречаются на страницах для агентов и разработчиков, а не на страницах новичка (аудит P6-C1, пп. 6–7) |
+| @fact:B150-EFFECT **effect** | человек, открывший навигацию, видит сначала «How an agent reads this manual» и «How vibe is built»; маршрут новичка спрятан; для `llms.txt` тот же порядок верен |
+| @fact:B150-SEVERITY **severity** | P2 — обход: ссылки со страницы-маршрута `start/index` (поставлены 2026-09-12); правка — атом в web-пакете |
+| @fact:B150-DISPOSITION **disposition** | `open` — навигация для людей упорядочивает разделы по маршруту читателя (`start`, `model`, `howto`, `agent`, `authoring`, `lifecycle`, `reference`, `diagnostics`, `faq`, `glossary`, `architecture`), неизвестные разделы — после, по алфавиту; порядок манифеста для агентов не меняется; решение владельца — держать список в web-пакете или объявлять в манифесте документации |
+| @fact:B150-FILED **filed by** | кампания документации, месячная петля A6.3 (аудит P6-C1), 2026-09-12 |
+
+## B-151 — docs: двадцать пять полей манифеста и лока не названы ни на одной странице
+
+| поле | значение |
+|---|---|
+| @fact:B151-WHAT **what** | снимок поверхности (`vibe doc surface`) знает 221 поле `vibe.toml` и 55 полей `vibe.lock`; нигде в руководстве не встречаются: манифест — `artifacts.build[].workdir`, `boot.default_link`, `boot_snippet.concepts`, `deploy.target[].depends_on`, `embedded_source[].license_path`, `embedded_source[].license_url`, `llm.default_model`, `llm.default_provider`, `mechanism[].config_schema`, `package.spec_format`, `project.spec_format`, `recommends`, `suggests`; лок — `meta.active_features`, `meta.virtual_capabilities[]` (с `emitted_at`, `trace_id`), `package[].admitted_by`, `package[].embedded_source[].license_file_sha256`/`license_path`/`license_url`/`tree_oid`, `package[].subskills_active[]` (с `cache_files`), `package[].via_override` (аудит P6-C1, п. 2) |
+| @fact:B151-EFFECT **effect** | читатель справочника не найдёт этих полей; `vibe doc diff` при смене версии назовёт страницы справочника, но не подскажет, что поле никогда не было описано |
+| @fact:B151-SEVERITY **severity** | P2 — таблицы `reference/manifest` и `reference/lock-file` |
+| @fact:B151-DISPOSITION **disposition** | `open` — строки в двух таблицах с `rule` на факт каждого поля; поля без факта в спеке — сначала факт, потом строка |
+| @fact:B151-FILED **filed by** | кампания документации, месячная петля A6.3 (аудит P6-C1), 2026-09-12 |
+
+## B-152 — docs: 45 подкоманд второго уровня не упомянуты в прозе
+
+| поле | значение |
+|---|---|
+| @fact:B152-WHAT **what** | из 93 подкоманд `vibe <команда> <подкоманда>` 45 существуют в руководстве только в авто-выводе `--help` родителя: `self` 10 из 15, `progress` 9 из 10, `aiui` 11 из 11, `facts` 5 из 9, `doc` 4 из 9, `registry` 3 из 11, `prefs` 2 из 7, `extensions` 1 из 2 (аудит P6-C1, п. 1); третий уровень `--help` не выводится — X-046 |
+| @fact:B152-EFFECT **effect** | читатель узнаёт о подкоманде из списка, но не о том, когда она нужна; `vibe doc diff` относит смену флага такой подкоманды к «нужна новая страница» |
+| @fact:B152-SEVERITY **severity** | P3 — семействами: `self`, `facts`, `registry`, `doc` — проза на существующих страницах; `aiui`, `progress` — инструменты разработчика, одна страница в `architecture/` или блоки `derived` второго уровня |
+| @fact:B152-DISPOSITION **disposition** | `open` — решается в недельных петлях по семейству за петлю |
+| @fact:B152-FILED **filed by** | кампания документации, месячная петля A6.3 (аудит P6-C1), 2026-09-12 |
