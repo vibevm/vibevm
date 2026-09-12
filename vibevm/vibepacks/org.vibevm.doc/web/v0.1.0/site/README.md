@@ -33,7 +33,7 @@ that file before any stylesheet and cannot resolve a token
 here from Astro one string at a time (D-28). The copy lives in
 `src/landing/i18n.ts` and is the owner's, byte for byte, asymmetries
 included; the page is assembled from the same `design/` components the
-documentation uses.
+documentation uses, and the parity test below is what says so.
 
 **The landing wears its own chrome, by name.** `src/routes/layout.tsx` is
 the documentation's frame — brand, search, footer. The landing addresses ask
@@ -85,3 +85,20 @@ second download of the same face.
 constellation on the brand ground, in colours read out of `design/palette.css`,
 and encodes the PNG itself. The Astro site referenced the file from four meta
 tags and never had it (A0.26).
+
+## The parity test
+
+`node tools/parity.mjs <astro-dist> [site/dist]` compares this build against
+the Astro landing's: the set of addresses, and for `/`, `/ru/` and
+`/404.html` the language, title, description, `canonical`, every `hreflang`,
+every `og:` and `twitter:` tag, the normalised structured data, the analytics
+tag and the visible text; `robots.txt` and the key file byte for byte;
+`llms.txt` by its disambiguation paragraph and its links; the sitemap by its
+addresses.
+
+Every difference is either fixed or a rule in the script with the reason it
+exists, and a difference no rule covers fails the run (F-73). A green run is
+the gate for pointing the domain at this build. The reference is built in a
+scratch copy of the Astro repository — `npm ci && npm run build && node
+scripts/build-llms-full.mjs` — never in that repository itself, which this
+campaign only reads (R-28).
