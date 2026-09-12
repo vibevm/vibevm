@@ -13,6 +13,7 @@ use std::ffi::OsString;
 use std::path::PathBuf;
 
 use anyhow::{Result, bail};
+use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
 
 use crate::cli::{DocArgs, DocCheckArgs, DocCommand};
@@ -51,13 +52,6 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
-    if args.derived && !args.examples {
-        bail!(
-            "`vibe doc check --derived` is not open yet — the generators land with the \
-             `derived` atom (spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-DERIVED)"
-        );
-    }
-
     let runner = RunnerEnv {
         binary: args
             .binary
@@ -81,21 +75,47 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         only: args.only.clone(),
     };
 
-    let report = examples::check(&args.path, &runner, &options)?;
-    print!("{}", report.render());
-    if report.ok() {
-        return Ok(());
+    if args.examples {
+        let report = examples::check(&args.path, &runner, &options)?;
+        print!("{}", report.render());
+        if !report.ok() {
+            let counts = report.counts();
+            bail!(
+                "documented examples do not match the product: {} diverged, {} could not run, \
+                 {} page(s) unreadable (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#INV-EXAMPLES-RUN; \
+                 fix: repair the product, or the page — never the comparison)",
+                counts.differ,
+                counts.failed,
+                report.unreadable.len()
+            );
+        }
     }
-    let counts = report.counts();
-    bail!(
-        "documented examples do not match the product: {} diverged, {} could not run, \
-         {} page(s) unreadable (violates \
-         spec://org.vibevm.core/vibevm/common/PROP-057#INV-EXAMPLES-RUN; \
-         fix: repair the product, or the page — never the comparison)",
-        counts.differ,
-        counts.failed,
-        report.unreadable.len()
-    );
+
+    if args.derived {
+        let env = derived::DerivedEnv {
+            binary: runner.binary.clone(),
+            // The schemas and the format registry live in the tree, not
+            // in the package: a `jtd-schema` reference addresses the
+            // project that publishes the format.
+            repo_root: runner
+                .repo_root
+                .clone()
+                .unwrap_or_else(|| args.path.clone()),
+            coordinate: derived::coordinate_of(&args.path)?,
+            timeout_secs: args.timeout,
+        };
+        let report = derived::check(&args.path, &env, args.accept)?;
+        print!("{}", report.render());
+        if !report.ok() {
+            bail!(
+                "a `derived` reference no longer builds to what the record holds (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-DERIVED-CHECK; \
+                 fix: read what moved, update the prose around it, and re-run with --accept)"
+            );
+        }
+    }
+    Ok(())
 }
 
 /// The real per-user settings directory the tripwire guards: the

@@ -511,6 +511,20 @@ run_step "documented examples run and match" \
     --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 \
     --sandbox "${TMPDIR:-${TEMP:-/tmp}}/vdocs" || OVERALL=$?
 
+# 4c. The `derived` references (PROP-057 ##PIPE-DERIVED). Command help,
+# schema field tables and manifest fields are GENERATED at build and never
+# stored on a page; what the package keeps is a record of what the last
+# build produced — a hash per block, never the text. This step rebuilds
+# every one of them twice (a generator that is not a function of the tree
+# would make the record meaningless) and compares with that record.
+#
+# A red line here says a reference the manual inserts now says something
+# else: the prose around it needs a human, and `vibe doc check --derived
+# --accept` moves the record forward once that human has looked.
+run_step "derived references build to what the record holds" \
+  cargo run --quiet -p vibe-cli -- doc check --derived \
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 || OVERALL=$?
+
 # 5. The AI-Native discipline gate (conform). Runs last: it reuses the
 # build cache the steps above populated, and its content-addressed fact
 # store re-extracts only changed files. Wiring it here is what keeps the
