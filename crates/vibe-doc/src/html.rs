@@ -49,15 +49,19 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod inline;
 
+mod emit;
+
 use vibe_specdoc::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 
-use crate::content::Content;
-use inline::{escape, escape_attr, render};
+use crate::content::{Content, ExampleBody};
+use crate::numbering::{BlockPath, Numbering};
+use emit::{anchor, anchor_line, close, line, open, pre_code, push_p, void};
+use inline::{escape, render};
 
 /// One attribute, already escaped.
 type Attrs = Vec<(&'static str, String)>;
 
-/// Render a page as an island.
+/// Render a page as an island, without block numbers.
 ///
 /// ```
 /// use vibe_doc::{content::Content, html};
@@ -78,6 +82,34 @@ type Attrs = Vec<(&'static str, String)>;
 /// assert!(!island.contains("<script"));
 /// ```
 pub fn to_html(doc: &SpecDoc, content: &Content) -> String {
+    to_html_numbered(doc, content, &Numbering::none())
+}
+
+/// Render a page as an island carrying its block numbers.
+///
+/// Each numbered block takes `data-p` and opens with its margin anchor —
+/// `<a class="p-anchor" id="p07" href="#p07">07</a>` — so `#p07` lands on
+/// the block and a reader can copy the link with one click. A section
+/// heading keeps its own named anchor and takes no number: it has an
+/// address already, and that address is immutable while `pNN` lives by
+/// the current text (PROP-057 `##READER-NUMBERED-BLOCKS`).
+///
+/// ```
+/// use vibe_doc::{content::Content, html, numbering::number_blocks};
+///
+/// let doc = vibe_specdoc::from_xml_with(
+///     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+///      <spec xmlns=\"https://vibevm.org/spec/1\">\n\
+///        <title id=\"root\">Hello</title>\n<p>one</p>\n\
+///      </spec>\n",
+///     vibe_specdoc::Vocabulary::Doc,
+/// )
+/// .unwrap();
+///
+/// let island = html::to_html_numbered(&doc, &Content::new(), &number_blocks(&doc));
+/// assert!(island.contains("<p data-p=\"1\"><a class=\"p-anchor\" id=\"p01\" href=\"#p01\">01</a>one</p>"));
+/// ```
+pub fn to_html_numbered(doc: &SpecDoc, content: &Content, numbering: &Numbering) -> String {
     let mut out = String::new();
     let mut attrs: Attrs = vec![("class", "doc-page".to_owned())];
     push_status(&mut attrs, doc.status.as_ref());
@@ -89,17 +121,23 @@ pub fn to_html(doc: &SpecDoc, content: &Content) -> String {
         }
         line(&mut out, 1, "h1", &attrs, &render(&title.text));
     }
-    for node in &doc.preamble {
-        block(&mut out, 1, node, content);
-    }
-    for section in &doc.sections {
-        section_html(&mut out, 1, section, 2, content);
+    blocks_html(&mut out, 1, &doc.preamble, &[], content, numbering);
+    for (i, section) in doc.sections.iter().enumerate() {
+        section_html(&mut out, 1, section, 2, &[i as u16], content, numbering);
     }
     close(&mut out, 0, "article");
     out
 }
 
-fn section_html(out: &mut String, depth: usize, s: &Section, level: usize, content: &Content) {
+fn section_html(
+    out: &mut String,
+    depth: usize,
+    s: &Section,
+    level: usize,
+    path: &[u16],
+    content: &Content,
+    numbering: &Numbering,
+) {
     let mut attrs: Attrs = Vec::new();
     if let Some(id) = &s.id {
         attrs.push(("id", id.clone()));
@@ -110,44 +148,76 @@ fn section_html(out: &mut String, depth: usize, s: &Section, level: usize, conte
     // The dialect nests six levels deep at most, and so does HTML.
     let heading = format!("h{}", level.min(6));
     line(out, depth + 1, &heading, &[], &render(&s.title));
-    for node in &s.blocks {
-        block(out, depth + 1, node, content);
-    }
-    for sub in &s.sections {
-        section_html(out, depth + 1, sub, level + 1, content);
+    blocks_html(out, depth + 1, &s.blocks, path, content, numbering);
+    for (i, sub) in s.sections.iter().enumerate() {
+        let mut child = path.to_vec();
+        child.push(i as u16);
+        section_html(out, depth + 1, sub, level + 1, &child, content, numbering);
     }
     close(out, depth, "section");
 }
 
-fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
+fn blocks_html(
+    out: &mut String,
+    depth: usize,
+    nodes: &[BlockNode],
+    path: &[u16],
+    content: &Content,
+    numbering: &Numbering,
+) {
+    for (i, node) in nodes.iter().enumerate() {
+        let num = numbering.get(&BlockPath::new(path.to_vec(), i as u16));
+        block(out, depth, node, content, num);
+    }
+}
+
+fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, num: Option<u32>) {
     let mut attrs: Attrs = Vec::new();
     push_when(&mut attrs, node.when.as_ref());
+    push_p(&mut attrs, num);
     match &node.block {
         Block::Paragraph(u) => {
             push_unit(&mut attrs, u);
-            line(out, depth, "p", &attrs, &render(&u.text));
+            line(
+                out,
+                depth,
+                "p",
+                &attrs,
+                &format!("{}{}", anchor(num), render(&u.text)),
+            );
         }
         Block::Quote(u) => {
             push_unit(&mut attrs, u);
             open(out, depth, "blockquote", &attrs);
+            anchor_line(out, depth + 1, num);
             line(out, depth + 1, "p", &[], &render(&u.text));
             close(out, depth, "blockquote");
         }
         Block::List { ordered, items } => {
             let tag = if *ordered { "ol" } else { "ul" };
             open(out, depth, tag, &attrs);
-            for item in items {
+            for (i, item) in items.iter().enumerate() {
                 let mut item_attrs: Attrs = Vec::new();
                 push_unit(&mut item_attrs, item);
-                line(out, depth + 1, "li", &item_attrs, &render(&item.text));
+                // A list may hold nothing but `<li>`, so the block's
+                // anchor rides at the head of the first item rather than
+                // as a sibling HTML would hoist out of the list.
+                let head = if i == 0 { anchor(num) } else { String::new() };
+                line(
+                    out,
+                    depth + 1,
+                    "li",
+                    &item_attrs,
+                    &format!("{head}{}", render(&item.text)),
+                );
             }
             close(out, depth, tag);
         }
-        Block::Table { rows } => table(out, depth, rows, &attrs),
+        Block::Table { rows } => table(out, depth, rows, &attrs, num),
         Block::Fence { lang, text, .. } => {
-            pre_code(out, depth, &attrs, lang.as_deref(), text);
+            pre_code(out, depth, &attrs, lang.as_deref(), text, num);
         }
-        Block::Rule { uri, .. } => rule(out, depth, uri, &attrs, content),
+        Block::Rule { uri, .. } => rule(out, depth, uri, &attrs, content, num),
         Block::Example {
             id,
             fixture,
@@ -166,15 +236,14 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
             if exit.unwrap_or(0) != 0 {
                 attrs.push(("data-exit", exit.unwrap_or(0).to_string()));
             }
-            example_body(
-                out,
-                depth,
-                &attrs,
-                lang.as_deref(),
-                run,
-                expect,
-                stderr.as_deref(),
-            );
+            let body = ExampleBody {
+                lang: lang.clone(),
+                exit: *exit,
+                run: run.clone(),
+                expect: expect.clone(),
+                stderr: stderr.clone(),
+            };
+            example_body(out, depth, &attrs, &body, num);
         }
         Block::ExampleRef { id } => match content.examples.get(id) {
             Some(body) => {
@@ -184,21 +253,14 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
                 if body.exit.unwrap_or(0) != 0 {
                     attrs.push(("data-exit", body.exit.unwrap_or(0).to_string()));
                 }
-                example_body(
-                    out,
-                    depth,
-                    &attrs,
-                    body.lang.as_deref(),
-                    &body.run,
-                    &body.expect,
-                    body.stderr.as_deref(),
-                );
+                example_body(out, depth, &attrs, body, num);
             }
             None => {
                 attrs.push(("class", "example".to_owned()));
                 attrs.push(("data-example-ref", id.clone()));
                 attrs.push(("data-unresolved", "true".to_owned()));
                 open(out, depth, "div", &attrs);
+                anchor_line(out, depth + 1, num);
                 close(out, depth, "div");
             }
         },
@@ -210,19 +272,21 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
             if text.is_none() {
                 attrs.push(("data-unresolved", "true".to_owned()));
             }
-            pre_code(out, depth, &attrs, Some("text"), text.unwrap_or(""));
+            pre_code(out, depth, &attrs, Some("text"), text.unwrap_or(""), num);
         }
         Block::Note { kind, body } => {
             attrs.push(("class", "note".to_owned()));
             attrs.push(("data-note", kind.as_str().to_owned()));
             push_unit(&mut attrs, body);
             open(out, depth, "aside", &attrs);
+            anchor_line(out, depth + 1, num);
             line(out, depth + 1, "p", &[], &render(&body.text));
             close(out, depth, "aside");
         }
         Block::Figure { src, alt, caption } => {
             push_unit(&mut attrs, caption);
             open(out, depth, "figure", &attrs);
+            anchor_line(out, depth + 1, num);
             let img: Attrs = vec![("src", src.clone()), ("alt", alt.clone())];
             void(out, depth + 1, "img", &img);
             line(out, depth + 1, "figcaption", &[], &render(&caption.text));
@@ -243,12 +307,14 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
                 attrs.push(("data-assert", "none".to_owned()));
             }
             open(out, depth, "div", &attrs);
+            anchor_line(out, depth + 1, num);
             pre_code(
                 out,
                 depth + 1,
                 &[("class", "prompt-text".to_owned())],
                 Some("prompt"),
                 text,
+                None,
             );
             if let Some(needs) = needs {
                 line(
@@ -293,7 +359,14 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content) {
 
 /// A cited rule: the fact's current text, its address, and the language
 /// the specification is written in.
-fn rule(out: &mut String, depth: usize, uri: &str, outer: &Attrs, content: &Content) {
+fn rule(
+    out: &mut String,
+    depth: usize,
+    uri: &str,
+    outer: &Attrs,
+    content: &Content,
+    num: Option<u32>,
+) {
     let mut attrs = outer.clone();
     attrs.push(("class", "rule".to_owned()));
     let found = content.rules.get(uri);
@@ -301,6 +374,7 @@ fn rule(out: &mut String, depth: usize, uri: &str, outer: &Attrs, content: &Cont
         attrs.push(("data-unresolved", "true".to_owned()));
     }
     open(out, depth, "blockquote", &attrs);
+    anchor_line(out, depth + 1, num);
 
     let mut link_attrs: Attrs = vec![("class", "rule".to_owned())];
     if let Some(href) = content.link(uri) {
@@ -325,33 +399,35 @@ fn example_body(
     out: &mut String,
     depth: usize,
     attrs: &Attrs,
-    lang: Option<&str>,
-    run: &str,
-    expect: &str,
-    stderr: Option<&str>,
+    body: &ExampleBody,
+    num: Option<u32>,
 ) {
     open(out, depth, "div", attrs);
+    anchor_line(out, depth + 1, num);
     pre_code(
         out,
         depth + 1,
         &[("class", "example-run".to_owned())],
-        Some(lang.unwrap_or("sh")),
-        run,
+        Some(body.lang.as_deref().unwrap_or("sh")),
+        &body.run,
+        None,
     );
     pre_code(
         out,
         depth + 1,
         &[("class", "example-output".to_owned())],
         None,
-        expect,
+        &body.expect,
+        None,
     );
-    if let Some(err) = stderr {
+    if let Some(err) = &body.stderr {
         pre_code(
             out,
             depth + 1,
             &[("class", "example-stderr".to_owned())],
             None,
             err,
+            None,
         );
     }
     close(out, depth, "div");
@@ -359,8 +435,14 @@ fn example_body(
 
 /// A table. The first row is the header when the source had one — the
 /// pivot records that by carrying it as `rows[0]`.
-fn table(out: &mut String, depth: usize, rows: &[Vec<Unit>], attrs: &Attrs) {
+fn table(out: &mut String, depth: usize, rows: &[Vec<Unit>], attrs: &Attrs, num: Option<u32>) {
     open(out, depth, "table", attrs);
+    // A table may hold nothing but a caption, column groups and rows, so
+    // the block's anchor rides in the caption — the one place HTML puts
+    // arbitrary content at the head of a table.
+    if num.is_some() {
+        line(out, depth + 1, "caption", &[], &anchor(num));
+    }
     let mut rows = rows.iter();
     if let Some(header) = rows.next() {
         open(out, depth + 1, "thead", &[]);
@@ -429,73 +511,6 @@ fn push_when(attrs: &mut Attrs, when: Option<&Cond>) {
     if let Some(cond) = when {
         attrs.push(("data-when", cond.to_string()));
     }
-}
-
-// --- the emitters -------------------------------------------------------
-//
-// Indentation is structural and stable, so two builds of one page are
-// one file: a diff of two islands then shows what MOVED, not how the
-// writer felt about whitespace.
-
-fn indent(out: &mut String, depth: usize) {
-    for _ in 0..depth {
-        out.push_str("  ");
-    }
-}
-
-fn attr_text(attrs: &[(&'static str, String)]) -> String {
-    attrs
-        .iter()
-        .map(|(k, v)| format!(" {k}=\"{}\"", escape_attr(v)))
-        .collect()
-}
-
-fn open(out: &mut String, depth: usize, tag: &str, attrs: &[(&'static str, String)]) {
-    indent(out, depth);
-    out.push_str(&format!("<{tag}{}>\n", attr_text(attrs)));
-}
-
-fn close(out: &mut String, depth: usize, tag: &str) {
-    indent(out, depth);
-    out.push_str(&format!("</{tag}>\n"));
-}
-
-/// An element whose whole body fits on its own line.
-fn line(out: &mut String, depth: usize, tag: &str, attrs: &[(&'static str, String)], body: &str) {
-    indent(out, depth);
-    out.push_str(&format!("<{tag}{}>{body}</{tag}>\n", attr_text(attrs)));
-}
-
-fn void(out: &mut String, depth: usize, tag: &str, attrs: &[(&'static str, String)]) {
-    indent(out, depth);
-    out.push_str(&format!("<{tag}{} />\n", attr_text(attrs)));
-}
-
-/// A preformatted block, opening tag to closing tag on ONE line.
-///
-/// `<pre>` preserves whitespace, so the pretty-printing that makes the
-/// rest of the island readable would become content here: an indented
-/// `<code>` inside an indented `<pre>` shows a reader six spaces and two
-/// blank lines that no page ever wrote. Every byte between the fences is
-/// the author's; the indentation stops at the opening tag.
-fn pre_code(
-    out: &mut String,
-    depth: usize,
-    pre_attrs: &[(&'static str, String)],
-    lang: Option<&str>,
-    text: &str,
-) {
-    let mut code_attrs: Attrs = Vec::new();
-    if let Some(lang) = lang {
-        code_attrs.push(("class", format!("language-{lang}")));
-    }
-    indent(out, depth);
-    out.push_str(&format!(
-        "<pre{}><code{}>{}</code></pre>\n",
-        attr_text(pre_attrs),
-        attr_text(&code_attrs),
-        escape(text)
-    ));
 }
 
 #[cfg(test)]

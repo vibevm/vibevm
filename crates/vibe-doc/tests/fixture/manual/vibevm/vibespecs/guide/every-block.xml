@@ -53,4 +53,7 @@
       <p>A whole section that only one agent sees.</p>
     </section>
   </varying>
+  <section id="footnotes" title="Footnotes">
+    <p>Apparatus, not flow: these blocks take no numbers, because their count changes whenever a reference above them does.</p>
+  </section>
 </spec>
