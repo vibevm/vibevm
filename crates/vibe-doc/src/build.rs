@@ -219,7 +219,13 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
     // file there. A build that named its own files would be the second
     // opinion the shell has no way to choose between.
     let coordinate = format!("{}/{}", card.group.as_str(), card.name);
-    let kind = vibe_core::PackageKind::Doc;
+    // The glyph of a generated placeholder is the KIND's
+    // (`##CARD-PLACEHOLDERS-GENERATED`), so it is read from the package
+    // rather than assumed: a build of a documentation package is the
+    // common case and not the only one — the site renders every kind
+    // from its own bytes (`##LEVEL-ZERO`), and a `lang` package wearing
+    // a book would be a picture that says the wrong thing.
+    let kind = declared_kind(package_dir);
     let mut generated_roles = Vec::new();
     for slot in media::slots(package_dir, &coordinate)? {
         let bytes = match slot.bytes {
@@ -244,6 +250,27 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
         unreadable: set.unreadable.iter().map(|u| u.rel.clone()).collect(),
         generated_roles,
     })
+}
+
+/// The kind a package declares, or `doc` when it declares none.
+///
+/// Read as TOML data, and a value the vocabulary does not know reads as
+/// the default rather than stopping the build: a picture is not worth a
+/// refusal, and the kind is checked where kinds are checked.
+fn declared_kind(package_dir: &Path) -> vibe_core::PackageKind {
+    let default = vibe_core::PackageKind::Doc;
+    let Ok(text) = std::fs::read_to_string(package_dir.join("vibe.toml")) else {
+        return default;
+    };
+    let Ok(value) = toml::from_str::<toml::Value>(&text) else {
+        return default;
+    };
+    value
+        .get("package")
+        .and_then(|p| p.get("kind"))
+        .and_then(toml::Value::as_str)
+        .and_then(|word| <vibe_core::PackageKind as std::str::FromStr>::from_str(word).ok())
+        .unwrap_or(default)
 }
 
 /// Write a build under `out_dir`, creating the directories it needs.

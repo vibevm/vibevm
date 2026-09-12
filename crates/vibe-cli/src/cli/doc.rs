@@ -143,6 +143,18 @@ pub struct DocBuildSiteArgs {
     /// nothing.
     #[arg(long)]
     pub dry_run: bool,
+
+    /// The site package that turns the rendered trees into the domain.
+    /// Defaults to the one in the host's checkout, which is where a
+    /// renderer has one.
+    #[arg(long, value_name = "DIR")]
+    pub web: Option<PathBuf>,
+
+    /// Render the documentation trees and stop. For a machine with no
+    /// Node, and for looking at what the pipeline produced before the
+    /// site is built on it.
+    #[arg(long)]
+    pub no_web: bool,
 }
 
 /// `vibe doc manifest` — what a machine reads about the package.

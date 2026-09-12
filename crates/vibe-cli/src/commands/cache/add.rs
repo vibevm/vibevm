@@ -53,13 +53,50 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
         .collect::<Result<_>>()?;
 
     let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
+    let warmed = warm(&resolver, &store_root, roots)?;
 
-    let mut inserted: Vec<String> = Vec::new();
-    let mut already: Vec<String> = Vec::new();
-    // Documented subjects the warm-up could not bring along, each with
-    // the reason — a `(coordinate, why)` pair, never a bare list.
-    let mut unreachable: Vec<(String, String)> = Vec::new();
+    emit(
+        ctx,
+        &store_root,
+        in_project,
+        &warmed.inserted,
+        &warmed.already,
+        &warmed.unreachable,
+    )
+}
+
+/// What one warm-up put into the store.
+#[derive(Debug, Clone, Default)]
+pub(crate) struct Warmed {
+    /// Coordinates the store did not hold before.
+    pub inserted: Vec<String>,
+    /// Coordinates it already held, fetched idempotently.
+    pub already: Vec<String>,
+    /// Documented subjects the warm-up could not bring along, each with
+    /// the reason — a `(coordinate, why)` pair, never a bare list.
+    pub unreachable: Vec<(String, String)>,
+}
+
+/// Warm `roots` and everything they need into the machine store.
+///
+/// Separate from [`run`] because it has a second caller: the registry
+/// builder warms a published version before it renders it, and it must
+/// warm it the SAME way — `##REL-WARMUP-CLOSURE` is a property of the
+/// warm-up and not of the command, and two implementations of it would
+/// mean a manual whose citations resolve on one path and not on the
+/// other.
+pub(crate) fn warm(
+    resolver: &InstallResolver,
+    store_root: &Path,
+    roots: Vec<PackageRef>,
+) -> Result<Warmed> {
+    let mut warmed = Warmed::default();
     let mut fetched: BTreeSet<String> = BTreeSet::new();
+    let Warmed {
+        inserted,
+        already,
+        unreachable,
+    } = &mut warmed;
 
     // The walk runs to a fixed point rather than once, because the
     // documentation closure grows a level at a time: warming a manual
@@ -114,7 +151,7 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
             let was_present =
                 vibe_registry::lookup(&node.group, &node.name, &node.version).is_some();
             resolver
-                .resolve_and_fetch(&exact_pinned_pkgref(node), &store_root, None)
+                .resolve_and_fetch(&exact_pinned_pkgref(node), store_root, None)
                 .with_context(|| format!("fetching {label} into the machine store"))?;
             if was_present {
                 already.push(label);
@@ -123,17 +160,9 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
             }
             warmed_now.push((node.group.clone(), node.name.clone(), node.version.clone()));
         }
-        pending = documentation_closure(&store_root, &warmed_now, &mut unreachable)?;
+        pending = documentation_closure(store_root, &warmed_now, unreachable)?;
     }
-
-    emit(
-        ctx,
-        &store_root,
-        in_project,
-        &inserted,
-        &already,
-        &unreachable,
-    )
+    Ok(warmed)
 }
 
 /// What the documentation just warmed asks for in turn: the subjects of

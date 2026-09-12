@@ -422,13 +422,25 @@ cargo run -p vibe-cli -- doc shell status
 **The whole site, not one package: `doc build-site`.** Every verb above answers about the one package you point `--path` at. `build-site` answers about the site — it reads two sources named in a `site.toml`, and it is the command the renderer container runs.
 
 ```sh
-# Read the configuration and print what this site is, writing nothing.
+# Read the sources and print what would be rebuilt, writing nothing.
 cargo run -p vibe-cli -- doc build-site --config site.toml --dry-run
+
+# Render what moved, then build the domain on the result.
+cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site
+
+# Render the documentation trees and stop — for a machine with no Node.
+cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site --no-web
 ```
 
 The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
 
 Nothing in that file authorises anything. The site reads every source anonymously, so there is no `auth`, no token and no environment name in the shape — a configuration that *could* carry a credential invites one onto a renderer with no use for it.
+
+**What a run does, in order.** It polls both sources for the set of «coordinate · version · content hash» they hold *now*; compares that with `<out>/.vibe-site/state.json`, which records what was rendered and what it was rendered from; and rebuilds only the pairs that are new, moved or last failed. Each rebuilt pair is warmed into the machine store the way `vibe cache add` warms one — subjects and all, so its `spec://` citations resolve offline — then composed into a documentation package and built in all three projections under `<out>/.vibe-site/trees/`. Finally the site package is run over every standing tree and its output replaces everything in `<out>` except `.vibe-site`.
+
+Two consequences worth knowing before you point it at a directory. **The state file is inside the output**, because the question it answers is «what is in *this* directory»; a serving configuration has to refuse `/.vibe-site/` the way it refuses any other kitchen. And **a package that will not render becomes a page** rather than a failure: the reason is composed into a card and a page at the same address, the row records the failure, and the next run tries again — a registry of hundreds will always hold one broken package, and a builder that stopped for it would publish nothing at all.
+
+**Level 0 is every package, from its own bytes.** A package that ships no documentation still gets pages: the manifest as a reference page, the README, and the boot snippet when it declares one, beside every specification it carries — copied at its own path, because the path is the address a `spec://` citation resolves to. A `doc` package gets the same treatment and its authored pages besides, which is why there is one rendering path and not two.
 
 **What each check asks.** `--examples` runs every documented command against the debug binary in a sandbox and compares the output exactly, after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests, and a red example is fixed in the normalisation rules or in the product, never by loosening the comparison. `--citations` asks one question of every `spec://` a page cites — does the anchor exist. `--derived` rebuilds every generated block and compares it with the record in the package; the cure for a red one is `--derived --accept`. `--translations` checks an adaptation against the documentation it adapts, structure only. `--coverage` requires every spec fact marked `actionstage="doc"` with an audience to be cited by a page for that same audience, and `--min <percent>` lowers the bar for an intermediate run. `--media` judges the card's images by their bytes.
 
