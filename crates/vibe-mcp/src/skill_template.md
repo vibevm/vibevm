@@ -12,6 +12,13 @@ project-specific conventions (custom commit rules, write-ahead log
 protocols, custom spec corpus, etc.) live elsewhere — see the last
 section.
 
+**The manual is a package.** When the fuller explanation of something
+here is wanted — how the boot lane works, what a registry is, how to
+publish — it is the `doc` package `org.vibevm.core/vibevm-docs`: install
+its skill (`vibe skill install --skill vibevm-docs`), read a page with
+the `read_doc` MCP tool, or serve it locally with `vibe doc serve`.
+Nothing below depends on having it.
+
 ## First step — detect the situation
 
 Check whether `vibe.toml` exists in the working directory.
@@ -40,11 +47,15 @@ To create one:
    keep, edit, or delete. vibevm commands work the same way whether
    they're present or not.
 
-   **Two registries are already configured** by `vibe init`:
-   `vibespecs` (GitHub) and `vibespecs-gitverse` (GitVerse). **Do
-   NOT call `vibe registry add`** unless the user explicitly asked
-   for a custom host — adding a redundant entry just slows resolves
-   and confuses code review.
+   **`vibe init` writes no `[[registry]]` table**, and `vibe install`
+   does not need one: it resolves through the registries configured
+   for the machine. **Do NOT call `vibe registry add`** unless the
+   user explicitly asked for a custom host — adding a redundant entry
+   just slows resolves and confuses code review. One command does
+   want a project-level entry today: `vibe outdated` refuses without
+   one and says so. That is a known defect of `outdated`, not a
+   missing step here — report it rather than editing the manifest to
+   work around it.
 
 2. **(Optional) `vibe install <pkgref> --assume-yes`** — install one
    or more packages from the configured registries. There is no

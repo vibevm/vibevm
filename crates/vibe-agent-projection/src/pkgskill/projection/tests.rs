@@ -341,6 +341,59 @@ content_hash = "sha256:cccc"
     );
 }
 
+/// A documentation package is the one kind `vibe install` refuses, so it
+/// never enters a lock file and its skill would be invisible to
+/// `vibe skill` forever. It is collected from the project's own in-tree
+/// registry instead — and only when it IS documentation: an ordinary
+/// package sitting there reaches an agent by being installed, and
+/// listing it from two places would offer one projection twice.
+#[test]
+fn a_documentation_package_authored_in_tree_contributes_its_skill() {
+    let project = tempfile::tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        "[project]\nname = \"host\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+
+    let packages = project
+        .path()
+        .join(vibe_core::layout::current_packages_root());
+    for (name, kind, extra) in [
+        (
+            "thing-docs",
+            "doc",
+            "title = \"Thing\"\nabstract = \"What it covers.\"\n\
+             [[documents]]\npackage = \"org.example/thing\"\nversion = \"^1.0\"\n",
+        ),
+        ("thing-tool", "tool", ""),
+    ] {
+        let slot = packages.join(format!("org.example/{name}/v0.1.0"));
+        fs::create_dir_all(slot.join(format!("skills/{name}"))).unwrap();
+        fs::write(slot.join(format!("skills/{name}/SKILL.md")), "# skill\n").unwrap();
+        fs::write(
+            slot.join("vibe.toml"),
+            format!(
+                "[package]\ngroup = \"org.example\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
+                 version = \"0.1.0\"\n{extra}\n\
+                 [[skill]]\nname = \"{name}\"\npath = \"skills/{name}\"\n"
+            ),
+        )
+        .unwrap();
+    }
+
+    let skills = collect_declared_skills(project.path()).unwrap();
+    let found: Vec<(String, String)> = skills
+        .into_iter()
+        .map(|skill| (skill.origin, skill.decl.name))
+        .collect();
+    assert_eq!(
+        found,
+        vec![("doc:thing-docs".to_string(), "thing-docs".to_string())],
+        "only the documentation package's skill arrives this way"
+    );
+}
+
 #[test]
 fn standalone_filter_diagnostics_keep_the_original_precedence_and_bytes() {
     let project = tempfile::tempdir().unwrap();
