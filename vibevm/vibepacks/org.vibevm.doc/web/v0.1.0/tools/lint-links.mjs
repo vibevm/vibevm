@@ -85,7 +85,7 @@ const EXCEPTIONS = [
   {
     id: "L-01",
     reason:
-      "The island golden cites `media/diagram.svg` relative to the page, and the fixture package carries no such file — the pipeline writes a package's media at the root of its tree, not beside a page, and SVG is not an allowed medium in this wave (D-20-6). Filed as an island-golden finding; the picture is the only broken one on the fixture page.",
+      "The island golden cites `media/diagram.svg` beside the DOCUMENT, and the pipeline publishes a package's media at the root of its tree under a content name — so the address misses at whatever depth the page is served, and the fixture package carries no such file in either place. SVG is not an allowed medium in this wave (D-20-6). Filed as an island-golden finding; the picture is the only broken one on the fixture page.",
     matches: (miss) => miss.target.endsWith("/media/diagram.svg"),
   },
 ];
