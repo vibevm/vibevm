@@ -8,7 +8,7 @@ Validated during authoring:
 
 - The campaign checker accepts exact baseline hashes, task/parent/mandate coverage, child order and the combined completion/inherited-prerequisite graph.
 - All existing read-path locators and crate names in ordinary Cargo check commands were checked against this checkout. Prospective test families are explicitly marked TO CREATE.
-- Forty planning-helper tests pass, covering original coverage/retirement cases, preview bindings and the targeted verification guards. The affected multi-user-planning renderer's fourteen tests also pass. No Cargo tests or full product panel were run for this correction.
+- Forty-two planning-helper tests pass, covering original coverage/retirement cases, preview bindings, targeted verification guards and advisory parallel integration. The earlier renderer correction passed fourteen focused tests; its renderer inputs remain unchanged by the parallel addition. No Cargo tests or full product panel were run for these corrections.
 - The existing baseline executable's XML-to-Markdown dry run examined all 61 XML files without writing: 60 byte-stable; the master has only IR-stable quote-entity normalization. No IR-divergent source or refusal remained.
 - Planning review corrected missing module/CLI/MCP registration perimeters, a premature service-catalog dependency, Linux egress fixture design, source-contract ordering, exact census-derived batch requirements and retirement/packet-navigation checks.
 
@@ -21,6 +21,8 @@ Frozen review inputs and staging-unit bytes remain unchanged. Task recipe edits 
 The preview author's two XML documents previously passed read-only pivot classification without IR divergence: the master had quote-entity normalization, and NEXT-A26 lost only blank lines in reverse projection. No source conversion was applied. The later owner verification ruling supersedes blanket-panel wording retained in the immutable baseline excerpts without removing their behavioral obligations.
 
 The historical planning ancestor stays fixed. Neither DP1/DP2 product captures nor the independent documentation have been supplied or executed by this authoring pass. The documentation input gate is initially blocked; supplying it later does not authorize campaign execution. Existing accepted/candidate states and evidence in the local plan are preserved while the seed/local revisions advance deliberately.
+
+The bounded parallelism request is handled by the permanent multi-user-planning parallel protocol, `steward-parallel` helper and this campaign's derived `parallel-frontier`/packet fields. It required no new node, dependency change or task rewrite. All 158 protected task, seed/local-plan, context, frozen-input and staging/promotion files remain byte-identical in this addition. Twenty-four focused analyzer tests pass, including Windows junction aliases, active work, ancestor suppression, stale/narrowed bindings and read-only behavior. The actual context still reports zero ready tasks and no dispatch authorization. Incoming documentation will adapt its existing gated input and affected packet bindings when supplied.
 
 The full product panel, native artifact smokes, Docker operations, CI installation, release publication and product implementation were not run. Their current green/complete state is not asserted.
 

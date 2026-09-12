@@ -14,6 +14,7 @@ Run these separately from the selected checkout, replacing <context> with its re
 
     python -B campaigns/next/campaign.py check --context <context>
     python -B campaigns/next/campaign.py frontier --context <context>
+    python -B campaigns/next/campaign.py parallel-frontier --context <context>
     python -B campaigns/next/campaign.py task NEXT-P0.1 --context <context>
 
 The no-context check validates only the shared seed. Frontier/task also validate complete local coverage, so a shortened UI or damaged local plan cannot silently hide work. Task output names the detailed JSON contract and active XML sources; after consumption it follows validated permanent targets.
@@ -31,6 +32,18 @@ One work package may need another workstream's early group before its own parent
 M-13-D.2 requires the accepted exact per-file ownership/version census before dispatch. M-17-A.2 requires finite handler-family batches from the accepted M-16 census; convert its local node to a group and register those additional task files in manifest.json refinements before execution. Each refinement has id equal to its parent task and tasks_file pointing to a JSON group with sequential .1… children. The checker retains the original denominator and validates the added contracts.
 
 The core task metadata is the canonical recipe. Shared XML stages product laws; permanent PROP/FEAT anchors are created before code/tests cite them. Final retirement is a separate evidence gate, not a reason to defer permanent source contracts.
+
+## Parallel execution on the existing graph
+
+`parallel-frontier` uses the installed multi-user-planning `steward-parallel` analyzer. It reports dependency-ready leaves, recorded active work, candidates awaiting review, read/write overlaps, unknown perimeters and proposed compatible batches. It does not launch jobs, reserve resources, accept results or change dependencies. Its `dispatch_authorized: false` is deliberate: a proposed batch still needs actual input, semantic, live-job and resource checks.
+
+Before dispatch, bind exact worker files inside each task's existing outer perimeter, the accepted contract/input capture, selected tests, shared resources and one integration owner. Shared `lib.rs`, manifests, schema registrations and generator outputs must have an assigned writer. Read/write conflicts matter even when output files differ. An isolated worktree retains candidate changes but does not prove their compatibility; retain compatible build artifacts and keep heavy command concurrency separate from worker count.
+
+Optional `--bindings <local-json>` refines the same task IDs with narrower read/write paths and resource demands. The input uses schema 1, plan id/revision/raw SHA and per-task entries; see the installed skill for its exact fields. It is an ephemeral analysis input, not a second plan or a repository worker queue. Missing resources and external documentation roots remain unknown. Current file/contract identity, actual running jobs and physical resource capacity are still checked by the coordinator.
+
+Use parallelism between existing ready tasks or bounded independent worker packets inside one ready task. All parent acceptance obligations remain. Preparation and review can overlap independent production on captured inputs, but cannot bypass a prerequisite. Keep candidate production within review capacity; do not add a reviewer/tester trio or duplicate full suites for every small task.
+
+This addition preserves the 425-node graph and all 212 task contracts byte-for-byte. It does not remove the `.1` to `.2` sequencing rule, change Phase 0 ordering or move `NEXT-PREVIEW-DOCS.2` ahead of its 17 workstream dependencies. The incoming documentation will be bound at its existing input gate; then only affected packets, topic maps and evidence need adaptation.
 
 ## Change accounting, migration and documentation
 

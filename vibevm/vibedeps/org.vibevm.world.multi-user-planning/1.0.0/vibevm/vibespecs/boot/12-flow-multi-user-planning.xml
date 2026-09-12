@@ -86,6 +86,20 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
   evidence for omissions and contradictions.</REPLAN-AND-BACKSCAN>
     </facts>
   </planning>
+  <parallel title="Parallel work without a second plan">
+    <p><PARALLEL-PACKETS fact="true" status="impl/done">Use parallelism among
+  already-ready tasks or bounded independent parts of one ready task. Keep
+  existing prerequisites and root acceptance. Bind accepted inputs, actual
+  read/write paths, one integration owner and shared resources before dispatch;
+  broad allowed directories do not establish independent ownership. Overlap
+  production, targeted checks and preparation for review only on stable subjects,
+  and keep the rate of new work within review and machine capacity. The optional
+  steward-parallel analyzer reports path/resource candidates and unknowns; it
+  grants no permission, reserves nothing and proves no live-job or semantic
+  independence. Incoming documentation needs a bound source and ownership before
+  its affected packets change. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#root.</PARALLEL-PACKETS></p>
+  </parallel>
   <verification title="Verification economy">
     <p><AFFECTED-TARGETS-FIRST fact="true" status="impl/done">Select the
   build/test target before exact affected cases or a small family, including

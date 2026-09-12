@@ -11,8 +11,8 @@ epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
-description = "Multi-contributor campaign stewardship with targeted verification, interruption recovery, deterministic goals, and opt-in handoffs"
-keywords = ["planning", "campaigns", "multi-user", "goal", "verification", "continuation", "recovery", "handoff", "agents"]
+description = "Multi-contributor campaign stewardship with advisory parallel analysis, targeted verification, recovery, and deterministic goals"
+keywords = ["planning", "campaigns", "multi-user", "parallel", "goal", "verification", "continuation", "recovery", "handoff", "agents"]
 
 [compatibility]
 min_vibe_version = "0.1.0"
@@ -40,3 +40,8 @@ description = "On explicit owner request, prepare or receive a formal same-machi
 name = "steward-goal"
 path = "vibevm/vibespecs/skills/steward-goal"
 description = "Render or refresh the deterministic local campaign goal from the selected plan node; ordinary continuation does not require a custody claim"
+
+[[skill]]
+name = "steward-parallel"
+path = "vibevm/vibespecs/skills/steward-parallel"
+description = "Inspect ready work, review backlog and declared or bound parallel conflicts without launching jobs or changing the plan"

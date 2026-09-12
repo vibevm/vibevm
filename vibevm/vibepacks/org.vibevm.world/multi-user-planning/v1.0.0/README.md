@@ -64,6 +64,10 @@ evidence mechanics that any capable agent or human coordinator can use.
 - @fact:CONTENT-VERIFICATION Target-first affected checks, bounded scope
   escalation, compatible evidence reuse and fail-fast panel resumption in
   `verification-selection.xml`. @status:impl/done
+- @fact:CONTENT-PARALLEL Parallel ready tasks and bounded subwork, exact
+  read/write and resource bindings, one integration owner, review-capacity
+  control and adaptation to incoming documentation in `parallel-execution.xml`.
+  Existing task ids, dependencies and acceptance stay intact. @status:impl/done
 - @fact:CONTENT-RECOVERY Bounded provider retries, ambiguous-effect recovery,
   live-worker reconciliation and durable decision summaries in
   `interruption-recovery.xml`. It uses existing plan/evidence surfaces and
@@ -77,9 +81,10 @@ evidence mechanics that any capable agent or human coordinator can use.
 - @fact:CONTENT-MIGRATION The composition and migration rules for projects
   leaving `wal`/`wal-specspaces`, including the redbook exclusion recipe, in
   `migration-and-composition.xml`. @status:impl/done
-- @fact:CONTENT-SKILLS Three optional agent skills: status-only orientation,
-  explicit same-machine formal handoff, and deterministic goal refresh. They are not
-  `vibe.exe` commands.
+- @fact:CONTENT-SKILLS Four optional agent skills: status-only orientation,
+  explicit same-machine formal handoff, deterministic goal refresh, and
+  `steward-parallel` for a read-only JSON frontier with readiness, conflicts,
+  candidate batches and review backlog. They are not `vibe.exe` commands.
   @status:impl/done
 
 ## Authority boundary {#authority}
@@ -150,6 +155,18 @@ and valid per-step evidence; resume failed or invalidated steps and the unrun
 tail. Keep the complete gate denominator and identify aggregate proof honestly.
 Existing overbroad recipes may be narrowed with a recorded equivalent
 claim-to-proof mapping, without changing the plan format. @status:spec/done
+
+@fact:PARALLEL-WITHOUT-REPLANNING Use independent ready tasks or bounded
+disjoint packets inside one ready task; preserve prerequisites and accept the
+parent only when its whole obligation holds. Settle shared contracts, bind both
+read and write subjects, and give common integration files one owner. Overlap
+production, useful prechecks and central review on stable subjects; stop adding
+producers when unjudged candidates exceed review capacity. Manage expensive
+builds and Docker commands separately from worker count, retaining compatible
+caches and affected-test selection. The optional frontier helper offers JSON
+analysis, never launches work or asserts dispatch authority. New documentation
+becomes input only after its source, version and ownership are supplied; adapt
+affected packets and keep existing documentation gates. @status:spec/done
 
 @fact:RECOVERY-WITHOUT-REPLAY A model interruption may lose reasoning while
 commands or workers continue. Inspect their status, diffs and receipts first.

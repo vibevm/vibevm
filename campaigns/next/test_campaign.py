@@ -332,6 +332,29 @@ class CampaignChecks(unittest.TestCase):
         self.assertEqual(self.plan, before)
         self.assertEqual(MODULE["ready_nodes"](self.plan), [])
 
+    def test_parallel_view_keeps_the_real_execution_hold_and_seed_bytes(self):
+        path = ROOT / "campaigns/next/plan.seed.toml"
+        before = path.read_bytes()
+        view = MODULE["parallel_frontier"](MANIFEST, None)
+        self.assertEqual(view["counts"]["nodes"], len(self.plan["node"]))
+        self.assertEqual(view["execution_hold"], "blocked")
+        self.assertEqual(view["ready"], [])
+        self.assertEqual(view["proposed_batches"], [])
+        self.assertFalse(view["dispatch_authorized"])
+        self.assertFalse(view["runtime_observed"])
+        self.assertEqual(view["plan_sha256"], MODULE["digest"](before))
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_parallel_packet_keeps_prerequisites_and_documentation_gate(self):
+        before = copy.deepcopy(self.plan)
+        for key in ("M-13-A.2", "NEXT-PREVIEW-DOCS.2"):
+            packet = MODULE["task_packet"](MANIFEST, key, None)
+            self.assertFalse(packet["parallel"]["dispatch_authorized"])
+            self.assertFalse(packet["parallel"]["dependencies_changed"])
+            self.assertEqual(packet["parallel"]["state"], "requires-binding")
+            self.assertFalse(packet["ready"])
+        self.assertEqual(self.plan, before)
+
 
 if __name__ == "__main__":
     unittest.main()

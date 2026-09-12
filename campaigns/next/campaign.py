@@ -24,6 +24,10 @@ TASK_FIELDS = {"id", "title", "goal", "read_paths", "write_paths", "steps",
                "safe_stop", "commit_subject", "notes"}
 RENDERER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/"
                    "vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py")
+PARALLEL_ANALYZER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/"
+                          "vibevm/vibespecs/skills/steward-parallel/scripts/parallel_frontier.py")
+PARALLEL_SPEC = ("spec://org.vibevm.world/multi-user-planning/flows/"
+                 "multi-user-planning/parallel-execution#root")
 
 
 class Refusal(ValueError):
@@ -543,6 +547,25 @@ def ready_nodes(plan):
     return sorted(ready, key=lambda n: (n["order"], n["id"]))
 
 
+def parallel_frontier(manifest, context, bindings_path=None):
+    """Inspect existing work; never relax dependencies or dispatch candidates."""
+    plan = load_plan(context)
+    path = context / "plan.toml" if context else HOME / "plan.seed.toml"
+    raw = path.read_bytes()
+    need(tomllib.loads(raw.decode("utf-8")) == plan, "plan moved while capturing parallel view")
+    tasks = load_tasks(manifest)
+    validate_coverage(manifest, tasks, plan)
+    bindings = read_json(bindings_path) if bindings_path else None
+    helper = runpy.run_path(str(PARALLEL_ANALYZER))
+    result = helper["analyze"](plan, tasks, ROOT, bindings, plan_sha256=digest(raw))
+    need(path.read_bytes() == raw, "plan moved while deriving parallel view")
+    result["campaign_id"] = manifest["campaign_id"]
+    result["execution_hold"] = next(n["state"] for n in plan["node"]
+                                    if n["id"] == "NEXT-EXECUTION-AUTHORITY")
+    result["policy_spec"] = PARALLEL_SPEC
+    return result
+
+
 def resolved_contract_units(manifest, selected):
     ledger = tomllib.loads((HOME / "promotion.toml").read_text(encoding="utf-8"))
     _, states, clauses = source_contracts(manifest, ledger)
@@ -605,6 +628,13 @@ def task_packet(manifest, task_id, context):
                            "build_link_and_run_cost", "reuse_and_escalation_conditions"],
         "bindings_executed": False,
         "status_note": "The coordinator resolves choices, available commands, expected coverage and cost before execution. This packet is a planned obligation; it neither selects real tests nor proves a run."}
+    result["parallel"] = {
+        "state": "requires-binding", "policy_spec": PARALLEL_SPEC,
+        "dispatch_authorized": False, "dependencies_changed": False,
+        "binding_fields": ["accepted_contract_and_input_captures", "exact_read_and_write_paths",
+                           "integration_owner_and_shared_registration", "resources_and_observed_capacity",
+                           "targeted_verification", "job_report_identity_and_safe_stop"],
+        "status_note": "Use existing ready tasks or bounded independent subwork of this task. Verify read/write conflicts, actual inputs, live jobs and resources before dispatch. Keep the same parent acceptance and prerequisites; missing documentation input stays gated. An advisory batch is not permission."}
     result["ready"] = task_id in {n["id"] for n in ready_nodes(load_plan(context))}
     result["status_note"] = "Readiness is a dependency check, not authorization or verification of physical inputs."
     return result
@@ -644,28 +674,34 @@ def retirement_check(manifest, context, unit_id):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["check", "frontier", "task", "retirement-check"])
+    parser.add_argument("command", choices=["check", "frontier", "parallel-frontier", "task", "retirement-check"])
     parser.add_argument("task_id", nargs="?")
     parser.add_argument("--context", type=Path)
     parser.add_argument("--unit")
+    parser.add_argument("--bindings", type=Path, help="optional plan-bound exact perimeters/resources for parallel-frontier")
     args = parser.parse_args()
     try:
         manifest = read_json(HOME / "manifest.json")
-        if args.command != "check":
+        need(args.bindings is None or args.command == "parallel-frontier",
+             "--bindings applies only to parallel-frontier")
+        if args.command not in {"check", "parallel-frontier"}:
             validate_coverage(manifest, load_tasks(manifest), load_plan(args.context))
         if args.command == "check":
             result = check(manifest, args.context)
         elif args.command == "frontier":
             result = {"ok": True, "ready": [{"id": n["id"], "title": n["title"]} for n in ready_nodes(load_plan(args.context))]}
+        elif args.command == "parallel-frontier":
+            result = parallel_frontier(manifest, args.context, args.bindings)
         elif args.command == "task":
             need(args.task_id, "task requires an ID")
             result = task_packet(manifest, args.task_id, args.context)
         else:
             result = retirement_check(manifest, args.context, args.unit)
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        print(json.dumps(result, ensure_ascii=args.command == "parallel-frontier", indent=2))
         return 0
     except (Refusal, OSError, ValueError, KeyError, ET.ParseError) as error:
-        print(json.dumps({"ok": False, "reason": str(error)}, ensure_ascii=False))
+        print(json.dumps({"ok": False, "reason": str(error)},
+                         ensure_ascii=args.command == "parallel-frontier"))
         return 2
 
 

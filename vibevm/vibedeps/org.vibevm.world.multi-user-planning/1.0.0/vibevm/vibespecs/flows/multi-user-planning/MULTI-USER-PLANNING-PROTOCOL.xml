@@ -141,6 +141,11 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
       <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
   [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
+      <DOC-PARALLEL fact="true" status="spec/done">Parallel packets, shared
+  resource coordination and advisory frontier analysis:
+  [`parallel-execution.xml`](parallel-execution.xml). Existing dependencies and
+  acceptance authority remain unchanged; `steward-parallel` reports candidates
+  and conflicts without dispatching work.</DOC-PARALLEL>
       <DOC-VERIFICATION fact="true" status="spec/done">Selecting affected
   build/test targets, evidence reuse and partial-panel recovery:
   [`verification-selection.xml`](verification-selection.xml). Read when binding

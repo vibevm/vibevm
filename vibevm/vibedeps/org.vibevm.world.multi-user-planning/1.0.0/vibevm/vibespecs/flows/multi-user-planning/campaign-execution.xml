@@ -81,7 +81,9 @@ now from checks the atom must implement; do not derive commands from task ids.
 Name their expected behavior, the safe stop and recovery route; confirm needed
 resources and current authority. Missing information becomes bounded preparation
 or refinement of the affected existing nodes. It does not authorize a worker
-to invent architecture, skip a dependency or restart the entire campaign.</DISPATCH-READINESS></p>
+to invent architecture, skip a dependency or restart the entire campaign.
+For concurrent packets, bind read subjects, exact write perimeters, resource
+access and integration ownership under `parallel-execution.xml`.</DISPATCH-READINESS></p>
     <p><INPUT-CHANGE fact="true" status="spec/done">Expected writes by the
 current coordinator or its known disjoint workers require recapturing affected
 inputs and invalidating dependent evidence, not asking for the same authority
@@ -133,13 +135,15 @@ recommission or reject. Never delete first or restart blindly. Follow
 [`interruption-recovery.xml`](interruption-recovery.xml) for provider failures,
 quota exhaustion, interrupted effects and ordinary continuation.</WORKER-FAILURE></p>
     <p><PARALLEL-WORK fact="true" status="spec/done">Parallelize independent
-work only after shared contracts are settled and write perimeters, shared
-resources and integration order are compatible. Name one integration owner.
-Size the active window to available review and integration capacity: if viable
-candidates accumulate, judge and integrate them before adding producers.
-Completion order is not dependency order. Do not duplicate a worker whose job
-may still be live, and do not lower acceptance because a cheaper model produced
-the result.</PARALLEL-WORK></p>
+ready tasks or bounded disjoint subwork inside one ready task, keeping existing
+dependencies and parent acceptance intact. Bind shared accepted contracts,
+read/write subjects, resources and one integration owner before fan-out. Match
+the window to review capacity and heavy commands to actual machine capacity;
+judge viable accumulated candidates before adding producers. Completion order
+does not change dependencies. Follow
+[`parallel-execution.xml`](parallel-execution.xml) for compatible packets,
+review pipelines, incoming documentation and the optional read-only frontier.
+Do not duplicate a possibly live worker or lower acceptance for its model.</PARALLEL-WORK></p>
   </workers>
   <gates title="5. Gate economy">
     <p><EXACT-GATES fact="true" status="spec/done">Every atom establishes
