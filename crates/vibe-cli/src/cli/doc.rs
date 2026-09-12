@@ -181,9 +181,19 @@ pub struct DocCheckArgs {
     #[arg(long)]
     pub coverage: bool,
 
-    /// With `--coverage`, the percentage that counts as a pass. The
-    /// standing bar is everything told; a lower one is for the
-    /// intermediate runs of a campaign that is still writing the pages.
+    /// Lint the prose against the style law: the tics on the package's
+    /// list for its language, sentence and paragraph length by block
+    /// kind, a glossary term used before anybody introduced it, three
+    /// terms in one sentence, a heading the law forbids by name. It
+    /// reports and never edits.
+    #[arg(long)]
+    pub style: bool,
+
+    /// With `--coverage` and `--style`, the percentage that counts as a
+    /// pass — of audience pairs told, and of pages that carry no style
+    /// error. The standing bar is everything told and every page clean; a
+    /// lower one is for the intermediate runs of a campaign that is still
+    /// writing the pages.
     #[arg(long, default_value_t = vibe_doc::coverage::FULL_COVERAGE, value_name = "PERCENT")]
     pub min: u8,
 

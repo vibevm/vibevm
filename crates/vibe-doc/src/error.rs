@@ -174,6 +174,27 @@ pub enum DocError {
          fix: name a documentation this machine can reach, and mirror it)"
     )]
     Translation { adapts: String, message: String },
+
+    /// The style linter has no data to judge the prose by — no banned
+    /// list for the language the package is written in. An empty list
+    /// would report a clean page for the wrong reason: «no tic found» and
+    /// «nothing to find one with» print the same zero.
+    #[error(
+        "the style check cannot read this package's prose: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT; \
+         fix: ship the language's list under `style/`, or check a package that has one)"
+    )]
+    Style { message: String },
+
+    /// A `prompt` could not be run through the configured agent: no
+    /// runner, a runner that will not start, or a fixture the run needs
+    /// and the package does not have.
+    #[error(
+        "the prompt check cannot run: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST; \
+         fix: declare `[doc.prompts] runner` in the package, or pass `--runner`)"
+    )]
+    Prompt { message: String },
 }
 
 impl DocError {
