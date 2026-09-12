@@ -105,8 +105,10 @@ fn a_rule_quotes_the_current_text_names_the_specs_language_and_pins_nothing() {
         island.contains("data-uri=\"spec://org.demo/lib/common/PROP-001#A\""),
         "{island}"
     );
+    // The citation is handed to the resolver rather than spelled down the
+    // address map: only the mount knows what it carries.
     assert!(
-        island.contains("href=\"/doc/org.demo/lib/latest/common/PROP-001/#A\""),
+        island.contains("href=\"/doc/resolve/?uri=spec://org.demo/lib/common/PROP-001%23A\""),
         "{island}"
     );
     assert!(island.contains("lang=\"en\""), "{island}");
