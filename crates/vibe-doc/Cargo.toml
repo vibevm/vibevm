@@ -1,0 +1,34 @@
+[package]
+name = "vibe-doc"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish = false
+repository.workspace = true
+homepage.workspace = true
+description = "The PROP-057 documentation pipeline: the example runner, the derived generators and the checks a documentation package answers to"
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+# The fixture declaration (`example.toml`) and the manifest a
+# `manifest-field` reference addresses are both TOML read as data.
+serde.workspace = true
+toml.workspace = true
+# `--json` example streams are parsed document by document and validated
+# against the fixture's JTD schema map; the schemas themselves are JSON.
+serde_json.workspace = true
+# A normalisation rule is a DECLARED line form, visible in review
+# (PROP-057 ##PIPE-EXAMPLE-RUNNER): a regular expression is the form the
+# fixture spells it in.
+regex.workspace = true
+# Page discovery inside a documentation package.
+walkdir.workspace = true
+# The pivot: pages are read through the documentation vocabulary, never
+# by a second parser of our own (PROP-045 ##PIVOT-MODEL).
+vibe-specdoc.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
