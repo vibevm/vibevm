@@ -1,0 +1,91 @@
+/* tokens.css — the thirteen semantic names every component is allowed to
+   read, in two maps.
+   ---------------------------------------------------------------------
+   A component asks for a ROLE (`--text-2`, `--bg-raise`) and never for a
+   colour; the colour it gets depends on the theme, and the theme is set
+   in exactly two ways — the system's preference, or the reader's explicit
+   choice stamped on `<html data-theme>` before the stylesheet loads
+   (`theme-init.js`). Both ways select the same dark map, which is why the
+   media block and the attribute block below carry identical bodies, and
+   why `design/audit/contrast.mjs` compares them on every run: two
+   mechanisms for one map, never a third map.
+
+   Not one literal lives in this file. Every value is a `var()` into
+   `palette.css`, which is the single place a colour is written down
+   (PROP-057 `##STACK-DESIGN-FLOOR`, R-27). A colour literal in a
+   component is a review error; a colour literal HERE would be the same
+   error one level up. */
+
+@import "./palette.css";
+
+/* The light map — the default, and the one a reader who asked for light
+   gets whatever the system prefers. */
+:root,
+[data-theme="light"] {
+  --bg: var(--ivory-100);
+  --bg-raise: var(--ivory-50);
+  --bg-sink: var(--ivory-200);
+  --text: var(--text-light);
+  --text-2: var(--muted-docs);
+  --text-3: var(--faint-light-docs);
+  --line: var(--border);
+  --line-strong: var(--border-strong);
+  --accent: var(--terracotta-bright);
+  --accent-hover: var(--terracotta-deep);
+  --accent-soft: var(--terracotta-bg);
+  --code-bg: var(--cream-100);
+  --selection: var(--terracotta-soft);
+}
+
+/* The dark map, chosen by the system. `:not([data-theme="light"])` is
+   what lets the reader's explicit light choice win over the system's
+   dark preference — without it the attribute would be overruled by a
+   media query it has no way to answer. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--ink);
+    --bg-raise: var(--ink-raise);
+    --bg-sink: var(--ink-sink);
+    --text: var(--cream-dark);
+    --text-2: var(--dim-docs);
+    --text-3: var(--faint-dark-docs);
+    --line: var(--line-dark);
+    --line-strong: var(--line-strong-dark);
+    --accent: var(--accent-docs);
+    --accent-hover: var(--accent-hover-raw);
+    --accent-soft: var(--accent-soft-raw);
+    --code-bg: var(--ink-sink);
+    --selection: var(--accent-soft-raw);
+  }
+}
+
+/* The same dark map, chosen by the reader. */
+[data-theme="dark"] {
+  --bg: var(--ink);
+  --bg-raise: var(--ink-raise);
+  --bg-sink: var(--ink-sink);
+  --text: var(--cream-dark);
+  --text-2: var(--dim-docs);
+  --text-3: var(--faint-dark-docs);
+  --line: var(--line-dark);
+  --line-strong: var(--line-strong-dark);
+  --accent: var(--accent-docs);
+  --accent-hover: var(--accent-hover-raw);
+  --accent-soft: var(--accent-soft-raw);
+  --code-bg: var(--ink-sink);
+  --selection: var(--accent-soft-raw);
+}
+
+/* Shape and time do not change with the theme, so they are written once
+   and no block below overrides them. */
+:root {
+  --radius-sm: var(--radius-sm-raw);
+  --radius-md: var(--radius-md-raw);
+  --radius-lg: var(--radius-lg-raw);
+  --radius-xl: var(--radius-xl-raw);
+  --radius-pill: var(--radius-pill-raw);
+  --shadow-card: var(--shadow-card-raw);
+  --shadow-hover: var(--shadow-hover-raw);
+  --shadow-mega: var(--shadow-mega-raw);
+  --speed: var(--speed-raw);
+}

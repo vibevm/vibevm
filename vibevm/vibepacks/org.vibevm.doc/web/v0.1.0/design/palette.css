@@ -1,0 +1,87 @@
+/* palette.css — the raw colours, and the only file in the package that
+   may write one.
+   ---------------------------------------------------------------------
+   Two maps of one system (D-21): the warm light map of the owner's design
+   system, and the warm dark map of the landing. They share their accent
+   literally — `--terracotta-bright` and the landing's `--accent` are the
+   same `#D97757` — which is why this is one system in two modes and not
+   two systems.
+
+   Every value below is quoted from its source file with the line it sits
+   on, so a reader can go and check it. Nothing here is semantic: a name
+   like `--ivory-200` says what the colour IS, never what it is FOR. What
+   it is for is `tokens.css`, and a component reads only from there
+   (PROP-057 `##STACK-DESIGN-FLOOR`).
+
+   A raw name never equals a semantic name. Where a source name would
+   collide — with a token, or with the other map — it carries the map it
+   came from (`--text-light`, `--faint-dark`) or the fact that it is raw
+   (`--accent-raw`). The cascade has no way to tell two `--text`es apart,
+   and the one that lost would be silently wrong.
+
+   Names ending in `-docs` are minted, not quoted: the audit found the
+   source tone short of its contrast threshold and the same hue was moved
+   in lightness until it passed with a margin. Each carries what it came
+   from and what its Lc was before and after
+   (`design/audit/contrast.mjs --mint`). */
+
+:root {
+  /* ---- The light map — anthropic.css, block `:root` ---------------- */
+  --ivory-50: #fcfbf8; /* anthropic.css:34 */
+  --ivory-100: #faf9f5; /* anthropic.css:35 — the source's own --page-bg (:98) */
+  --ivory-200: #f0eee6; /* anthropic.css:36 */
+  --ivory-300: #e8e5d9; /* anthropic.css:37 */
+  --cream-100: #f1ecdf; /* anthropic.css:38 */
+  --text-light: #1f1e1b; /* anthropic.css:47 */
+  --muted: #63625b; /* anthropic.css:48 */
+  --faint-light: #8e8d85; /* anthropic.css:49 */
+  --border: #e0ddd2; /* anthropic.css:52 */
+  --border-strong: #c9c6ba; /* anthropic.css:53 */
+  --terracotta-deep: #c15f3c; /* anthropic.css:58 */
+  --terracotta-bright: #d97757; /* anthropic.css:59 */
+  --terracotta-soft: #ebcbbc; /* anthropic.css:60 */
+  --terracotta-bg: #f6ede6; /* anthropic.css:61 */
+
+  /* ---- The dark map — global.css, block `:root` -------------------- */
+  --ink: #14120e; /* global.css:60 */
+  --ink-raise: #1c1a15; /* global.css:61 */
+  --ink-sink: #100f0b; /* global.css:62 */
+  --cream-dark: #f4f1e8; /* global.css:63 */
+  --dim: #a8a197; /* global.css:64 */
+  --faint-dark: #6f695e; /* global.css:65 */
+  --accent-raw: #d97757; /* global.css:66 — the same hex as --terracotta-bright */
+  --accent-hover-raw: #e08a6d; /* global.css:67 */
+  --accent-soft-raw: rgba(217, 119, 87, 0.14); /* global.css:68 */
+  --line-dark: #2e2a22; /* global.css:69 */
+  --line-strong-dark: #3a352b; /* global.css:70 */
+
+  /* ---- Minted tones — the audit's answer, not a source's -----------
+     Each is its source tone moved in lightness only, on the same hue and
+     the same saturation, by the smallest step that clears its role's
+     threshold with a 2 Lc margin over the WORST background it is used on
+     — which for every text role is `--selection`. The "was/now" numbers
+     are that worst case, not the best one.
+
+     The two light tones and the two dark tones land on the same value
+     because secondary and tertiary text are held to the same threshold
+     over the same backgrounds: at Lc 60 on `--selection` there is one
+     answer on this hue, not two. The names stay separate so the design
+     review can part them again by relaxing the tertiary rule, which is
+     the only thing that would give the palette three levels back. */
+  --muted-docs: #4f4e49; /* mint: from --muted, worst |Lc| 54.08 -> 62.28 */
+  --faint-light-docs: #4f4e49; /* mint: from --faint-light, worst |Lc| 34.26 -> 62.28 */
+  --dim-docs: #beb9b1; /* mint: from --dim, worst |Lc| 49.12 -> 62.17 */
+  --faint-dark-docs: #bdb9b1; /* mint: from --faint-dark, worst |Lc| 21.86 -> 62.05 */
+  --accent-docs: #dc8264; /* mint: from --accent-raw, |Lc| on dark --bg 43.29 -> 47.20 */
+
+  /* ---- Shape and time — anthropic.css ------------------------------ */
+  --radius-sm-raw: 8px; /* anthropic.css:86 */
+  --radius-md-raw: 12px; /* anthropic.css:87 */
+  --radius-lg-raw: 16px; /* anthropic.css:88 */
+  --radius-xl-raw: 24px; /* anthropic.css:89 */
+  --radius-pill-raw: 999px; /* anthropic.css:90 */
+  --shadow-card-raw: 0 1px 2px rgba(20, 20, 19, 0.04), 0 4px 16px rgba(20, 20, 19, 0.05); /* anthropic.css:93 */
+  --shadow-hover-raw: 0 2px 4px rgba(20, 20, 19, 0.06), 0 12px 32px rgba(20, 20, 19, 0.1); /* anthropic.css:94 */
+  --shadow-mega-raw: 0 24px 64px rgba(20, 20, 19, 0.16), 0 4px 16px rgba(20, 20, 19, 0.08); /* anthropic.css:95 */
+  --speed-raw: 0.18s; /* anthropic.css:100 */
+}
