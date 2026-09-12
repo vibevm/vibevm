@@ -71,6 +71,157 @@ fn file_url(path: &Path) -> String {
     format!("file:///{}", path.to_string_lossy().replace('\\', "/"))
 }
 
+/// Add the documentation half of the fixture registry: a `doc` package
+/// documenting `org.example/parent`, its Russian adaptation, and a
+/// manual whose subject no registry can serve — the three shapes the
+/// warm-up closure has to tell apart.
+fn add_documentation_to_registry(registry: &Path) {
+    let write = |dir: PathBuf, manifest: String| {
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("vibe.toml"), manifest).unwrap();
+        fs::write(dir.join("README.md"), "# manual\n").unwrap();
+    };
+    let card = "title = \"A Manual\"\nabstract = \"Four answers.\"\n";
+    write(
+        registry
+            .join("org.example")
+            .join("parent-docs")
+            .join("v0.1.0"),
+        format!(
+            "[package]\ngroup = \"org.example\"\nname = \"parent-docs\"\n\
+             kind = \"doc\"\nversion = \"0.1.0\"\n{card}\n\
+             [[documents]]\npackage = \"org.example/parent\"\nversion = \"^0.1\"\n"
+        ),
+    );
+    write(
+        registry
+            .join("org.example")
+            .join("parent-docs-ru")
+            .join("v0.1.0"),
+        format!(
+            "[package]\ngroup = \"org.example\"\nname = \"parent-docs-ru\"\n\
+             kind = \"doc\"\nversion = \"0.1.0\"\n{card}\n\
+             [i18n]\ncanonical = \"ru\"\n\n\
+             [[documents]]\npackage = \"org.example/parent\"\nversion = \"^0.1\"\n\n\
+             [translates]\npackage = \"org.example/parent-docs\"\nversion = \"^0.1\"\n"
+        ),
+    );
+    write(
+        registry
+            .join("org.example")
+            .join("host-docs")
+            .join("v0.1.0"),
+        format!(
+            "[package]\ngroup = \"org.example\"\nname = \"host-docs\"\n\
+             kind = \"doc\"\nversion = \"0.1.0\"\n{card}\n\
+             [[documents]]\npackage = \"org.example/not-a-package\"\nversion = \"^1.0\"\n"
+        ),
+    );
+}
+
+/// PROP-057 `##REL-WARMUP-CLOSURE`: warming documentation warms what it
+/// documents, so a `spec://` citation on its pages resolves offline.
+///
+/// The adaptation is the load-bearing case: it pulls its SOURCE
+/// documentation, and the source pulls its own subject — a level the
+/// closure only reaches by running to a fixed point rather than once.
+#[test]
+fn cache_add_warms_a_doc_packages_subjects_and_its_source() {
+    let outer = tempfile::tempdir().unwrap();
+    let registry = make_dir_registry(outer.path());
+    add_documentation_to_registry(&registry);
+    let user = UserScratch::new();
+    fs::write(
+        user.settings.join("registry.toml"),
+        format!(
+            "[[registry]]\nname = \"fixture\"\nurl = \"{}\"\n",
+            file_url(&registry)
+        ),
+    )
+    .unwrap();
+    let bare = tempfile::tempdir().unwrap();
+
+    let out = user
+        .vibe()
+        .current_dir(bare.path())
+        .arg("cache")
+        .arg("add")
+        .arg("org.example/parent-docs-ru")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    let store = store_dir(&user);
+    for owed in [
+        // The adaptation itself.
+        "org.example/parent-docs-ru/v0.1.0/vibe.toml",
+        // Its `[translates]` source — one level out.
+        "org.example/parent-docs/v0.1.0/vibe.toml",
+        // The subject both of them document.
+        "org.example/parent/v0.1.0/vibe.toml",
+        // And the subject's own dependency closure, as before.
+        "org.example/child/v0.1.0/vibe.toml",
+    ] {
+        assert!(
+            store.join(owed).is_file(),
+            "`{owed}` must be in the store after warming the adaptation; \
+             stdout:\n{}",
+            String::from_utf8_lossy(&out.stdout)
+        );
+    }
+}
+
+/// A documented subject no registry can serve does not fail the
+/// warm-up — the subject of a documentation may be a project
+/// coordinate, and the host itself is one (`##REL-HOST-SUBJECT`). It is
+/// reported instead, because one citation on those pages will not open
+/// offline and silence would let the reader find that out on a plane.
+#[test]
+fn an_unwarmable_subject_is_reported_not_raised() {
+    let outer = tempfile::tempdir().unwrap();
+    let registry = make_dir_registry(outer.path());
+    add_documentation_to_registry(&registry);
+    let user = UserScratch::new();
+    fs::write(
+        user.settings.join("registry.toml"),
+        format!(
+            "[[registry]]\nname = \"fixture\"\nurl = \"{}\"\n",
+            file_url(&registry)
+        ),
+    )
+    .unwrap();
+    let bare = tempfile::tempdir().unwrap();
+
+    let out = user
+        .vibe()
+        .current_dir(bare.path())
+        .arg("cache")
+        .arg("add")
+        .arg("org.example/host-docs")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "an unwarmable subject must not fail the warm-up; stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(
+        stdout.contains("org.example/not-a-package"),
+        "the subject that stayed cold is named:\n{stdout}"
+    );
+    assert!(
+        store_dir(&user)
+            .join("org.example/host-docs/v0.1.0/vibe.toml")
+            .is_file(),
+        "and the documentation itself is warmed all the same"
+    );
+}
+
 /// Seed store entries directly — `clean` tests act on the store as a
 /// directory tree, so they plant fixtures rather than running `add`
 /// first: `org.example/wal@{0.1.0,0.2.0}`, `org.example/other@1.0.0`,

@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
@@ -51,34 +52,153 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
         .map(|r| short_name::qualify(&resolver, r, &empty_lock))
         .collect::<Result<_>>()?;
 
-    // The closure walk is the existing solve — it already follows each
-    // package's `[requires]`; no bespoke traversal here.
-    let graph = resolver
-        .solve(&roots)
-        .map_err(|e| anyhow!("resolving the dependency closure: {e}"))?;
     let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
 
     let mut inserted: Vec<String> = Vec::new();
     let mut already: Vec<String> = Vec::new();
-    for node in graph.iter() {
-        let name = &node.name;
-        let version = &node.version;
-        let label = format!("{}/{name}@{version}", node.group.as_str());
-        // Write-once makes the presence check the honest discriminator:
-        // a node already in the store is fetched (idempotently,
-        // returning the existing entry) and its bytes stay untouched.
-        let was_present = vibe_registry::lookup(&node.group, &node.name, &node.version).is_some();
-        resolver
-            .resolve_and_fetch(&exact_pinned_pkgref(node), &store_root, None)
-            .with_context(|| format!("fetching {label} into the machine store"))?;
-        if was_present {
-            already.push(label);
+    // Documented subjects the warm-up could not bring along, each with
+    // the reason — a `(coordinate, why)` pair, never a bare list.
+    let mut unreachable: Vec<(String, String)> = Vec::new();
+    let mut fetched: BTreeSet<String> = BTreeSet::new();
+
+    // The walk runs to a fixed point rather than once, because the
+    // documentation closure grows a level at a time: warming a manual
+    // pulls its subjects, and warming a translation pulls the source
+    // documentation, which pulls the source's own subjects. Each round
+    // solves and fetches, then asks what the newly warmed documentation
+    // itself asks for; a round that adds no coordinate is the last.
+    let mut pending = roots;
+    let mut derived = false;
+    while !pending.is_empty() {
+        // The closure walk within one round is the existing solve — it
+        // already follows each package's `[requires]`; no bespoke
+        // traversal here.
+        //
+        // A ROOT the user named must resolve, so the first round solves
+        // them together and a failure is the command's failure. A
+        // DERIVED coordinate is solved on its own and a failure is
+        // recorded, not raised: the subject of a documentation may be a
+        // project coordinate no registry can hand back — the host
+        // itself is one (`##REL-HOST-SUBJECT`) — and refusing there
+        // would make a project's own manual unwarmable.
+        let nodes = if derived {
+            let mut nodes = Vec::new();
+            for reference in &pending {
+                match resolver.solve(std::slice::from_ref(reference)) {
+                    Ok(graph) => nodes.extend(graph.iter().cloned()),
+                    Err(e) => unreachable.push((reference.to_string(), e.to_string())),
+                }
+            }
+            nodes
         } else {
-            inserted.push(label);
+            resolver
+                .solve(&pending)
+                .map_err(|e| anyhow!("resolving the dependency closure: {e}"))?
+                .iter()
+                .cloned()
+                .collect()
+        };
+        derived = true;
+        let mut warmed_now: Vec<(vibe_core::Group, String, semver::Version)> = Vec::new();
+        for node in &nodes {
+            let name = &node.name;
+            let version = &node.version;
+            let label = format!("{}/{name}@{version}", node.group.as_str());
+            if !fetched.insert(label.clone()) {
+                continue;
+            }
+            // Write-once makes the presence check the honest
+            // discriminator: a node already in the store is fetched
+            // (idempotently, returning the existing entry) and its
+            // bytes stay untouched.
+            let was_present =
+                vibe_registry::lookup(&node.group, &node.name, &node.version).is_some();
+            resolver
+                .resolve_and_fetch(&exact_pinned_pkgref(node), &store_root, None)
+                .with_context(|| format!("fetching {label} into the machine store"))?;
+            if was_present {
+                already.push(label);
+            } else {
+                inserted.push(label);
+            }
+            warmed_now.push((node.group.clone(), node.name.clone(), node.version.clone()));
         }
+        pending = documentation_closure(&store_root, &warmed_now, &mut unreachable)?;
     }
 
-    emit(ctx, &store_root, in_project, &inserted, &already)
+    emit(
+        ctx,
+        &store_root,
+        in_project,
+        &inserted,
+        &already,
+        &unreachable,
+    )
+}
+
+/// What the documentation just warmed asks for in turn: the subjects of
+/// every `doc` package's `[[documents]]` and the source of its
+/// `[translates]`, each at its declared constraint
+/// (PROP-057 `##REL-WARMUP-CLOSURE`).
+///
+/// This is the whole reason a documentation warm-up is not just a
+/// fetch: a page cites its subject by `spec://`, and a citation that
+/// cannot be opened offline is a dead link in the one mode where there
+/// is nowhere else to look.
+///
+/// A coordinate whose form no registry could serve is recorded in
+/// `unreachable` rather than raised: the subject of a documentation may
+/// be a PROJECT coordinate — the host itself is one
+/// (`##REL-HOST-SUBJECT`) — and refusing the warm-up over it would make
+/// the manual of a project unwarmable.
+fn documentation_closure(
+    store_root: &Path,
+    warmed: &[(vibe_core::Group, String, semver::Version)],
+    unreachable: &mut Vec<(String, String)>,
+) -> Result<Vec<PackageRef>> {
+    let mut next: Vec<PackageRef> = Vec::new();
+    for (group, name, version) in warmed {
+        let entry = vibe_registry::store::entry_dir(store_root, group, name, version);
+        let Ok(manifest) = Manifest::read(entry.join(Manifest::FILENAME)) else {
+            continue;
+        };
+        if manifest
+            .package
+            .as_ref()
+            .is_none_or(|p| p.kind != vibe_core::PackageKind::Doc)
+        {
+            continue;
+        }
+        let edges = manifest
+            .documents
+            .iter()
+            .map(|d| (d.package.as_str(), d.version.as_str()))
+            .chain(
+                manifest
+                    .translates
+                    .iter()
+                    .map(|t| (t.package.as_str(), t.version.as_str())),
+            );
+        for (coordinate, constraint) in edges {
+            match warm_ref(coordinate, constraint) {
+                Some(reference) => next.push(reference),
+                None => unreachable.push((
+                    format!("{coordinate}@{constraint}"),
+                    "not a `<group>/<name>` coordinate a registry could serve".to_string(),
+                )),
+            }
+        }
+    }
+    Ok(next)
+}
+
+/// A `<group>/<name>` coordinate plus its constraint as a pkgref, or
+/// `None` when the coordinate is not one a registry could serve.
+fn warm_ref(coordinate: &str, constraint: &str) -> Option<PackageRef> {
+    let (group, name) = coordinate.split_once('/')?;
+    let group = vibe_core::Group::parse(group).ok()?;
+    let version = vibe_core::VersionSpec::parse(constraint).ok()?;
+    PackageRef::new(None, Some(group), name, version).ok()
 }
 
 /// The registry resolver every cache-family command that needs to
@@ -197,6 +317,7 @@ fn emit(
     in_project: bool,
     inserted: &[String],
     already: &[String],
+    unreachable: &[(String, String)],
 ) -> Result<()> {
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
@@ -206,6 +327,13 @@ fn emit(
             "source": if in_project { "project" } else { "user" },
             "inserted": inserted,
             "already_present": already,
+            "unwarmed_subjects": unreachable
+                .iter()
+                .map(|(coordinate, reason)| serde_json::json!({
+                    "package": coordinate,
+                    "reason": reason,
+                }))
+                .collect::<Vec<_>>(),
             "count": inserted.len() + already.len(),
         }))?;
         return Ok(());
@@ -227,6 +355,15 @@ fn emit(
     }
     for label in already {
         ctx.skipped(label, "already present — bytes untouched (write-once)");
+    }
+    // A subject no registry could serve is said out loud: the warm-up
+    // succeeded, but one `spec://` citation in that documentation will
+    // not open offline, and silence would let the reader discover that
+    // on a plane.
+    for (coordinate, reason) in unreachable {
+        ctx.step(&format!(
+            "documented subject `{coordinate}` not warmed — {reason}"
+        ));
     }
     ctx.summary(&format!(
         "\n{} fetched, {} already present — nothing materialised into any project.",
