@@ -411,19 +411,24 @@ fn docs_corpus_shape_is_counted() {
         totals.guarded_sections, 1,
         "one section is guarded by `when` (`os:windows`, in install-vibe)"
     );
-    // The genre is wider than its live use: these four constructs have no
-    // page yet, so their coverage is the unit tests' job (`xml_doc_tests`),
-    // and this assertion is the tripwire that says so out loud.
+    assert_eq!(
+        totals.stderrs, 1,
+        "one example asserts a stderr: `vibe bin list` prints nothing on stdout and \
+         reports «no installed package declares a [[binary]]» on stderr, and the \
+         example runner captured both halves"
+    );
+    // The genre is wider than its live use: these constructs have no page
+    // yet, so their coverage is the unit tests' job (`xml_doc_tests`), and
+    // this assertion is the tripwire that says so out loud.
     assert_eq!(
         (
             totals.example_refs,
             totals.notes,
             totals.figures,
-            totals.stderrs,
             totals.guarded_slots
         ),
-        (0, 0, 0, 0, 0),
-        "example ref, note, figure, stderr and a guarded BLOCK are not in \
+        (0, 0, 0, 0),
+        "example ref, note, figure and a guarded BLOCK are not in \
          the corpus yet — when a page adopts one, update this count"
     );
 }

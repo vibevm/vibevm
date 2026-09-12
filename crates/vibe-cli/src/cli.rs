@@ -14,6 +14,7 @@ use clap::{Parser, Subcommand};
 mod agentic;
 mod aiui;
 mod cache;
+mod doc;
 mod explain;
 mod extensions;
 mod inspect;
@@ -37,6 +38,7 @@ mod workspace;
 pub use agentic::*;
 pub use aiui::*;
 pub use cache::*;
+pub use doc::*;
 pub use explain::*;
 pub use extensions::*;
 pub use inspect::*;
@@ -267,6 +269,11 @@ pub enum Command {
 
     /// Run the spec-consistency linter against the project tree.
     Check(CheckArgs),
+
+    /// Work with a documentation package (PROP-057). `vibe doc check
+    /// --examples` runs every documented command in a sandbox and compares
+    /// its output with what the page promises, exactly.
+    Doc(DocArgs),
 
     /// Inspect and edit the project's consumer-owned adoption-facts registry.
     Facts(crate::commands::facts::FactsArgs),

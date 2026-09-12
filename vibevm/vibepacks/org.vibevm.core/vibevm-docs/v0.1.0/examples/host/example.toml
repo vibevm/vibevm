@@ -1,0 +1,8 @@
+# The one fixture whose subject is the checkout of vibe itself: the pages
+# about traceability query the map of the repository they document, and no
+# scaffolded project has such a map. Read-only commands only; the tripwire
+# proves the tree did not move.
+schema = 1
+
+[fixture]
+in_source_tree = true

@@ -1,0 +1,8 @@
+# The slot with one spec source in it, entered: the working directory is
+# the package, because the conversion command the page shows addresses the
+# package's own spec tree.
+schema = 1
+
+[fixture]
+from = "flow-slot"
+cwd = "work/vibevm/vibepacks/org.acme/review-notes/v0.1.0"

@@ -1,0 +1,7 @@
+# The workspace with two members, each carrying the hand-written
+# `[package]` table the page says a member needs. `vibe init package`
+# scaffolds a different layout, so these are files, not a recipe step.
+schema = 1
+
+[fixture]
+from = "workspace-root"

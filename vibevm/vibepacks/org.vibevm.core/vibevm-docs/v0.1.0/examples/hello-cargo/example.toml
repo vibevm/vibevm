@@ -1,0 +1,15 @@
+# `hello-vibe` with a real Cargo crate in it, so the pages about building,
+# packaging and scraping exercise an actual build tool rather than a
+# manifest that claims one.
+schema = 1
+
+[fixture]
+from = "hello-vibe"
+
+[[fixture.step]]
+run = "cargo init --name hello --vcs none"
+cwd = "work/hello-vibe"
+
+[[fixture.step]]
+run = "cargo generate-lockfile --offline"
+cwd = "work/hello-vibe"

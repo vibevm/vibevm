@@ -5,7 +5,11 @@
   <p>A version is a promise about behaviour, not a snapshot of files. Your project asks for a range, vibe records the one number it chose, and an update moves that number on purpose. vibe itself follows the same rule: one number stands for one contract, however often the binary behind it is rebuilt.</p>
   <example id="outdated" fixture="hello-vibe-registry">
     <run>vibe outdated --path hello-vibe</run>
-    <expect></expect>
+    <expect>PACKAGE VERSIONS
+GROUP                 NAME                          INSTALLED      LATEST         STATUS
+org.vibevm.world      wal                           1.0.0           -               unknown
+
+0 of 1 package have updates available</expect>
   </example>
   <asking title="Asking for a version">
     <p>Package versions follow semantic versioning: three numbers, where the first changes when a package breaks compatibility. In the [manifest](../glossary/index.xml#manifest) you name a constraint, not a version: `^1.0` means any 1.x from 1.0 up, `=1.2.0` means exactly that one, and a bare [coordinate](../glossary/index.xml#coordinate) means the newest stable release. The resolver picks one version per package that satisfies every constraint in the graph, and the [lock file](../glossary/index.xml#lock-file) records the choice.</p>

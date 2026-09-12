@@ -20,6 +20,8 @@ features = ["rfd/xdg-portal"]
 [dependencies]
 specmark.workspace = true
 vibe-core.workspace = true
+# The PROP-057 documentation pipeline behind `vibe doc`.
+vibe-doc.workspace = true
 vibe-facts.workspace = true
 vibe-actions.workspace = true
 vibe-graph.workspace = true

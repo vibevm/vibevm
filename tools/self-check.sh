@@ -488,6 +488,29 @@ run_step "cargo clippy --workspace --all-targets -- -D warnings" \
 run_step "cargo run -p vibe-cli -- check --path . --quiet" \
   cargo run --quiet -p vibe-cli -- check --path . --quiet || OVERALL=$?
 
+# 4b. The documented examples (PROP-057 ##OBS-EXAMPLES-GOLDEN). Every
+# `<example>` in the manual runs against the binary this panel just built,
+# in a fresh sandbox, and its stdout, stderr and exit code are compared
+# EXACTLY with what the page promises, after the normalisation each fixture
+# declares. This is the one technical link between the product and its
+# documentation, and it belongs in the panel rather than in a measurer by
+# the owner's standing decision: a command whose output changed has broken
+# a page, and the panel is where a broken page should be found.
+#
+# An example that has no golden yet is DECLARED in the package's
+# `examples/deferred.toml` with its reason and skipped, so this step is
+# green only when every capturable example actually matches — an empty
+# golden cannot buy silence.
+#
+# `cargo run` for the same reason step 4 uses it: the examples must run
+# against this tree's own build, never a stale binary. The sandbox root is
+# kept SHORT — a materialised dependency tree under a deep temp path
+# overflows the Windows path limit.
+run_step "documented examples run and match" \
+  cargo run --quiet -p vibe-cli -- doc check --examples \
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 \
+    --sandbox "${TMPDIR:-${TEMP:-/tmp}}/vdocs" || OVERALL=$?
+
 # 5. The AI-Native discipline gate (conform). Runs last: it reuses the
 # build cache the steps above populated, and its content-addressed fact
 # store re-extracts only changed files. Wiring it here is what keeps the

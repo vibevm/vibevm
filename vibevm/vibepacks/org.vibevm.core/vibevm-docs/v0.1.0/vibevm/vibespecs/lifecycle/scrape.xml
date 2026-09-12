@@ -17,7 +17,9 @@
     <p>1. Create the contract. The default is conservative: it names vibe's trees, refuses anything it cannot prove unmodified, and checks health with `cargo`:</p>
     <example id="scrape-contract" fixture="hello-cargo">
       <run>vibe scrape contract init --path hello-vibe</run>
-      <expect></expect>
+      <expect>Scrape contract
+  ✓ created  &lt;TMP&gt;/work/hello-vibe/vibevm/scrape/contract.toml
+Review the contract, then run `vibe scrape contract check`.</expect>
     </example>
     <p>2. Adapt it. A fresh project has no modification baseline for vibe's files, so the two `[[classify]]` rules refuse them as unknown; if you never edited those trees, set `modified = "delete"` on both. Replace the `[[healthcheck]]` if the project is not a Rust workspace. Then validate: `vibe scrape contract check --path hello-vibe`.</p>
     <p>3. Look at the plan:</p>

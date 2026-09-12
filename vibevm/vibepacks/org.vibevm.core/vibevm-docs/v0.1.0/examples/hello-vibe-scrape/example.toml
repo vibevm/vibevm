@@ -1,0 +1,16 @@
+# `hello-cargo` with a scrape contract initialised and its two `refuse`
+# settings turned to `delete`, which is the state the scrape pages
+# describe before they plan a removal.
+schema = 1
+
+[fixture]
+from = "hello-cargo"
+
+[[fixture.step]]
+run = "vibe scrape contract init --path hello-vibe"
+
+[[fixture.step]]
+edit = { path = "work/hello-vibe/vibevm/scrape/contract.toml", from = 'modified = "refuse"', to = 'modified = "delete"' }
+
+[[fixture.step]]
+run = "vibe scrape contract check --path hello-vibe"

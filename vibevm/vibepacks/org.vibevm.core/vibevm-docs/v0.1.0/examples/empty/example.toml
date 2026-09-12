@@ -1,0 +1,7 @@
+# The same state as `none`, under the name the pages use when a command
+# runs before anything exists. Kept apart so a page that says «in an empty
+# folder» cites a fixture that says the same.
+schema = 1
+
+[fixture]
+from = "none"

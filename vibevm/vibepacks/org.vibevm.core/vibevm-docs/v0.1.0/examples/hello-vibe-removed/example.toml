@@ -1,0 +1,8 @@
+# `hello-vibe` after the package was uninstalled again.
+schema = 1
+
+[fixture]
+from = "hello-vibe"
+
+[[fixture.step]]
+run = "vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes"

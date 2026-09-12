@@ -28,6 +28,7 @@
     <example id="bin-list" fixture="hello-vibe-cwd">
       <run>vibe bin list</run>
       <expect></expect>
+      <stderr>bin list: no installed package declares a [[binary]].</stderr>
     </example>
   </binaries>
   <servers title="MCP servers">

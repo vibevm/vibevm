@@ -17,12 +17,19 @@
     <p>1. See what is behind:</p>
     <example id="outdated" fixture="hello-vibe-registry">
       <run>vibe outdated --path hello-vibe</run>
-      <expect></expect>
+      <expect>PACKAGE VERSIONS
+GROUP                 NAME                          INSTALLED      LATEST         STATUS
+org.vibevm.world      wal                           1.0.0           -               unknown
+
+0 of 1 package have updates available</expect>
     </example>
     <p>2. Update one package, or all of them:</p>
     <example id="update" fixture="hello-vibe-registry">
       <run>vibe update org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect></expect>
+      <expect>Re-resolving 1 package…
+  → closure unchanged (1 packages)
+
+Updated 1 package (0 version bumps).</expect>
     </example>
     <p>`vibe update --all` updates everything in the lock file; the two forms are mutually exclusive.</p>
     <p>3. Read the diff of `vibe.lock` before you commit it. Each changed entry names the old and the new version and [fingerprint](../glossary/index.xml#fingerprint).</p>
