@@ -27,9 +27,15 @@
    Значения переменных — в нативном написании (`C:\…`), см. A0.12 §1.
    Корень песочницы — короткий путь (`%TEMP%\vdocs\`): в глубоком каталоге
    `git clone` реестра падает с `fatal: '$GIT_DIR' too big` (PP-C2 §5b).
-3. **Реестр — локальный.** `home/registry.toml` песочницы объявляет один
-   реестр `local` с адресом `file:///<корень хоста>/vibevm/vibepacks`:
-   in-tree реестр хоста, только чтение. Проект, созданный `vibe init`,
+3. **Реестр — локальный и лежит внутри фикстуры** (X-025, закрыто в A2.9).
+   `home/registry.toml` песочницы объявляет один реестр `local` с адресом
+   `file:///${REGISTRY}`; подстановка даёт каталог `registry/` той же
+   песочницы — копию только нужных пакетов (`org.vibevm.world/wal` и его
+   замыкание, девять файлов), которая живёт в
+   `examples/none/tree/registry/`. До A2.9 адрес указывал на in-tree реестр
+   хоста; это делало каждую установку зависимой от дерева, которое раннер
+   как раз и проверяет, и путь хоста протекал в `source_url` примера
+   `reference/machine-formats--list-json` (пересняли, см. очередь). Проект, созданный `vibe init`,
    резолвит через него без сети; `vibe registry list --path hello-vibe`
    честно печатает «No [[registry]] entries in vibe.toml» — реестр
    машинный, не проектный. Прогрев store через `cache add --path <хост>`
@@ -58,11 +64,11 @@
 | `hello-vibe` | `hello-vibe-empty` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` |
 | `hello-vibe-relay` | `hello-vibe` | `vibe agentic explain --path hello-vibe` — в `hello-vibe/.vibe/agentic/command.md` припаркована инструкция |
 | `hello-vibe-removed` | `hello-vibe` | `vibe uninstall org.vibevm.world/wal --path hello-vibe --assume-yes` |
-| `hello-vibe-registry` | `hello-vibe` | `vibe registry add local C:/Users/olegc/git/v/vibevm-docs/vibevm/vibepacks --path hello-vibe` — реестр объявлен в манифесте проекта (для `outdated`/`update`, которые машинный реестр не читают, B-136) |
+| `hello-vibe-registry` | `hello-vibe` | `vibe registry add local ${REGISTRY} --path hello-vibe` — реестр объявлен в манифесте проекта (для `outdated`/`update`, которые машинный реестр не читают, B-136) |
 | `hello-vibe-cwd` | `hello-vibe` | то же дерево; **cwd команды — `work/hello-vibe`** (для команд без `--path`: `vibe bin`, `vibe tools`) |
 | `hello-cargo` | `hello-vibe` | в `work/hello-vibe`: `cargo init --name hello --vcs none` (Cargo.toml и `src/main.rs`), затем `cargo generate-lockfile --offline` — проект с настоящим инструментом сборки для health-проверок и артефактов |
 | `hello-deploy` | `hello-cargo` | копия дерева `hello-vibe` под именем `work/hello-deploy`; в её `vibe.toml` дописаны таблицы со страницы `lifecycle/build-package-deploy`, шаг 1 (артефакт `hello`, цель `local` с `deploy:vibe-bin`, профиль `local`) |
-| `hello-vibe-scrape` | `hello-cargo` | `vibe scrape contract init --path hello-vibe`; в `hello-vibe/vibevm/scrape/contract.toml` оба `modified = "refuse"` заменены на `modified = "delete"`; `vibe scrape contract check --path hello-vibe` обязан быть зелёным, иначе — в отчёт |
+| `hello-vibe-scrape` | `hello-cargo` | `vibe scrape contract init --path hello-vibe`; в `hello-vibe/vibevm/scrape/contract.toml` оба `modified = "refuse"` заменены на `modified = "delete"`; `vibe scrape contract check --path hello-vibe` на этой машине **не зелёный** (два блокера health-панели, A2.9 §аномалии) — оба примера на этой фикстуре ушли в «не сейчас» |
 | `project` | `empty` | `vibe init` в `work/` (проект в cwd; `[project] name = "work"`) |
 | `flow-slot` | `project` | `vibe init package org.acme/review-notes` — слот `vibevm/vibepacks/org.acme/review-notes/v0.1.0/` как есть (`kind = "tool"`, страница объясняет правку вида) |
 | `package-spec` | `flow-slot` | в слот положен `vibevm/vibespecs/NOTES-FLOW.md` из одного заголовка `# Notes flow {#root}` и одного абзаца `@fact:ONE-NOTE One note per review. @status:spec/done`; **cwd команды — `work/vibevm/vibepacks/org.acme/review-notes/v0.1.0`** |
@@ -72,10 +78,14 @@
 | `host` | — | без дерева: **cwd команды — корень хоста** `C:\Users\olegc\git\v\vibevm-docs` (чекаут самого vibe, чьи спеки несут карту трассируемости); только читающие команды (`explain`, `select`); в выводе корень нормализуется в `<REPO>` |
 | `docs-store` | `empty` | store с пакетом `org.vibevm.core/vibevm-docs` — **невозможно до фазы 2** (вид `doc` неизвестен бинарнику) |
 
-Фикстуры фазы 2 (A2.9) наследуют эту таблицу как первый корпус раннера:
-каждая строка становится `examples/<фикстура>/example.toml` пакета
-документации с объявленными правилами нормализации (A0.12 §5); локальный
-реестр становится копией нужных пакетов внутри фикстуры (X-025).
+**Сделано в A2.9** (коммит `5c472381`): семнадцать строк этой таблицы
+живут как `examples/<фикстура>/example.toml` в пакете документации —
+рецепт (`from` + шаги `run`/`copy`/`append`/`edit`), объявленные правила
+нормализации (A0.12 §5) и карта «`--json`-документ → JTD-схема». Не
+заведены `package-notes` и `docs-store`: единственные примеры на них
+объявлены отложенными, и раннер до фикстуры не доходит. Список отложенных
+— `examples/deferred.toml` того же пакета, по строке на пример с причиной
+и событием, которое его снимет (X-026).
 
 ## Что не снимается сейчас {#not-now}
 
@@ -84,6 +94,9 @@
 | `start/install-vibe` | `windows-install` | вывод установщика снимается с дистрибутива релиза, не с отладочной сборки | фаза 5, публикация |
 | `howto/read-documentation-locally` | `cache-add-docs`, `doc-serve` | вид `doc` и `vibe doc` появляются в фазе 2 | A2.1, A2.20 |
 | `howto/publish-a-package` | `publish-dry-run`, `publish` | `--dry-run` требует publish-токен и режет букву диска как хост (B-133) | после починки B-133 |
+| `lifecycle/build-package-deploy` | `package`, `deploy-plan` | манифест, который печатает сама страница в шаге 1, продукт отвергает: идентификатор цели сборки `hello` и идентификатор её же выхода `hello` совпадают, а они глобально уникальны в документе (PROP-054 `##ARTIFACT-REGISTRY`) | правка фенса страницы (не воркера: проза) |
+| `lifecycle/phases` | `deploy-plan` | тот же манифест, процитированный со второй страницы | там же |
+| `lifecycle/scrape` | `scrape-plan`, `scrape-output` | `vibe scrape contract check` блокирует план двумя находками health-панели: `health-no-applicable-required-check` и `health-preparation-failed` (бинарник `cargo` несёт 14 hard-link-имён, и панель отказывается считать его единолично своим) | когда health-панель scrape запускается на машине разработчика |
 
 ## Очередь {#queue}
 
@@ -97,10 +110,10 @@
 | `agent/give-your-agent-the-skill` | `mcp-status` | `vibe mcp status --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `agent/give-your-agent-the-skill` | `mcp-install` | `vibe mcp install --auto --yes --dry-run --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `agent/give-your-agent-the-skill` | `skill-list` | `vibe skill list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
-| `architecture/traceability` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `architecture/traceability` | `select` | `vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list` | `hello-vibe-cwd` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `architecture/traceability` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | снято 5c472381 |
+| `architecture/traceability` | `select` | `vibe select --where "uri:spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET depth:1"` | `host` | снято 5c472381 |
+| `authoring/ship-tools-and-mcp-servers` | `bin-list` | `vibe bin list` | `hello-vibe-cwd` | снято 5c472381 |
+| `authoring/specs-agents-can-cite` | `explain` | `vibe explain "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"` | `host` | снято 5c472381 |
 | `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | снято 700db4b8 |
 | `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | снято 700db4b8 |
 | `authoring/write-a-flow` | `manifest` | `cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` | `flow-slot` | снято 700db4b8 |
@@ -118,29 +131,29 @@
 | `howto/set-up-a-workspace` | `workspace-table` | `cat vibe.toml` | `workspace-root` | снято 700db4b8 |
 | `howto/set-up-a-workspace` | `member-manifest` | `cat packages/notes-flow/vibe.toml` | `workspace` | снято 700db4b8 |
 | `howto/set-up-a-workspace` | `install` | `vibe install --assume-yes` | `workspace` | снято 700db4b8 |
-| `howto/update-packages` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `howto/update-packages` | `update` | `vibe update org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `howto/use-a-private-registry` | `registry-add` | `vibe registry add acme git@github.com:acme-specs --path hello-vibe --position primary` | `hello-vibe` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `howto/update-packages` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | снято 5c472381 |
+| `howto/update-packages` | `update` | `vibe update org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-registry` | снято 5c472381 |
+| `howto/use-a-private-registry` | `registry-add` | `vibe registry add acme git@github.com:acme-specs --path hello-vibe --position primary` | `hello-vibe` | снято 5c472381 |
 | `howto/work-offline` | `cache-add` | `vibe cache add org.vibevm.world/wal` | `empty` | снято 700db4b8 |
 | `howto/work-offline` | `cache-list` | `vibe cache list` | `hello-vibe` | снято 700db4b8 |
 | `howto/work-offline` | `cache-check` | `vibe cache check` | `hello-vibe` | снято 700db4b8 |
 | `howto/work-offline` | `install-offline` | `vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
-| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-deploy --assume-yes` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/build-package-deploy` | `package` | `vibe package --path hello-deploy --assume-yes` | `hello-deploy` | не сейчас (манифест шага 1 отвергается продуктом) |
+| `lifecycle/build-package-deploy` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | не сейчас (тот же манифест) |
 | `lifecycle/build-package-deploy` | `deployments` | `vibe deployments` | `hello-vibe` | снято 700db4b8 |
 | `lifecycle/extensions-and-providers` | `extensions` | `vibe extensions --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
-| `lifecycle/extensions-and-providers` | `tools` | `vibe tools` | `hello-vibe-cwd` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `lifecycle/scrape` | `scrape-contract` | `vibe scrape contract init --path hello-vibe` | `hello-cargo` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
+| `lifecycle/extensions-and-providers` | `tools` | `vibe tools` | `hello-vibe-cwd` | снято 5c472381 |
+| `lifecycle/phases` | `deploy-plan` | `vibe deploy --plan --profile local --path hello-deploy` | `hello-deploy` | не сейчас (тот же манифест) |
+| `lifecycle/scrape` | `scrape-contract` | `vibe scrape contract init --path hello-vibe` | `hello-cargo` | снято 5c472381 |
+| `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | не сейчас (health-панель scrape не запускается) |
+| `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | не сейчас (health-панель scrape не запускается) |
 | `model/boot-lane` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `model/lock-and-store` | `cache-path` | `vibe cache path` | `hello-vibe` | снято 700db4b8 |
 | `model/packages-and-kinds` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `model/registries` | `registry-list` | `vibe registry list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `model/two-trees` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
-| `model/versions` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | ждёт раннера A2.9 (снятия минимизированы по слову владельца 2026-09-12) |
-| `reference/machine-formats` | `list-json` | `vibe list --json --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/versions` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | снято 5c472381 |
+| `reference/machine-formats` | `list-json` | `vibe list --json --path hello-vibe` | `hello-vibe` | переснято 5c472381 (`source_url` — реестр внутри фикстуры, X-025) |
 | `reference/settings-and-environment` | `vars` | `vibe vars` | `hello-vibe` | снято 700db4b8 |
 | `start/first-project` | `init` | `vibe init hello-vibe` | `empty` | снято 700db4b8 |
 | `start/first-project` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
