@@ -36,6 +36,7 @@ import { packagePath, href } from "../site/src/lib/href.ts";
 import { ISLAND_PLACEHOLDER } from "../site/src/lib/island-placeholder.ts";
 import { catalogueLlmsTxt, siteManifest } from "../site/src/seo/catalogue.ts";
 import {
+  CSP_CONF_LIMIT,
   cspConf,
   cspPolicy,
   hashOf,
@@ -457,13 +458,31 @@ function writeCsp(outDirName) {
      container reads it from there; a container started before the first
      render keeps the empty one its image ships (X-035, X-044). */
   const conf = join(out, ".vibe-site", "csp.conf");
+  const policy = readFileSync(join(out, "csp.txt"), "utf8").trim();
   mkdirSync(dirname(conf), { recursive: true });
-  writeFileSync(conf, cspConf(readFileSync(join(out, "csp.txt"), "utf8")), "utf8");
+  writeFileSync(conf, cspConf(policy), "utf8");
 
   const total = [...scripts.values()].reduce((sum, count) => sum + count, 0);
   process.stdout.write(
     `build (${mode}): csp.txt — ${hashes.length} inline script hash(es) over ${total} occurrence(s), no external source; .vibe-site/csp.conf written for the serving container\n`,
   );
+  /* Said out loud, because the alternative is a site that quietly stops
+     carrying a policy the day it grows past the ceiling. It is not a
+     failure — the deployment is no worse off than the landing it
+     replaces, which carried no policy at all — but it is a decision
+     somebody has to take, and nobody takes a decision they were not told
+     about (X-044). */
+  if (policy.length > CSP_CONF_LIMIT) {
+    process.stdout.write(
+      [
+        `build (${mode}): NO CONTENT POLICY IS SERVED — the policy is ${policy.length} bytes,`,
+        `  and the serving configuration cannot carry more than ${CSP_CONF_LIMIT}.`,
+        "  One hash per distinct inline script does not scale past a site of a few",
+        "  hundred pages; what replaces the hashes is the deployment's decision.",
+        "",
+      ].join("\n"),
+    );
+  }
 }
 
 function vite(configRelative) {

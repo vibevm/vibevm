@@ -4,7 +4,14 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-import { cspConf, cspPolicy, hashOf, hashesIn, inlineScripts } from "./csp.ts";
+import {
+  CSP_CONF_LIMIT,
+  cspConf,
+  cspPolicy,
+  hashOf,
+  hashesIn,
+  inlineScripts,
+} from "./csp.ts";
 
 /**
  * What the policy is FOR is the difference between a script a browser
@@ -104,6 +111,32 @@ test("a policy that cannot be quoted is refused", () => {
     () => cspConf("default-src 'self'\nscript-src 'self'"),
     /newline/,
   );
+});
+
+/**
+ * The ceiling, measured in the image the site is served from: nginx
+ * stops reading a parameter at 4096 bytes and refuses to start. A site
+ * of one manual never reaches it; a site of the whole registry passes it
+ * twenty times over on its first render, which is X-044's revision
+ * trigger arriving rather than a bug.
+ *
+ * What the generator does about it is the only thing it can do without
+ * taking somebody else's decision: it writes no policy, says so in the
+ * file, and leaves the variable defined so that the domain still comes
+ * up. Emitting the policy anyway would stop the server; emitting half of
+ * one would block scripts the pages need.
+ */
+test("a policy the server cannot parse becomes no policy, loudly", () => {
+  const oversized = cspPolicy(
+    Array.from({ length: 200 }, (_, n) => hashOf(`script${n}()`)),
+  );
+  assert.ok(oversized.length > CSP_CONF_LIMIT);
+  const conf = cspConf(oversized);
+  assert.match(conf, /map \$sent_http_content_type \$vibe_csp \{/);
+  assert.match(conf, /NO POLICY IS SERVED/);
+  assert.match(conf, new RegExp(`${oversized.length}`));
+  assert.equal(conf.includes("text/html"), false);
+  assert.equal(hashesIn(conf).length, 0);
 });
 
 /**
