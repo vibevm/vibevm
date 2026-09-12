@@ -1,0 +1,83 @@
+# PACKET-P2-O10 — псевдоистория версий и очередь сопровождения (A2.26, A2.27)
+
+##subagent-quiet-clause
+
+Ты — воркер кампании документации, исполнитель уровня `opus5`. Boot-лейн
+репозитория не читать. Твоя инструкция — этот файл и ровно те файлы,
+которые он называет. Предусловие: коммиты пакетов P2-O6 (цитаты, карта
+рёбер), P2-O7 (манифест страниц), P2-O8 (покрытие, CLI) и P2-O9 (линтер)
+в ветке — проверь `git log --oneline -50` и прочитай их отчёты.
+
+## Читать сначала
+
+1. Этот пакет целиком; отчёты P2-O6…P2-O9.
+2. `campaigns/docs-2026-09/PLAN.md` — атомы **A2.26**, **A2.27** (A2.28
+   снят), гейт фазы 2 (после A2.27).
+3. `campaigns/docs-2026-09/MAINTENANCE.md` §2.5, §3, §5, §7 (восемь чисел
+   месячной петли), `vibevm/vibespecs/design/documentation-vision.xml` D-26
+   (`reviews.toml`), D-27 (версии — контракты, никаких отпечатков, дат
+   сборки и «отставания»; версии неразличимы), §10 п. 14 (`vibe doc diff
+   <версия> now` — разрешение владельца; реализуй как флаг, выключенный по
+   умолчанию, и назови в отчёте).
+4. Норма: PROP-057 `observability` (OBS-VERSIONS-ARE-CONTRACTS,
+   OBS-SURFACE-SNAPSHOTS и соседние), `invariants`.
+5. Код: `crates/vibe-doc/`, `crates/vibe-cli/src/commands/doc*`,
+   `formats/REGISTRY.toml` и `schemas/` (снимок поверхности — JTD-формат в
+   реестре), `crates/vibe-cli/src/cli.rs` (дерево `--help`),
+   `crates/vibe-core/src/manifest/` (поля манифеста и lock-файла из структур
+   с `deny_unknown_fields`), `progress-core` (факты с `actionstage="doc"`),
+   `BACKLOG.md` (строки `docs:`).
+6. Правила репозитория: Conventional Commits с телом «почему»; атом —
+   коммит; **коммитить только явной формой `git commit -m … -- <свои пути>`**;
+   **никаких трейлеров и упоминаний моделей**; `cargo fmt --all`;
+   `unwrap`/`expect` в доменной логике запрещены; ошибки цитируют
+   `spec://…`; wire только через схему → `cargo xtask codegen`; гейты в
+   приватном `CARGO_TARGET_DIR=<scratch>\target-p2o10`; секреты и `infra/`
+   не читать; `git push` не делать.
+
+## Цель — два атома, два коммита
+
+**A2.26** `vibe doc surface --record <версия> [--out <каталог>]` пишет
+`maintenance/surface/<версия>.json` — структурный снимок поверхности
+бинарника и корпуса: дерево `--help` всех команд с флагами, поля манифеста
+и lock-файла, JTD-схемы, тексты фактов с `actionstage="doc"`,
+`formats/REGISTRY.toml`; схема снимка — JTD в реестре форматов;
+**никаких хэшей, дат сборки и идентификаторов состояния** — только номер
+версии от вызывающего. `vibe doc diff <старая> <новая> [--format md|json]`
+сравнивает два снимка семантически (добавлено/удалено/изменено: команда,
+флаг, поле, факт, схема) и через граф цитат, источники `derived` и карту
+покрытия печатает страницы к обновлению с причиной; изменение без
+страницы — «нужна новая страница»; пустой список — тоже ответ. Тесты: две
+фикстуры снимков с известной разницей → известный список страниц; снимок
+одного бинарника дважды — одинаков. Каталог `maintenance/` сайт и
+`llms*.txt` не рендерят. Коммит:
+`feat(doc): record version surfaces and diff them into pages to update`.
+
+**A2.27** `vibe doc todo`: очередь по текущему состоянию — пробелы
+покрытия (A2.16), красные примеры (A2.9), неразрешимые цитаты (A2.11),
+расхождения адаптаций (A2.15), возраст страниц по `reviews.toml` (старше 90
+дней; правило пяти правок по числу коммитов страницы с даты чтения, если
+история доступна), строки `docs:` из `BACKLOG.md`, статистика линтера
+(A2.25); `--format md` для недели, `--format json` — восемь чисел
+`MAINTENANCE.md` §7; печатает числа, никогда не даёт ненулевой код в
+панели; раздел «смена версии» — только если в `maintenance/surface/` есть
+снимок другой версии (тогда вывод `vibe doc diff`). `reviews.toml` —
+данные пакета, схема JTD. Коммит: `feat(doc): build the maintenance queue`.
+
+## Гейты
+
+`cargo fmt --all --check`, `cargo build -p vibe-doc -p vibe-cli`, `cargo
+test -p vibe-doc -p vibe-wire`, `cargo clippy` по ним, `cargo xtask
+check-codegen`, `cargo xtask specmap` (0 suspects), `vibe.exe facts check
+--exhaustive` — clean; `vibe doc todo --format json --path
+vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0` — вывод в отчёт.
+
+## Что не делать
+
+Прозу страниц не менять; PROP-файлы не менять; чужие незакоммиченные
+файлы не стейджить; `vibe doc diff <версия> now` — только за флагом.
+
+## Результат
+
+Два коммита (без push) и `campaigns/docs-2026-09/findings/WORKER-REPORT-P2-O10.md`
+по форме отчёта P2-O1, с восемью числами очереди по руководству.
