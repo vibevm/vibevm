@@ -117,6 +117,7 @@
 | `authoring/specs-agents-can-cite` | `convert` | `vibe refactor convert-source --from md --to xml --dry-run vibevm/vibespecs` | `package-spec` | снято 700db4b8 |
 | `authoring/write-a-flow` | `init-package` | `vibe init package org.acme/review-notes` | `project` | снято 700db4b8 |
 | `authoring/write-a-flow` | `manifest` | `cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` | `flow-slot` | снято 700db4b8 |
+| `authoring/facts-and-status-markers` | `facts-check` | `vibe facts check` | `package-spec` | снято 6bd8272d |
 | `authoring/write-a-flow` | `check` | `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` | `flow-slot` | снято 700db4b8 |
 | `authoring/write-a-lang-package` | `init-lang` | `vibe init package org.acme/sql-style` | `project` | снято 700db4b8 |
 | `howto/install-a-package` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
@@ -148,6 +149,7 @@
 | `lifecycle/scrape` | `scrape-plan` | `vibe scrape --plan --path hello-vibe` | `hello-vibe-scrape` | не сейчас (health-панель scrape не запускается) |
 | `lifecycle/scrape` | `scrape-output` | `vibe scrape --output hello-clean --path hello-vibe` | `hello-vibe-scrape` | не сейчас (health-панель scrape не запускается) |
 | `model/boot-lane` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
+| `model/dependency-visibility` | `why-wal` | `vibe why org.vibevm.world/wal --path hello-vibe` | `hello-vibe` | снято f81a6b80 |
 | `model/lock-and-store` | `cache-path` | `vibe cache path` | `hello-vibe` | снято 700db4b8 |
 | `model/packages-and-kinds` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
 | `model/registries` | `registry-list` | `vibe registry list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
@@ -155,6 +157,7 @@
 | `model/versions` | `outdated` | `vibe outdated --path hello-vibe` | `hello-vibe-registry` | снято 5c472381 |
 | `reference/machine-formats` | `list-json` | `vibe list --json --path hello-vibe` | `hello-vibe` | переснято 5c472381 (`source_url` — реестр внутри фикстуры, X-025) |
 | `reference/settings-and-environment` | `vars` | `vibe vars` | `hello-vibe` | снято 700db4b8 |
+| `reference/tree` | `tree` | `vibe tree --plain --path hello-vibe` | `hello-vibe` | снято 6bd8272d |
 | `start/first-project` | `init` | `vibe init hello-vibe` | `empty` | снято 700db4b8 |
 | `start/first-project` | `install` | `vibe install org.vibevm.world/wal --path hello-vibe --assume-yes` | `hello-vibe-empty` | снято 700db4b8 |
 | `start/first-project` | `list` | `vibe list --path hello-vibe` | `hello-vibe` | снято 700db4b8 |
