@@ -18,7 +18,7 @@ PATTERNS = [
     ("scratch path", re.compile(r"Temp[\\/]claude[\\/]|/tmp/claude|C--Users-")),
     ("ip address", re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.])")),
     ("token-like", re.compile(r"(?:ghp|gho|github_pat)_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}")),
-    ("private infra", re.compile(r"anarchic\.pro|x-ui\.service|\bREALITY\b|\bxray\b")),
+    ("private infra", re.compile(r"anarchic\.pro|x-ui\.service|\bREALITY\b(?!-)|\bxray\b")),
 ]
 ALLOW = {"0.0.0.0", "127.0.0.1"}
 bad = 0
