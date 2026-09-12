@@ -54,13 +54,13 @@ is a new id with the old one retired as a tombstone/alias, so a bookmark/link/se
 silently retargets.</stable-id-law></p>
   </registry>
   <tree-widget title="3. The settings tree widget">
-    <p><tree-widget-req fact="true" status="spec/done">REQ {#tree-widget}. The left pane is a **tree of pages** (groups → pages) rendered through the PROP-037
+    <p><tree-widget-req fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#tree-widget}. The left pane is a **tree of pages** (groups → pages) rendered through the PROP-037
 `Tree` widget (so it inherits its glyphs, theme, fold, keyboard model — no bespoke renderer). `↑`/`↓`
 move, `←`/`→` fold/expand, `Enter` opens the focused page's form (§4) in the right pane.</tree-widget-req></p>
     <p><tree-shows-origin-hint fact="true" status="spec/done">REQ {#tree-shows-origin-hint}. Each page row carries a compact **origin hint** when one of its keys is
 shadowed — a glyph + the winning layer (e.g. `▾ appearance  [L3]`) — so the user sees at a glance where
 a value is coming from (the §4.1.1 precedence pain, surfaced visually).</tree-shows-origin-hint></p>
-    <p><tree-context fact="true" status="spec/done">REQ {#tree-context}. The tree respects the active project context (which repo's `.vibe/` is L2); a
+    <p><tree-context fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#tree-context}. The tree respects the active project context (which repo's `.vibe/` is L2); a
 no-project session shows only L1 (user-machine) pages.</tree-context></p>
   </tree-widget>
   <edit-form title="4. The edit form — per-type fields">
@@ -77,7 +77,7 @@ of typed fields, one per preference key, by `KeyMeta.type` (PROP-040 §6):</form
 contract, clean-room: a cheap `is_modified()` (form vs current `ResolvedPrefs`), `apply()` (writes via
 PROP-040 `set`, throws a typed error on validation failure), `reset()` (model → form). `apply` is gated
 on `is_modified()`; the form never writes a no-op.</configurable-lifecycle></p>
-    <p><write-layer-choice fact="true" status="spec/done">REQ {#write-layer-choice}. Editing a field writes to a **chosen layer** (default L3 for a project
+    <p><write-layer-choice fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#write-layer-choice}. Editing a field writes to a **chosen layer** (default L3 for a project
 session, L1 for a no-project session), selected in the form — never silently to the wrong layer (the
 VSCode `.vscode-overwrites-contributors` pain, §4.1.2). Writing to a layer the key's `scope` forbids is
 refused with the reason (PROP-040 §7).</write-layer-choice></p>
@@ -85,11 +85,11 @@ refused with the reason (PROP-040 §7).</write-layer-choice></p>
 "needs reload" badge — so the user knows when a change takes effect (the §4.3.2 hot-reload pain).</apply-indicator></p>
   </edit-form>
   <provenance title="5. The provenance view — &quot;where does this value come from?&quot;">
-    <p><provenance-view fact="true" status="spec/done">REQ {#provenance-view} (PROP-040 §5, §8). A field shows its **provenance** on demand: the resolved
+    <p><provenance-view fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#provenance-view} (PROP-040 §5, §8). A field shows its **provenance** on demand: the resolved
 value plus each layer's contribution (`default / L1 / L2 / L3 / CLI / env`), the winning `origin`
 (file:line where known), and which layers are shadowed. This is the visual form of `vibe prefs
 show-origins` (PROP-040 §8) — the first-class answer to "which layer is winning?".</provenance-view></p>
-    <p><provenance-edit fact="true" status="spec/done">REQ {#provenance-edit}. From the provenance view the user can **override at a specific layer** (set L3
+    <p><provenance-edit fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#provenance-edit}. From the provenance view the user can **override at a specific layer** (set L3
 without touching L2, or clear L3 to fall back to L2) — direct, layer-aware editing, not a single
 mystery write.</provenance-edit></p>
   </provenance>
@@ -102,7 +102,7 @@ reports why.</validation-feedback></p>
 PROP-040 §6) — a flat list of every warning across L1/L2/L3, jump-to-field.</lint-all></p>
   </validation>
   <search title="7. Search">
-    <p><settings-search fact="true" status="spec/done">REQ {#settings-search} (Δ-15; the archived settings study §3.7). A search (the `vibe-actions` Search Everywhere
+    <p><settings-search fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#settings-search} (Δ-15; the archived settings study §3.7). A search (the `vibe-actions` Search Everywhere
 engine, PROP-039 §10 — the same engine the `vibe tree` TUI uses) finds settings by **key, display name,
 description, and synonyms**. Selecting a result opens the owning page with that field focused. The
 search index is built from the page registry (§2) so a new page is searchable with no extra wiring.</settings-search></p>

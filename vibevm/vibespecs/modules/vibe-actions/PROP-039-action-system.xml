@@ -34,7 +34,7 @@ logic may reference a rendering type.</no-render-dep></p>
   </overview>
   <addressing title="2. Addressing">
     <address-grammar title="2.1 The address grammar">
-      <p><ADDRESS-GRAMMAR fact="true" status="spec/done">REQ. An action is named by an **`ActionAddr`** with the textual form
+      <p><ADDRESS-GRAMMAR fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">REQ. An action is named by an **`ActionAddr`** with the textual form
 `action://&lt;group&gt;/&lt;name&gt;[?&lt;params&gt;]`, where `&lt;group&gt;` is a dotted namespace (e.g. `vibe.tree`,
 `core`), `&lt;name&gt;` is a dotted/kebab identifier (e.g. `copy.markdown`, `search.everywhere`), and the
 optional `&lt;params&gt;` is a `&amp;`-separated `key=value` query carrying invocation parameters (§5).
@@ -158,7 +158,7 @@ English original. Search Everywhere (§10) indexes **both**, so a user typing th
 an action under any locale (copies VSCode `localize2`).</RESOLVED-LABEL></p>
     </i18n-resolved>
     <i18n-fallback title="8.3 English default &amp; locale swap">
-      <p><I18N-FALLBACK-LAW fact="true" status="spec/done">REQ. English is the **default, mandatory-complete** locale and the terminating fallback. Other locales
+      <p><I18N-FALLBACK-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">REQ. English is the **default, mandatory-complete** locale and the terminating fallback. Other locales
 may lag and fall back silently. Locale switch is atomic (`ArcSwap&lt;Catalogue&gt;`); a package may ship
 `locales/&lt;lang&gt;.ftl`, and a dedicated language-pack package may override, merged by explicit priority
 (language-pack &gt; package locale &gt; inline English).</I18N-FALLBACK-LAW></p>
@@ -249,13 +249,13 @@ No core / model / controller code depends on a `Surface` implementation or a ren
 invariant).</SURFACE-TRAIT-DEF></p>
     </surface-trait>
     <model-view title="11.2 The serialisable model view">
-      <p><MODEL-VIEW-DEF fact="true" status="spec/done">REQ. The observable UI state is a **serialisable `ModelView`** snapshot (focus, open modals, visible
+      <p><MODEL-VIEW-DEF fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">REQ. The observable UI state is a **serialisable `ModelView`** snapshot (focus, open modals, visible
 rows, current tree/selection, the active tab, the set of enabled actions with their addresses +
 reasons). It is a pure projection of the Model and carries **no rendering types** — so an AI reads
 structured state, never pixels.</MODEL-VIEW-DEF></p>
     </model-view>
     <aiui title="11.3 The headless AIUI surface">
-      <p><AIUI-REFERENCE fact="true" status="impl/done">REQ (**built**; the in-process form ships). The core offers a **headless AIUI** surface:
+      <p><AIUI-REFERENCE fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">REQ (**built**; the in-process form ships). The core offers a **headless AIUI** surface:
 `list_actions(filter?)` (enumerate the registry with live enablement + reasons + params),
 `invoke(addr, args)` (the same `invoke` as §7.1), `state() -&gt; ModelView` (§11.2), and
 `search(query, tab?)` (drive §10 programmatically). `vibe-actions/src/aiui.rs` implements

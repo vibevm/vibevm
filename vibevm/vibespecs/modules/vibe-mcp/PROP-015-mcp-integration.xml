@@ -24,11 +24,11 @@ bridge-packages design that added the [#skill-include](#skill-include) req on
 agent then has to *find and read* what landed. Two integration surfaces
 close that loop:</close-the-loop></p>
     <facts ordered="true">
-      <SURFACE-SERVER fact="true" status="impl/done">A **Model Context Protocol server** (`vibe mcp serve`) that exposes the
+      <SURFACE-SERVER fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">A **Model Context Protocol server** (`vibe mcp serve`) that exposes the
    project's lockfile-derived state to any MCP-speaking agent as callable
    tools — so the agent queries package identity and pulls subskill content
    on demand instead of guessing from the file tree.</SURFACE-SERVER>
-      <SURFACE-INSTALL fact="true" status="impl/done">An **agent-integration command family** (`vibe mcp install` and friends)
+      <SURFACE-INSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">An **agent-integration command family** (`vibe mcp install` and friends)
    that wires that server into each agent's own configuration and writes a
    per-agent skill manifest, so an operator runs one command instead of
    hand-editing five different config files.</SURFACE-INSTALL>
@@ -74,21 +74,21 @@ against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
       <p><TOOLS-IO-CONVENTION fact="true" status="impl/done">The shipped tools (all group-qualified `&lt;group&gt;/&lt;name&gt;` pkgrefs in;
 structured JSON + a text rendering out):</TOOLS-IO-CONVENTION></p>
       <facts ordered="false">
-        <TOOL-QUERY-PACKAGE fact="true" status="impl/done">**`query_package`** — the full lockfile entry for an installed package
+        <TOOL-QUERY-PACKAGE fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`query_package`** — the full lockfile entry for an installed package
   (kind, version, `content_hash`, registry, source, `files_written`,
   features, active subskills, `describes` PURL, language). Read-only.</TOOL-QUERY-PACKAGE>
-        <TOOL-READ-SUBSKILL fact="true" status="impl/done">**`read_subskill`** — the concatenated content of an active subskill's
+        <TOOL-READ-SUBSKILL fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`read_subskill`** — the concatenated content of an active subskill's
   files. `eager` / `lazy-push` subskills read from the project tree;
   `lazy-pull` subskills read from the package cache (PROP-003 §2.5.0), so
   the agent gets bytes regardless of delivery mode. Read-only.</TOOL-READ-SUBSKILL>
-        <TOOL-MATERIALISE-SUBSKILL fact="true" status="impl/done">**`materialise_subskill`** — copy a `lazy-pull` subskill's content into
+        <TOOL-MATERIALISE-SUBSKILL fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`materialise_subskill`** — copy a `lazy-pull` subskill's content into
   the project tree. No-op for `eager` / `lazy-push` (already on disk);
   refuses to overwrite without `force`. The one writing tool.</TOOL-MATERIALISE-SUBSKILL>
       </facts>
       <p><TOOL-FAILURE-RENDERING fact="true" status="impl/done">A tool failure renders as `isError: true` in the result payload (a
 tool-level failure), distinct from a transport-level JSON-RPC error.</TOOL-FAILURE-RENDERING></p>
       <map-query title="2.2.1 Searching the map — the set-returning twin of `explain`">
-        <p><MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION fact="true" status="impl/done">**`query` finds nodes; `explain`
+        <p><MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`query` finds nodes; `explain`
 looks at one.** Until 2026-08-06 the map could only be asked about a target
 already known by name, so *«which of these exist?»* was unanswerable — not in
 the host, not in any language stack, not in the engine. `query` is that
@@ -154,7 +154,7 @@ are the ones §2.2.1 ships, reached rather than redefined; the parser lives in i
 own module behind its own entry point, so a broken grammar leaves `query`
 answering. That separation is the owner's ruling in
 `##MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT` made structural instead of promised.</SELECT-STANDS-ON-THE-FILTER-LEVEL-AND-CANNOT-TAKE-IT-DOWN></p>
-        <p><SELECT-SEVEN-PREDICATES-JOINED-BY-AND fact="true" status="impl/done">**Seven predicates, whitespace
+        <p><SELECT-SEVEN-PREDICATES-JOINED-BY-AND fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**Seven predicates, whitespace
 separated, joined by AND, and no operators at all:** `uri:`, `symbol:`, `kind:`
 (the filter level's own), `scope:` (prefix of a spec address), `has:` / `lacks:`
 (an edge verb), `depth:` (0..3). No disjunction, no parentheses, no precedence —
@@ -185,7 +185,7 @@ edge-bearing nodes, 71.7 % reach more at depth 2 than at depth 1 and only 5.9 %
 reach more at depth 3; the largest connected component is 44 nodes. So depth is a
 precision control on this map rather than a safety one — and the result ceiling
 stays hard regardless, because it protects against a future map, not this one.</SELECT-THE-BOUND-IS-CHOSEN-AGAINST-A-MEASUREMENT-NOT-A-FEELING></p>
-        <p><SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR fact="true" status="impl/done">**An unknown predicate, an unknown
+        <p><SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**An unknown predicate, an unknown
 verb, a repeated predicate, an out-of-range depth or an empty query is an ERROR
 that names the offending token and lists what was expected** — never a silently
 ignored clause. Same law as the markup's typed fences, for the same reason: a
@@ -218,7 +218,7 @@ lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-
     </errors>
     <agent-detection title="2.4 Agent detection">
       <p><req-agent-detection fact="true" status="impl/done">`req r1`</req-agent-detection></p>
-      <p><AGENT-SET fact="true" status="impl/done">**Decision.** The integration surface supports a fixed set of MCP-capable
+      <p><AGENT-SET fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** The integration surface supports a fixed set of MCP-capable
 coding agents (Claude Code, Claude Code Desktop, Cursor, OpenCode, Codex).</AGENT-SET></p>
       <facts ordered="false">
         <AGENT-PRESENCE fact="true" status="impl/done">An agent is *present* in a project when its project-level markers exist
@@ -239,14 +239,14 @@ agent-aware but format-generic:</CONFIG-SHAPE-DECL></p>
   `mcp`, `mcp_servers`).</CONFIG-SECTION-KEY>
         <CONFIG-SCOPE fact="true" status="impl/done">**Scope** — project (`.&lt;agent&gt;/…` in the repo) and/or user (the host
   config dir). Some agents are user-only (Claude Code Desktop, Codex).</CONFIG-SCOPE>
-        <CONFIG-PATH fact="true" status="impl/done">**Config path** — resolved per (agent, scope), cross-platform. The
+        <CONFIG-PATH fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Config path** — resolved per (agent, scope), cross-platform. The
   path must be the file the agent actually reads for MCP *discovery*,
   not merely a settings file it happens to own. For Claude Code that is
   `&lt;project&gt;/.mcp.json` (project) and the top-level `mcpServers` of
   `~/.claude.json` (user) — **never `settings.json`**, which only
   *gates* `.mcp.json` servers (`enabledMcpjsonServers`) and does not
   define them.</CONFIG-PATH>
-        <CONFIG-MERGE fact="true" status="impl/done">**Merge discipline** — installing upserts vibevm's one entry under the
+        <CONFIG-MERGE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Merge discipline** — installing upserts vibevm's one entry under the
   section key and **preserves every foreign key, and their order**: the
   JSON writer round-trips order-preserving (`serde_json/preserve_order`),
   so a merge into a large `~/.claude.json` appends rather than
@@ -267,7 +267,7 @@ agent-aware but format-generic:</CONFIG-SHAPE-DECL></p>
     </agent-config>
     <skill title="2.6 Skill materialisation">
       <p><req-skill fact="true" status="impl/done">`req r1`</req-skill></p>
-      <p><SKILL-MANIFEST fact="true" status="impl/done">**Decision.** For agents that support a skill manifest (Claude Code,
+      <p><SKILL-MANIFEST fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** For agents that support a skill manifest (Claude Code,
 OpenCode, Codex — not the JSON-config-only Cursor / Claude Code Desktop),
 `vibe mcp install` also writes a `SKILL.md` describing how to use vibevm
 through the MCP tools.</SKILL-MANIFEST></p>
@@ -281,7 +281,7 @@ through the MCP tools.</SKILL-MANIFEST></p>
     </skill>
     <lifecycle title="2.7 The integration lifecycle">
       <p><req-lifecycle fact="true" status="impl/done">`req r1`</req-lifecycle></p>
-      <p><LIFECYCLE-MATRIX fact="true" status="impl/done">**Decision.** The agent-integration command family is a coherent
+      <p><LIFECYCLE-MATRIX fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** The agent-integration command family is a coherent
 lifecycle over the (agent × scope) matrix, every verb idempotent and
 every mutating verb offering `--dry-run` and a confirmation:</LIFECYCLE-MATRIX></p>
       <facts ordered="false">
@@ -301,7 +301,7 @@ JSON.</LIFECYCLE-REPORTS></p>
       <p><INCLUDE-DECL fact="true" status="impl/done">**Decision.** `SkillDecl` gains an optional `include` — a list of glob
 patterns relative to the skill's `path`.</INCLUDE-DECL></p>
       <facts ordered="false">
-        <INCLUDE-SELECTIVE fact="true" status="impl/done">When present, only matching files are
+        <INCLUDE-SELECTIVE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">When present, only matching files are
   projected into the agent's skill directory, preserving their relative
   structure; when absent or empty, the whole `path` tree is projected — the
   existing §2.6 behaviour, unchanged.</INCLUDE-SELECTIVE>

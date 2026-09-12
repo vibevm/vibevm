@@ -26,7 +26,7 @@ flows.</related></p>
 (`legacy-spec/research/settings-system-vscode-idea.md` §7) maps to one or more REQs here.</delta-mapping>
   </facts>
   <scope title="1. Scope — application/user preferences, NOT project config">
-    <p><app-prefs-not-project fact="true" status="spec/done">REQ {#app-prefs-not-project}. The system stores **application/user preferences** — how vibevm's
+    <p><app-prefs-not-project fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#app-prefs-not-project}. The system stores **application/user preferences** — how vibevm's
 surfaces *look and behave for this user* (the TUI's palette/glyph/tier/mode/sort/shape/fold; future
 vibe-app prefs). It does **not** store project properties. `vibe.toml` (the vibe-PROJECT manifest —
 package/deps/build, the `pom.xml` analogue, governed by [PROP-000 §4](../../common/PROP-000.xml) and
@@ -44,16 +44,16 @@ the settings-UI (PROP-041) possible.</frontend-agnostic></p>
   <levels title="2. The three levels + precedence">
     <p><three-levels fact="true" status="spec/done">REQ {#three-levels}. Preferences resolve over **three file layers**, lowest-to-highest precedence:</three-levels></p>
     <facts ordered="false">
-      <L1-USER-MACHINE fact="true" status="spec/done">**L1 — user-machine** (`~/.vibe/`, e.g. `~/.vibe/settings.toml`): this user's global defaults on this
+      <L1-USER-MACHINE fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**L1 — user-machine** (`~/.vibe/`, e.g. `~/.vibe/settings.toml`): this user's global defaults on this
   machine (analogue: VSCode User settings; IntelliJ Application `options/*.xml`).</L1-USER-MACHINE>
-      <L2-REPO-SHARED fact="true" status="spec/done">**L2 — repo-shared** (`.vibe/settings.toml` inside the repo, **committed**): the team's preferences
+      <L2-REPO-SHARED fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**L2 — repo-shared** (`.vibe/settings.toml` inside the repo, **committed**): the team's preferences
   for this project (analogue: VSCode `.vscode/settings.json`; IntelliJ `.idea/` shared `*.xml`,
   `RoamingType.DEFAULT`).</L2-REPO-SHARED>
-      <L3-USER-PROJECT fact="true" status="spec/done">**L3 — user-project** (`.vibe/settings.local.toml`, **gitignored**): this user's fine-tuning for
+      <L3-USER-PROJECT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**L3 — user-project** (`.vibe/settings.local.toml`, **gitignored**): this user's fine-tuning for
   this specific project (analogue: IntelliJ `$WORKSPACE_FILE$` = `.idea/workspace.xml`, personal,
   `RoamingType.DISABLED`).</L3-USER-PROJECT>
     </facts>
-    <p><precedence-law fact="true" status="spec/done">REQ {#precedence-law} (Δ-11, imperative 1). The precedence is a **law**, fixed in one place (this
+    <p><precedence-law fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#precedence-law} (Δ-11, imperative 1). The precedence is a **law**, fixed in one place (this
 section) and encoded in the binary, never ambiguous:</precedence-law></p>
     <fence>built-in default  ⊂  L1 user-machine  ⊂  L2 repo-shared  ⊂  L3 user-project  ⊂  CLI flag  ⊂  env var</fence>
     <p><precedence-elaboration fact="true" status="spec/done">A higher layer **overrides** a lower one per the merge semantics (§4). L3 wins among file layers;
@@ -100,7 +100,7 @@ confuses layers (the `.idea` what-to-commit pain, §4.2.1).</role-marker></p>
 [PROP-000 §13](../../common/PROP-000.xml)). Preference files live at `.vibe/settings.toml` /
 `.vibe/settings.local.toml` — siblings of `cache/`, never inside it. The layout is fixed by this
 contract so cache-vs-prefs never collide.</dotvibe-not-cache></p>
-    <p><missing-is-default fact="true" status="spec/done">REQ {#missing-is-default}. A missing or corrupt file falls back to defaults — **never a hard error**
+    <p><missing-is-default fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#missing-is-default}. A missing or corrupt file falls back to defaults — **never a hard error**
 (analogous to PROP-037 §9). A parse error is reported as a non-fatal diagnostic and the layer is
 treated as absent.</missing-is-default></p>
   </locations>
@@ -111,7 +111,7 @@ re-implemented clean-room):</merge-algorithm></p>
     <facts ordered="false">
       <MERGE-SCALARS fact="true" status="spec/done">**Scalars** (string/number/boolean): **last-wins** (the higher layer's value replaces).</MERGE-SCALARS>
       <MERGE-OBJECTS fact="true" status="spec/done">**Objects** (tables): **recursive deep-merge** — children merge by the same rules.</MERGE-OBJECTS>
-      <MERGE-ARRAYS fact="true" status="spec/done">**Arrays**: **replace, not concatenate** — a higher-layer array fully replaces the lower one (the
+      <MERGE-ARRAYS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**Arrays**: **replace, not concatenate** — a higher-layer array fully replaces the lower one (the
   non-obvious VSCode semantics; the dotnet #118204 trap is avoided by making this explicit and
   documented).</MERGE-ARRAYS>
     </facts>
@@ -145,7 +145,7 @@ files** — the introspection bottleneck of IntelliJ (§3.9) is avoided by const
 prefs), mirroring VSCode's section access.</get-section></p>
   </resolver>
   <schema title="6. Schema + validation + deprecation">
-    <p><schema-first fact="true" status="spec/done">REQ {#schema-first} (Δ-04, imperative 4). The preference surface is **schema-first**: every key is
+    <p><schema-first fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#schema-first} (Δ-04, imperative 4). The preference surface is **schema-first**: every key is
 declared with `type`, `default`, and metadata. Unknown keys (typos, retired names) produce a **loud
 warning at boot and at `vibe prefs check`** — never a silent ignore (the VSCode JSON-schema-gap pain,
 §4.1.5; the IntelliJ un-validated-XML pain).</schema-first></p>
@@ -180,13 +180,13 @@ layer that its scope forbids is a typed error (the VSCode scope-target validatio
 **resolved value and its origin** — which layer set it, with `file:line` where known (the git
 `--show-origin` + VSCode `inspect()` combined). This is the first-class answer to "which layer is
 winning?" (§4.1.1) and the debugging surface for the AIUI.</show-origins-req></p>
-    <p><prefs-command fact="true" status="spec/done">REQ {#prefs-command}. The `vibe prefs` command surface: `vibe prefs get &lt;key&gt;`, `vibe prefs set &lt;key&gt;
+    <p><prefs-command fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#prefs-command}. The `vibe prefs` command surface: `vibe prefs get &lt;key&gt;`, `vibe prefs set &lt;key&gt;
 &lt;value&gt; [--layer L1|L2|L3]`, `vibe prefs list`, `vibe prefs check` (validate all layers), `vibe prefs
 migrate`, `vibe prefs show-origins [key]`. (Distinct from `vibe show config`, which remains the
 project-config view.)</prefs-command></p>
   </show-origins>
   <gitignore title="9. `.gitignore` auto-generation + the path classifier">
-    <p><gitignore-autogen fact="true" status="spec/done">REQ {#gitignore-autogen} (Δ-06, imperative 6). `vibe init` writes a `.gitignore` entry for
+    <p><gitignore-autogen fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#gitignore-autogen} (Δ-06, imperative 6). `vibe init` writes a `.gitignore` entry for
 `.vibe/settings.local.toml` (and the L3 pattern) so a personal file is **never accidentally
 committed** — the IntelliJ `workspace.xml` "keeps popping up" pain (§4.2.3) avoided by default, not
 by user discipline.</gitignore-autogen></p>
@@ -209,7 +209,7 @@ VSCode debounced file-watcher, §2.3) — edit your `~/.vibe/settings.toml` in `
 picks it up.</file-watch></p>
   </events>
   <secrets title="11. Secrets + untrusted L2">
-    <p><no-secrets-in-committed fact="true" status="spec/done">REQ {#no-secrets-in-committed} (imperative 7; `secrets-hygiene` flow). Preference files are
+    <p><no-secrets-in-committed fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">REQ {#no-secrets-in-committed} (imperative 7; `secrets-hygiene` flow). Preference files are
 **non-secret** (UI look/behaviour). The schema forbids a committed `.vibe/settings.toml` from carrying
 a `[secret]`-style section; `vibe prefs check` refuses such a file (the `.idea`/`.vscode` keystore-leak
 vector, §4.3.3). Secrets belong in `vibe.toml`'s `api_key_env` (env-var name) or a per-user keychain —
