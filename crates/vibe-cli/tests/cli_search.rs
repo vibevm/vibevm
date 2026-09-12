@@ -230,27 +230,55 @@ fn spawn_github_mock(canned: GitHubCanned) -> GitHubMock {
     }
 }
 
+/// A registry that publishes no index, spelled the way the
+/// index-location ladder asks for it
+/// ([PROP-005 §2.2 `#form-factor`](../../../vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml),
+/// B-083).
+///
+/// Removing `VIBEVM_INDEX_URL_<R>` used to be enough to mean "this
+/// registry has no index": the ladder had two rungs and an unset env
+/// var fell straight through. It has three now, and the last one
+/// *guesses* — a canonical public `https://github.com/<org>` registry
+/// resolves to the live `https://raw.githubusercontent.com/<org>/index/<ref>`.
+/// The `vibespecs` org used below publishes exactly that repository, so
+/// an env-removal-only fixture stopped meaning "no index" and started
+/// meaning "probe the public internet and find a real catalog": the
+/// registry never entered `registries_unconfigured`, `--full-scan` never
+/// ran, and this file's promise of no live internet (module doc, top)
+/// lapsed into a colour decided by a third party's repository.
+///
+/// `none` on an explicit rung is the contract's deliberate off switch
+/// and short-circuits before any HTTP, so the fixture is hermetic by
+/// construction instead of by hoping a URL keeps answering 404.
+const NO_INDEX: &str = "none";
+
 fn write_github_only_manifest(project_root: &std::path::Path) {
-    let manifest = r#"[project]
+    let manifest = format!(
+        r#"[project]
 name = "test-search"
 version = "0.0.1"
 
 [[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"
-"#;
+index_url = "{NO_INDEX}"
+"#
+    );
     std::fs::write(project_root.join("vibe.toml"), manifest).unwrap();
 }
 
 fn write_gitverse_only_manifest(project_root: &std::path::Path) {
-    let manifest = r#"[project]
+    let manifest = format!(
+        r#"[project]
 name = "test-search"
 version = "0.0.1"
 
 [[registry]]
 name = "vibespecs-gitverse"
 url = "https://gitverse.ru/vibespecs"
-"#;
+index_url = "{NO_INDEX}"
+"#
+    );
     std::fs::write(project_root.join("vibe.toml"), manifest).unwrap();
 }
 
