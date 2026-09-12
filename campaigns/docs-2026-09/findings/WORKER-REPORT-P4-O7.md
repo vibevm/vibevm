@@ -708,6 +708,207 @@ Caused by: installing fresh generated tree … failed: Access is denied. (os err
 - Своих процессов не осталось; чужие не останавливал (J-105) — ждал.
   Три дерева руководства из scratch удалены.
 
+## Хвост — `latest` как алиас обслуживаемой версии
+
+Один атом, один коммит: **`985e2a56` `feat(doc): serve latest as an alias
+of the served version`**.
+
+### Выбор: 200, а не 302 — и почему
+
+Пакет хвоста разрешал оба ответа и просил назвать выбранный. Выбран
+**тот же ответ, что у нумерованного адреса**, а не редирект на него, по
+трём причинам в порядке веса:
+
+1. **Сайт отвечает 200 на обоих написаниях.** P4-O6 мерил это числом: 96
+   островов = 48 страниц × 2 написания версии. Читатель, который на том
+   же адресе даёт редирект, показывает локально не то, что показывает
+   веб, — а весь смысл общей адресной карты в том, что ссылка работает в
+   обоих мирах одинаково.
+2. **Переключатель версий оболочки (P4-O2) предлагает именно `latest`.**
+   Редирект вернул бы номер в адресную строку, и переключатель читался бы
+   как кнопка, которая ничего не делает: читатель нажал «latest», а адрес
+   остался прежним.
+3. **Относительные адреса острова (атом 1) верны под обоими написаниями
+   по построению.** Уводить читателя из выбранного им написания нечем
+   оправдать: выигрыша нет, а плата — лишний круг на каждый ресурс под
+   `latest`.
+
+### Решение 15 — перевод делается один раз, до всех дорожек
+
+`routes::as_numbered` заменяет ведущий `<координата>/latest/` на
+`<координата>/<версия>/` сразу после снятия базы, и дальше **ни одна
+дорожка не знает, что у версии два имени**. Поэтому под `latest`
+отвечает не «четыре формы, которые кто-то не забыл перечислить», а всё,
+что отвечает вообще: страницы, обе проекции, починка потерянного слэша,
+картинки карточки, страница пакета, резолвер и отказы.
+
+Побочный эффект — упрощение: `routes/media.rs` носил второе написание
+сам (`latest_prefix` в `requested`), и эта ветка исчезла; условие
+страницы пакета из атома 2 свернулось с двух сравнений до одного.
+`Reader::latest_prefix()` остался, и теперь у него ровно один читатель —
+сам переводчик.
+
+`latest` читается **только на позиции версии**: `…/0.1.0/latest/` —
+по-прежнему 404 с именем `latest.xml`, потому что там стоит документ, а
+не версия. Это отдельный тест.
+
+### Решение 16 — тест формулирует закон, а не таблицу статусов
+
+`latest_answers_as_the_version_it_stands_for_on_every_address`: для
+восьми форм сравниваются **статус, тип, `Location` и байты** двух
+написаний. Список ожидаемых статусов был бы согласен с читателем, который
+случайно прав на тех четырёх формах, которые кто-то выписал; равенство —
+нет.
+
+Рядом сторож `the_picture_the_alias_case_names_is_one_this_package_publishes`:
+имя картинки в списке форм сверяется с тем, что сборка действительно
+пишет. Он **сработал при первом прогоне** — я взял хэш наугад, и без
+сторожа случай «картинка под `latest`» тихо сравнивал бы два одинаковых
+404 и проходил бы всегда.
+
+### Живой прогон: обе колонки совпали на всех формах
+
+`vibe doc serve` над руководством, оболочка настоящая
+(`"provenance": "embedded"`), запросы `curl --path-as-is`:
+
+```
+совпало | нумерованный                             | latest                                   | адрес
+same    | 200 text/html; charset=utf-8 44005       | 200 text/html; charset=utf-8 44005       | start/index/
+same    | 200 text/markdown; charset=utf-8 5506    | 200 text/markdown; charset=utf-8 5506    | start/index.md
+same    | 200 application/xml; charset=utf-8 3668  | 200 application/xml; charset=utf-8 3668  | start/index.xml
+same    | 308                                      | 308                                      | start/index
+same    | 200 text/html; charset=utf-8 35901       | 200 text/html; charset=utf-8 35901       | (страница пакета)
+same    | 200 image/svg+xml 622                    | 200 image/svg+xml 622                    | media/e65e5833a9f1d438.svg
+same    | 308                                      | 308                                      | llms.txt
+same    | 404 application/json 123                 | 404 application/json 123                 | model/nope/
+```
+
+Обе починки слэша ведут на **нумерованный** адрес — перевод происходит
+раньше починки, то есть канонической формой читателя остаётся номер:
+
+```
+0.1.0   start/index  308 -> <base><координата>/0.1.0/start/index/
+latest  start/index  308 -> <base><координата>/0.1.0/start/index/
+```
+
+### Находка: `<координата>/<версия>/llms*.txt` — тупик в обоих написаниях
+
+`…/0.1.0/llms.txt` отвечает `308` на `…/0.1.0/llms.txt/`, а тот — `404`
+(«this documentation carries no page `llms.txt.xml`»). Это **было так и
+до хвоста**: локальный читатель отдаёт агентские файлы только в корне
+монтажа (`<base>llms.txt` → `200 text/plain`, 17 900 байт), а под
+координатой их нет. Сработала общая развилка `page()`: адрес с точкой,
+чьё расширение не `.md` и не `.xml`, считается «страницей, потерявшей
+слэш».
+
+Алиас этот адрес **не чинит и не ломает** — он делает оба написания
+одинаковыми, как и просил пакет («отвечают тем же, что нумерованный
+адрес»). Но у `latest` ответ поменялся с честного `404` на `308` в тот же
+`404`, то есть на один прыжок длиннее, и это стоит знать.
+
+Чинить в этом атоме не стал: A4.5 говорит, что **сайт** копирует
+`llms*.txt` дерева в `/doc/…/<версия|latest>/`, то есть правильный ответ —
+отдавать четыре тира и под координатой тоже, и это решение о том, где
+живут агентские поверхности локально (`##SEO-LLMS-FILES`), а не о
+написании версии. Правка на три строки: `machine_file` должен принимать
+имя и после снятия `reader.prefix`. Кандидат в следующий атом; тест
+алиаса на форму `llms.txt` уже стоит и переживёт починку — он сравнивает
+две колонки, а не статус.
+
+`manifest.json` под координатой — та же форма и тот же тупик, но его
+сайт под изданием и не публикует (A4.5: «не копируется; сайт пишет его
+сам»), так что чинить там нечего — разве что отвечать честным 404.
+
+### Гейты хвоста, дословно
+
+```
+$ cargo fmt --all --check
+FMT_EXIT=0
+
+$ cargo clippy -p vibe-doc -p vibe-doc-server -p vibe-doc-shell --all-targets -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 18.33s
+CLIPPY_EXIT=0
+
+$ cargo test -p vibe-doc -p vibe-doc-server -p vibe-doc-shell
+test result: ok. 554 passed; 0 failed; …
+test result: ok. 5 passed; …
+test result: ok. 3 passed; …
+test result: ok. 5 passed; …
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s
+test result: ok. 19 passed; …
+test result: ok. 64 passed; …   (doctest vibe-doc)
+test result: ok. 6 passed; …    (doctest vibe-doc-server)
+test result: ok. 11 passed; …   (doctest vibe-doc-shell)
+EXIT=0
+
+$ cargo test -p vibe-doc -p vibe-doc-server -p vibe-doc-shell --features vibe-doc-shell/embedded-shell
+… те же девять строк, 37 в vibe-doc-server …
+EXIT=0
+
+$ cargo xtask conform check --scope crates/vibe-doc-server
+conform check: 0 finding(s) in scope crates/vibe-doc-server ({}), 0 frozen in baseline, 0 new; SARIF at target\conform\report.sarif.
+
+$ cargo xtask conform check --scope crates/vibe-doc
+conform check: 0 finding(s) in scope crates/vibe-doc ({}), 0 frozen in baseline, 0 new; SARIF at target\conform\report.sarif.
+
+$ cargo xtask specmap
+specmap: wrote …\specmap.json (7930 spec units, 3600 tagged code items, 3112 edges, 0 suspects, 31 warnings).
+specmap: ratchet gate — 0 gated orphan(s), 0 dispositioned (6 crate(s) exempt).
+specmap: resolve gate — 0 unresolved host edge(s), 35 non-host edge(s) outside this map's jurisdiction.
+$ git checkout -- specmap.json
+```
+
+Тестов в `vibe-doc-server` было 34, стало **37**: закон алиаса, сторож
+имени картинки и «`latest` читается только на позиции версии».
+
+### Playwright хвоста
+
+```
+$ npx playwright test -c site/tests/playwright.config.ts site/tests/local-reader.spec.ts
+  5 passed (14.8s)
+```
+
+Полная панель (`pnpm test:e2e`) на момент хвоста красная не по моей
+причине и **не воспроизводимо моим кодом**: P5-O1 держит в дереве 17
+изменённых и 3 новых файла web-пакета (включая `tools/build.mjs`,
+фикстуры и `.gitignore`), суд — над собранным `site/dist`, а статическая
+сборка `vibe` не зовёт вообще (в `tools/build.mjs` единственный
+`spawnSync` — это `vite`). Мой диффы этого хвоста — только Rust. Зелёной
+я видел эту панель час назад на `34 passed`; сейчас в ней 38 зелёных и
+новые чужие спеки (`libraries.spec.ts`), падающие на чужом незакоммиченном
+коде. Спека, которая меряет мой периметр, зелёная.
+
+### А-7. Осиротевший превью-сервер моего же прогона держал порт
+
+После красного `pnpm test:e2e` остался `node serve.mjs 4173` без
+родителя, и следующий запуск Playwright отказался стартовать
+(«already used»). Процесс мой (время создания совпадает с моим прогоном,
+цепочка родителей мертва) — остановлен. Чужих процессов не трогал:
+J-105 про чужие, а не про сирот своего прогона.
+
+### А-6 закрыта чужой рукой
+
+Запись `derived` руководства перезаписана коммитом `c719ce29`
+(`docs(vibevm-docs): re-record the vibe doc help after the registry
+builder landed`) — тем, кто добавил `vibe doc build-site`, как и
+следовало. Проверка после хвоста:
+
+```
+$ vibe doc check --path <руководство> --derived
+derived: 72 unchanged, 0 moved
+EXIT=0
+```
+
+Пункт 1 раздела «Что не сделано» тем самым снят.
+
+### Состояние дерева после хвоста
+
+- `git status --short` по `crates/**` — пусто: всё в коммите `985e2a56`.
+- Бинарник дерева **снова без фичи** (`cargo build -p vibe-cli`,
+  `--print-shell` → `"provenance": "fallback"`).
+- `specmap.json` возвращён к HEAD.
+- Своих процессов не осталось (`vibe.exe` — 0), чужих не останавливал.
+
 ## R-25
 
 Путей вне репозитория в отчёте нет: scratch обозначен `<scratch>`, база
