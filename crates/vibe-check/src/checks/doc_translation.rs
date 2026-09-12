@@ -65,8 +65,27 @@ fn canonical_is_written(manifest_text: &str) -> bool {
 /// offline: the project's own package root first (an in-tree package is
 /// the source of truth while it is being developed), then the machine
 /// store.
+///
+/// «The project's own» is asked of the ANCESTORS too, and that is not a
+/// convenience. A translation under development is checked two ways —
+/// `vibe check` from the project root, and `vibe check --path
+/// <the adaptation's slot>` — and only the first has the package root
+/// beneath it. Without the walk the second reported «the source is not
+/// readable offline» about a package sitting in the same tree, which is
+/// a warning that teaches an author to ignore warnings.
 fn source_roots(project_root: &Path) -> Vec<PathBuf> {
-    let mut roots = vec![project_root.join(vibe_core::layout::current_packages_root())];
+    let packages = vibe_core::layout::current_packages_root();
+    let mut roots = vec![project_root.join(&packages)];
+    // The checked root's own ancestors, nearest first. A slot inside an
+    // in-tree registry is three levels under it; the walk is unbounded
+    // because a project may be checked out anywhere, and each step costs
+    // one `is_dir`.
+    for ancestor in project_root.ancestors().skip(1) {
+        let candidate = ancestor.join(&packages);
+        if candidate.is_dir() && !roots.contains(&candidate) {
+            roots.push(candidate);
+        }
+    }
     if let Ok(store) = vibe_registry::store::store_root() {
         roots.push(store);
     }
@@ -142,10 +161,12 @@ impl Check for DocTranslationCheck {
         let Ok(manifest) = Manifest::read(&manifest_file) else {
             return;
         };
+        let manifest_path = Path::new(Manifest::FILENAME).to_path_buf();
+        self.check_available(&manifest, &manifest_path, report);
+
         let Some(translates) = manifest.translates.as_ref() else {
             return;
         };
-        let manifest_path = Path::new(Manifest::FILENAME).to_path_buf();
 
         let written = std::fs::read_to_string(&manifest_file)
             .map(|text| canonical_is_written(&text))
@@ -173,6 +194,50 @@ impl Check for DocTranslationCheck {
 }
 
 impl DocTranslationCheck {
+    /// `##LOC-LANGUAGE-FIELD` — a `doc` package's `[i18n].available` is
+    /// empty by construction.
+    ///
+    /// The field lists the languages ONE package carries, which is how
+    /// localisation works everywhere else in this project. Documentation
+    /// works the other way round: a translation is another package, with
+    /// its own authors, its own rhythm and its own officiality per
+    /// language. So a documentation package that lists languages is
+    /// claiming to hold text it does not hold — and the site, which
+    /// computes the available languages from the `translates` edges at
+    /// every render (`##LOC-NO-TRANSLATIONS-TABLE`), would disagree with
+    /// the package's own manifest about what exists.
+    fn check_available(&self, manifest: &Manifest, manifest_path: &Path, report: &mut CheckReport) {
+        let is_documentation = manifest
+            .package
+            .as_ref()
+            .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc);
+        if !is_documentation || manifest.i18n.available.is_empty() {
+            return;
+        }
+        let i18n = &manifest.i18n;
+        report.err(
+            CheckId::DocTranslation,
+            Some(manifest_path.to_path_buf()),
+            None,
+            format!(
+                "this `doc` package lists `[i18n].available = [{listed}]`, and a documentation \
+                 package carries exactly one language — a translation is another package, so \
+                 the list claims text this package does not hold. Which languages a \
+                 documentation has is computed from the `translates` edges at every render, \
+                 never read from a table \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD; \
+                 fix: drop `available` and keep `[i18n] canonical` alone; publish each other \
+                 language as its own package, named `<name>-<lang>`)",
+                listed = i18n
+                    .available
+                    .iter()
+                    .map(|tag| format!("\"{tag}\""))
+                    .collect::<Vec<_>>()
+                    .join(", "),
+            ),
+        );
+    }
+
     /// `##LOC-DOCUMENTS-MATCH` — the subjects of a translation and of
     /// its source are the same set, or the reader is told which way they
     /// differ; an unreachable source is a warning that names why.
