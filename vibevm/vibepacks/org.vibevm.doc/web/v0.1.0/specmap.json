@@ -9,6 +9,34 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/capability-card/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/capability-card/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/card/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/card/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/code-block/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/code-block/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/dep-graph/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/dep-graph/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/doc-card/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -37,6 +65,13 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/fallback-notice/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/fallback-notice/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/footer/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -51,10 +86,73 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/for-agent/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/for-agent/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/hero/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/hero/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/hero/install-block.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/hero/install-block.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/language-selector/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/language-selector/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/lightbox/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/lightbox/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/package-header/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/package-header/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/page-meta/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/page-meta/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/prose/index.tsx",
       "item_kind": "module",
       "line": 1,
       "symbol": "design/src/components/prose/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/return-to-place/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/return-to-place/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/rule-panel/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/rule-panel/index.tsx"
     },
     {
       "crate_name": "src",
@@ -69,6 +167,20 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "design/src/components/section-head/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/settings-panel/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/settings-panel/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/shelf/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/shelf/index.tsx"
     },
     {
       "crate_name": "src",
@@ -93,6 +205,20 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/toc/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/toc/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/version-switch/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/version-switch/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/index.ts",
       "item_kind": "module",
       "line": 1,
@@ -100,10 +226,24 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/components/catalogue/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/components/catalogue/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/components/island/index.tsx",
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/components/island/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/config.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/config.ts"
     },
     {
       "crate_name": "src",
@@ -118,6 +258,41 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/generated/doc-manifest.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/landing/chrome.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/landing/chrome.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/landing/head.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/landing/head.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/landing/i18n.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/landing/i18n.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/landing/landing.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/landing/landing.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/landing/theme-color.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/landing/theme-color.ts"
     },
     {
       "crate_name": "src",
@@ -149,6 +324,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/lib/library.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/library.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/lib/manifest.ts",
       "item_kind": "module",
       "line": 1,
@@ -163,10 +345,143 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/lib/view.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/view.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/agent.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/agent.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/anchors.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/anchors.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/catalogue.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/catalogue.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/code.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/code.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/dom.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/dom.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/embedding.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/embedding.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/fallback.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/fallback.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/language.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/language.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/mount.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/mount.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/overlay.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/overlay.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/platform.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/platform.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/position.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/position.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/reading-mode.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/reading-mode.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/rules.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/rules.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/settings.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/settings.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/storage.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/storage.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/toc.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/toc.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/root.tsx",
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/root.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/routes/404@landing.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/routes/404@landing.tsx"
     },
     {
       "crate_name": "src",
@@ -177,6 +492,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/routes/doc/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/routes/doc/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/routes/doc/layout.tsx",
       "item_kind": "module",
       "line": 1,
@@ -184,10 +506,24 @@
     },
     {
       "crate_name": "src",
-      "file": "site/src/routes/index.tsx",
+      "file": "site/src/routes/en/index@landing.tsx",
       "item_kind": "module",
       "line": 1,
-      "symbol": "site/src/routes/index.tsx"
+      "symbol": "site/src/routes/en/index@landing.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/routes/index@landing.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/routes/index@landing.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/routes/layout-landing!.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/routes/layout-landing!.tsx"
     },
     {
       "crate_name": "src",
@@ -198,10 +534,10 @@
     },
     {
       "crate_name": "src",
-      "file": "site/src/routes/ru/index.tsx",
+      "file": "site/src/routes/ru/index@landing.tsx",
       "item_kind": "module",
       "line": 1,
-      "symbol": "site/src/routes/ru/index.tsx"
+      "symbol": "site/src/routes/ru/index@landing.tsx"
     }
   ],
   "edges": [
@@ -211,6 +547,38 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#ROW-DISC-DOCS-STATUS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/capability-card/index.tsx",
+      "from_symbol": "design/src/components/capability-card/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/card/index.tsx",
+      "from_symbol": "design/src/components/card/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/code-block/index.tsx",
+      "from_symbol": "design/src/components/code-block/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/dep-graph/index.tsx",
+      "from_symbol": "design/src/components/dep-graph/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
       "verb": "implements"
     },
     {
@@ -246,6 +614,14 @@
       "verb": "implements"
     },
     {
+      "file": "design/src/components/fallback-notice/index.tsx",
+      "from_symbol": "design/src/components/fallback-notice/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "implements"
+    },
+    {
       "file": "design/src/components/footer/index.tsx",
       "from_symbol": "design/src/components/footer/index.tsx",
       "line": 1,
@@ -262,11 +638,83 @@
       "verb": "implements"
     },
     {
+      "file": "design/src/components/for-agent/index.tsx",
+      "from_symbol": "design/src/components/for-agent/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/hero/index.tsx",
+      "from_symbol": "design/src/components/hero/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/hero/install-block.tsx",
+      "from_symbol": "design/src/components/hero/install-block.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/language-selector/index.tsx",
+      "from_symbol": "design/src/components/language-selector/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/lightbox/index.tsx",
+      "from_symbol": "design/src/components/lightbox/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/package-header/index.tsx",
+      "from_symbol": "design/src/components/package-header/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/page-meta/index.tsx",
+      "from_symbol": "design/src/components/page-meta/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
       "file": "design/src/components/prose/index.tsx",
       "from_symbol": "design/src/components/prose/index.tsx",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/return-to-place/index.tsx",
+      "from_symbol": "design/src/components/return-to-place/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/rule-panel/index.tsx",
+      "from_symbol": "design/src/components/rule-panel/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED",
       "verb": "implements"
     },
     {
@@ -283,6 +731,22 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/settings-panel/index.tsx",
+      "from_symbol": "design/src/components/settings-panel/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/shelf/index.tsx",
+      "from_symbol": "design/src/components/shelf/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#DISC-THREE-SIGNALS",
       "verb": "implements"
     },
     {
@@ -310,6 +774,22 @@
       "verb": "implements"
     },
     {
+      "file": "design/src/components/toc/index.tsx",
+      "from_symbol": "design/src/components/toc/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/version-switch/index.tsx",
+      "from_symbol": "design/src/components/version-switch/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-VERSION-SHOWS-CURRENT",
+      "verb": "implements"
+    },
+    {
       "file": "design/src/index.ts",
       "from_symbol": "design/src/index.ts",
       "line": 1,
@@ -318,11 +798,27 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/components/catalogue/index.tsx",
+      "from_symbol": "site/src/components/catalogue/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/components/island/index.tsx",
       "from_symbol": "site/src/components/island/index.tsx",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/config.ts",
+      "from_symbol": "site/src/config.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS",
       "verb": "implements"
     },
     {
@@ -339,6 +835,46 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/landing/chrome.tsx",
+      "from_symbol": "site/src/landing/chrome.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/landing/head.ts",
+      "from_symbol": "site/src/landing/head.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-STRUCTURED-DATA",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/landing/i18n.ts",
+      "from_symbol": "site/src/landing/i18n.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/landing/landing.tsx",
+      "from_symbol": "site/src/landing/landing.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/landing/theme-color.ts",
+      "from_symbol": "site/src/landing/theme-color.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
       "verb": "implements"
     },
     {
@@ -374,6 +910,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/lib/library.ts",
+      "from_symbol": "site/src/lib/library.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/lib/manifest.ts",
       "from_symbol": "site/src/lib/manifest.ts",
       "line": 1,
@@ -390,11 +934,163 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/lib/view.ts",
+      "from_symbol": "site/src/lib/view.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/agent.ts",
+      "from_symbol": "site/src/reader/agent.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/anchors.ts",
+      "from_symbol": "site/src/reader/anchors.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/catalogue.ts",
+      "from_symbol": "site/src/reader/catalogue.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/code.ts",
+      "from_symbol": "site/src/reader/code.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-DERIVED-AT-BUILD",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/dom.ts",
+      "from_symbol": "site/src/reader/dom.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/embedding.ts",
+      "from_symbol": "site/src/reader/embedding.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-EMBEDDING-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/fallback.ts",
+      "from_symbol": "site/src/reader/fallback.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/language.ts",
+      "from_symbol": "site/src/reader/language.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/mount.ts",
+      "from_symbol": "site/src/reader/mount.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/overlay.ts",
+      "from_symbol": "site/src/reader/overlay.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/platform.ts",
+      "from_symbol": "site/src/reader/platform.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-NUMBERING",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/position.ts",
+      "from_symbol": "site/src/reader/position.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/reading-mode.ts",
+      "from_symbol": "site/src/reader/reading-mode.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/rules.ts",
+      "from_symbol": "site/src/reader/rules.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/settings.ts",
+      "from_symbol": "site/src/reader/settings.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/storage.ts",
+      "from_symbol": "site/src/reader/storage.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/toc.ts",
+      "from_symbol": "site/src/reader/toc.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/root.tsx",
       "from_symbol": "site/src/root.tsx",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/routes/404@landing.tsx",
+      "from_symbol": "site/src/routes/404@landing.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
       "verb": "implements"
     },
     {
@@ -406,6 +1102,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/routes/doc/index.tsx",
+      "from_symbol": "site/src/routes/doc/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/routes/doc/layout.tsx",
       "from_symbol": "site/src/routes/doc/layout.tsx",
       "line": 1,
@@ -414,8 +1118,24 @@
       "verb": "implements"
     },
     {
-      "file": "site/src/routes/index.tsx",
-      "from_symbol": "site/src/routes/index.tsx",
+      "file": "site/src/routes/en/index@landing.tsx",
+      "from_symbol": "site/src/routes/en/index@landing.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CHARSET-AND-REDIRECTS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/routes/index@landing.tsx",
+      "from_symbol": "site/src/routes/index@landing.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/routes/layout-landing!.tsx",
+      "from_symbol": "site/src/routes/layout-landing!.tsx",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
@@ -430,11 +1150,11 @@
       "verb": "implements"
     },
     {
-      "file": "site/src/routes/ru/index.tsx",
-      "from_symbol": "site/src/routes/ru/index.tsx",
+      "file": "site/src/routes/ru/index@landing.tsx",
+      "from_symbol": "site/src/routes/ru/index@landing.tsx",
       "line": 1,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
       "verb": "implements"
     }
   ],
@@ -447,6 +1167,30 @@
       "file": "design/src/components/badge/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/badge/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#ROW-DISC-DOCS-STATUS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/capability-card/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/capability-card/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/card/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/card/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/code-block/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/code-block/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/dep-graph/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/dep-graph/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -474,6 +1218,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "design/src/components/fallback-notice/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/fallback-notice/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "design/src/components/footer/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/footer/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
@@ -486,9 +1236,63 @@
     },
     {
       "code": "dangling-edge",
+      "file": "design/src/components/for-agent/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/for-agent/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/hero/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/hero/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/hero/install-block.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/hero/install-block.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/language-selector/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/language-selector/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/lightbox/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/lightbox/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/package-header/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/package-header/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/page-meta/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/page-meta/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "design/src/components/prose/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/prose/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/return-to-place/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/return-to-place/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/rule-panel/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/rule-panel/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -501,6 +1305,18 @@
       "file": "design/src/components/section-head/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/section-head/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/settings-panel/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/settings-panel/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/shelf/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/shelf/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#DISC-THREE-SIGNALS`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -522,15 +1338,39 @@
     },
     {
       "code": "dangling-edge",
+      "file": "design/src/components/toc/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/toc/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/version-switch/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/version-switch/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-VERSION-SHOWS-CURRENT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "design/src/index.ts",
       "line": 1,
       "message": "edge `design/src/index.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-WORKSPACE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/components/catalogue/index.tsx",
+      "line": 1,
+      "message": "edge `site/src/components/catalogue/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/components/island/index.tsx",
       "line": 1,
       "message": "edge `site/src/components/island/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/config.ts",
+      "line": 1,
+      "message": "edge `site/src/config.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -543,6 +1383,36 @@
       "file": "site/src/generated/doc-manifest.ts",
       "line": 1,
       "message": "edge `site/src/generated/doc-manifest.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/landing/chrome.tsx",
+      "line": 1,
+      "message": "edge `site/src/landing/chrome.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/landing/head.ts",
+      "line": 1,
+      "message": "edge `site/src/landing/head.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-STRUCTURED-DATA`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/landing/i18n.ts",
+      "line": 1,
+      "message": "edge `site/src/landing/i18n.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/landing/landing.tsx",
+      "line": 1,
+      "message": "edge `site/src/landing/landing.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/landing/theme-color.ts",
+      "line": 1,
+      "message": "edge `site/src/landing/theme-color.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -570,6 +1440,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/lib/library.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/library.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/lib/manifest.ts",
       "line": 1,
       "message": "edge `site/src/lib/manifest.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
@@ -582,9 +1458,123 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/lib/view.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/view.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/agent.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/agent.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/anchors.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/anchors.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/catalogue.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/code.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/code.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-DERIVED-AT-BUILD`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/dom.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/dom.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-ONE-CONTENT-PATH`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/embedding.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/embedding.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-EMBEDDING-CONTRACT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/fallback.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/fallback.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/language.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/language.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/mount.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/mount.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/overlay.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/overlay.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/platform.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/platform.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-NUMBERING`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/position.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/position.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/reading-mode.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/reading-mode.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/rules.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/rules.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/settings.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/settings.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/storage.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/storage.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/toc.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/toc.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/root.tsx",
       "line": 1,
       "message": "edge `site/src/root.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/routes/404@landing.tsx",
+      "line": 1,
+      "message": "edge `site/src/routes/404@landing.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -594,15 +1584,33 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/routes/doc/index.tsx",
+      "line": 1,
+      "message": "edge `site/src/routes/doc/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/routes/doc/layout.tsx",
       "line": 1,
       "message": "edge `site/src/routes/doc/layout.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
-      "file": "site/src/routes/index.tsx",
+      "file": "site/src/routes/en/index@landing.tsx",
       "line": 1,
-      "message": "edge `site/src/routes/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+      "message": "edge `site/src/routes/en/index@landing.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CHARSET-AND-REDIRECTS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/routes/index@landing.tsx",
+      "line": 1,
+      "message": "edge `site/src/routes/index@landing.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/routes/layout-landing!.tsx",
+      "line": 1,
+      "message": "edge `site/src/routes/layout-landing!.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -612,9 +1620,9 @@
     },
     {
       "code": "dangling-edge",
-      "file": "site/src/routes/ru/index.tsx",
+      "file": "site/src/routes/ru/index@landing.tsx",
       "line": 1,
-      "message": "edge `site/src/routes/ru/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT`: no spec unit carries this anchor"
+      "message": "edge `site/src/routes/ru/index@landing.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
     }
   ]
 }

@@ -27,6 +27,59 @@ light theme's ground and accent, written as literals because a browser reads
 that file before any stylesheet and cannot resolve a token
 (PROP-057 `##STACK-BUILD-HYGIENE`).
 
+## The documentation reader
+
+`src/routes/doc/[...path]/` is one catch-all route for three addresses —
+a page, a package's own page, and a language's catalogue — because they
+are the same address at three lengths, and a second route would be a
+second opinion about where a language ends and a group begins. The door
+at `/doc/` is the only documentation route file beside it.
+
+**The behaviours are plain TypeScript in `src/reader/`, not components,
+and that is forced.** The page a reader reads is an island: finished HTML
+the Rust pipeline rendered, inserted as a string, never turned into a
+component tree and never re-rendered. Nothing inside it can carry a Qwik
+handler. So each behaviour listens once on a region, narrows what was
+clicked, and returns its own teardown; `mount.ts` composes them and the
+route starts it from a visible task.
+
+Two things about that arrangement are worth knowing before changing it.
+The chrome the reader ATTACHES to the island — the fence toolbars, the
+table regions, the contents — is added before the behaviours that listen
+over it, because a listener attached before its element exists never
+fires. And every read and write of `localStorage` is wrapped: a browser
+with site data blocked throws on the property access itself, and a reader
+with cookies off should lose their font size rather than their page.
+
+**Nothing moves the reader except the reader.** That needed an inline
+script in the head, which the route declares: two mechanisms move a
+reloaded page before any module of it runs — the browser's own scroll
+restoration and Qwik Router's copy in `history.state` — and the second is
+the one that was actually doing it. Back and forward are exempt, told
+apart by the navigation type. The cost is a second inline script for a
+CSP to carry the hash of; the cheaper home for those two lines is
+`design/theme-init.js`, which already runs first for the same kind of
+reason.
+
+**A language never 404s.** Every language materialises every page of the
+source: one an adaptation has not reached yet is written at its address
+with the source's text, `rel=canonical` to the source, `noindex`, a
+bilingual notice shown once per session, and its internal links
+re-pointed so a reader does not silently fall back into the source
+language. The build drops those pages from the sitemap, because a sitemap
+saying «index this» beside a page saying «do not» costs a crawler a fetch
+to be told to go away.
+
+**The door chooses a language in the browser, and that is a limitation
+rather than a shortcut.** `Accept-Language` is a request header and a
+directory of files has nothing that reads one; `navigator.languages` is
+the same preference list seen from the other side of the request. The
+order is the vision's — what the reader chose before, then what the
+browser asks for, then the documentation's own language — and the
+decision is taken once per session and never against an explicit click.
+Served one day by something that can read a header, it becomes a 302 and
+`src/reader/catalogue.ts` goes away.
+
 ## The landing
 
 `/` and `/ru/` are the landing the domain has served since it opened, moved
@@ -102,3 +155,27 @@ the gate for pointing the domain at this build. The reference is built in a
 scratch copy of the Astro repository — `npm ci && npm run build && node
 scripts/build-llms-full.mjs` — never in that repository itself, which this
 campaign only reads (R-28).
+
+## The end-to-end run
+
+`pnpm test:e2e` builds nothing: it reads `site/dist` through
+`tests/serve.mjs`, forty lines of Node that bind `127.0.0.1`, serve
+`<route>/index.html` behind a directory address and 308 an address
+missing its slash. **Run a build first** — the suite measures whatever is
+on disk, and a stale `dist` is a suite measuring last week.
+
+It exists because the reader's behaviours are the one part of this
+package a type checker cannot judge at all. A block «in the middle of the
+window», a page that does NOT scroll itself on reload, a theme already
+right at the first frame, a table inside a scrolling region: none is a
+pure function, and a unit test that never opens a page passes on all of
+them while a reader sees none.
+
+One worker and no retries, on purpose. Several tests read and write one
+origin's `localStorage` and one of them is about what a reload restores,
+so parallel workers would be two readers sharing one memory; and a retry
+that turns a failure green is a failure that comes back later, in front
+of somebody else.
+
+The browser is downloaded into the user's own Playwright cache by
+`pnpm exec playwright install chromium` and never into this tree.

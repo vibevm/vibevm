@@ -18,6 +18,7 @@
  */
 
 import { all } from "./dom.ts";
+import { rememberLanguage } from "./fallback.ts";
 
 /** Strip any fragment a destination already has, then add the live one. */
 function withFragment(href: string, fragment: string): string {
@@ -46,6 +47,18 @@ export function startLanguageSwitch(): () => void {
     if (!(target instanceof Element)) return;
     if (target.closest("[data-language-selector]") === null) return;
     repaint();
+    /**
+     * An explicit click is the strongest statement a reader can make
+     * about language, so it is recorded BEFORE the page leaves. Without
+     * this, choosing the source language at the door would be undone at
+     * the door: the catalogue reads the remembered choice, and the one
+     * just made would not be there yet.
+     */
+    const choice = target.closest("[data-lang-choice]");
+    if (choice instanceof HTMLElement) {
+      const tag = choice.dataset["langChoice"];
+      if (tag !== undefined) rememberLanguage(tag);
+    }
   };
 
   window.addEventListener("hashchange", onHash);

@@ -25,6 +25,7 @@ import {
   readFileSync,
   rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -62,9 +63,34 @@ if (plan === undefined) {
   process.exit(2);
 }
 
+/** Every page manifest this build renders from, read as data. */
+function manifests() {
+  const dir = join(SITE_ROOT, "src", "fixtures");
+  const files = readdirSync(dir).filter(
+    (entry) => entry.startsWith("manifest") && entry.endsWith(".json"),
+  );
+  if (files.length === 0) {
+    throw new Error(`${dir}: no page manifest to build from`);
+  }
+  return files.map((entry) => {
+    const file = join(dir, entry);
+    const manifest = JSON.parse(readFileSync(file, "utf8"));
+    if (!Array.isArray(manifest.pages)) {
+      throw new Error(`${file}: the manifest declares no pages array`);
+    }
+    return manifest;
+  });
+}
+
 /**
- * Addresses the library declares: for every edition its own package page
- * and each page it carries, plus the one catalogue at `/doc/`.
+ * Addresses the library declares.
+ *
+ * Every LANGUAGE carries every page of the SOURCE — an adaptation that
+ * has not reached a page yet still answers at its address, with the
+ * source's text and a notice, which is what makes a language never a 404
+ * (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). So the count is: one door,
+ * one catalogue per adaptation, and for every edition its own package
+ * page plus one page per page of the source.
  *
  * It reads the manifests itself rather than importing the site's
  * library, and that is the whole point of the gate: two independent
@@ -72,23 +98,17 @@ if (plan === undefined) {
  * pages it had would be asking the build to confirm its own opinion.
  */
 function docAddressCount() {
-  const dir = join(SITE_ROOT, "src", "fixtures");
-  const manifests = readdirSync(dir).filter(
-    (entry) => entry.startsWith("manifest") && entry.endsWith(".json"),
+  const all = manifests();
+  const source = all.find((one) => one.package?.translation === undefined);
+  if (source === undefined) {
+    throw new Error("no source manifest: every one of them is a translation");
+  }
+  const adaptations = all.length - 1;
+  return (
+    1 + // the door at /doc/
+    adaptations + // one catalogue per adapted language
+    all.length * (1 + source.pages.length) // a package page plus every page
   );
-  if (manifests.length === 0) {
-    throw new Error(`${dir}: no page manifest to build from`);
-  }
-  let addresses = 1; // the catalogue at /doc/
-  for (const entry of manifests) {
-    const file = join(dir, entry);
-    const manifest = JSON.parse(readFileSync(file, "utf8"));
-    if (!Array.isArray(manifest.pages)) {
-      throw new Error(`${file}: the manifest declares no pages array`);
-    }
-    addresses += 1 + manifest.pages.length;
-  }
-  return addresses;
 }
 
 /**
@@ -122,6 +142,46 @@ function landingRouteCount() {
   };
   walk(routes);
   return found;
+}
+
+/**
+ * A page that asks not to be indexed does not belong in the sitemap.
+ *
+ * The two say opposite things otherwise: a sitemap is «index this» and
+ * `noindex` is «do not», and a crawler handed both spends a fetch to be
+ * told to go away. The pages this is about are the translation
+ * fallbacks — the source's text materialised under an adaptation's
+ * address so a language never 404s (`##READER-LANGUAGE-SWITCH-KEEPS-
+ * PLACE`) — and they carry `canonical` to the source as well, so what a
+ * crawler should keep is named rather than merely implied.
+ *
+ * It reads the built HTML rather than being told, because that is what
+ * the sitemap itself is written from, and a second list of «which pages
+ * are fallbacks» would be a second thing to get wrong. It belongs to
+ * whatever writes the sitemap and lives here until the two meet.
+ */
+function pruneSitemap(outDirName) {
+  const out = join(SITE_ROOT, outDirName);
+  const sitemap = join(out, "sitemap.xml");
+  if (!existsSync(sitemap)) return 0;
+
+  const xml = readFileSync(sitemap, "utf8");
+  let removed = 0;
+  const kept = xml.replace(/[ \t]*<url>[\s\S]*?<\/url>\n?/g, (entry) => {
+    const loc = /<loc>([^<]*)<\/loc>/.exec(entry);
+    if (loc === null) return entry;
+    const path = new URL(loc[1]).pathname;
+    const file = join(out, path.replace(/^\/+/, ""), "index.html");
+    if (!existsSync(file)) return entry;
+    const html = readFileSync(file, "utf8");
+    if (!/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i.test(html)) {
+      return entry;
+    }
+    removed += 1;
+    return "";
+  });
+  if (removed > 0) writeFileSync(sitemap, kept);
+  return removed;
 }
 
 function vite(configRelative) {
@@ -209,6 +269,12 @@ if (plan.countsLanding) {
   process.stdout.write(
     `build (${mode}): root files ${roots.written.join(", ")}; ${roots.faces} font file(s) at /fonts/, ${roots.rewritten} page(s) repointed at the bundled faces, ${roots.crawlers} crawler name(s) from ${roots.sources} provider page(s)\n`,
   );
+  const skipped = pruneSitemap(plan.outDir);
+  if (skipped > 0) {
+    process.stdout.write(
+      `build (${mode}): ${skipped} page(s) asked not to be indexed and left the sitemap\n`,
+    );
+  }
 }
 
 process.stdout.write(`build (${mode}): ok\n`);

@@ -11,6 +11,7 @@ import {
   CodeChrome,
   DocsNav,
   Fab,
+  FallbackNotice,
   ForAgent,
   Lightbox,
   PackageHeader,
@@ -25,6 +26,7 @@ import {
   VersionSwitch,
 } from "@vibe-docs/design";
 
+import { Catalogue } from "../../../components/catalogue/index.tsx";
 import { Island } from "../../../components/island/index.tsx";
 import { ISLAND_HTML } from "../../../lib/island-source.ts";
 import { documentationParams } from "../../../lib/pages.ts";
@@ -58,6 +60,17 @@ const PLATFORMS = [
 
 const AGENT_LEAD =
   "This page has a machine mirror. The citation carries the version rather than latest, so what an agent quotes does not move under it.";
+
+/**
+ * The bilingual notice a fallback page carries, in the two languages
+ * that matter: the one the reader asked for and the one they are being
+ * handed. Both lines are written out rather than composed, because a
+ * sentence assembled from fragments reads like one.
+ */
+const FALLBACK_ASKED =
+  "Эта страница ещё не переведена — вы читаете её на языке источника.";
+const FALLBACK_GIVEN =
+  "This page has not been adapted yet; you are reading it in the source language.";
 
 /**
  * Nobody moves the reader except the reader.
@@ -109,6 +122,7 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
       addressLanguage: view.address.lang,
       fallback: view.fallback,
       sourceHref: view.canonical,
+      mount: view.mount,
     }),
   );
 
@@ -117,6 +131,13 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
       <DocsNav label="Pages of this documentation" items={view.nav} />
       <Toc label="Contents" rulesLabel="Rules this page cites" />
       <Prose measure={MEASURE}>
+        {view.fallback ? (
+          <FallbackNotice
+            asked={FALLBACK_ASKED}
+            given={FALLBACK_GIVEN}
+            dismissLabel="ok"
+          />
+        ) : null}
         <div class="doc-view__switches">
           <VersionSwitch label="Version" items={view.versions} />
           <TabPills label="Platform" items={PLATFORMS} />
@@ -286,6 +307,7 @@ export default component$(() => {
     );
   }
 
+  if (view.kind === "catalogue") return <Catalogue lang={view.lang} />;
   return view.kind === "page" ? (
     <DocumentationPage view={view} />
   ) : (
@@ -303,6 +325,7 @@ export default component$(() => {
 export const head: DocumentHead = ({ params }) => {
   const view = viewOf(params["path"] ?? "");
   if (view === null) return { title: "Not a documentation address" };
+  if (view.kind === "catalogue") return { title: "Documentation" };
   if (view.kind === "package") {
     return {
       title: view.title,
@@ -310,6 +333,25 @@ export const head: DocumentHead = ({ params }) => {
         view.description === undefined
           ? []
           : [{ name: "description", content: view.description }],
+    };
+  }
+  /**
+   * A fallback page is one text at two addresses, and the head is where
+   * that is said out loud. `canonical` points at the source page, so a
+   * search engine keeps one of them; `noindex` keeps this one out of the
+   * index entirely, because an adaptation's address showing the source's
+   * words is useful to a reader who asked for it and misleading to
+   * anyone who finds it in a result list.
+   */
+  if (view.fallback) {
+    return {
+      title: view.title,
+      meta: [
+        { name: "description", content: view.summary },
+        { name: "robots", content: "noindex" },
+      ],
+      links: [{ rel: "canonical", href: view.canonical }],
+      scripts: [MANUAL_SCROLL],
     };
   }
   return {
