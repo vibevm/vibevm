@@ -24,6 +24,7 @@ import {
   PageGenre,
   TranslationStatus,
   type AdaptedSource,
+  type CardMedia,
   type DocManifest,
   type DocPackage,
   type DocPage,
@@ -168,6 +169,35 @@ function translation(value: unknown, at: string): Parsed<AdaptedSource> {
   };
 }
 
+/**
+ * Where the card's three pictures are published.
+ *
+ * All three or none. A build of this pipeline writes every role — a role
+ * that declares nothing gets a generated placeholder
+ * (`##CARD-PLACEHOLDERS-GENERATED`) — so a `media` with two addresses in
+ * it is a manifest somebody assembled by hand, and reading it as «this
+ * package has no banner» would show a drawn placeholder beside two real
+ * pictures and call that the card.
+ *
+ * The addresses are relative to the base the documentation is served
+ * under, which is why nothing here joins them to anything: the site and
+ * the local reader mount at different places, and the one that knows
+ * where it is standing is the caller.
+ */
+function cardMedia(value: unknown, at: string): Parsed<CardMedia> {
+  if (!isRecord(value)) return fail(at, "expected an object");
+  const icon = str(value, "icon", at);
+  if (!icon.ok) return icon;
+  const banner = str(value, "banner", at);
+  if (!banner.ok) return banner;
+  const preview = str(value, "preview", at);
+  if (!preview.ok) return preview;
+  return {
+    ok: true,
+    value: { icon: icon.value, banner: banner.value, preview: preview.value },
+  };
+}
+
 function page(value: unknown, at: string): Parsed<DocPage> {
   if (!isRecord(value)) return fail(at, "expected an object");
   const path = str(value, "path", at);
@@ -249,6 +279,18 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
     if (!parsed.ok) return parsed;
     parsedTranslation = parsed.value;
   }
+  /* Optional because the registry rules this format permissive: a
+     manifest written before the field existed is still a manifest, and a
+     reader that refused one would refuse every document already
+     published. Absent means «this document predates the field», never
+     «this package has no picture». */
+  const pictures = field(value, "media");
+  let parsedMedia: CardMedia | undefined = undefined;
+  if (pictures !== undefined) {
+    const parsed = cardMedia(pictures, `${at}.media`);
+    if (!parsed.ok) return parsed;
+    parsedMedia = parsed.value;
+  }
 
   // Read one by one rather than spread from `read`: an index signature
   // would make every field `string | undefined` again, which is the
@@ -291,6 +333,7 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
       subjects: parsedSubjects,
       audiences: who.value,
       rendered_at: renderedAt,
+      ...(parsedMedia === undefined ? {} : { media: parsedMedia }),
       ...(description === undefined ? {} : { description }),
       ...(published === undefined ? {} : { published_at: published }),
       ...(parsedTranslation === undefined
