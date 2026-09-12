@@ -77,6 +77,15 @@
   padding: 0.08em 0.3em;
 }
 
+/* The fence scrolls INSIDE, not outside.
+   ---------------------------------------------------------------------
+   A long line has to scroll somewhere, and the obvious place — `overflow`
+   on the `pre` — takes the block's NUMBER with it: the number is
+   absolutely positioned in the margin, and an overflow box clips its
+   absolutely positioned descendants. The symptom is a numbered block with
+   no number, on exactly the blocks a bug report is most likely to be
+   about. So the `pre` stays unclipped and the `code` inside it does the
+   scrolling; the number is a child of the `pre` and never enters it. */
 .prose pre {
   position: relative;
   background: var(--code-bg);
@@ -84,14 +93,15 @@
   border-radius: var(--radius-md);
   padding: 0.9rem 1rem;
   margin: 0 0 1.2rem;
-  overflow-x: auto;
 }
 
 .prose pre code {
+  display: block;
   background: none;
   padding: 0;
   font-size: 0.86em;
   line-height: 1.55;
+  overflow-x: auto;
 }
 
 /* ---- The block number ------------------------------------------------

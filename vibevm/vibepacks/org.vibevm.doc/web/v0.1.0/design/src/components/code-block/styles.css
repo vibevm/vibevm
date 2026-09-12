@@ -55,9 +55,21 @@
 
 /* The block a table is put into by the reader: the control above, the
    scrolling region below, so the control never scrolls away from the
-   reader looking for it. */
+   reader looking for it.
+   ---------------------------------------------------------------------
+   The two rules under it are what keeps a wide table's NUMBER visible. An
+   overflow box clips its absolutely positioned descendants unless their
+   containing block lies outside it — so the table stops being the
+   positioned ancestor and this wrapper becomes one. The number then hangs
+   in the margin beside the block rather than being cut off at the
+   scroller's left edge, which is where it was going. */
 .table-block {
+  position: relative;
   margin: 0 0 1.3rem;
+}
+
+.prose .table-block > .table-scroll > table[data-p] {
+  position: static;
 }
 
 .table-block .table-scroll {

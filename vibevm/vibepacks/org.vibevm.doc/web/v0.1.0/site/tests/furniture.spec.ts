@@ -121,6 +121,27 @@ test("an executed example says which of its blocks is the expectation", async ({
   );
 });
 
+/**
+ * The defect this pins was invisible to every other check and visible in
+ * the first screenshot: a block that scrolls sideways lost its NUMBER,
+ * because an overflow box clips its absolutely positioned descendants.
+ * It hit exactly the blocks a bug report is most likely to cite — the
+ * fences, the generated output and the wide table.
+ */
+test("a block that scrolls sideways keeps its number in the margin", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(PAGE);
+  for (const id of ["p05", "p07", "p08", "p13"]) {
+    const anchor = page.locator(`a.p-anchor#${id}`);
+    await expect(anchor).toBeVisible();
+    const box = await anchor.boundingBox();
+    expect(box, `${id} has no box`).not.toBeNull();
+    expect(box?.width ?? 0).toBeGreaterThan(0);
+  }
+});
+
 test("a generated block says what generated it and from what", async ({
   page,
 }) => {
