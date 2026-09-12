@@ -53,11 +53,6 @@ const QUARANTINED: &[(&str, &str)] = &[
         "agent/how-agents-read-this-manual.xml",
         "unknown audience value `agent`",
     ),
-    ("glossary/index.xml", "the dialect has no <fact> element"),
-    (
-        "reference/machine-formats.xml",
-        "the dialect has no <derived/> element (inside <td>)",
-    ),
 ];
 
 /// Pages that PARSE but are not written in the canonical form the dialect
@@ -72,6 +67,7 @@ const NOT_CANONICAL: &[(&str, &str)] = &[
     // A whole table row written on one line; the writer gives each cell
     // its own line.
     ("architecture/how-vibe-is-built.xml", "compact <tr> rows"),
+    ("reference/machine-formats.xml", "compact <tr> rows"),
     (
         "architecture/what-the-lifecycle-epic-delivered.xml",
         "compact <tr> rows",
@@ -401,10 +397,10 @@ fn docs_corpus_shape_is_counted() {
         totals.guarded_slots += s.guarded_slots;
         totals.guarded_sections += s.guarded_sections;
     }
-    // The readable corpus (44 pages less the three quarantined ones).
-    assert_eq!(totals.examples, 58, "the pages carry 58 examples");
-    assert_eq!(totals.rules, 319, "the pages cite 319 rules");
-    assert_eq!(totals.derived, 54, "the pages derive 54 references");
+    // The readable corpus (44 pages less the quarantined one).
+    assert_eq!(totals.examples, 59, "the pages carry 59 examples");
+    assert_eq!(totals.rules, 373, "the pages cite 373 rules");
+    assert_eq!(totals.derived, 72, "the pages derive 72 references");
     assert_eq!(totals.prompts, 19, "19 scenario pages open with a prompt");
     assert_eq!(totals.asserts, 40, "those prompts carry 40 asserts");
     assert_eq!(

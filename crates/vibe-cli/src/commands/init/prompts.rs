@@ -142,7 +142,7 @@ pub(super) fn prompt_package_fields(
     name: &str,
     user_config: &UserConfig,
 ) -> Result<ProjectFields> {
-    let kind_items = vec!["tool", "flow", "feat", "stack", "mcp", "lang"];
+    let kind_items = vec!["tool", "flow", "feat", "stack", "mcp", "lang", "doc", "app"];
     let _kind_sel = Select::new()
         .with_prompt("Package kind")
         .items(&kind_items)

@@ -16,7 +16,7 @@ use serde_json::json;
 /// must reproduce exactly. The schemas no longer hold it inline, so
 /// this literal is the only witness of the "before" side.
 pub(super) fn inline_package_kind() -> Value {
-    json!({"enum": ["flow", "feat", "stack", "tool", "mcp", "lang"]})
+    json!({"enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"]})
 }
 
 /// A vocabulary home built from a name → fragment map, in a tempdir —

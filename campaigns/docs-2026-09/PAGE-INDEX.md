@@ -124,7 +124,7 @@
 | `glossary/index` | `deploy-profile` | deploy profile | A named, ordered list of targets and the providers that apply packaged |
 | `glossary/index` | `embedded-registry` | embedded registry | The in-tree packages of a source-built vibe, consulted automatically as a registry: |
 | `glossary/index` | `extension-point` | extension point | A named place in the lifecycle a contribution binds to: a phase, |
-| `glossary/index` | `fact` | fact | One anchored unit of a specification with a status: a rule, a |
+| `glossary/index` | `section` | fact | One anchored unit of a specification with a status: a rule, a |
 | `glossary/index` | `family` | family | A set of packages sharing a name stem that move in unison: |
 | `glossary/index` | `feature` | feature | An optional, additive content set of a package, declared in `[features]` and |
 | `glossary/index` | `fingerprint` | fingerprint | The hash of a package's shippable tree, the identity half of a |
@@ -282,7 +282,7 @@
 | `reference/machine-formats` | `root` | Machine formats and JSON reports | |
 | `reference/machine-formats` | `the-rule` | One rule for every format | Anything a foreign parser reads, a report a script parses, a file |
 | `reference/machine-formats` | `the-envelope` | The envelope | A `--json` document is one JSON object per command, or a stream |
-| `reference/machine-formats` | `the-documents` | The documents | The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the |
+| `reference/machine-formats` | `the-documents` | The documents | The fields of every schema in the table, generated from the schema |
 | `reference/machine-formats` | `edge-cases` | Edge cases and rules | A document that no schema describes is a defect, not a feature; |
 | `reference/manifest` | `root` | The manifest: vibe.toml | |
 | `reference/manifest` | `one-file` | One file, three roles | Every node, whether a consumer project, a publishable package or a workspace |

@@ -64,9 +64,9 @@ pub struct PackageRow {
     /// skip. A plain string, not a `package_kind` ref: the field is nullable,
     /// and the codegen pass has no shape rule for a nullable vocabulary enum
     /// (`optional_shapes.rs` refuses rather than guess) — the open vocabulary
-    /// (flow, feat, stack, tool, mcp, lang, or any future kind an older reader
-    /// must carry verbatim) is stated here in prose; the day the pass learns
-    /// that shape, this field should return to the ref.
+    /// (flow, feat, stack, tool, mcp, lang, doc, app, or any future kind an
+    /// older reader must carry verbatim) is stated here in prose; the day the
+    /// pass learns that shape, this field should return to the ref.
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub kind: Option<String>,
 

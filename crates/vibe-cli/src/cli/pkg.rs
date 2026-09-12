@@ -50,7 +50,7 @@ pub struct InitArgs {
     pub no_registry: bool,
 
     // --- Package creation flags (for `vibe init package` and project+pkg forms) ---
-    /// Package kind: flow, feat, stack, tool, mcp, lang. Default: tool.
+    /// Package kind: flow, feat, stack, tool, mcp, lang, doc, app. Default: tool.
     #[arg(long)]
     pub kind: Option<String>,
 
@@ -82,7 +82,7 @@ pub struct InitArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct ListArgs {
-    /// Filter by package kind (flow, feat, stack, tool, mcp, lang).
+    /// Filter by package kind (flow, feat, stack, tool, mcp, lang, doc, app).
     #[arg(long)]
     pub kind: Option<String>,
 
@@ -379,7 +379,7 @@ pub struct SearchArgs {
     #[arg(long)]
     pub purl: Option<String>,
 
-    /// Restrict results to a single package kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`).
+    /// Restrict results to a single package kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`).
     /// Applies only to free-text search; PURL
     /// lookup ignores it.
     #[arg(long)]

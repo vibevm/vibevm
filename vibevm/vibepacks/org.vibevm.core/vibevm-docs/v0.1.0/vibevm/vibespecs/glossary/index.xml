@@ -58,10 +58,10 @@
     <p>A named place in the lifecycle a contribution binds to: a phase, a slot inside a phase, or a position in the boot compiler, written `family:name`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
   </extension-point>
-  <fact title="fact">
+  <section id="fact" title="fact">
     <p>One anchored unit of a specification with a status: a rule, a decision, a lead-in. In XML an element named after its id with `fact="true"`; in Markdown a paragraph opening with `@fact:ID`. The addressable atom an agent cites.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
-  </fact>
+  </section>
   <family title="family">
     <p>A set of packages sharing a name stem that move in unison: the bundle `&lt;family&gt;`, the language guide `&lt;family&gt;-lang`, the server `&lt;family&gt;-mcp`. A change to any member bumps every member to one version.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>

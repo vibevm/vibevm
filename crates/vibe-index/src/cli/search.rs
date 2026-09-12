@@ -22,7 +22,7 @@ pub struct Args {
     pub query: String,
 
     /// Keep only hits of this kind: flow, feat, stack, tool, mcp,
-    /// lang. The wire vocabulary is open, but the ARGUMENT speaks: a
+    /// lang, doc, app. The wire vocabulary is open, but the ARGUMENT speaks: a
     /// kind this build does not know is refused with a message, not
     /// filtered away in silence.
     #[arg(long, value_name = "KIND")]

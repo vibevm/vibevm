@@ -27,16 +27,18 @@ fn an_unfamiliar_value_survives_the_read_write_cycle() {
     assert_eq!(wire, "\"plugin\"");
 }
 
-/// Guards the known half of the stitch: all six wire values of
-/// `PackageKind` read into their NAMED variants (not `Unknown`) and write
-/// back the very bytes they came as — the wire-parity property the five
+/// Guards the known half of the stitch: every wire value of
+/// `PackageKind` reads into its NAMED variant (not `Unknown`) and writes
+/// back the very bytes it came as — the wire-parity property the five
 /// oracles check indirectly, pinned here on the type itself.
 #[test]
 fn every_known_value_reads_named_and_writes_identical_bytes() {
-    for wire in ["feat", "flow", "lang", "mcp", "stack", "tool"] {
+    for wire in ["app", "doc", "feat", "flow", "lang", "mcp", "stack", "tool"] {
         let value: PackageKind =
             serde_json::from_str(&format!("\"{wire}\"")).expect("a known value parses");
         let canonical = match &value {
+            PackageKind::App => "app",
+            PackageKind::Doc => "doc",
             PackageKind::Feat => "feat",
             PackageKind::Flow => "flow",
             PackageKind::Lang => "lang",

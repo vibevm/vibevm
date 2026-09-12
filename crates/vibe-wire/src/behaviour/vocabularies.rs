@@ -21,6 +21,8 @@ impl PackageKind {
             PackageKind::Tool => "tool",
             PackageKind::Mcp => "mcp",
             PackageKind::Lang => "lang",
+            PackageKind::Doc => "doc",
+            PackageKind::App => "app",
             PackageKind::Unknown(value) => value.as_str(),
         }
     }
@@ -31,13 +33,15 @@ impl PackageKind {
     /// opened. This is the finite set a build can NAME: help text,
     /// summary tables, CLI error messages.
     pub fn known() -> &'static [PackageKind] {
-        static KNOWN: [PackageKind; 6] = [
+        static KNOWN: [PackageKind; 8] = [
             PackageKind::Flow,
             PackageKind::Feat,
             PackageKind::Stack,
             PackageKind::Tool,
             PackageKind::Mcp,
             PackageKind::Lang,
+            PackageKind::Doc,
+            PackageKind::App,
         ];
         &KNOWN
     }
@@ -68,6 +72,8 @@ impl FromStr for PackageKind {
             "tool" => PackageKind::Tool,
             "mcp" => PackageKind::Mcp,
             "lang" => PackageKind::Lang,
+            "doc" => PackageKind::Doc,
+            "app" => PackageKind::App,
             other => PackageKind::Unknown(other.to_string()),
         })
     }
@@ -144,7 +150,7 @@ mod tests {
     #[test]
     fn known_list_names_every_variant_and_nothing_else() {
         let known = PackageKind::known();
-        assert_eq!(known.len(), 6);
+        assert_eq!(known.len(), 8);
         for k in known {
             assert!(
                 !matches!(k, PackageKind::Unknown(_)),
