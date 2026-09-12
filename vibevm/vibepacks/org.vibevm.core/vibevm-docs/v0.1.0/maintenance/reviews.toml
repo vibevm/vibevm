@@ -167,3 +167,23 @@ by = "central session"
 path = "agent/how-agents-read-this-manual.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "agent/give-your-agent-the-skill.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "architecture/how-vibe-is-built.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "architecture/what-the-lifecycle-epic-delivered.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "architecture/traceability.xml"
+read = "2026-09-12"
+by = "central session"
