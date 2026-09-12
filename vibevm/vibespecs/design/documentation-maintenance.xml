@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Сопровождение документации — регламент, черновик кампании</title>
+  <status stage="spec" state="done" comment="design rationale behind PROP-058 — the maintenance regulation drafted 2026-09-10 and rehearsed in phase 6; imported 2026-09-12; non-normative, PROP-058 wins where they disagree"/>
+  <p><companion-line fact="true" status="spec/done">**Explains:** [PROP-058](../common/PROP-058-documentation-maintenance.xml).</companion-line></p>
+  <why title="0. Зачем">
+    <p><why-1 fact="true" status="spec/done">Документация дрейфует с первого дня после публикации. Продукт меняет
+команды и поля; читатели приносят вопросы, на которые страниц нет; мелкие
+правки, накопившись, ломают лестницу понятий и тон. Ни один из трёх
+процессов не останавливается сам. Значит, обновление — не «когда руки
+дойдут», а регламент с триггерами, дежурными, инструментами и гейтами.</why-1></p>
+    <p><why-2 fact="true" status="spec/done">Одно ограничение задано владельцем: продукт выходит по десять раз в день и
+принимает по сто pull request'ов, документация между проверками неизбежно
+дрейфует, и этот риск принят. Второе ограничение оттуда же: версия —
+контракт на поведение, а не набор файлов; внутри версии продукт меняется
+невидимо, десять релизов в день могут нести один номер, история
+переписывается, и отличить одну amend-версию от другой не может никто.
+Поэтому регламент не опирается ни на что, кроме номера версии, который
+владелец меняет осознанно: единственная «разница», которую считает машина, —
+разница между объявленными версиями по снимкам поверхности (§2.5), и она —
+внутренняя кухня разработчиков документации; читатель видит номер и
+контракт (`VISION.md`, D-27). Внутри версии всё сравнивается только с
+текущим состоянием. Регламент не ставит технических замков между
+релизом продукта и документацией. Он делает три вещи: измеряет дрейф,
+показывает его читателю и закрепляет обещание команды время от времени
+проводить полную сверку (§2.4).</why-2></p>
+    <p><why-3 fact="true" status="spec/done">Этот документ описывает регламент **до** того, как документация написана,
+чтобы кампания реализации сразу накапливала материал для него: каждая
+удача, неудача и находка кампании записывается в журнал с пометкой, какое
+правило регламента она подтверждает, меняет или создаёт. В фазе 6 регламент
+переписывается по журналу и дважды репетируется на свежей документации,
+прежде чем стать нормой.</why-3></p>
+  </why>
+  <drift title="1. Три источника дрейфа и что их ловит">
+    <table>
+      <tr>
+        <td>Дрейф</td>
+        <td>Как выглядит</td>
+        <td>Что ловит уже по вижену</td>
+        <td>Что добавляет регламент</td>
+      </tr>
+      <tr>
+        <td><drift-1 fact="true" status="spec/done">**Продукт меняется**</drift-1></td>
+        <td><drift-2 fact="true" status="spec/done">новая команда, флаг, поле манифеста, поведение; текст спеки изменился</drift-2></td>
+        <td><drift-3 fact="true" status="spec/done">`rule` цитирует текущий текст спеки (D-14); `derived` регенерируется из текущего бинарника; примеры исполняются как golden-тесты; гейт покрытия видит команды, поля и обязательства без страницы</drift-3></td>
+        <td><drift-4 fact="true" status="spec/done">очередь `vibe doc todo` (§3) как измеритель текущих пробелов, не замок; полная сверка по обещанию команды (§2.4); долг документации в `BACKLOG.md`. Устаревшую **прозу** машина не видит — её читает человек</drift-4></td>
+      </tr>
+      <tr>
+        <td><drift-5 fact="true" status="spec/done">**Мир меняется**</drift-5></td>
+        <td><drift-6 fact="true" status="spec/done">вопросы без страницы; новый сценарий; агенты не находят ответ по якорю</drift-6></td>
+        <td><drift-7 fact="true" status="spec/done">манифест страниц и гейт покрытия обязательств (D-14)</drift-7></td>
+        <td><drift-8 fact="true" status="spec/done">сигналы использования (§5), очередь `vibe doc todo`, «страница недели»</drift-8></td>
+      </tr>
+      <tr>
+        <td><drift-9 fact="true" status="spec/done">**Текст стареет**</drift-9></td>
+        <td><drift-10 fact="true" status="spec/done">лестница сломана вставками; термин появился без введения; тон поплыл; страницу не читали год</drift-10></td>
+        <td><drift-11 fact="true" status="spec/done">линтер стиля (D-25)</drift-11></td>
+        <td><drift-12 fact="true" status="spec/done">правило пяти правок (§6), возраст страницы в `reviews.toml`, чтение вслух, месячное ревью</drift-12></td>
+      </tr>
+    </table>
+  </drift>
+  <loops title="2. Четыре петли">
+    <table>
+      <tr>
+        <td>Петля</td>
+        <td>Триггер</td>
+        <td>Кто</td>
+        <td>Время</td>
+        <td>Вход</td>
+        <td>Выход</td>
+        <td>Гейт</td>
+      </tr>
+      <tr>
+        <td><loops-1 fact="true" status="spec/done">**Коммита** (§2.1)</loops-1></td>
+        <td><loops-2 fact="true" status="spec/done">любой коммит в продукт или в документацию</loops-2></td>
+        <td><loops-3 fact="true" status="spec/done">автор коммита; для прозы — центральная сессия</loops-3></td>
+        <td><loops-4 fact="true" status="spec/done">минуты</loops-4></td>
+        <td><loops-5 fact="true" status="spec/done">дифф</loops-5></td>
+        <td><loops-6 fact="true" status="spec/done">документация в том же коммите или строка долга — привычка, не замок</loops-6></td>
+        <td><loops-7 fact="true" status="spec/done">панель: внутренние проверки документации зелёные; дрейф и долг — числом, не красным</loops-7></td>
+      </tr>
+      <tr>
+        <td><loops-8 fact="true" status="spec/done">**Недельная** (§2.2)</loops-8></td>
+        <td><loops-9 fact="true" status="spec/done">календарь, раз в неделю</loops-9></td>
+        <td><loops-10 fact="true" status="spec/done">дежурная центральная сессия; механика — дешёвая модель; владелец читает одну страницу</loops-10></td>
+        <td><loops-11 fact="true" status="spec/done">30–60 минут</loops-11></td>
+        <td><loops-12 fact="true" status="spec/done">`vibe doc todo`, сигналы недели</loops-12></td>
+        <td><loops-13 fact="true" status="spec/done">до пяти мелких правок, долг рассортирован, страница недели прочитана, запись в журнал</loops-13></td>
+        <td><loops-14 fact="true" status="spec/done">отчёт недели в журнале</loops-14></td>
+      </tr>
+      <tr>
+        <td><loops-15 fact="true" status="spec/done">**Месячная** (§2.3)</loops-15></td>
+        <td><loops-16 fact="true" status="spec/done">календарь, раз в месяц</loops-16></td>
+        <td><loops-17 fact="true" status="spec/done">центральная сессия с владельцем; код — Opus 5</loops-17></td>
+        <td><loops-18 fact="true" status="spec/done">полдня</loops-18></td>
+        <td><loops-19 fact="true" status="spec/done">метрики §7, журнал месяца, аналитика</loops-19></td>
+        <td><loops-20 fact="true" status="spec/done">до трёх переписанных страниц, изменения регламента, релиз пакета документации</loops-20></td>
+        <td><loops-21 fact="true" status="spec/done">отчёт месяца; `reviews.toml` обновлён</loops-21></td>
+      </tr>
+      <tr>
+        <td><loops-22 fact="true" status="spec/done">**Полная сверка** (§2.4)</loops-22></td>
+        <td><loops-23 fact="true" status="spec/done">обещание команды: раз в квартал и перед крупной вехой; не на каждый релиз</loops-23></td>
+        <td><loops-24 fact="true" status="spec/done">центральная сессия с владельцем; механика — дешёвая модель; код — Opus 5</loops-24></td>
+        <td><loops-25 fact="true" status="spec/done">день–два</loops-25></td>
+        <td><loops-26 fact="true" status="spec/done">`vibe doc todo` и `vibe doc check` против текущего продукта; весь корпус страниц</loops-26></td>
+        <td><loops-27 fact="true" status="spec/done">пробелы покрытия к нулю, `derived` перегенерированы, примеры зелёные, все страницы и адаптации перечитаны против текущего продукта, даты чтения обновлены, снимок поверхности текущей версии записан, релиз пакета документации</loops-27></td>
+        <td><loops-28 fact="true" status="spec/done">отчёт сверки; ноль пробелов и красных примеров на дату сверки; все страницы с датой чтения не старше сверки</loops-28></td>
+      </tr>
+      <tr>
+        <td><loops-29 fact="true" status="spec/done">**Смена версии** (§2.5)</loops-29></td>
+        <td><loops-30 fact="true" status="spec/done">осознанное решение владельца поднять номер версии продукта</loops-30></td>
+        <td><loops-31 fact="true" status="spec/done">разработчики документации: центральная сессия; механика — дешёвая модель</loops-31></td>
+        <td><loops-32 fact="true" status="spec/done">часы</loops-32></td>
+        <td><loops-33 fact="true" status="spec/done">`vibe doc diff &lt;старая&gt; &lt;новая&gt;` по снимкам поверхности</loops-33></td>
+        <td><loops-34 fact="true" status="spec/done">обновлены только перечисленные страницы, снимок новой версии записан, changelog для читателей написан руками, пакет документации выходит с новым `[[documents]] version`</loops-34></td>
+        <td><loops-35 fact="true" status="spec/done">все страницы из списка diff обновлены или получили долг с атомом; читателю не видно ничего, кроме номера</loops-35></td>
+      </tr>
+    </table>
+    <loop-commit title="2.1 Петля коммита: мелочи">
+      <p><loop-commit-1 fact="true" status="spec/done">Правило одно, и это привычка команды, а не технический гейт: **изменение
+продукта, которое видно пользователю, несёт документацию в том же коммите**
+— как сегодня DEV-GUIDE и RUNTIME-GUIDE (план, R-11). «Видно пользователю»
+— это новая или изменённая команда, флаг, поле манифеста или lock-файла,
+формат отчёта, сообщение об ошибке с адресом, факт спеки с
+`actionstage="doc"`, новый PROP. Привычку держит чекбокс в шаблоне pull
+request'а: «документация: обновлена / долг записан / не нужна».</loop-commit-1></p>
+      <p><loop-commit-2 fact="true" status="spec/done">Если документация в том же коммите невозможна (большая страница, ждёт
+решения), коммит несёт **строку долга**: запись в `BACKLOG.md` с префиксом
+`docs:` и severity, с адресом изменения. Панель считает строки долга и
+печатает дрейф числом; ни то ни другое не роняет сборку — при десяти релизах
+в день замок между продуктом и документацией недопустим, дрейф между
+сверками принят как риск (§2.4). Месячная петля дренирует долг, полная
+сверка добирает всё, что осталось. Долг без адреса не принимается.</loop-commit-2></p>
+      <p><loop-commit-3 fact="true" status="spec/done">Для правок только документации — путь короткий: правка → `vibe doc check
+--style --examples --citations` на затронутых страницах → коммит
+`docs(vibevm-docs): …`. Мелкая правка подчиняется дисциплине §6.</loop-commit-3></p>
+      <p><loop-commit-4 fact="true" status="spec/done">Первое действие любой правки — `git status` и проверка живого конфликта
+писателей (журнал, J-005): две центральные сессии в одном дереве — стоп.</loop-commit-4></p>
+    </loop-commit>
+    <loop-weekly title="2.2 Недельная петля: малое ревью">
+      <p><loop-weekly-1 fact="true" status="spec/done">Порядок, буквально:</loop-weekly-1></p>
+      <facts ordered="true">
+        <loop-weekly-2 fact="true" status="spec/done">Дешёвая модель запускает `vibe doc todo --format md` и `vibe doc check`
+   по всему пакету и кладёт отчёт в журнал недели. Центральная сессия читает
+   отчёт, не сырые выводы.</loop-weekly-2>
+        <loop-weekly-3 fact="true" status="spec/done">Сортировка очереди: что чинится за пять минут — чинится сейчас (не больше
+   пяти правок за петлю, иначе это не мелочь); что больше — становится
+   строкой долга с severity; что спорно — вопрос владельцу одной строкой.</loop-weekly-3>
+        <loop-weekly-4 fact="true" status="spec/done">Сигналы недели (§5): вопросы людей и агентов, отставание адаптаций,
+   страницы с аномальным поведением читателей. Каждый сигнал — либо правка,
+   либо долг, либо «наблюдение без действия» с причиной.</loop-weekly-4>
+        <loop-weekly-5 fact="true" status="spec/done">**Страница недели.** Одна страница по кругу (порядок — `reviews.toml`);
+   владелец или центральная сессия читает её вслух как читатель из
+   `STYLE.md` §1. Спотыкание — правка или долг. Дата чтения — в
+   `reviews.toml`.</loop-weekly-5>
+        <loop-weekly-6 fact="true" status="spec/done">Запись в журнал: что сделано, что отложено, что удивило. Мелкие правки
+   публикуются патч-версией пакета документации раз в неделю (вопрос
+   владельцу, §11).</loop-weekly-6>
+      </facts>
+    </loop-weekly>
+    <loop-monthly title="2.3 Месячная петля: большое ревью">
+      <facts ordered="true">
+        <loop-monthly-1 fact="true" status="spec/done">**Метрики** (§7) за месяц — таблица в отчёте; тренд важнее значения.</loop-monthly-1>
+        <loop-monthly-2 fact="true" status="spec/done">**Аудит корпуса**: каждая верхнеуровневая команда, каждое поле манифеста,
+   каждый kind имеет страницу (сверка с `derived`); глоссарий — одно слово,
+   одно значение (поиск синонимов по корпусу); лестница между страницами
+   (термин впервые введён там, где его ищут); дубли и мёртвые страницы;
+   уровни `llms.txt` укладываются в бюджеты токенов; выборка из десяти
+   промптов прогоняется агентом (`vibe doc check --prompts --sample 10`,
+   D-30) — красный ассерт → правка страницы или долг.</loop-monthly-2>
+        <loop-monthly-3 fact="true" status="spec/done">**Аналитика**: страницы с высоким выходом и коротким чтением —
+   кандидаты на переписывание; запросы поиска без результата (когда поиск
+   появится); принятые IndexNow, ошибки Search Console.</loop-monthly-3>
+        <loop-monthly-4 fact="true" status="spec/done">**Адаптации**: суммарное отставание; страницы, где отставание больше трёх
+   ревизий, — в очередь адаптации.</loop-monthly-4>
+        <loop-monthly-5 fact="true" status="spec/done">**Долг**: `BACKLOG.md` строки `docs:` — каждая либо закрыта, либо получила
+   атом, либо переоценена с причиной.</loop-monthly-5>
+        <loop-monthly-6 fact="true" status="spec/done">**Стиль**: тики, проскочившие за месяц (найдены при чтении), добавляются
+   в списки линтера; ложные срабатывания линтера — правка правила.</loop-monthly-6>
+        <loop-monthly-7 fact="true" status="spec/done">**Журнал → регламент**: каждая запись месяца с пустым полем «→ регламент»
+   получает решение; изменения регламента — правки этого документа (потом
+   PROP) с датой и ссылкой на записи.</loop-monthly-7>
+        <loop-monthly-8 fact="true" status="spec/done">**Чтение вслух трёх страниц** владельцем: одна новая, одна самая
+   посещаемая, одна самая старая по `reviews.toml`.</loop-monthly-8>
+        <loop-monthly-9 fact="true" status="spec/done">**Релиз** пакета документации минорной версией с changelog, собранным из
+   журнала месяца (человеческий текст пишет центральная сессия).</loop-monthly-9>
+      </facts>
+    </loop-monthly>
+    <loop-reconcile title="2.4 Полная сверка: обещание команды, не замок">
+      <p><loop-reconcile-1 fact="true" status="spec/done">Продукт выходит по десять раз в день и принимает по сто pull request'ов;
+документация между сверками дрейфует, и этот риск принят. Ни один
+технический гейт не связывает релиз продукта с документацией, и ничто не
+пытается измерить «сколько изменилось с прошлого раза» — такой меры нет по
+замыслу проекта (D-27). Вместо замка — две вещи: **текущие пробелы**
+измеряются (`vibe doc todo` печатает число команд, полей и обязательств без
+страницы, красных примеров и неразрешимых цитат; никогда не роняет сборку) и
+команда **обещает себе полную сверку**: раз в квартал и перед крупной вехой
+— мажорной версией, публичным анонсом, — не на каждый релиз.</loop-reconcile-1></p>
+      <p><loop-reconcile-2 fact="true" status="spec/done">Порядок сверки, день–два:</loop-reconcile-2></p>
+      <facts ordered="true">
+        <loop-reconcile-3 fact="true" status="spec/done">Дешёвая модель собирает документацию против **текущего релизного**
+   бинарника, не отладочного (J-001): `vibe doc todo`, `vibe doc check` со
+   всеми флагами, все примеры и **все промпты через агента**
+   (`--prompts`, D-30); отчёт — в журнал.</loop-reconcile-3>
+        <loop-reconcile-4 fact="true" status="spec/done">Центральная сессия закрывает пробелы: страницы для новых команд, полей и
+   обязательств пишутся или получают долг с атомом; `derived`
+   перегенерируются; примеры с изменившимся выводом обновляются как
+   golden-тесты; неразрешимые цитаты чинятся.</loop-reconcile-4>
+        <loop-reconcile-5 fact="true" status="spec/done">**Каждая страница перечитывается против текущего продукта** — это и
+   есть сверка, потому что устаревшую прозу машина не видит: рядом с
+   текстом открыты `--help` и спека, коридоры переписываются там, где
+   разошлись. Порядок — по `reviews.toml`, от самых давно не читанных.
+   Страницы, до которых руки не дошли, остаются с прежней датой чтения —
+   честно.</loop-reconcile-5>
+        <loop-reconcile-6 fact="true" status="spec/done">Адаптации перечитываются против источника; расхождение структуры
+   (`--translations`) — ноль.</loop-reconcile-6>
+        <loop-reconcile-7 fact="true" status="spec/done">Пакет документации релизится версией, совместимой с текущим релизом
+   продукта (`[[documents]] version`); сайт показывает её как `latest`; после
+   публикации — `curl` корневых ссылок домена на `/doc/sitemap.xml` и
+   `/doc/llms.txt` (J-004), IndexNow по изменённым адресам.</loop-reconcile-7>
+        <loop-reconcile-8 fact="true" status="spec/done">Отчёт сверки в журнал: пробелы до и после, число перечитанных и
+   переписанных страниц, время. Ноль пробелов и все даты чтения не старше
+   сверки — единственный гейт, и это гейт сверки, не релиза продукта.</loop-reconcile-8>
+      </facts>
+    </loop-reconcile>
+    <loop-version title="2.5 Смена версии: псевдоистория для разработчиков документации">
+      <p><loop-version-1 fact="true" status="spec/done">Версия — контракт на поведение. Владелец поднимает номер осознанно, когда
+контракт изменился, и это единственный момент, когда машина считает
+«разницу между версиями» (D-27). Смысл механизма — не искать, что
+изменилось в файлах, а **алгоритмически назвать страницы, которые надо
+обновить**, чтобы LLM правила их, а не перечитывала всю документацию.</loop-version-1></p>
+      <p><loop-version-2 fact="true" status="spec/done">Порядок, часы:</loop-version-2></p>
+      <facts ordered="true">
+        <loop-version-3 fact="true" status="spec/done">Владелец меняет номер версии продукта. Никакого технического гейта на
+   этом шаге нет и не будет.</loop-version-3>
+        <loop-version-4 fact="true" status="spec/done">Дешёвая модель записывает снимок поверхности новой версии против
+   текущего релизного бинарника: `vibe doc surface --record &lt;новая&gt;` →
+   `maintenance/surface/&lt;новая&gt;.json`. Снимок старой версии уже лежит рядом —
+   его записала последняя полная сверка или прошлая смена версии.</loop-version-4>
+        <loop-version-5 fact="true" status="spec/done">`vibe doc diff &lt;старая&gt; &lt;новая&gt;` печатает список: что изменилось в
+   контракте (команда, флаг, поле, обязательство, схема) и какие страницы
+   это цитируют, выводят или обязаны покрывать; у каждой страницы —
+   причина. Пустой список — тоже ответ.</loop-version-5>
+        <loop-version-6 fact="true" status="spec/done">Центральная сессия обновляет **только перечисленные страницы** (и
+   пишет новые для того, что появилось без страницы); остальное не трогается.
+   То, что не успевает, — долг `docs:` с атомом.</loop-version-6>
+        <loop-version-7 fact="true" status="spec/done">Человеческий changelog между версиями для читателей пишется по выводу
+   diff — руками, по `STYLE.md`; сам вывод diff наружу не публикуется.</loop-version-7>
+        <loop-version-8 fact="true" status="spec/done">Пакет документации выходит с новым `[[documents]] version`; сайт
+   показывает его как `latest` для новой версии. Читатель видит номер и
+   контракт, ничего из кухни.</loop-version-8>
+        <loop-version-9 fact="true" status="spec/done">Запись в журнал: сколько страниц назвал diff, сколько обновлено, время.</loop-version-9>
+      </facts>
+      <p><loop-version-10 fact="true" status="spec/done">Внутри версии тот же инструмент можно запустить как `vibe doc diff &lt;версия&gt;
+now` — подсказка полной сверке, какие страницы перечитать первыми. Это
+кухня: никаких следов на страницах, никаких меток для читателя (вопрос
+владельцу, `VISION.md` §10 п. 14).</loop-version-10></p>
+    </loop-version>
+  </loops>
+  <tools title="3. Инструменты">
+    <facts ordered="false">
+      <tools-1 fact="true" status="spec/done">**`vibe doc todo`** — очередь сопровождения по **текущему** состоянию, без
+  сравнений «с тех пор»: команды, поля манифеста и обязательства без
+  страницы (гейт покрытия), красные примеры, неразрешимые цитаты,
+  расхождения структуры адаптаций, возраст страниц по `reviews.toml`
+  (старше 90 дней), строки долга из `BACKLOG.md`, статистика линтера;
+  `--format md` для отчёта недели, `--format json` для метрик. Печатает
+  числа, никогда не роняет сборку.</tools-1>
+      <tools-2 fact="true" status="spec/done">**`vibe doc check`** — существующие проверки (D-14, D-25); флаг
+  `--prompts` прогоняет промпты страниц сценариев через агента-исполнителя
+  и проверяет ассерты (D-30) — дорого, поэтому не в панели: руками, в
+  месячной петле выборкой, на сверке целиком.</tools-2>
+      <tools-3 fact="true" status="spec/done">**`vibe doc surface --record &lt;версия&gt;`** — снимок поверхности продукта
+  на объявленную версию: структурный JSON (команды и флаги из `--help`,
+  поля манифеста и lock-файла, схемы, тексты фактов с `actionstage="doc"`,
+  реестр форматов), не хэш; ключ — только номер версии, который назвал
+  владелец. Лежит в `maintenance/surface/&lt;версия&gt;.json` пакета документации;
+  сайт этот каталог не рендерит.</tools-3>
+      <tools-4 fact="true" status="spec/done">**`vibe doc diff &lt;старая&gt; &lt;новая&gt;`** — разница двух снимков, переведённая
+  в страницы: через граф цитат `rule`, источники `derived` и карту покрытия
+  — «что изменилось → какие страницы обновить → почему». Только для
+  разработчиков документации (§2.5).</tools-4>
+      <tools-5 fact="true" status="spec/done">**`reviews.toml`** в пакете документации: страница → дата последнего
+  чтения вслух и кто читал; порядок «страницы недели». Данные, не генерат и
+  не история: дата говорит «когда читали», а не «против чего».</tools-5>
+      <tools-6 fact="true" status="spec/done">**`JOURNAL.md`** — журнал (§4). В кампании — в папке вижена, с фазы 1 в
+  зоне кампании; после кампании — в пакете документации.</tools-6>
+      <tools-7 fact="true" status="spec/done">**`CHANGELOG.md`** пакета документации — что изменилось для читателя,
+  по версиям; пишется из журнала, человеческим текстом.</tools-7>
+      <tools-8 fact="true" status="spec/done">**`BACKLOG.md`** хоста — долг документации строками `docs:` с severity.</tools-8>
+    </facts>
+  </tools>
+  <journal title="4. Журнал">
+    <p><journal-1 fact="true" status="spec/done">Одна таблица, только дописывается. Поля: дата; тип — `успех`, `неудача`,
+`находка`, `наблюдение`; стабильный идентификатор `J-NNN`; что случилось;
+свидетельство (команда, коммит, якорь, файл); **→ регламент** — какое
+правило это подтверждает, меняет или создаёт, либо «наблюдение без
+действия: причина».</journal-1></p>
+    <p><journal-2 fact="true" status="spec/done">Три закона журнала:</journal-2></p>
+    <facts ordered="true">
+      <journal-3 fact="true" status="spec/done">**Запись делается в том же атоме**, где случилось событие: красная проба,
+   ложное срабатывание линтера, опровергнутое предсказание, обходной путь,
+   удачный приём. Не «в конце недели по памяти».</journal-3>
+      <journal-4 fact="true" status="spec/done">**Поле «→ регламент» не остаётся пустым** дольше месячной петли.</journal-4>
+      <journal-5 fact="true" status="spec/done">**Правило без находки — гипотеза.** Каждое правило регламента ссылается на
+   записи журнала, которые его породили; правило без ссылки помечается
+   «гипотеза» и проверяется. Так находки кампании не теряются и не
+   выдумываются: регламент растёт только из того, что случилось.</journal-5>
+    </facts>
+  </journal>
+  <signals title="5. Сигналы">
+    <table>
+      <tr>
+        <td>Источник</td>
+        <td>Сигнал</td>
+        <td>Куда попадает</td>
+      </tr>
+      <tr>
+        <td><signals-1 fact="true" status="spec/done">Сборка</signals-1></td>
+        <td><signals-2 fact="true" status="spec/done">неразрешимые цитаты, красные примеры, дыры покрытия, расхождения структуры адаптаций, статистика линтера</signals-2></td>
+        <td><signals-3 fact="true" status="spec/done">`vibe doc todo`</signals-3></td>
+      </tr>
+      <tr>
+        <td><signals-4 fact="true" status="spec/done">Продукт</signals-4></td>
+        <td><signals-5 fact="true" status="spec/done">новые команды, поля, обязательства и PROP без страницы — видны гейту покрытия как текущие пробелы, не как «изменения с тех пор»</signals-5></td>
+        <td><signals-6 fact="true" status="spec/done">`vibe doc todo`, петля коммита</signals-6></td>
+      </tr>
+      <tr>
+        <td><signals-7 fact="true" status="spec/done">Владелец</signals-7></td>
+        <td><signals-8 fact="true" status="spec/done">решение поднять номер версии продукта</signals-8></td>
+        <td><signals-9 fact="true" status="spec/done">§2.5: `vibe doc diff`, список страниц к обновлению</signals-9></td>
+      </tr>
+      <tr>
+        <td><signals-10 fact="true" status="spec/done">Промпты</signals-10></td>
+        <td><signals-11 fact="true" status="spec/done">красный ассерт при прогоне агентом; агент не понял промпт</signals-11></td>
+        <td><signals-12 fact="true" status="spec/done">правка страницы или долг `docs:`; два падения подряд — переписывание</signals-12></td>
+      </tr>
+      <tr>
+        <td><signals-13 fact="true" status="spec/done">Люди</signals-13></td>
+        <td><signals-14 fact="true" status="spec/done">вопросы в чате и issue, замечания владельца при чтении вслух</signals-14></td>
+        <td><signals-15 fact="true" status="spec/done">долг `docs:` или правка</signals-15></td>
+      </tr>
+      <tr>
+        <td><signals-16 fact="true" status="spec/done">Агенты</signals-16></td>
+        <td><signals-17 fact="true" status="spec/done">скилл `vibevm-docs` просит агента, не нашедшего ответ по якорю, записать вопрос строкой `docs-gap:` в `BACKLOG.md` проекта-потребителя; для хоста — в его `BACKLOG.md`</signals-17></td>
+        <td><signals-18 fact="true" status="spec/done">недельная петля</signals-18></td>
+      </tr>
+      <tr>
+        <td><signals-19 fact="true" status="spec/done">Сайт</signals-19></td>
+        <td><signals-20 fact="true" status="spec/done">просмотры, выходы, время чтения по страницам (Umami); поисковые запросы без результата, когда появится поиск; Search Console</signals-20></td>
+        <td><signals-21 fact="true" status="spec/done">месячная петля</signals-21></td>
+      </tr>
+      <tr>
+        <td><signals-22 fact="true" status="spec/done">Журнал</signals-22></td>
+        <td><signals-23 fact="true" status="spec/done">записи с пустым «→ регламент»</signals-23></td>
+        <td><signals-24 fact="true" status="spec/done">месячная петля</signals-24></td>
+      </tr>
+    </table>
+  </signals>
+  <small-edits title="6. Дисциплина мелких правок">
+    <facts ordered="true">
+      <small-edits-1 fact="true" status="spec/done">Одна правка — один коммит `docs(vibevm-docs): …` с конкретным описанием.</small-edits-1>
+      <small-edits-2 fact="true" status="spec/done">Якоря не меняются (R-06); `derived` руками не правится (R-03); число или
+   имя поля в прозе — только с `rule` рядом (R-01).</small-edits-2>
+      <small-edits-3 fact="true" status="spec/done">Вставленный термин вводится на месте (`STYLE.md` §2); линтер стиля
+   зелёный на странице.</small-edits-3>
+      <small-edits-4 fact="true" status="spec/done">**Правило пяти правок:** пятая мелкая правка одной страницы с последнего
+   чтения вслух ставит страницу в очередь «страница недели» — накопленные
+   заплатки ломают лестницу незаметно для каждого автора заплатки.</small-edits-4>
+      <small-edits-5 fact="true" status="spec/done">Мелкая правка, которая тянет за собой другие страницы, — не мелкая: она
+   становится долгом с атомом.</small-edits-5>
+    </facts>
+  </small-edits>
+  <metrics title="7. Метрики месячного ревью">
+    <table>
+      <tr>
+        <td>Метрика</td>
+        <td>Как считать</td>
+        <td>Куда должна идти</td>
+      </tr>
+      <tr>
+        <td><metrics-1 fact="true" status="spec/done">Пробелы на начало месяца</metrics-1></td>
+        <td><metrics-2 fact="true" status="spec/done">число строк `vibe doc todo` по покрытию, примерам и цитатам</metrics-2></td>
+        <td><metrics-3 fact="true" status="spec/done">к нулю</metrics-3></td>
+      </tr>
+      <tr>
+        <td><metrics-4 fact="true" status="spec/done">Возраст страниц</metrics-4></td>
+        <td><metrics-5 fact="true" status="spec/done">медиана дней с последнего чтения по `reviews.toml`</metrics-5></td>
+        <td><metrics-6 fact="true" status="spec/done">ниже 90</metrics-6></td>
+      </tr>
+      <tr>
+        <td><metrics-7 fact="true" status="spec/done">Отставание адаптаций</metrics-7></td>
+        <td><metrics-8 fact="true" status="spec/done">сумма ревизий по всем страницам адаптации</metrics-8></td>
+        <td><metrics-9 fact="true" status="spec/done">к нулю на полной сверке</metrics-9></td>
+      </tr>
+      <tr>
+        <td><metrics-10 fact="true" status="spec/done">Покрытие обязательств</metrics-10></td>
+        <td><metrics-11 fact="true" status="spec/done">`vibe doc check --coverage`</metrics-11></td>
+        <td><metrics-12 fact="true" status="spec/done">100 процентов</metrics-12></td>
+      </tr>
+      <tr>
+        <td><metrics-13 fact="true" status="spec/done">Тики на тысячу слов</metrics-13></td>
+        <td><metrics-14 fact="true" status="spec/done">линтер стиля по корпусу</metrics-14></td>
+        <td><metrics-15 fact="true" status="spec/done">к нулю</metrics-15></td>
+      </tr>
+      <tr>
+        <td><metrics-16 fact="true" status="spec/done">Долг</metrics-16></td>
+        <td><metrics-17 fact="true" status="spec/done">строки `docs:` в `BACKLOG.md` по severity</metrics-17></td>
+        <td><metrics-18 fact="true" status="spec/done">P1 = 0</metrics-18></td>
+      </tr>
+      <tr>
+        <td><metrics-19 fact="true" status="spec/done">Находки → регламент</metrics-19></td>
+        <td><metrics-20 fact="true" status="spec/done">записей за месяц / из них с решением</metrics-20></td>
+        <td><metrics-21 fact="true" status="spec/done">все с решением</metrics-21></td>
+      </tr>
+      <tr>
+        <td><metrics-22 fact="true" status="spec/done">Дней с последней полной сверки</metrics-22></td>
+        <td><metrics-23 fact="true" status="spec/done">по дате в `reviews.toml`</metrics-23></td>
+        <td><metrics-24 fact="true" status="spec/done">не больше 90 при квартальной каденции</metrics-24></td>
+      </tr>
+    </table>
+    <p><metrics-25 fact="true" status="spec/done">Восемь чисел, не больше; таблица в отчёте месяца, тренд рядом.</metrics-25></p>
+  </metrics>
+  <roles title="8. Роли по ярусам">
+    <table>
+      <tr>
+        <td>Ярус</td>
+        <td>В петле коммита</td>
+        <td>В недельной</td>
+        <td>В месячной</td>
+        <td>В полной сверке</td>
+        <td>При смене версии</td>
+      </tr>
+      <tr>
+        <td><roles-1 fact="true" status="spec/done">Владелец</roles-1></td>
+        <td><roles-2 fact="true" status="spec/done">—</roles-2></td>
+        <td><roles-3 fact="true" status="spec/done">читает страницу недели (по желанию)</roles-3></td>
+        <td><roles-4 fact="true" status="spec/done">читает три страницы вслух; решает по регламенту</roles-4></td>
+        <td><roles-5 fact="true" status="spec/done">назначает дату, принимает отчёт сверки</roles-5></td>
+        <td><roles-6 fact="true" status="spec/done">поднимает номер; принимает changelog</roles-6></td>
+      </tr>
+      <tr>
+        <td><roles-7 fact="true" status="spec/done">Центральная сессия (Fable)</roles-7></td>
+        <td><roles-8 fact="true" status="spec/done">правит прозу, если коммит её требует</roles-8></td>
+        <td><roles-9 fact="true" status="spec/done">сортирует очередь, делает мелкие правки, пишет запись в журнал</roles-9></td>
+        <td><roles-10 fact="true" status="spec/done">аудит корпуса, переписывание страниц, изменения регламента, changelog</roles-10></td>
+        <td><roles-11 fact="true" status="spec/done">перечитывает страницы против текущего продукта, переписывает коридоры, закрывает пробелы новыми страницами</roles-11></td>
+        <td><roles-12 fact="true" status="spec/done">обновляет страницы из списка diff, пишет changelog для читателей</roles-12></td>
+      </tr>
+      <tr>
+        <td><roles-13 fact="true" status="spec/done">Opus 5 High</roles-13></td>
+        <td><roles-14 fact="true" status="spec/done">код инструментов</roles-14></td>
+        <td><roles-15 fact="true" status="spec/done">—</roles-15></td>
+        <td><roles-16 fact="true" status="spec/done">правки инструментов по находкам</roles-16></td>
+        <td><roles-17 fact="true" status="spec/done">правки инструментов и генераторов `derived`</roles-17></td>
+        <td><roles-18 fact="true" status="spec/done">правки `surface`/`diff` по находкам</roles-18></td>
+      </tr>
+      <tr>
+        <td><roles-19 fact="true" status="spec/done">Дешёвая модель</roles-19></td>
+        <td><roles-20 fact="true" status="spec/done">—</roles-20></td>
+        <td><roles-21 fact="true" status="spec/done">прогоняет `todo` и `check`, собирает отчёт</roles-21></td>
+        <td><roles-22 fact="true" status="spec/done">собирает метрики и аналитику, машинный черновик адаптации</roles-22></td>
+        <td><roles-23 fact="true" status="spec/done">прогоняет `todo`, `check` и примеры против текущего релиза, собирает отчёт; записывает снимок поверхности</roles-23></td>
+        <td><roles-24 fact="true" status="spec/done">записывает снимок новой версии, прогоняет `diff`, собирает список</roles-24></td>
+      </tr>
+    </table>
+  </roles>
+  <self-change title="9. Как меняется сам регламент">
+    <p><self-change-1 fact="true" status="spec/done">Регламент — не догма: он меняется по журналу в месячной петле (§2.3 п. 7).
+Каждое изменение — правка с датой и ссылками на записи `J-NNN`. Раз в
+квартал — вопрос владельцу: какие петли оказались лишними, какие метрики
+никто не смотрит, какие правила ни разу не сработали. Правило, не
+сработавшее за квартал, помечается «спящее» и выносится из чеклиста; правило
+без записи-основания — «гипотеза». Так регламент худеет, а не толстеет.</self-change-1></p>
+  </self-change>
+  <landing title="10. Куда ложится норма">
+    <table>
+      <tr>
+        <td>Что</td>
+        <td>Где</td>
+        <td>Когда</td>
+      </tr>
+      <tr>
+        <td><landing-1 fact="true" status="spec/done">Норма петель, журнала, долга, гейта релиза</landing-1></td>
+        <td><landing-2 fact="true" status="spec/done">PROP «documentation maintenance», следующий свободный номер после PROP-057</landing-2></td>
+        <td><landing-3 fact="true" status="spec/done">фаза 6, атом A6.4</landing-3></td>
+      </tr>
+      <tr>
+        <td><landing-4 fact="true" status="spec/done">Страница для мейнтейнера «How this manual is maintained» (аудитория `dev`)</landing-4></td>
+        <td><landing-5 fact="true" status="spec/done">пакет `vibevm-docs`</landing-5></td>
+        <td><landing-6 fact="true" status="spec/done">A6.4</landing-6></td>
+      </tr>
+      <tr>
+        <td><landing-7 fact="true" status="spec/done">Чеклисты `maintenance/weekly.md`, `monthly.md`, `release.md`</landing-7></td>
+        <td><landing-8 fact="true" status="spec/done">пакет `vibevm-docs`</landing-8></td>
+        <td><landing-9 fact="true" status="spec/done">A6.4</landing-9></td>
+      </tr>
+      <tr>
+        <td><landing-10 fact="true" status="spec/done">`reviews.toml`, `JOURNAL.md`, `CHANGELOG.md`</landing-10></td>
+        <td><landing-11 fact="true" status="spec/done">пакет `vibevm-docs`</landing-11></td>
+        <td><landing-12 fact="true" status="spec/done">A6.1, A6.4</landing-12></td>
+      </tr>
+      <tr>
+        <td><landing-13 fact="true" status="spec/done">`vibe doc todo`</landing-13></td>
+        <td><landing-14 fact="true" status="spec/done">`vibe-doc`, CLI</landing-14></td>
+        <td><landing-15 fact="true" status="spec/done">фаза 2, A2.27</landing-15></td>
+      </tr>
+      <tr>
+        <td><landing-16 fact="true" status="spec/done">`vibe doc surface`, `vibe doc diff`, каталог `maintenance/surface/`</landing-16></td>
+        <td><landing-17 fact="true" status="spec/done">`vibe-doc`, CLI; пакет документации</landing-17></td>
+        <td><landing-18 fact="true" status="spec/done">фаза 2, A2.26; первый снимок — A6.5</landing-18></td>
+      </tr>
+      <tr>
+        <td><landing-19 fact="true" status="spec/done">Календарь полной сверки, чеклист `maintenance/reconcile.md`</landing-19></td>
+        <td><landing-20 fact="true" status="spec/done">пакет документации; даты чтения в `reviews.toml`</landing-20></td>
+        <td><landing-21 fact="true" status="spec/done">A6.5</landing-21></td>
+      </tr>
+      <tr>
+        <td><landing-22 fact="true" status="spec/done">Регламент как flow-пакет для чужих проектов с doc-пакетами</landing-22></td>
+        <td><landing-23 fact="true" status="spec/done">`org.vibevm.world/docs-maintenance`</landing-23></td>
+        <td><landing-24 fact="true" status="spec/done">вторая волна: когда второй проект захочет тот же ритуал</landing-24></td>
+      </tr>
+    </table>
+  </landing>
+  <open title="11. Открытые вопросы владельцу">
+    <facts ordered="true">
+      <open-1 fact="true" status="spec/done">Каденции: неделя и месяц, как здесь, или две недели и квартал.</open-1>
+      <open-2 fact="true" status="spec/done">Дежурный по недельной петле: владелец с центральной сессией или только
+   сессия с отчётом владельцу.</open-2>
+      <open-3 fact="true" status="spec/done">Публиковать мелкие правки патч-версией еженедельно или копить до
+   месячного релиза.</open-3>
+      <open-4 fact="true" status="spec/done">Сигнал от агентов `docs-gap:` в `BACKLOG.md` проектов-потребителей —
+   уместно ли писать в чужой файл по воле скилла, или только предлагать.</open-4>
+      <open-5 fact="true" status="spec/done">Каденция полной сверки: раз в квартал, перед крупной вехой, или и то и
+   другое. Рекомендация — и то и другое, с правом владельца отложить.</open-5>
+      <open-6 fact="true" status="spec/done">Примеры с `expect` — единственная техническая связка продукта с
+   документацией (golden-тесты в панели): оставить как тесты или тоже
+   перевести в измеритель. Рекомендация — оставить: они правятся как любой
+   golden-файл и стоят минуты.</open-6>
+      <open-7 fact="true" status="spec/done">Псевдоистория версий (§2.5): где хранить снимки и разрешить ли
+   внутренний `vibe doc diff &lt;версия&gt; now` как подсказку сверке
+   (`VISION.md` §10 п. 14).</open-7>
+    </facts>
+  </open>
+</spec>
