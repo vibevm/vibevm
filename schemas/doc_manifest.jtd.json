@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "description": "The page manifest of one documentation package in one language (PROP-057 `##SEO-MANIFEST-AND-RESOLVER`, `##DISC-MACHINE-MIRROR`). It is served as `/doc/manifest.json`, it is the source of the site's navigation, and every `llms` tier is derived from it rather than from a second walk of the tree. One manifest is one package, so it is one language: a translation is another package and has a manifest of its own. Nothing here compares versions, fingerprints or revisions (`##OBS-NOTHING-LEAKS`). Source of truth for `crates/vibe-wire/src/generated/doc_manifest/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_manifest"
+    },
+    "x-vocabularies": ["group", "version"],
+    "x-wire-order": ["schema_version", "package", "pages"]
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "package": {
+      "ref": "doc_package",
+      "metadata": {
+        "description": "The card and the officiality of the documentation itself — what a shelf, a language selector and a catalogue row show before any page is opened."
+      }
+    },
+    "pages": {
+      "elements": { "ref": "doc_page" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every page of the package, in the reading order the layer law gives them — stable text before text that moves with the product (PROP-048 `##THE-LAYER-LAW`). A package with no pages yet writes `[]`, never an absent key."
+      }
+    }
+  },
+  "definitions": {
+    "documentation_status": {
+      "enum": ["primary", "official", "community"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Where one documentation stands for one subject (PROP-057 `##REL-OFFICIAL-IS-CONVERGENCE`, `##ROW-DISC-DOCS-STATUS`). `primary` — the subject sent its readers here first; `official` — the subject named it among its own; `community` — only the documentation's own edge is known. Closed by construction: the value is COMPUTED from the convergence of the two edges at every render, and a fourth name would mean a fourth way for edges to meet. It is never stored as a flag in a manifest or an index (`##REL-NO-OFFICIAL-FLAG`); this document is a render, which is exactly why it may carry it."
+      }
+    },
+    "translation_status": {
+      "enum": ["official", "community"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Where one translation stands for its source documentation (PROP-057 `##LOC-OFFICIAL-TRANSLATION`, `##ROW-DISC-TRANS-STATUS`). `official` — the same group as the source published it under the name `<docname>-<lang>`; everything else is `community`. There is no `primary` on this level: a source documentation sends nobody to one language first."
+      }
+    },
+    "page_genre": {
+      "enum": ["concept", "task"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which of the two page skeletons a page follows (the package's own `AUTHORING.md` §7, under PROP-057 `##SEO-PAGE-TEMPLATE` and `##MANDATE-PROMPT-FIRST`). A `task` page opens with the request a person hands to an agent and carries a `prompt` block; a `concept` page explains one thing and carries none. Closed because the style law names exactly two skeletons: a third genre is a change to how the manual is written, not a value a page may invent."
+      }
+    },
+    "audience": {
+      "enum": ["user", "author", "dev", "agent"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "For whom a page is written (PROP-043 `##AUDIENCE-VALUES`, widened with `agent` by PROP-057 `##OBS-AUDIENCE-AGENT`). The single home of this vocabulary is PROP-043 and its one implementation is `progress_core::model::Audience`; the list is spelled here because `vibe-wire` carries no edge to that crate, the same sanctioned duplication the pivot's `when` conditions make for the same reason. Audiences are never declared on the card — they are derived from the page markup (`##CARD-NO-AUDIENCE-DECLARATION`)."
+      }
+    },
+    "documented_subject": {
+      "metadata": {
+        "description": "One subject this documentation documents, and where it stands for that subject. A `doc` package may document several, and it can be primary for one and community for another — so the status lives per subject and the package's own `status` is the strongest of them.",
+        "x-wire-order": ["package", "version", "status"]
+      },
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The subject's `<group>/<name>` coordinate, exactly as `[[documents]]` spells it."
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "description": "The semver constraint `[[documents]]` puts on the subject's version. A constraint, not a version: the site picks the newest documentation whose constraint admits the subject version a reader is looking at (`##REL-VERSION-SELECTION`)."
+          }
+        },
+        "status": { "ref": "documentation_status" }
+      }
+    },
+    "adapted_source": {
+      "metadata": {
+        "description": "The documentation this package adapts into its own language (PROP-057 §5), present only in a translation's manifest. It carries neither a revision nor a hash of the source: a «how far behind» comparison needs a history the project does not keep, and the check that exists compares structure against the source as it is now (`##LOC-NO-REVISION`).",
+        "x-wire-order": ["package", "version", "status"]
+      },
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The source documentation's `<group>/<name>` coordinate, exactly as `[translates]` spells it."
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "description": "The semver constraint `[translates]` puts on the source documentation's version."
+          }
+        },
+        "status": { "ref": "translation_status" }
+      }
+    },
+    "doc_package": {
+      "metadata": {
+        "description": "The documentation's card, its language and its officiality — the arXiv-style row of PROP-057 `##CARD-DECISION`: a title a person reads, the publisher beside it, the abstract that says what the thing covers and for whom.",
+        "x-wire-order": [
+          "group",
+          "name",
+          "version",
+          "publisher",
+          "title",
+          "description",
+          "abstract",
+          "lang",
+          "status",
+          "subjects",
+          "translation",
+          "audiences"
+        ]
+      },
+      "properties": {
+        "group": { "ref": "group" },
+        "name": { "type": "string" },
+        "version": { "ref": "version" },
+        "publisher": {
+          "type": "string",
+          "metadata": {
+            "description": "Who published this documentation — the package's group, printed beside the title wherever the title appears (`##DISC-PUBLISHER-VISIBLE`). Named as its own member rather than left to be re-derived from `group`, because the shell parses nothing and computes nothing (`##PIPE-SHELL-PARSES-NOTHING`): every value it shows arrives named."
+          }
+        },
+        "title": {
+          "type": "string",
+          "metadata": {
+            "description": "The display name on shelves, in the selector, in the page heading and in the catalogue (`##CARD-TITLE`). Required for kind `doc`; identity stays the coordinate, so two documentations may share a title."
+          }
+        },
+        "abstract": {
+          "type": "string",
+          "metadata": {
+            "description": "What it covers, for whom, what it assumes known, what it leaves out — three to six sentences in the package's own language, bounded at about a thousand characters (`##CARD-DESCRIPTION-AND-ABSTRACT`)."
+          }
+        },
+        "lang": {
+          "type": "string",
+          "metadata": {
+            "description": "The language every page in this manifest is written in — the package's `[i18n].canonical`, a BCP-47 tag, `en` when the manifest declares none (`##LOC-LANGUAGE-FIELD`). There is no second `lang` field on a package and no list of languages here: another language is another package, found through its `translates` edge."
+          }
+        },
+        "status": {
+          "ref": "documentation_status",
+          "metadata": {
+            "description": "The strongest standing this documentation holds over any of its subjects — the one value a shelf, a star and a catalogue row need when a package documents more than one thing. The per-subject truth is in `subjects`."
+          }
+        },
+        "subjects": {
+          "elements": { "ref": "documented_subject" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Every subject of `[[documents]]`, which a `doc` package is required to declare at least one of (`##REL-DOCUMENTS-REQUIRED`). Emitted even when empty: a manifest built over a manifest that broke that rule must show the emptiness, not hide it."
+          }
+        },
+        "audiences": {
+          "elements": { "ref": "audience" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Every audience any page of this documentation is written for, sorted and without repetition — the audiences a catalogue row shows. Derived from the page markup, never declared."
+          }
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "description": "The one-line subtitle for lists and the page's meta description; absent when the package declares none.",
+            "x-default": null
+          }
+        },
+        "translation": {
+          "ref": "adapted_source",
+          "metadata": {
+            "description": "Present exactly when this package is a translation — that is, when it declares `[translates]`. Its absence is what says «this is a source documentation», so no second flag exists to disagree with it."
+          }
+        }
+      }
+    },
+    "doc_page": {
+      "metadata": {
+        "description": "One page: where it is, what it is, who it is for, what it says first, and how long it takes to read.",
+        "x-wire-order": [
+          "path",
+          "title",
+          "genre",
+          "audiences",
+          "anchors",
+          "summary"
+        ]
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The page's address inside the package — a `/`-separated path under the package's spec root, `model/lock-and-store.xml`. Forward slashes on every platform, so one manifest reads the same everywhere, and the site's address map turns it into a URL without an index (`##SITE-MOUNT`)."
+          }
+        },
+        "title": {
+          "type": "string",
+          "metadata": { "description": "The page's H1." }
+        },
+        "genre": { "ref": "page_genre" },
+        "audiences": {
+          "elements": { "ref": "audience" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Who the page is written for, sorted and without repetition, from the `audience` of its `<status>` markers. Empty means the page marked none, which the coverage gate can see and a guess would hide."
+          }
+        },
+        "anchors": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Every named anchor the page carries, in document order: the title's id, each section's id, each fact's id. These are the immutable addresses a citation may point at (`##INV-ANCHORS-IMMUTABLE`); the positional `pNN` numbers are NOT here, because they live by the current text and would turn a manifest into a promise the next edit breaks."
+          }
+        },
+        "summary": {
+          "type": "string",
+          "metadata": {
+            "description": "The page's leading fact — its first paragraph, which the style law requires to stand alone and names as the page's line in `llms.txt` (`AUTHORING.md` §7). Taken, never composed: a summary written by the pipeline would be a second description of the page that nobody proofreads."
+          }
+        }
+      }
+    }
+  }
+}

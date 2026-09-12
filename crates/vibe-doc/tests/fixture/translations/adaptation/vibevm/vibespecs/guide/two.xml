@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Вторая</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p><LEAD-TWO fact="true" status="doc/work">Вторая страница пары, у которой средний блок — список.</LEAD-TWO></p>
+  <p>Первый пункт. Второй пункт.</p>
+  <p><TAIL-TWO fact="true" status="doc/work">И закрывающий абзац после него.</TAIL-TWO></p>
+</spec>

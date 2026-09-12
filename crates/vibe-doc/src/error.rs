@@ -146,6 +146,18 @@ pub enum DocError {
         reference: String,
         message: String,
     },
+
+    /// The manifest of a documentation package does not carry what a card
+    /// needs. A `doc` package MUST declare `title` and `abstract`, and the
+    /// coordinate it is addressed by must parse — without them there is no
+    /// shelf row, no catalogue entry and no site address
+    /// (PROP-057 `##CARD-FIELDS`, `##KIND-DOC-MUST-DOCUMENT`).
+    #[error(
+        "`{path}` {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS; \
+         fix: declare the card fields a package of kind `doc` must carry)"
+    )]
+    Manifest { path: PathBuf, message: String },
 }
 
 impl DocError {
@@ -161,6 +173,14 @@ impl DocError {
             action,
             path: path.into(),
             source,
+        }
+    }
+
+    /// A card defect, named with the manifest that carries it.
+    pub(crate) fn manifest(path: impl Into<PathBuf>, message: impl Into<String>) -> DocError {
+        DocError::Manifest {
+            path: path.into(),
+            message: message.into(),
         }
     }
 }

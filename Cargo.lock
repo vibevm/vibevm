@@ -4487,6 +4487,7 @@ name = "vibe-doc"
 version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
+ "progress-core",
  "regex",
  "semver",
  "serde",
@@ -4499,6 +4500,7 @@ dependencies = [
  "vibe-registry",
  "vibe-spec",
  "vibe-specdoc",
+ "vibe-wire",
  "vibe-workspace",
  "walkdir",
 ]

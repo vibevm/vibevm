@@ -850,6 +850,44 @@ unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
 
+# ── Documentation pipeline (2 records, 1 JTD), PROP-057 §10 ────────────────
+# What the documentation pipeline publishes for machines. Both are read by
+# parsers nobody here controls — the Qwik shell, search crawlers, and the
+# LLM crawlers the owner named in the mandate — so both state `many`.
+#
+# `doc-manifest` is the page manifest served as `/doc/manifest.json`
+# (`##SEO-MANIFEST-AND-RESOLVER`): the card, the officiality statuses, the
+# language, and one row per page with its audiences, genre, anchors, leading
+# fact and reading time. Recoverable: it is a projection of the package's own
+# bytes plus the edges of its subjects, so deleting it and rendering again
+# reproduces it exactly. Permissive reading, the default for `many`: a reader
+# of this document may be older than the build that wrote it.
+#
+# `llms` is the `llms.txt` family — the index, `llms-full.txt`, and the two
+# budgeted tiers `llms-small.txt` and `llms-medium.txt` (`##SEO-LLMS-FILES`).
+# It carries `schema = "none"` because it is a MARKDOWN convention, not a
+# JSON document: there is nothing for JTD to describe and no Rust type to
+# generate. It is inventoried all the same, and that is the whole point of
+# the axis — foreign parsers read it, so its shape is a contract whether or
+# not a schema can state it. The four tiers are one record: they are one
+# format rendered at four budgets from one manifest, and four records would
+# invite four shapes.
+[format.doc-manifest]
+epoch = 1
+schema = "schemas/doc_manifest.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/doc-manifest/e1"
+sunset = "none"
+
+[format.llms]
+epoch = 1
+schema = "none"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1
