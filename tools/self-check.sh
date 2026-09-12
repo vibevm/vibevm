@@ -701,6 +701,42 @@ run_step "island parity across the shell adapters" \
   cargo test --quiet -p vibe-doc-server \
     the_island_is_the_same_bytes_through_both_adapters || OVERALL=$?
 
+# 8d. The local reader over a real browser (PROP-057
+# ##INV-LOCAL-IS-OFFLINE, campaign atom A4.15).
+#
+# It starts `vibe doc serve` on a free loopback port, opens two pages of
+# the manual, intercepts EVERY request the browser makes — fonts, styles,
+# chunks, images, `fetch` — and asserts that each one went back to that
+# port; then opens the static build as a `file://` document and asserts
+# the same. No unit test can see a browser fetch a font, and one request
+# to a font service is one company's package names in somebody's access
+# log.
+#
+# Node is the one thing it needs that a Rust checkout may not have, so a
+# machine without `node_modules` SKIPS with the reason printed. That is
+# the opposite of step 8b's rule, and deliberately: the floor above
+# measures the web package itself and a partial floor is a lie, while
+# this is a second witness to what the Rust tests already assert about
+# the policy and the routes.
+check_local_reader() {
+  if [ ! -d "$WEBPKG_DIR/node_modules" ]; then
+    echo "self-check: \`$WEBPKG_DIR/node_modules\` is absent — Playwright lives there." >&2
+    echo "self-check: skipped: the local-reader browser test needs Node." >&2
+    echo "self-check: fix: corepack enable && (cd $WEBPKG_DIR && pnpm install --frozen-lockfile)" >&2
+    return 0
+  fi
+  local bin="target/debug/vibe"
+  [ -x "$bin" ] || bin="$bin.exe"
+  if [ ! -x "$bin" ]; then
+    echo "self-check: skipped: no \`$bin\` for the reader to start." >&2
+    return 0
+  fi
+  VIBE_BIN="$PWD/$bin" pnpm --dir "$WEBPKG_DIR" exec playwright test \
+    -c site/tests/playwright.config.ts site/tests/local-reader.spec.ts
+}
+run_step "the local reader loads nothing from outside (browser)" \
+  check_local_reader || OVERALL=$?
+
 
 # 9. The packages' own traceability self-traces (Traceability Relocation Plan
 # Phase 4; the authored-engine half moved with the consolidation). Every gated
