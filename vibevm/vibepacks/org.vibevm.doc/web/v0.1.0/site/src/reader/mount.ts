@@ -20,8 +20,15 @@
  * call.
  */
 
+import { startAnchors } from "./anchors.ts";
+import { startAgentSurface } from "./agent.ts";
+import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
+import { startLanguageSwitch } from "./language.ts";
 import { startPlatformSwitch } from "./platform.ts";
+import { startPosition } from "./position.ts";
+import { startReadingMode } from "./reading-mode.ts";
 import { startRuleTransclusion } from "./rules.ts";
+import { startSettings } from "./settings.ts";
 
 /**
  * What the reader needs to know about the page it is on, worked out at
@@ -54,8 +61,28 @@ export type ReaderContext = {
 
 /** Start every behaviour; the returned function stops all of them. */
 export function startReader(context: ReaderContext): () => void {
-  void context;
-  const stops = [startPlatformSwitch(), startRuleTransclusion()];
+  const embedded = isEmbedded();
+
+  const settings = startSettings({
+    persist: !embedded,
+    publish: embedded ? publishSettings : () => undefined,
+  });
+
+  const stops = [
+    settings.stop,
+    startPlatformSwitch(),
+    startRuleTransclusion(),
+    startAnchors(),
+    startLanguageSwitch(),
+    startPosition(),
+    startReadingMode(),
+    startAgentSurface(context.uri),
+    startEmbedding({
+      onSettings: settings.receive,
+      files: [context.md, context.xml, context.llms],
+    }),
+  ];
+
   return () => {
     for (const stop of stops) stop();
   };

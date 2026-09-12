@@ -230,3 +230,36 @@ export function parseDocTarget(segments: readonly string[]): DocTarget | null {
 export function specUri(address: DocAddress): string {
   return `spec://${address.group}/${address.name}@${address.version}/${address.document}`;
 }
+
+/**
+ * A `spec://` address turned back into a place on this site — the
+ * inverse of `specUri`, and the one thing an embedding host may ask the
+ * reader to do («open this»).
+ *
+ * A citation without a version means the newest, which is the `latest`
+ * address; a fragment travels through untouched, because keeping a
+ * reader's place is the whole reason a host sends one.
+ */
+export function hrefOfSpecUri(uri: string): string | null {
+  const match = /^spec:\/\/([^/]+)\/([^/@]+)(?:@([^/]+))?\/(.+)$/.exec(uri);
+  if (match === null) return null;
+  const [, group, name, version, rest] = match;
+  if (group === undefined || name === undefined || rest === undefined)
+    return null;
+  if (!group.includes(".")) return null;
+
+  const hash = rest.indexOf("#");
+  const document = hash === -1 ? rest : rest.slice(0, hash);
+  const fragment = hash === -1 ? "" : rest.slice(hash);
+  if (document.length === 0) return null;
+
+  return (
+    docHref({
+      lang: null,
+      group,
+      name,
+      version: version ?? "latest",
+      document,
+    }) + fragment
+  );
+}

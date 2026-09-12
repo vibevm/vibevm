@@ -1,0 +1,134 @@
+/* The gear, the panel and the quick row. Fixed to the top right, above
+   the sticky header, and out of the way of the reading column. */
+
+.settings {
+  position: fixed;
+  top: 0.7rem;
+  right: 1rem;
+  z-index: 32;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* The quick row is the reading mode: it appears once the first heading
+   has gone above 40% of the window, and only then. Before that the gear
+   alone is enough, and a row of controls over an unread page is noise. */
+.settings__quick {
+  display: none;
+  gap: 0.25rem;
+}
+
+.settings--reading .settings__quick {
+  display: flex;
+}
+
+.settings__gear,
+.settings__quick-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.settings__gear:hover,
+.settings__quick-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.settings__quick-button[aria-pressed="false"] {
+  opacity: 0.55;
+}
+
+.settings__panel {
+  position: absolute;
+  top: 2.6rem;
+  right: 0;
+  width: min(18rem, calc(100vw - 2rem));
+  padding: 0.7rem 0.8rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+.settings__group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  border: none;
+}
+
+.settings__group legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.settings__button {
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease,
+    background var(--speed) ease;
+}
+
+.settings__button:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.settings__button[aria-pressed="true"],
+.settings__button.is-current {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.settings__value {
+  min-width: 3rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.settings__reset {
+  margin: 0.2rem 0 0;
+}
+
+/* There is no second column width to choose on a phone. */
+@media (max-width: 900px) {
+  .settings__group--width {
+    display: none;
+  }
+}

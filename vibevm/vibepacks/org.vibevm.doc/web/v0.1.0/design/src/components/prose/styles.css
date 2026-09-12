@@ -2,10 +2,18 @@
    below names markup the Rust pipeline emits; nothing here is generated
    by a component. */
 
+/* The reading column. Both of its dimensions are the reader's: the
+   measure comes in as a custom property and the text size as a
+   multiplier of the page's own, which is why every size below is `em`
+   and not `rem` — `rem` would ignore the setting and the headings would
+   stay put while the paragraphs grew. The chrome around the column does
+   NOT scale with it: enlarging the text a reader is reading is a reading
+   setting, enlarging the whole interface is a browser setting. */
 .prose {
   max-width: var(--measure);
   margin: 0 auto;
   padding: 2.5rem 1.25rem 6rem;
+  font-size: calc(1em * var(--reader-font, 1));
 }
 
 .prose h1,
@@ -21,16 +29,16 @@
 }
 
 .prose h1 {
-  font-size: 2.1rem;
+  font-size: 2.1em;
   margin-top: 0;
 }
 
 .prose h2 {
-  font-size: 1.5rem;
+  font-size: 1.5em;
 }
 
 .prose h3 {
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 
 .prose p,
@@ -82,7 +90,7 @@
 .prose pre code {
   background: none;
   padding: 0;
-  font-size: 0.86rem;
+  font-size: 0.86em;
   line-height: 1.55;
 }
 
@@ -98,7 +106,7 @@
   width: 2.4rem;
   text-align: right;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.75em;
   line-height: 1.9;
   color: var(--text-3);
   opacity: 0.5;
@@ -111,8 +119,36 @@
   color: var(--accent);
 }
 
+/* The tick after a copy. It is a pseudo-element and not a swapped label
+   so the number does not move under the cursor that just hit it. */
+.prose .p-anchor.copied::after {
+  content: " ✓";
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* The numbers are a setting, not furniture: a reader who turns them off
+   gets the text without them, and the blocks keep their ids so every
+   link into the page still lands. */
+.prose.no-anchors .p-anchor {
+  display: none;
+}
+
 .prose [data-p] {
   position: relative;
+}
+
+/* The block a fragment names. `:target` does the work with no script at
+   all — which matters, because it is also what a printed page and a
+   reader with no JavaScript get; the class is what the behaviour adds
+   after `replaceState`, which does not always re-evaluate `:target`. */
+.prose [data-p]:target,
+.prose [data-p]:has(> .p-anchor:target),
+.prose [data-p].is-target,
+.prose .is-target {
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 0.35rem var(--accent-soft);
 }
 
 @media (max-width: 900px) {
@@ -162,7 +198,7 @@
   top: 0.35rem;
   right: 0.6rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.68em;
   color: var(--text-3);
 }
 
@@ -215,7 +251,7 @@
 
 .prose figcaption {
   margin-top: 0.4rem;
-  font-size: 0.85rem;
+  font-size: 0.85em;
   color: var(--text-3);
 }
 
@@ -228,12 +264,27 @@
   background: var(--bg-sink);
 }
 
+/* «Hand to agent» exists only in an embedded reader, where there is an
+   agent to hand it to. The behaviour adds the button; this is what it
+   looks like when it does. */
+.prose .prompt__hand {
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  cursor: pointer;
+}
+
 /* ---- Tables --------------------------------------------------------- */
 
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  font-size: 0.92em;
   margin: 0 0 1.3rem;
 }
 

@@ -9,11 +9,14 @@ import {
 import {
   Card,
   DocsNav,
+  Fab,
   ForAgent,
   PackageHeader,
   PageMeta,
   Prose,
+  ReturnToPlace,
   RulePanel,
+  SettingsPanel,
   Shelf,
   TabPills,
   VersionSwitch,
@@ -52,6 +55,42 @@ const PLATFORMS = [
 
 const AGENT_LEAD =
   "This page has a machine mirror. The citation carries the version rather than latest, so what an agent quotes does not move under it.";
+
+/**
+ * Nobody moves the reader except the reader.
+ *
+ * Two mechanisms would otherwise, and both run before any module of this
+ * page does, which is why this is a script in the head and not a line in
+ * the behaviour. The browser restores the scroll position of a reloaded
+ * document; and the router keeps its own copy in `history.state` and
+ * scrolls to it from its bootstrap, which is the one that actually moved
+ * the page here. The promise the return-to-place button makes is that a
+ * reader who comes back to a page lands where the page starts and is
+ * OFFERED their place (`##READER-NO-AUTOSCROLL`) — a page that jumps on
+ * reload has broken it before the button is rendered.
+ *
+ * Back and forward are the exception, and the navigation type is how it
+ * is told: returning to a page you just left SHOULD land where you were,
+ * because that is what «back» means. Only a fresh load or a reload is
+ * cleared.
+ *
+ * The cost is a second inline script for a Content-Security-Policy to
+ * carry the hash of, beside the theme's. The cheaper home for these
+ * lines is the theme script itself, which already runs first for exactly
+ * this kind of reason.
+ */
+const MANUAL_SCROLL = {
+  key: "scroll-restoration",
+  script: [
+    "(function(){",
+    "var n=performance.getEntriesByType('navigation')[0];",
+    "if(n&&n.type==='back_forward')return;",
+    "history.scrollRestoration='manual';",
+    "var s=history.state;",
+    "if(s&&s._qRouterScroll){delete s._qRouterScroll;history.replaceState(s,'');}",
+    "})()",
+  ].join(""),
+} as const;
 
 /** One documentation page: the meta row, the island, the panels over it. */
 const DocumentationPage = component$<{ view: PageView }>((props) => {
@@ -107,6 +146,18 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
         openLabel="open the rule"
         closeLabel="close"
       />
+      <SettingsPanel label="Reading settings" />
+      <ReturnToPlace label="back to where you were" />
+      <Fab label="For an agent: the address of this place" glyph="{ }">
+        <ForAgent
+          title="For an agent"
+          lead={AGENT_LEAD}
+          uri={view.uri}
+          links={[...view.links]}
+          copyLabel="copy"
+          compact={true}
+        />
+      </Fab>
     </div>
   );
 });
@@ -257,6 +308,7 @@ export const head: DocumentHead = ({ params }) => {
   return {
     title: view.title,
     meta: [{ name: "description", content: view.summary }],
+    scripts: [MANUAL_SCROLL],
   };
 };
 
