@@ -20,6 +20,8 @@ pub mod deploy_lock_resources;
 pub mod deploy_receipt;
 pub mod distribution;
 pub mod doc_manifest;
+pub mod doc_surface;
+pub mod doc_surface_diff;
 pub mod extensions_analyze;
 pub mod extensions_report;
 pub mod format_id;

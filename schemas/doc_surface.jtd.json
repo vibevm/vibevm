@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "description": "The surface snapshot of the product on one declared version (PROP-057 `##OBS-SURFACE-SNAPSHOTS`, `##OBS-VERSION-CONTRACT`). It is a STRUCTURAL description and never a fingerprint: the command tree with its flags, the keys the manifest and the lock file accept, the members of every published schema, the text of every specification fact marked `actionstage=\"doc\"`, and the format registry. There are no hashes, no build dates and no state identifiers anywhere in it — the only identity it carries is the version number the owner declared, because that number is the only event by which this project computes a difference between versions. Written by `vibe doc surface --record <version>` into `maintenance/surface/<version>.json` of a documentation package, read by `vibe doc diff <old> <new>`, and rendered by nothing: the directory is the documentation developers' kitchen and the site does not serve it (`##OBS-NOTHING-LEAKS`). Source of truth for `crates/vibe-wire/src/generated/doc_surface/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_surface"
+    }
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "version": {
+      "type": "string",
+      "metadata": {
+        "description": "The version number the caller declared, verbatim. It is an INPUT and never a reading: the product cannot tell one amend of a version from another, and a snapshot that guessed its own number would be pretending to a history the project does not keep (`##OBS-VERSION-CONTRACT`)."
+      }
+    },
+    "commands": {
+      "elements": { "ref": "surface_command" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every command of the binary, in the order a walk of `--help` reaches them, each with the flags it accepts. This is the surface a reader types, so it is taken from the help the reader would read and never from the parser's source."
+      }
+    },
+    "manifest_fields": {
+      "elements": { "type": "string" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every dotted key path `vibe.toml` accepts, sorted — `package`, `package.title`, `package.binary[].name`. The list is what the real parser answers when asked, so it states what the product accepts rather than what a struct is called."
+      }
+    },
+    "lock_fields": {
+      "elements": { "type": "string" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The same for `vibe.lock`."
+      }
+    },
+    "schemas": {
+      "elements": { "ref": "surface_schema" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every JTD schema the format registry names, with its members. A document a foreign parser reads is a contract, and its members are the part of the contract a page quotes."
+      }
+    },
+    "facts": {
+      "elements": { "ref": "surface_fact" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The text of every specification fact marked `actionstage=\"doc\"` with an audience — the promises the documentation answers to. The TEXT is here and not a hash of it: a diff that could only say «this changed» would send a writer to read the whole corpus again."
+      }
+    },
+    "formats": {
+      "elements": { "ref": "surface_format" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The format registry as it stood, record by record."
+      }
+    }
+  },
+  "definitions": {
+    "surface_command": {
+      "metadata": {
+        "description": "One command of the binary and the flags it accepts."
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The command line a reader types as far as this node — `vibe doc build`."
+          }
+        },
+        "summary": {
+          "type": "string",
+          "metadata": {
+            "description": "The one-line description the parent's help gives it, empty at the root."
+          }
+        },
+        "flags": {
+          "elements": { "ref": "surface_flag" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "surface_flag": {
+      "metadata": {
+        "description": "One option of one command, as its own help spells it."
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The long form when there is one, else the short — `--format`, `-h`."
+          }
+        },
+        "value": {
+          "type": "string",
+          "metadata": {
+            "description": "The placeholder the flag takes, empty when it is a switch — `FORMAT`, `PATH`."
+          }
+        },
+        "summary": { "type": "string" }
+      }
+    },
+    "surface_schema": {
+      "metadata": {
+        "description": "One published document format and the members its schema states."
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The format id in the registry — the address that survives the file moving."
+          }
+        },
+        "path": { "type": "string" },
+        "fields": {
+          "elements": { "ref": "surface_schema_field" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "surface_schema_field": {
+      "metadata": {
+        "description": "One member of one form of one schema."
+      },
+      "properties": {
+        "form": {
+          "type": "string",
+          "metadata": {
+            "description": "The definition the member belongs to, empty for the document's own root."
+          }
+        },
+        "name": { "type": "string" },
+        "required": {
+          "type": "boolean",
+          "metadata": {
+            "description": "Whether the member sits in `properties` rather than `optionalProperties`. Moving a member between the two is a contract change and this is what makes it visible."
+          }
+        },
+        "shape": {
+          "type": "string",
+          "metadata": {
+            "description": "The member's form in one phrase — `string`, `uint32`, `elements of doc_page`, `enum user|author`."
+          }
+        }
+      }
+    },
+    "surface_fact": {
+      "metadata": {
+        "description": "One documentation obligation of the specifications."
+      },
+      "properties": {
+        "address": {
+          "type": "string",
+          "metadata": {
+            "description": "`<observed path>#<anchor>` — the address a page cites it by."
+          }
+        },
+        "audiences": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "text": { "type": "string" }
+      }
+    },
+    "surface_format": {
+      "metadata": {
+        "description": "One record of `formats/REGISTRY.toml`, verbatim."
+      },
+      "properties": {
+        "id": { "type": "string" },
+        "epoch": { "type": "uint32" },
+        "schema": { "type": "string" },
+        "recoverable": { "type": "boolean" },
+        "foreign_parsers": { "type": "string" },
+        "corpus": { "type": "string" },
+        "sunset": { "type": "string" }
+      }
+    }
+  }
+}

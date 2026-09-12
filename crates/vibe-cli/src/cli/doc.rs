@@ -40,6 +40,23 @@ pub enum DocCommand {
     /// ships it serves bare islands — the same content HTML the public
     /// site glues into its own frame.
     Serve(DocServeArgs),
+
+    /// Record what the product's surface looks like on one declared
+    /// version: the command tree with its flags, the keys the manifest
+    /// and the lock file accept, the members of every published schema,
+    /// the text of every documentation obligation, and the format
+    /// registry. There is no hash, no build date and no state identifier
+    /// in it — a version is a behavioural contract, and the number the
+    /// owner declares is the only thing this project compares versions
+    /// by.
+    Surface(DocSurfaceArgs),
+
+    /// Compare two recorded surfaces and print the pages to update, each
+    /// with the reason that reached it: a rule the page cites, a command
+    /// or a schema the page derives its text from, or a promise made to
+    /// an audience nobody tells. A change no page answers to is reported
+    /// as a page that does not exist yet.
+    Diff(DocDiffArgs),
 }
 
 /// `vibe doc build` — render the package.
@@ -147,6 +164,74 @@ pub struct DocServeArgs {
     /// running one.
     #[arg(long, value_name = "PATH")]
     pub binary: Option<PathBuf>,
+}
+
+/// `vibe doc surface` — the surface of one declared version.
+#[derive(Debug, clap::Args)]
+pub struct DocSurfaceArgs {
+    /// The version number this snapshot is recorded under. It is your
+    /// word and nothing reads it back: the product cannot tell one amend
+    /// of a version from another, so the number is an input.
+    #[arg(long, value_name = "VERSION")]
+    pub record: String,
+
+    /// The documentation package the snapshot is written into. Defaults
+    /// to the current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Write the snapshot here instead of the package's own
+    /// `maintenance/surface/`.
+    #[arg(long, value_name = "DIR")]
+    pub out: Option<PathBuf>,
+
+    /// The `vibe` binary whose surface is recorded. Defaults to the
+    /// running one, so a snapshot describes the build that took it.
+    #[arg(long, value_name = "PATH")]
+    pub binary: Option<PathBuf>,
+
+    /// Seconds one `--help` may take before it is killed.
+    #[arg(long, default_value_t = 300, value_name = "SECONDS")]
+    pub timeout: u64,
+}
+
+/// `vibe doc diff` — two surfaces, and the pages between them.
+#[derive(Debug, clap::Args)]
+pub struct DocDiffArgs {
+    /// The older version, by the number its snapshot was recorded under.
+    #[arg(value_name = "OLD")]
+    pub from: String,
+
+    /// The newer version. The word `now` means the product this command
+    /// is, compared without recording anything — a hint to a full
+    /// reconciliation about which pages to re-read first. It is off by
+    /// default because it is not a version: see `--allow-now`.
+    #[arg(value_name = "NEW")]
+    pub to: String,
+
+    /// Permit `now` as the newer side. Without it, `now` is refused:
+    /// inside a version the product changes invisibly by design, so a
+    /// comparison against the working tree answers a question the project
+    /// does not otherwise ask, and the flag is where that decision is
+    /// visible.
+    #[arg(long)]
+    pub allow_now: bool,
+
+    /// How the answer is printed: for a person, or for a machine.
+    #[arg(long, default_value = "md", value_parser = ["md", "json"])]
+    pub format: String,
+
+    /// The documentation package whose pages the changes are placed in.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// The `vibe` binary `now` is read from.
+    #[arg(long, value_name = "PATH")]
+    pub binary: Option<PathBuf>,
+
+    /// Seconds one `--help` may take before it is killed.
+    #[arg(long, default_value_t = 300, value_name = "SECONDS")]
+    pub timeout: u64,
 }
 
 /// `vibe doc check` — the checks that keep a manual from lying.

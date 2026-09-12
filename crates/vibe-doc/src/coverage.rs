@@ -72,6 +72,14 @@ pub struct Obligation {
     /// people it was made to, and the vocabulary's silent default (`dev`)
     /// is the absence of a promise, not a promise to developers.
     pub audiences: Vec<Audience>,
+    /// The fact's own text, verbatim.
+    ///
+    /// The gate itself never reads it — «is this told» is answered by an
+    /// address. It is carried because the surface snapshot records the
+    /// TEXT of every obligation (`##OBS-SURFACE-SNAPSHOTS`), and a second
+    /// walk of the corpus to fetch it would be a second opinion about
+    /// which facts are obligations.
+    pub text: String,
 }
 
 /// Why one (obligation, audience) pair is open.
@@ -284,6 +292,7 @@ pub fn obligations<'a>(docs: impl IntoIterator<Item = &'a ParsedDoc>) -> Vec<Obl
                 line: fact.line,
                 anchor,
                 audiences,
+                text: fact.body.clone(),
             });
         }
     }
@@ -314,22 +323,7 @@ pub fn check(
         .map(|p| (p.rel.clone(), page::audiences(&p.doc)))
         .collect();
 
-    // `<canonical file>#<anchor>` → the pages that cite it. The file is
-    // canonicalised on BOTH sides because an address resolves to an
-    // absolute path and an obligation carries a repo-relative one; on
-    // Windows the two spellings of one file differ in more than the
-    // separator.
-    let mut cited: BTreeMap<String, Vec<String>> = BTreeMap::new();
-    let mut located: BTreeMap<String, Option<String>> = BTreeMap::new();
-    for edge in citations::edges(package_dir, coordinate)? {
-        let Some(key) = edge_key(&edge.uri, sources, &mut located) else {
-            continue;
-        };
-        let pages = cited.entry(key).or_default();
-        if !pages.contains(&edge.page) {
-            pages.push(edge.page.clone());
-        }
-    }
+    let cited = cited_index(package_dir, coordinate, sources)?;
 
     let mut tallies: Vec<AudienceTally> = Audience::ALL
         .into_iter()
@@ -341,7 +335,7 @@ pub fn check(
         .collect();
     let mut gaps = Vec::new();
     for obligation in &obligations {
-        let key = canonical_key(&corpus_root.join(&obligation.path), &obligation.anchor);
+        let key = obligation_key(corpus_root, &obligation.path, &obligation.anchor);
         let citing = key.and_then(|k| cited.get(&k)).cloned().unwrap_or_default();
         for audience in &obligation.audiences {
             // The rows were built from `Audience::ALL` a few lines up,
@@ -385,6 +379,43 @@ pub fn check(
         unreadable: set.unreadable.iter().map(|u| u.rel.clone()).collect(),
         min_percent,
     })
+}
+
+/// `<canonical file>#<anchor>` → the pages of this package that cite it.
+///
+/// The file is canonicalised on BOTH sides because an address resolves to
+/// an absolute path and an obligation carries a repo-relative one; on
+/// Windows the two spellings of one file differ in more than the
+/// separator. Pair it with [`obligation_key`], which canonicalises the
+/// other side.
+///
+/// The gate and the version diff both need «which pages cite this rule»,
+/// and they get it from here rather than each building the map: two
+/// builders would be two answers, and the day they disagreed the gate
+/// would close on a page the diff never mentions.
+pub fn cited_index(
+    package_dir: &Path,
+    coordinate: &str,
+    sources: &SpecSources,
+) -> Result<BTreeMap<String, Vec<String>>> {
+    let mut cited: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut located: BTreeMap<String, Option<String>> = BTreeMap::new();
+    for edge in citations::edges(package_dir, coordinate)? {
+        let Some(key) = edge_key(&edge.uri, sources, &mut located) else {
+            continue;
+        };
+        let pages = cited.entry(key).or_default();
+        if !pages.contains(&edge.page) {
+            pages.push(edge.page.clone());
+        }
+    }
+    Ok(cited)
+}
+
+/// The key an obligation at `<corpus root>/<path>#<anchor>` is found
+/// under in [`cited_index`], or `None` when the file is not there.
+pub fn obligation_key(corpus_root: &Path, path: &str, anchor: &str) -> Option<String> {
+    canonical_key(&corpus_root.join(path), anchor)
 }
 
 /// The `<canonical file>#<anchor>` key one cited address resolves to, or

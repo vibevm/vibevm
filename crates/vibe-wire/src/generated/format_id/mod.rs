@@ -45,6 +45,8 @@ pub enum FormatId {
     DistributionAggregateManifest,
     DistributionBundleManifest,
     DocManifest,
+    DocSurface,
+    DocSurfaceDiff,
     ExtensionsAnalyze,
     Handshake,
     IndexByCap,
