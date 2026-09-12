@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Packages and their kinds</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>Everything vibe installs is a package: a folder with a small description file and the text or tools it delivers. Packages come in eight kinds, and the kind tells you what a package is for before you open it: a way of working, a feature, a technology, a tool, a language guide, an agent server, documentation, or an application.</p>
   <example id="list" fixture="hello-vibe">
     <run>vibe list --path hello-vibe</run>
@@ -15,6 +15,19 @@ flow  wal  1.0.0    package  —
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#PACKAGES-CARRY-THE-LAYOUT-TOO"/>
     <p>A package is named by a *[coordinate](../glossary/index.xml#coordinate)*: a group, a slash, and a name, as in `org.vibevm.world/wal`. The group looks like a reversed domain name and says who publishes; the name is unique within the group. A version completes the address when one is needed: `org.vibevm.world/wal@1.0.0`. The kind is not part of the name. It may be written as a prefix on the command line, `flow:org.vibevm.world/wal`, and then vibe checks that the package really is of that kind.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"/>
+    <p>The group is a claim, not a credential: nothing checks that the publisher of `com.google/x` owns that domain, and nothing ever will, because vibe has no central verifier to ask. The name is unique within its group, so the coordinate alone is the identity. On the command line the kind prefix and the group are both optional; in a manifest the coordinate is always written in full. In a registry the repository is named by joining group and name with a dot, `org.vibevm.world.wal`, which is itself a valid reversed domain name.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-IS-A-CLAIM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#NAME-UNIQUE-IN-GROUP"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#PKGREF-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#SHORT-CLI-ONLY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#IDENTITY-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#JOINER-UNDERSCORE"/>
+    <p>Wherever a package is named in a project, the full coordinate stands: `group/name` in a requirement, `group.name` as a repository name, `group/name` as the first segment of a `spec://` address. Short names survive only as what a person types once at the command line.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-029#ADDR-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-029#CARRIER-PKGREF-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-029#CARRIER-REPO-NAME-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-029#CARRIER-SPEC-URI-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-029#ADDR-SHORT-NAMES"/>
   </a-package>
   <the-kinds title="The eight kinds">
     <table>
@@ -32,13 +45,26 @@ flow  wal  1.0.0    package  —
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
     <p>The kind is metadata about the package, not part of its identity: it decides where content is placed, what the `--kind` filter of `vibe list` and `vibe search` shows, and whether a kind-prefixed name is accepted. Two packages of different kinds may not share a coordinate, because the coordinate alone is the identity.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA"/>
+    <p>An `app` differs from a `tool` mechanically: a tool lives in a project and runs through `vibe bin exec` by the lock file, while an app runs in no consumer project and is built and deployed on its own.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-APP-VS-TOOL"/>
   </the-kinds>
   <families title="Families and companions">
     <p>Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the language guide, the server that serves its tools, and a small bundle that pins both at one version. This is a *family*. Requiring the bundle installs the family, and a change to any member bumps every member to one shared version, so the pieces can never drift apart.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
+    <p>The bundle itself is the smallest package there is: a manifest and a README, no code and no boot snippet. Its one job is to name the family's members at one version.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR"/>
     <p>Documentation is the exception. A package's manual is its *[companion](../glossary/index.xml#companion)*, named with the suffix `-docs` in the same group, and it keeps its own version line. A fixed typo in the manual does not release the tools, and a new tool version does not demand a new manual. The manual says which versions of its subject it describes, and the site picks the newest manual that fits.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
   </families>
+  <on-disk title="How a package lands on disk">
+    <p>`[package].materialization` says how a package arrives in a consumer's tree. `copy` is the default and all an ordinary package needs; `hardlink` is the same content sharing bytes with the store. Both are vendored: the folder is committed with the project and restores offline from it. `in-place` keeps a live git checkout with its own `.git`, ignored by git and restored by a fresh clone at the locked commit, so it needs the network and a git source. Anything destructive on such a slot, an uninstall, a forced reinstall or a version switch, asks first, or needs `--force` when nobody can answer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#MODE-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#SNAPSHOT-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#VENDORED-COPY-MODES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#IN-PLACE-NOT-VENDORED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#IP-REQUIRES-GIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#DESTRUCTIVE-CONFIRM"/>
+  </on-disk>
   <edge-cases title="Edge cases and rules">
     <p>Changing a package's group or name creates a new package, not a rename: versions do not carry across, and old coordinates are never reused for different content.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-CHANGE-NEW-PACKAGE"/>
@@ -46,5 +72,12 @@ flow  wal  1.0.0    package  —
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-NOT-INSTALLED"/>
     <p>A short name without a group, such as `wal`, is accepted on the command line and resolved through the [registry](../glossary/index.xml#registry) [index](../glossary/index.xml#index-registry); it is convenience, and the manifest always records the full coordinate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-SHORT-BEHAVIOUR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#RESOLVE-ONCE-WRITE-QUALIFIED"/>
+    <p>Resolving a short name needs the index, one lookup per registry; a registry without one offers no short names, and the full coordinate is required. If the lock file already pins a package of that name, the short name means the locked one. When two registries offer different packages under one name, vibe stops with exit code 7 and lists the candidates, and you repeat the command with the group. A kind prefix checks the result and never disambiguates, because two packages of different kinds cannot share a coordinate.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#INDEX-DEPENDENCY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#LOCKFILE-AUTHORITATIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#COLLISION-BEHAVIOR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#EXIT-CODE-7"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-VALIDATION"/>
   </edge-cases>
 </spec>

@@ -25,6 +25,9 @@
     <p>Each tool is one `[[binary]]` entry: a `name`, unique in the package, and a `crate`, a directory inside the shippable tree with a `Cargo.toml`. `vibe bin list` shows what the installed packages declare, `vibe bin build` builds the named tools or all of them, `vibe bin path` prints an artifact's location, and `vibe bin exec &lt;name&gt; -- &lt;args&gt;` runs it through the lock file. Building executes the package's build scripts, so it asks for consent the first time, like an install does.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
+    <p>The `name` is unique within the package and should be safe from collisions across packages, which the family prefix gives you for free. The `crate` names a folder inside the shippable tree with a Cargo package whose binary is called exactly `name`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#NAME-CONSTRAINTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#CRATE-CONSTRAINT"/>
     <example id="bin-list" fixture="hello-vibe-cwd">
       <run>vibe bin list</run>
       <expect></expect>
@@ -37,7 +40,21 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#VIBE-FREE-SERVING"/>
     <p>A server that serves another package's toolchain, the gates of a language discipline for example, must require that package with an exact pin, `=X.Y.Z`. The engines behind the agent's tools and the gates the consumer runs must resolve to one version set: one engine, one truth, enforced by the resolver rather than by the protocol.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#EXACT-PIN-LAW"/>
+    <p>The kind promises a server: an `mcp` manifest without an `[[mcp_server]]` table is refused. The server is one of the package's own binaries, so `binary` must name a `[[binary]]` of the same manifest, and its delivery, consent and staleness follow the binary machinery. In `args`, the only substitution is `{project_root}`, resolved at registration; an unknown token is refused.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#KIND-PROMISES-SERVER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#SERVER-IS-BINARY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET"/>
   </servers>
+  <hooks title="Install hooks">
+    <p>A package may run a script when it is installed. `[hooks]` names a base path without extension, and the package ships `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` or both; the runner picks the one for the host. `pre-install` runs as soon as the package's folder is complete and before vibe uses it; `post-install` runs after the install is durable, with the lock written and the boot files regenerated. The working directory is the package's own folder in the dependency tree, and the environment names the package's group, name, version, kind, folder and the phase. A hook's edits to files vibe owns are ephemeral: a reinstall or an update restores those bytes and runs the hook again.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#BASE-PATH-VALUE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#SCRIPT-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-PRE-INSTALL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-POST-INSTALL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#CWD-IS-SLOT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOK-ENV"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+  </hooks>
   <edge-cases title="Edge cases and rules">
     <p>A tool's artifact belongs to the exact version installed; after an update the old artifact is not trusted, and the next `vibe bin exec` builds the new version first.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#TRUST-CURRENT-SLOT"/>
@@ -45,5 +62,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY"/>
     <p>The `[[mcp_server]]` table is legal only in packages of kind `mcp`; a `tool` package ships binaries but no servers.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
+    <p>A `.vibeignore` at the package root adds globs to the list of build output that never enters the shippable tree.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SURF-VIBEIGNORE"/>
   </edge-cases>
 </spec>

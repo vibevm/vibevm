@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Publish a package</title>
-  <status stage="doc" state="work" audience="author"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>You wrote a package and want others to install it. This page publishes it to the place your projects install from, as its own repository, tags the version, and checks that a fresh project can install it.</p>
   <prompt id="publish-a-package">Publish the in-tree package org.acme/notes of this project, the slot vibevm/vibepacks/org.acme/notes/v0.1.0, to the first registry of this project, using the publish token already in my environment, then create a scratch project elsewhere and install the published package into it to prove it works. Ask me before the actual push.
     <needs>the vibevm skill installed for your agent; a publish token for the registry's host in the environment or under `~/.vibe/`; the package's `vibe.toml` complete, with a version that has not been published before</needs>
@@ -11,10 +11,20 @@
   <what-happens title="What happens">
     <p>The agent runs `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` first and shows you what would happen: the [registry](../glossary/index.xml#registry), the repository name derived from the [coordinate](../glossary/index.xml#coordinate), the version tag. After your yes it runs the real command: vibe creates the repository in the registry organisation through the host's API if it does not exist, pushes the package's shippable tree, and tags the version. The package is then one more repository the registry's [index](../glossary/index.xml#index-registry) will pick up. To prove it, the agent creates a scratch project and installs the package by coordinate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
+    <p>The publisher is a mechanical tool: it creates the repository, pushes the content and tags the version, and nothing more. The host of the registry's address picks the adapter that creates repositories; GitHub and GitVerse are known, and an unknown host is a clear error rather than a guess. In the repository the package content lies flat at the root, and the version is the tag `v` followed by the version number.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-UTILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#FLAT-LAYOUT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-TAG-VERSION"/>
   </what-happens>
   <by-hand title="By hand">
     <p>1. Put a publish token where vibe reads it. That is the environment variable `VIBEVM_PUBLISH_TOKEN`, or a file `~/.vibe/&lt;host&gt;.publish.token` such as `~/.vibe/github.publish.token`, readable by you alone. The token needs the right to create repositories in the organisation.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
+    <p>vibe looks for the token in a fixed order and takes the first it finds: `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` for the registry's host, such as `VIBEVM_PUBLISH_TOKEN_GITHUB`, then `VIBEVM_PUBLISH_TOKEN`, then the per-host file, then the older `~/.vibe/git.publish.token`. The token is a surface secret: it is never printed, never logged, never written to a file vibe writes, and leaves the process only in the request to the host over an encrypted connection.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-HOST-ENV-VAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-PER-HOST-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-SECRECY-INVARIANT"/>
     <p>2. Rehearse:</p>
     <example id="publish-dry-run" fixture="package-notes">
       <run>vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run</run>
@@ -27,9 +37,13 @@
     </example>
     <p>4. Install it from a fresh project to be sure: `vibe init scratch` and `vibe install &lt;group&gt;/notes --path scratch`.</p>
   </by-hand>
-  <versions title="Versions never move">
-    <p>A published version is immutable: a tag that already exists is refused, and consumers verify the content [fingerprint](../glossary/index.xml#fingerprint) on every install, so a re-pushed tag is caught rather than silently accepted. To ship a fix, bump the version in the manifest and publish again.</p>
+  <versions title="Publishing a version again">
+    <p>Publishing a version that already exists replaces it: vibe appends a commit with the new content and moves the version tag to it. The version number changes only when you change it in the manifest. A consumer who already resolved that version keeps the exact bytes the [lock file](../glossary/index.xml#lock-file) recorded, and verifies the content [fingerprint](../glossary/index.xml#fingerprint) on every install, so the moved tag is noticed rather than silently accepted; a fresh install gets the new content. When the change matters to consumers, bump the version.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-MUTABLE-VERSIONS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#THE-FREEZE-MODEL"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
+    <p>The publisher never rewrites the registry's history: every publish commit is a child of the head it observed, the tag moves only inside one atomic push guarded by the expected state of both refs, older tags are never touched, and the run stays inside the organisation the manifest names.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-NEVER-RULES"/>
   </versions>
   <workspaces title="Several packages at once">
     <p>A repository that develops several packages publishes them with `vibe workspace publish`. It orders the members by their dependencies on each other and publishes each as its own repository. It stops at the first failure with a report of what was published and what remains. Each published copy carries an `[origin]` table naming the repository and the commit it came from, so a copy can always be traced to its source. `--member` restricts the run to one node; `--dry-run` shows the selection and the order without pushing.</p>

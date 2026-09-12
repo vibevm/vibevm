@@ -14,6 +14,7 @@ org.vibevm.world      wal                           1.0.0           -           
   <asking title="Asking for a version">
     <p>Package versions follow semantic versioning: three numbers, where the first changes when a package breaks compatibility. In the [manifest](../glossary/index.xml#manifest) you name a constraint, not a version: `^1.0` means any 1.x from 1.0 up, `=1.2.0` means exactly that one, and a bare [coordinate](../glossary/index.xml#coordinate) means the newest stable release. The resolver picks one version per package that satisfies every constraint in the graph, and the [lock file](../glossary/index.xml#lock-file) records the choice.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-LATEST"/>
     <p>A family of packages that must move together pins its members exactly, so that a language guide and the server that serves its tools always resolve to one version set. You will meet these pins in the manifests of bundles; they are deliberate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#AGGREGATOR-PINS-DELIBERATE"/>
   </asking>
@@ -25,6 +26,9 @@ org.vibevm.world      wal                           1.0.0           -           
   <what-a-version-promises title="What a version promises">
     <p>A version number is a contract: version 1 does what version 1 is documented to do. Inside a version the files behind it may be rebuilt, corrected or re-published, and a reader of the documentation does not see that kitchen. This is also how vibe treats its own releases. The binary you get from `vibe self install latest` is whatever the main branch holds today, under one version number. The manual describes the contract of that number rather than the files of one build.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-VERSION-CONTRACT"/>
+    <p>A package version is a snapshot by default, in the sense the word has in Maven: its content may change under the same number, and `vibe update` brings the fresh content. A frozen version is the exception a publisher declares. Before the first public release, breaking changes ship without migration notes; the switch that ends that regime is the owner's alone.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#THE-FREEZE-MODEL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"/>
   </what-a-version-promises>
   <vibe-itself title="Versions of vibe itself">
     <p>The program manages its own versions with `vibe self`: `self install` builds a version from source or installs a verified bundle, `self ls` lists what the machine holds, `self use` switches the active one, and `self rollback` returns to the previous one. The selector `latest` means the tip of the main branch, `stable` the newest tagged release, and a plain `X.Y.Z` that tag.</p>
@@ -32,6 +36,15 @@ org.vibevm.world      wal                           1.0.0           -           
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#SEL-STABLE"/>
     <p>Switching versions never overwrites a running binary and never requires a new terminal: the active version is a pointer the shim follows on the next call.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ACTIVATION-LAW"/>
+    <p>The manager looks after the program on the machine, not a project's dependencies, and its launcher folder goes on `PATH` once. `self use` repoints the active version; `--eval` prints a shell line for a one-terminal override instead. `self update` follows where the running copy came from: a source checkout rebuilds at the tip, an installed binary refreshes its own version number and never jumps to another. `self rollback` swaps to the previous version and back again. The active version needs `--force` to be removed, and the copy that is running cannot be removed at all. Every prompt has a flag, so the whole thing works from a script or an agent, and `vibe vars` prints the variables the installation reads, without the publish token.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#VVM-IS-TOOL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#PATH-SHIM-DIR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-USE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-UPDATE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-ROLLBACK"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#RM-PROTECTED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#FULLY-SCRIPTABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#VARS-CONTENT"/>
   </vibe-itself>
   <edge-cases title="Edge cases and rules">
     <p>Two packages with the same coordinate and version but different bytes are two different things, and the second is refused. If a maintainer needs to re-publish, the version number changes.</p>

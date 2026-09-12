@@ -19,6 +19,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-DOCUMENTS-MATCH"/>
     <p>The name `&lt;source&gt;-&lt;lang&gt;` in the source's group is what makes the translation official by default. A translation from another group is found and shown as a community translation, with its publisher.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION"/>
+    <p>The default name of a translation is the documentation's name with the language tag in lower case, `vibevm-docs-ru` or `vibevm-docs-pt-br`, in the same group.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-TRANSLATION-NAME"/>
   </the-manifest>
   <the-rules title="The rules of a translation">
     <p>A translation mirrors blocks, not sentences: within a block the translator writes what a native editor would write, replaces a joke with one that works in the language or drops it, and follows the glossary of the translation. It never authors examples: an example's output is checked once, on the source, and a translation points at it. It never adds an anchor, because a link into the source must land on the same block in every language, which is also what lets the reader switch languages without losing the place.</p>

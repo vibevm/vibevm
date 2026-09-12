@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Machine formats and JSON reports</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author,agent"/>
   <p>Every command can answer in JSON for scripts and agents. This page lists the documents, their schemas and the envelope fields that every document carries.</p>
   <example id="list-json" fixture="hello-vibe">
     <run>vibe list --json --path hello-vibe</run>

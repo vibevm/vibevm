@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The lifecycle: from validate to deploy</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>Building software has a fixed order of steps, and vibe names them: check the tree, produce generated sources, build, test, let an agent create what only an agent can, verify, assemble, deploy. Each step runs only when something it depends on changed.</p>
   <example id="deploy-plan" fixture="hello-deploy">
     <run>vibe deploy --plan --profile local --path hello-deploy</run>
@@ -25,6 +25,9 @@
       <tr><td>`deploy`</td><td>apply the packaged artifacts to explicit destinations through a named profile</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-BUILD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-DEPLOY"/>
   </the-phases>
   <fresh title="Nothing runs twice for nothing">
     <p>Every phase run records a [fingerprint](../glossary/index.xml#fingerprint) of the inputs it declared; the next run skips a phase whose inputs did not change. Freshness is judged per [contribution](../glossary/index.xml#contribution), so one stale step re-runs alone and its neighbours stay skipped. This is what makes `vibe deploy` cheap to type twice: the second time it mostly reports that everything is fresh.</p>

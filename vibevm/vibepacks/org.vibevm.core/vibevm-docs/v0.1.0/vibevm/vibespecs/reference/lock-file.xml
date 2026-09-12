@@ -19,6 +19,9 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE"/>
+    <p>`root_dependencies` mirrors the manifest's `[requires.packages]`, so the lock file is a self-contained snapshot that needs no manifest to read. Removing a root with `vibe uninstall` drops it from both files; removing a package that is only a transitive dependency is refused with an explanation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCKFILE-V2"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-ROOT-DEPENDENCIES"/>
   </meta>
   <package-entries title="[[package]]">
     <table>

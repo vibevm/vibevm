@@ -21,12 +21,19 @@
   <the-store title="The machine store">
     <p>Every package vibe fetches, for any project, lands in one [store](../glossary/index.xml#store) under your home directory, `~/.vibe/cache/`, keyed by the package's identity rather than by where it came from. A version fetched for one project is available to every other project on the machine, whichever registry they configure, and the store is never emptied behind your back: reclaiming space is a command you run.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-STORE-IS-DOT-VIBE-CACHE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#EXPLICIT-RECLAIM"/>
     <p>The store can be warmed on purpose. `vibe cache add` fetches a package and everything it depends on without touching any project, which is how you prepare for a flight or how a machine gets the manual of a package for local reading. `vibe cache list` shows what the store holds; `vibe cache check` verifies every entry against its fingerprint.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-ADD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-LIST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CHECK"/>
+    <p>`vibe cache clean` reclaims space, all of it, by age or by package, and only when you say which.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CLEAN"/>
   </the-store>
   <offline title="Offline">
     <p>With `--offline`, or `VIBE_OFFLINE=1` in the environment, vibe touches no network at all. Resolution and fetch are satisfied from the store, local mirrors, the project's own dependency tree and path sources. Anything that is not there is a hard error naming the missing package; vibe never silently installs a partial result.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-FLAG"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
     <p>A version in the store is usable even if no registry lists it any more. The store holds bytes that were verified when they arrived; a registry that has gone quiet does not make them worse.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY"/>

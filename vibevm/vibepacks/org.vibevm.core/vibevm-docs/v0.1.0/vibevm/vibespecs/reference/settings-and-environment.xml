@@ -38,6 +38,23 @@ VIBE_LOG=warn</expect>
     <p>Preferences merge layer by layer: a scalar from a higher layer replaces, tables merge deeply, arrays replace as a whole. `vibe prefs list` shows every resolved value with its origin, `vibe prefs show-origins` the [contribution](../glossary/index.xml#contribution) of each layer, and `vibe prefs set` writes one key into one layer.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-SCALARS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-ARRAYS"/>
+    <p>The three layers are the machine, `~/.vibe/settings.toml`, the repository, `.vibe/settings.toml`, and your own copy for one project, `.vibe/settings.local.toml`, which `vibe init` adds to `.gitignore` so it is never committed by accident. The precedence between them is one fixed law, written in the binary. A missing or broken file counts as absent with a warning, never as an error. Every key is declared with a type and a default, and an unknown key is a loud warning at boot and in `vibe prefs check`. These files hold how vibe looks and behaves for you; project properties live in the manifest, and a committed settings file may carry no secrets. The commands are `vibe prefs get`, `set` with `--layer`, `list`, `check`, `migrate` and `show-origins`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L1-USER-MACHINE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L3-USER-PROJECT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#gitignore-autogen"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#precedence-law"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#app-prefs-not-project"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#no-secrets-in-committed"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command"/>
+    <p>`vibe prefs` without arguments opens a settings screen in the terminal: a tree of pages on the left, drawn by the same widget as `vibe tree`, and a form on the right. Editing a field writes to a layer you choose, your own project layer by default inside a project and the machine layer outside one. A field shows its provenance on demand, the winning layer and the shadowed ones, and lets you override or clear one layer without touching the others. A search finds settings by key, name, description and synonyms.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget-req"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-context"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-view"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-edit"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#settings-search"/>
   </inside-a-project>
   <variables title="Environment variables">
     <table>
@@ -66,6 +83,7 @@ VIBE_LOG=warn</expect>
   <edge-cases title="Edge cases and rules">
     <p>Token files are surface secrets: restrict them to your user, never commit them, never paste their contents anywhere. vibe redacts a token in every output and error, and the discipline on your side is the same.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-SURFACE-SECRET"/>
     <p>`vibe show config` is the project-configuration view with the origin of each value; `vibe prefs` is the application-preference file. They are different files and different commands.</p>
   </edge-cases>
 </spec>

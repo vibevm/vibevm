@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The dependency tree on screen</title>
+  <status stage="doc" state="work" audience="user,author,agent"/>
+  <p>`vibe tree` draws the packages a project resolved as a tree, says for each one how its text reaches the agent, and explains why. On a terminal it opens an interactive screen; in a script it prints a plain tree or JSON. This page is that command, its screen, and the way an agent can look at the screen without a terminal.</p>
+  <example id="tree" fixture="hello-vibe">
+    <run>vibe tree --plain --path hello-vibe</run>
+    <expect>project: &lt;TMP&gt;/work/hello-vibe
+STATIC.md: (none)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.md
+
+org.vibevm.world/wal  dynamic  .  .  .</expect>
+  </example>
+  <what-it-shows title="What it shows">
+    <p>The command reads the committed [lock file](../glossary/index.xml#lock-file), the manifests and the generated boot files of the project at `--path`, and writes nothing: it never touches the tree, a manifest, the lock or the generated files. Each package is one row, with the columns in a fixed order. The load column is the lane a package's [boot snippet](../glossary/index.xml#boot-snippet) landed in, read from the generated files rather than recomputed, so the screen shows what an agent will read. A package that appears under several parents is drawn under each one and marked `(*)` after the first, without being expanded again. The status line shows the size of the compiled lane in bytes and lines.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-ANSWER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-INPUTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-READ-ONLY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#ROW-PER-PACKAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EFFECTIVE-FROM-ARTIFACTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DAG-RENDERING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#STATIC-SIZE-INDICATOR"/>
+  </what-it-shows>
+  <three-outputs title="Three outputs">
+    <p>On a terminal the default is the interactive screen. When the output is not a terminal, or with `--plain`, the command prints a static tree. `--json` emits one object with the same data the screen renders, valid against the shipped schema, for any tool downstream.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-TUI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-PLAIN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-JSON"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#JSON-CONTRACT"/>
+    <p>Two warnings come with the tree. Root drift means the lock file's list of roots disagrees with the manifest, so the lock is behind. Stale artifacts means the committed boot files disagree with a fresh computation, so the project needs `vibe reinstall`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-ROOT-DRIFT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-STALE-ARTIFACTS"/>
+  </three-outputs>
+  <the-screen title="The screen">
+    <p>The screen has three display modes, each a configuration of one tree widget and none a flat list, and three shapes of the tree, chosen per mode; the active mode is picked from a menu, shown in the status line and remembered. Primary actions sit on function keys: `F1` opens Search Everywhere, `F2` the sort menu, `F3` the mode menu, `F4` the settings screen, `F6` copies the current screen and `Shift+F6` opens the copy settings. The footer lists the active keys, with `Shift` written as an arrow to keep the hints short.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THREE-MODES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THREE-SHAPES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODE-SELECT-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F-KEY-SCHEME"/>
+    <p>Inside the tree the arrows move and pan, `Space` folds a node, `Enter` opens the detail card, and `Shift` with a horizontal arrow switches tabs anywhere in the application. Search Everywhere works as in an IDE: an «All» tab that searches everything and tabs per category. The sort menu depends on the mode. Controls are grouped, and `Tab` steps between groups. Modals stack: each new one draws over the last, `Esc` closes the top one, and at the base screen `Esc` asks before quitting, because a session may have been slow to load.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TREE-KEYS-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F1-SEARCH-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F2-SORT-MENU-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOCUS-GROUPS-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODAL-STACK-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#QUIT-CONFIRM-REQ"/>
+    <p>Copy is «what I see is what I copy»: each screen serialises what it shows, as text by default, as Markdown or a file on request; a PNG export is reserved and says so. The interface state, the mode and the sort, shape and order choices, is saved under `~/.vibe/tree/` and restored at the next launch; a missing or broken file falls back to the defaults. The colour tier is detected once from the environment and can be overridden in the settings.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COPY-FLOW-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COPY-PROVIDERS-REQ"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PNG-RESERVED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SETTINGS-PERSISTENCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TIER-DETECTION"/>
+  </the-screen>
+  <the-terminal-app title="A terminal of its own">
+    <p>`vibe term` launches vibeterm, a terminal application hosting a shell, so the screen can be used and inspected on its own. A `vibe tree` started inside vibeterm does not open a second window: it takes over the current terminal for the session.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#TERM-LAUNCHER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#IN-PLACE-UPGRADE"/>
+  </the-terminal-app>
+  <for-agents title="Looking at the screen from an agent">
+    <p>An agent has no terminal, so the `vibe aiui` family renders the screen for it. The render verb builds the same model `vibe tree` builds at `--path`, drives a key script at a given size, `80x24` by default, and prints a snapshot in one of two formats: plain text, or `cells`, a run-length encoding of every cell with its glyph, colours and modifiers, for assertions about style. A key script is a space-separated list of key names, function keys, arrows, `Enter`, `Esc`, `Tab` and the rest, with a `Shift+` prefix where needed. Keys that would leave the process or change the world, `F4` and the copy keys, are refused rather than executed. The model verb projects the state without rendering at all, and the terminal verbs drive a live vibeterm session.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#AIUI-FAMILY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#RENDER-VERB-SEMANTICS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#SNAPSHOT-FORMATS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#FMT-CELLS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#KEY-SCRIPT-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#SIDE-EFFECT-KEYS-REFUSED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#MODEL-VERB"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#TERMINAL-VERBS"/>
+    <p>Underneath, every action of the interface has an address, `action://&lt;group&gt;/&lt;name&gt;`, and the observable state is one serialisable snapshot with the focus, the open modals, the visible rows and the enabled actions with their reasons, carrying no rendering types. A headless surface lists the actions, invokes one by address, returns the snapshot and runs the search, which is how an agent drives the screen without seeing it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#ADDRESS-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#MODEL-VIEW-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#AIUI-REFERENCE"/>
+  </for-agents>
+  <edge-cases title="Edge cases and rules">
+    <p>English is the complete locale of the interface and the last fallback; another locale may lag and falls back silently. A package may ship its own locale file, and a language pack may override one.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#I18N-FALLBACK-LAW"/>
+  </edge-cases>
+</spec>
