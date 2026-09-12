@@ -232,6 +232,27 @@ exclude = [
     # Exclude only the uninstalled README retained as package history; the
     # package's XML specs and the wider namespace remain observed.
     "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0/README.md",
+    # A DOCUMENTATION PACKAGE'S EXAMPLE FIXTURES — trees the example runner
+    # builds a sandbox from, not text this project authored.
+    #
+    # `##PIPE-EXAMPLE-RUNNER` defines a fixture as "a directory with a tree
+    # and an `example.toml`", and the tree is whatever state the documented
+    # command needs: a registry holding a copy of `flow:wal`'s nine files, a
+    # scratch project carrying somebody's `NOTES-FLOW.md`. They came into
+    # the corpus as a side effect of admitting the manual's namespace
+    # (`153e68d9`), and they are the wrong genre twice over — they are
+    # COPIES of packages this project observes elsewhere under their own
+    # paths, so marking them would mark the same claim twice, and they are
+    # INPUT to a check rather than a claim about anything: the line F-096
+    # drew is that a document belongs in the corpus when it asserts
+    # something this project could be wrong about, and a fixture asserts
+    # nothing — the example's `expect` does.
+    #
+    # Narrow by construction: it names the manual's own `examples/` and no
+    # other directory, version-agnostic so the next slot inherits it. Never
+    # widen it to `**/examples/**` — an `examples/` directory in an ordinary
+    # package may hold authored prose.
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/*/examples/**",
 ]
 
 # DOCUMENTATION: OBSERVED, NEVER JUDGED (PROP-057 ##OBS-NOT-JUDGED).

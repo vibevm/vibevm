@@ -80,17 +80,33 @@ fn genre_of(doc: &SpecDoc) -> PageGenre {
 /// vocabulary's own order (`user`, `author`, `dev`, `agent` — the ladder
 /// PROP-043 declares them on), without repetition.
 fn audiences_of(doc: &SpecDoc) -> Vec<Audience> {
-    let mut found: Vec<Audience> = Vec::new();
+    let spoken = audiences(doc);
+    AUDIENCES
+        .iter()
+        .filter(|a| spoken.iter().any(|s| map_audience(*s) == **a))
+        .cloned()
+        .collect()
+}
+
+/// Who a page speaks to, in the progress vocabulary the page's markup is
+/// written in, in that vocabulary's own order and without repetition.
+///
+/// Public because «who is this page for» must mean ONE thing in this
+/// crate: the manifest row carries it to the reader and the coverage
+/// gate closes an obligation with it ([`crate::coverage`]). Two walks
+/// would answer differently the first time a block grew a new place to
+/// carry a status, and then the navigation and the gate would disagree
+/// about a page nobody would think to re-read.
+pub fn audiences(doc: &SpecDoc) -> Vec<progress_core::model::Audience> {
+    use progress_core::model::Audience as Spoken;
+    let mut found: Vec<Spoken> = Vec::new();
     let mut take = |status: Option<&StatusEl>| {
         for a in status.iter().flat_map(|s| s.audience.iter()) {
-            let mapped = map_audience(*a);
-            if !found.contains(&mapped) {
-                found.push(mapped);
+            if !found.contains(a) {
+                found.push(*a);
             }
         }
     };
-    // `Audience` is a generated wire type and carries no `Copy`, so the
-    // vocabulary order is walked by reference and cloned once at the end.
     take(doc.status.as_ref());
     for unit in units(doc) {
         take(unit.fact.as_ref().and_then(|f| f.status.as_ref()));
@@ -98,10 +114,9 @@ fn audiences_of(doc: &SpecDoc) -> Vec<Audience> {
     for section in sections(doc) {
         take(section.status.as_ref());
     }
-    AUDIENCES
-        .iter()
+    Spoken::ALL
+        .into_iter()
         .filter(|a| found.contains(a))
-        .cloned()
         .collect()
 }
 

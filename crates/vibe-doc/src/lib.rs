@@ -35,6 +35,13 @@
 //!   — the navigation, the `llms` files, `/doc/manifest.json` — is one
 //!   fold over it rather than a second walk of the package.
 //!
+//! * [`coverage`] — the gate. A spec fact marked `actionstage="doc"`
+//!   with an audience is a PROMISE that the documentation will tell that
+//!   audience this rule; the gate asks, per audience, whether a page for
+//!   those people cites it. It answers «is everything told», which is
+//!   the question a table of contents cannot answer and a navigation
+//!   must never be built from (`##OBS-COVERAGE-GATE`).
+//!
 //! * [`llms`] — the corpus as a machine reads it: the index, the whole
 //!   text, and two tiers cut to a token budget, all in the layer law's
 //!   order — stable text before text that moves with the product
@@ -99,6 +106,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod citations;
 pub mod content;
+pub mod coverage;
 pub mod derived;
 pub mod error;
 pub mod examples;
