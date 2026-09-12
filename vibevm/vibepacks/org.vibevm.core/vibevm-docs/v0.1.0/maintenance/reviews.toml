@@ -42,3 +42,78 @@ by = "central session"
 path = "model/packages-and-kinds.xml"
 read = "2026-09-12"
 by = "central session"
+
+[[page]]
+path = "model/registries.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/versions.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "model/lock-and-store.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/install-a-package.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/update-packages.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/remove-a-package.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/work-offline.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/publish-a-package.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/read-documentation-locally.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/set-up-a-workspace.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "howto/use-a-private-registry.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "lifecycle/phases.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "lifecycle/build-package-deploy.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "lifecycle/extensions-and-providers.xml"
+read = "2026-09-12"
+by = "central session"
+
+[[page]]
+path = "lifecycle/scrape.xml"
+read = "2026-09-12"
+by = "central session"
