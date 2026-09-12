@@ -71,7 +71,8 @@ A0.27 в плане отсутствует.
 | — | `eb803e29` `docs(backlog): file the phase-0 product findings` | B-123…B-130 из X-001, X-002, X-005, X-008–X-010, X-013 и F-05; P1 (X-017) не заводится — у владельца |
 | — | `ab7731b6` `chore(specmap): tag the bridge code and regenerate the map` | пять сирот bridge-кампании получили `specmark::scope!` (J-049); 8 унаследованных `unbumped-hash` записаны как данные |
 | — | `69053551` `chore(wire): raise the derive baseline for non-wire types` | J-048: ratchet держал не-wire типы; `release_manifest.rs` — настоящий wire, схема JTD у воркера P1-O3 |
-| — | `bb6320b1` `refactor(wire): generate the distribution manifests from a JTD schema` | P1-O3: одна схема с `x-wire-order`, поведение в `vibe-wire::behaviour` (правило сироты), байты голденов не сдвинулись; шаг 3 панели зелёный; панель падает на шаге 5 — унаследованные красные (`upstream_authors` в фикстуре теста, clippy в `xtask/src/bridge.rs` и `vibe-install`, дрейф корпуса `index/e1`) у воркера P1-O4 |
+| — | `bb6320b1` `refactor(wire): generate the distribution manifests from a JTD schema` | P1-O3: одна схема с `x-wire-order`, поведение в `vibe-wire::behaviour` (правило сироты), байты голденов не сдвинулись; шаг 3 панели зелёный |
+| — | `03f01007` `chore(panel): clear the inherited test fixture and clippy reds` | P1-O4: фикстура `upstream_authors`, clippy по существу (замыкание в `fetch.rs`, `PinArgs` в `bridge.rs`); третий красный — перелом провода корпуса `index/e1` (J-069, review-маркер); ещё 11 фикстур `schema_version = 6` (J-070) — пакет P1-O5 |
 | A1.1 + A1.2 | `ed75ce00` `docs(spec): admit doc and app kinds so documentation ships as packages` | под целью сессии владельца, с датированной пометкой «pending ratification» в тексте поправки; `VIBEVM-SPEC.md` §4.1 и PROP-000 `KIND-SET`/`INV-VOCABULARY` одним коммитом; ратификация — при слиянии (review-маркер) |
 | A1.11 | локальный файл, не коммитится | план стюарда r2: DOCS-SPIKES принят, current_node DOCS-CONTRACT; `GOAL.md` перерисован |
 
@@ -114,7 +115,7 @@ A0.27 в плане отсутствует.
 | Атом | Пакет | Коммит | Что подтвердил или опроверг |
 |---|---|---|---|
 | A2.1, A2.2, A2.4 | `findings/PACKET-P2-O1.md` | в работе | виды `doc`/`app`, wire-словарь, поля связи/локализации/карточки |
-| A2.8 | `findings/PACKET-P2-O2.md` | в работе | семь элементов словаря документации в пивоте |
+| A2.8 | `findings/PACKET-P2-O2.md` | `a7bff252` `feat(specdoc): give the documentation genre its seven elements`; отчёт `6422ec88` | словарь — параметр читателя, `when` в слоте (J-071); корпусный тест прибивает 43 читаемые страницы; `audience="agent"` ждёт A2.12 |
 
 ## Фаза 3 — ранние атомы {#phase-3-early}
 
@@ -178,6 +179,7 @@ A0.27 в плане отсутствует.
 | D-23 / F-41 | Кто выполняет серверные шаги переключения: владелец по чеклисту или агент по OpenSSH с подтверждением каждого шага | OPEN |
 | D-16 | Частота опроса хоста: раз в час, дебаунс 5 мин, dev-профиль рендерера (рекомендация) | OPEN |
 | X-017 | P1 в `vibe-index` — уведомление; чинить вне кампании или внутри | OPEN |
+| корпус `index/e1` (J-069) | Байты gzip зависят от унификации фич Cargo: A — сменить корневую фичу `zip` на `deflate-flate2` (miniz_oxide), C — прибить реализацию deflate внутри `vibe-index` (настоящая починка «same input, same bytes»); B (перемонтировать голден) не работает. Рекомендация — C; до решения шаг 6d панели красный | OPEN |
 | PROP-057 `REL-FIELD-PLACEMENT` | Таблицы связи и `[media]` — верхний уровень манифеста; `title`, `abstract` — в `[package]` (рекомендация, вижен §10 п. 4) | OPEN |
 | PROP-057 §12 | Механизм встраивания оболочки (восемь пунктов) — подтвердить | OPEN |
 | X-005, X-015 | Мелкое: `vibevm/vibedeps/.gitignore` в истории; фирменное `og.png` | OPEN |
