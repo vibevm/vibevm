@@ -888,14 +888,14 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
-# ── Documentation maintenance (2 records, 2 JTD), PROP-057 §10 ──────────────
-# The kitchen of the documentation developers (`##OBS-SURFACE-SNAPSHOTS`).
-# None of it reaches a reader, and none of it is read by a parser this project
-# does not own — so both state `ours`, in contrast with the two records above,
-# which crawlers and the site's shell read. They are inventoried all the same:
-# `##M-FORMAT-REGISTRY` asks whether a surface is a contract, not whether a
-# stranger reads it, and these are read by a `vibe` that may be months newer
-# than the one that wrote them.
+# ── Documentation maintenance (4 records, 4 JTD), PROP-057 §10 ──────────────
+# The kitchen of the documentation developers (`##OBS-SURFACE-SNAPSHOTS`,
+# `##OBS-MAINTENANCE-TOOLS`). None of it reaches a reader, and none of it is
+# read by a parser this project does not own — so all four state `ours`, in
+# contrast with the two records above, which crawlers and the site's shell
+# read. They are inventoried all the same: `##M-FORMAT-REGISTRY` asks whether
+# a surface is a contract, not whether a stranger reads it, and these are read
+# by a `vibe` that may be months newer than the one that wrote them.
 #
 # `doc-surface` is the structural snapshot of the product on one declared
 # version, kept at `maintenance/surface/<version>.json` in a documentation
@@ -906,6 +906,14 @@ sunset = "none"
 # `doc-surface-diff` is what `vibe doc diff` prints — the changes between two
 # snapshots, already translated into the pages to update. Recoverable: two
 # snapshots reproduce it exactly.
+#
+# `doc-todo` is the maintenance queue by the current state and the eight
+# numbers of the monthly review. Recoverable: it is a reading of the tree.
+#
+# `doc-reviews` is `maintenance/reviews.toml`, the authored record of which
+# page was last read aloud, by whom, and when the last full reconciliation
+# was. NOT recoverable: nothing in the tree remembers that a human sat down
+# with a page, which is precisely why the file exists.
 [format.doc-surface]
 epoch = 1
 schema = "schemas/doc_surface.jtd.json"
@@ -918,6 +926,22 @@ sunset = "none"
 epoch = 1
 schema = "schemas/doc_surface_diff.jtd.json"
 recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+[format.doc-todo]
+epoch = 1
+schema = "schemas/doc_todo.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+[format.doc-reviews]
+epoch = 1
+schema = "schemas/doc_reviews.jtd.json"
+recoverable = false
 foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"

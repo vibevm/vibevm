@@ -98,6 +98,14 @@
 //!   update, each with its reason (`##OBS-SURFACE-SNAPSHOTS`). No hashes,
 //!   no build dates, nothing a reader ever sees.
 //!
+//! * [`todo`] — the maintenance queue by the CURRENT state: obligations
+//!   nobody tells, examples that no longer match, citations that no
+//!   longer resolve, adaptations that do not mirror, pages owed a
+//!   reading, documentation debt and what the linter found. It prints
+//!   numbers and never gates — no technical lock binds a release of the
+//!   product to its documentation, so the answer to drift is a
+//!   measurement somebody reads (`##OBS-NO-RELEASE-LOCK`).
+//!
 //! * [`prompts`] — «the docs cannot lie» for the half of the manual a
 //!   reader does not type. A task page opens with a request in the user's
 //!   voice, and an agent says something different every time it answers
@@ -166,6 +174,7 @@ pub mod pages;
 pub mod prompts;
 pub mod style;
 pub mod surface;
+pub mod todo;
 pub mod translations;
 pub mod xml;
 

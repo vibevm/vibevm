@@ -1,0 +1,160 @@
+{
+  "metadata": {
+    "description": "The maintenance queue of a documentation package by its CURRENT state (PROP-057 `##OBS-MAINTENANCE-TOOLS`, `MAINTENANCE.md` §3 and §7). It holds no comparison with «since last time»: coverage gaps, unresolvable citations, adaptation divergences, page age, documentation debt and the linter's tally are all questions about the tree as it stands, because a version is a behavioural contract and the product inside one changes invisibly by design (`##OBS-VERSION-CONTRACT`). `vibe doc todo --format md` renders the week's report from it and `--format json` carries the eight numbers of the monthly review. It is a MEASURER and never a ratchet: the command prints the numbers and returns success whatever they say (`##OBS-NO-RELEASE-LOCK`). Source of truth for `crates/vibe-wire/src/generated/doc_todo/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_todo"
+    }
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "package": {
+      "type": "string",
+      "metadata": {
+        "description": "The documentation package's `<group>/<name>@<version>` coordinate."
+      }
+    },
+    "examples_measured": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Whether this run executed the documented examples. Running them builds a sandbox per fixture and costs minutes, so the queue leaves them to `--examples`; when it is false the example rows are ABSENT rather than zero, and the flag is here so nobody reads an unmeasured queue as a clean one."
+      }
+    },
+    "metrics": { "ref": "todo_metrics" },
+    "sections": {
+      "elements": { "ref": "todo_section" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The queue itself, grouped by where the work came from. A section with nothing in it is still emitted: «no unresolvable citations» is an answer, and a missing section reads as a check nobody ran."
+      }
+    }
+  },
+  "definitions": {
+    "todo_metrics": {
+      "metadata": {
+        "description": "The eight numbers of the monthly review (`MAINTENANCE.md` §7), in the order the table lists them. A number this run could not measure is `null` and never zero: «nothing to find» and «nothing looked» must not print the same digit."
+      },
+      "properties": {
+        "gaps": {
+          "type": "uint32",
+          "metadata": {
+            "description": "Queue rows from coverage, examples and citations together — the first metric, and the one that should go to zero."
+          }
+        },
+        "page_age_median_days": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "Median days since a page was last read aloud, from `reviews.toml`. `null` when the package records no readings at all — a manual nobody has read aloud yet has no median, it has a backlog."
+          }
+        },
+        "adaptation_divergences": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "How far the adaptations are from their source, counted as STRUCTURAL divergences — pages, anchors and blocks that do not mirror. The seventh edition removed the revision count this row used to hold, because «how far behind» needs a history the project does not keep (`##LOC-NO-REVISION`). `null` when the package adapts nothing."
+          }
+        },
+        "coverage_percent": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "The share of obligation-and-audience pairs a page tells. `null` when the run stood outside a checkout and had no corpus to state the obligations."
+          }
+        },
+        "tics_per_100k_words": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "Style findings per hundred thousand words of prose. The metric table states the rate per THOUSAND words; the unit here is a hundred times finer so the number is an exact integer, and a reader divides by a hundred to get the table's own unit. The reason is not taste: every schema in this project is free of floats, and the first float takes the `Eq` floor off every generated type — a cost this row is not worth paying. `null` when the package ships no banned list for its own language, which is the state where a zero would mean «nothing to find one with»."
+          }
+        },
+        "debt_p1": {
+          "type": "uint32",
+          "metadata": {
+            "description": "`docs:` lines of severity P1 in the host's `BACKLOG.md`. The target is zero and the other severities live in the queue's own section."
+          }
+        },
+        "findings_without_decision": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "Journal entries whose «→ regulation» field is still empty. The metric table counts entries and decisions; one number says the same thing, because the target is that every entry has one. `null` when the package carries no journal."
+          }
+        },
+        "days_since_reconcile": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "Days since the last full reconciliation, from the date `reviews.toml` records. `null` when none has happened."
+          }
+        }
+      }
+    },
+    "todo_section": {
+      "metadata": {
+        "description": "One source of queue rows."
+      },
+      "properties": {
+        "name": { "ref": "section_name" },
+        "measured": {
+          "type": "boolean",
+          "metadata": {
+            "description": "Whether this run asked the question. A section that was skipped carries no items and says so here."
+          }
+        },
+        "items": {
+          "elements": { "ref": "todo_item" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "section_name": {
+      "enum": [
+        "coverage",
+        "examples",
+        "citations",
+        "adaptations",
+        "page-age",
+        "debt",
+        "style",
+        "version-change"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Where a row came from (`MAINTENANCE.md` §3). Closed: the queue's sources are the signals the regulation names, and a ninth would be a change to the regulation rather than a value a run may invent. `version-change` appears only when `maintenance/surface/` holds a snapshot of some version other than the package's own — then it carries the output of `vibe doc diff` (`MAINTENANCE.md` §2.5)."
+      }
+    },
+    "todo_item": {
+      "metadata": {
+        "description": "One row of the queue: what needs attention and why."
+      },
+      "properties": {
+        "subject": {
+          "type": "string",
+          "metadata": {
+            "description": "The page, the address or the debt line the row is about."
+          }
+        },
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "description": "Why it is in the queue, in one line an author can act on without opening anything else."
+          }
+        },
+        "severity": {
+          "ref": "item_severity"
+        }
+      }
+    },
+    "item_severity": {
+      "enum": ["error", "warning", "info"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "How loud the row is. An `error` is something the documentation promises and does not do; a `warning` is prose somebody should look at; `info` is a row that is here to be counted, such as a debt line already triaged elsewhere."
+      }
+    }
+  }
+}

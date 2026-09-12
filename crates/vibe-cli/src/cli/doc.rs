@@ -57,6 +57,15 @@ pub enum DocCommand {
     /// an audience nobody tells. A change no page answers to is reported
     /// as a page that does not exist yet.
     Diff(DocDiffArgs),
+
+    /// The maintenance queue by the CURRENT state of the package and the
+    /// product: obligations nobody tells, citations that no longer
+    /// resolve, adaptations that do not mirror, pages owed a reading
+    /// aloud, documentation debt and what the style linter found. It
+    /// prints the numbers and returns success whatever they say — no
+    /// technical gate binds a release of the product to its
+    /// documentation, so this measures rather than stops.
+    Todo(DocTodoArgs),
 }
 
 /// `vibe doc build` — render the package.
@@ -230,6 +239,55 @@ pub struct DocDiffArgs {
     pub binary: Option<PathBuf>,
 
     /// Seconds one `--help` may take before it is killed.
+    #[arg(long, default_value_t = 300, value_name = "SECONDS")]
+    pub timeout: u64,
+}
+
+/// `vibe doc todo` — the maintenance queue.
+#[derive(Debug, clap::Args)]
+pub struct DocTodoArgs {
+    /// The documentation package. Defaults to the current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// How the queue is printed: the week's report for a person, or the
+    /// month's eight numbers for a machine.
+    #[arg(long, default_value = "md", value_parser = ["md", "json"])]
+    pub format: String,
+
+    /// Also run every documented example and fold the red ones in.
+    /// Without it they are not measured, and the queue says so rather
+    /// than reporting none: the runner builds a sandbox per fixture and
+    /// costs minutes, which is not what a weekly reading should cost.
+    #[arg(long)]
+    pub examples: bool,
+
+    /// The bar the coverage and style readings state. It changes what
+    /// the report says the target is, never whether this command
+    /// succeeds.
+    #[arg(long, default_value_t = vibe_doc::coverage::FULL_COVERAGE, value_name = "PERCENT")]
+    pub min: u8,
+
+    /// The debt file to count `docs:` lines in. Defaults to `BACKLOG.md`
+    /// at the root of the checkout this runs in.
+    #[arg(long, value_name = "PATH")]
+    pub backlog: Option<PathBuf>,
+
+    /// The journal to count entries owing a decision in. Defaults to
+    /// `JOURNAL.md` in the documentation package.
+    #[arg(long, value_name = "PATH")]
+    pub journal: Option<PathBuf>,
+
+    /// The `vibe` binary the examples run and the surface is read from.
+    /// Defaults to the running one.
+    #[arg(long, value_name = "PATH")]
+    pub binary: Option<PathBuf>,
+
+    /// Where example sandboxes are built.
+    #[arg(long, value_name = "PATH")]
+    pub sandbox: Option<PathBuf>,
+
+    /// Seconds one documented command may take before it is killed.
     #[arg(long, default_value_t = 300, value_name = "SECONDS")]
     pub timeout: u64,
 }
