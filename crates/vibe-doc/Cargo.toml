@@ -59,6 +59,10 @@ semver.workspace = true
 # `schemas/doc_manifest.jtd.json` and never hand-written (PROP-000 §16,
 # PROP-044). This library builds that generated type directly.
 vibe-wire.workspace = true
+# The manifest's two dates arrive as inputs — the writer never calls the
+# clock (PROP-044 ##M-CANONICAL-BYTES) — and their wire form is the
+# `timestamp` vocabulary, which is `chrono::DateTime<Utc>` in code.
+chrono.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

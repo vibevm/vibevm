@@ -171,20 +171,25 @@ pub fn index(manifest: &DocManifest, base: &str) -> String {
     out
 }
 
-/// One page's line in the index: title, link, leading fact and
-/// audiences.
+/// One page's line in the index: title, link, leading fact, reading time
+/// and audiences.
+///
+/// The reading time is on the LINE, not only in the manifest, because the
+/// line is what an agent budgeting a context window reads before it
+/// decides which pages to fetch.
 fn line(manifest: &DocManifest, page: &DocPage, base: &str) -> String {
     let audiences = audience_list(&page.audiences);
     let audiences = if audiences.is_empty() {
         String::new()
     } else {
-        format!(" ({audiences})")
+        format!(" · {audiences}")
     };
     format!(
-        "- [{}]({}): {}{}\n",
+        "- [{}]({}): {} ({} min{})\n",
         page.title,
         page_link(manifest, &page.path, base),
         one_line(&page.summary),
+        page.reading_time_min,
         audiences
     )
 }
@@ -262,7 +267,14 @@ fn head(manifest: &DocManifest, base: &str) -> String {
             }
         ));
     }
-    out.push_str(&format!("Read it at {}.\n", package_link(manifest, base)));
+    out.push_str(&format!(
+        "Read it at {}. Rendered {}.\n",
+        package_link(manifest, base),
+        package.rendered_at.format("%Y-%m-%d")
+    ));
+    if let Some(published) = &package.published_at {
+        out.push_str(&format!("Published {}.\n", published.format("%Y-%m-%d")));
+    }
     out.push_str(&format!("\n{}\n", package.abstract_.trim()));
     out
 }

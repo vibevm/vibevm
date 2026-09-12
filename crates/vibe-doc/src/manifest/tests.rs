@@ -1,5 +1,6 @@
 //! Building a manifest over a real package tree.
 
+use chrono::{TimeZone, Utc};
 use vibe_wire::generated::doc_manifest::{DocumentationStatus, PageGenre, TranslationStatus};
 
 use super::*;
@@ -14,8 +15,19 @@ pub(crate) fn fixture(name: &str) -> std::path::PathBuf {
         .join(name)
 }
 
+pub(crate) fn rendered_at() -> chrono::DateTime<Utc> {
+    Utc.with_ymd_and_hms(2026, 9, 12, 9, 0, 0)
+        .single()
+        .expect("instant")
+}
+
 fn built() -> Built {
-    build(&fixture("manual"), &SpecSources::new()).expect("the fixture package builds")
+    build(
+        &fixture("manual"),
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .expect("the fixture package builds")
 }
 
 /// The card is the manifest's, taken from the package's own declaration:
@@ -69,6 +81,8 @@ fn the_page_row_is_the_page() {
     assert_eq!(page.audiences, vec![Audience::User, Audience::Dev]);
     assert!(page.anchors.starts_with(&["root".to_owned()]));
     assert!(page.summary.starts_with("This page uses every block"));
+    assert!(page.reading_time_min >= 1);
+    assert_eq!(page.reviewed_at, None);
 }
 
 /// The card's audiences are the union of its pages' — derived from the
@@ -88,11 +102,54 @@ fn two_builds_of_one_tree_at_one_instant_are_the_same_bytes() {
     assert_eq!(to_json(&built().manifest), to_json(&built().manifest));
 }
 
+/// The manifest is a projection, not a check: it carries no publication
+/// date for a package read out of a tree, because a package read out of a
+/// tree has none.
+#[test]
+fn a_package_read_from_a_tree_has_no_publication_date() {
+    assert!(built().manifest.package.published_at.is_none());
+    let when = rendered_at();
+    let published = build(
+        &fixture("manual"),
+        &SpecSources::new(),
+        &Options::at(when).published(when),
+    )
+    .expect("builds");
+    assert_eq!(published.manifest.package.published_at, Some(when));
+}
+
+/// A page that has been read aloud carries the date the package recorded,
+/// lifted to midnight UTC — the one staleness signal the project keeps.
+#[test]
+fn a_recorded_read_aloud_date_reaches_the_page_row() {
+    let built = build(
+        &fixture("translations/source"),
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .expect("builds");
+    let read: Vec<Option<String>> = built
+        .manifest
+        .pages
+        .iter()
+        .map(|p| p.reviewed_at.map(|d| d.to_rfc3339()))
+        .collect();
+    assert!(
+        read.contains(&Some("2026-09-11T00:00:00+00:00".to_owned())),
+        "{read:?}"
+    );
+    assert!(read.contains(&None), "the other page was never read aloud");
+}
+
 /// A translation's card names what it adapts and how it stands for it.
 #[test]
 fn a_translation_names_its_source_and_its_standing() {
-    let built = build(&fixture("translations/adaptation"), &SpecSources::new())
-        .expect("the adaptation builds");
+    let built = build(
+        &fixture("translations/adaptation"),
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .expect("the adaptation builds");
     let translation = built
         .manifest
         .package
@@ -113,7 +170,8 @@ fn a_package_with_no_card_is_refused_by_name() {
         "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\n",
     )
     .expect("write");
-    let error = build(tmp.path(), &SpecSources::new()).expect_err("refused");
+    let error =
+        build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at())).expect_err("refused");
     assert!(error.to_string().contains("`[package].title`"), "{error}");
     assert!(
         error.to_string().contains("PROP-057#CARD-FIELDS"),

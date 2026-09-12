@@ -81,11 +81,66 @@ fn a_page_with_no_paragraph_has_no_summary() {
     assert_eq!(summary_of(&d), "");
 }
 
-/// A row is the page's address and its title, not a second opinion about
-/// either.
+/// The two rates of `##READER-META-AND-PRINT`: the source language reads
+/// faster than an adaptation, so the same page is a longer read in
+/// Russian than in English.
 #[test]
-fn a_row_carries_the_pages_address_and_its_title() {
-    let row = row(&page("  <p>text</p>\n"));
+fn an_adaptation_reads_slower_than_the_source_language() {
+    let body: String = std::iter::repeat_n("word", 500)
+        .collect::<Vec<_>>()
+        .join(" ");
+    let d = doc(&format!("  <p>{body}</p>\n"));
+    // 502 words with the title: three minutes at 250 and at 200 alike.
+    assert_eq!(reading_time_min(&d, "en"), 3);
+    assert_eq!(reading_time_min(&d, "ru"), 3);
+    let short: String = std::iter::repeat_n("word", 450)
+        .collect::<Vec<_>>()
+        .join(" ");
+    let d = doc(&format!("  <p>{short}</p>\n"));
+    // 452 words: two minutes for a reader of the source language, three
+    // for a reader of an adaptation.
+    assert_eq!(reading_time_min(&d, "en"), 2);
+    assert_eq!(reading_time_min(&d, "ru"), 3);
+}
+
+/// A page with almost nothing on it still takes a minute: zero minutes
+/// is not a reading time anybody can use.
+#[test]
+fn the_shortest_page_still_reads_for_one_minute() {
+    assert_eq!(reading_time_min(&doc("  <p>one</p>\n"), "en"), 1);
+}
+
+/// Fences, examples and prompts are read too. A reference page made of
+/// tables that claimed a one-minute read would be lying to the reader
+/// who is about to spend ten.
+#[test]
+fn the_count_includes_what_the_reader_sees_in_a_fence() {
+    let words: String = std::iter::repeat_n("token", 600)
+        .collect::<Vec<_>>()
+        .join(" ");
+    let d = doc(&format!("  <fence lang=\"text\">{words}</fence>\n"));
+    assert_eq!(reading_time_min(&d, "en"), 3);
+}
+
+/// A `derived` block holds an address and no text, so it weighs nothing
+/// until the product is run — and a manifest build deliberately does not
+/// run it.
+#[test]
+fn a_derived_block_weighs_nothing_in_the_reading_time() {
+    let with = doc("  <p>one</p>\n  <derived kind=\"cli-help\" ref=\"vibe list --help\"/>\n");
+    let without = doc("  <p>one</p>\n");
+    assert_eq!(
+        reading_time_min(&with, "en"),
+        reading_time_min(&without, "en")
+    );
+}
+
+/// A page that has never been read aloud carries no date, which is a
+/// state worth showing rather than a zero to fill in.
+#[test]
+fn a_row_carries_a_read_aloud_date_only_when_the_package_recorded_one() {
+    let row = row(&page("  <p>text</p>\n"), "en", &Reviews::none());
+    assert_eq!(row.reviewed_at, None);
     assert_eq!(row.path, "guide/a.xml");
     assert_eq!(row.title, "A page");
 }

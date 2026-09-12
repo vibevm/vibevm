@@ -8,8 +8,9 @@ use serde::{Deserialize, Serialize};
 /// `llms` tier is derived from it rather than from a second walk of the tree.
 /// One manifest is one package, so it is one language: a translation is another
 /// package and has a manifest of its own. Nothing here compares versions,
-/// fingerprints or revisions (`##OBS-NOTHING-LEAKS`). Source of truth for
-/// `crates/vibe-wire/src/generated/doc_manifest/`.
+/// fingerprints or revisions — the only dates are when the build rendered the
+/// pages and when a human last read one aloud (`##OBS-NOTHING-LEAKS`). Source
+/// of truth for `crates/vibe-wire/src/generated/doc_manifest/`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DocManifest {
     pub schema_version: u32,
@@ -128,6 +129,21 @@ pub struct DocPackage {
     /// without repetition — the audiences a catalogue row shows. Derived from
     /// the page markup, never declared.
     pub audiences: Vec<Audience>,
+
+    /// When this version of the package was published, for the sitemap's
+    /// `lastmod` (`##SEO-SITEMAP`). Absent for a documentation that has never
+    /// been published — an in-tree package being read from a developer's own
+    /// checkout has no publication date, and inventing one would be a lie a
+    /// crawler believes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub published_at: Option<Timestamp>,
+
+    /// When this build rendered the pages. One of the exactly two dates a
+    /// reader may see (`##READER-META-AND-PRINT`), and it belongs to the build
+    /// rather than to any one page, so it is written once. The writer never
+    /// calls the clock: the instant arrives as an input, which is what keeps
+    /// the bytes of a build reproducible.
+    pub rendered_at: Timestamp,
 }
 
 /// One page: where it is, what it is, who it is for, what it says first, and
@@ -164,6 +180,21 @@ pub struct DocPage {
     /// the pipeline would be a second description of the page that nobody
     /// proofreads.
     pub summary: String,
+
+    /// Minutes to read the page, rounded up, never below one: the words the
+    /// page carries at 250 a minute for `en` and 200 for every other language,
+    /// `ru` included (PROP-057 `##READER-META-AND-PRINT`, the rates of the
+    /// vision's D-22 item 9). A `derived` block contributes nothing — the
+    /// manifest is built from the page's own bytes and a generated reference
+    /// has none until the product is run.
+    pub reading_time_min: u32,
+
+    /// When a human last read this page aloud against the product, from the
+    /// package's `reviews.toml` (`##OBS-MAINTENANCE-TOOLS`). The second of the
+    /// exactly two dates a reader may see. Absent when the page has never been
+    /// read aloud — which is a state worth showing, not a zero to fill in.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reviewed_at: Option<Timestamp>,
 }
 
 /// Where one documentation stands for one subject (PROP-057 `##REL-OFFICIAL-
@@ -222,6 +253,8 @@ pub enum PageGenre {
     #[serde(rename = "task")]
     Task,
 }
+
+pub use crate::generated::shared::Timestamp;
 
 /// Where one translation stands for its source documentation (PROP-057 `##LOC-
 /// OFFICIAL-TRANSLATION`, `##ROW-DISC-TRANS-STATUS`). `official` — the

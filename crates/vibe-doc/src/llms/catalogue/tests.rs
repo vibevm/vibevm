@@ -2,14 +2,18 @@
 
 use super::*;
 use crate::citations::SpecSources;
-use crate::manifest::tests::fixture;
-use crate::manifest::{self};
+use crate::manifest::tests::{fixture, rendered_at};
+use crate::manifest::{self, Options};
 use vibe_wire::generated::doc_manifest::DocumentationStatus;
 
 fn manifest_of(name: &str) -> DocManifest {
-    manifest::build(&fixture(name), &SpecSources::new())
-        .expect("the fixture builds")
-        .manifest
+    manifest::build(
+        &fixture(name),
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .expect("the fixture builds")
+    .manifest
 }
 
 /// A row is what an arXiv search result is: a title a person reads, the

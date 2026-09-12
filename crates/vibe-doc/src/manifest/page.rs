@@ -14,11 +14,24 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-
 use vibe_specdoc::doc::{Block, BlockNode, Section, SpecDoc, StatusEl, Unit};
 use vibe_wire::generated::doc_manifest::{Audience, DocPage, PageGenre};
 
-use super::AUDIENCES;
+use super::{AUDIENCES, Reviews};
 use crate::pages::Page;
 
+/// Words a minute for the source language. The rate the reader's meta
+/// block counts with (the vision's D-22 item 9): English reads faster
+/// than the languages this manual is adapted into, and one number for
+/// everything would overstate every adaptation.
+pub const WORDS_PER_MINUTE_EN: u32 = 250;
+
+/// Words a minute for every other language, Russian included — the rate
+/// PROP-057 `##READER-META-AND-PRINT` names for an adaptation.
+pub const WORDS_PER_MINUTE_OTHER: u32 = 200;
+
+/// The language tag that reads at [`WORDS_PER_MINUTE_EN`].
+const FAST_LANGUAGE: &str = "en";
+
 /// Build one page's row.
-pub fn row(page: &Page) -> DocPage {
+pub fn row(page: &Page, lang: &str, reviews: &Reviews) -> DocPage {
     DocPage {
         path: page.rel.clone(),
         title: title_of(&page.doc),
@@ -26,6 +39,8 @@ pub fn row(page: &Page) -> DocPage {
         audiences: audiences_of(&page.doc),
         anchors: anchors_of(&page.doc),
         summary: summary_of(&page.doc),
+        reading_time_min: reading_time_min(&page.doc, lang),
+        reviewed_at: reviews.read_aloud(&page.rel),
     }
 }
 
@@ -161,6 +176,79 @@ fn summary_of(doc: &SpecDoc) -> String {
         }
     });
     summary.unwrap_or_default()
+}
+
+/// Minutes to read the page, rounded up, never below one.
+///
+/// The count is every word the page CARRIES — its prose, its tables, its
+/// fences, the commands and golden output of its examples, the text of
+/// its prompts. A `derived` block contributes nothing: it holds an
+/// address, and its text does not exist until the product is run, which a
+/// manifest build deliberately does not do. One rate over all of it: a
+/// second rate for code would be a law nobody wrote down, and the reader
+/// of a reference page does spend time on the table.
+pub fn reading_time_min(doc: &SpecDoc, lang: &str) -> u32 {
+    let rate = if lang.eq_ignore_ascii_case(FAST_LANGUAGE) {
+        WORDS_PER_MINUTE_EN
+    } else {
+        WORDS_PER_MINUTE_OTHER
+    };
+    let words = word_count(doc);
+    words.div_ceil(rate as usize).max(1) as u32
+}
+
+fn word_count(doc: &SpecDoc) -> usize {
+    let mut words = 0usize;
+    let mut count = |text: &str| words += text.split_whitespace().count();
+    if let Some(title) = &doc.title {
+        count(&title.text);
+    }
+    for section in sections(doc) {
+        count(&section.title);
+    }
+    walk(doc, &mut |block| match block {
+        Block::Fence { text, .. } => words += text.split_whitespace().count(),
+        Block::Example {
+            run,
+            expect,
+            stderr,
+            ..
+        } => {
+            words += run.split_whitespace().count();
+            words += expect.split_whitespace().count();
+            words += stderr
+                .iter()
+                .map(|s| s.split_whitespace().count())
+                .sum::<usize>();
+        }
+        Block::Prompt {
+            text,
+            needs,
+            outcome,
+            asserts,
+            ..
+        } => {
+            words += text.split_whitespace().count();
+            words += needs
+                .iter()
+                .map(|s| s.split_whitespace().count())
+                .sum::<usize>();
+            words += outcome
+                .iter()
+                .map(|s| s.split_whitespace().count())
+                .sum::<usize>();
+            words += asserts
+                .iter()
+                .map(|s| s.split_whitespace().count())
+                .sum::<usize>();
+        }
+        other => {
+            for unit in block_units(other) {
+                words += unit.text.split_whitespace().count();
+            }
+        }
+    });
+    words
 }
 
 /// Every block of the document in reading order, preamble first.
