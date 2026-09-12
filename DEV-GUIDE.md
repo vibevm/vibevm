@@ -70,6 +70,44 @@ cargo xtask check-codegen
 
 The xtask reports an actionable error if `jtd-codegen` is not on PATH or in `tools/jtd-codegen/`.
 
+### 2.6 Node and pnpm for the site
+
+Needed only for the site package `org.vibevm.doc/web` — the Qwik application that carries both the landing and the documentation reader. Nothing else in this repository needs Node, and a reader's machine never does ([PROP-057 `##STACK-NODE-SERVER-ONLY`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack)).
+
+The versions are pinned exactly, together with the framework, by [PROP-057 §12 `##STACK-QWIK`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack): **Node 24.18.0** and **pnpm 10.33.2**. The package declares both — `engines.node` and `packageManager` — so `corepack enable` is all it takes to get the right pnpm:
+
+```sh
+corepack enable
+cd vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
+pnpm install --frozen-lockfile
+```
+
+`pnpm-lock.yaml` is committed; `node_modules/`, `dist/`, `server/` and `tmp/` never are — the package is published as source ([PROP-024 §2.2](vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml)).
+
+**The floor.** The web package is authored under the `typescript-ai-native` discipline, and its seven steps (`prettier → tsc → tests → eslint → conform → specmap → test-gate`) plus the APCA contrast audit of both themes run as one command from the package root:
+
+```sh
+pnpm floor
+```
+
+The seven steps are a compiled tool, not an npm package. `pnpm floor` finds it in `$TYPESCRIPT_AI_NATIVE`, then on `PATH`, then in this checkout's built slot — so inside this repository it works after the tool has been built once:
+
+```sh
+target/debug/vibe.exe bin build typescript-ai-native --assume-yes
+```
+
+From the repo root the same floor runs without pnpm at all, which is the form `tools/self-check.sh` uses:
+
+```sh
+vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native.exe \
+  floor --path vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
+node vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/design/audit/contrast.mjs
+```
+
+**Building the site.** `pnpm build:static` prerenders every route for the server; `pnpm build:embedded` builds only the documentation routes for the shell `vibe` embeds. Both count the pages the generator reports against the pages the manifest declares and fail on a mismatch — the static generator under-generates silently and still exits 0 ([`##STACK-PAGE-COUNT-GATE`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack)).
+
+**Windows caveat.** Git Bash (MSYS2) rewrites anything that looks like a POSIX path, in arguments and in environment variables alike — a base path passed as `/doc/` reached the generator as `/Program Files/Git/doc/`. When a path or a base has to be passed to a build script from Git Bash, prefix the command with `MSYS_NO_PATHCONV=1`, or pass a value with no leading slash. PowerShell and `cmd` are unaffected.
+
 ## 3. Build / test / lint
 
 From repo root:

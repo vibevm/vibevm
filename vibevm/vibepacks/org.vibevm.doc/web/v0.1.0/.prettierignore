@@ -1,0 +1,22 @@
+vibedeps/
+.vibe/
+node_modules/
+target/
+specmap.json
+package-lock.json
+pnpm-lock.yaml
+discipline/
+# Qwik build output and the incremental cache (A0.14 §4, K-7): the floor's
+# first and fourth steps must walk the source, never the artifacts.
+tmp/
+dist/
+server/
+# The fonts travel as bytes; the island goldens are copied from the Rust
+# pipeline's output and must stay byte-identical to it.
+design/fonts/
+site/src/fixtures/
+# vibe-generated boot artifacts (rewritten on every install).
+vibevm/vibespecs/boot/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
