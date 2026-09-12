@@ -42,6 +42,10 @@ vibe-workspace.workspace = true
 # seam, so no second reading of a page exists (PROP-057
 # ##PIPE-EDGES-HOST-SIDE).
 vibe-doc.workspace = true
+# One question of each in-tree package slot — «does it call itself
+# documentation» — read as TOML data, so a field this walk never looks at
+# cannot drop a package's pages out of the map.
+toml.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

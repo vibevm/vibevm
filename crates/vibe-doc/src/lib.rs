@@ -48,6 +48,11 @@
 //!   `##SITE-MOUNT` fixes — so the site and the local reader write the
 //!   same shapes from the same function.
 //!
+//! * [`agent`] — one page, by address, for a machine. The web serves a
+//!   page at a path and its projections beside it; an agent reading over
+//!   MCP has no HTTP at all and asks by the `spec://` address it would
+//!   cite, through the same four sources (`##OBS-AUDIENCE-AGENT`).
+//!
 //! * [`media`] — the card's pictures. What an author ships is judged
 //!   from its first bytes and published under a name taken from its
 //!   content; what an author ships NOTHING for is computed from the hash
@@ -117,6 +122,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+pub mod agent;
 pub mod build;
 pub mod citations;
 pub mod content;

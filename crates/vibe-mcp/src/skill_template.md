@@ -135,6 +135,22 @@ call; the three are read-only):
   `lacks:verifies` (spec rules with no verifier), `uri:… depth:1` (a
   rule's implementers and one hop around them).
 
+Documentation travels in that same map — a page that cites a rule is a
+`documents` edge into it — so `explain` answers "where is this rule
+explained" with no new tool. Reading the page is the one thing the map
+cannot do:
+
+- **`read_doc(address, format?, lang?)`** — one page of a documentation
+  package (kind `doc`) by its `spec://<group>/<name>[@<version>]/<document>`
+  address. `format` is `md` (default; each cited rule's current text
+  substituted in — what you want to READ) or `xml` (the addresses kept —
+  what you want if you will resolve them yourself). `lang` looks for the
+  adaptation published as `<name>-<lang>` and falls back to the source,
+  saying which language came back. Both projections carry the same `pNN`
+  block numbers the website shows, so `…/<document>#p12` means one block
+  everywhere. The usual shape is `explain` to find the page, `read_doc`
+  to read it.
+
 If the user asks about installed packages — what's installed, what
 version, what features are active, what files a package contributed
 — call `query_package` first. Don't infer.

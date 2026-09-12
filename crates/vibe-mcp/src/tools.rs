@@ -19,6 +19,12 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 pub mod output;
 pub use output::ToolOutput;
 
+/// The documentation page reader (PROP-057 `##OBS-AUDIENCE-AGENT`),
+/// split out beside `explain`, `query` and `select` for the same reason
+/// they are: this registry file sits at its size ceiling.
+pub mod read_doc;
+pub use read_doc::ReadDocMcpTool;
+
 /// The MCP tool seam (PROP-015 §2.2): a tool describes itself (name,
 /// human description, JSON-Schema input shape) and runs against parsed
 /// `arguments` plus the read-only [`ServerContext`]. Every tool is a cell
@@ -64,6 +70,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(LifecycleTasksMcpTool),
         Box::new(LifecycleRunMcpTool),
         Box::new(RequirementsQueryMcpTool),
+        Box::new(ReadDocMcpTool),
     ]
 }
 

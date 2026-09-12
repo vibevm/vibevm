@@ -11,7 +11,7 @@ use serde_json::{Value, json};
 use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 use vibe_mcp::tools::{
     AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryMcpTool,
-    QueryPackageMcpTool, ReadSubskillMcpTool, SelectMcpTool, default_tools,
+    QueryPackageMcpTool, ReadDocMcpTool, ReadSubskillMcpTool, SelectMcpTool, default_tools,
 };
 use vibe_mcp::{ServerContext, dispatch_one};
 
@@ -546,4 +546,70 @@ fn dispatch_tools_list_includes_every_cell() {
     assert!(names.contains(&"read_subskill"));
     assert!(names.contains(&"materialise_subskill"));
     assert!(names.contains(&"agentic_explain"));
+    assert!(names.contains(&"read_doc"));
+}
+
+// --- read_doc (PROP-057: the page an agent reads, by address) -----------
+
+/// The documentation page reader answers from the checkout's own in-tree
+/// packages, and says which projection, which language and which source
+/// it gave back. Driving it here is also this cell's behaviour oracle:
+/// without one the discipline gate says so (`cell-has-oracle`, R-040).
+#[test]
+fn read_doc_cell_returns_a_page_and_names_where_it_came_from() {
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+    std::fs::write(
+        root.join("vibe.toml"),
+        "[project]
+name = \"host\"
+group = \"com.example\"
+version = \"1.0.0\"
+",
+    )
+    .unwrap();
+    let package = root.join("vibevm/vibepacks/com.example/thing-docs/v0.1.0");
+    std::fs::create_dir_all(package.join("vibevm/vibespecs/model")).unwrap();
+    std::fs::write(
+        package.join("vibe.toml"),
+        "[package]
+name = \"thing-docs\"
+group = \"com.example\"
+kind = \"doc\"
+         version = \"0.1.0\"
+title = \"Thing\"
+abstract = \"What it covers.\"
+         [i18n]
+canonical = \"en\"
+         [[documents]]
+package = \"com.example/thing\"
+version = \"^1.0\"
+",
+    )
+    .unwrap();
+    std::fs::write(
+        package.join("vibevm/vibespecs/model/boot-lane.xml"),
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+         <spec xmlns=\"https://vibevm.org/spec/1\">
+             <title id=\"root\">Boot lane</title>
+             <p>The boot lane is what a session reads first.</p>
+         </spec>
+",
+    )
+    .unwrap();
+    let ctx = ServerContext::with_store_root(root.to_path_buf(), root.join("store"));
+
+    let out = ReadDocMcpTool
+        .run(
+            &json!({ "address": "spec://com.example/thing-docs/model/boot-lane" }),
+            &ctx,
+        )
+        .unwrap();
+    assert_eq!(out["format"], "md");
+    assert_eq!(out["lang"], "en");
+    assert_eq!(out["source"], "in-tree");
+    // The block numbers a citation uses travel in the projection, so
+    // `#p01` means one block on the website and here.
+    let page = out["page"].as_str().unwrap_or_default();
+    assert!(page.contains("[p01]"), "{page}");
 }

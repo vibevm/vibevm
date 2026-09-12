@@ -163,7 +163,11 @@ pub fn explain(root: &Path, target: &str, json: bool) -> Result<Explain> {
 /// posture).
 fn explain_fresh(root: &Path, target: &str, json: bool) -> Result<Explain> {
     let cfg = specmap_core::config::Config::load(root)?.unwrap_or_default();
-    let map = specmap_core::index::build(root, &cfg);
+    // With the project's documentation in it: a `rule` on a page is a
+    // `documents` edge, and «who explains this rule» is exactly the
+    // question this verb exists to answer (PROP-057
+    // `##PIPE-EDGES-HOST-SIDE`).
+    let map = docscan::host_map(root, &cfg);
     let rendered = if json {
         Explain::Json(specmap_core::explain::explain_json(&map, target)?)
     } else {
