@@ -31,7 +31,7 @@ changed byte invalidates everything downstream of it in the prefix; *(c)*
 screen output is spent at the dearest rate, so chatter is the first thing to
 cut (the subagent quiet clause and the `auto` interaction mode exist for
 exactly this).</COST-MODEL></p>
-    <p><THE-LAYER-LAW fact="true" status="spec/done">**Everything is layered by mutation frequency — the whole
+    <p><THE-LAYER-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="author,agent">**Everything is layered by mutation frequency — the whole
 loaded context is one monotone gradient (owner, 2026-08-23, near-verbatim:
 «всё в приложении устроено слоями; на самой вершине — динамическая загрузка
 быстрых изменений»).** Reading order equals stability order: the
@@ -53,7 +53,7 @@ against this layering — where does each byte it adds sit on the gradient,
 and does anything fast-changing sneak ahead of anything slow.</THE-LAYER-LAW></p>
   </law>
   <static-prefix title="3. STATIC — the cache-stable prefix">
-    <p><STATIC-ROLE fact="true" status="spec/done">**What STATIC is (the owner's definition, refined): the
+    <p><STATIC-ROLE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author,agent">**What STATIC is (the owner's definition, refined): the
 generated static boot lane is a CACHE-STABLE PREFIX in LLM-economy terms.** It
 is loaded into an agent or subagent once, at the head of its context, and from
 then on stays byte-for-byte identical across sessions and spawns — so the
@@ -71,7 +71,7 @@ structural inputs and NOT a function of the mutable (the adoption registry,
 statuses, timestamps) — PROP-046 ##LAW-STATIC-INVARIANT is this law's
 registry-side half. Regenerating with unchanged structural inputs MUST emit
 identical bytes; that identity is measurable and belongs in the gates.</STATIC-INVALIDATION-LAW></p>
-    <p><STATIC-PREFIX-SHARING fact="true" status="spec/done">**The multiplier: one prefix, every agent.** When
+    <p><STATIC-PREFIX-SHARING fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**The multiplier: one prefix, every agent.** When
 the boss and all its workers load the SAME byte-identical prefix, the cache
 warmed by any one of them serves every later spawn — each subagent starts
 cheap. This makes the stability requirement STRICTER than per-session
