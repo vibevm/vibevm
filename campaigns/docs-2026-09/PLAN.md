@@ -2226,13 +2226,14 @@ set -e
 cargo build -p vibe-cli
 V=target/debug/vibe.exe
 D=vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0
-R=fixtures/doc/adaptation-ru        # боевая адаптация — волна C (D-29)
+R=crates/vibe-doc/tests/fixture/translations/adaptation   # фикстура фазы 2; боевая адаптация — волна C (D-29)
 $V --help | grep -q ' doc '                                   # команда есть
 $V init --help | grep -q 'flow, feat, stack, tool, mcp, lang, doc, app'
 grep -q '"doc"' formats/vocabularies.json && grep -q '"app"' formats/vocabularies.json
 cargo xtask check-codegen && cargo xtask wire-diff
 $V doc check --path $D --examples --citations --derived --coverage --media --style --min 100
-$V doc check --path $R --translations --media --style
+$V doc check --path $R --translations --media --style || true   # фикстура намеренно расходится в одном блоке (F-44): вывод читается, гарантию держит следующая строка
+cargo test -p vibe-doc translation
 $V doc manifest --path $D --llms full | head -1 | grep -q .
 $V doc manifest --path $D --json | grep -q '"primary"'
 $V progress report --view doc --audience user | grep -q .
@@ -2407,6 +2408,13 @@ Fable** F1–F4 — Opus останавливается, собирает оче
 
 ## 14. Журнал редакций плана {#changelog}
 
+- **2026-09-12, двенадцатая редакция.** §9: путь фикстуры адаптации — тот,
+  куда её положила фаза 2 (`crates/vibe-doc/tests/fixture/translations/adaptation`),
+  и она намеренно расходится в одном блоке (F-44), поэтому строка приёмки
+  читает вывод, а гарантию держат тесты крейта `vibe-doc`; последняя строка
+  (`tools/self-check.sh`) гоняется один раз перед слиянием в `main` — точечный
+  гейт по слову владельца 2026-09-12 (леджер, строка гейта фазы 2). Прогон
+  остальных строк — леджер, строка гейта фазы 6.
 - **2026-09-10, одиннадцатая редакция.** По D-30 (промпт сначала): A2.8 —
   седьмой элемент `Prompt`; новый A2.29 — прогон промптов агентом вне
   панели; P.3 — правила промптов и ассертов; новый P.7b — прогон промптов до
