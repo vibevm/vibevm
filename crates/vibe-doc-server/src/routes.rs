@@ -19,6 +19,8 @@
 //! | `<base><coordinate>/<version>/<document>/` | the page: the island in the shell |
 //! | `<base><coordinate>/<version>/<document>.md` | `text/markdown` |
 //! | `<base><coordinate>/<version>/<document>.xml` | `application/xml` |
+//! | `<base><coordinate>/<version>/` and `…/latest/` | the package's own page: the card, the shelf, the agent surfaces |
+//! | `<base>media/<name>`, `<base><coordinate>/<version>/media/<name>` | the card's pictures |
 //! | `<base>manifest.json` | the page manifest |
 //! | `<base>llms.txt`, `llms-small.txt`, `llms-medium.txt`, `llms-full.txt` | the agent files |
 //! | `<base>resolve?uri=spec://…` | a citation, followed |
@@ -49,6 +51,7 @@ use vibe_doc::{llms, manifest};
 use crate::Reader;
 use crate::error::ApiError;
 
+mod media;
 mod resolve;
 mod statics;
 
@@ -111,16 +114,25 @@ fn answer(reader: &Reader, raw_path: &str, query: Option<&str>) -> Result<Respon
     if let Some(response) = machine_file(reader, rest)? {
         return Ok(response);
     }
+    if let Some(response) = media::answer(reader, rest)? {
+        return Ok(response);
+    }
     if rest == resolve::ROUTE || rest == concat_slash(resolve::ROUTE) {
         return resolve::answer(reader, query);
     }
-    // The mount itself, and the door above it. A reader is pointed at ONE
-    // package, so both mean «the documentation» and both send the reader
-    // to its first page in reading order — rather than to a package page
-    // this reader cannot render, or to a 404 for the address it printed
-    // on start-up.
-    if rest.is_empty() || rest == reader.prefix {
-        return first_page(reader);
+    // The package's own page, at the address the site gives it and at the
+    // `latest` spelling of that address (`##SITE-MOUNT`). A reader is
+    // pointed at ONE package, so `latest` can only be this version, and
+    // the two are one page rather than a redirect between them — which is
+    // what the site does with them too.
+    if rest == reader.prefix || rest == reader.latest_prefix() {
+        return package_page(reader);
+    }
+    // The door above the mount. It means «the documentation», and the
+    // documentation now has a page of its own to mean — so the door leads
+    // there rather than past it into the first chapter.
+    if rest.is_empty() {
+        return Ok(found(&format!("{}{}", reader.base, reader.prefix)));
     }
 
     if let Some(address) = rest.strip_prefix(&reader.prefix) {
@@ -145,20 +157,33 @@ fn concat_slash(route: &str) -> String {
     format!("{route}/")
 }
 
-/// Send the reader to the first page, in the order the layer law gives
-/// the manifest (PROP-048 `##THE-LAYER-LAW`) — the same order the
-/// navigation is built in, so «the first page» means the same thing here
-/// and on the site.
-fn first_page(reader: &Reader) -> Result<Response, ApiError> {
+/// The package's own page: the card, the shelf of what this
+/// documentation holds, and the surfaces an agent reads.
+///
+/// The island is EMPTY, and that is the whole design rather than a gap.
+/// A package page has no document behind it — there is no `.xml` in the
+/// package that says «this is the package» — so the pipeline renders no
+/// island for it, and the values it shows are the manifest's: the card,
+/// the pages in reading order, `llms.txt`. The shell already builds that
+/// page out of `<base>manifest.json` (it has been building it and had
+/// nowhere to show it), so what this address owes it is the template and
+/// the page's title, and nothing else.
+fn package_page(reader: &Reader) -> Result<Response, ApiError> {
     let built = manifest::build(&reader.package_dir, &reader.sources, &options(reader))
         .map_err(|e| ApiError::internal(e.to_string()))?;
-    let Some(first) = built.manifest.pages.first() else {
-        return Err(ApiError::not_found(
-            "this documentation carries no pages yet",
-        ));
-    };
-    let stem = first.path.strip_suffix(".xml").unwrap_or(&first.path);
-    Ok(found(&format!("{}{}{stem}/", reader.base, reader.prefix)))
+    let title = built.manifest.package.title.clone();
+    let llms = format!("{}llms.txt", reader.base);
+    let dressed = wearing(
+        reader,
+        Some(&title),
+        &[vibe_doc_shell::template::Alternate {
+            media_type: "text/plain",
+            href: &llms,
+            title: "llms.txt of this documentation",
+        }],
+        "",
+    );
+    Ok(text(dressed, "text/html; charset=utf-8"))
 }
 
 /// The files that describe the whole mount rather than one page.
@@ -279,8 +304,9 @@ pub(crate) fn in_shell(reader: &Reader, page: &vibe_doc::pages::Page, island: &s
     let md = format!("{at}.md");
     let xml = format!("{at}.xml");
     let llms = format!("{}llms.txt", reader.base);
-    let dressed = vibe_doc_shell::template::relink(
-        &reader.template,
+    wearing(
+        reader,
+        title_of(page).as_deref(),
         &[
             vibe_doc_shell::template::Alternate {
                 media_type: "text/markdown",
@@ -298,9 +324,28 @@ pub(crate) fn in_shell(reader: &Reader, page: &vibe_doc::pages::Page, island: &s
                 title: "llms.txt of this documentation",
             },
         ],
-    );
-    let dressed = match title_of(page) {
-        Some(title) => vibe_doc_shell::template::retitle(&dressed, &title),
+        island,
+    )
+}
+
+/// The reader's template, corrected for the thing being served and
+/// filled.
+///
+/// The two corrections are the two places a prerendered route names a
+/// PAGE rather than the shell — the tab's title and the projections it
+/// offers — and both are made IN PLACE, on elements the template already
+/// declares. Nothing is inserted and nothing is moved: an element added
+/// to the head of a resumable document stops the framework from resuming
+/// it, and a page that does not resume has no behaviour at all.
+fn wearing(
+    reader: &Reader,
+    title: Option<&str>,
+    alternates: &[vibe_doc_shell::template::Alternate<'_>],
+    island: &str,
+) -> String {
+    let dressed = vibe_doc_shell::template::relink(&reader.template, alternates);
+    let dressed = match title {
+        Some(title) => vibe_doc_shell::template::retitle(&dressed, title),
         None => dressed,
     };
     vibe_doc_shell::template::glue(&dressed, &reader.shell.index().island_marker, island)

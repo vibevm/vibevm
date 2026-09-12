@@ -37,6 +37,16 @@ fn reader(tmp: &tempfile::TempDir) -> Reader {
 }
 
 async fn get_path(path: &str) -> (StatusCode, axum::http::HeaderMap, String) {
+    let (status, headers, bytes) = get_bytes(path).await;
+    (
+        status,
+        headers,
+        String::from_utf8_lossy(&bytes).into_owned(),
+    )
+}
+
+/// The same, without reading the body as text — which a picture is not.
+async fn get_bytes(path: &str) -> (StatusCode, axum::http::HeaderMap, Vec<u8>) {
     let tmp = tempfile::tempdir().unwrap();
     let app = build_app(std::sync::Arc::new(reader(&tmp)));
     let response = app
@@ -54,11 +64,7 @@ async fn get_path(path: &str) -> (StatusCode, axum::http::HeaderMap, String) {
     let bytes = axum::body::to_bytes(response.into_body(), 8 * 1024 * 1024)
         .await
         .unwrap();
-    (
-        status,
-        headers,
-        String::from_utf8_lossy(&bytes).into_owned(),
-    )
+    (status, headers, bytes.to_vec())
 }
 
 #[tokio::test]
@@ -259,6 +265,118 @@ async fn a_page_address_without_its_slash_redirects_to_the_one_with_it() {
     assert_eq!(
         headers[header::LOCATION],
         "/doc/com.example/thing-docs/0.2.0/model/boot-lane/"
+    );
+}
+
+/// The card's pictures come back as the bytes `vibe doc build` would
+/// have written, at the addresses the manifest names them by — and at the
+/// addresses a PAGE reaches them by, which are the edition's own
+/// (`##CARD-SITE-COPIES`).
+#[tokio::test]
+async fn the_cards_pictures_are_the_bytes_the_build_writes() {
+    let tmp = tempfile::tempdir().unwrap();
+    package(tmp.path());
+    let built = vibe_doc::build::build(
+        tmp.path(),
+        &SpecSources::new(),
+        &vibe_doc::build::Options {
+            format: vibe_doc::build::Format::Html,
+            base: "/doc/".to_string(),
+            manifest: vibe_doc::manifest::Options::at(
+                Utc.with_ymd_and_hms(2026, 9, 12, 0, 0, 0).unwrap(),
+            ),
+            derived: std::collections::BTreeMap::new(),
+        },
+    )
+    .expect("the fixture builds");
+    let pictures: Vec<_> = built
+        .files
+        .iter()
+        .filter(|file| file.path.starts_with("media/"))
+        .collect();
+    assert_eq!(pictures.len(), 3, "icon, banner and preview");
+
+    for file in pictures {
+        let expected_type = if file.path.ends_with(".png") {
+            "image/png"
+        } else {
+            "image/svg+xml"
+        };
+        // The manifest's own spelling, under the mount…
+        let (status, headers, body) = get_bytes(&format!("/doc/{}", file.path)).await;
+        assert_eq!(status, StatusCode::OK, "{}", file.path);
+        assert_eq!(headers[header::CONTENT_TYPE], expected_type);
+        assert_eq!(
+            body, file.bytes,
+            "{} is not the bytes the build wrote",
+            file.path
+        );
+        // …and the spelling a page of this edition climbs to, in both
+        // spellings of the version.
+        for prefix in [
+            "/doc/com.example/thing-docs/0.2.0/",
+            "/doc/com.example/thing-docs/latest/",
+        ] {
+            let (status, headers, _) = get_path(&format!("{prefix}{}", file.path)).await;
+            assert_eq!(status, StatusCode::OK, "{prefix}{}", file.path);
+            assert_eq!(headers[header::CONTENT_TYPE], expected_type);
+        }
+    }
+}
+
+/// A picture nobody published is a refusal, and a name that is not a
+/// name is refused before any of it could become a path
+/// (`##LOCAL-STATIC`).
+#[tokio::test]
+async fn a_picture_that_was_never_published_is_refused_and_never_looked_for() {
+    for (address, status) in [
+        ("/doc/media/nothing.svg", StatusCode::NOT_FOUND),
+        ("/doc/media/vibe.toml", StatusCode::NOT_FOUND),
+        ("/doc/media/..%2F..%2Fvibe.toml", StatusCode::BAD_REQUEST),
+        ("/doc/media/%2e%2e", StatusCode::BAD_REQUEST),
+        ("/doc/media/C:", StatusCode::BAD_REQUEST),
+        (
+            "/doc/com.example/thing-docs/0.2.0/media/..%2Fvibe.toml",
+            StatusCode::BAD_REQUEST,
+        ),
+    ] {
+        let (actual, _, body) = get_path(address).await;
+        assert_eq!(actual, status, "{address}: {body}");
+        assert!(!body.contains("[package]"), "{address} served a file");
+    }
+}
+
+/// The package's own page answers at its address, in both spellings of
+/// the version, as the shell around an empty island: there is no document
+/// behind a package page, and the values it shows are the manifest's.
+#[tokio::test]
+async fn the_package_page_answers_at_both_spellings_of_its_address() {
+    for address in [
+        "/doc/com.example/thing-docs/0.2.0/",
+        "/doc/com.example/thing-docs/latest/",
+    ] {
+        let (status, headers, body) = get_path(address).await;
+        assert_eq!(status, StatusCode::OK, "{address}");
+        assert_eq!(headers[header::CONTENT_TYPE], "text/html; charset=utf-8");
+        // The shell, with the documentation's own title in the tab.
+        assert!(body.contains("<html"), "{address}: {body}");
+        assert!(body.contains("<title>Thing Manual</title>"), "{body}");
+        // The hole is filled, and with nothing: a package page has no
+        // island, and a marker left standing would be shown to a reader.
+        assert!(!body.contains("<!--vibe-doc-island-->"), "{body}");
+        assert!(!body.contains("doc-page"), "{address}: {body}");
+    }
+}
+
+/// The door above the mount means «this documentation», and the
+/// documentation now has a page of its own to mean.
+#[tokio::test]
+async fn the_door_leads_to_the_package_page() {
+    let (status, headers, _) = get_path("/doc/").await;
+    assert_eq!(status, StatusCode::FOUND);
+    assert_eq!(
+        headers[header::LOCATION],
+        "/doc/com.example/thing-docs/0.2.0/"
     );
 }
 

@@ -52,6 +52,41 @@ impl Slot {
         self.bytes.is_none()
     }
 
+    /// The bytes served at this slot's address: the file the package
+    /// ships, or the placeholder drawn for a role that ships none
+    /// (`##CARD-PLACEHOLDERS-GENERATED`).
+    ///
+    /// One rule with two readers, which is the reason it is a function
+    /// and not a `match` written twice: a build writes these bytes into
+    /// a tree and the local reader answers a request with them, and a
+    /// picture that differed between the two would be a card that
+    /// changes when you read it locally.
+    ///
+    /// ```
+    /// use vibe_core::PackageKind;
+    /// use vibe_doc::media;
+    ///
+    /// let tmp = tempfile::tempdir().unwrap();
+    /// std::fs::write(tmp.path().join("vibe.toml"), "[package]\nname = \"a\"\n").unwrap();
+    /// let slots = media::slots(tmp.path(), "com.example/a").unwrap();
+    /// let icon = slots.iter().find(|slot| slot.role == "icon").unwrap();
+    /// // Nothing was declared, so the picture is drawn and its address
+    /// // is the coordinate's rather than any file's content name.
+    /// assert!(icon.generated());
+    /// let bytes = icon.render("com.example/a", PackageKind::Doc, "A");
+    /// assert!(String::from_utf8_lossy(&bytes).starts_with("<svg"));
+    /// ```
+    pub fn render(&self, coordinate: &str, kind: vibe_core::PackageKind, title: &str) -> Vec<u8> {
+        match &self.bytes {
+            Some(bytes) => bytes.clone(),
+            None => match self.role {
+                "icon" => super::icon_svg(coordinate, kind).into_bytes(),
+                "banner" => super::banner_svg(coordinate, kind).into_bytes(),
+                _ => super::preview_png(coordinate, kind, title),
+            },
+        }
+    }
+
     /// The extension a generated picture of this role carries.
     pub fn generated_extension(&self) -> &'static str {
         if self.role == "preview" { "png" } else { "svg" }

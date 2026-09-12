@@ -20,11 +20,23 @@
 //! this crate worth running. A binary carrying no shell serves the bare
 //! one: typography, no scripts, still a page a person reads.
 //!
-//! Beside them: the shell's own statics, the two projections a page has
-//! as files, the page manifest, the four `llms` tiers — the endpoints an
-//! agent reads (§7.3 of the vision, `##SEO-LLMS-FILES`) — and the
+//! **The package's own page**, at the address the site gives it and at
+//! the `latest` spelling of that address. It is the shell around an EMPTY
+//! island, and deliberately: no document in a package says «this is the
+//! package», so there is no island to render, and what the page shows —
+//! the card, the shelf of pages in reading order, the agent surfaces — is
+//! the manifest's, which the shell already reads.
+//!
+//! Beside them: the shell's own statics, the card's three pictures at the
+//! addresses `vibe doc build` writes them to, the two projections a page
+//! has as files, the page manifest, the four `llms` tiers — the endpoints
+//! an agent reads (§7.3 of the vision, `##SEO-LLMS-FILES`) — and the
 //! `spec://` resolver, which is a route here and a redirect table on a
-//! static host (the plan's fork F-15).
+//! static host (the plan's fork F-15). The resolver earns its keep twice
+//! over now that an island writes every citation as a question to it
+//! rather than as a path down the address map: the pipeline cannot know
+//! what the mount in front of it carries, and this is the address that
+//! can.
 //!
 //! ## The embedding contract is the shell's, and this server's job is
 //! not to break it
@@ -255,6 +267,11 @@ pub struct Reader {
     /// `<group>/<name>/<version>/` — the one address prefix this reader
     /// answers to.
     pub prefix: String,
+    /// `<group>/<name>` and the version inside that prefix, split once
+    /// at start-up rather than at each of the three places that need
+    /// them.
+    pub coordinate: String,
+    pub version: String,
     pub csp: String,
     pub sources: SpecSources,
     pub derived: std::collections::BTreeMap<String, String>,
@@ -309,6 +326,8 @@ impl Reader {
             package_dir: config.package_dir.clone(),
             base: config.base.clone(),
             prefix: format!("{coordinate}/{version}/"),
+            coordinate,
+            version,
             csp: content_policy(&shell, &template, config.frame_ancestor.as_deref()),
             sources,
             derived: std::collections::BTreeMap::new(),
@@ -334,6 +353,16 @@ impl Reader {
     /// line an operator can click.
     pub fn mount(&self) -> String {
         format!("{}{}", self.base, self.prefix)
+    }
+
+    /// The same prefix spelled with `latest` instead of the number.
+    ///
+    /// The site publishes every page at both spellings of one version
+    /// (`##SITE-MOUNT`), so a link written under one of them arrives here
+    /// under it. A reader is pointed at ONE package, which is what makes
+    /// the translation trivial: `latest` can only mean this version.
+    pub fn latest_prefix(&self) -> String {
+        format!("{}/{}/", self.coordinate, vibe_doc::content::LATEST)
     }
 }
 
