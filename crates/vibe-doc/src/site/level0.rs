@@ -49,7 +49,10 @@ use crate::pages::SPEC_ROOT;
 
 mod card;
 mod page;
-mod readme;
+// Public where its siblings are not: the block reader is the one piece
+// of a composition that answers a question on its own — «what shape is
+// this README» — and its example is worth compiling.
+pub mod readme;
 
 pub use page::{BOOT_SNIPPET_PAGE, MANIFEST_PAGE, README_PAGE};
 
