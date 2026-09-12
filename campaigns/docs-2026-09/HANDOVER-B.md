@@ -89,10 +89,10 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
 4. Первые фикстуры: раннер A2.9 — `EXAMPLES-TODO.md` §fixtures и корпус
    PP-C2; линтер A2.25 — скрипты PP-C1; прогон промптов A2.29 — корпус
    PP-O1; гейт doc-пакетов A2.5 — X-024.
-5. Панель `tools/self-check.sh` должна быть зелёной до первого атома фазы 2:
-   на передачу единственный красный шаг — wire-derive ratchet по
-   `release_manifest.rs`, который закрывает JTD-схема воркера P1-O3 (см.
-   `LEDGER.md`).
+5. Панель `tools/self-check.sh`: шаги 1–4 зелёные (`bb6320b1`, `03f01007`);
+   шаг 5 (`cargo test --workspace`) ждёт пакета P1-O5 — фикстуры lock-файлов
+   с `schema_version = 6` (J-070); шаг 6d (`wire-diff`) — решения владельца по
+   корпусу `index/e1` (J-069).
 
 ## 6. Открытые вопросы владельцу на дату передачи {#open-questions}
 
@@ -114,4 +114,5 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
 | X-026: примеры, снимаемые на релизе | атрибут `captured="release"` у `example`; раннер пропускает с причиной, панель релиза снимает | A2.9, фаза 5 |
 | X-027: карточка предмета `org.vibevm.core/vibevm` | сайт берёт карточку предмета из doc-пакета, который его документирует, пока корень хоста — `[project]` | A2.3 |
 | X-005, X-015 | мелкое: `vibevm/vibedeps/.gitignore` в истории; фирменное `og.png` | фаза 4 |
+| корпус `index/e1` (J-069): байты gzip зависят от унификации фич Cargo | прибить реализацию deflate внутри `vibe-index` (вариант C отчёта P1-O4 §3.4); до решения шаг `wire-diff` панели красный по унаследованной причине | владелец, `findings/WORKER-REPORT-P1-O4.md` §3 |
 | P.8: стиль-ревью трёх страниц | `start/what-vibevm-is`, `howto/work-offline`, `authoring/write-a-flow`; замечания — в F1 | владелец |
