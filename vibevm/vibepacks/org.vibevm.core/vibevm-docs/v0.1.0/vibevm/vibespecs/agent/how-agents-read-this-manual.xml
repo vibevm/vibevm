@@ -7,16 +7,16 @@
     <table>
       <tr><td>Address</td><td>What it is</td><td>When to read it</td></tr>
       <tr><td>`https://vibevm.org/doc/llms.txt`</td><td>the index: one line per page, the page's first paragraph</td><td>first, to choose a page</td></tr>
-      <tr><td>`https://vibevm.org/doc/&lt;page&gt;.md`</td><td>one page as plain Markdown, block numbers included</td><td>to answer one question</td></tr>
-      <tr><td>`https://vibevm.org/doc/&lt;page&gt;.xml`</td><td>the same page in its source form, with every rule address and example intact</td><td>to quote a rule or run an example</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;package&gt;/&lt;version&gt;/&lt;page&gt;.md`</td><td>one page as plain Markdown, block numbers included</td><td>to answer one question</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;package&gt;/&lt;version&gt;/&lt;page&gt;.xml`</td><td>the same page in its source form, with every rule address and example intact</td><td>to quote a rule or run an example</td></tr>
       <tr><td>`https://vibevm.org/doc/llms-small.txt`, `llms-medium.txt`, `llms-full.txt`</td><td>the corpus in three sizes, stable text first</td><td>only when a task spans many pages</td></tr>
       <tr><td>`https://vibevm.org/doc/manifest.json`</td><td>every page with its language, audiences, status and anchors</td><td>to navigate programmatically</td></tr>
-      <tr><td>`https://vibevm.org/doc/resolve?uri=spec://…`</td><td>the resolver: an address in, the page and block out</td><td>when a message or a page cites an address</td></tr>
+      <tr><td>`https://vibevm.org/doc/resolve/?uri=spec://…`</td><td>the resolver: an address in, the page and block out</td><td>when a message or a page cites an address</td></tr>
       <tr><td>`https://vibevm.org/doc/ru/…`</td><td>the same files for another language</td><td>when the user reads that language</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"/>
-    <p>The site also serves the page manifest, a JSON list of every page with its statuses, languages, audiences and anchors, at `/doc/manifest.json`, and resolves a `spec://` address at `/doc/resolve?uri=…`.</p>
+    <p>The site also serves the page manifest, a JSON list of every page with its statuses, languages, audiences and anchors, at `/doc/manifest.json`, and resolves a `spec://` address at `/doc/resolve/?uri=…`; `&lt;package&gt;` is the group and name of the manual, `org.vibevm.core/vibevm-docs`, and `&lt;version&gt;` is a number or `latest`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"/>
   </the-files>
   <offline title="Without a network">
