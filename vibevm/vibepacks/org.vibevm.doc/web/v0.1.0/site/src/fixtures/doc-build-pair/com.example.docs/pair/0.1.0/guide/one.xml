@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">One</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p p="1"><fact id="LEAD-ONE" status="doc/work">The first page of the pair, which a translation mirrors block for block.</fact></p>
+  <example id="version" fixture="none" p="2">
+    <run>vibe --version</run>
+    <expect>vibe 1.0.0</expect>
+  </example>
+  <section id="why" title="Why">
+    <p p="3"><fact id="WHY-ONE" status="doc/work">Because a mirror needs two pages to be worth checking.</fact></p>
+  </section>
+</spec>

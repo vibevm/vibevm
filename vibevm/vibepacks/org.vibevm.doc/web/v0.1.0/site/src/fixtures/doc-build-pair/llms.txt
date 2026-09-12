@@ -1,0 +1,16 @@
+# The Pair
+
+> Two pages, so a translation has something to mirror.
+
+A community documentation of com.example/subject, published by com.example.docs, in en.
+Read it at /doc/com.example.docs/pair/0.1.0/. Rendered 2026-09-12.
+
+What it covers: two pages, one with an example and a section, one with a list.
+For whom: whoever changes the translation check and needs a source to check against.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: everything else.
+
+## Pages
+
+- [Two](/doc/com.example.docs/pair/0.1.0/guide/two/): The second page of the pair, whose middle block is a list. (1 min · user)
+- [One](/doc/com.example.docs/pair/0.1.0/guide/one/): The first page of the pair, which a translation mirrors block for block. (1 min · user)

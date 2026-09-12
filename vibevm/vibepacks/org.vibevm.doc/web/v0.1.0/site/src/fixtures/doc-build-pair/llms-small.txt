@@ -1,0 +1,53 @@
+# The Pair
+
+> Two pages, so a translation has something to mirror.
+
+A community documentation of com.example/subject, published by com.example.docs, in en.
+Read it at /doc/com.example.docs/pair/0.1.0/. Rendered 2026-09-12.
+
+What it covers: two pages, one with an example and a section, one with a list.
+For whom: whoever changes the translation check and needs a source to check against.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: everything else.
+
+---
+
+<!-- guide/two.xml -->
+Source: /doc/com.example.docs/pair/0.1.0/guide/two/
+Address: spec://com.example.docs/pair@0.1.0/guide/two
+
+# Two {#root}
+
+@status:doc/work @audience:user
+
+[p01] @fact:LEAD-TWO The second page of the pair, whose middle block is a list. @status:doc/work
+
+- [p02] A first item.
+- A second item.
+
+[p03] @fact:TAIL-TWO And a closing paragraph after it. @status:doc/work
+
+---
+
+<!-- guide/one.xml -->
+Source: /doc/com.example.docs/pair/0.1.0/guide/one/
+Address: spec://com.example.docs/pair@0.1.0/guide/one
+
+# One {#root}
+
+@status:doc/work @audience:user
+
+[p01] @fact:LEAD-ONE The first page of the pair, which a translation mirrors block for block. @status:doc/work
+
+[p02]
+```sh
+vibe --version
+```
+
+```output
+vibe 1.0.0
+```
+
+## Why {#why}
+
+[p03] @fact:WHY-ONE Because a mirror needs two pages to be worth checking. @status:doc/work

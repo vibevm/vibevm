@@ -36,7 +36,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { sourceOf } from "../site/src/seo/editions.ts";
 import { fileIn, treesOf } from "./doc-surfaces.mjs";
 
 /** What a `vibe doc build` tree calls its card and page list. */
@@ -96,7 +95,7 @@ function islandRelative(tree, document) {
 }
 
 /**
- * Every page address of the library, with the island bytes behind it.
+ * Every page address of every library, with the island bytes behind it.
  *
  * The rules are the ones the surfaces are copied by, because they are
  * the same rules: an edition is rendered from its own tree; a page it
@@ -106,28 +105,33 @@ function islandRelative(tree, document) {
  * version get the same bytes, because they are two addresses of one
  * page (`##SITE-CANONICAL-LATEST`).
  *
+ * The fallback is a library's OWN source and never another library's:
+ * two documentations are two texts, and a page missing from one has
+ * nothing to do with a page of the same name in the other.
+ *
  * Whether an edition «carries» a page is asked of the ISLAND and not of
  * the Markdown beside it. A deployment may name only the `--format html`
  * tree, and then no `.md` exists anywhere — a test written against the
  * wrong file would report every page of that build as a translation
  * fallback.
  */
-export function islandsOf(trees, editions, addresses) {
-  const source = sourceOf(editions);
-  const sourceTrees = treesOf(trees, source);
+export function islandsOf(trees, libraries) {
   const found = new Map();
-  for (const address of addresses) {
-    if (address.kind !== "page" || address.document === undefined) continue;
-    const own = treesOf(trees, address.edition);
-    const carries = own.some((tree) =>
-      tree.files.includes(islandRelative(tree, address.document)),
-    );
-    const from = carries ? own : sourceTrees;
-    const prefix = from[0]?.prefix;
-    if (prefix === undefined) continue;
-    const file = fileIn(from, `${prefix}${address.document}/${ISLAND_FILE}`);
-    if (file === undefined) continue;
-    found.set(address.href, readFileSync(file, "utf8"));
+  for (const library of libraries) {
+    const sourceTrees = treesOf(trees, library.source);
+    for (const address of library.addresses) {
+      if (address.kind !== "page" || address.document === undefined) continue;
+      const own = treesOf(trees, address.edition);
+      const carries = own.some((tree) =>
+        tree.files.includes(islandRelative(tree, address.document)),
+      );
+      const from = carries ? own : sourceTrees;
+      const prefix = from[0]?.prefix;
+      if (prefix === undefined) continue;
+      const file = fileIn(from, `${prefix}${address.document}/${ISLAND_FILE}`);
+      if (file === undefined) continue;
+      found.set(address.href, readFileSync(file, "utf8"));
+    }
   }
   return found;
 }

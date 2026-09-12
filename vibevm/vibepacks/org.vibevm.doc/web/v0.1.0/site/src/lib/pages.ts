@@ -12,10 +12,10 @@
  * place, or the gate is comparing a build against its own opinion.
  */
 
-import { siteAddresses } from "./library.ts";
+import { siteAddressesOf } from "./library.ts";
 import { BUILT } from "./library-source.ts";
 
 /** Every documentation address, as the catch-all route's parameters. */
 export function documentationParams(): { path: string }[] {
-  return siteAddresses(BUILT).map((address) => ({ path: address.path }));
+  return siteAddressesOf(BUILT).map((address) => ({ path: address.path }));
 }

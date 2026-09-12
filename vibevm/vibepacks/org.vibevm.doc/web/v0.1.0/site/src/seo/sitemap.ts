@@ -24,9 +24,8 @@ import {
   doorHref,
   indexableOf,
   lastmodOf,
-  sourceOf,
-  type Address,
   type Edition,
+  type Library,
 } from "./editions.ts";
 
 /** Where the index itself is served, and what robots.txt names. */
@@ -109,54 +108,66 @@ function partHref(source: Edition, edition: Edition): string {
 }
 
 /**
- * The sitemap index and its parts, from the addresses the library has.
+ * The sitemap index and its parts, from the addresses the libraries
+ * have: one part per package and language, over every documentation the
+ * build carries.
  *
  * The catalogues are a part of their own. They belong to no package —
  * the door and its per-language twins are the entrances of the site's documentation
  * half — and putting them into one package's file would make that file
- * lie the day a second package arrives.
+ * lie the day a second package arrives. Each language stands there once
+ * however many documentations are adapted into it, because a catalogue
+ * is an address of the site and not of a documentation; its date is the
+ * newest of the editions behind it, which is when the shelf last moved.
  */
 export function sitemapOf(
   origin: string,
-  editions: readonly Edition[],
-  addresses: readonly Address[],
+  libraries: readonly Library[],
 ): Sitemap {
-  const indexable = indexableOf(addresses);
   const parts: SitemapPart[] = [];
 
-  const source = sourceOf(editions);
   /* Catalogues are taken from all the addresses and not from the
      indexable ones: `latest` is a version spelling and a catalogue has no
      version to spell — a catalogue address is a language and nothing else. */
-  const catalogues = [
-    { href: doorHref(), lastmod: lastmodOf(source) },
-    ...addresses
-      .filter((address) => address.kind === "catalogue" && !address.fallback)
-      .map((address) => ({
-        href: address.href,
-        lastmod: lastmodOf(address.edition),
-      })),
-  ];
+  const catalogues = new Map<string, string>();
+  const keep = (href: string, lastmod: string) => {
+    const seen = catalogues.get(href);
+    if (seen === undefined || seen < lastmod) catalogues.set(href, lastmod);
+  };
+  for (const library of libraries) {
+    keep(doorHref(), lastmodOf(library.source));
+    for (const address of library.addresses) {
+      if (address.kind !== "catalogue" || address.fallback) continue;
+      keep(address.href, lastmodOf(address.edition));
+    }
+  }
+  const door = catalogues.get(doorHref()) ?? "";
   parts.push({
     href: docFileHref("sitemap/catalogues.xml"),
-    xml: urlset(origin, catalogues),
-    lastmod: lastmodOf(source),
+    xml: urlset(
+      origin,
+      [...catalogues].map(([href, lastmod]) => ({ href, lastmod })),
+    ),
+    lastmod: door,
   });
 
-  for (const edition of editions) {
-    const mine = indexable
-      .filter((address) => address.edition === edition)
-      .filter((address) => address.kind !== "catalogue")
-      .map((address) => ({
-        href: address.href,
+  for (const library of libraries) {
+    const indexable = indexableOf(library.addresses);
+    for (const edition of library.editions) {
+      const mine = indexable
+        .filter((address) => address.edition === edition)
+        .filter((address) => address.kind !== "catalogue")
+        .map((address) => ({
+          href: address.href,
+          lastmod: lastmodOf(edition),
+        }));
+      if (mine.length === 0) continue;
+      parts.push({
+        href: partHref(library.source, edition),
+        xml: urlset(origin, mine),
         lastmod: lastmodOf(edition),
-      }));
-    if (mine.length === 0) continue;
-    parts.push({
-      href: partHref(source, edition),
-      xml: urlset(origin, mine),
-      lastmod: lastmodOf(edition),
-    });
+      });
+    }
   }
 
   const index = [

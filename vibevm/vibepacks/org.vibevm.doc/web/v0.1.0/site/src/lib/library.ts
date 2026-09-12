@@ -2,7 +2,9 @@
 
 /**
  * The library a shell is showing: one source documentation and every
- * adaptation of it, as manifests turned into addresses.
+ * adaptation of it, as manifests turned into addresses — and, since a
+ * site carries as many libraries as it carries source documentations,
+ * the grouping that decides which manifests make up which library.
  *
  * Two rules shape this file and nothing else does.
  *
@@ -28,6 +30,14 @@
  * reader's is fetched from `<base>manifest.json` while the page is being
  * read. A module-level library would have made the second impossible to
  * express and the first impossible to test.
+ *
+ * And a build is given a LIST of them. One library is one source
+ * documentation and its adaptations; a registry render hands the site
+ * every package it published, which is forty-eight documentations that
+ * adapt nothing of each other's. So the manifests are grouped by the
+ * coordinate an adaptation names in `translates`, and each group becomes
+ * a library of its own with its own addresses, its own `latest` and its
+ * own languages.
  */
 
 import type {
@@ -97,45 +107,89 @@ function edition(manifest: DocManifest, segment: string | null): Edition {
   };
 }
 
+/** One documentation and the adaptations of it, still as manifests. */
+export type SourceGroup = {
+  readonly source: DocManifest;
+  readonly adaptations: readonly DocManifest[];
+};
+
+/** The `<group>/<name>` an adaptation names its source by (`translates`). */
+function coordinateOf(manifest: DocManifest): string {
+  return `${manifest.package.group}/${manifest.package.name}`;
+}
+
 /**
- * The library a set of manifests describes, in D-19's order: the source,
- * then the starred adaptations, then the community ones.
+ * The manifests a build was given, grouped into the libraries they are.
+ *
+ * An adaptation belongs to the documentation it names in `translates`
+ * and to no other — never to whichever source happens to be first, and
+ * never to a language it shares with an unrelated package. A source that
+ * nobody adapted is a library of one edition, which is what every
+ * package of a registry render is.
+ *
+ * An adaptation whose SOURCE this build does not carry becomes the
+ * source of a library of its own, under its own coordinate. The
+ * alternative was to refuse it, and a registry that publishes a
+ * volunteer's translation of something published elsewhere would then
+ * stop the whole render over one package — the same failure a render
+ * refuses to make of a broken package. Nothing collides: the coordinate
+ * an adaptation is served under here is its own, and the source it names
+ * has no address on this site to be confused with.
+ *
+ * The order is the order the manifests were named, taken at each
+ * library's first mention, so a deployment's `VIBE_DOC_OUT` decides it
+ * and two runs over the same trees agree.
+ */
+export function groupBySource(
+  manifests: readonly DocManifest[],
+): readonly SourceGroup[] {
+  const sources = new Map<string, DocManifest>();
+  for (const manifest of manifests) {
+    if (manifest.package.translation !== undefined) continue;
+    const at = coordinateOf(manifest);
+    if (!sources.has(at)) sources.set(at, manifest);
+  }
+
+  const groups = new Map<
+    string,
+    { source: DocManifest; adapted: DocManifest[] }
+  >();
+  const open = (at: string, source: DocManifest) => {
+    const group = { source, adapted: [] };
+    groups.set(at, group);
+    return group;
+  };
+
+  for (const manifest of manifests) {
+    const adapts = manifest.package.translation?.package;
+    const source = adapts === undefined ? undefined : sources.get(adapts);
+    if (adapts !== undefined && source !== undefined) {
+      (groups.get(adapts) ?? open(adapts, source)).adapted.push(manifest);
+      continue;
+    }
+    const at = coordinateOf(manifest);
+    if (!groups.has(at)) open(at, manifest);
+  }
+
+  return [...groups.values()].map((group) => ({
+    source: group.source,
+    adaptations: group.adapted,
+  }));
+}
+
+/**
+ * The library one group describes, in D-19's order: the source, then the
+ * starred adaptations, then the community ones.
  *
  * The order is not decoration. Three signals have to agree — the star,
  * the word, and the place in the list — and the only way to keep them
  * agreeing is to sort by the same value the star is drawn from.
- *
- * A set with no source is refused rather than guessed at: every address
- * of every edition is built on the source's coordinate (D-06), so a
- * library of translations alone has nothing to be served under.
  */
-export function libraryOf(manifests: readonly DocManifest[]): Library {
-  const sources = manifests.filter(
-    (manifest) => manifest.package.translation === undefined,
+export function libraryOf(group: SourceGroup): Library {
+  const source = edition(group.source, null);
+  const adapted = group.adaptations.map((manifest) =>
+    edition(manifest, manifest.package.lang),
   );
-  const found = sources[0];
-  if (found === undefined) {
-    throw new Error("no source manifest: every one of them is a translation");
-  }
-  /* One documentation and its adaptations, and not two documentations.
-     Every address of every edition is built on the SOURCE's coordinate
-     with a language segment in front of it (D-06), so a second source
-     has nothing to be served under: it would be read as an adaptation
-     of the first and would collide with any real one in its language.
-     The site that carries many documentations is the registry build,
-     which gives each its own library. */
-  if (sources.length > 1) {
-    const named = sources
-      .map((one) => `${one.package.group}/${one.package.name}`)
-      .join(", ");
-    throw new Error(
-      `${sources.length} source manifests in one library (${named}): this build renders one documentation and the adaptations of it`,
-    );
-  }
-  const source = edition(found, null);
-  const adapted = manifests
-    .filter((manifest) => manifest !== found)
-    .map((manifest) => edition(manifest, manifest.package.lang));
   return {
     source,
     editions: [
@@ -146,8 +200,15 @@ export function libraryOf(manifests: readonly DocManifest[]): Library {
   };
 }
 
+/** Every library a set of manifests describes, one per source documentation. */
+export function librariesOf(
+  manifests: readonly DocManifest[],
+): readonly Library[] {
+  return groupBySource(manifests).map(libraryOf);
+}
+
 /**
- * A library out of manifests that are still bytes.
+ * The libraries out of manifests that are still bytes.
  *
  * Failing here fails with the name of the manifest that failed, which is
  * the only useful moment to learn that a manifest is not one — at build
@@ -155,10 +216,10 @@ export function libraryOf(manifests: readonly DocManifest[]): Library {
  * between «the store holds something this shell cannot read» and a page
  * that renders half a shelf.
  */
-export function parseLibrary(
+export function parseLibraries(
   inputs: readonly { readonly name: string; readonly value: unknown }[],
-): Library {
-  return libraryOf(
+): readonly Library[] {
+  return librariesOf(
     inputs.map((one) => {
       const parsed = parseDocManifest(one.value);
       if (!parsed.ok) {
@@ -168,6 +229,28 @@ export function parseLibrary(
       }
       return parsed.value;
     }),
+  );
+}
+
+/**
+ * The library one documentation address belongs to, found by the
+ * coordinate the address is built on.
+ *
+ * That coordinate is always the SOURCE's — an adaptation is served under
+ * it with a language segment in front (D-06) — so one lookup answers for
+ * every language of every library, and an address of a documentation
+ * this build does not carry answers `null` rather than the first library
+ * that happens to be there.
+ */
+export function libraryAt(
+  libraries: readonly Library[],
+  group: string,
+  name: string,
+): Library | null {
+  return (
+    libraries.find(
+      (one) => one.source.card.group === group && one.source.card.name === name,
+    ) ?? null
   );
 }
 
@@ -304,4 +387,72 @@ export function siteAddresses(library: Library): readonly SiteAddress[] {
     }
   }
   return out;
+}
+
+/**
+ * Every documentation address the whole site has — every library's, with
+ * one catalogue per language rather than one per adaptation.
+ *
+ * A catalogue is a LANGUAGE and not an edition: `vibevm.org/doc/ru/` is the site's
+ * Russian shelf, and three documentations adapted into Russian are three
+ * cards on it, not three pages at one address. The static generator is
+ * handed this list, so a duplicate here would be an address written
+ * twice and a page-count gate that disagreed with itself.
+ */
+export function siteAddressesOf(
+  libraries: readonly Library[],
+): readonly SiteAddress[] {
+  const out: SiteAddress[] = [];
+  const catalogues = new Set<string>();
+  for (const library of libraries) {
+    for (const address of siteAddresses(library)) {
+      if (address.kind === "catalogue") {
+        if (catalogues.has(address.path)) continue;
+        catalogues.add(address.path);
+      }
+      out.push(address);
+    }
+  }
+  return out;
+}
+
+/**
+ * Every language the site carries, once each, in the order the libraries
+ * put them: the source languages first, then the starred adaptations,
+ * then the community ones.
+ *
+ * The entry is an EDITION because that is what the language selector is
+ * built to show — a publisher and a star, which belong to a
+ * documentation and not to a language. Where a language carries more
+ * than one documentation, the count of them is the honest answer to
+ * «published by whom», and the catalogue the entry leads to names each
+ * one with its own publisher and its own star.
+ */
+export type SiteLanguage = {
+  readonly segment: string | null;
+  readonly tag: string;
+  /** The one edition in this language, when there is only one. */
+  readonly edition: Edition;
+  /** How many documentations the site carries in this language. */
+  readonly count: number;
+};
+
+export function siteLanguages(
+  libraries: readonly Library[],
+): readonly SiteLanguage[] {
+  const found = new Map<string, { edition: Edition; count: number }>();
+  for (const library of libraries) {
+    for (const one of library.editions) {
+      const key = one.segment ?? "";
+      const seen = found.get(key);
+      if (seen === undefined) found.set(key, { edition: one, count: 1 });
+      else seen.count += 1;
+    }
+  }
+  return [...found.values()].map((one) => ({
+    segment: one.edition.segment,
+    tag: one.edition.tag,
+    edition: one.edition,
+    count: one.count,
+  }));
 }

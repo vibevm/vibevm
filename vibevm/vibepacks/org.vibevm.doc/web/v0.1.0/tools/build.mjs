@@ -43,11 +43,10 @@ import {
 } from "../site/src/seo/csp.ts";
 import {
   LATEST,
-  addressesOf,
+  addressesOfAll,
   coordinateOf,
   docFileHref,
-  editionsOf,
-  sourceOf,
+  librariesOf,
 } from "../site/src/seo/editions.ts";
 import { PUBLIC_ONLY } from "../site/src/seo/local.ts";
 import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
@@ -63,6 +62,7 @@ import {
 } from "./doc-surfaces.mjs";
 import { buildLibrary, fixtureLibrary } from "./library-source.mjs";
 import { lintLinks } from "./lint-links.mjs";
+import { staticOutDir } from "./out-dir.mjs";
 import { writeRootFiles } from "./root-files.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -73,7 +73,8 @@ const MODES = {
   static: {
     clientConfig: "vite.config.ts",
     adapterConfig: join("adapters", "static", "vite.config.ts"),
-    outDir: "dist",
+    /** Where the Vite configuration was told to write, which the environment may move. */
+    outDir: staticOutDir(),
     /** The landing is part of the site build and not of the embedded one. */
     countsLanding: true,
   },
@@ -118,14 +119,16 @@ function manifests() {
 }
 
 /**
- * Addresses the library declares.
+ * Addresses the libraries declare.
  *
- * Every LANGUAGE carries every page of the SOURCE — an adaptation that
+ * Every LANGUAGE carries every page of ITS SOURCE — an adaptation that
  * has not reached a page yet still answers at its address, with the
  * source's text and a notice, which is what makes a language never a 404
  * (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). So the count is: one door,
- * one catalogue per adaptation, and for every edition its own package
- * page plus one page per page of the source.
+ * one catalogue per adapted LANGUAGE of the whole site — three
+ * documentations adapted into Russian are three cards on one shelf and
+ * not three addresses — and, for every library, every edition's own
+ * package page plus one page per page of that library's source.
  *
  * It reads the manifests itself rather than importing the site's
  * library, and that is the whole point of the gate: two independent
@@ -134,11 +137,30 @@ function manifests() {
  */
 function docAddressCount() {
   const all = manifests();
-  const source = all.find((one) => one.package?.translation === undefined);
-  if (source === undefined) {
-    throw new Error("no source manifest: every one of them is a translation");
+  const sources = new Map();
+  for (const manifest of all) {
+    if (manifest.package?.translation !== undefined) continue;
+    const card = manifest.package;
+    const at = `${card.group}/${card.name}`;
+    if (!sources.has(at)) sources.set(at, { pages: manifest.pages.length, editions: 1 });
   }
-  const adaptations = all.length - 1;
+  const languages = new Set();
+  for (const manifest of all) {
+    const adapts = manifest.package?.translation?.package;
+    const mine = sources.get(adapts);
+    if (adapts !== undefined && mine !== undefined) {
+      mine.editions += 1;
+      languages.add(manifest.package.lang);
+      continue;
+    }
+    /* An adaptation whose source this build does not carry is a library
+       of its own, under its own coordinate: it has no source here to be
+       served behind, so it is counted as one. */
+    const at = `${manifest.package.group}/${manifest.package.name}`;
+    if (!sources.has(at)) {
+      sources.set(at, { pages: manifest.pages.length, editions: 1 });
+    }
+  }
   /* Twice, because a page has two addresses: the version number and
      `latest`. They are the same content and the site says so — the
      numbered one carries `rel=canonical` to the other — but a citation
@@ -146,10 +168,14 @@ function docAddressCount() {
      offers it, so it is an address the build has to write rather than a
      word on a page (`##SITE-CANONICAL-LATEST`). */
   const spellings = 2;
+  let pages = 0;
+  for (const library of sources.values()) {
+    pages += library.editions * spellings * (1 + library.pages);
+  }
   return (
     1 + // the door at /doc/
-    adaptations + // one catalogue per adapted language
-    all.length * spellings * (1 + source.pages.length)
+    languages.size + // one catalogue per adapted language of the site
+    pages
   );
 }
 
@@ -198,8 +224,8 @@ function landingRouteCount() {
  * the origin and the analytics id arrive on (`site/src/config.ts`).
  */
 const TREES = mode === "static" ? readTrees(treePaths()) : [];
-const EDITIONS = editionsOf(manifests());
-const MEDIA = mode === "static" ? mediaMapOf(TREES, EDITIONS) : {};
+const LIBRARIES = librariesOf(manifests());
+const MEDIA = mode === "static" ? mediaMapOf(TREES, LIBRARIES) : {};
 
 /**
  * The island of every page, put where the marker stands.
@@ -232,7 +258,7 @@ const MEDIA = mode === "static" ? mediaMapOf(TREES, EDITIONS) : {};
  */
 function fillIslands(outDirName) {
   const out = join(SITE_ROOT, outDirName);
-  const islands = islandsOf(TREES, EDITIONS, addressesOf(EDITIONS));
+  const islands = islandsOf(TREES, LIBRARIES);
   const standIn = readFileSync(
     join(SITE_ROOT, "src", "fixtures", "island.html"),
     "utf8",
@@ -286,9 +312,7 @@ function htmlFiles(dir, found = []) {
 function writeDocumentationSurfaces(outDirName) {
   const out = join(SITE_ROOT, outDirName);
   const config = siteConfig(process.env);
-  const source = sourceOf(EDITIONS);
-  const addresses = addressesOf(EDITIONS);
-  const number = source.manifest.package.version;
+  const addresses = addressesOfAll(LIBRARIES);
   let written = 0;
 
   const write = (address, contents) => {
@@ -298,36 +322,37 @@ function writeDocumentationSurfaces(outDirName) {
     written += 1;
   };
 
-  const copied = copySurfaces(TREES, EDITIONS, out);
+  const copied = copySurfaces(TREES, LIBRARIES, out);
 
   /* The page manifest of each edition, at both spellings of the version.
      It is the manifest the pipeline wrote, re-serialised rather than
      re-derived: the site never recomputes what Rust computed, and the
      one thing it adds is the address the bytes are served at. */
-  for (const edition of EDITIONS) {
-    for (const version of [number, LATEST]) {
-      const base = href(
-        packagePath(coordinateOf(source, edition.segment, version)),
-      );
-      write(
-        `${base}manifest.json`,
-        `${JSON.stringify(edition.manifest, null, 2)}\n`,
-      );
+  for (const library of LIBRARIES) {
+    const source = library.source;
+    const number = source.manifest.package.version;
+    for (const edition of library.editions) {
+      for (const version of [number, LATEST]) {
+        const base = href(
+          packagePath(coordinateOf(source, edition.segment, version)),
+        );
+        write(
+          `${base}manifest.json`,
+          `${JSON.stringify(edition.manifest, null, 2)}\n`,
+        );
+      }
     }
   }
 
   write(
     docFileHref("manifest.json"),
-    `${JSON.stringify(siteManifest(EDITIONS, addresses), null, 2)}\n`,
+    `${JSON.stringify(siteManifest(LIBRARIES), null, 2)}\n`,
   );
-  write(
-    docFileHref("llms.txt"),
-    catalogueLlmsTxt(config.origin, EDITIONS, addresses),
-  );
-  const corpus = fullCorpus(TREES, EDITIONS, config.origin);
+  write(docFileHref("llms.txt"), catalogueLlmsTxt(config.origin, LIBRARIES));
+  const corpus = fullCorpus(TREES, LIBRARIES, config.origin);
   if (corpus !== null) write(docFileHref("llms-full.txt"), corpus);
 
-  const sitemap = sitemapOf(config.origin, EDITIONS, addresses);
+  const sitemap = sitemapOf(config.origin, LIBRARIES);
   write(docFileHref("sitemap.xml"), sitemap.index);
   for (const part of sitemap.parts) write(part.href, part.xml);
 
@@ -338,7 +363,7 @@ function writeDocumentationSurfaces(outDirName) {
   write(docFileHref("resolve/index.html"), resolverPage());
 
   process.stdout.write(
-    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, ${sitemap.parts.length} sitemap part(s) over ${sitemap.addresses} address(es), resolver\n`,
+    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) of ${LIBRARIES.length} librar${LIBRARIES.length === 1 ? "y" : "ies"} (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, ${sitemap.parts.length} sitemap part(s) over ${sitemap.addresses} address(es), resolver\n`,
   );
   if (copied.unplaced.length > 0) {
     process.stdout.write(
@@ -461,7 +486,14 @@ const ssg = vite(plan.adapterConfig);
 // 2. What the generator says it made. An absent line is itself a
 //    failure: the generator prints nothing at all when it renders
 //    nothing, which is the silent case this gate is here for.
-const reported = /- Generated:\s+(\d+)\s+page/.exec(ssg);
+//
+//    The colour is taken off first. A parent that sets `FORCE_COLOR` —
+//    a test runner, a CI — makes Vite wrap the number in escape codes,
+//    and a gate that then read «0 pages» from a build that made
+//    twenty-four would be a red with no cause anywhere near it.
+const ESCAPE = String.fromCharCode(27);
+const plain = ssg.replaceAll(new RegExp(`${ESCAPE}\\[[0-9;]*m`, "g"), "");
+const reported = /- Generated:\s+(\d+)\s+page/.exec(plain);
 const generated = reported === null ? 0 : Number.parseInt(reported[1], 10);
 
 // 3. What the site says it has.

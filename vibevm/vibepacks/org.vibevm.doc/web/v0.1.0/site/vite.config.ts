@@ -20,6 +20,10 @@
  * package's own fixture pair when it names none. A bundler cannot import
  * a file whose path only the deployment knows, so the manifests arrive
  * as a substituted value — the same channel the card addresses take.
+ *
+ * Where it writes is the one other thing the environment may move
+ * (`tools/out-dir.mjs`), so that a second library set can be built
+ * beside the first rather than over it.
  */
 
 import { qwikVite } from "@qwik.dev/core/optimizer";
@@ -27,6 +31,7 @@ import { qwikRouter } from "@qwik.dev/router/vite";
 import { defineConfig, type UserConfig } from "vite";
 
 import { buildLibrary } from "../tools/library-source.mjs";
+import { staticOutDir, staticServerDir } from "../tools/out-dir.mjs";
 
 export default defineConfig((): UserConfig => {
   return {
@@ -37,7 +42,10 @@ export default defineConfig((): UserConfig => {
     },
     plugins: [
       qwikRouter({ trailingSlash: true }),
-      qwikVite({ client: { outDir: "dist" }, ssr: { outDir: "server" } }),
+      qwikVite({
+        client: { outDir: staticOutDir() },
+        ssr: { outDir: staticServerDir() },
+      }),
     ],
   };
 });

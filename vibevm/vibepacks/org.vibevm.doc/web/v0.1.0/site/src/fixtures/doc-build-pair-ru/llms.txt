@@ -1,0 +1,17 @@
+# Пара
+
+> Два экземпляра страниц, один из них намеренно расходится.
+
+A community documentation of com.example/subject, published by com.example.docs, in ru.
+An adaptation of com.example.docs/pair (an official translation).
+Read it at /doc/com.example.docs/pair-ru/0.1.0/. Rendered 2026-09-12.
+
+Что покрывает: две страницы — зеркало источника, во второй намеренное расхождение.
+Для кого: для того, кто меняет проверку переводов.
+Что предполагает известным: ничего.
+Чего не покрывает: всё остальное.
+
+## Pages
+
+- [Вторая](/doc/com.example.docs/pair-ru/0.1.0/guide/two/): Вторая страница пары, у которой средний блок — список. (1 min · user)
+- [Первая](/doc/com.example.docs/pair-ru/0.1.0/guide/one/): Первая страница пары, которую перевод зеркалит блок в блок. (1 min · user)

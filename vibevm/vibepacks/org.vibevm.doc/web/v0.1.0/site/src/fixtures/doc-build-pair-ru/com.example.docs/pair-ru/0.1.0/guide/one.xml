@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Первая</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p p="1"><fact id="LEAD-ONE" status="doc/work">Первая страница пары, которую перевод зеркалит блок в блок.</fact></p>
+  <example ref="version" p="2"/>
+  <section id="why" title="Зачем">
+    <p p="3"><fact id="WHY-ONE" status="doc/work">Потому что зеркало имеет смысл проверять на двух страницах.</fact></p>
+  </section>
+</spec>

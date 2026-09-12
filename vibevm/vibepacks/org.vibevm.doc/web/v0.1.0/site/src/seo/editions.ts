@@ -1,8 +1,12 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT */
 
 /**
- * The library as the machine surfaces see it: editions, addresses, and
- * which page each address serves.
+ * The libraries as the machine surfaces see them: editions, addresses,
+ * and which page each address serves.
+ *
+ * Libraries, plural, because a build carries one per source
+ * documentation — one over a manual and its translations, forty-eight
+ * over a registry render.
  *
  * It exists beside `lib/library.ts` rather than inside it because of who
  * calls it. The library is the shell's — it is imported by routes, it
@@ -29,6 +33,7 @@ import {
   type DocAddress,
   type PackageAddress,
 } from "../lib/href.ts";
+import { groupBySource, type SourceGroup } from "../lib/library.ts";
 
 /**
  * The version segment that always names the newest publication.
@@ -80,17 +85,33 @@ export function documentOf(path: string): string {
 }
 
 /**
- * The editions in D-19's order: the source, then the starred
- * adaptations, then the community ones.
+ * One documentation and the adaptations of it, with every address they
+ * publish — the machine surfaces' twin of `lib/library.ts`'s `Library`,
+ * which is the same thing shaped for the shell that renders pages.
+ *
+ * A build has as many of these as it was given source documentations: a
+ * registry render hands the site every package it published, and none of
+ * them is a translation of another.
+ */
+export type Library = {
+  /** The source first, then the starred adaptations, then the rest. */
+  readonly editions: readonly Edition[];
+  /** The source — the coordinate every address here is built on. */
+  readonly source: Edition;
+  /** Every address these editions have, in both spellings of the version. */
+  readonly addresses: readonly Address[];
+};
+
+/**
+ * The editions of one group in D-19's order: the source, then the
+ * starred adaptations, then the community ones.
  *
  * The order is the same one the language selector draws, and for the
  * same reason: the star, the word and the place in the list have to
  * agree, and the only way to keep them agreeing is to sort by the value
  * the star is drawn from.
  */
-export function editionsOf(
-  manifests: readonly DocManifest[],
-): readonly Edition[] {
+export function editionsOf(group: SourceGroup): readonly Edition[] {
   const one = (manifest: DocManifest, segment: string | null): Edition => ({
     segment,
     tag: manifest.package.lang,
@@ -98,32 +119,43 @@ export function editionsOf(
     official: manifest.package.translation?.status === "official",
   });
 
-  const source = manifests.find(
-    (manifest) => manifest.package.translation === undefined,
+  const adapted = group.adaptations.map((manifest) =>
+    one(manifest, manifest.package.lang),
   );
-  if (source === undefined) {
-    throw new Error("no source manifest: every one of them is a translation");
-  }
-  const sources = manifests.filter(
-    (manifest) => manifest.package.translation === undefined,
-  );
-  if (sources.length > 1) {
-    const named = sources
-      .map((each) => `${each.package.group}/${each.package.name}`)
-      .join(", ");
-    throw new Error(
-      `${sources.length} source manifests in one library (${named}): this build renders one documentation and the adaptations of it`,
-    );
-  }
-  const adapted = manifests
-    .filter((manifest) => manifest !== source)
-    .map((manifest) => one(manifest, manifest.package.lang));
-
   return [
-    one(source, null),
+    one(group.source, null),
     ...adapted.filter((edition) => edition.official),
     ...adapted.filter((edition) => !edition.official),
   ];
+}
+
+/**
+ * Every library a build's manifests describe, with its addresses.
+ *
+ * The grouping is `lib/library.ts`'s and not a second opinion of it: an
+ * adaptation belongs to the documentation it names in `translates`, and
+ * which manifests make one library is a question that must have exactly
+ * one answer for the pages and the machine files to describe the same
+ * site.
+ */
+export function librariesOf(
+  manifests: readonly DocManifest[],
+): readonly Library[] {
+  return groupBySource(manifests).map((group) => {
+    const editions = editionsOf(group);
+    return {
+      editions,
+      source: sourceOf(editions),
+      addresses: addressesOf(editions),
+    };
+  });
+}
+
+/** Every address of every library, as one list. */
+export function addressesOfAll(
+  libraries: readonly Library[],
+): readonly Address[] {
+  return libraries.flatMap((library) => library.addresses);
 }
 
 /** The source edition — the coordinate every address is built on. */

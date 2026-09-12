@@ -1,10 +1,10 @@
 # Fixtures
 
-Three files and one tree. Three of them are **copies** taken from the
-Rust pipeline's own goldens; the rest are the site's own library, written
-here. They exist so the site can be built, its page count checked, its
-language machinery exercised and its links followed before any real
-documentation package is on the machine.
+Three files and three trees. Some of them are **copies** taken from the
+Rust pipeline's own goldens or its output; the rest are the site's own
+library, written here. They exist so the site can be built, its page
+count checked, its language machinery exercised and its links followed
+before any real documentation package is on the machine.
 
 | File | Where it comes from | Refreshed by |
 | --- | --- | --- |
@@ -12,6 +12,24 @@ documentation package is on the machine.
 | `manifest.json` | the site's own: the pipeline's `formats/corpora/doc-manifest/e1/manual.json` with a **second page** added | edited here, kept parseable by `manifest.test.ts` |
 | `manifest-ru.json` | the site's own: an **official adaptation** of `manifest.json` that carries only one of its two pages | edited here |
 | `doc-build/` | a `vibe doc build` output in miniature: the agent surfaces of `manifest.json`'s library | see below |
+| `doc-build-pair/` | a `vibe doc build` output over `crates/vibe-doc/tests/fixture/translations/source` — a **second source documentation** | `vibe doc build --format html\|md\|xml`, merged into one directory |
+| `doc-build-pair-ru/` | the same over `…/tests/fixture/translations/adaptation` — the **official adaptation** of the one above | as above |
+
+## The second library
+
+A site carries one library per source documentation, and a fixture set
+with one documentation in it cannot show that. `doc-build-pair/` and
+`doc-build-pair-ru/` are the second: a package that adapts nothing of
+`fixture-manual`'s, and an adaptation that names `com.example.docs/pair`
+in `[translates]` and must therefore be attributed to it and to nothing
+else. They are not copied from goldens — they are what `vibe doc build`
+wrote over the crate's own translation fixture, unedited, media
+placeholders included, so the card addresses a page names in `og:image`
+are real files a link check can follow.
+
+A build renders them only when a deployment names them in
+`VIBE_DOC_OUT`. `pnpm build:static` with nothing named still renders the
+one-library fixture pair below, exactly as it did before they existed.
 
 ## `doc-build/` — the tree the build copies from
 
