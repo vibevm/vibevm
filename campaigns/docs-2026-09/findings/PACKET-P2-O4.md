@@ -41,6 +41,18 @@
    `git push` не делать; настоящий дом `~/.vibe` раннер не трогает никогда
    (трипвайр как в `tools/user-home-tripwire.sh`).
 
+Решения пивота, которые ты наследуешь (отчёт P2-O2 §«Решения»): словарь —
+параметр читателя `vibe_specdoc::doc::Vocabulary::{Spec, Doc}` через
+`from_xml_with` / `load_spec_text_with` / `project_spec_text_with` /
+`convert_with`; `when` живёт в слоте `BlockNode { when, block }` и в
+`Section`; `Example { id, fixture, lang, exit: Option<i32>, run, expect,
+stderr }`, тексты `run`/`expect`/`stderr` дословные, пустой `<expect></expect>`
+— утверждение «ничего не печатает»; `example id` и `prompt id` — в общем
+пространстве якорей. Корпусный тест `crates/vibe-specdoc/tests/docs_corpus.rs`
+держит карантин и список неканоничных страниц: если `--accept` перепишет
+страницы, он же их канонизирует, и список `NOT_CANONICAL` надо сократить в
+том же коммите.
+
 ## Цель — три атома, три коммита
 
 **A2.0 + A2.9** Новый крейт `crates/vibe-doc` по чеклисту §2.8; модуль
