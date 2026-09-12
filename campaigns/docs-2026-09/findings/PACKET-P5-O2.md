@@ -57,7 +57,7 @@
 **A5.7 nginx выдачи** — `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/nginx.conf`
 на весь домен: наследует `vibevm-org/nginx.conf` по списку п. 5, с
 поправками: immutable-кеш на `/assets/`, `/build/` и `/fonts/` (X-040), а
-не `/_astro/`; `q-manifest.json` — 404 (STACK-BUILD-HYGIENE); CSP из
+не `/_astro/`; `q-manifest.json` — 404 (STACK-BUILD-HYGIENE); `/.vibe-site/` и всё под ним — 404 (состояние и деревья билдера лежат внутри выхода намеренно — отчёт P5-O1, «Раскладка выхода»); CSP из
 `dist/csp.txt` сборки (заголовок собирается стадией сборки образа, не
 рукой: `include /etc/nginx/csp.conf`, который генерирует `Dockerfile` из
 `csp.txt`; X-044: хэшей 47 на фикстуре и ~150 на руководстве, поэтому заголовок вешается только на HTML-ответы — через `map` по типу ответа, не `add_header` на весь сервер, — а его размер в байтах на странице руководства идёт в отчёт владельцу); `/doc/` и `/doc` — относительные редиректы к каталогу со
@@ -65,7 +65,7 @@
 `/` (301, относительный `Location`). Тест по выходу сборки в контейнере
 (`docker run` образа выдачи над `dist/`): заголовки на `.txt`, `.xml`,
 `.md` содержат `charset=utf-8`; `/en/` даёт относительный `Location`;
-`/doc` → `/doc/`; `q-manifest.json` → 404; CSP присутствует и совпадает с
+`/doc` → `/doc/`; `q-manifest.json` → 404; `/.vibe-site/state.json` → 404; CSP присутствует и совпадает с
 `csp.txt` на HTML и отсутствует на `/assets/**`. Коммит:
 `feat(web): ship the serving nginx config for the whole domain`.
 
@@ -78,6 +78,8 @@
 пусто; тест P4-O3/A4.15 для сервера — если уже есть). Пути `/u/s.js` и
 `/u/e` сайт не обслуживает и в nginx выдачи не описывает (их отдаёт домен).
 Коммит: `feat(web): reuse the landing's first-party analytics tag`.
+
+Предусловие: P4-O8 (`feat(web): build one library per source documentation`) в ветке — без него сборка сайта принимает одну исходную документацию, а билдер отдаёт 48 (отчёт P5-O1, А-1); `host_url` и `default_theme` из `site.toml` подключай к оболочке в A5.9 теми же именами, что читает `site/src/config.ts` (X-058).
 
 **A5.6 шаги 1–2, локальная проба** — `docker/Dockerfile` рендерера:
 стадия Node (образ с точной версией 24.18.0, `corepack enable`, `pnpm
