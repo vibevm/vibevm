@@ -8,9 +8,11 @@ import {
 } from "@qwik.dev/router";
 import {
   Card,
+  CodeChrome,
   DocsNav,
   Fab,
   ForAgent,
+  Lightbox,
   PackageHeader,
   PageMeta,
   Prose,
@@ -19,6 +21,7 @@ import {
   SettingsPanel,
   Shelf,
   TabPills,
+  Toc,
   VersionSwitch,
 } from "@vibe-docs/design";
 
@@ -110,8 +113,9 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
   );
 
   return (
-    <div class="doc-view" lang={view.textLanguage}>
+    <div class="doc-view doc-view--page" lang={view.textLanguage}>
       <DocsNav label="Pages of this documentation" items={view.nav} />
+      <Toc label="Contents" rulesLabel="Rules this page cites" />
       <Prose measure={MEASURE}>
         <div class="doc-view__switches">
           <VersionSwitch label="Version" items={view.versions} />
@@ -130,7 +134,9 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
           readingMinutes={view.readingMinutes}
           links={[...view.links]}
         />
-        <Island html={ISLAND_HTML} />
+        <CodeChrome>
+          <Island html={ISLAND_HTML} />
+        </CodeChrome>
         <ForAgent
           title="For an agent"
           lead={AGENT_LEAD}
@@ -148,6 +154,7 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
       />
       <SettingsPanel label="Reading settings" />
       <ReturnToPlace label="back to where you were" />
+      <Lightbox label="The picture or table you opened" closeLabel="close" />
       <Fab label="For an agent: the address of this place" glyph="{ }">
         <ForAgent
           title="For an agent"

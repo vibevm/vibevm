@@ -22,6 +22,9 @@
 
 import { startAnchors } from "./anchors.ts";
 import { startAgentSurface } from "./agent.ts";
+import { startCodeChrome } from "./code.ts";
+import { startOverlay } from "./overlay.ts";
+import { startToc } from "./toc.ts";
 import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
 import { startLanguageSwitch } from "./language.ts";
 import { startPlatformSwitch } from "./platform.ts";
@@ -70,6 +73,13 @@ export function startReader(context: ReaderContext): () => void {
 
   const stops = [
     settings.stop,
+    // The chrome over the island first: the contents, the toolbars and
+    // the overlay all add elements the behaviours below then listen
+    // over, and a listener attached before the element exists is a
+    // listener that never fires.
+    startCodeChrome(),
+    startOverlay(),
+    startToc(),
     startPlatformSwitch(),
     startRuleTransclusion(),
     startAnchors(),
