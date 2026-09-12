@@ -62,7 +62,7 @@ import type { DocView, PackageView, PageView } from "../lib/view.ts";
 import { analytics } from "./analytics.ts";
 import { docFileHref, LATEST } from "./editions.ts";
 import { localHead } from "./local.ts";
-import { previewOf } from "./media.ts";
+import { cardPreviewOf } from "./media.ts";
 import { articleData, collectionData } from "./structured-data.ts";
 
 /**
@@ -86,20 +86,18 @@ function absolute(path: string): string {
 /**
  * The card a share of this page shows.
  *
- * The package's composed preview when the build was given the tree that
- * holds it, and the site's own brand card otherwise — never nothing. Four
- * meta tags name an image on every page, and an address that answers with
- * a 404 is worse than a generic picture: it is a broken promise on every
- * share, and nobody sees it until somebody shares.
+ * The package's composed preview when its manifest names one or the
+ * build found one in the tree, and the site's own brand card otherwise —
+ * never nothing. Four meta tags name an image on every page, and an
+ * address that answers with a 404 is worse than a generic picture: it is
+ * a broken promise on every share, and nobody sees it until somebody
+ * shares.
  *
  * The coordinate is always the source's, because that is the coordinate
- * every address on this site is built on, and the version is always the
- * number: `latest` is an address, not a publication, and the card belongs
- * to the publication.
+ * every address on this site is built on.
  */
 function cardOf(library: Library): string {
-  const card = sourceEdition(library).card;
-  const preview = previewOf(card.group, card.name, card.version);
+  const preview = cardPreviewOf(sourceEdition(library).card);
   return absolute(preview ?? href("og.png"));
 }
 

@@ -1,22 +1,32 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PREVIEW-COMPOSED */
 
 /**
- * Where a package's link preview is, when the build was given one.
+ * Where a package's link preview is.
  *
- * The page cannot work the address out. A documentation package's card
- * images are written by `vibe doc build` under content-hashed names, and
- * the page manifest does not carry those names — a hole in the manifest
- * schema, already filed and already assigned (X-042). Until it is
- * closed, the build reads the tree it is copying, finds the 1200×630
- * card the pipeline composed (D-20, `##CARD-PREVIEW-COMPOSED`), and
- * hands the address to the pages through the environment, the same way
- * the origin and the analytics id arrive (`config.ts`).
+ * The manifest says. `media` carries the three card images at the
+ * addresses `vibe doc build` wrote them to — `media/<content name>`,
+ * relative to the base the documentation is served under
+ * (`##CARD-MEDIA-ROLES`) — and the shell shows what it names and
+ * computes nothing (`##PIPE-SHELL-PARSES-NOTHING`).
  *
- * A build that was given no tree has no card and says so by leaving the
- * map empty: the page then names the site's own `og.png`, which the same
- * build always writes. A preview is a promise that an address answers
- * with an image, and a guessed one would break it on every share.
+ * It has not always said. The field is optional because the format is
+ * read permissively (PROP-044 §4.4): a manifest written before the
+ * addresses were carried is still a manifest, and absent means «this
+ * document predates the field», never «this package has no picture». For
+ * those, the build reads the tree it is copying, finds the 1200×630 card
+ * the pipeline composed (D-20, `##CARD-PREVIEW-COMPOSED`), and hands the
+ * address to the pages through the environment, the same way the origin
+ * and the analytics id arrive (`config.ts`) — the search that was the
+ * only path before X-055 and is now the second one.
+ *
+ * A build that has neither has no card and says so: the page then names
+ * the site's own `og.png`, which the same build always writes. A preview
+ * is a promise that an address answers with an image, and a guessed one
+ * would break it on every share.
  */
+
+import type { DocPackage } from "../generated/doc-manifest.ts";
+import { packageHref } from "../lib/href.ts";
 
 /** The environment name both stages read. */
 export const DOC_MEDIA_ENV = "VITE_DOC_MEDIA";
@@ -72,4 +82,26 @@ export function previewOf(
   version: string,
 ): string | undefined {
   return DOC_MEDIA[`${group}/${name}@${version}`]?.preview;
+}
+
+/**
+ * The card of one documentation: what its own manifest names, and the
+ * build's search of the tree only for a manifest that names nothing.
+ *
+ * The version is always the NUMBER and never `latest`: `latest` is an
+ * address and the card belongs to the publication, so a share of the
+ * `latest` page still names the picture of the version it is showing.
+ */
+export function cardPreviewOf(card: DocPackage): string | undefined {
+  const declared = card.media?.preview;
+  if (declared !== undefined && declared.length > 0) {
+    const at = packageHref({
+      lang: null,
+      group: card.group,
+      name: card.name,
+      version: card.version,
+    });
+    return `${at}${declared}`;
+  }
+  return previewOf(card.group, card.name, card.version);
 }
