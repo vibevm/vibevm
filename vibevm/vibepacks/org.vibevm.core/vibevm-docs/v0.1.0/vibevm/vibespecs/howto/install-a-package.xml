@@ -64,5 +64,13 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#INSTALLATION-CONSENT-SUCCESSOR"/>
     <p>A package that is already installed is not installed twice: vibe says so and points at `vibe update`.</p>
     <p>A public registry that answers with an authentication error for a missing package is walked past, not treated as a failure; add `--auth-required` in a script that must notice a private registry being down.</p>
+    <p>A package that delivers tools is recorded at install and built on demand: `vibe bin build` compiles the named tools, or all of them, from the exact installed package, and `vibe bin exec &lt;name&gt;` resolves the tool through the project's lock file to its folder and runs it, building first if needed. Installing the package is the consent to build, and vibe narrates what it is about to compile. Offline, a build that needs crates from the network fails the way Cargo fails, with the manual recipe as a hint. When your own code needs a shipped crate, reference it by path into the package's folder, and keep `vibevm/vibedeps/` out of your Cargo workspace, because a folder cannot belong to two workspaces.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-TIMING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BIN-BUILD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BIN-EXEC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PATH-DEP-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#WORKSPACE-EXCLUDE"/>
   </edge-cases>
 </spec>

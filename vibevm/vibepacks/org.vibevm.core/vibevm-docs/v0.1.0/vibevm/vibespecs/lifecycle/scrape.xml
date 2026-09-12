@@ -34,12 +34,27 @@ Review the contract, then run `vibe scrape contract check`.</expect>
     </example>
     <p>5. Or [scrape](../glossary/index.xml#scrape) in place, which is a recoverable transaction and requires explicit authorisation: `vibe scrape --in-place --assume-yes`. If it is interrupted, `vibe scrape --recover --path &lt;root&gt;` settles the pending transaction.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND"/>
+    <p>The commands in one place. `vibe scrape contract init` writes a conservative default only when none exists, and `contract check` parses and plans it without writing. `vibe scrape --plan` is read-only and, given no mode, plans the in-place form, the larger risk. `--output` creates the export in a folder that must not exist and never changes the source tree. `--in-place` runs the journaled transaction, shows the census of modified and deleted files when interactive, and unattended needs `--assume-yes` after a green plan. Planning and checking run everywhere; in this first epoch the mutating modes run on Windows only, where the safety mechanics have been proven.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-CONTRACT-COMMANDS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-PLAN-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-EXPORT-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-INPLACE-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-EXECUTION-PLATFORM-E1"/>
   </by-hand>
   <the-contract title="The contract">
     <p>What counts as vibe's and what counts as yours is not guessed from file names; a contract says it. The contract lives at `vibevm/scrape/contract.toml` in the project: `vibe scrape contract init` writes the conservative default, `vibe scrape contract check` validates one, and `--contract &lt;file&gt;` reads another. A contained contract is the last file removed, so the plan can be re-read until the end.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#DEFAULT-CONTRACT"/>
     <p>A scrape never deletes a path blindly: a build script that calls a vibe tool, generated product sources that sit beside disposable generated state, an authored specification that shares a tree with generated boot output, all are dispositioned by the contract, and untouched files stay byte-identical.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-PRESERVATION"/>
+    <p>The contract is strict: unknown tables and values are rejected, `schema` is 1, and every id is unique. Files you wrote under `vibevm/vibespecs` are never taken for generated because of their folder; a contract that wants zero residue names them for deletion or relocation itself. Generated code, tests and models the project accepted are product and stay unless a row names them. Globs only select; bytes change only through typed adapters, never through a regex or a shell rewrite. Zero residue means zero registered identities, paths and markers, not the word «vibe» in your prose.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#CONTRACT-STRICTNESS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#AUTHORED-SPECS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-CODE-SURVIVES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#TYPED-ONLY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#ZERO-RESIDUAL-SCOPE"/>
+    <p>You supply the policy, the engine supplies the mechanics and the verdicts. Anything the sealed contract and the observed tree cannot decide is a blocker, never a guess. The tool does not rewrite git history, does not publish, and does not remove what was deployed to your machine; those stay explicit operations.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#ALGORITHMIC-BOUNDARY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#NON-GOALS"/>
   </the-contract>
   <edge-cases title="Edge cases and rules">
     <p>Scrape is not clean. `vibe clean` removes what vibe can regenerate and keeps the relationship; scrape removes the relationship itself, which is why it needs a contract, a health proof and a recoverable commit.</p>

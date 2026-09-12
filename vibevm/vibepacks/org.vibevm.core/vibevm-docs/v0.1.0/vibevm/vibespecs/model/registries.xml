@@ -12,8 +12,23 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
     <p>A project declares its registries in the [manifest](../glossary/index.xml#manifest) as an ordered list. Each entry has a local name, the organisation's root address, and a naming convention that maps a coordinate to a repository name. When a package is requested, vibe walks the list in order and the first registry that has a matching version wins.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
-    <p>A machine may add registries of its own in `~/.vibe/registry.toml`, merged after the project's; a project's list always wins over the machine's. This is how a company points every project on a laptop at its private registry without editing each project.</p>
+    <p>The list is an array in priority order; beside it a mirror is a second address for the same registry, and an override bypasses the walk for one coordinate. An entry's `url` is the organisation's root, never a package repository, and it is a plain git address, `https://`, `ssh://`, `git@host:` or `file://`, with no shorthand for any particular host. Its `naming` says how a coordinate becomes a repository name; the default joins the group and the name with a dot.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-URL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-PLAIN-GIT-URL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-NAMING"/>
+    <p>The walk moves on to the next registry only when one answers that it does not have the package. A connection failure, a server error or a malformed manifest stops the install with that error, because an outage or a typo is something you want to know about. On a registry declared public, a demand for credentials counts as «not here» and the walk continues; on a registry that declares an authentication regime, it is a real failure.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-SEMANTICS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-AWARE-401"/>
+    <p>An entry can be switched off without being deleted: `enabled = false` makes every command skip that registry until you flip it back.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ENABLED-FLAG"/>
+    <p>A machine may add registries of its own in `~/.vibe/registry.toml`, merged after the project's; a project's list always wins over the machine's. This is how a company points every project on a laptop at its private registry without editing each project. The file carries the same `[[registry]]`, `[[mirror]]` and `[[override]]` sections as a project manifest, for any registry, remote or local; a name declared in both places is the project's.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GLOBAL-REGISTRY-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MERGE-PROJECT-FIRST"/>
+    <p>A new project trusts exactly two roots by default, `https://github.com/vibespecs` and `https://gitverse.ru/vibespecs`, which `vibe init` writes into the manifest unless you pass `--no-registry` or name another with `--registry-url`. Every other registry is trusted only because you added it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#DEFAULT-TRUSTED-REGISTRIES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#INIT-DEFAULT-REGISTRY"/>
   </what-a-registry-is>
   <the-index title="The index">
     <p>Cloning a repository to learn what is in it is slow, and listing an organisation to search it is impossible without an account. So a registry may keep an *[index](../glossary/index.xml#index-registry)*: a separate repository beside the packages that records, for every published version, the manifest's summary and the content [fingerprint](../glossary/index.xml#fingerprint). `vibe search` reads the index; a fresh install reads it to skip a round of clones.</p>
@@ -22,23 +37,60 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE"/>
     <p>The index location is derived from the registry's address and can be overridden per registry with an environment variable named after the registry, `VIBEVM_INDEX_URL_&lt;NAME&gt;`; the literal value `none` switches index lookups off for that registry.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"/>
+    <p>A registry entry may pin its index with `index_url`; without one, a public GitHub organisation maps to its `index` repository on the raw content host and any other host to `&lt;registry-url&gt;/index`. A probe of the index has three outcomes: found, absent, or refused. Only absent falls through quietly to a live listing, because nobody promised an index; an index that is there and cannot be read is reported. `vibe search` asks each configured index the question directly rather than downloading the whole catalogue.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-CONFIG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-SEARCH"/>
   </the-index>
   <mirrors-and-overrides title="Mirrors, overrides and git sources">
     <p>A *mirror* is another address for the same registry, tried first for availability and verified against the same fingerprints; a mirror that serves different bytes for a known version is refused, not trusted. Mirrors never appear in the [lock file](../glossary/index.xml#lock-file): the canonical address is what gets recorded, so switching mirrors changes nothing for your teammates.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-INTEGRITY-MANDATORY"/>
     <p>An *override* replaces one package with a copy from elsewhere, for a hotfix or a patch waiting upstream; it short-circuits the registry walk for that one coordinate and is marked as such in the lock file, so nobody mistakes it for a published version.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
+    <p>An override relaxes nothing: the copy's fingerprint is still pinned in the lock file and verified on every install, and the entry carries `overridden = true`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SEMANTICS"/>
     <p>A dependency may also point straight at a git repository, at a tag, a commit or a branch. A tag and a commit are pinned; a branch is re-walked on update, and the lock file records the commit that was actually installed.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GIT-SOURCE-DECL"/>
+    <p>A git source is written as an inline table on the requirement, with a `git` address and exactly one of `tag`, `rev` or `branch`; none or two is refused, because guessing a default branch is not acceptable on a surface that decides what code enters your project. The source's `auth` is declared on the source itself, never borrowed from a registry on the same host. When the repository arrives, vibe reads the package's own manifest and refuses one whose kind and name differ from what you required.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-WIRE-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-EXACTLY-ONE-REF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-AUTH-EXPLICIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY-VERIFICATION"/>
+    <p>The source of a requirement is decided in a fixed order: an override first, then a git source declared on the requirement, then the registry walk. A branch is followed only by `vibe update`; `vibe install` keeps the commit the lock recorded.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-RESOLUTION-ORDER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-MUTABILITY"/>
   </mirrors-and-overrides>
   <authentication title="Authentication">
     <p>A public registry needs no credentials, and vibe sends none: it silences git's credential helpers so an install in a script never hangs on a password prompt. A private registry declares its regime in the manifest: a token read from an environment variable, the system's credential helper, or SSH keys. The token comes from your environment and never lands in a file vibe writes.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
   </authentication>
+  <local-sources title="Packages on this machine">
+    <p>A vibe built from a source checkout treats that checkout's in-tree packages as an [embedded registry](../glossary/index.xml#embedded-registry): on by default for such a build, off for a distributed one, and off for one command with `--no-default-registry`. Version enumeration still unions the embedded and the declared registries, so a newer published version is seen; an override or a git source on a requirement stays above the embedded registry. `--embedded-short-circuit` stops enumeration at the embedded registry for the packages it serves, so a fully embedded graph resolves with no network at all.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#KNOB-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#KNOB-SUPPRESS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#ENUM-UNION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#EXPLICIT-ABOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#FLAG-EMBEDDED-SHORT-CIRCUIT"/>
+    <p>A package resolved this way is recorded with `source_kind = "embedded"`, and `vibe check` warns that such a lock is not portable. In `--frozen` and other non-interactive runs the embedded registry is off, so a lock that only works on one developer's machine cannot pass in a build server.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCK-EMBEDDED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#GUARD-WARN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#GUARD-CI-OFF"/>
+    <p>A project that carries a `packages/` folder beside its manifest gets that folder opened as a local registry with no declaration at all. Packages resolved from it record `source_kind = "local"`, which is portable, because every checkout resolves the same folder to the same content. `--no-prefer-local` bypasses the folder for one command.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-AUTO-OPEN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-SOURCE-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-NO-PREFER-FLAG"/>
+  </local-sources>
   <edge-cases title="Edge cases and rules">
     <p>A vibe built from a source checkout treats that checkout's in-tree packages as an ambient registry, consulted first: a developer of vibe installs the packages being developed without publishing them. A distributed vibe has no such registry.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT"/>
     <p>The source repository of vibe itself is mirrored on two hosts, but that is a different thing from the package registry: the mirrors carry the program's source, the registry carries packages, and the credentials for the two are never shared.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-016#ORTHOGONALITY-LAW"/>
+    <p>vibe drives registries through the `git` program on your `PATH` and checks for it before it starts; `VIBE_GIT_BINARY` points it at another copy. A registry clone older than one hour is refreshed before an install, a younger one is used as is, and `vibe registry sync` refreshes regardless of age.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
   </edge-cases>
 </spec>

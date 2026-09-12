@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Build, package and deploy a project</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>This page takes a project from source to a running deployment with three commands, shows what each leaves on disk, and how to take a deployment down again without guessing what it owned.</p>
   <prompt id="build-package-deploy">For the VibeVM project in the current folder, show me the deploy plan for the profile named local, then run the deploy, list the deployments this machine now holds, and finally undeploy the same profile. Stop and ask me before the deploy and before the undeploy.
     <needs>the vibevm skill installed for your agent; a project whose manifest declares a build artifact, a deploy target with the mechanism `deploy:vibe-bin` and a profile named `local`, as the tables on this page show; `cargo` on the `PATH`</needs>

@@ -20,6 +20,10 @@
     <p>The `abstract` answers four questions in three to six sentences: what the manual covers, for whom, what it assumes known, what it leaves out. The `title` is the display name on every shelf; the [coordinate](../glossary/index.xml#coordinate) stays the identity, and the publisher is shown beside it. Images are optional source files in the package tree; when absent, the site draws a placeholder from the coordinate.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"/>
+    <p>A documentation package may also declare a skill, a `[translates]` table and `[media]`. Its pages live under `vibevm/vibespecs/` like the specs of any package, and only there is the documentation vocabulary open. The default name of a subject's documentation is the subject's name with `-docs`, in the same group.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MAY-DECLARE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-PAGES-LOCATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-NAME"/>
   </the-manifest>
   <the-vocabulary title="The vocabulary of a page">
     <p>Pages are written in the project's XML dialect, extended for documentation with a small vocabulary that ordinary specifications do not have. Each element is checked by a tool, which is the point of having it.</p>
@@ -47,6 +51,9 @@
   <checks title="Checking and publishing">
     <p>`vibe doc check --examples --citations --derived --media --style` runs every check; the examples run against the real binary in a sandbox copied from the fixture the page names, and a page is committed only when the checks are green. Publishing is `vibe registry publish` like any package; a reader gets the manual with `vibe cache add`, and the site renders it when the [index](../glossary/index.xml#index-registry) announces it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EXAMPLE-RUNNER"/>
+    <p>Every `rule` is a live citation without a pin: the page shows the fact's current text at every render, and the citation check asks one thing, whether the anchor still exists. Facts a specification marks as obligations for an audience must be cited by a page for that audience, and `vibe doc check --coverage` is that gate.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-COVERAGE-GATE"/>
   </checks>
   <edge-cases title="Edge cases and rules">
     <p>Any group may document any package; the site shows such a manual on the community shelf with its publisher, and the subject's own group can promote it to official by naming it in `[documentation]`.</p>
@@ -55,5 +62,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT"/>
     <p>A manual describes a version range of its subject through `[[documents]] version`, and the site shows, for each subject version, the newest manual whose range admits it.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION"/>
+    <p>A package with no documentation at all is still shown: the site renders any published version from its own bytes, the manifest as a reference page, the README, the boot snippet, the specs with their anchors, and the declared skills, binaries and servers.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO"/>
   </edge-cases>
 </spec>

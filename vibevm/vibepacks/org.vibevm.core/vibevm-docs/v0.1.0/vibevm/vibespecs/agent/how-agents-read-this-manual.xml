@@ -16,6 +16,8 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"/>
+    <p>The site also serves the page manifest as JSON at `/doc/manifest.json`, with statuses, languages, audiences and anchors, and resolves a `spec://` address at `/doc/resolve?uri=…`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"/>
   </the-files>
   <offline title="Without a network">
     <p>The same pages live in the machine [store](../glossary/index.xml#store) once `vibe cache add org.vibevm.core/vibevm-docs` has run. `vibe explain "spec://org.vibevm.core/vibevm-docs/&lt;page&gt;#&lt;anchor&gt;"` prints a page or a block; `vibe doc manifest --llms small` prints the page list from the store. Nothing on this path contacts the network, which is why proprietary documentation is read this way.</p>
@@ -35,9 +37,27 @@
     <p>5. Never load the full corpus when one page answers.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"/>
   </procedure>
+  <the-tools title="The tools of the server">
+    <p>`vibe mcp serve` offers the same operations as tools. `explain` looks at one node of the map by address; `query` finds nodes, and the two are separate verbs on purpose. `select` takes up to seven predicates, `uri:`, `symbol:`, `kind:`, `scope:`, `has:`, `lacks:` and `depth:`, whitespace separated and joined by AND, with no operators; an unknown predicate, a repeated one or an empty query is an error that names the token and lists what was expected.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-SEVEN-PREDICATES-JOINED-BY-AND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR"/>
+    <p>`query_package` returns the full lock entry of an installed package. `read_subskill` returns the content of an active [subskill](../glossary/index.xml#subskill) wherever it lives, in the project tree or in the machine store. `materialise_subskill` copies a lazily pulled subskill into the project tree and refuses to overwrite without `force`; it is the one tool that writes.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-QUERY-PACKAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-READ-SUBSKILL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-MATERIALISE-SUBSKILL"/>
+    <p>The language packages of the `mcp` kind bring servers of their own with four tools, `tcg_validate`, `tcg_scope`, `tcg_complete` and `tcg_type`: thin adapters over the operations of the same names, each taking a required `language`, `typescript` or `rust`, and the operation's own parameters unchanged, and answering with the enriched result as structured content plus a short text with the findings first.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#TOOLS-NEW-HOME"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#FOUR-TOOLS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#PARAM-LANGUAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#PARAMS-PASSTHROUGH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#ENRICHED-RESPONSES"/>
+  </the-tools>
   <edge-cases title="Edge cases and rules">
     <p>Text written for agents is never part of a project's [boot lane](../glossary/index.xml#boot-lane); this manual is fetched when needed, not read at every session start.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"/>
+    <p>The boot lane itself is pure file reading: nothing in it executes, and the manual is not on it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING"/>
     <p>A page that exists in the source language but not in the language you asked for is served in the source language under the address you asked for, with a note; do not treat it as missing.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"/>
   </edge-cases>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Set up a workspace</title>
-  <status stage="doc" state="work" audience="author"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>Several packages developed together can live in one repository and share one record of the versions they use. This page turns a folder into such a workspace and shows how members refer to each other by path.</p>
   <prompt id="set-up-a-workspace">Turn the VibeVM project in the current folder into a workspace with two member packages under packages/: org.acme/notes-flow and org.acme/notes-docs, where notes-docs documents notes-flow. Run an install and show me that one lock file at the root covers both members.
     <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
@@ -14,6 +14,10 @@
   <what-happens title="What happens">
     <p>The agent adds a `[workspace]` table to the root [manifest](../glossary/index.xml#manifest) naming the member paths, and writes each member's `vibe.toml` by hand with a `[package]` table: a member is a plain package folder, and `vibe init package` scaffolds a different layout, the in-tree slot the authoring pages describe. Membership is explicit: a folder with a manifest that is not listed is not a member. Then it runs `vibe install` at the root: vibe discovers the workspace, resolves the requirements of every member in one unified resolution, and writes a single [lock file](../glossary/index.xml#lock-file) at the root.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP"/>
+    <p>One source tree and one lock file at its root: members are folders, the split into packages is logical, and publishing copies a member's folder into a repository of its own. A command run inside a member walks up to the root and works against the root's lock, so a developer can work inside a sub-project without noticing the workspace around it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-SOURCE-TREE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-LOCKFILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#COMMAND-BUBBLING"/>
   </what-happens>
   <by-hand title="By hand">
     <p>1. In the root `vibe.toml`, declare the members; globs are allowed:</p>
@@ -55,6 +59,14 @@ vibe install: vibe.lock unchanged — nothing to re-resolve (3 nodes up to date)
   <members-referring title="Members referring to each other">
     <p>A member requires a sibling by path rather than by [registry](../glossary/index.xml#registry), with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary coordinate in each published copy.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE"/>
+    <p>A path is a third source of packages beside registries and git. A member requires another by path during development and by version once published, in one line of two halves, `{ path = "../flow-wal", version = "^0.1" }`: the published copy names the registry version, which an outside consumer can resolve, and the path never leaves the workspace. A version placeholder declared once at the root stands in for a number repeated across members.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PATH-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#DUAL-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#VERSION-PLACEHOLDERS"/>
+    <p>Each publishable member declares its posture with `publish` in `[package]`. `vibe workspace publish` walks the members dependency-first, skips `publish = false`, and stops at the first failure with a report of what was published and what remains; there is no rollback, because a clear partial report is better than a pretended transaction.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-POSTURE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-TOPOLOGICAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-NOT-ATOMIC"/>
   </members-referring>
   <edge-cases title="Edge cases and rules">
     <p>Workspaces nest: a member may itself carry a `[workspace]` table. Nesting groups members; it does not create separate resolution domains, and the one lock file stays at the absolute root.</p>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Glossary</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author,dev,agent"/>
   <p>One definition per term, and the only place a term is defined. Every other page links here the first time it uses a word from this list.</p>
   <adaptation title="adaptation">
     <p>A version of documentation in another language: a separate package that mirrors the source block for block and is free sentence by sentence. This manual says «translation» and «adaptation» for the same thing. See *translation*.</p>

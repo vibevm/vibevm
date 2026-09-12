@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Extensions and providers</title>
-  <status stage="doc" state="work" audience="author"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>A package can plug into the build: run a step, transform a stage, or hand a task to an agent. This page explains how such plug-ins are declared, how a project turns them on, and how to see which ones ran and why.</p>
   <example id="extensions" fixture="hello-vibe">
     <run>vibe extensions --path hello-vibe</run>
@@ -28,6 +28,12 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"/>
     <p>Every handler receives one context envelope, a versioned JSON document that names the project, the phase, the artifacts produced so far and the configuration of the contribution, and answers with a reply envelope that may declare new artifacts. The envelope is how phases talk to each other.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW"/>
+    <p>A native handler is a dynamic library with exactly four C symbols; the request and the reply cross that boundary as versioned JSON, one family per library, and the `vibe-ext` crate gives an author safe macros so that no `unsafe` is ever written by hand. A closed-source handler ships prebuilt for each platform; the exact prebuilt wins, declared source may build instead, and absence refuses rather than skips. A `compile:` transform runs inside lane regeneration, so it may only be a builtin or an admitted native handler, never a script, a binary or an agent. A contribution that wants the low-level pass tier says so with `compiler_internals = true`, and then still needs the host's activation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#ABI-CRATE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG"/>
   </handlers>
   <activation title="Switching contributions on">
     <p>Installing a package is the consent to run its contributions: a dependency's phase and slot contributions are active as soon as the package is installed. The consuming manifest can activate a contribution that is not automatic, disable one by its id, or override its configuration. There are no consent dialogs at run time; there is total transparency instead.</p>

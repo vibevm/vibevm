@@ -43,6 +43,11 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
       <tr><td>`.vibe/`</td><td>vibe</td><td>no</td><td>never</td></tr>
     </table>
     <p>The last row is the project's scratch space: caches and internal state, ignored by git and safe to delete. The machine-wide [store](../glossary/index.xml#store) of fetched packages is elsewhere, in your home directory, and is shared by every project on the machine.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#VIBE-DIR-IGNORED"/>
+    <p>One more folder appears once a project starts keeping track of which rules of its packages it has adopted: `vibefacts/`, committed, one small TOML file per package. Installing a package copies none of the author's statuses into it; adopting them is a deliberate act, `vibe facts adopt`, and `vibe facts` is the lever for everything else, listing, setting a status by address, syncing and reporting.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-HOME"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-046#LAW-SOVEREIGNTY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-046#CLI-FACTS"/>
   </who-writes-what>
   <edge-cases title="Edge cases and rules">
     <p>If you delete `vibevm/vibedeps/` or the generated boot files, `vibe reinstall` rebuilds them from the lock file and the store without touching the network.</p>

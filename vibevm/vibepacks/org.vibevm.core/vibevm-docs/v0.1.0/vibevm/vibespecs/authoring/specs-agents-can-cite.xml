@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Write specs an agent can cite</title>
-  <status stage="doc" state="work" audience="author"/>
+  <status stage="doc" state="work" audience="author,agent"/>
   <p>The text in a package is only useful to an agent if every rule in it has an address. This page shows the shape of such text: named sections, one idea per unit, a status on each, and an address that never changes once published.</p>
   <two-processes title="Why an address">
     <p>A person and an agent share one repository and nothing else: no hallway, no shared memory, no tone of voice. The specification tree is the only channel between them, and a channel works when a message can be pointed at. «Fix the retry count» sends the agent guessing; «fix `spec://org.acme/notes-flow/flows/notes/PROTOCOL#RETRY-COUNT`» sends it to one line. The second costs about twenty tokens; the first costs hundreds and may land on the wrong rule.</p>
@@ -30,6 +30,8 @@
     <p>A specification is written in Markdown or in the project's XML dialect, and both parse into one document model. In XML a section is an element named after its anchor, `&lt;retry-policy title="3. Retries"&gt;`. A rule is an element named after its id, with the attribute `fact="true"` and a status. In Markdown the same rule is a paragraph opening with `@fact:RETRY-COUNT` and closing with `@status:spec/done`. A tool that knows nothing of your vocabulary still finds every rule by one attribute test, and a converter turns one form into the other, reporting anything a round trip would not preserve.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-SECTION-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#FACTS-GROUP-ELEMENT"/>
     <p>The status on each unit says where it stands: `spec/done` for a settled rule, `impl/done` once code implements it, `spec/work` for a draft. Two id registers carry the signal at no cost: an upper-case id marks a rule with binding weight, a lower-case one a lead-in or a note.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
     <example id="convert" fixture="package-spec">
@@ -56,7 +58,24 @@ dry-run ir-stable-loss vibevm/vibespecs/boot/10-tool-review-notes.md
 
 summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=2</expect>
     </example>
+    <p>`vibe refactor convert-source --to xml` or `--to markdown` converts files or whole folders, skipping the dependency tree and generated files. It writes the sibling form and deletes the original in one act, so the tree never holds both forms of one document. Before writing, it converts the result back and compares: a byte-identical round trip converts silently; a loss of comments or layout is refused with a per-file description unless you confirm, or pass `--force`; a change of meaning is always refused, because that is a defect of the converter, not of your file. `--dry-run` reports every file and writes nothing.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-SOURCE-SURFACE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"/>
   </the-dialect>
+  <directives title="Directives: use, embed and read">
+    <p>A spec may pull another by address. `#use spec://…` pulls the whole top-level section that contains the addressed node, and not its siblings; `#embed` splices exactly the addressed node, no more. The default merge is `:add`, so interface text need not be repeated to appear in the result. Every file a directive names must be declared in the package's manifest. Cycles are legal in the contract layer and forbidden among source bodies, which is what guarantees that a build always ends.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-ANCESTOR-RULE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-EXACT-RULE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-DEFAULT-ADD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-MANIFEST-AGREE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#NO-DEADLOCK-INVARIANT"/>
+    <p>In prose an agent reads, `@spec://…` with the at-sign is mandatory: the agent reads it in place, once, on first encounter, and the compiler never splices it. A bare `spec://…` is at the agent's discretion.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#AT-SPEC-MANDATORY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#READ-ONCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#BARE-SPEC-DISCRETIONARY"/>
+  </directives>
   <immutable title="An address never moves">
     <p>Once published, an anchor is immutable. Renaming a section or a rule leaves a tombstone at the old anchor pointing at the new one, so a citation written last year still lands. Moving files does not change addresses either: the address is logical, the path is physics.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>

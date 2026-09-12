@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Bridge a repository you do not own</title>
+  <status stage="doc" state="work" audience="author,user"/>
+  <p>Some text you want your agent to read lives in a repository whose author has never heard of vibe. A bridge package makes it installable anyway: you steward someone else's repository and publish an ordinary package that wraps it, with the original's authorship and licence kept apart from yours.</p>
+  <prompt id="bridge-a-repository">Create a bridge package org.example/spec-kit in this project that wraps the repository https://github.com/example/spec-kit at its current release tag as a reference-backed source, keep the upstream authors and licence separate from ours, and check the package before I publish it.
+    <needs>the vibevm skill installed for your agent; network access to the upstream repository</needs>
+    <outcome>a package slot with `bridge = true` and one `[[embedded_source]]` naming the upstream URL, commit and source hash; `vibe check` reports no errors</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.example/spec-kit/v0.1.0 --quiet</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent scaffolds the package with `vibe init package`, marks it as a bridge in the manifest, and declares the upstream repository as an embedded source: its public address, the exact commit, the hash of the source tree and the upstream licence. Installing the package fetches that exact source into the consumer's machine store beside the package's own files. The bridge never becomes a second package: the wrapped repository is git content the resolver knows nothing about.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#BRIDGE-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#BRIDGE-FLAG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#NOT-A-PACKAGE"/>
+  </what-happens>
+  <three-classes title="Three ways to hold the upstream">
+    <p>Vendored: you copied the upstream tree into the package and committed it. This is the cheapest bridge, plain files and the flag, with hooks if the layout needs shaping. Submodule-backed: your workspace references the upstream through a git submodule, which a direct git install preserves live and which publication flattens into ordinary files. Reference-backed: the package repository holds only your metadata and adapters, and `[[embedded_source]]` names the upstream address, an immutable commit, the source-tree hash and the licence; installation fetches that exact source.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-VENDORED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-SUBMODULE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-REFERENCE"/>
+    <fence lang="toml">[package]
+name = "spec-kit"
+group = "org.example"
+kind = "flow"
+version = "0.1.0"
+bridge = true
+license = "UPL-1.0"
+
+[[embedded_source]]
+name = "spec-kit"
+url = "https://github.com/example/spec-kit"
+commit = "0123456789abcdef0123456789abcdef01234567"
+content_hash = "sha256:…"
+upstream_authors = ["The Spec Kit contributors"]
+upstream_license = "MIT"</fence>
+    <p>A declared source is authenticated twice when it arrives: the checkout must be at the declared commit, and the hash of its tree must equal the declared one; a `ref_hint` such as a tag name is only for people to read and never chooses bytes.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#FORM-DEPENDENCY-DECLARED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-AUTH"/>
+  </three-classes>
+  <whose-work title="Whose work it is">
+    <p>`authors` in the manifest names the people who wrote the bridge, its metadata and adapters, never the authors of the wrapped bytes; every embedded source records its own `upstream_authors`, and listings, locks and indexes keep the two lists apart. The same for licences: `license` describes the bridge alone, each source records its upstream licence and an immutable link to it, and a bridge never presents upstream bytes as relicensed. The coordinate names the product a consumer installs, not the codebase the packaging was written in: a bridge of Spec Kit may live at `org.speckit/speckit` whoever maintains it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#AUTHORSHIP-SEPARATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#LICENSE-BOUNDARY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#GROUP-PROVENANCE"/>
+  </whose-work>
+  <submodules title="Submodules on the way in and out">
+    <p>vibe fetches a package's submodules when it fetches the package, updates them with it, and makes their content available wherever the package lands: copied into the snapshot for the copying modes, live for an in-place checkout. Publication is the boundary: a registry repository is a self-contained snapshot, so the publisher checks that every populated submodule is at its indexed commit and clean, copies its files in, removes `.gitmodules` and reports what it flattened.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#WHAT-VVM-DOES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#PUBLISH-FLATTENS-GITLINKS"/>
+  </submodules>
+  <edge-cases title="Edge cases and rules">
+    <p>A bridge is published and installed like any package; what it adds is provenance. The upstream can move on without you: bumping the bridge means changing the declared commit and hash, and publishing a new version.</p>
+  </edge-cases>
+</spec>

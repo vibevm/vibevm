@@ -66,6 +66,13 @@ link = "dynamic"</expect>
     <p>The consumer decides how your snippet is linked, compiled into the priority lane or listed in `INDEX.md`; you may suggest a default in `[boot_snippet]`, and the consumer's choice wins.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
   </the-snippet>
+  <subskills title="Subskills: content that arrives when it is needed">
+    <p>A package may split its content into [subskills](../glossary/index.xml#subskill), the smallest units an agent can activate: each looks like a tiny package with its own manifest and files. What differs per subskill is its `delivery`, the primary axis: `eager` puts the content on disk at install, `lazy-push` and `lazy-pull` hold it back until an activation rule matches. A subskill activates when any one of its channels matches, once. For the lazy modes a `description` is required, because it is the whole trigger, and `vibe check` refuses a lazy subskill without one.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILL-DEFINITION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DELIVERY-PRIMARY-AXIS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ACTIVATION-ANY-MATCH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIPTION-REQUIRED"/>
+  </subskills>
   <layout title="What goes where">
     <p>Paths are relative to the package root, the slot `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`.</p>
     <table>
@@ -80,10 +87,19 @@ link = "dynamic"</expect>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SPEC-SUBTREE"/>
     <p>Everything under the package root except build output is the package: that is what is fingerprinted, copied into consumers and shown by the site.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF"/>
+    <p>A package is `simple` by default: its files are carried whole and read because they are present. `format = "normal"` opts into a split between `contract/`, small and cheap to load like a header, and `source/`, the heavy body pulled only when a directive asks for it; a normal package that nobody uses does not enter the build at all.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-NORMAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-TREE-SHAKING"/>
   </layout>
   <edge-cases title="Edge cases and rules">
     <p>Cross-references inside the package are addresses, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, never relative file paths; they survive being copied into any consumer.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"/>
+    <p>While you develop a package inside the same repository, edit its source and run `vibe install`: the change reaches the dependency tree without a flag, an update or a forced reinstall.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#AUTOMATIC-NO-FLAG"/>
     <p>Versions never move: to change a published snippet, bump the version and publish again. A consumer sees the change at its next update, not before.</p>
     <p>A flow may require other packages; a consumer installing yours gets them too, and their snippets enter the consumer's lane after yours.</p>
   </edge-cases>

@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 45; секций с якорями: 284; примеров: 60; промптов: 19; ссылок `rule`: 408; блоков `derived`: 72; фигур: 0.
+Страниц: 48; секций с якорями: 310; примеров: 62; промптов: 20; ссылок `rule`: 757; блоков `derived`: 72; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -19,10 +19,11 @@
 | `agent/give-your-agent-the-skill` | `servers-from-packages` | Servers that packages bring | A package of the `mcp` kind delivers a server built from its |
 | `agent/give-your-agent-the-skill` | `edge-cases` | Edge cases and rules | `vibe mcp upgrade` refreshes existing integrations to the shape shipped by the |
 | `agent/how-agents-read-this-manual` | `root` | How an agent reads this manual | |
-| `agent/how-agents-read-this-manual` | `the-files` | The machine files |  |
+| `agent/how-agents-read-this-manual` | `the-files` | The machine files | The site also serves the page manifest as JSON at `/doc/manifest.json`, with |
 | `agent/how-agents-read-this-manual` | `offline` | Without a network | The same pages live in the machine [store](../glossary/index.xml#store) once `vibe cache add |
 | `agent/how-agents-read-this-manual` | `citing` | Citing a place | Every block on a page carries a number, `p12` and so on, |
 | `agent/how-agents-read-this-manual` | `procedure` | The procedure the skill teaches | 1. On an error, read the address the message names, then the |
+| `agent/how-agents-read-this-manual` | `the-tools` | The tools of the server | `vibe mcp serve` offers the same operations as tools. `explain` looks at |
 | `agent/how-agents-read-this-manual` | `edge-cases` | Edge cases and rules | Text written for agents is never part of a project's [boot lane](../glossary/index.xml#boot-lane); |
 | `architecture/how-vibe-is-built` | `root` | How vibe is built | |
 | `architecture/how-vibe-is-built` | `five-layers` | Five layers | Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a |
@@ -44,17 +45,34 @@
 | `architecture/what-the-lifecycle-epic-delivered` | `deferred` | Deliberately left for later | Deploy targets beyond the first genres, a WebAssembly extension tier, per-language and |
 | `architecture/what-the-lifecycle-epic-delivered` | `retired` | Retired lanes, kept as history | The campaign also ran execution lanes that are no longer current: a |
 | `architecture/what-the-lifecycle-epic-delivered` | `edge-cases` | Where the evidence lives | The stage-by-stage ledger with commit hashes is `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md` in the repository; the |
+| `authoring/bridge-a-repository` | `root` | Bridge a repository you do not own | |
+| `authoring/bridge-a-repository` | `what-happens` | What happens | The agent scaffolds the package with `vibe init package`, marks it as |
+| `authoring/bridge-a-repository` | `three-classes` | Three ways to hold the upstream | Vendored: you copied the upstream tree into the package and committed it. |
+| `authoring/bridge-a-repository` | `whose-work` | Whose work it is | `authors` in the manifest names the people who wrote the bridge, its |
+| `authoring/bridge-a-repository` | `submodules` | Submodules on the way in and out | vibe fetches a package's submodules when it fetches the package, updates them |
+| `authoring/bridge-a-repository` | `edge-cases` | Edge cases and rules | A bridge is published and installed like any package; what it adds |
+| `authoring/facts-and-status-markers` | `root` | Facts and their status markers | |
+| `authoring/facts-and-status-markers` | `the-marker` | The marker | A marker is one XML-shaped element, `<status stage="…" state="…"/>`, embedded in Markdown |
+| `authoring/facts-and-status-markers` | `anchors` | Anchors | A marked unit must have an address. In Markdown the [anchor](../glossary/index.xml#anchor) is |
+| `authoring/facts-and-status-markers` | `placement` | Where a marker goes | There are four places. A document marker stands in the preamble, or |
+| `authoring/facts-and-status-markers` | `rollup` | How a status rolls up and down | A node's marker covers the descendants that carry none. An unmarked node's |
+| `authoring/facts-and-status-markers` | `actions` | Actions, stages and audiences | Beside the status a marker may carry an action, what should happen |
+| `authoring/facts-and-status-markers` | `requires` | What closes a fact | A fact may say what closes it: `@requires:implementation,verification` right before its final |
+| `authoring/facts-and-status-markers` | `the-tool` | The tool | `vibe facts check` is the lint, and `--exhaustive` demands a marker on |
+| `authoring/facts-and-status-markers` | `edge-cases` | Edge cases and rules | A document written before the qualified spelling keeps parsing: the legacy `@spec/done` |
 | `authoring/ship-tools-and-mcp-servers` | `root` | Ship tools and MCP servers | |
 | `authoring/ship-tools-and-mcp-servers` | `what-happens` | What happens | The agent scaffolds the package slot with `vibe init package`, puts the |
 | `authoring/ship-tools-and-mcp-servers` | `code-in-a-package` | Code in a package | A package is a project made installable, so it may carry arbitrary |
 | `authoring/ship-tools-and-mcp-servers` | `binaries` | Binaries | Each tool is one `[[binary]]` entry: a `name`, unique in the package, |
 | `authoring/ship-tools-and-mcp-servers` | `servers` | MCP servers | A package of kind `mcp` delivers a server an agent talks to: |
+| `authoring/ship-tools-and-mcp-servers` | `hooks` | Install hooks | A package may run a script when it is installed. `[hooks]` names |
 | `authoring/ship-tools-and-mcp-servers` | `edge-cases` | Edge cases and rules | A tool's artifact belongs to the exact version installed; after an update |
 | `authoring/specs-agents-can-cite` | `root` | Write specs an agent can cite | |
 | `authoring/specs-agents-can-cite` | `two-processes` | Why an address | A person and an agent share one repository and nothing else: no |
 | `authoring/specs-agents-can-cite` | `the-address` | The address | `spec://<group>/<name>[@<version>]/<path>/<document>#<anchor>`: the package [coordinate](../glossary/index.xml#coordinate), an optional version, the document's path inside `vibevm/vibespecs/` |
 | `authoring/specs-agents-can-cite` | `the-unit` | The unit | A unit is one anchored heading and the text under it, up |
 | `authoring/specs-agents-can-cite` | `the-dialect` | Two serialisations, one model | A specification is written in Markdown or in the project's XML dialect, |
+| `authoring/specs-agents-can-cite` | `directives` | Directives: use, embed and read | A spec may pull another by address. `#use spec://…` pulls the whole |
 | `authoring/specs-agents-can-cite` | `immutable` | An address never moves | Once published, an anchor is immutable. Renaming a section or a rule |
 | `authoring/specs-agents-can-cite` | `edge-cases` | Edge cases and rules | A generated file is never a citation target: cite the source document, |
 | `authoring/translate-documentation` | `root` | Translate documentation | |
@@ -73,6 +91,7 @@
 | `authoring/write-a-flow` | `what-happens` | What happens | The agent runs `vibe init package org.acme/review-notes`, which adds a package slot |
 | `authoring/write-a-flow` | `by-hand` | By hand | 1. Create the package slot: |
 | `authoring/write-a-flow` | `the-snippet` | The snippet is the expensive part | A snippet is paid for on every session start by every consumer. |
+| `authoring/write-a-flow` | `subskills` | Subskills: content that arrives when it is needed | A package may split its content into [subskills](../glossary/index.xml#subskill), the smallest units an |
 | `authoring/write-a-flow` | `layout` | What goes where | Paths are relative to the package root, the slot `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`. |
 | `authoring/write-a-flow` | `edge-cases` | Edge cases and rules | Cross-references inside the package are addresses, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, never relative file paths; they |
 | `authoring/write-a-lang-package` | `root` | Write a lang package | |
@@ -171,7 +190,7 @@
 | `howto/publish-a-package` | `root` | Publish a package | |
 | `howto/publish-a-package` | `what-happens` | What happens | The agent runs `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` first and shows you |
 | `howto/publish-a-package` | `by-hand` | By hand | 1. Put a publish token where vibe reads it. That is the |
-| `howto/publish-a-package` | `versions` | Versions never move | A published version is immutable: a tag that already exists is refused, |
+| `howto/publish-a-package` | `versions` | Publishing a version again | Publishing a version that already exists replaces it: vibe appends a commit |
 | `howto/publish-a-package` | `workspaces` | Several packages at once | A repository that develops several packages publishes them with `vibe workspace publish`. |
 | `howto/publish-a-package` | `edge-cases` | Edge cases and rules | `--repo-url` pushes straight to an existing git repository with your local git |
 | `howto/read-documentation-locally` | `root` | Read documentation locally | |
@@ -256,12 +275,14 @@
 | `model/packages-and-kinds` | `a-package` | What a package is | A package is a project made installable. It has the same layout |
 | `model/packages-and-kinds` | `the-kinds` | The eight kinds | The set is closed and grows only by an amendment to the |
 | `model/packages-and-kinds` | `families` | Families and companions | Some [capabilities](../glossary/index.xml#capability) arrive as several packages that share a name stem: the |
+| `model/packages-and-kinds` | `on-disk` | How a package lands on disk | `[package].materialization` says how a package arrives in a consumer's tree. `copy` is |
 | `model/packages-and-kinds` | `edge-cases` | Edge cases and rules | Changing a package's group or name creates a new package, not a |
 | `model/registries` | `root` | Registries and the index | |
 | `model/registries` | `what-a-registry-is` | What a registry is | A [registry](../glossary/index.xml#registry) is not a server vibe runs. It is a hosting |
 | `model/registries` | `the-index` | The index | Cloning a repository to learn what is in it is slow, and |
 | `model/registries` | `mirrors-and-overrides` | Mirrors, overrides and git sources | A *mirror* is another address for the same registry, tried first for |
 | `model/registries` | `authentication` | Authentication | A public registry needs no credentials, and vibe sends none: it silences |
+| `model/registries` | `local-sources` | Packages on this machine | A vibe built from a source checkout treats that checkout's in-tree packages |
 | `model/registries` | `edge-cases` | Edge cases and rules | A vibe built from a source checkout treats that checkout's in-tree packages |
 | `model/two-trees` | `root` | Two trees: what you write and what vibe writes | |
 | `model/two-trees` | `the-rule` | The founding rule | Think of how a C++ program uses a library: you write `#include`, |
@@ -285,7 +306,7 @@
 | `reference/commands` | `documentation` | Documentation |  |
 | `reference/lock-file` | `root` | The lock file: vibe.lock | |
 | `reference/lock-file` | `where` | Where it lives and who writes it | There is one `vibe.lock` per workspace, at the absolute root, beside the |
-| `reference/lock-file` | `meta` | [meta] |  |
+| `reference/lock-file` | `meta` | [meta] | `root_dependencies` mirrors the manifest's `[requires.packages]`, so the lock file is a self-contained |
 | `reference/lock-file` | `package-entries` | [[package]] |  |
 | `reference/lock-file` | `reading-a-diff` | Reading a diff | A changed `version` with a changed `content_hash` is an update. A changed |
 | `reference/lock-file` | `edge-cases` | Edge cases and rules | An unchanged manifest against an unchanged [lock file](../glossary/index.xml#lock-file) makes `vibe install` skip |
@@ -297,9 +318,9 @@
 | `reference/manifest` | `root` | The manifest: vibe.toml | |
 | `reference/manifest` | `one-file` | One file, three roles | Every node, whether a consumer project, a publishable package or a workspace |
 | `reference/manifest` | `package-table` | [package] | `[project]` carries the same descriptive fields for a consumer, without a version |
-| `reference/manifest` | `requirements` | [requires] and its neighbours |  |
-| `reference/manifest` | `sources` | Where packages come from |  |
-| `reference/manifest` | `deliveries` | What a package delivers |  |
+| `reference/manifest` | `requirements` | [requires] and its neighbours | A [feature](../glossary/index.xml#feature) adds content and never removes or contradicts any; `default` lists |
+| `reference/manifest` | `sources` | Where packages come from | A localised file sits beside the canonical one with a language tag |
+| `reference/manifest` | `deliveries` | What a package delivers | A skill is a manifest section, never a kind of its own. |
 | `reference/manifest` | `documentation-tables` | Documentation and its subjects |  |
 | `reference/manifest` | `example-manifest` | A complete example | The manifest of this manual, generated from the package itself, shows a |
 | `reference/settings-and-environment` | `root` | Settings, paths and environment | |
@@ -308,6 +329,13 @@
 | `reference/settings-and-environment` | `variables` | Environment variables |  |
 | `reference/settings-and-environment` | `precedence` | Precedence | For the same setting, a flag on the command line wins over |
 | `reference/settings-and-environment` | `edge-cases` | Edge cases and rules | Token files are surface secrets: restrict them to your user, never commit |
+| `reference/tree` | `root` | The dependency tree on screen | |
+| `reference/tree` | `what-it-shows` | What it shows | The command reads the committed [lock file](../glossary/index.xml#lock-file), the manifests and the generated |
+| `reference/tree` | `three-outputs` | Three outputs | On a terminal the default is the interactive screen. When the output |
+| `reference/tree` | `the-screen` | The screen | The screen has three display modes, each a configuration of one tree |
+| `reference/tree` | `the-terminal-app` | A terminal of its own | `vibe term` launches vibeterm, a terminal application hosting a shell, so the |
+| `reference/tree` | `for-agents` | Looking at the screen from an agent | An agent has no terminal, so the `vibe aiui` family renders the |
+| `reference/tree` | `edge-cases` | Edge cases and rules | English is the complete locale of the interface and the last fallback; |
 | `start/first-project` | `root` | Create your first project | |
 | `start/first-project` | `what-happens` | What happens | The agent runs `vibe init hello-vibe`, which creates the folder with a |
 | `start/first-project` | `by-hand` | By hand | 1. Create the project. The name becomes the folder: |
@@ -335,3 +363,4 @@
 | `start/what-vibevm-is` | `how-it-works` | How it works | The unit vibe installs is a *package*: a folder with a short |
 | `start/what-vibevm-is` | `what-it-is-not` | What it is not | VibeVM is not an agent and has no model inside it. It |
 | `start/what-vibevm-is` | `where-next` | Where to go next | To see it on your own machine, install vibe and create a |
+| `start/what-vibevm-is` | `the-licence` | The licence | vibe is open source under the Universal Permissive License 1.0. The licence |

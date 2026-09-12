@@ -27,4 +27,8 @@
   <where-next title="Where to go next">
     <p>To see it on your own machine, install vibe and create a first project: the newcomer's route walks through both in ten minutes. To understand the pieces, read the pages on the two trees, the boot lane and packages, in that order.</p>
   </where-next>
+  <the-licence title="The licence">
+    <p>vibe is open source under the Universal Permissive License 1.0. The licence covers what this repository ships, the program and the packages in its own groups; a package you write or install carries its own.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#LICENSE-EULA"/>
+  </the-licence>
 </spec>

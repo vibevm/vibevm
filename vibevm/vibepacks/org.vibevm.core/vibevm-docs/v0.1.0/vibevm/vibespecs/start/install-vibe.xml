@@ -12,6 +12,10 @@
   <what-happens title="What happens">
     <p>On Windows the agent downloads the release archive, unpacks it, and runs its installer script. The script imports the binary into vibe's own managed folder under `~/.vibe/opt`, marks it active, and adds one folder of small launcher scripts to your user `PATH`. Everywhere else the agent clones the source repository and runs its first-run script, which builds the program and installs it through the same manager. Either way, the result is the same layout: versions under `~/.vibe/opt/vibevm/`, launchers in `~/.vibe/opt/bin/`, and a pointer that says which version is current.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT"/>
+    <p>vibe runs on Windows, macOS and Linux. The one-line cold start is a script at a stable address, `https://vibevm.org/install.sh` for Bash and `install.ps1` for PowerShell: it downloads the release manifest, verifies a small bootstrap binary by size and digest, and that binary verifies and installs the full bundle. Package managers such as Homebrew and WinGet come later.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#PLATFORMS-TRIO"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#COLD-START-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#BOOTSTRAP-SCRIPT-LATER"/>
   </what-happens>
   <by-hand title="By hand">
     <windows title="On Windows" when="os:windows">

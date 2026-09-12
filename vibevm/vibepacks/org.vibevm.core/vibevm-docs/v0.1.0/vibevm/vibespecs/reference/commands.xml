@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Command reference</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author,agent"/>
   <p>Every command vibe accepts, with its options, in the words the program itself prints. Nothing on this page is written by hand.</p>
   <global title="Global options">
     <p>Every command takes `--json` for machine-readable output, `--quiet` for a one-line summary, `--invoked-by &lt;agent&gt;` to stamp the caller into reports, `--unattended` to answer every confirmation, `--offline` to forbid network access, and `--agent-mode` to say how agent steps run. The full text:</p>
     <derived kind="cli-help" ref="vibe --help"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#OBS-OUTPUT-MODES"/>
   </global>
   <projects title="Projects and packages">
     <derived kind="cli-help" ref="vibe init --help"/>

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The manifest: vibe.toml</title>
-  <status stage="doc" state="work" audience="user"/>
+  <status stage="doc" state="work" audience="user,author"/>
   <p>`vibe.toml` is the one file you write to describe a project or a package: its name, what it depends on, where packages come from, and what it delivers. This page lists every table and field with its meaning.</p>
   <one-file title="One file, three roles">
     <p>Every node, whether a consumer project, a publishable package or a workspace root, has a file named `vibe.toml`. The tables present decide the role: `[project]` marks a consumer that is never published, `[package]` a publishable package, `[workspace]` a coordinator of members; the first two exclude each other, the third composes with either or with neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
     <p>Unknown keys are rejected, not ignored: a [manifest](../glossary/index.xml#manifest) written for a newer vibe than the one reading it fails to parse with the offending key named.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DENY-UNKNOWN-FIELDS"/>
   </one-file>
   <package-table title="[package]">
     <table>
@@ -42,6 +43,17 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LINK-FIELD"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-PACKAGES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-CAPABILITIES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-ANY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-PROVIDES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-OBSOLETES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-CONFLICTS"/>
+    <p>A [feature](../glossary/index.xml#feature) adds content and never removes or contradicts any; `default` lists the features active when nothing is said, and `--no-default-features` omits them. When two packages require one package with different features, the resolver materialises it once with the union. On the command line `vibe install &lt;coordinate&gt; --features a,b`, `--no-default-features` and `--all-features` control activation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-ADDITIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-UNIFICATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-INSTALL-FEATURES"/>
   </requirements>
   <sources title="Where packages come from">
     <table>
@@ -56,6 +68,10 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-ARRAY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION"/>
+    <p>A localised file sits beside the canonical one with a language tag before the extension, `README.ru.md` next to `README.md`. Every package ships the canonical form of every file it lists, and translations only add to it, so a project with no translation in its preferred language installs without an error. `vibe install --language ru` overrides the preference for one run.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SIDECAR-PATTERN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
   </sources>
   <deliveries title="What a package delivers">
     <table>
@@ -70,6 +86,11 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
+    <p>A skill is a manifest section, never a kind of its own. `include` narrows which files of `path` are projected into an agent's skill folder, and its absence projects the whole tree. A skill may take its body from a declared `[[embedded_source]]` and add resources below a `references/` folder, under the same include selection and traversal checks.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-LAWS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOKS-TABLE"/>

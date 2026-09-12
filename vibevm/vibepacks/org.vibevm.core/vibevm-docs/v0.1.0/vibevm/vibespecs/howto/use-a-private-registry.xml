@@ -34,8 +34,10 @@ vibe registry add: `acme` registered (1 total registry).</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-STUB"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-MARKER-FILE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-STEP-HOP-LIMIT"/>
-    <p>The versions a consumer can see are the tags of the stub, not of the target: the registry's owner admits each version by tagging the stub. `vibe registry redirect` creates a stub, `redirect-sync` copies the target's tags into it after confirmation, and `redirect-update` changes the pointer.</p>
+    <p>The versions a consumer can see are the tags of the stub, not of the target: the registry's owner admits each version by tagging the stub. `vibe registry redirect` creates a stub, `redirect-sync` copies the target's tags into it after confirmation, and `redirect-update` changes the pointer. When a stub's target changes, because the maintainer moved to another host, a consumer accepts the switch with `--trust-redirect`; vibe never follows a changed target silently.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-TAG-VISIBILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-CLI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-TRUST-FLAG"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
   </redirects>
