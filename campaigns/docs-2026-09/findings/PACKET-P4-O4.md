@@ -118,7 +118,7 @@ content-addressed каталог `~/.vibe/opt/vibevm/doc-shell/<sha256>/`; пр�
 **A4.15 Тест «ни одного внешнего запроса».** Единственное исключение из
 «web-пакет не править»: **один новый файл** `site/tests/local-reader.spec.ts`
 в web-пакете (Playwright там уже стоит — смотри `site/tests/*.spec.ts` и
-`site/playwright.config.ts` как образец; ничего существующего в пакете не
+`site/tests/playwright.config.ts` и `site/tests/serve.mjs` как образец; ничего существующего в пакете не
 менять, `package.json` не трогать). Тест поднимает собранный `vibe` с
 встроенной оболочкой (`vibe doc serve --path <руководство> --port <свободный>`;
 путь к бинарнику — переменная окружения `VIBE_BIN`, по умолчанию
