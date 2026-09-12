@@ -42,6 +42,13 @@
 //!   the question a table of contents cannot answer and a navigation
 //!   must never be built from (`##OBS-COVERAGE-GATE`).
 //!
+//! * [`media`] — the card's pictures. What an author ships is judged
+//!   from its first bytes and published under a name taken from its
+//!   content; what an author ships NOTHING for is computed from the hash
+//!   of the coordinate and the glyph of the kind, so a package looks the
+//!   same on the site and in the local reader and no file is stored for
+//!   either (`##CARD-PLACEHOLDERS-GENERATED`, `##CARD-SITE-COPIES`).
+//!
 //! * [`llms`] — the corpus as a machine reads it: the index, the whole
 //!   text, and two tiers cut to a token budget, all in the layer law's
 //!   order — stable text before text that moves with the product
@@ -114,6 +121,7 @@ pub mod html;
 pub mod llms;
 pub mod manifest;
 pub mod md;
+pub mod media;
 pub mod numbering;
 pub mod pages;
 pub mod translations;
