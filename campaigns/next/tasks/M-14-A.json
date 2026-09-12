@@ -42,7 +42,8 @@
         "Future live-system capability is advertised as implemented."
       ],
       "checks": [
-        "cargo test -p vibe-core",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: environment-role and legacy-host-guard contract tests in vibe-core."
       ],
       "acceptance": [
@@ -54,7 +55,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
         "crates/vibe-core/src/environment/ is a proposed small domain module; confirm its parent export before adding files. D-022 remains OPEN and does not block these neutral roles.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -100,8 +101,10 @@
         "Arbitrary /usr-oriented binaries are declared HOME-relocatable."
       ],
       "checks": [
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-lifecycle",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: injected-root, Linux-path and prefix-compatibility tests."
       ],
       "acceptance": [
@@ -113,7 +116,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "crates/vibe-core/src/layout.rs is the existing layout authority named in the baseline architecture; inspect it when the execution packet admits the implementation.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     }

@@ -24,7 +24,7 @@ For a fresh empty context, copy the seed to plan.toml only after creating the co
 
 Read the complete task contract under tasks/. Each task has concrete inputs, a closed outer write perimeter, ordered steps, positive/negative cases, real check commands, expected results, a safe stop and a proposed commit subject. Existing module/registration/dependency files are included where a new service or module must become reachable.
 
-A TO CREATE check is a required test family to implement, not a command that exists today. Run the actual crate checks, inspect the test list and require nonzero exact selection before using a new filter. No zero-test invocation, skipped platform, producer PASS, shell transcript or matching counter is sufficient evidence.
+A TO CREATE check is a required test family to implement, not a command that exists today. SELECT BEFORE DISPATCH recipes must be resolved to actual package/build targets and affected cases before execution. Inspect source/metadata first; list only the selected target when needed, since listing also compiles it. A test-name filter without target selection can still build unrelated executables. Require the intended nonzero selection; skipped platforms, producer PASS and matching counters are insufficient evidence.
 
 One work package may need another workstream's early group before its own parent finishes. Follow the DAG: M-16-A sits between M-13-A/B; M-16-B precedes M-14-B/C; M-11-D is pulled forward; M-15-K bootstraps Linux before payload/backend work. Do not try to finish M-13 or M-16 in numerical isolation.
 
@@ -70,7 +70,11 @@ Authoring checks:
     python -B -m unittest discover -s campaigns/next -p test_campaign.py
     git diff --check
 
-The full product panel is tools/self-check.sh through Git Bash on Windows. It is intentionally not part of authoring validation and is unmeasured until Phase 0. Phase/task execution must record actual successful, failed and unavailable steps; never discard the child exit code.
+[verification-policy.json](verification-policy.json) binds the owner's affected-test rule. Each task packet requires a verification selection covering changed behavior, negative cases, invariants and named contract consumers, with actual target/filter/flags and relevant input identity. The task's permitted write perimeter alone does not trigger codegen, wire, exhaustive-facts or whole-project checks. Unknown test names are unresolved bindings, never permission to run the whole crate.
+
+The ordinary full product panel is reserved for NEXT-CLOSE.3, using tools/self-check.sh through Git Bash on Windows. Phase 0 and the 17 workstream reviews use sufficient affected checks and matching prior evidence. Additional broad verification needs an explicit full-check request or demonstrated cross-cutting impact with no sufficient narrower proof. A commit, milestone, push or worker completion is not that reason. Reuse compatible build artifacts; a warm build is not a passed test.
+
+After a panel failure, run failed/invalidated steps and the never-run tail; retain successful steps only for the same complete relevant subjects. Account for the complete required denominator and report combined evidence honestly. The script has no resume flag and invoking it still runs its full panel. No product panel was run during this planning correction.
 
 campaign.py is read-only. It checks task/schema/coverage shape, exact frozen inputs, effective scheduling cycles, accepted-parent consistency and promotion witnesses. It neither accepts work nor runs commands, writes plans, issues permissions or deletes files. Semantic review and real gate execution remain central responsibilities.
 

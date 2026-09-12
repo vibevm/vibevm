@@ -33,10 +33,10 @@
         "Neither M-15 nor M-17-D is marked complete by this package."
       ],
       "checks": [
-        "cargo test -p xtask -- --list",
-        "cargo test -p xtask",
-        "cargo test -p vibe-publish -- --list",
-        "cargo test -p vibe-publish",
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -79,10 +79,10 @@
         "Partial effects or pending approval never become done; live B remains disabled."
       ],
       "checks": [
-        "cargo test -p xtask -- --list",
-        "cargo test -p xtask",
-        "cargo test -p vibe-publish -- --list",
-        "cargo test -p vibe-publish",
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],

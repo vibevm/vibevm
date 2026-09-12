@@ -61,18 +61,18 @@
         "Reading a descriptor or detecting a marker grants no write or process authority."
       ],
       "checks": [
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
-        "cargo test -p vibe-extension-registry -- --list",
-        "cargo test -p vibe-extension-registry",
-        "cargo test -p vibe-wire -- --list",
-        "cargo test -p vibe-wire",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-extension-registry target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-extension-registry <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -84,7 +84,7 @@
       "commit_subject": "feat(adapters): admit package-defined client capability maps",
       "notes": [
         "Prerequisites M-14-C and M-16-C are mandatory; use their identity/authority contracts.",
-        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -141,16 +141,16 @@
         "Active MCP launch content is visible in the prepared plan and does not inherit execution approval from a hash."
       ],
       "checks": [
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-safefs -- --list",
-        "cargo test -p vibe-safefs",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -161,7 +161,7 @@
       "safe_stop": "Generic host operations and grant refusal matrix pass in injected roots.",
       "commit_subject": "feat(adapters): enforce exact grants for file and config projection",
       "notes": [
-        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -215,16 +215,16 @@
         "Missing before-state yields honest non-reversible status; revoked apply cannot run."
       ],
       "checks": [
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-wire -- --list",
-        "cargo test -p vibe-wire",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -235,7 +235,7 @@
       "safe_stop": "Receipt migration and isolated inverse/revocation evidence are complete.",
       "commit_subject": "feat(adapters): retain external projection ownership and recovery",
       "notes": [
-        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     }

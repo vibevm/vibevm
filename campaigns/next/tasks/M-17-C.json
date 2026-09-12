@@ -36,8 +36,10 @@
         "Cross-client conflict metadata exposes another client's buffer content."
       ],
       "checks": [
-        "cargo test -p vibe-mcp",
-        "cargo test -p vibe-orchestrator",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: independent two-client analysis/rename conformance suite."
       ],
       "acceptance": [
@@ -48,7 +50,7 @@
       "commit_subject": "test(api): prove two-client analysis and rename conformance",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -83,9 +85,12 @@
         "Revocation erases unique retained evidence or triggers the revoked native reader."
       ],
       "checks": [
-        "cargo test -p vibe-mcp",
-        "cargo test -p vibe-orchestrator",
-        "cargo test -p vibe-lifecycle",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: multi-adapter concurrency/restart/cancel/revocation conformance cases."
       ],
       "acceptance": [
@@ -96,7 +101,7 @@
       "commit_subject": "test(api): exercise reconnect cancellation and retained evidence",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -131,8 +136,10 @@
         "A headless test contacts real model services/public registries or exposes host HOME/socket."
       ],
       "checks": [
-        "cargo test -p vibe-mcp",
-        "cargo test -p vibe-lifecycle",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: two-client HOME/Docker/service full-path integration using admitted M-15 fixtures."
       ],
       "acceptance": [
@@ -143,7 +150,7 @@
       "commit_subject": "test(api): cover environment image and service action paths",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     }

@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import runpy
+import shlex
 import subprocess
 import sys
 import tomllib
@@ -180,7 +181,94 @@ def load_tasks(manifest):
                  f"invalid planned subject: {task['id']}")
             need(task["id"] not in result, f"duplicate task {task['id']}")
             result[task["id"]] = task
+    validate_check_recipes(result)
     return result
+
+
+def validate_check_recipes(tasks):
+    """Catch broad literal defaults, not prove or execute a selected recipe."""
+    obsolete = (r"(?:^|[.;]\s+)listed checks intentionally use unfiltered crate suites(?:\.|$)",
+                r"^use full listed crate tests by default(?:\.|$)")
+    for key, task in tasks.items():
+        for note in task["notes"]:
+            need(not any(re.search(pattern, note, re.IGNORECASE) for pattern in obsolete),
+                 f"obsolete broad verification default: {key}")
+        for command in task["checks"]:
+            text = command.strip()
+            if re.match(r"^(?:bash\s+)?(?:\./)?tools/self-check\.sh\b", text):
+                raise Refusal(f"ordinary task cannot prescribe the full product panel: {key}")
+            if not re.match(r"^cargo(?:\.exe)?\s+(?:\+\S+\s+)?test(?:\s|$)", text):
+                continue  # SELECT BEFORE DISPATCH and conditional prose are not commands.
+            args = shlex.split(text)
+            args = args[:args.index("--")] if "--" in args else args
+            need(not any(arg.split("=", 1)[0] in
+                         {"--workspace", "--all", "--all-targets", "--all-features",
+                          "--tests", "--bins", "--examples", "--benches"}
+                         for arg in args), f"broad Cargo test default: {key}")
+            selected = "--lib" in args or "--doc" in args
+            for index, arg in enumerate(args):
+                name = ""
+                named = arg in {"--test", "--bin"} or arg.startswith(("--test=", "--bin="))
+                if arg in {"--test", "--bin"} and index + 1 < len(args):
+                    name = args[index + 1]
+                elif arg.startswith(("--test=", "--bin=")):
+                    name = arg.split("=", 1)[1]
+                if named:
+                    need(name and not name.startswith("-") and not any(c in name for c in "*?["),
+                         f"Cargo test needs a concrete named compile target: {key}")
+                    selected = True
+            need(selected, f"Cargo test must select a compile target before listing/filtering: {key}")
+
+
+def verification_policy(manifest):
+    path = manifest.get("verification_policy")
+    need(isinstance(path, str) and path.strip(), "verification-policy binding missing")
+    policy = read_json(within(path))
+    fields = {"schema", "ordinary_gate_mode", "full_panel_gate", "baseline_gate",
+              "workstream_gates", "policy_spec", "binding_required", "rules",
+              "workstream_acceptance", "baseline_acceptance", "final_acceptance"}
+    need(isinstance(policy, dict) and set(policy) == fields,
+         "verification-policy fields differ")
+    need(type(policy["schema"]) is int and policy["schema"] == 1,
+         "unsupported verification-policy schema")
+    need(policy["ordinary_gate_mode"] == "affected-targets" and
+         policy["binding_required"] is True, "verification binding must remain required")
+    need(policy["full_panel_gate"] == "NEXT-CLOSE.3" and
+         policy["baseline_gate"] == "NEXT-P0.2", "verification gate identity differs")
+    expected = ["NEXT-GATE-" + row["id"] for row in manifest["milestones"]]
+    need(policy["workstream_gates"] == expected and len(set(expected)) == 17,
+         "verification workstream gate coverage differs")
+    need(policy["policy_spec"] == "spec://org.vibevm.world/multi-user-planning/flows/"
+         "multi-user-planning/verification-selection#root", "verification policy authority differs")
+    for key in ("workstream_acceptance", "baseline_acceptance", "final_acceptance"):
+        need(isinstance(policy[key], str) and policy[key].strip(),
+             f"verification acceptance missing: {key}")
+    need(isinstance(policy["rules"], list) and policy["rules"] and
+         all(isinstance(rule, str) and rule.strip() for rule in policy["rules"]),
+         "verification rules missing")
+    return policy
+
+
+def validate_verification_policy(manifest, nodes, tasks):
+    """Validate scheduled obligations; no binding or test verdict is established."""
+    policy = verification_policy(manifest)
+    groups = [row["id"] for row in manifest["milestones"]]
+    obsolete = ("Run actual full tools/self-check.sh", "Pass the coherent full panel",
+                "From the next checkout run Git Bash tools/self-check.sh")
+    for key in groups + policy["workstream_gates"] + [policy["baseline_gate"], "NEXT-P0-GATE"]:
+        need(not any(line.startswith(obsolete) for line in nodes[key]["acceptance"]),
+             f"obsolete unconditional full panel remains: {key}")
+    for key in groups + policy["workstream_gates"]:
+        need(key in nodes and policy["workstream_acceptance"] in nodes[key]["acceptance"],
+             f"targeted workstream acceptance missing: {key}")
+    for key in (policy["baseline_gate"], "NEXT-P0-GATE"):
+        need(key in nodes and policy["baseline_acceptance"] in nodes[key]["acceptance"],
+             f"targeted baseline acceptance missing: {key}")
+    key = policy["full_panel_gate"]
+    need(key in nodes and policy["final_acceptance"] in nodes[key]["acceptance"],
+         f"comprehensive final acceptance missing: {key}")
+    validate_check_recipes(tasks)
+    return policy
 
 
 def work_packages(manifest):
@@ -319,6 +407,7 @@ def validate_coverage(manifest, tasks, plan):
         need(manifest.get("preview_control"), "preview-control binding missing")
     if manifest.get("preview_control"):
         validate_preview_control(manifest, nodes, tasks)
+    validate_verification_policy(manifest, nodes, tasks)
     return nodes
 
 
@@ -437,6 +526,7 @@ def check(manifest, context):
             "retired_units": sum(x["state"] == "retired" for x in status.values()),
             "execution_hold": nodes["NEXT-EXECUTION-AUTHORITY"]["state"],
             "preview_change_records_verified": False,
+            "verification_bindings_executed": False,
             "open_owner_decisions": [d["id"] for d in manifest["decisions"] if d["owner_state"] == "open"]}
 
 
@@ -482,7 +572,7 @@ def task_packet(manifest, task_id, context):
             "Central reads complete local plan; worker uses an explicitly commissioned quiet packet and exact files only.",
             "Promote the applicable product law before code/tests cite it; never cite a temporary campaign anchor from permanent code.",
             "Future paths/types/tests in notes are proposed; missing prerequisites or changed baseline require refinement, not invented proof.",
-            "No zero-test filter counts as validation; full product panel runs at coherent boundaries, not every tiny edit.",
+            "Select the compile target before listing/filtering tests; bind affected proof before dispatch and refresh it against the actual diff.",
             "Only actual reviewed evidence moves candidate to accepted; this tool never updates acceptance."]
     else:
         plan = load_plan(context)
@@ -502,6 +592,19 @@ def task_packet(manifest, task_id, context):
             "post_removal_gate": control["post_removal_gate"],
             "task_rules": control["task_rules"],
             "status_note": "These are planned obligations. Actual captures, change records and documentation evidence belong to the permanent transition index; this packet verifies none of them."}
+    policy = verification_policy(manifest)
+    result["verification"] = {
+        "state": "requires-binding", "policy": manifest["verification_policy"],
+        "policy_spec": policy["policy_spec"], "rules": policy["rules"],
+        "full_panel_gate": policy["full_panel_gate"],
+        "mode": "full-product" if task_id == policy["full_panel_gate"] else policy["ordinary_gate_mode"],
+        "binding_fields": ["affected_claims_and_contract_consumers", "package_and_compile_target",
+                           "existing_regressions_and_new_cases", "test_names_or_reviewed_filter",
+                           "exact_commands_and_flags", "relevant_input_closure",
+                           "fixtures_toolchain_platform_environment", "expected_nonzero_coverage",
+                           "build_link_and_run_cost", "reuse_and_escalation_conditions"],
+        "bindings_executed": False,
+        "status_note": "The coordinator resolves choices, available commands, expected coverage and cost before execution. This packet is a planned obligation; it neither selects real tests nor proves a run."}
     result["ready"] = task_id in {n["id"] for n in ready_nodes(load_plan(context))}
     result["status_note"] = "Readiness is a dependency check, not authorization or verification of physical inputs."
     return result

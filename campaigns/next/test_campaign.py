@@ -12,6 +12,56 @@ ROOT = MODULE["ROOT"]
 MANIFEST = MODULE["read_json"](ROOT / "campaigns/next/manifest.json")
 
 
+class VerificationRecipes(unittest.TestCase):
+    def validate(self, commands, notes=()):
+        MODULE["validate_check_recipes"]({"fixture": {"checks": commands, "notes": notes}})
+
+    def test_crate_filter_and_list_do_not_narrow_compilation(self):
+        for command in ("cargo test -p example", "cargo test -p example selected_name",
+                        "cargo test -p example -- --list",
+                        "cargo test -p example -- --list --lib"):
+            with self.subTest(command=command):
+                with self.assertRaisesRegex(MODULE["Refusal"], "compile target"):
+                    self.validate([command])
+
+    def test_compile_target_selection_is_accepted_without_claiming_a_run(self):
+        self.validate(["cargo test -p example --lib module::tests:: -- --list",
+                       "cargo test -p example --test integration named_case -- --exact",
+                       "cargo test -p example --test=integration -- --list",
+                       "cargo +stable test -p example --bin cli commands::tests::",
+                       "cargo test -p example --doc"])
+
+    def test_broad_selectors_cannot_hide_beside_a_narrow_selector(self):
+        for flag in ("--workspace", "--all", "--all-targets", "--all-features", "--tests"):
+            with self.subTest(flag=flag):
+                with self.assertRaisesRegex(MODULE["Refusal"], "broad Cargo"):
+                    self.validate([f"cargo test -p example --lib {flag}"])
+
+    def test_wildcard_or_missing_named_target_is_not_a_concrete_selection(self):
+        for suffix in ("--test", "--test -- --list", "--test=*", "--bin cli?", "--lib --test=*"):
+            with self.subTest(suffix=suffix):
+                with self.assertRaisesRegex(MODULE["Refusal"], "concrete named"):
+                    self.validate([f"cargo test -p example {suffix}"])
+
+    def test_unbound_or_conditional_recipe_is_not_misread_as_executed_command(self):
+        self.validate(["SELECT BEFORE DISPATCH: name the target before cargo test -p example.",
+                       "CONDITIONAL: full panel only for an explicitly justified scope.",
+                       "TO CREATE: a permanent behavioral test for the required refusal case."])
+
+    def test_obsolete_imperatives_refuse_but_explanations_do_not(self):
+        for note in ("Use full listed crate tests by default. Optional narrowing follows.",
+                     "Inspect tests; listed checks intentionally use unfiltered crate suites."):
+            with self.subTest(note=note):
+                with self.assertRaisesRegex(MODULE["Refusal"], "obsolete broad"):
+                    self.validate([], [note])
+        self.validate([], ["Do not use full listed crate tests by default.",
+                           "The old phrase 'listed checks intentionally use unfiltered crate suites' was removed."])
+
+    def test_ordinary_leaf_cannot_prescribe_full_product_panel(self):
+        with self.assertRaisesRegex(MODULE["Refusal"], "ordinary task"):
+            self.validate(["bash tools/self-check.sh"])
+
+
 class CampaignChecks(unittest.TestCase):
     def setUp(self):
         self.plan = MODULE["load_plan"](None)
@@ -26,11 +76,24 @@ class CampaignChecks(unittest.TestCase):
         self.assertGreaterEqual(result["implementation_tasks"], 212)
         self.assertFalse(result["product_gates_executed"])
         self.assertFalse(result["preview_change_records_verified"])
+        self.assertFalse(result["verification_bindings_executed"])
 
     def test_missing_task_cannot_be_hidden_by_short_local_plan(self):
         self.plan["node"] = [n for n in self.plan["node"] if n["id"] != "M-01-A.1"]
         with self.assertRaises(MODULE["Refusal"]):
             MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_targeted_policy_cannot_hide_old_unconditional_panel(self):
+        for key, requirement in (
+            ("M-13", "Pass the coherent full panel and accept the workstream evidence before retirement."),
+            ("NEXT-GATE-M-13", "Run actual full tools/self-check.sh from this unchanged checkout."),
+            ("NEXT-P0.2", "From the next checkout run Git Bash tools/self-check.sh --quiet; preserve exit status."),
+        ):
+            with self.subTest(node=key):
+                plan = copy.deepcopy(self.plan)
+                next(n for n in plan["node"] if n["id"] == key)["acceptance"].append(requirement)
+                with self.assertRaisesRegex(MODULE["Refusal"], "obsolete unconditional full panel"):
+                    MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
 
     def test_inherited_prerequisite_deadlock_is_rejected(self):
         nodes = {
@@ -226,6 +289,48 @@ class CampaignChecks(unittest.TestCase):
         self.assertEqual({row["path"]: row["sha256"] for row in MANIFEST["baseline_files"]}, expected)
         for path, sha256 in expected.items():
             self.assertEqual(MODULE["digest"]((ROOT / path).read_bytes()), sha256)
+
+    def test_verification_policy_binding_cannot_disappear(self):
+        manifest = copy.deepcopy(MANIFEST)
+        manifest.pop("verification_policy", None)
+        with self.assertRaisesRegex(MODULE["Refusal"], "verification-policy binding missing"):
+            MODULE["validate_coverage"](manifest, self.tasks, self.plan)
+
+    def test_workstream_baseline_and_final_verification_obligations_are_required(self):
+        policy = MODULE["verification_policy"](MANIFEST)
+        for key, acceptance, reason in (("M-01", "workstream_acceptance", "workstream acceptance"),
+                                        ("NEXT-GATE-M-01", "workstream_acceptance", "workstream acceptance"),
+                                        ("NEXT-P0.2", "baseline_acceptance", "baseline acceptance"),
+                                        ("NEXT-P0-GATE", "baseline_acceptance", "baseline acceptance"),
+                                        ("NEXT-CLOSE.3", "final_acceptance", "final acceptance")):
+            with self.subTest(key=key):
+                nodes = {node["id"]: copy.deepcopy(node) for node in self.plan["node"]}
+                nodes[key]["acceptance"].remove(policy[acceptance])
+                with self.assertRaisesRegex(MODULE["Refusal"], reason):
+                    MODULE["validate_verification_policy"](MANIFEST, nodes, self.tasks)
+
+    def test_phase_zero_cannot_become_the_full_panel_gate(self):
+        policy = MODULE["verification_policy"](MANIFEST)
+        policy["full_panel_gate"] = "NEXT-P0.2"
+        with patch.dict(MODULE["verification_policy"].__globals__, {"read_json": lambda path: policy}):
+            with self.assertRaisesRegex(MODULE["Refusal"], "gate identity differs"):
+                MODULE["verification_policy"](MANIFEST)
+
+    def test_packets_require_binding_without_starting_work_or_claiming_checks(self):
+        before = copy.deepcopy(self.plan)
+        for key in ("M-01-A.1", "NEXT-P0.2", "NEXT-CLOSE.3"):
+            with self.subTest(key=key):
+                packet = MODULE["task_packet"](MANIFEST, key, None)
+                verification = packet["verification"]
+                self.assertEqual(verification["state"], "requires-binding")
+                self.assertIn("package_and_compile_target", verification["binding_fields"])
+                self.assertIn("affected_claims_and_contract_consumers", verification["binding_fields"])
+                self.assertFalse(verification["bindings_executed"])
+                self.assertFalse(packet["ready"])
+                self.assertEqual(verification["mode"], "full-product" if key == "NEXT-CLOSE.3" else "affected-targets")
+        MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+        self.assertEqual(self.plan, before)
+        self.assertEqual(MODULE["ready_nodes"](self.plan), [])
 
 
 if __name__ == "__main__":

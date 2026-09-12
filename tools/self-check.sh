@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# vibevm self-check — runs the floor invariants every commit on `main`
-# is supposed to satisfy. Designed to be cheap to invoke locally and
-# trivial to wire into a CI matrix later. See `DEV-GUIDE.md` §6.
+# vibevm self-check — the full integration/release panel. This command
+# always runs the full selected panel; it is not the ordinary per-edit gate.
+# During development select affected Cargo targets and cases directly.
+# See `DEV-GUIDE.md` §6 and multi-user-planning's verification-selection law.
 #
 # Invariants checked, in order:
 #   1. `cargo fmt --all --check`         — every file is rustfmt-clean.
@@ -83,11 +84,16 @@
 # What that costs the reader, said here because it has been paid for twice:
 # a run that went red says NOTHING about the steps after the red one — they
 # did not execute. So "the panel failed at step X" is not a report on the
-# panel, and a fixed X does not license a claim about X+1. After any repair
-# the panel is re-run END TO END, and the green tail is the only evidence
-# that every step ran. Measured 2026-08-14, when a new gate sat behind a
-# step that failed first and went untested in a run everyone read as
-# covering it; and again 2026-08-17, when a red run stopped at step 9 of 53.
+# panel, and a fixed X does not license a claim about X+1. A coordinator may
+# retain prior successful steps only when their complete relevant subjects,
+# commands, toolchains and environment still match. It must run failed or
+# invalidated steps and the never-run tail, accounting for the full actual
+# denominator. Such combined evidence is not a successful invocation of this
+# script. This script has no resume flag; run the exact constituent commands
+# explicitly, or use a full invocation when that full gate is owed and valid
+# per-step evidence is unavailable. Do not restart everything merely because
+# one localized repair landed. The original fail-fast incidents (2026-08-14
+# and 2026-08-17) require honest tail coverage, not redundant successful work.
 
 set -u
 

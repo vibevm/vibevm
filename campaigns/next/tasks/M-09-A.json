@@ -31,8 +31,8 @@
         "A research snapshot or latest upstream cannot replace the manifest's captured identity."
       ],
       "checks": [
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -76,10 +76,10 @@
         "Unsupported mandatory platform/action is not counted as successful integration."
       ],
       "checks": [
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],

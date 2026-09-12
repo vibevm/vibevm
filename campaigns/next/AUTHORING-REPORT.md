@@ -2,13 +2,13 @@
 
 Planning is complete. Phase 0 and implementation have not started. The owner's planning-only instruction is represented by the blocked NEXT-EXECUTION-AUTHORITY gate.
 
-The authored corpus preserves 17 milestones, 86 original work-package identities, 26 owner decisions and 34 findings. The original 201 detailed implementation tasks remain byte-identical. The DP1-to-DP2 addition contributes 11 tasks in four supplemental groups, producing a 425-node multi-user-planning tree with 212 tasks. Sixty original temporary XML units retain their 229 source clauses; NEXT-A26 adds twelve, for 61 units and 241 pending clauses.
+The authored corpus preserves 17 milestones, 86 original work-package identities, 26 owner decisions and 34 findings. The original 201 task identities, goals, paths and behavioral cases remain; the owner's latest verification correction replaces broad commands and refreshes task hash witnesses. The DP1-to-DP2 addition contributes 11 tasks in four supplemental groups, producing a 425-node multi-user-planning tree with 212 tasks. Sixty original temporary XML units retain their 229 source clauses; NEXT-A26 adds twelve, for 61 units and 241 pending clauses.
 
 Validated during authoring:
 
 - The campaign checker accepts exact baseline hashes, task/parent/mandate coverage, child order and the combined completion/inherited-prerequisite graph.
 - All existing read-path locators and crate names in ordinary Cargo check commands were checked against this checkout. Prospective test families are explicitly marked TO CREATE.
-- Twenty-eight helper tests pass, covering the original missing-task/dependency/retirement cases plus supplemental coverage, preview bootstrap/closure bindings, permanent-home refusal, packet resolution and documentation input acceptance without starting implementation.
+- Forty planning-helper tests pass, covering original coverage/retirement cases, preview bindings and the targeted verification guards. The affected multi-user-planning renderer's fourteen tests also pass. No Cargo tests or full product panel were run for this correction.
 - The existing baseline executable's XML-to-Markdown dry run examined all 61 XML files without writing: 60 byte-stable; the master has only IR-stable quote-entity normalization. No IR-divergent source or refusal remained.
 - Planning review corrected missing module/CLI/MCP registration perimeters, a premature service-catalog dependency, Linux egress fixture design, source-contract ordering, exact census-derived batch requirements and retirement/packet-navigation checks.
 
@@ -16,7 +16,9 @@ Preview-transition planning adds exact DP1 capture before surviving implementati
 
 The expanded checker verifies supplemental coverage, bootstrap and closure dependencies, permanent destination boundaries, owner holds and packet access to the active or promoted preview contract. Independent review removed a prose dependency on the bootstrap's own completion and distinguished native-role, linked-evidence, documentation and release check stages. An intake or reviewed-stage success cannot claim later proof.
 
-The 148 protected original task-group, frozen-input and staging-unit files remain byte-identical. All prior local node states/evidence and mandate rows remain unchanged. The two added/modified XML documents also passed read-only pivot classification without IR divergence: the master retains its known quote-entity normalization, and NEXT-A26 loses only blank lines in reverse projection. No source conversion was applied.
+Frozen review inputs and staging-unit bytes remain unchanged. Task recipe edits are intentional: 475 unfiltered package-test runs and 355 crate-wide listings become compile-target/case bindings; 162 broad oracles are conditional on actual affected inputs. Listing is optional discovery, not a second mandatory invocation per case. The 17 workstream reviews and Phase 0 use affected checks; NEXT-CLOSE.3 retains comprehensive final proof. Existing task IDs, dependencies, behavioral cases and local accepted/candidate evidence are preserved.
+
+The preview author's two XML documents previously passed read-only pivot classification without IR divergence: the master had quote-entity normalization, and NEXT-A26 lost only blank lines in reverse projection. No source conversion was applied. The later owner verification ruling supersedes blanket-panel wording retained in the immutable baseline excerpts without removing their behavioral obligations.
 
 The historical planning ancestor stays fixed. Neither DP1/DP2 product captures nor the independent documentation have been supplied or executed by this authoring pass. The documentation input gate is initially blocked; supplying it later does not authorize campaign execution. Existing accepted/candidate states and evidence in the local plan are preserved while the seed/local revisions advance deliberately.
 

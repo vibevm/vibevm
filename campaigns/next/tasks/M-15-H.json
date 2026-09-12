@@ -46,9 +46,11 @@
         "A descriptor fetches a remote schema or enrolls its own credentials during catalog read."
       ],
       "checks": [
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-workspace",
-        "cargo xtask check-codegen",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "TO CREATE: generation service-catalog projection fixtures."
       ],
       "acceptance": [
@@ -60,7 +62,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -109,8 +111,10 @@
         "Stale health is displayed as current or an ungranted effect is auto-approved."
       ],
       "checks": [
-        "cargo test -p vibe-mcp",
-        "cargo test -p vibe-core",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: service argument/auth/origin/TTL tests using fixture endpoints."
       ],
       "acceptance": [
@@ -122,7 +126,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -160,7 +164,8 @@
         "A denied action still mutates service data or secret material enters image layers."
       ],
       "checks": [
-        "cargo test -p vibe-mcp",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: two-services-and-agent Docker integration journey; no live model subscription or public service is required."
       ],
       "acceptance": [
@@ -171,7 +176,7 @@
       "commit_subject": "test(services): exercise local agent catalog and authorization",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     }

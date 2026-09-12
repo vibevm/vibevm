@@ -51,8 +51,10 @@
         "A capability query silently pulls a base or creates a builder."
       ],
       "checks": [
-        "cargo test -p vibe-lifecycle",
-        "cargo test -p vibe-mcp",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: Docker preflight adapter tests; actual daemon probe is a separately admitted integration action."
       ],
       "acceptance": [
@@ -65,7 +67,7 @@
         "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
         "Proposed environment composition module remains below transport; no permanent daemon. Docker availability must be observed in the execution session, not inherited from this baseline.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -116,7 +118,8 @@
         "Missing bootstrap bytes cause an implicit latest-tag fetch."
       ],
       "checks": [
-        "cargo test -p vibe-lifecycle",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: isolated Linux bootstrap integration test with capability preflight and exact owned-resource cleanup."
       ],
       "acceptance": [
@@ -129,7 +132,7 @@
         "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
         "M-15-K precedes M-15-A and M-15-E. Do not add a dependency on M-15-F rootfs population.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -172,7 +175,8 @@
         "An unobserved daemon path, host-gateway proxy or alternate attachment prevents a complete proof; Linux evidence cannot be relabelled Windows coverage."
       ],
       "checks": [
-        "cargo test -p vibe-test-support",
+        "SELECT BEFORE DISPATCH: vibe-test-support target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-test-support <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "TO CREATE: egress boundary self-test exercised under the admitted Linux fixture; ordinary unit tests cannot establish isolation."
       ],
       "acceptance": [
@@ -183,7 +187,7 @@
       "commit_subject": "test(executor): verify isolated egress observation boundaries",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Chosen proof backend is the dedicated internal-network Linux fixture with a privileged trusted guard in its own disposable namespaces. This is a test design, not a production native-code sandbox claim. Runtime agent containers remain unprivileged.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

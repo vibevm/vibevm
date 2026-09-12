@@ -42,10 +42,10 @@
         "Undeclared target IDs, malformed qualified refs and weak-only activation without its dependency refuse or stay dormant as defined."
       ],
       "checks": [
-        "cargo test -p vibe-core -- --list",
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-resolver -- --list",
-        "cargo test -p vibe-resolver",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-resolver target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-resolver <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -58,7 +58,7 @@
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
         "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
-        "TO CREATE: m_05_b_1_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "TO CREATE: m_05_b_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -111,16 +111,16 @@
         "All-features cannot select constrained members implicitly."
       ],
       "checks": [
-        "cargo test -p vibe-core -- --list",
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-resolver -- --list",
-        "cargo test -p vibe-resolver",
-        "cargo test -p vibe-wire -- --list",
-        "cargo test -p vibe-wire",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-resolver target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-resolver <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff"
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
       ],
       "acceptance": [
         "Generated requests retain owner edge/domain/target and choice provenance.",
@@ -131,7 +131,7 @@
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
         "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
-        "TO CREATE: m_05_b_2_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "TO CREATE: m_05_b_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -180,14 +180,14 @@
         "Ambiguous references, unknown source epoch and concurrent edits do not produce partial authored changes."
       ],
       "checks": [
-        "cargo test -p vibe-core -- --list",
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-orchestrator -- --list",
-        "cargo test -p vibe-orchestrator",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff"
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
       ],
       "acceptance": [
         "Migration code and fixtures demonstrate preserved syntax/intent rather than prose instructions.",
@@ -198,7 +198,7 @@
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
         "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
-        "TO CREATE: m_05_b_3_cases test family for the cases below. This is not an existing test. Enumerate the owning crate's tests before any optional filter; listed checks intentionally use unfiltered crate suites.",
+        "TO CREATE: m_05_b_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "PROPOSED orchestrator src/migration/ is a write ceiling only; use the M-13-owned migration module if already supplied within the admitted perimeter.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

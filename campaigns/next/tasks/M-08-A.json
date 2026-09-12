@@ -50,12 +50,12 @@
         "Unsupported directory/resource shape is an explicit case, not omitted coverage."
       ],
       "checks": [
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -100,12 +100,12 @@
         "Qwen must not be represented only by adding a fourth hardcoded executable field."
       ],
       "checks": [
-        "cargo test -p vibe-agent-projection -- --list",
-        "cargo test -p vibe-agent-projection",
-        "cargo test -p vibe-lifecycle -- --list",
-        "cargo test -p vibe-lifecycle",
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],

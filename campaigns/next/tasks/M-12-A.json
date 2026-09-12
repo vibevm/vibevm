@@ -34,12 +34,12 @@
         "This gate cannot report M-15 or full M-17 done."
       ],
       "checks": [
-        "cargo test -p vibe-install -- --list",
-        "cargo test -p vibe-install",
-        "cargo test -p vibe-workspace -- --list",
-        "cargo test -p vibe-workspace",
-        "cargo test -p vibe-orchestrator -- --list",
-        "cargo test -p vibe-orchestrator",
+        "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -74,7 +74,7 @@
       "steps": [
         "Prepare complete captures from .1 into a controlled source/cache fixture; then replay in a second clean injected home with network/process counters.",
         "Compare resulting lock, full package resources, boot contributions, derivatives, adapter receipts and native example evidence against the accepted graph.",
-        "Exercise missing-capture and changed-definition cases; run the existing full self-check only at this coherent integration boundary with root-provided environment isolation."
+        "Exercise missing-capture and changed-definition cases with bound replay/capture checks. Escalate to the full self-check only for demonstrated nonlocal impact with no adequate narrower proof, using root-provided environment isolation; the designated final campaign gate remains separate."
       ],
       "positive_cases": [
         "Prepared offline replay reproduces exact selected sources/resources and declared operations.",
@@ -85,24 +85,24 @@
         "Byte-equal output alone cannot substitute for capture/receipt ownership agreement."
       ],
       "checks": [
-        "cargo test -p vibe-install -- --list",
-        "cargo test -p vibe-install",
-        "cargo test -p vibe-workspace -- --list",
-        "cargo test -p vibe-workspace",
-        "cargo test -p vibe-orchestrator -- --list",
-        "cargo test -p vibe-orchestrator",
+        "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check",
-        "bash tools/self-check.sh"
+        "CONDITIONAL FULL PANEL: bash tools/self-check.sh only at the designated final campaign gate or for demonstrated nonlocal impact with no adequate narrower proof; record the reason and actual results. Ordinary task completion does not require it."
       ],
       "acceptance": [
         "Offline replay evidence includes zero network attempts and exact output/ownership joins.",
-        "Full panel result includes every executed step, with unrun tail never claimed green."
+        "Bound check results include every executed step. If a justified full panel runs, record all executed and unrun steps; an unrun tail is never claimed green."
       ],
       "safe_stop": "Offline initial-route integration is proven; no registry publication.",
       "commit_subject": "test(integration): reproduce the initial route from captured inputs",
       "notes": [
-        "Additional existing integration command: bash tools/self-check.sh. Run only when prerequisites are assembled; it is a broad integration gate, not a per-edit loop."
+        "Available broad integration command: bash tools/self-check.sh. Complete this task with its bound replay/capture checks; use the full panel only at the designated final campaign gate or for demonstrated nonlocal impact with no adequate narrower proof."
       ]
     }
   ]

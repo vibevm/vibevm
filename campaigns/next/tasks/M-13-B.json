@@ -32,8 +32,8 @@
         "No rule grants blanket authority to rewrite frozen/foreign captures or historical evidence."
       ],
       "checks": [
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -83,8 +83,8 @@
         "ETO cannot authorize secret/raw-memory dumping, native sandbox claims or a new IDE/plugin project."
       ],
       "checks": [
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
-        "cargo run --quiet -p vibe-cli -- facts check --exhaustive",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],

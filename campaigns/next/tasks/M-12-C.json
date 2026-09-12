@@ -38,12 +38,12 @@
         "Absent demand, destination binding or current authority prevents execution."
       ],
       "checks": [
-        "cargo test -p vibe-publish -- --list",
-        "cargo test -p vibe-publish",
-        "cargo test -p vibe-wire -- --list",
-        "cargo test -p vibe-wire",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],
@@ -55,7 +55,7 @@
       "commit_subject": "feat(tracker): prepare a one-way project fact projection",
       "notes": [
         "OPTIONAL: M-12-C is not a prerequisite for M-12-A/B/D, M-15 or M-17. No tool/message is sent by this task.",
-        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff commands are existing self-check gates.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -91,8 +91,8 @@
         "Pending/declined approval is not a completed export."
       ],
       "checks": [
-        "cargo test -p vibe-publish -- --list",
-        "cargo test -p vibe-publish",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "cargo fmt --all -- --check",
         "git diff --check"
       ],

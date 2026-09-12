@@ -32,9 +32,11 @@
         "HOME-only or image-only completion closes the whole phase."
       ],
       "checks": [
-        "cargo test -p vibe-lifecycle",
-        "cargo test -p vibe-mcp",
-        "TO CREATE: complete runtime delivery parity fixture; coordinator runs the unchanged-tree full panel."
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: complete runtime delivery parity fixture with affected delivery cases. A coordinator runs the full panel only at the designated final campaign gate or for demonstrated nonlocal impact with no adequate narrower proof."
       ],
       "acceptance": [
         "Every required M-15 case has reproducible evidence and no unmatched required row.",
@@ -44,7 +46,7 @@
       "commit_subject": "test(environment): close HOME and Docker delivery parity",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance."
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
     },
     {
@@ -78,7 +80,7 @@
         "Container tests are cited as proof of kernel/boot correctness."
       ],
       "checks": [
-        "cargo run --quiet -p vibe-cli -- check --path . --quiet",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
         "TO CREATE: documentation example conformance cases using implemented operation grammar; coordinator supplies final reference/promotion checks."
       ],
       "acceptance": [
@@ -90,7 +92,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
         "Documentation paths are proposed owned destinations. Cross-domain promotion and campaign retirement are root-owned tasks, not duplicated here.",
-        "Use full listed crate tests by default. If narrowing to a newly created test filter, first run cargo test -p <crate> -- --list and verify an exact nonzero test-name match; a zero-test run is not acceptance."
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
     }
   ]

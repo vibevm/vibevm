@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "ordinary_gate_mode": "affected-targets",
+  "full_panel_gate": "NEXT-CLOSE.3",
+  "baseline_gate": "NEXT-P0.2",
+  "workstream_gates": [
+    "NEXT-GATE-M-13",
+    "NEXT-GATE-M-01",
+    "NEXT-GATE-M-02",
+    "NEXT-GATE-M-03",
+    "NEXT-GATE-M-04",
+    "NEXT-GATE-M-05",
+    "NEXT-GATE-M-06",
+    "NEXT-GATE-M-07",
+    "NEXT-GATE-M-08",
+    "NEXT-GATE-M-09",
+    "NEXT-GATE-M-10",
+    "NEXT-GATE-M-11",
+    "NEXT-GATE-M-12",
+    "NEXT-GATE-M-14",
+    "NEXT-GATE-M-15",
+    "NEXT-GATE-M-16",
+    "NEXT-GATE-M-17"
+  ],
+  "policy_spec": "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#root",
+  "binding_required": true,
+  "rules": [
+    "Before dispatch, bind affected behavior and contract consumers to available test targets, existing regressions, required new cases and exact commands. Changed-file count alone does not establish impact.",
+    "Select the Cargo compile target before listing or filtering tests: --lib, --test <target>, --bin <target> or --doc as applicable. Bare cargo test -p, workspace/all-target/all-feature sweeps and unscoped --list are not ordinary defaults. Include compilation and linking in the cost estimate.",
+    "Use source and manifest inspection to identify targets before compiling. Bind package/target, test names or reviewed module filter, command flags, relevant source/dependency/fixture/schema/configuration bytes, toolchain/platform/environment, expected coverage and escalation reason. Verify that required selected tests actually execute and are not ignored; zero tests is not evidence.",
+    "Keep existing commands distinct from TO CREATE cases. A SELECT BEFORE DISPATCH recipe is an unresolved planning obligation, not an executable command, successful check or permission to invent a test name.",
+    "Preserve affected negative cases, invariants, consumer integration and applicable wire/codegen/reference proof. Broaden for demonstrated cross-cutting impact or insufficient narrower evidence; never broaden solely because a commit, workstream, push, worker or session finished.",
+    "Reuse compatible incremental build artifacts and CARGO_TARGET_DIR when useful. A warm build cache is not a passed test verdict; reuse test evidence only for matching checked subjects and covered claims.",
+    "The routine full product panel is reserved for NEXT-CLOSE.3. A concrete cross-cutting change with no sufficient narrower proof or an explicit owner request can justify another scoped full panel; workers report that need instead of automatically launching it.",
+    "After failure or interruption, retain successful stages only when their complete checked subjects still match. Run failed, invalidated and never-run required stages; unknown validity needs rechecking. Preserve any required order or shared-state continuity instead of splicing incompatible runs. Record every required stage/case and report combined evidence as an aggregate, never as one successful script invocation. A repaired step or unmeasured tail is not a passed panel.",
+    "Planning validation checks these obligations and packet shape only. It executes no verification binding, product gate or campaign task and does not change the execution hold."
+  ],
+  "workstream_acceptance": "Review the actual workstream delta and affected contract consumers; bind and execute sufficient targeted integration checks, preserving applicable negative/invariant/wire/codegen proof. Reuse only matching-subject evidence. Workstream completion alone does not require the full product panel; record any concrete reason to broaden and the actual checked scope.",
+  "baseline_acceptance": "Capture available baseline evidence and run only checks needed to establish the first authorized implementation frontier and its assumptions. Record measured, failed, unavailable and unmeasured areas explicitly; a full product panel is not a Phase 0 prerequisite unless concrete cross-cutting uncertainty cannot be resolved more narrowly.",
+  "final_acceptance": "After scaffold removal, establish complete permanent final-product panel and decisive domain/ETO/HOME/Docker plus DP1-to-DP2 migration/documentation evidence for the accepted subject. Resume interrupted proof by checking failed, invalidated and never-run stages; reuse successful stages only with matching complete subjects. No unmeasured tail or unrelated green run counts as final acceptance."
+}

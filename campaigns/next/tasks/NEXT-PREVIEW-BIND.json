@@ -45,10 +45,12 @@
       "checks": [
         "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
         "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode bindings --stage roles --format json",
-        "cargo test -p vibe-core",
-        "cargo test -p vibe-requirements",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "git diff --check"
       ],
       "acceptance": [
@@ -108,8 +110,8 @@
       "checks": [
         "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
         "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode bindings --stage linked --format json",
-        "cargo xtask check-codegen",
-        "cargo xtask wire-diff",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "git diff --check"
       ],
       "acceptance": [
