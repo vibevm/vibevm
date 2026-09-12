@@ -9,7 +9,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
-mod add;
+// `add` is `pub(crate)` and its two siblings are not: the registry
+// builder warms a published version before it renders it, and it warms
+// it through this module's `warm` rather than through a second walk of
+// its own (PROP-057 `##REL-WARMUP-CLOSURE`).
+pub(crate) mod add;
 mod check;
 mod clean;
 
