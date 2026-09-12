@@ -31,7 +31,7 @@ still belongs to).</related></p>
   `vibe install`, and the original author has no incentive to change.</unreachable>
       </facts>
       <facts ordered="false">
-        <BRIDGE-DEF fact="true" status="impl/done">A **bridge package** closes the gap without the author's involvement: a
+        <BRIDGE-DEF fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">A **bridge package** closes the gap without the author's involvement: a
   *maintainer* volunteers to steward someone else's repository and publishes an
   ordinary vibevm package that **wraps** it.</BRIDGE-DEF>
         <BRIDGE-MEANS fact="true" status="impl/done">The bridge makes the foreign repo
@@ -60,7 +60,7 @@ still belongs to).</related></p>
     <flag title="2.1 A bridge is marked by a flag, not a kind">
       <p><req-flag fact="true" status="impl/done">`req r1`</req-flag></p>
       <facts ordered="false">
-        <BRIDGE-FLAG fact="true" status="impl/done">`[package].bridge = true` marks a package as a bridge.</BRIDGE-FLAG>
+        <BRIDGE-FLAG fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`[package].bridge = true` marks a package as a bridge.</BRIDGE-FLAG>
         <FLAG-NOT-KIND fact="true" status="impl/done">It does **not** change
   the package's `kind` (a bridged skill is still a `feat`/`tool` as appropriate)
   or its identity.</FLAG-NOT-KIND>
@@ -75,18 +75,18 @@ still belongs to).</related></p>
       <p><req-classes fact="true" status="impl/done">`req r1`</req-classes></p>
       <p><TWO-CLASSES fact="true" status="impl/done">A bridge obtains the upstream repo in one of three ways:</TWO-CLASSES></p>
       <facts ordered="false">
-        <CLASS-VENDORED fact="true" status="impl/done">**Vendored ("git in git")** — the maintainer copied the upstream tree into
+        <CLASS-VENDORED fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Vendored ("git in git")** — the maintainer copied the upstream tree into
   the package and committed it. This needs **none** of PROP-021/022 machinery:
   it is plain files in a `snapshot` package. A vendored bridge is therefore the
   cheapest case — the flag (§2.1) plus, if the layout needs shaping, hooks.</CLASS-VENDORED>
-        <CLASS-SUBMODULE fact="true" status="impl/done">**Submodule-backed authoring** — the maintainer workspace references upstream
+        <CLASS-SUBMODULE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Submodule-backed authoring** — the maintainer workspace references upstream
   through a Git submodule ([PROP-021](PROP-021-submodule-sources.xml)). A direct
   Git-source install preserves that live Git composition. Registry publication
   deliberately flattens a clean populated gitlink into ordinary package files,
   removes `.gitmodules`, and reports `submodule &lt;path&gt; vendored at &lt;sha&gt;`;
   the published package is therefore a truthful vendored snapshot, not a
   dangling promise that consumers will recurse into the maintainer's repo.</CLASS-SUBMODULE>
-        <CLASS-REFERENCE fact="true" status="impl/done">**Reference-backed** — the package repository contains only maintainer-authored
+        <CLASS-REFERENCE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Reference-backed** — the package repository contains only maintainer-authored
   metadata and adapters. `[[embedded_source]]` declares the original public Git
   URL, an immutable full commit, an independently verified source-tree hash and
   upstream licence provenance. Installation fetches that exact source directly
@@ -125,13 +125,13 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
       <p><req-maintainer fact="true" status="impl/done">`req r1`</req-maintainer></p>
       <facts ordered="false">
         <MAINTAINER-VS-AUTHOR fact="true" status="impl/done">The bridge's **maintainer** is distinct from the upstream **author**.</MAINTAINER-VS-AUTHOR>
-        <AUTHORSHIP-SEPARATION fact="true" status="impl/done">`[package].authors` names only the people or organisations that authored
+        <AUTHORSHIP-SEPARATION fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`[package].authors` names only the people or organisations that authored
   the package's own metadata, adapters and other maintainer-owned payload. It
   never absorbs the authors of referenced bytes. Every `[[embedded_source]]`
   records those separately as a non-empty `upstream_authors` list. Listings,
   locks and indexes preserve both lists under their own labels; they never
   concatenate them into one ambiguous authorship claim.</AUTHORSHIP-SEPARATION>
-        <GROUP-PROVENANCE fact="true" status="impl/done">The package's qualified coordinate
+        <GROUP-PROVENANCE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The package's qualified coordinate
   ([PROP-008](PROP-008-qualified-naming.xml)) names the **product a consumer
   installs**, not the codebase in which its packaging machinery happened to be
   written. Packaging Spec Kit does not make it `org.vibevm/*`; its product
@@ -152,7 +152,7 @@ mandates none of them:</COMPOSE-OPTIONAL></p>
   Locally, independent package repositories may live under a neutral collection
   such as `~/git/v/packages/`; publication still maps one package repository to
   one registry repository.</INDEPENDENT-REPOSITORY-DEFAULT>
-        <LICENSE-BOUNDARY fact="true" status="impl/done">A bridge records two distinct legal surfaces: `[package].license` describes
+        <LICENSE-BOUNDARY fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A bridge records two distinct legal surfaces: `[package].license` describes
   only the maintainer-authored bridge package, while every external embedded
   source records its upstream licence and an immutable licence URL. A bridge
   never presents upstream bytes as relicensed by the bridge maintainer.</LICENSE-BOUNDARY>

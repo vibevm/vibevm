@@ -92,7 +92,7 @@ against `libgit2` (via the `git2` crate) in v1.</SHELL-OUT></p>
       </facts>
       <p><risks-lead fact="true" status="impl/done">**Risks accepted:**</risks-lead></p>
       <facts ordered="false">
-        <RISK-GIT-IN-PATH fact="true" status="impl/done">**Runtime dependency on `git` in `PATH`.** Acceptable: our target
+        <RISK-GIT-IN-PATH fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Runtime dependency on `git` in `PATH`.** Acceptable: our target
   audience is developers who already have git installed. We perform a
   preflight `git --version` check and emit an actionable error (with
   a pointer to `https://git-scm.com/downloads`) if it is missing.</RISK-GIT-IN-PATH>
@@ -196,7 +196,7 @@ over the `[registry]` section in `vibe.toml` (a URL — git or
 is unchanged from M0.</PER-PROJECT-CACHE-UNCHANGED></p>
     </cache-layout>
     <freshness title="2.5 Freshness policy">
-      <p><FRESHNESS-TTL fact="true" status="impl/done">**Decision:** the default freshness TTL is **1 hour**, checked against
+      <p><FRESHNESS-TTL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision:** the default freshness TTL is **1 hour**, checked against
 `meta.toml.last_pulled_at`. An install whose registry cache is older
 than the TTL triggers an implicit `update`. An install whose cache is
 younger skips the pull. `vibe registry sync` forces an update
@@ -324,7 +324,7 @@ milestone is shippable.</acceptance-lead></p>
   <open-questions title="6. Open questions">
     <p><parking-lot-lead fact="true" status="spec/work">None blocking. Parking lot:</parking-lot-lead></p>
     <facts ordered="false">
-      <OPEN-GIT-BINARY-PATH fact="true" status="impl/done">**Resolved — shipped as proposed.** The `VIBE_GIT_BINARY`
+      <OPEN-GIT-BINARY-PATH fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Resolved — shipped as proposed.** The `VIBE_GIT_BINARY`
   PATH override lives in `git_backend/shell.rs` and its comment cites §6 of this
   PROP; the env-var form was chosen over a CLI flag exactly to keep the CLI
   surface stable.</OPEN-GIT-BINARY-PATH>

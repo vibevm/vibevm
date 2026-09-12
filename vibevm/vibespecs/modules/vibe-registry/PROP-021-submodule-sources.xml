@@ -41,7 +41,7 @@ is fetched into), [PROP-022 §2](../vibe-workspace/PROP-022-materialization-mode
       </facts>
     </problem>
     <what title="1.2 What this is — submodule as a first-class embedded source">
-      <p><WHAT-VVM-DOES fact="true" status="impl/done">vibevm fetches a package's submodules when it fetches the package, updates them
+      <p><WHAT-VVM-DOES fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">vibevm fetches a package's submodules when it fetches the package, updates them
 when it updates the package, and makes the submodule content available wherever
 the package is materialised — embedded into the snapshot for the
 copy-based modes, or living natively for `in-place`
@@ -64,7 +64,7 @@ copy-based modes, or living natively for `in-place`
       </facts>
       <p><APPLIES-BOTH-CLONES fact="true" status="impl/done">This applies identically to the registry cache clone and to an `in-place`
 slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.xml#in-place)).</APPLIES-BOTH-CLONES></p>
-      <p><PUBLISH-FLATTENS-GITLINKS fact="true" status="impl/done">**Publication boundary.** Workspace/direct Git source acquisition may carry
+      <p><PUBLISH-FLATTENS-GITLINKS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Publication boundary.** Workspace/direct Git source acquisition may carry
 real submodules, but a per-package registry repository is a self-contained
 package snapshot. Publish inspects each populated gitlink before copying,
 requires its checkout to match the indexed commit and be clean, copies its
@@ -81,19 +81,19 @@ declaration forms:</EMBEDDED-SOURCE-MODEL></p>
       <facts ordered="false">
         <FORM-GIT-NATIVE fact="true" status="impl/done">**git-native** (`.gitmodules`) — vibevm
   reads no `.gitmodules` itself; git does, via §2.1.</FORM-GIT-NATIVE>
-        <FORM-DEPENDENCY-DECLARED fact="true" status="impl/done">**dependency-declared** — a package's manifest uses `[[embedded_source]]`
+        <FORM-DEPENDENCY-DECLARED fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**dependency-declared** — a package's manifest uses `[[embedded_source]]`
   to name an upstream Git source independently of the package repository. The
   declaration carries a portable name, public credential-free HTTPS URL, full
   immutable commit, expected `sha256:` source-tree hash, optional ref hint, and
   upstream licence provenance. This supports snapshot/binary-distributed bridge
   packages without copying the upstream tree into their repository.</FORM-DEPENDENCY-DECLARED>
       </facts>
-      <p><NOT-A-PACKAGE fact="true" status="impl/done">Either way, the embedded repo is **not** a second vibevm package: it is git
+      <p><NOT-A-PACKAGE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Either way, the embedded repo is **not** a second vibevm package: it is git
 content, never entered into the dependency resolver
 ([PROP-002](PROP-002-decentralized-registry.xml): one git repo = one package;
   the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE></p>
       <facts ordered="false">
-        <DECLARED-SOURCE-AUTH fact="true" status="impl/done">A dependency-declared source is authenticated twice: its resolved checkout
+        <DECLARED-SOURCE-AUTH fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A dependency-declared source is authenticated twice: its resolved checkout
   must equal the declared commit and its deterministic source-tree hash must
   equal `content_hash`. `ref_hint` is diagnostic only and never selects bytes.</DECLARED-SOURCE-AUTH>
         <DECLARED-SOURCE-CACHE fact="true" status="impl/done">Authenticated trees live in an accretive content-addressed directory below

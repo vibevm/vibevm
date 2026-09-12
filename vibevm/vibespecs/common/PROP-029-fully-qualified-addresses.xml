@@ -4,10 +4,10 @@
   <status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-07-12, owner-ratified; re-marked at fact grain (re-pilot) same day"/>
   <p><status-line fact="true" status="spec/done">**Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.xml#group) (the `group` field) and the **addressable-specs** flow, whose `#modules` unit defines the fully-qualified module authority and the joiner-never-`.` rule this PROP applies: `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`.</status-line></p>
   <decision title="1. Every address is fully qualified">
-    <p><ADDR-LAW fact="true" status="spec/done">A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project:</ADDR-LAW></p>
+    <p><ADDR-LAW fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,author">A package address MUST carry its full coordinate — `group` **and** `name` — in **every** occurrence across the project:</ADDR-LAW></p>
     <facts ordered="false">
       <ADDR-SURFACES fact="true" status="spec/done">The occurrences it binds: manifests, lockfiles, `spec://` citations, `scope!` markers, `DEVIATES` lines, code comments, and docs.</ADDR-SURFACES>
-      <ADDR-SHORT-NAMES fact="true" status="spec/done">Short or bare names survive only as a one-time human CLI input, resolved to the qualified form at the boundary (PROP-008 §2.6).</ADDR-SHORT-NAMES>
+      <ADDR-SHORT-NAMES fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">Short or bare names survive only as a one-time human CLI input, resolved to the qualified form at the boundary (PROP-008 §2.6).</ADDR-SHORT-NAMES>
       <ADDR-NO-BARE-ON-DISK fact="true" status="spec/done">Nothing on disk stores a bare name.</ADDR-NO-BARE-ON-DISK>
     </facts>
     <p><joiner-why fact="true" status="spec/done">Why the full coordinate is a self-contained global symbol is the addressable-specs `#modules` unit. On the **joiner** vibevm now diverges from that unit's letter by owner ruling (2026-08-13): the flat carrier joins with `.`, because the composite must obey real domain rules, and the unit's premise — «a dotted `&lt;group&gt;.&lt;name&gt;` hides the boundary» — does not hold here: the name grammar guarantees a single dot-free LDH label, so the **last dot** splits the boundary deterministically. That follow-up landed 2026-08-14: the upstream `#modules` unit no longer states joiner-never-`.` — it now carries the general law (`##A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE`: an out-of-alphabet separator, or a grammatical guarantee on one half, the guaranteed half deciding whether the first or the last occurrence is the boundary) and the flat-surface cost of a blanket ban (`##A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES`). vibevm is therefore no longer a divergence from that unit but an instance of it, and the paragraph above records why the old letter fell rather than being deleted with it.</joiner-why></p>
@@ -20,17 +20,17 @@
       </tr>
       <tr>
         <td><CARRIER-PKGREF fact="true" status="spec/done">pkgref (manifests, lockfiles, prose)</CARRIER-PKGREF></td>
-        <td><CARRIER-PKGREF-FORM fact="true" status="spec/done">`[&lt;kind&gt;:]&lt;group&gt;/&lt;name&gt;`</CARRIER-PKGREF-FORM></td>
+        <td><CARRIER-PKGREF-FORM fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,author">`[&lt;kind&gt;:]&lt;group&gt;/&lt;name&gt;`</CARRIER-PKGREF-FORM></td>
         <td><CARRIER-PKGREF-EXAMPLE fact="true" status="spec/done">`stack:org.vibevm.ai-native/rust-ai-native-lang`</CARRIER-PKGREF-EXAMPLE></td>
       </tr>
       <tr>
         <td><CARRIER-SPEC-URI fact="true" status="spec/done">`spec://` authority (the `&lt;module&gt;` segment)</CARRIER-SPEC-URI></td>
-        <td><CARRIER-SPEC-URI-FORM fact="true" status="spec/done">`&lt;group&gt;/&lt;name&gt;` — the name is the first path segment</CARRIER-SPEC-URI-FORM></td>
+        <td><CARRIER-SPEC-URI-FORM fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">`&lt;group&gt;/&lt;name&gt;` — the name is the first path segment</CARRIER-SPEC-URI-FORM></td>
         <td><CARRIER-SPEC-URI-EXAMPLE fact="true" status="spec/done">`spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor`</CARRIER-SPEC-URI-EXAMPLE></td>
       </tr>
       <tr>
         <td><CARRIER-REPO-NAME fact="true" status="spec/done">repo name (flat, one segment)</CARRIER-REPO-NAME></td>
-        <td><CARRIER-REPO-NAME-FORM fact="true" status="spec/done">`&lt;group&gt;.&lt;name&gt;` — `/` is illegal in a repo name; the name is the last label</CARRIER-REPO-NAME-FORM></td>
+        <td><CARRIER-REPO-NAME-FORM fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">`&lt;group&gt;.&lt;name&gt;` — `/` is illegal in a repo name; the name is the last label</CARRIER-REPO-NAME-FORM></td>
         <td><CARRIER-REPO-NAME-EXAMPLE fact="true" status="spec/done">`org.vibevm.ai-native.rust-ai-native-lang`</CARRIER-REPO-NAME-EXAMPLE></td>
       </tr>
     </table>
