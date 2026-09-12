@@ -25,8 +25,11 @@ use serde::Serialize;
 use serde_json::json;
 use specmap_core::config::Config;
 use specmap_core::generated::specmap::{EdgeVerb, Specmap};
-use specmap_core::index::{Summary, build, to_canonical_bytes};
+use specmap_core::index::{Summary, build, build_with_scanner, to_canonical_bytes};
+use specmap_core::scanner::{CodeScanner, CompositeScanner, DefaultScanner};
+use vibe_core::PackageKind;
 use vibe_core::manifest::{Manifest, PackageMeta};
+use vibe_trace::docscan::DocScanner;
 
 use crate::cli::SpecmapArgs;
 use crate::output;
@@ -102,7 +105,22 @@ fn generate(dir: &Path) -> Result<Outcome> {
     // Build under the local nickname so the code edges — which cite the nickname
     // verbatim — resolve. Then remap every OWN-namespace URI to the coordinate,
     // so the carried map's addresses are globally unique.
-    let mut map = build(dir, &cfg);
+    //
+    // A package of kind `doc` carries one more source of edges: its pages
+    // cite rules, and a `rule` is a `documents` edge (PROP-057
+    // `##PIPE-EDGES-HOST-SIDE`). The engine's dialect has no `<rule>` and
+    // must not grow one — it is closed, shared by three language stacks and
+    // vendored six times — so the reading happens on the host side and
+    // reaches the engine through its own `CodeScanner` seam, composed with
+    // the built-in set rather than replacing it.
+    let mut map = if pkg.kind == PackageKind::Doc {
+        let default = DefaultScanner::new();
+        let pages = DocScanner::new(coordinate.clone());
+        let composite = CompositeScanner::new(vec![&default as &dyn CodeScanner, &pages]);
+        build_with_scanner(dir, &cfg, &composite)
+    } else {
+        build(dir, &cfg)
+    };
     let remapped = local_namespace != coordinate;
     remap_namespace(&mut map, &local_namespace, &coordinate);
 

@@ -10,9 +10,10 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 use std::ffi::OsString;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
+use vibe_doc::citations::{self, SpecSources};
 use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
 
@@ -46,9 +47,10 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
-    if !args.examples && !args.derived {
+    if !args.examples && !args.derived && !args.citations {
         bail!(
-            "`vibe doc check` needs a check to run: `--examples`, `--derived`, or both \
+            "`vibe doc check` needs a check to run: `--examples`, `--derived`, \
+             `--citations`, or any combination \
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
@@ -92,6 +94,20 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         }
     }
 
+    if args.citations {
+        let coordinate = derived::coordinate_of(&args.path)?;
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let report = citations::check(&args.path, &coordinate, &sources)?;
+        print!("{}", report.render());
+        if !report.ok() {
+            bail!(
+                "a documented rule cites an address that no longer resolves (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED; \
+                 fix: correct the address, or leave a tombstone where the rule was renamed)"
+            );
+        }
+    }
+
     if args.derived {
         let env = derived::DerivedEnv {
             binary: runner.binary.clone(),
@@ -118,6 +134,65 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     Ok(())
 }
 
+/// The world a `rule` citation resolves against (PROP-057
+/// `##LOCAL-WARMUP`): the checkout the operator is standing in, the
+/// packages it authors in-tree, the instances its lock selected, and the
+/// machine store `vibe cache add` warms. The library discovers none of
+/// them — naming them here is what keeps a documentation build
+/// reproducible by inspection.
+///
+/// Without a working directory there is no checkout, and the store alone
+/// answers: that is the local reader's own situation, reading
+/// documentation for a project it is not inside.
+fn spec_sources(repo_root: &Option<PathBuf>, settings_home: Option<&Path>) -> SpecSources {
+    let sources = match repo_root {
+        Some(root) => {
+            let (group, name) = self_coordinate(root);
+            SpecSources::for_checkout(root, group.as_deref(), &name)
+        }
+        None => SpecSources::new(),
+    };
+    match settings_home {
+        Some(home) => sources.with_store(home.join(STORE_DIR)),
+        None => sources,
+    }
+}
+
+/// The machine store's directory under the settings home — the same
+/// `<settings>/cache` [`vibe_registry::store::store_root`] resolves, named
+/// here because this command hands the path down instead of letting a
+/// library read the environment for it.
+const STORE_DIR: &str = "cache";
+
+/// The checkout's own `[project]` group and name — the coordinate a
+/// `spec://` address must carry to reach its authored specs (B-031).
+///
+/// Read as TOML data: the one question is «what coordinate does this
+/// directory answer to», and a strict manifest parse would make it fail
+/// over a field it never reads. A directory with no manifest answers to
+/// no coordinate, which is a legitimate state — then only the other three
+/// sources speak.
+fn self_coordinate(root: &Path) -> (Option<String>, String) {
+    let Ok(text) = std::fs::read_to_string(root.join("vibe.toml")) else {
+        return (None, String::new());
+    };
+    let Ok(value) = toml::from_str::<toml::Value>(&text) else {
+        return (None, String::new());
+    };
+    let read = |table: &str, key: &str| {
+        value
+            .get(table)
+            .and_then(|t| t.get(key))
+            .and_then(toml::Value::as_str)
+            .map(str::to_owned)
+    };
+    let group = read("project", "group").or_else(|| read("package", "group"));
+    let name = read("project", "name")
+        .or_else(|| read("package", "name"))
+        .unwrap_or_default();
+    (group, name)
+}
+
 /// The real per-user settings directory the tripwire guards: the
 /// relocation variable when it is set, else `<home>/.vibe`.
 fn settings_home(settings: &Option<OsString>, home: &Option<OsString>) -> Option<PathBuf> {
@@ -135,6 +210,7 @@ mod tests {
         DocCheckArgs {
             examples: false,
             derived: false,
+            citations: false,
             accept: false,
             force: false,
             only: None,
@@ -170,5 +246,38 @@ mod tests {
     #[test]
     fn with_no_home_at_all_the_tripwire_simply_has_no_home_half() {
         assert_eq!(settings_home(&None, &None), None);
+    }
+
+    /// The composition root NAMES the four citation sources; the library
+    /// discovers none of them. Without a working directory there is no
+    /// checkout — the local reader's own situation.
+    #[test]
+    fn without_a_working_directory_the_citation_world_has_no_checkout() {
+        let world = spec_sources(&None, Some(Path::new("/home/u/.vibe")));
+        assert!(!world.has_checkout());
+    }
+
+    /// A directory that carries no manifest answers to no coordinate,
+    /// which is a state, not a failure.
+    #[test]
+    fn a_directory_with_no_manifest_answers_to_no_coordinate() {
+        let tmp = tempfile::tempdir().expect("temp dir");
+        assert_eq!(self_coordinate(tmp.path()), (None, String::new()));
+    }
+
+    /// The project's own coordinate is what a `spec://` address must
+    /// carry to reach its authored specs.
+    #[test]
+    fn the_checkout_coordinate_is_read_from_the_project_table() {
+        let tmp = tempfile::tempdir().expect("temp dir");
+        std::fs::write(
+            tmp.path().join("vibe.toml"),
+            "[project]\nname = \"vibevm\"\ngroup = \"org.vibevm.core\"\n",
+        )
+        .expect("write");
+        assert_eq!(
+            self_coordinate(tmp.path()),
+            (Some("org.vibevm.core".to_string()), "vibevm".to_string())
+        );
     }
 }

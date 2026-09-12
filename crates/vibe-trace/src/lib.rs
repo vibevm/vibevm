@@ -23,6 +23,12 @@ use std::path::Path;
 use anyhow::Result;
 use serde_json::Value;
 
+/// The documentation-page scanner (PROP-057 `##PIPE-EDGES-HOST-SIDE`):
+/// `rule` citations become `documents` edges through the engine's own
+/// `CodeScanner` seam, so the vendored engine and its dialect are never
+/// edited to learn a host element.
+pub mod docscan;
+
 mod foreign;
 mod fragment;
 

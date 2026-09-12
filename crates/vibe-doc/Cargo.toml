@@ -32,6 +32,24 @@ sha2.workspace = true
 # The pivot: pages are read through the documentation vocabulary, never
 # by a second parser of our own (PROP-045 ##PIVOT-MODEL).
 vibe-specdoc.workspace = true
+# A `rule` citation is a `spec://` address. The grammar and the
+# «doc-path → file» lookup (with its PROP-NNN prefix inversion) have ONE
+# home — `vibe-spec` — and a second reading of either would be a second
+# law (PROP-035 §6).
+vibe-spec.workspace = true
+# The layout laws a citation source resolves against — the spec root, the
+# materialisation root — and the canonical language default a cited spec
+# carries when its manifest declares none (PROP-052, PROP-003 §2.7).
+vibe-core.workspace = true
+# The machine store's entry layout (PROP-010 §2.7): documentation warmed
+# with `vibe cache add` cites specs that live there and nowhere else.
+vibe-registry.workspace = true
+# The lock file's materialisation slot (PROP-057 ##LOCAL-WARMUP names
+# `slot_abs_path` as one of this library's four sources).
+vibe-workspace.workspace = true
+# A store or slot directory is named by its version, and «the freshest
+# one present» is a semver question.
+semver.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
