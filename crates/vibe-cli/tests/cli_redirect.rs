@@ -12,6 +12,7 @@ use common::{
 };
 use predicates::prelude::*;
 use specmark::verifies;
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
 // ---------------------------------------------------------------------------
 // M1.16 — install via registry redirect stub (PROP-002 §2.4.2)
@@ -207,10 +208,11 @@ fn list_json_surfaces_via_redirect_for_redirect_resolved_package() {
     // redirect-resolved package — source_url = target, via_redirect = stub.
     fs::write(
         project.path().join("vibe.lock"),
-        r#"[meta]
+        format!(
+            r#"[meta]
 generated_by = "test"
 generated_at = "2026-01-01T00:00:00Z"
-schema_version = 6
+schema_version = {CURRENT_SCHEMA_VERSION}
 
 [[package]]
 kind = "flow"
@@ -220,7 +222,8 @@ version = "0.1.0"
 source_url = "git@example.invalid:external-flow-internal.git"
 content_hash = "sha256:abc"
 via_redirect = "https://stub.invalid/org.vibevm.internal"
-"#,
+"#
+        ),
     )
     .unwrap();
     let stdout = String::from_utf8(

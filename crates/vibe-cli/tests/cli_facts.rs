@@ -7,6 +7,7 @@ mod common;
 use std::fs;
 
 use common::UserScratch;
+use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
 #[test]
 fn facts_crud_filters_and_spec_to_registry_sync() {
@@ -126,7 +127,9 @@ fn facts_clean_names_orphans_preserves_spec_and_honours_dry_run() {
     .expect("manifest");
     fs::write(
         project.path().join("vibe.lock"),
-        "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-08-22T00:00:00Z\"\nschema_version = 6\n",
+        format!(
+            "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-08-22T00:00:00Z\"\nschema_version = {CURRENT_SCHEMA_VERSION}\n"
+        ),
     )
     .expect("empty lockfile");
     fs::create_dir_all(project.path().join(common::facts_root())).expect("facts home");

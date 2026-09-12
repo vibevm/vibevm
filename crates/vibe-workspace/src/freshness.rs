@@ -270,6 +270,7 @@ mod tests {
     use std::fs;
     use std::path::Path;
     use tempfile::TempDir;
+    use vibe_core::manifest::CURRENT_SCHEMA_VERSION;
 
     fn write(dir: &Path, rel: &str, body: &str) {
         let p = dir.join(rel);
@@ -295,8 +296,8 @@ mod tests {
     }
 
     /// Parse a `Lockfile` from a `[[package]]` body, prepending the meta
-    /// block. `roots` becomes `meta.root_dependencies`. Schema v6 carries
-    /// qualified naming plus optional visibility provenance.
+    /// block. `roots` becomes `meta.root_dependencies`. The schema number
+    /// comes from the constant the reader checks, so a bump cannot rot it.
     fn lockfile(roots: &[&str], packages_toml: &str) -> Lockfile {
         let roots_list = roots
             .iter()
@@ -304,7 +305,7 @@ mod tests {
             .collect::<Vec<_>>()
             .join(", ");
         let text = format!(
-            "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"x\"\nschema_version = 6\n\
+            "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"x\"\nschema_version = {CURRENT_SCHEMA_VERSION}\n\
              root_dependencies = [{roots_list}]\n\n{packages_toml}"
         );
         toml::from_str(&text).unwrap()
