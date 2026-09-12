@@ -20,6 +20,12 @@ vibe-specdoc.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
+# The documentation pipeline owns everything with content in it
+# (PROP-057 `##PIPE-LIBRARY`), and the card's limits are content: the
+# permitted formats, the proportions and the byte ceilings are declared
+# there once and rendered here as linter findings. A second copy of a
+# ceiling is a second law.
+vibe-doc.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 walkdir.workspace = true

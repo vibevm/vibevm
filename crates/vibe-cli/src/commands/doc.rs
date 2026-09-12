@@ -17,6 +17,7 @@ use vibe_doc::citations::{self, SpecSources};
 use vibe_doc::coverage;
 use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
+use vibe_doc::media;
 use vibe_doc::translations;
 
 use crate::cli::{DocArgs, DocCheckArgs, DocCommand, ProgressCommonArgs};
@@ -49,10 +50,16 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
-    if !args.examples && !args.derived && !args.citations && !args.translations && !args.coverage {
+    if !args.examples
+        && !args.derived
+        && !args.citations
+        && !args.translations
+        && !args.coverage
+        && !args.media
+    {
         bail!(
             "`vibe doc check` needs a check to run: `--examples`, `--derived`, \
-             `--citations`, `--translations`, `--coverage`, or any combination \
+             `--citations`, `--translations`, `--coverage`, `--media`, or any combination \
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
@@ -119,6 +126,21 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
                 "a translation does not mirror the documentation it adapts (violates \
                  spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR; \
                  fix: repair the translation against its source — never the other way round)"
+            );
+        }
+    }
+
+    if args.media {
+        let report = media::check(&args.path)?;
+        print!("{}", report.render());
+        if !report.ok() {
+            bail!(
+                "the card declares an image the site cannot serve: {} error(s), {} warning(s) \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE; \
+                 fix: repair the image, or drop the role — a placeholder is generated for a \
+                 role that declares nothing)",
+                report.errors(),
+                report.warnings()
             );
         }
     }
@@ -296,6 +318,7 @@ mod tests {
             derived: false,
             citations: false,
             translations: false,
+            media: false,
             coverage: false,
             min: vibe_doc::coverage::FULL_COVERAGE,
             accept: false,

@@ -63,6 +63,13 @@ pub struct DocCheckArgs {
     #[arg(long, default_value_t = vibe_doc::coverage::FULL_COVERAGE, value_name = "PERCENT")]
     pub min: u8,
 
+    /// Check the card's images: that each declared file is there, is the
+    /// format its bytes say it is, and fits the shape and the byte
+    /// ceiling its role is shown at. A role that declares nothing is not
+    /// a role without a picture — the placeholder is generated.
+    #[arg(long)]
+    pub media: bool,
+
     /// Record a capture on the page when the example has no golden yet.
     /// Never replaces a golden that already holds text — see `--force`.
     #[arg(long)]

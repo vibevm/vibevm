@@ -10,12 +10,12 @@
 //! as an unverified shape rather than a defect — the honest answer when
 //! the bytes are a picture and only the measurement failed.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#card");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE");
 
 /// The formats the card distinguishes: the three it permits, the one it
 /// names in its refusal, and everything else.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum Format {
+pub(crate) enum Format {
     Png,
     Jpeg,
     WebP,
@@ -27,7 +27,7 @@ pub(super) enum Format {
 
 impl Format {
     /// The word a finding spells.
-    pub(super) fn as_str(self) -> &'static str {
+    pub(crate) fn as_str(self) -> &'static str {
         match self {
             Format::Png => "PNG",
             Format::Jpeg => "JPEG",
@@ -39,17 +39,17 @@ impl Format {
 }
 
 /// What the header reader learned about one file.
-pub(super) struct Probe {
-    pub(super) format: Format,
+pub(crate) struct Probe {
+    pub(crate) format: Format,
     /// `(width, height)` in pixels, or `None` when the format is known
     /// but its header could not be followed.
-    pub(super) dimensions: Option<(u32, u32)>,
+    pub(crate) dimensions: Option<(u32, u32)>,
 }
 
 impl Probe {
     /// Read `bytes`' first bytes. Never fails: an unreadable shape is
     /// absence, never an error, and an unknown format is a verdict.
-    pub(super) fn of(bytes: &[u8]) -> Probe {
+    pub(crate) fn of(bytes: &[u8]) -> Probe {
         if bytes.starts_with(PNG_MAGIC) {
             return Probe {
                 format: Format::Png,
@@ -199,4 +199,4 @@ fn webp_dimensions(bytes: &[u8]) -> Option<(u32, u32)> {
 
 #[cfg(test)]
 #[path = "image/tests.rs"]
-pub(super) mod tests;
+pub(crate) mod tests;
