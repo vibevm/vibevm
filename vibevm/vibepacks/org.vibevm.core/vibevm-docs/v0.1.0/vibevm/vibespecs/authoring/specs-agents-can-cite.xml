@@ -61,7 +61,7 @@ dry-run ir-stable-loss vibevm/vibespecs/boot/10-tool-review-notes.md
 
 summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=2</expect>
     </example>
-    <p>`vibe refactor convert-source --to xml` or `--to markdown` converts files or whole folders, skipping the dependency tree and generated files. It writes the sibling form and deletes the original in one act, so the tree never holds both forms of one document. Before writing, it converts the result back and compares: a byte-identical round trip converts silently; a loss of comments or layout is refused with a per-file description unless you confirm, or pass `--force`; a change of meaning is always refused, because that is a defect of the converter, not of your file. `--dry-run` reports every file and writes nothing.</p>
+    <p>`vibe refactor convert-source --to xml` or `--to markdown` converts files or whole folders, skipping the dependency tree and generated files. It writes the sibling form and deletes the original in one act, so the tree never holds both forms of one document. Before writing, it converts the result back and compares: a byte-identical round trip converts silently, and a loss of comments or layout is refused with a per-file description unless you confirm, or pass `--force`. A change of meaning is always refused, because that is a defect of the converter, not of your file. `--dry-run` reports every file and writes nothing.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-SOURCE-SURFACE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"/>
