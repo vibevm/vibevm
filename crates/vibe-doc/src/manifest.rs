@@ -9,7 +9,7 @@
 //! walk would be a second answer, and the day they disagreed nobody would
 //! know which one the reader saw.
 //!
-//! ## Three things the manifest deliberately does not carry
+//! ## Four things the manifest deliberately does not carry
 //!
 //! **No officiality flag.** `primary`, `official` and `community` are
 //! COMPUTED here, at every build, from the convergence of two edges — the
@@ -17,6 +17,11 @@
 //! subject (`##REL-OFFICIAL-IS-CONVERGENCE`). A stored `official = true`
 //! is a design error by name (`##REL-NO-OFFICIAL-FLAG`); this document is
 //! a render, which is exactly why it may hold the answer.
+//!
+//! **No clock.** Both instants arrive in [`Options`]. A writer that calls
+//! `now()` produces different bytes for the same tree, and «the same
+//! sources render to the same bytes» is what makes a site build cacheable
+//! (PROP-044 `##M-CANONICAL-BYTES`).
 //!
 //! **No product.** Building a manifest runs no binary and generates no
 //! `derived` block. It is a function of the package's own bytes, the
@@ -32,10 +37,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND
 
 pub mod layer;
 pub mod page;
+pub mod reviews;
 pub mod status;
 
 use std::path::Path;
 
+use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
     AdaptedSource, Audience, DocManifest, DocPackage, DocPage, DocumentedSubject,
 };
@@ -44,10 +51,50 @@ use crate::citations::SpecSources;
 use crate::error::{DocError, Result};
 use crate::pages::{self, PageSet};
 
+pub use reviews::Reviews;
+
 /// The manifest's own version, written into every document this library
 /// produces. It moves when the shape moves, and the format registry's
 /// epoch moves with it (`formats/REGISTRY.toml`, record `doc-manifest`).
 pub const SCHEMA_VERSION: u32 = 1;
+
+/// The file the package keeps its read-aloud dates in.
+pub const REVIEWS: &str = "reviews.toml";
+
+/// What the build knows that the package cannot.
+///
+/// Both fields are instants the CALLER supplies. The library reads no
+/// clock and no environment: a documentation build must render the same
+/// bytes from the same tree, and a `now()` inside here would quietly make
+/// that false.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Options {
+    /// When this build rendered the pages — one of the exactly two dates
+    /// a reader may see (`##READER-META-AND-PRINT`).
+    pub rendered_at: DateTime<Utc>,
+    /// When this version of the package was published, when it was
+    /// published at all. `None` for a package read from a checkout or an
+    /// in-tree registry: it has no publication date, and inventing one
+    /// would put a date in a sitemap that nothing on earth supports.
+    pub published_at: Option<DateTime<Utc>>,
+}
+
+impl Options {
+    /// A build at `rendered_at` of something never published.
+    pub fn at(rendered_at: DateTime<Utc>) -> Options {
+        Options {
+            rendered_at,
+            published_at: None,
+        }
+    }
+
+    /// The same build, of a package published at `published_at`.
+    #[must_use]
+    pub fn published(mut self, published_at: DateTime<Utc>) -> Options {
+        self.published_at = Some(published_at);
+        self
+    }
+}
 
 /// Build the manifest of the documentation package at `package_dir`.
 ///
@@ -63,21 +110,25 @@ pub const SCHEMA_VERSION: u32 = 1;
 /// checks — not a projection — are where a refusal belongs.
 ///
 /// ```no_run
+/// use chrono::{TimeZone, Utc};
 /// use vibe_doc::citations::SpecSources;
-/// use vibe_doc::manifest;
+/// use vibe_doc::manifest::{self, Options};
 ///
 /// let world = SpecSources::for_checkout("/repo", Some("org.vibevm.core"), "vibevm");
+/// let when = Utc.with_ymd_and_hms(2026, 9, 12, 0, 0, 0).unwrap();
 /// let built = manifest::build(
 ///     std::path::Path::new("/repo/vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0"),
 ///     &world,
+///     &Options::at(when),
 /// )
 /// .unwrap();
 /// assert_eq!(built.manifest.package.name, "vibevm-docs");
 /// ```
-pub fn build(package_dir: &Path, sources: &SpecSources) -> Result<Built> {
+pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Result<Built> {
     let card = Card::read(package_dir)?;
     let set = pages::read_package(package_dir)?;
-    Ok(assemble(&card, &set, sources))
+    let reviews = Reviews::read(package_dir.join(REVIEWS))?;
+    Ok(assemble(&card, &set, &reviews, sources, options))
 }
 
 /// One built manifest and the pages that did not parse.
@@ -88,8 +139,18 @@ pub struct Built {
     pub unreadable: Vec<String>,
 }
 
-fn assemble(card: &Card, set: &PageSet, sources: &SpecSources) -> Built {
-    let mut rows: Vec<DocPage> = set.pages.iter().map(page::row).collect();
+fn assemble(
+    card: &Card,
+    set: &PageSet,
+    reviews: &Reviews,
+    sources: &SpecSources,
+    options: &Options,
+) -> Built {
+    let mut rows: Vec<DocPage> = set
+        .pages
+        .iter()
+        .map(|p| page::row(p, &card.lang, reviews))
+        .collect();
     layer::order(&mut rows, &set.pages);
 
     let subjects: Vec<DocumentedSubject> = card
@@ -136,6 +197,8 @@ fn assemble(card: &Card, set: &PageSet, sources: &SpecSources) -> Built {
         subjects,
         translation,
         audiences,
+        published_at: options.published_at,
+        rendered_at: options.rendered_at,
     };
 
     Built {

@@ -2,13 +2,17 @@
 
 use super::*;
 use crate::citations::SpecSources;
-use crate::manifest::tests::fixture;
-use crate::manifest::{self};
+use crate::manifest::tests::{fixture, rendered_at};
+use crate::manifest::{self, Options};
 
 fn built() -> vibe_wire::generated::doc_manifest::DocManifest {
-    manifest::build(&fixture("translations/source"), &SpecSources::new())
-        .expect("the fixture builds")
-        .manifest
+    manifest::build(
+        &fixture("translations/source"),
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .expect("the fixture builds")
+    .manifest
 }
 
 fn rendered_bodies() -> BTreeMap<String, String> {
@@ -35,7 +39,7 @@ fn the_four_tiers_are_named_by_the_convention() {
 
 /// The index opens with the card — the title, the star, the caption, the
 /// publisher and the language — and then lists the pages with their
-/// leading fact.
+/// leading fact and their reading time.
 #[test]
 fn the_index_carries_the_card_and_one_line_a_page() {
     let text = index(&built(), "/doc/");
@@ -47,7 +51,8 @@ fn the_index_carries_the_card_and_one_line_a_page() {
         text.contains("- [One](/doc/com.example.docs/pair/0.1.0/guide/one/): The first page"),
         "{text}"
     );
-    assert!(text.contains("(user)"), "{text}");
+    assert!(text.contains("min · user)"), "{text}");
+    assert!(text.contains("Rendered 2026-09-12."), "{text}");
 }
 
 /// `##OBS-AUDIENCE-AGENT` puts pages written for agents first in

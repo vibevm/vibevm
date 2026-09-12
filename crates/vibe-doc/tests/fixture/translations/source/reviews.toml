@@ -1,0 +1,12 @@
+# When a human last read each page of this package aloud against the
+# product (PROP-057 ##OBS-MAINTENANCE-TOOLS, the vision's D-26).
+#
+# One page is recorded and one is not, on purpose: a fixture in which
+# every page carries a date cannot show what an unread page looks like,
+# and «never read aloud» is a state the reader is meant to see.
+#
+# The date is a calendar day, because a person wrote it down. The manifest
+# lifts it to midnight UTC on the way to the wire, where the project has
+# exactly one spelling for a date.
+[pages]
+"guide/one.xml" = { read = 2026-09-11, by = "vibevm" }

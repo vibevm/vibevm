@@ -25,6 +25,8 @@ fn row(path: &str) -> DocPage {
         audiences: Vec::new(),
         anchors: Vec::new(),
         summary: String::new(),
+        reading_time_min: 1,
+        reviewed_at: None,
     }
 }
 

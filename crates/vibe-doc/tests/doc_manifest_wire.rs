@@ -10,7 +10,8 @@
 //!
 //! 1. **The writer emits the corpus bytes.** The manifest built from the
 //!    fixture packages in `tests/fixture/` is byte-for-byte what the
-//!    corpus holds. The build is a function of the tree alone, so the
+//!    corpus holds. The build is deterministic by construction — the two
+//!    instants arrive as inputs and nothing here reads a clock — so the
 //!    comparison is bytes, not shape.
 //! 2. **The corpus survives the generated reader.** Every corpus document
 //!    parses into `DocManifest` and back at the `Value` level without
@@ -29,9 +30,10 @@
 
 use std::path::{Path, PathBuf};
 
+use chrono::{TimeZone, Utc};
 use serde_json::Value;
 use vibe_doc::citations::SpecSources;
-use vibe_doc::manifest;
+use vibe_doc::manifest::{self, Options};
 use vibe_wire::generated::doc_manifest::DocManifest;
 
 /// The corpus home the format registry names for `doc-manifest`.
@@ -48,8 +50,19 @@ fn fixture(name: &str) -> PathBuf {
         .join(name)
 }
 
+/// Two fixed instants, so the document is a function of the tree alone.
+fn options() -> Options {
+    Options {
+        rendered_at: Utc
+            .with_ymd_and_hms(2026, 9, 12, 9, 0, 0)
+            .single()
+            .expect("an instant"),
+        published_at: Utc.with_ymd_and_hms(2026, 9, 1, 12, 0, 0).single(),
+    }
+}
+
 fn built(package: &str) -> DocManifest {
-    manifest::build(&fixture(package), &SpecSources::new())
+    manifest::build(&fixture(package), &SpecSources::new(), &options())
         .unwrap_or_else(|e| panic!("the fixture package `{package}` builds: {e}"))
         .manifest
 }

@@ -20,7 +20,9 @@
     "audiences": [
       "user",
       "dev"
-    ]
+    ],
+    "published_at": "2026-09-01T12:00:00Z",
+    "rendered_at": "2026-09-12T09:00:00Z"
   },
   "pages": [
     {
@@ -41,7 +43,8 @@
         "for-codex",
         "footnotes"
       ],
-      "summary": "This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps."
+      "summary": "This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps.",
+      "reading_time_min": 1
     }
   ]
 }
