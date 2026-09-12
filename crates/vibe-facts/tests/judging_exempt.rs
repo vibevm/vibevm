@@ -169,6 +169,62 @@ fn the_exemption_reaches_the_pages_and_not_just_the_slot() {
     }
 }
 
+/// A documentation package's `examples/` hold FIXTURE TREES — the state a
+/// documented command is run against (`##PIPE-EXAMPLE-RUNNER`) — and those
+/// are the one part of such a package that must NOT be observed. They are
+/// copies of packages this project already observes under their own paths,
+/// so marking them would mark one claim twice; and a fixture asserts
+/// nothing anybody could be wrong about, which is the line F-096 drew for
+/// what belongs in the corpus at all.
+///
+/// A failure here means the `exclude` glob in `facts.toml` stopped
+/// reaching them (or a new documentation package brought fixtures of its
+/// own). The repair is a glob naming that package's `examples/` — never a
+/// wildcard over every `examples/`, because an ordinary package's
+/// `examples/` may hold authored prose.
+#[test]
+fn a_documentation_packages_fixture_trees_are_not_observed() {
+    let root = repo_root();
+    let config = scope::load_config(&root).expect("facts.toml loads");
+    let excluded = JudgingExemption::compile(&config.exclude).expect("the exclude globs compile");
+    let mut fixtures = 0usize;
+    for slot in doc_package_slots(&root) {
+        let mut stack = vec![root.join(&slot).join("examples")];
+        while let Some(dir) = stack.pop() {
+            let Ok(entries) = std::fs::read_dir(&dir) else {
+                continue;
+            };
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    stack.push(path);
+                    continue;
+                }
+                let ext = path.extension().and_then(|e| e.to_str());
+                if ext != Some("xml") && ext != Some("md") {
+                    continue;
+                }
+                let rel = path.strip_prefix(&root).expect("under the root");
+                assert!(
+                    excluded.covers(rel),
+                    "{}: a fixture tree inside `{slot}/examples`, and the \
+                     corpus observes it — add an `exclude` glob naming that \
+                     package's `examples/`",
+                    scope::rel_str(rel)
+                );
+                fixtures += 1;
+            }
+        }
+    }
+    assert!(
+        fixtures > 0,
+        "no documentation fixture carries a `.md` or `.xml` — this guard \
+         holds an exclusion against going stale and cannot do that against \
+         an empty set; if the fixtures really carry no prose any more, \
+         delete the exclusion and this test together"
+    );
+}
+
 /// An exemption is not an exclusion, and the two must never be spelled for
 /// the same path: `exclude` removes a file from the corpus, `exempt` keeps
 /// it there and frees it from judgement alone. A package named by both

@@ -51,6 +51,18 @@ pub struct DocCheckArgs {
     #[arg(long)]
     pub translations: bool,
 
+    /// Require every documentation obligation of the specifications — a
+    /// fact marked `actionstage="doc"` naming an audience — to be cited
+    /// by a page written for that same audience.
+    #[arg(long)]
+    pub coverage: bool,
+
+    /// With `--coverage`, the percentage that counts as a pass. The
+    /// standing bar is everything told; a lower one is for the
+    /// intermediate runs of a campaign that is still writing the pages.
+    #[arg(long, default_value_t = vibe_doc::coverage::FULL_COVERAGE, value_name = "PERCENT")]
+    pub min: u8,
+
     /// Record a capture on the page when the example has no golden yet.
     /// Never replaces a golden that already holds text — see `--force`.
     #[arg(long)]

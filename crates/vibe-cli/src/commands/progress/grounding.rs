@@ -72,7 +72,11 @@ impl VocabularyByPackage {
 
 /// The observed tree + campaign zone, resolved once per invocation.
 pub(crate) struct Ground {
-    pub(super) root: PathBuf,
+    /// The observed tree's root, canonicalised. `pub(crate)` because the
+    /// documentation coverage gate joins it with an obligation's
+    /// repo-relative path, and the two must be the same root the parse
+    /// used or the join names a file that does not exist.
+    pub(crate) root: PathBuf,
     pub(crate) docs: Vec<ParsedDoc>,
     pub(super) campaign: Option<PathBuf>,
     /// The campaign cache, read once at the head of the run: it says what

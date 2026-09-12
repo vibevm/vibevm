@@ -14,11 +14,12 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
 use vibe_doc::citations::{self, SpecSources};
+use vibe_doc::coverage;
 use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
 use vibe_doc::translations;
 
-use crate::cli::{DocArgs, DocCheckArgs, DocCommand};
+use crate::cli::{DocArgs, DocCheckArgs, DocCommand, ProgressCommonArgs};
 
 /// The ambient values the composition root resolves and hands down, so no
 /// module below `main` reads the environment (the conform ambient-env
@@ -48,10 +49,10 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
-    if !args.examples && !args.derived && !args.citations && !args.translations {
+    if !args.examples && !args.derived && !args.citations && !args.translations && !args.coverage {
         bail!(
             "`vibe doc check` needs a check to run: `--examples`, `--derived`, \
-             `--citations`, `--translations`, or any combination \
+             `--citations`, `--translations`, `--coverage`, or any combination \
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
@@ -122,6 +123,32 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         }
     }
 
+    if args.coverage {
+        let coordinate = derived::coordinate_of(&args.path)?;
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let report = coverage_report(
+            &args.path,
+            args.min,
+            &runner.repo_root,
+            &coordinate,
+            &sources,
+        )?;
+        print!("{}", report.render());
+        if !report.ok() {
+            bail!(
+                "the documentation does not tell everything the specifications promised: \
+                 {}% of {} audience pair(s) covered, {} required, {} page(s) unreadable \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#OBS-COVERAGE-GATE; \
+                 fix: write the page — the gate closes on a page for that audience citing \
+                 the rule, never on a list of pages)",
+                report.percent(),
+                report.owed(),
+                report.min_percent,
+                report.unreadable.len()
+            );
+        }
+    }
+
     if args.derived {
         let env = derived::DerivedEnv {
             binary: runner.binary.clone(),
@@ -146,6 +173,49 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// The coverage gate's two halves, each fetched from the one place that
+/// owns it.
+///
+/// The obligations come from the grounding cell every `vibe facts` verb
+/// enters through — the same include globs, the same exclusions, the same
+/// per-package vocabulary dispatch. Enumerating the corpus a second time
+/// here would give the gate a corpus nobody else can see, and the day the
+/// two lists disagreed the gate would be measuring the disagreement.
+///
+/// A check run outside a checkout has no corpus at all: `--coverage` then
+/// refuses rather than reporting a green nothing, because «no obligations
+/// found» and «no obligations» print the same number.
+fn coverage_report(
+    package_dir: &Path,
+    min: u8,
+    repo_root: &Option<PathBuf>,
+    coordinate: &str,
+    sources: &SpecSources,
+) -> Result<coverage::Report> {
+    let Some(root) = repo_root.clone() else {
+        bail!(
+            "`--coverage` needs the tree whose specifications state the obligations, and \
+             this run has no working directory to read one from \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#OBS-COVERAGE-GATE; \
+             fix: run it from the project whose `facts.toml` names the observed corpus)"
+        );
+    };
+    let grounded = crate::commands::progress::grounding::ground(&ProgressCommonArgs {
+        path: root,
+        campaign: None,
+        no_cache: false,
+    })?;
+    let obligations = coverage::obligations(grounded.docs.iter());
+    Ok(coverage::check(
+        package_dir,
+        coordinate,
+        sources,
+        &grounded.root,
+        obligations,
+        min,
+    )?)
 }
 
 /// The world a `rule` citation resolves against (PROP-057
@@ -226,6 +296,8 @@ mod tests {
             derived: false,
             citations: false,
             translations: false,
+            coverage: false,
+            min: vibe_doc::coverage::FULL_COVERAGE,
             accept: false,
             force: false,
             only: None,
@@ -241,7 +313,30 @@ mod tests {
         let e = run_check(args(), DocEnv::default()).expect_err("refused");
         assert!(e.to_string().contains("--examples"), "{e}");
         assert!(e.to_string().contains("--translations"), "{e}");
+        assert!(e.to_string().contains("--coverage"), "{e}");
         assert!(e.to_string().contains("PROP-057#PIPE-LIBRARY"), "{e}");
+    }
+
+    /// The gate measures a corpus, and a run with no tree to read one
+    /// from has none. It refuses rather than reporting the green nothing
+    /// an empty obligation list would print — «zero promises found» and
+    /// «zero promises» are the same number and not the same fact.
+    #[test]
+    fn coverage_without_a_tree_refuses_instead_of_reporting_nothing() {
+        let tmp = tempfile::tempdir().expect("temp dir");
+        std::fs::write(
+            tmp.path().join("vibe.toml"),
+            "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n",
+        )
+        .expect("write");
+        let checked = DocCheckArgs {
+            coverage: true,
+            path: tmp.path().to_path_buf(),
+            ..args()
+        };
+        let e = run_check(checked, DocEnv::default()).expect_err("refused");
+        assert!(e.to_string().contains("OBS-COVERAGE-GATE"), "{e}");
+        assert!(e.to_string().contains("facts.toml"), "{e}");
     }
 
     /// A package that adapts nothing passes `--translations` and says
