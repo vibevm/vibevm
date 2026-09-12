@@ -57,6 +57,48 @@ pub const FORMATS: &[Format] = &[Format::Html, Format::Md, Format::Xml];
 /// block means RUNNING a product, and which product — and whether it may
 /// be run at all for a package the site merely publishes — is a decision
 /// above this library, not inside it.
+///
+/// The canonical implementation lives in the composition root, warms
+/// through `vibe cache add`'s own walk, and runs a product only for the
+/// host's own packages. An implementation that does neither is legal and
+/// useful — it is what a build over a checkout alone needs:
+///
+/// ```
+/// use std::collections::BTreeMap;
+/// use std::path::{Path, PathBuf};
+/// use vibe_doc::site::{Pair, Prepare};
+///
+/// /// Everything is already on disk, and no product is run: the blocks
+/// /// render as the marked gaps they are.
+/// struct OnDisk {
+///     root: PathBuf,
+/// }
+///
+/// impl Prepare for OnDisk {
+///     fn warm(&self, pair: &Pair) -> vibe_doc::error::Result<PathBuf> {
+///         Ok(self.root.join(pair.coordinate()))
+///     }
+///
+///     fn derived(&self, _pair: &Pair, _package: &Path) -> BTreeMap<String, String> {
+///         BTreeMap::new()
+///     }
+/// }
+///
+/// let prepare = OnDisk { root: PathBuf::from("/srv/packages") };
+/// let pair = Pair {
+///     source: "vibespecs".into(),
+///     group: "org.example".into(),
+///     name: "wal".into(),
+///     version: "1.0.0".into(),
+///     content_hash: "sha256:aa".into(),
+///     origin: vibe_doc::site::Origin::Registry,
+///     entry: None,
+/// };
+/// assert_eq!(
+///     prepare.warm(&pair).unwrap(),
+///     Path::new("/srv/packages").join("org.example/wal"),
+/// );
+/// ```
 pub trait Prepare {
     /// Bring the pair's bytes onto disk and answer with the directory
     /// that holds them. Warming a `doc` package warms its subjects too,
