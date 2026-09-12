@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Dependency visibility: public, private and friends</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>A package you depend on has dependencies of its own, and those can reach your project too. Whether they do is decided where each dependency is declared, one line at a time: everyone gets it, nobody gets it, or only the projects that have named the declaring package a friend. This page explains the three marks, the friendship that opens the middle one, what ends up in your tree as a result, and how to ask vibe why a package is there or missing.</p>
+  <example id="why-wal" fixture="hello-vibe">
+    <run>vibe why org.vibevm.world/wal --path hello-vibe</run>
+    <expect>org.vibevm.world/wal — present: root-edge via hello-vibe -&gt; org.vibevm.world/wal (override: none)</expect>
+  </example>
+  <three-marks title="Three marks on a requirement">
+    <p>Every line under `[requires.packages]` is an edge from your [package](../glossary/index.xml#package) to the one it names, and the edge carries an optional `access` mark. The mark is the provider's word about its own dependency: how far it may seep upward, to the projects that depend on the provider.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-LEVELS"/>
+    <fence lang="toml">[requires.packages]
+"org.example/style" = "^1.0"
+"org.example/wal" = { version = "^2.0", access = "private" }
+"org.example/inner" = { version = "^1.0", access = "friends-only" }</fence>
+    <p>`public` is the default and needs no writing: the dependency reaches every consumer above you, however far up, with nothing to opt into. It is the right mark for everything your own text builds on, and for the members of a collection.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-PUBLIC"/>
+    <p>`private` stops the dependency at your door. The edge is followed only when your package is itself the root of the installation, which is the case in your own checkout. It is the mark for tooling and for the disciplines that shape how you work rather than what you ship.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-PRIVATE"/>
+    <p>`friends-only` sits between the two. The dependency reaches only the consumers whose [friend closure](../glossary/index.xml#friend-closure) contains your package: those who deliberately named you a friend, directly or through a friend of theirs.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-FRIENDS"/>
+    <p>Because presence flows by default, the author's duty is to narrow on purpose. Mark `private` every edge that is not part of what you offer, and `friends-only` what only your inner circle should build on. Every public edge costs your consumers reading budget, and the [lock file](../glossary/index.xml#lock-file) makes that bill visible.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#REEXPORT-USAGE-NORM"/>
+  </three-marks>
+  <friendship title="Friendship: opting in">
+    <p>Friendship is declared by the consumer, never assumed. On an edge, `friend = true` says «I enter friendship with this package»; in the `[visibility]` section, `friends = ["org.example/inner"]` says the same for a package you do not require directly. The default is `false`: an ordinary edge takes the package, not its inner circle. Presence is generous and friendship is stingy, and the two defaults differ on purpose.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#FRIEND-EDGE-FLAG"/>
+    <p>A `friends-only` mark on your own edge implies friendship with the package it names, so a chain of friends works from one mark per hop. Write `friend = false` beside it when you want to deliver a package to your circle without entering its circle yourself.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#FRIENDS-ONLY-IMPLIES-FRIEND"/>
+    <p>A friend declares nothing about what it receives. When you befriend a package, everything it vouches for arrives without a line in your [manifest](../glossary/index.xml#manifest), at the versions the voucher chose, and the friends-only edges of those packages open in turn. The moment your own text starts building on one of them, declare your own direct edge: transit says «here because a friend stands on it», not «mine».</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#TRANSIT-WITHOUT-DECLARATION"/>
+    <p>The two marks are independent and point in opposite directions, so they compose. A public edge with `friend = true` delivers the package to everyone above you and opens its friends-only doors for you alone; that friendship does not travel onward. Passing friendship on is exactly what the `friends-only` mark does.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#PUBLIC-PLUS-FRIEND"/>
+  </friendship>
+  <the-visibility-section title="The visibility section, unfriend and exclude">
+    <p>Whatever concerns the package as a whole rather than one edge lives in one section, `[visibility]`, the same for a project and for a package: `friends`, `unfriend`, `allow-friends` and `ignore-concept-warnings`. Beside it stands the top-level `[override]` table described below.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#VISIBILITY-SECTION"/>
+    <fence lang="toml">[visibility]
+friends = ["org.example/inner"]
+unfriend = ["org.example/noisy"]
+allow-friends = ["org.example/partner"]</fence>
+    <p>`unfriend` removes the named packages from the friendships you pass on. They still arrive at your level when an edge admits them, but nobody sees them as your friends through you. Another package in the same tree may still befriend them; the pruning is yours alone.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#UNFRIEND-IS-NODE-SCOPED"/>
+    <p>`exclude`, written on an edge, is the other prune: the named packages are cut from every chain that passes through that edge, however deep, even where they are public. A different path may still deliver them, and then they are present through that path. Exclusion can only narrow what providers granted, never widen it, so any package may declare it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#EXCLUDE-IS-EDGE-SCOPED"/>
+    <p>A provider can also say who may befriend it. `allow-friends` absent means anyone; an empty list seals the package, so its gated content exists only in its own checkout; a list names the exact circle. The check falls on the one who grants friendship: a grant the provider does not permit is a warning, never an error, and the closure does not grow there.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-DESIGN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-STATES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-CHECKPOINT"/>
+    <p>A seal gates friendship, not delivery. A sealed package still arrives wherever a friends-only edge delivers it; what stays shut is its own inner circle, and the rejected grant is reported. `vibe friends org.example/partner` prints the whole picture for one provider: open, sealed or a named circle, who befriends it, which grants it rejects, and whether it sits in your closure.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#SEAL-GATES-FRIENDSHIP-NOT-DELIVERY"/>
+  </the-visibility-section>
+  <overrides title="Repairing an edge you do not own">
+    <p>Sometimes the mark you need is on an edge you do not own: a member of a collection marked a dependency private that your consumers need, or a provider sealed itself against you. The `[override]` table rewrites foreign edges, and it is lawful in any manifest, not only at the root. An aggregator uses it to reshape a member's edge for all of its own consumers, the way it curates its delivery with `exclude`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE"/>
+    <fence lang="toml">[override]
+"org.example/member -&gt; org.example/wal" = { access = "public" }
+"org.example/partner" = { allow-friends = "*" }</fence>
+    <p>An edge key names the two ends of the edge with an arrow; a package key names a provider and rewrites its `allow-friends`. Overrides apply along the chains that pass through the manifest declaring them. The one nearer to the root is applied later and wins, so the root always has the final word, and an intermediary wins only on the chains it takes part in.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-PATH-SEMANTICS"/>
+    <p>The same key, `override`, also serves the older array form `[[override]]` that pins a replacement source for one [coordinate](../glossary/index.xml#coordinate). The two shapes are told apart by their form, either alone is lawful, and one manifest carrying both is a loud error rather than a merge.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-KEY-COEXISTENCE"/>
+  </overrides>
+  <what-arrives title="What arrives in your tree">
+    <p>The packages that the marks admit from your root form the [effective set](../glossary/index.xml#effective-set), and it is the only set vibe works with. Version resolution runs over it alone: a private edge of a package that is not your root contributes no constraint, fetches nothing and cannot conflict. The lock file records the effective set, so your lock never carries another package's tooling.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"/>
+    <p>The dependency tree under `vibedeps/` holds exactly that set. A package that is excluded or invisible leaves no folder, no cache entry for your world and no text in the [boot lane](../glossary/index.xml#boot-lane).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#MATERIALISE-EFFECTIVE-ONLY"/>
+    <p>Your own edges are always followed, private ones included. That is how one `[requires]` is both your development set and your contract, split edge by edge rather than by section: in your checkout the private tooling materialises; consumed as a dependency, only the seeping edges do.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#PRIVATE-IS-THE-DEV-WORLD"/>
+    <p>Because a mark in the middle of the graph can widen what reaches you, `vibe update` prints the change to the effective set: which packages enter or leave and how much reading budget they add or remove. A widening is a reviewed event, not a quiet seep.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LOCK-DIFF"/>
+  </what-arrives>
+  <asking-why title="Asking why">
+    <p>`vibe why` answers the question a visibility system otherwise turns into folklore. For a package that is present it prints the chain that admits it, each hop with its rule, its access mark and where the friendship came from. For a package that is absent it prints the nearest blocked chains and what blocked each one: a private edge, a missing friendship, an unfriend or an exclude. `vibe tree` carries the same annotations on every node.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY"/>
+  </asking-why>
+  <edge-cases title="Edge cases and rules">
+    <p>A package reached by two paths is present as soon as one path admits it; an exclude on the other path changes nothing. Excluding is subtraction and may be declared anywhere; widening is an override, and the root can always re-override an intermediary. Friendship, unfriending and sealing change which chains are open, never which versions are chosen: the version of a vouched package stays with the voucher.</p>
+  </edge-cases>
+</spec>

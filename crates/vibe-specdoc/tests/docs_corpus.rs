@@ -118,7 +118,7 @@ fn corpus() -> Vec<(String, String)> {
     files.retain(|(rel, _)| !QUARANTINED.iter().any(|(q, _)| q == rel));
     assert_eq!(
         files.len(),
-        44 - QUARANTINED.len(),
+        45 - QUARANTINED.len(),
         "every page but the quarantined ones"
     );
     files
@@ -154,8 +154,8 @@ fn all_pages() -> Vec<(String, String)> {
     files.sort();
     assert_eq!(
         files.len(),
-        44,
-        "the documentation package carries 44 pages; a page added or removed \
+        45,
+        "the documentation package carries 45 pages; a page added or removed \
          is a deliberate edit, so update this count with it"
     );
     files
@@ -375,7 +375,7 @@ fn doc_genre_is_not_round_trippable_through_markdown() {
     }
     assert_eq!(
         divergent,
-        44 - QUARANTINED.len(),
+        45 - QUARANTINED.len(),
         "every page, not just the ones with examples"
     );
 }
@@ -401,9 +401,9 @@ fn docs_corpus_shape_is_counted() {
         totals.guarded_slots += s.guarded_slots;
         totals.guarded_sections += s.guarded_sections;
     }
-    // The whole corpus: 44 pages, none quarantined.
-    assert_eq!(totals.examples, 59, "the pages carry 59 examples");
-    assert_eq!(totals.rules, 381, "the pages cite 381 rules");
+    // The whole corpus: 45 pages, none quarantined.
+    assert_eq!(totals.examples, 60, "the pages carry 60 examples");
+    assert_eq!(totals.rules, 408, "the pages cite 408 rules");
     assert_eq!(totals.derived, 72, "the pages derive 72 references");
     assert_eq!(totals.prompts, 19, "19 scenario pages open with a prompt");
     assert_eq!(totals.asserts, 40, "those prompts carry 40 asserts");
