@@ -133,3 +133,45 @@ fn the_rendered_trees_stay_where_the_next_run_can_hand_them_over() {
         "the host's README is not at its address"
     );
 }
+
+/// Every name the renderer sets on the static build is a name the site
+/// package reads.
+///
+/// It is a contract across two languages and nothing else compares its
+/// two ends: a rename on either side leaves a build that runs, a site
+/// that renders and a value that quietly never arrives. That is the
+/// exact failure X-058 recorded — the analytics host and the default
+/// theme were configured, resolved, printed in the run's own report, and
+/// then read by nobody.
+///
+/// It returns rather than fails when the package is not beside the
+/// crate: this crate is compiled outside a checkout of the host too, and
+/// there the question has no subject.
+#[test]
+fn the_environment_names_are_the_ones_the_site_package_reads() {
+    let package = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .join(web::WEB_PACKAGE);
+    let Ok(shell) = std::fs::read_to_string(package.join("site/src/config.ts")) else {
+        return;
+    };
+    let surfaces =
+        std::fs::read_to_string(package.join("tools/doc-surfaces.mjs")).expect("the tree reader");
+
+    for name in [
+        web::ORIGIN,
+        web::WEBSITE_ID,
+        web::HOST_URL,
+        web::DEFAULT_THEME,
+    ] {
+        assert!(
+            shell.contains(name),
+            "`{name}` is set by the renderer and read by nobody in `site/src/config.ts`"
+        );
+    }
+    assert!(
+        surfaces.contains(web::TREES),
+        "`{}` is set by the renderer and read by nobody in `tools/doc-surfaces.mjs`",
+        web::TREES
+    );
+}

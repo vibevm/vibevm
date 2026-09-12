@@ -44,10 +44,17 @@ const DIST: &str = "site/dist";
 
 /// The environment names the site package reads. They are its contract
 /// and not this module's invention — `site/src/config.ts` and
-/// `tools/doc-surfaces.mjs` name the same four.
-const TREES: &str = "VIBE_DOC_OUT";
-const ORIGIN: &str = "VITE_SITE_ORIGIN";
-const WEBSITE_ID: &str = "VITE_UMAMI_WEBSITE_ID";
+/// `tools/doc-surfaces.mjs` name the same five.
+///
+/// Every value of `[site]` that the shell can act on travels this way,
+/// and all of them travel together: a configuration where one key
+/// reached the pages and the next was silently dropped would be a
+/// configuration nobody could reason about from reading it (X-058).
+pub(super) const TREES: &str = "VIBE_DOC_OUT";
+pub(super) const ORIGIN: &str = "VITE_SITE_ORIGIN";
+pub(super) const WEBSITE_ID: &str = "VITE_UMAMI_WEBSITE_ID";
+pub(super) const HOST_URL: &str = "VITE_UMAMI_HOST_URL";
+pub(super) const DEFAULT_THEME: &str = "VITE_SITE_DEFAULT_THEME";
 
 /// Run the static build over `trees` and move its output into `out`.
 pub(crate) fn build(web: &Path, trees: &[PathBuf], site: &Site, out: &Path) -> Result<String> {
@@ -69,6 +76,8 @@ pub(crate) fn build(web: &Path, trees: &[PathBuf], site: &Site, out: &Path) -> R
         .env(TREES, &list)
         .env(ORIGIN, &site.origin)
         .env(WEBSITE_ID, &site.analytics.website_id)
+        .env(HOST_URL, &site.analytics.host_url)
+        .env(DEFAULT_THEME, site.default_theme.as_str())
         .output()
         .map_err(|e| {
             anyhow::anyhow!(

@@ -8,7 +8,17 @@ import {
 } from "@qwik.dev/router";
 import themeInit from "@vibe-docs/design/theme-init.js?raw";
 
+import { SITE } from "./config.ts";
+import { themeInitScript } from "./lib/theme-init.ts";
+
 import "./global.css";
+
+/**
+ * The theme script with this deployment's default in it, composed once
+ * at module scope: the value is a build-time constant and composing it
+ * per render would hand the framework a new string on every page.
+ */
+const THEME_INIT = themeInitScript(themeInit, SITE.defaultTheme);
 
 /**
  * The document itself — the only place the site writes `<head>`.
@@ -35,7 +45,7 @@ export default component$(() => {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script dangerouslySetInnerHTML={themeInit} />
+        <script dangerouslySetInnerHTML={THEME_INIT} />
         <DocumentHeadTags />
       </head>
       <body>

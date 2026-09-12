@@ -32,8 +32,10 @@
 export const ENV_NAMES = {
   origin: "VITE_SITE_ORIGIN",
   umamiWebsiteId: "VITE_UMAMI_WEBSITE_ID",
+  umamiHostUrl: "VITE_UMAMI_HOST_URL",
   indexNowKey: "VITE_INDEXNOW_KEY",
   lastmod: "VITE_SITE_LASTMOD",
+  defaultTheme: "VITE_SITE_DEFAULT_THEME",
 } as const;
 
 /**
@@ -47,15 +49,40 @@ export const ENV_NAMES = {
  */
 const DEFAULT_ORIGIN = "https://vibevm.org";
 
+/**
+ * What a reader who has chosen nothing gets (F-48).
+ *
+ * `system` is the reader's own operating-system setting and is the
+ * default until the design review says otherwise; the other two are a
+ * decision the site takes on the reader's behalf, and `theme-init.js`
+ * stamps them on the document before the first stylesheet is parsed.
+ */
+export type DefaultTheme = "system" | "light" | "dark";
+
+/** The three spellings, which is also the order a refusal would list. */
+const THEMES: readonly DefaultTheme[] = ["system", "light", "dark"];
+
 export type SiteConfig = {
   /** Scheme and host, no trailing slash: `https://vibevm.org`. */
   readonly origin: string;
   /** The Umami property id, or `""` — which means «render no tag». */
   readonly umamiWebsiteId: string;
+  /**
+   * Where the tag reports to, or `""` — which means «this origin».
+   *
+   * A first-party script served by the domain itself reports to the
+   * domain itself, so the origin is the answer and not a guess at one.
+   * It is configurable all the same because a preview of the site
+   * reports to the live property rather than to a property of its own,
+   * and the preview's origin is not the live one.
+   */
+  readonly umamiHostUrl: string;
   /** The IndexNow key, or `""` — which means «write no key file». */
   readonly indexNowKey: string;
   /** `YYYY-MM-DD` for `sitemap.xml`; the build date unless told otherwise. */
   readonly lastmod: string;
+  /** The theme a reader who has chosen nothing gets. */
+  readonly defaultTheme: DefaultTheme;
 };
 
 /** A record read defensively: anything that is not a string is absent. */
@@ -86,11 +113,23 @@ function today(): string {
  */
 export function siteConfig(env: Readonly<Record<string, unknown>>): SiteConfig {
   const origin = read(env, ENV_NAMES.origin) ?? DEFAULT_ORIGIN;
+  /* A theme this build does not know is «system», not a refusal. The
+     configuration is read and refused on the other side of the seam,
+     where the file and its line number are still in hand
+     (`vibe_doc::site::config`); by the time a word has travelled through
+     an environment variable there is nothing useful left to say about
+     it, and a build that stopped here would fail a deploy over a value
+     whose only effect is which of two correct palettes a first-time
+     reader sees. */
+  const theme = read(env, ENV_NAMES.defaultTheme);
+  const known = THEMES.find((one) => one === theme);
   return {
     origin: origin.replace(/\/+$/, ""),
     umamiWebsiteId: read(env, ENV_NAMES.umamiWebsiteId) ?? "",
+    umamiHostUrl: (read(env, ENV_NAMES.umamiHostUrl) ?? "").replace(/\/+$/, ""),
     indexNowKey: read(env, ENV_NAMES.indexNowKey) ?? "",
     lastmod: read(env, ENV_NAMES.lastmod) ?? today(),
+    defaultTheme: known ?? "system",
   };
 }
 
