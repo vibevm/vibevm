@@ -1,0 +1,45 @@
+.fab {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  z-index: 30;
+}
+
+.fab__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raise);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-hover);
+  transition:
+    background var(--speed) ease,
+    border-color var(--speed) ease,
+    transform var(--speed) ease;
+}
+
+.fab__button:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.fab__panel {
+  position: absolute;
+  right: 0;
+  bottom: 3.6rem;
+  width: min(22rem, 80vw);
+  padding: 0.9rem 1rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+  font-size: 0.88rem;
+  color: var(--text-2);
+}

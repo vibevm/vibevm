@@ -1,8 +1,305 @@
 {
-  "code_items": [],
-  "edges": [],
+  "code_items": [
+    {
+      "crate_name": "src",
+      "file": "design/src/components/badge/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/badge/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/doc-card/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/doc-card/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/docs-header/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/docs-header/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/docs-nav/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/docs-nav/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/fab/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/fab/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/footer/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/footer/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/footnotes/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/footnotes/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/prose/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/prose/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/search-box/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/search-box/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/section-head/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/section-head/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/tab-pills/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/tab-pills/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/table-scroll/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/table-scroll/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/components/tag/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/tag/index.tsx"
+    },
+    {
+      "crate_name": "src",
+      "file": "design/src/index.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/index.ts"
+    }
+  ],
+  "edges": [
+    {
+      "file": "design/src/components/badge/index.tsx",
+      "from_symbol": "design/src/components/badge/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#ROW-DISC-DOCS-STATUS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/doc-card/index.tsx",
+      "from_symbol": "design/src/components/doc-card/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/docs-header/index.tsx",
+      "from_symbol": "design/src/components/docs-header/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/docs-nav/index.tsx",
+      "from_symbol": "design/src/components/docs-nav/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/fab/index.tsx",
+      "from_symbol": "design/src/components/fab/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#DISC-MACHINE-MIRROR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/footer/index.tsx",
+      "from_symbol": "design/src/components/footer/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/footnotes/index.tsx",
+      "from_symbol": "design/src/components/footnotes/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/prose/index.tsx",
+      "from_symbol": "design/src/components/prose/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/search-box/index.tsx",
+      "from_symbol": "design/src/components/search-box/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/section-head/index.tsx",
+      "from_symbol": "design/src/components/section-head/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/tab-pills/index.tsx",
+      "from_symbol": "design/src/components/tab-pills/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/table-scroll/index.tsx",
+      "from_symbol": "design/src/components/table-scroll/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/tag/index.tsx",
+      "from_symbol": "design/src/components/tag/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/index.ts",
+      "from_symbol": "design/src/index.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-WORKSPACE",
+      "verb": "implements"
+    }
+  ],
   "schema": 3,
   "spec_units": [],
   "suspects": [],
-  "warnings": []
+  "warnings": [
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/badge/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/badge/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#ROW-DISC-DOCS-STATUS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/doc-card/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/doc-card/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/docs-header/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/docs-header/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/docs-nav/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/docs-nav/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/fab/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/fab/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#DISC-MACHINE-MIRROR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/footer/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/footer/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/footnotes/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/footnotes/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/prose/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/prose/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/search-box/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/search-box/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/section-head/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/section-head/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/tab-pills/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/tab-pills/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/table-scroll/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/table-scroll/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/tag/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/tag/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/index.ts",
+      "line": 1,
+      "message": "edge `design/src/index.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-WORKSPACE`: no spec unit carries this anchor"
+    }
+  ]
 }

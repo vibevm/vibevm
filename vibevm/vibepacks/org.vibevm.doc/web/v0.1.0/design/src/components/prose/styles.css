@@ -1,0 +1,266 @@
+/* The reading column and the island's own vocabulary. Every selector
+   below names markup the Rust pipeline emits; nothing here is generated
+   by a component. */
+
+.prose {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 6rem;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  margin: 2.2rem 0 0.8rem;
+}
+
+.prose h1 {
+  font-size: 2.1rem;
+  margin-top: 0;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.2rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 1.1rem;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+
+.prose li {
+  margin-bottom: 0.35rem;
+}
+
+.prose a {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--line-strong);
+  transition: text-decoration-color var(--speed) ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  border-radius: var(--radius-sm);
+  padding: 0.08em 0.3em;
+}
+
+.prose pre {
+  position: relative;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  margin: 0 0 1.2rem;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+/* ---- The block number ------------------------------------------------
+   Assigned by the pipeline, never by a script, and printed in the mono
+   face at half opacity: an address the eye can skip and the hand can
+   reach. It sits in the margin on a wide screen and above its block on a
+   narrow one, where there is no margin to sit in. */
+
+.prose .p-anchor {
+  position: absolute;
+  left: -3.1rem;
+  width: 2.4rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.9;
+  color: var(--text-3);
+  opacity: 0.5;
+  text-decoration: none;
+  transition: opacity var(--speed) ease;
+}
+
+.prose .p-anchor:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.prose [data-p] {
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .prose .p-anchor {
+    position: static;
+    display: block;
+    width: auto;
+    text-align: left;
+    line-height: 1.4;
+  }
+}
+
+/* ---- Quoted rules --------------------------------------------------
+   A rule is shown as what it is: a quotation, with its address kept in
+   `data-uri` so the «for an agent» surface can read it back out. */
+
+.prose blockquote {
+  margin: 0 0 1.2rem;
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 3px solid var(--line-strong);
+  color: var(--text-2);
+}
+
+.prose blockquote.rule {
+  border-left-color: var(--accent);
+  background: var(--bg-raise);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 0.7rem 1rem;
+  color: var(--text);
+}
+
+.prose blockquote.rule a.rule {
+  text-decoration: none;
+}
+
+.prose [data-unresolved="true"] {
+  border-left-style: dashed;
+  color: var(--text-3);
+}
+
+/* ---- Generated and executed blocks --------------------------------- */
+
+.prose pre.derived::after,
+.prose .example::after {
+  content: attr(data-ref);
+  position: absolute;
+  top: 0.35rem;
+  right: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+}
+
+.prose .example {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  margin: 0 0 1.2rem;
+  padding: 0.9rem 1rem;
+  background: var(--bg-raise);
+}
+
+.prose .example pre {
+  margin: 0;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.prose .example .example-run code::before {
+  content: "$ ";
+  color: var(--text-3);
+}
+
+/* ---- Call-outs, figures, prompts ------------------------------------ */
+
+.prose aside.note {
+  position: relative;
+  margin: 0 0 1.2rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+}
+
+.prose aside.note p:last-child {
+  margin-bottom: 0;
+}
+
+.prose figure {
+  margin: 0 0 1.4rem;
+}
+
+.prose figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.prose figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+
+.prose .prompt {
+  position: relative;
+  margin: 0 0 1.3rem;
+  padding: 1rem 1.1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-sink);
+}
+
+/* ---- Tables --------------------------------------------------------- */
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0 0 1.3rem;
+}
+
+.prose caption {
+  caption-side: top;
+  text-align: left;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  color: var(--text-2);
+  font-weight: 600;
+  border-bottom-color: var(--line-strong);
+}
+
+/* ---- Platform-conditional blocks ------------------------------------
+   `data-when` blocks are KEPT, never dropped: the number of a block must
+   mean the same thing in every build, so the switch hides them here and
+   the pipeline counts them there. */
+
+.prose [data-when] {
+  scroll-margin-top: 5rem;
+}

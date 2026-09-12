@@ -1,0 +1,45 @@
+.doc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--speed) ease,
+    box-shadow var(--speed) ease,
+    transform var(--speed) ease;
+}
+
+.doc-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.doc-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.doc-card__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.doc-card__publisher {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+
+.doc-card__summary {
+  font-size: 0.94rem;
+  color: var(--text-2);
+}

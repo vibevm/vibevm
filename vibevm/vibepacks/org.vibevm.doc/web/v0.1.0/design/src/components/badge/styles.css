@@ -1,0 +1,34 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.badge--primary {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.badge--official {
+  border-color: var(--line-strong);
+  color: var(--text-2);
+}
+
+.badge--community {
+  border-color: var(--line);
+  color: var(--text-3);
+}
+
+.badge__star {
+  color: var(--accent-hover);
+}

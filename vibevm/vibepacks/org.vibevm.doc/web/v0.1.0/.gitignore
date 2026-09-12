@@ -6,3 +6,5 @@ server/
 tmp/
 .vite/
 *.tsbuildinfo
+# The structural gate writes its SARIF report here on every run.
+target/
