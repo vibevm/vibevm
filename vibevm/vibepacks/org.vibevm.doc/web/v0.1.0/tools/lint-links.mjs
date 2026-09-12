@@ -39,6 +39,7 @@ import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { siteConfig } from "../site/src/config.ts";
+import { isBuilderState } from "./out-dir.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_ROOT = join(PACKAGE_ROOT, "site");
@@ -90,18 +91,27 @@ const EXCEPTIONS = [
   },
 ];
 
-/** Every file under a directory, as site-absolute addresses. */
+/**
+ * Every file under a directory, as site-absolute addresses.
+ *
+ * Except the builder's own: a deployment's output keeps its state and
+ * every rendered documentation tree inside the directory it publishes,
+ * and the serving configuration answers 404 for all of it. Those trees
+ * are the pipeline's intermediate form — islands, not pages — and their
+ * links are written for the address the page is served at, not for a
+ * path inside the kitchen. Walking them makes the check red about
+ * addresses nobody can fetch: 220 of them on the first live render.
+ */
 function filesUnder(dir, root = dir, found = new Set()) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
+    const address = `/${full
+      .slice(root.length + 1)
+      .split(sep)
+      .join("/")}`;
+    if (isBuilderState(address)) continue;
     if (statSync(full).isDirectory()) filesUnder(full, root, found);
-    else
-      found.add(
-        `/${full
-          .slice(root.length + 1)
-          .split(sep)
-          .join("/")}`,
-      );
+    else found.add(address);
   }
   return found;
 }

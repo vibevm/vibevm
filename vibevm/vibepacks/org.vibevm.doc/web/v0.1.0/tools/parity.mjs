@@ -26,6 +26,8 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { isBuilderState } from "./out-dir.mjs";
+
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
@@ -175,7 +177,17 @@ function files(dir, found = []) {
   return found;
 }
 
-/** Every public address a built tree serves, as the browser asks for it. */
+/**
+ * Every public address a built tree serves, as the browser asks for it.
+ *
+ * Public: the builder's own directory is skipped, because it is not an
+ * address of the domain and the serving configuration says so with a
+ * 404. A deployment's output holds the state and every rendered
+ * documentation tree inside it, so a comparison that walked them would
+ * report thousands of «only in this build» differences about files
+ * nobody can fetch — which is exactly what the first live render did
+ * (`isBuilderState`).
+ */
 function addresses(root) {
   const map = new Map();
   for (const file of files(root)) {
@@ -183,6 +195,7 @@ function addresses(root) {
     const address = rel.endsWith("index.html")
       ? `/${rel.slice(0, -"index.html".length)}`
       : `/${rel}`;
+    if (isBuilderState(address)) continue;
     map.set(address, file);
   }
   return map;
