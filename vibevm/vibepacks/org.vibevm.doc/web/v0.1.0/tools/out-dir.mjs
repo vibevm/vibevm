@@ -17,6 +17,29 @@
 /** The environment name that moves the static build's output. */
 export const OUT_DIR_ENV = "VIBE_SITE_DIST";
 
+/**
+ * The one directory inside a deployment's output that is not the domain.
+ *
+ * `vibe doc build-site` keeps its state and every rendered documentation
+ * tree under it, inside the directory it publishes, because the question
+ * that state answers is «what is in THIS directory» and an answer kept
+ * elsewhere goes stale the first time a directory is copied. The serving
+ * configuration answers 404 for it (`docker/nginx.conf`), and so must
+ * anything that measures the domain: a tool pointed at a deployed
+ * directory otherwise compares the kitchen with the dining room —
+ * measured on the first live render, where it made the link check 220
+ * broken and the parity test 2636 unexplained, all of them inside it.
+ */
+export const BUILDER_STATE_DIR = ".vibe-site";
+
+/** Whether an address of the output is the builder's own and not the domain's. */
+export function isBuilderState(address) {
+  return (
+    address === `/${BUILDER_STATE_DIR}` ||
+    address.startsWith(`/${BUILDER_STATE_DIR}/`)
+  );
+}
+
 /** The directory the static build writes its pages and files into. */
 export function staticOutDir(env = process.env) {
   const named = (env[OUT_DIR_ENV] ?? "").trim();
