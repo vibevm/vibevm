@@ -13,11 +13,19 @@
 //! ## What this check asks, and what it refuses to ask
 //!
 //! It asks about STRUCTURE: do the two packages carry the same pages, do
-//! the pages carry the same anchors, does every example a translation
-//! borrows exist on the source page it borrows from, and did the
-//! translation author an example of its own — which is forbidden, because
-//! command output is checked once, on the source, and a second copy is a
-//! second thing to go wrong (`##LOC-EXAMPLE-REF`).
+//! the pages carry the same anchors, do they carry the same blocks in the
+//! same order, does every example a translation borrows exist on the
+//! source page it borrows from, and did the translation author an example
+//! of its own — which is forbidden, because command output is checked
+//! once, on the source, and a second copy is a second thing to go wrong
+//! (`##LOC-EXAMPLE-REF`).
+//!
+//! The block comparison is the half anchors cannot cover (the campaign's
+//! F-44): two pages can agree on every anchor and still part on a
+//! paragraph the adaptation merged into its neighbour, and from there
+//! `#p12` means one thing in English and another in Russian. Merging or
+//! splitting paragraphs in a translation is not a style choice — it is
+//! the one edit that breaks the promise the language selector makes.
 //!
 //! It does NOT ask whether the adaptation still says what the source
 //! says. There is no revision, no content hash and no «behind by» here,
@@ -44,6 +52,7 @@ use vibe_specdoc::doc::{Block, SpecDoc};
 use crate::citations::sources::{Source, SpecSources};
 use crate::error::{DocError, Result};
 use crate::manifest;
+use crate::numbering::{Numbering, block_at, number_blocks};
 use crate::pages::{self, Page, PageSet};
 
 /// The manifest key a translation declares its source under.
@@ -64,6 +73,18 @@ pub enum Problem {
     OwnExample { page: String, id: String },
     /// The translation borrows an example the source page does not have.
     UnknownExampleRef { page: String, id: String },
+    /// The two pages part at a block: a different kind at the same
+    /// number, or one page running out of blocks before the other.
+    Block {
+        page: String,
+        /// The first block number where they part, as the reader sees it
+        /// in every projection — `p07`.
+        at: String,
+        /// The kind the source carries there, or `nothing` past its end.
+        source: String,
+        /// The kind the translation carries there.
+        translation: String,
+    },
 }
 
 impl Problem {
@@ -75,12 +96,17 @@ impl Problem {
             | Problem::AnchorMissing { page, .. }
             | Problem::AnchorExtra { page, .. }
             | Problem::OwnExample { page, .. }
-            | Problem::UnknownExampleRef { page, .. } => page,
+            | Problem::UnknownExampleRef { page, .. }
+            | Problem::Block { page, .. } => page,
         }
     }
 
     /// The line a report prints, in the words of what went wrong.
-    pub fn render(&self) -> String {
+    ///
+    /// `adapts` is the coordinate of the documentation being mirrored, so
+    /// a block divergence can name BOTH pages — the one to read and the
+    /// one to fix — instead of an address that could be either.
+    pub fn render(&self, adapts: &str) -> String {
         match self {
             Problem::MissingPage { page } => format!(
                 "  MISSING PAGE {page}\n    the source has this page and the translation \
@@ -106,8 +132,26 @@ impl Problem {
                 "  UNKNOWN EXAMPLE {page}#{id}\n    the translation borrows an example the \
                  source page does not carry"
             ),
+            Problem::Block {
+                page,
+                at,
+                source,
+                translation,
+            } => format!(
+                "  BLOCK {at} {page}\n    the source carries `{source}` there and the \
+                 translation carries `{translation}`\n    \
+                 source:      spec://{adapts}/{}#{at}\n    \
+                 translation: {page}#{at}",
+                document_of(page)
+            ),
         }
     }
+}
+
+/// A page address as a `spec://` doc-path: the same path without its
+/// extension, the form the addressing grammar spells a document in.
+fn document_of(page: &str) -> &str {
+    page.strip_suffix(".xml").unwrap_or(page)
 }
 
 /// One `--translations` run.
@@ -136,8 +180,9 @@ impl Report {
     /// The human form.
     pub fn render(&self) -> String {
         let mut out = String::new();
+        let adapts = self.adapts.as_deref().unwrap_or("<unknown>");
         for problem in &self.problems {
-            out.push_str(&problem.render());
+            out.push_str(&problem.render(adapts));
             out.push('\n');
         }
         for page in &self.unreadable {
@@ -290,6 +335,78 @@ fn compare_page(source: &Page, translation: &Page, report: &mut Report) {
             _ => {}
         }
     }
+
+    compare_blocks(source, translation, report);
+}
+
+/// The count and the kinds of the blocks, number by number.
+///
+/// Matching anchors are not enough (the campaign's F-44): two pages can
+/// agree on every anchor and still part on a paragraph the adaptation
+/// merged into its neighbour, and then `#p12` means one thing in English
+/// and another in Russian — which is exactly what the language selector
+/// promises it does not (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`).
+///
+/// Only the FIRST divergence on a page is reported. After a block is
+/// added or dropped every number below it differs, and a check that
+/// listed all of them would bury the one line that says where to look.
+fn compare_blocks(source: &Page, translation: &Page, report: &mut Report) {
+    let theirs = block_kinds(&source.doc);
+    let ours = block_kinds(&translation.doc);
+    for i in 0..theirs.len().max(ours.len()) {
+        let (a, b) = (theirs.get(i), ours.get(i));
+        if a == b {
+            continue;
+        }
+        report.problems.push(Problem::Block {
+            page: translation.rel.clone(),
+            at: Numbering::spell(i as u32 + 1),
+            source: a.map(|k| (*k).to_owned()).unwrap_or_else(nothing),
+            translation: b.map(|k| (*k).to_owned()).unwrap_or_else(nothing),
+        });
+        return;
+    }
+}
+
+/// What a page carries at each of its block numbers, in the order
+/// [`number_blocks`] assigns them — so position `i` here IS `p(i+1)`
+/// there, and the `footnotes` section is outside both.
+fn block_kinds(doc: &SpecDoc) -> Vec<&'static str> {
+    let numbering = number_blocks(doc);
+    (1..=numbering.len() as u32)
+        .filter_map(|n| numbering.path_of(n))
+        .filter_map(|path| block_at(doc, path))
+        .map(|node| kind_of(&node.block))
+        .collect()
+}
+
+/// The word for a block's kind, as a divergence names it.
+///
+/// `example` and `example ref` are ONE kind here, and that is the whole
+/// point: a translation replaces an authored example with a reference by
+/// law (`##LOC-EXAMPLE-REF`), so telling the two apart would paint every
+/// correct adaptation red. The real violation — a translation that
+/// authors its own — is caught by its own rule, where it can be explained
+/// in words the author can act on.
+fn kind_of(block: &Block) -> &'static str {
+    match block {
+        Block::Paragraph(_) => "p",
+        Block::List { .. } => "list",
+        Block::Table { .. } => "table",
+        Block::Fence { .. } => "fence",
+        Block::Quote(_) => "quote",
+        Block::Example { .. } | Block::ExampleRef { .. } => "example",
+        Block::Rule { .. } => "rule",
+        Block::Derived { .. } => "derived",
+        Block::Note { .. } => "note",
+        Block::Figure { .. } => "figure",
+        Block::Prompt { .. } => "prompt",
+    }
+}
+
+/// What a page carries past its last block.
+fn nothing() -> String {
+    "nothing".to_owned()
 }
 
 /// Every named anchor a page carries — the same walk the manifest's page
