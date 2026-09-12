@@ -52,6 +52,7 @@
       <tr><td>`vibe deploy`, `vibe deployments --json`</td><td>the deploy intent, the receipts, the inverse plan and the checkpoints</td><td>`deploy_intent.jtd.json`, `deploy_receipt.jtd.json`</td></tr>
       <tr><td>`vibe requirements --json`</td><td>the requirements report</td><td>`requirements_report.jtd.json`</td></tr>
       <tr><td>`vibe tree --json`</td><td>the package tree</td><td>a JSON Schema document, `package-tree.schema.v1.json`</td></tr>
+      <tr><td>`vibe doc manifest --json`, `vibe doc todo --format json`, `vibe doc surface --record`</td><td>the page manifest of a documentation package, the maintenance queue, the surface snapshot of a version and the diff of two</td><td>`doc_manifest.jtd.json`, `doc_todo.jtd.json`, `doc_surface.jtd.json`, `doc_surface_diff.jtd.json`</td></tr>
     </table>
     <p>The fields of every schema in the table, generated from the schema files in the order above:</p>
     <derived kind="jtd-schema" ref="schemas/init_report.jtd.json"/>
@@ -72,6 +73,9 @@
     <derived kind="jtd-schema" ref="schemas/deploy_intent.jtd.json"/>
     <derived kind="jtd-schema" ref="schemas/deploy_receipt.jtd.json"/>
     <derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_manifest.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_todo.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_surface.jtd.json"/>
     <p>The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the compiler trace and the native ABI have schemas of their own in the same folder; the registry lists all of them.</p>
   </the-documents>
   <edge-cases title="Edge cases and rules">

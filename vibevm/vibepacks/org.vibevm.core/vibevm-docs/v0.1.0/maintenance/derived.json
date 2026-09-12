@@ -225,6 +225,18 @@
       "sha256": "dca566aa5cec5beb1152fdcbcab48744a1eca8003f976879902c353e6a152c64",
       "bytes": 4193
     },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_manifest.jtd.json": {
+      "sha256": "66109d4f0b3468b5fbc6eff10c2f5b7a821db6b073c6d5e604b8f0a0bab5da2d",
+      "bytes": 7944
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_surface.jtd.json": {
+      "sha256": "4070a2e8d810f2a7d7d5792f18e69795e12614498dbb75d153be3a76459ccb14",
+      "bytes": 3653
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_todo.jtd.json": {
+      "sha256": "d92f9fff9737fef584d9263ca17d9eba9b131f2aa18547e5ce303d2eca0d306a",
+      "bytes": 3698
+    },
     "reference/machine-formats.xml#jtd-schema:schemas/extensions_analyze.jtd.json": {
       "sha256": "2f19cfe780dccfcbf39529ff375ec285cb7dd44d2c048f69e1f2d0b3fde1eba1",
       "bytes": 4941
