@@ -4,11 +4,17 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  catalogueHref,
   docHref,
   docPath,
+  docSegments,
   href,
+  llmsHref,
+  packageHref,
   parseDocAddress,
+  parseDocTarget,
   projectionHref,
+  specUri,
 } from "./href.ts";
 
 const PACKAGE_ROOT = join(import.meta.dirname, "..", "..", "..");
@@ -130,6 +136,64 @@ test("parse and print are each other's inverse", () => {
     if (address === null) continue;
     assert.equal(docPath(address), `doc/${segments.join("/")}/`);
   }
+});
+
+test("a package's own address is the page's address one segment short", () => {
+  const at = {
+    lang: null,
+    group: "org.vibevm.core",
+    name: "vibevm-docs",
+    version: "0.1.0",
+  } as const;
+  assert.equal(packageHref(at), "/doc/org.vibevm.core/vibevm-docs/0.1.0/");
+  assert.equal(
+    packageHref({ ...at, lang: "ru" }),
+    "/doc/ru/org.vibevm.core/vibevm-docs/0.1.0/",
+  );
+  assert.equal(llmsHref(at), "/doc/org.vibevm.core/vibevm-docs/0.1.0/llms.txt");
+  assert.equal(catalogueHref(null), "/doc/");
+  assert.equal(catalogueHref("ru"), "/doc/ru/");
+});
+
+test("one parser reads both addresses and says which it found", () => {
+  const page = parseDocTarget(["org.vibevm.core", "d", "0.1.0", "faq"]);
+  assert.equal(page?.kind, "page");
+  const pkg = parseDocTarget(["ru", "org.vibevm.core", "d", "0.1.0"]);
+  assert.equal(pkg?.kind, "package");
+  assert.equal(pkg?.address.lang, "ru");
+  assert.equal(parseDocTarget(["ru", "org.vibevm.core"]), null);
+  assert.equal(parseDocTarget([]), null);
+});
+
+test("the served path reads back as the segments the route matched", () => {
+  assert.deepEqual(docSegments("/doc/ru/g.h/n/1.0/page/"), [
+    "ru",
+    "g.h",
+    "n",
+    "1.0",
+    "page",
+  ]);
+  assert.deepEqual(docSegments("/doc/"), []);
+  assert.equal(docSegments("/ru/"), null);
+  assert.equal(docSegments("/"), null);
+});
+
+/**
+ * A citation is the one address that leaves the site, so it is the one
+ * that may never say `latest`: an agent handed `latest` quotes a page
+ * that moves under it between the question and the answer (R-26).
+ */
+test("a citation carries the version and no language", () => {
+  assert.equal(
+    specUri({
+      lang: "ru",
+      group: "org.vibevm.core",
+      name: "vibevm-docs",
+      version: "0.1.0",
+      document: "model/lock",
+    }),
+    "spec://org.vibevm.core/vibevm-docs@0.1.0/model/lock",
+  );
 });
 
 /**

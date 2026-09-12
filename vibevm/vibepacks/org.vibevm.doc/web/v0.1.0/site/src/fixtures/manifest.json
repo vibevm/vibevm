@@ -26,6 +26,22 @@
   },
   "pages": [
     {
+      "path": "reference/addresses.xml",
+      "title": "Addresses",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "ADDRESS-SHAPE",
+        "language"
+      ],
+      "summary": "The shape of a documentation address, which nothing in the product is allowed to invent.",
+      "reading_time_min": 1,
+      "reviewed_at": "2026-09-05T00:00:00Z"
+    },
+    {
       "path": "guide/every-block.xml",
       "title": "Every block once",
       "genre": "task",

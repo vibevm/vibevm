@@ -5,13 +5,15 @@ import test from "node:test";
 
 import { parseDocManifest } from "./manifest.ts";
 
-const FIXTURE = join(import.meta.dirname, "..", "fixtures", "manifest.json");
+const FIXTURES = join(import.meta.dirname, "..", "fixtures");
+const FIXTURE = join(FIXTURES, "manifest.json");
+const ADAPTATION = join(FIXTURES, "manifest-ru.json");
 
-function fixture(): unknown {
-  return JSON.parse(readFileSync(FIXTURE, "utf8"));
+function fixture(file: string = FIXTURE): unknown {
+  return JSON.parse(readFileSync(file, "utf8"));
 }
 
-test("the pipeline's own golden manifest parses", () => {
+test("the source manifest parses", () => {
   const parsed = parseDocManifest(fixture());
   assert.equal(
     parsed.ok,
@@ -21,8 +23,31 @@ test("the pipeline's own golden manifest parses", () => {
   if (!parsed.ok) return;
   assert.equal(parsed.value.package.group, "com.example.docs");
   assert.equal(parsed.value.package.lang, "en");
-  assert.equal(parsed.value.pages.length, 1);
-  assert.equal(parsed.value.pages[0]?.path, "guide/every-block.xml");
+  assert.equal(parsed.value.pages.length, 2);
+  assert.equal(parsed.value.pages[1]?.path, "guide/every-block.xml");
+});
+
+/**
+ * The adaptation is the fallback's whole subject: it is one page short
+ * of the source on purpose, so the gap the site materialises is a gap
+ * the fixture actually has rather than one a test pretends to.
+ */
+test("the adaptation parses and is a page short of its source", () => {
+  const source = parseDocManifest(fixture());
+  const adapted = parseDocManifest(fixture(ADAPTATION));
+  assert.equal(
+    adapted.ok,
+    true,
+    adapted.ok ? "" : `${adapted.error.path}: ${adapted.error.reason}`,
+  );
+  if (!adapted.ok || !source.ok) return;
+  assert.equal(adapted.value.package.lang, "ru");
+  assert.equal(adapted.value.package.translation?.status, "official");
+  assert.equal(
+    adapted.value.package.translation?.package,
+    `${source.value.package.group}/${source.value.package.name}`,
+  );
+  assert.equal(adapted.value.pages.length, source.value.pages.length - 1);
 });
 
 test("an absent optional field stays absent rather than becoming undefined", () => {
