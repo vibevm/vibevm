@@ -1690,3 +1690,13 @@ structure, and it goes when the file does.
 | @fact:B147-SEVERITY **severity** | P3 — фикстура; настоящих пакетов с картинками в страницах пока нет |
 | @fact:B147-DISPOSITION **disposition** | `open` — решить форму адреса картинки в странице (относительно корня дерева, по хэшу) и переписать голден; снять `L-01` |
 | @fact:B147-FILED **filed by** | кампания документации, P4-O2 (A4.12) и P4-O3 (A4.4), 2026-09-12 |
+
+## B-148 — `vibe init` не пишет реестры по умолчанию, хотя норма это обещает
+
+| поле | значение |
+|---|---|
+| @fact:B148-WHAT **what** | `vibe init <имя>` создаёт `vibe.toml` только с таблицей `[project]` (проба 2026-09-12: десять файлов, ни одной строки `[[registry]]`), тогда как PROP-000 `##INIT-DEFAULT-REGISTRY` и PROP-008 `##DEFAULT-TRUSTED-REGISTRIES` (оба `spec/done`, обязательства `user`) обещают два доверенных корня в каждом новом манифесте; подсказка `--no-registry` в `vibe init --help` говорит о секции `[registry]`, которой команды реестра не читают (`vibe registry list` знает только `[[registry]]`) |
+| @fact:B148-EFFECT **effect** | первый `vibe install` в новом проекте не находит реестра, пока пользователь не добавит его `vibe registry add` или не заведёт `~/.vibe/registry.toml`; руководство (`model/registries`, `howto/use-a-private-registry`) описывает продукт как есть и цитирует норму как обещание |
+| @fact:B148-SEVERITY **severity** | P2 — обход: `vibe registry add`; норма и продукт расходятся на поверхности, которую видит каждый новичок |
+| @fact:B148-DISPOSITION **disposition** | `open` — либо `vibe init` пишет `[[registry]]` с двумя корнями (и `--no-registry` его подавляет), либо норма переписывается под машинный `registry.toml`; решение владельца |
+| @fact:B148-FILED **filed by** | кампания документации, первая полная сверка (A6.5), 2026-09-12 |
