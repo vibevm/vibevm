@@ -2,140 +2,28 @@
 //!
 //! Closed vocabularies per PROP-043 §3.2 — any value outside these enums
 //! is a validation error, never a silent pass-through.
+//!
+//! This cell holds the vocabularies themselves — the enums a marker is
+//! written from and the [`Marker`] that carries them. Three things read
+//! those vocabularies rather than declaring them, and each has its own
+//! cell beside this one: the terminal-artifact set
+//! ([`artifacts`]), the worst-of rollup order ([`rollup_order`]) and the
+//! typo hint a rejected token gets ([`typo_hints`]). Their public names
+//! are re-exported here, so `model::ArtifactKind`, `model::rollup_key`
+//! and `model::nearest` are the paths they have always been.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes");
 
 use serde::{Deserialize, Serialize};
-use specmark::spec;
 use std::fmt;
 
-/// One artifact kind whose presence contributes to closing a fact.
-///
-/// Declaration order is the canonical wire and rendering order.
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts")]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum ArtifactKind {
-    Specification,
-    Implementation,
-    Verification,
-    Documentation,
-    Decision,
-    Research,
-    Plan,
-    Disposition,
-    External,
-}
+mod artifacts;
+mod rollup_order;
+mod typo_hints;
 
-impl ArtifactKind {
-    pub const ALL: [ArtifactKind; 9] = [
-        ArtifactKind::Specification,
-        ArtifactKind::Implementation,
-        ArtifactKind::Verification,
-        ArtifactKind::Documentation,
-        ArtifactKind::Decision,
-        ArtifactKind::Research,
-        ArtifactKind::Plan,
-        ArtifactKind::Disposition,
-        ArtifactKind::External,
-    ];
-
-    pub fn as_str(self) -> &'static str {
-        match self {
-            ArtifactKind::Specification => "specification",
-            ArtifactKind::Implementation => "implementation",
-            ArtifactKind::Verification => "verification",
-            ArtifactKind::Documentation => "documentation",
-            ArtifactKind::Decision => "decision",
-            ArtifactKind::Research => "research",
-            ArtifactKind::Plan => "plan",
-            ArtifactKind::Disposition => "disposition",
-            ArtifactKind::External => "external",
-        }
-    }
-
-    pub fn parse(value: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|kind| kind.as_str() == value)
-    }
-}
-
-impl fmt::Display for ArtifactKind {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(self.as_str())
-    }
-}
-
-/// A non-empty, duplicate-free artifact set stored in canonical order.
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts")]
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ArtifactRequirements(Vec<ArtifactKind>);
-
-impl ArtifactRequirements {
-    pub fn parse_csv(value: &str) -> Result<Self, String> {
-        if value.is_empty() {
-            return Err("requirements list is empty".into());
-        }
-        let mut kinds = Vec::new();
-        for member in value.split(',') {
-            if member.is_empty() {
-                return Err("requirements list contains an empty member".into());
-            }
-            let Some(kind) = ArtifactKind::parse(member) else {
-                return Err(format!("unknown required artifact kind `{member}`"));
-            };
-            if kinds.contains(&kind) {
-                return Err(format!("duplicate required artifact kind `{member}`"));
-            }
-            kinds.push(kind);
-        }
-        kinds.sort();
-        Ok(Self(kinds))
-    }
-
-    pub fn iter(&self) -> impl Iterator<Item = ArtifactKind> + '_ {
-        self.0.iter().copied()
-    }
-
-    pub fn contains(&self, kind: ArtifactKind) -> bool {
-        self.0.contains(&kind)
-    }
-
-    pub fn to_csv(&self) -> String {
-        self.iter()
-            .map(ArtifactKind::as_str)
-            .collect::<Vec<_>>()
-            .join(",")
-    }
-}
-
-impl Serialize for ArtifactRequirements {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        self.0.serialize(serializer)
-    }
-}
-
-impl<'de> Deserialize<'de> for ArtifactRequirements {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let raw = Vec::<ArtifactKind>::deserialize(deserializer)?;
-        if raw.is_empty() {
-            return Err(serde::de::Error::custom(
-                "artifact requirements must not be empty",
-            ));
-        }
-        let csv = raw
-            .iter()
-            .map(|kind| kind.as_str())
-            .collect::<Vec<_>>()
-            .join(",");
-        Self::parse_csv(&csv).map_err(serde::de::Error::custom)
-    }
-}
+pub use artifacts::{ArtifactKind, ArtifactRequirements};
+pub use rollup_order::rollup_key;
+pub use typo_hints::nearest;
 
 /// Where a unit of text stands in its development cycle (PROP-043 §3.3).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -378,81 +266,6 @@ impl fmt::Display for Audience {
     }
 }
 
-/// The key `void` sorts to: above every real `(stage, state)` pair, and
-/// the same value whatever stage it is written at.
-///
-/// A sentinel is only how the invariant is implemented — the property
-/// test `void_outranks_every_pair_at_every_stage` is the contract, and it
-/// is what a future change has to keep true.
-const VOID_KEY: (u8, u8) = (u8::MAX, u8::MAX);
-
-/// The fixed sort key for worst-of rollup (PROP-043 §3.10):
-/// `unknown < idea < spec < impl < test < doc < freeze`, and within a
-/// stage the `State` completeness order. Lower = less advanced = "worse".
-///
-/// `void` is the one value outside that scheme: it sorts above every pair
-/// **regardless of stage**, so a tombstone never governs a document that
-/// still has live units, and a document whose every unit is void is
-/// itself void without that case being written down anywhere. This is the
-/// pair, not the state, precisely because stage dominates the pair —
-/// giving `void` the top state slot within its stage would leave an
-/// `@spec/void` still dragging the file down to `spec`.
-pub fn rollup_key(stage: Stage, state: State) -> (u8, u8) {
-    // Short-circuits before the stage is ever consulted — that is the
-    // whole of the rule.
-    if state == State::Void {
-        return VOID_KEY;
-    }
-    let s = match stage {
-        Stage::Unknown => 0,
-        Stage::Idea => 1,
-        Stage::Spec => 2,
-        Stage::Impl => 3,
-        Stage::Test => 4,
-        Stage::Doc => 5,
-        Stage::Freeze => 6,
-    };
-    let t = match state {
-        State::Hold => 0,
-        State::Plan => 1,
-        State::Work => 2,
-        State::Done => 3,
-        // Unreachable — the short-circuit above returned already. Named
-        // rather than swept up by a wildcard so that the next value added
-        // to the vocabulary breaks this match instead of silently landing
-        // on some neighbour's rank.
-        State::Void => return VOID_KEY,
-    };
-    (s, t)
-}
-
-/// Nearest legal value for a typo'd token, for `check` hints
-/// (PROP-043 §3.2 — "typos like `rewrok` die in CI").
-pub fn nearest<'a>(input: &str, legal: impl IntoIterator<Item = &'a str>) -> Option<&'a str> {
-    legal
-        .into_iter()
-        .map(|cand| (levenshtein(input, cand), cand))
-        .filter(|(d, _)| *d <= 3)
-        .min_by_key(|(d, _)| *d)
-        .map(|(_, cand)| cand)
-}
-
-fn levenshtein(a: &str, b: &str) -> usize {
-    let a: Vec<char> = a.chars().collect();
-    let b: Vec<char> = b.chars().collect();
-    let mut prev: Vec<usize> = (0..=b.len()).collect();
-    let mut cur = vec![0usize; b.len() + 1];
-    for (i, ca) in a.iter().enumerate() {
-        cur[0] = i + 1;
-        for (j, cb) in b.iter().enumerate() {
-            let cost = usize::from(ca != cb);
-            cur[j + 1] = (prev[j] + cost).min(prev[j + 1] + 1).min(cur[j] + 1);
-        }
-        std::mem::swap(&mut prev, &mut cur);
-    }
-    prev[b.len()]
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -488,30 +301,6 @@ mod tests {
         assert_eq!(Audience::parse("agents"), None);
     }
 
-    #[test]
-    fn artifact_requirements_serde_preserves_the_non_empty_canonical_set() {
-        let requirements =
-            ArtifactRequirements::parse_csv("external,specification,verification").unwrap();
-        assert_eq!(
-            serde_json::to_string(&requirements).unwrap(),
-            r#"["specification","verification","external"]"#
-        );
-        let decoded: ArtifactRequirements =
-            serde_json::from_str(r#"["external","specification"]"#).unwrap();
-        assert_eq!(decoded.to_csv(), "specification,external");
-        assert!(serde_json::from_str::<ArtifactRequirements>("[]").is_err());
-        assert!(serde_json::from_str::<ArtifactRequirements>(r#"["plan","plan"]"#).is_err());
-    }
-
-    #[test]
-    fn rollup_order_matches_prop_043() {
-        // unknown is the floor; freeze/done is the ceiling.
-        assert!(rollup_key(Stage::Unknown, State::Done) < rollup_key(Stage::Idea, State::Hold));
-        assert!(rollup_key(Stage::Idea, State::Done) < rollup_key(Stage::Spec, State::Hold));
-        assert!(rollup_key(Stage::Impl, State::Work) < rollup_key(Stage::Impl, State::Done));
-        assert!(rollup_key(Stage::Doc, State::Done) < rollup_key(Stage::Freeze, State::Plan));
-    }
-
     /// The spelling, pinned. `vocabularies_round_trip` cannot do this
     /// job: `parse` is defined *through* `as_str`, so it round-trips any
     /// spelling whatsoever and would bless `voidx` — verified by
@@ -527,75 +316,6 @@ mod tests {
         assert_eq!(
             serde_json::from_str::<State>("\"void\"").unwrap(),
             State::Void
-        );
-    }
-
-    /// The `void` contract, stated over the whole `Stage::ALL ×
-    /// State::ALL` product rather than as the three examples that
-    /// motivated it: every real pair sorts below `void`, and `void` sorts
-    /// to one value no matter which stage carries it.
-    #[test]
-    fn void_outranks_every_pair_at_every_stage() {
-        for stage in Stage::ALL {
-            for state in State::ALL {
-                for at in Stage::ALL {
-                    let key = rollup_key(stage, state);
-                    let void = rollup_key(at, State::Void);
-                    if state == State::Void {
-                        assert_eq!(
-                            key, void,
-                            "`void` must not depend on its stage: {stage}/{state} vs {at}/void"
-                        );
-                    } else {
-                        assert!(key < void, "{stage}/{state} must sort below {at}/void");
-                    }
-                }
-            }
-        }
-    }
-
-    /// The three worked examples of DRIFT-028 §4.1, by name. "Worst-of"
-    /// is `min_by_key(rollup_key)` — the fold `rollup_doc` runs.
-    #[test]
-    fn worst_of_reads_void_as_no_claim() {
-        fn worst(pairs: &[(Stage, State)]) -> (Stage, State) {
-            *pairs
-                .iter()
-                .min_by_key(|(st, s)| rollup_key(*st, *s))
-                .expect("at least one marker")
-        }
-        // worst-of {spec/void, impl/plan} = impl/plan — the live part
-        // governs; the tombstone's *stage* no longer drags the document.
-        assert_eq!(
-            worst(&[(Stage::Spec, State::Void), (Stage::Impl, State::Plan)]),
-            (Stage::Impl, State::Plan)
-        );
-        // worst-of {done, void} = done — real work outranks no claim.
-        assert_eq!(
-            worst(&[(Stage::Impl, State::Done), (Stage::Impl, State::Void)]),
-            (Stage::Impl, State::Done)
-        );
-        // worst-of {void} = void, and a document whose every unit is void
-        // *is* void — the same rule, not a special case.
-        assert_eq!(
-            worst(&[(Stage::Spec, State::Void)]),
-            (Stage::Spec, State::Void)
-        );
-        assert_eq!(
-            worst(&[(Stage::Spec, State::Void), (Stage::Doc, State::Void)]).1,
-            State::Void
-        );
-    }
-
-    #[test]
-    fn nearest_catches_the_famous_typo() {
-        assert_eq!(
-            nearest("rewrok", Action::ALL.iter().map(|a| a.as_str())),
-            Some("rework")
-        );
-        assert_eq!(
-            nearest("zzzzzz", Action::ALL.iter().map(|a| a.as_str())),
-            None
         );
     }
 }
