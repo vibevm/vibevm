@@ -246,27 +246,30 @@ EXIT=0
 ```
 
 ```
-$ CARGO_TARGET_DIR=<scratch> cargo build --workspace
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 05s
-ISO_EXIT=0
+$ cargo build --workspace
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 11.93s
+BUILD_OK
 ```
 
-Про отдельный `CARGO_TARGET_DIR`: `cargo build --workspace` в общем
-`target/` этого дерева не может слинковаться, пока параллельный воркер
-гоняет свой CLI-набор — `error: failed to remove file target/debug/vibe.exe
-… Access is denied (os error 5)`, по пять живых `vibe.exe` одновременно.
-Это состояние машины, а не код: ретрай-цикл ловил окно четверть часа и не
-поймал. Тот же гейт на тех же исходниках прогнан в чистом target-каталоге и
-зелёный; в общем дереве зелены `cargo check --workspace --all-targets` и
-`cargo build --workspace --exclude vibe-cli` (оба выше / EXIT=0), а сам
-`cargo build --workspace` в общем `target/` успешно проходил в этой же
-сессии после A2.12 (`Finished … in 1m 39s`).
+Этот гейт пришлось ждать: пока параллельный воркер гонял свой CLI-набор
+(до пяти живых `vibe.exe` одновременно), линковка падала на
+`error: failed to remove file target/debug/vibe.exe … Access is denied
+(os error 5)` — состояние машины, не код. Ретрай-цикл поймал окно и прошёл
+в общем `target/`; до того тот же гейт был прогнан в чистом
+`CARGO_TARGET_DIR` (`Finished … in 3m 05s`, `ISO_EXIT=0`) — оба на тех же
+исходниках.
 
 ```
 $ target/debug/vibe.exe facts check --exhaustive
 progress check: clean (325 files, 22 warning(s))
 EXIT=0
 ```
+
+Прогнан на **пересобранном** бинарнике, то есть на том, чей `ScopeConfig`
+уже знает поле `judging`: живой `facts.toml` с новой таблицей читается, и
+корпус от неё не изменился — те же 325 файлов и те же 22 предупреждения,
+что до правки. Это и есть проверка главного закона ключа на живом дереве,
+а не только на временных каталогах юнит-тестов.
 
 Флаг проверен на собранном бинарнике, а не только в юнит-тестах:
 
