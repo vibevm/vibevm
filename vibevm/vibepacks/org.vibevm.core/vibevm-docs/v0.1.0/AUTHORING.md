@@ -197,3 +197,7 @@ The owner reads three pages aloud at the phase gate. A page that cannot be read 
 Prose is written by the strongest model available in the central session; the owner has named Fable, Astra and Sol. It is never written by a delegated worker. This covers pages, first paragraphs, the `title` and `abstract` of packages, the glossary, questions, the skill text, and adaptations into other languages. Workers, by the owner's directive Claude Opus 5 at high reasoning effort, do the work around the prose: fixtures, expected output, the block mirrors of adaptations, code, checks, the web shell. A worker's draft of prose is a draft. It is rewritten, not edited, before it ships.
 
 The order of work for a page: outline the ladder, write, self-edit against §2–§8, run `vibe doc check --style`, and hand the page to the owner's spot-read at the gate.
+
+## Two words that are not synonyms {#manual-and-documentation}
+
+*Documentation* is the genre and the package kind: any package of kind `doc`, of any subject. *Manual* is this one, `org.vibevm.core/vibevm-docs`, and the pages say «this manual» when they mean the thing the reader is holding. Neither word is a glossary term, because both are ordinary English; the corpus audit of 2026-09-12 asked whether they were synonyms, and the answer is that they name two different things.
