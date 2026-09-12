@@ -59,7 +59,9 @@ fn the_card_is_read_out_of_the_packages_own_manifest() {
 #[test]
 fn the_card_names_the_addresses_the_build_writes_its_images_at() {
     let card = built().manifest.package;
-    let media = card.media.expect("every build of this pipeline writes the addresses");
+    let media = card
+        .media
+        .expect("every build of this pipeline writes the addresses");
     for address in [&media.icon, &media.banner, &media.preview] {
         assert!(
             address.starts_with("media/"),
