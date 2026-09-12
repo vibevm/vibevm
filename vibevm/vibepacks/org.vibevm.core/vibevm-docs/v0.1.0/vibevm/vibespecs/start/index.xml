@@ -16,7 +16,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
   </step-3>
   <step-4 title="Step 4: look at what appeared">
-    <p>Read [What a project contains](what-a-project-contains.xml) with the new folder open beside it. Two files are yours, one tree is yours, one tree is vibe's, and two generated files carry the reading list. Knowing who writes what is the difference between a project that stays consistent and one that fights its own tool.</p>
+    <p>Read [What a project contains](what-a-project-contains.xml) with the new folder open beside it. Two files are yours, one tree is yours, one tree is vibe's, and the generated files carry the reading list. Knowing who writes what is the difference between a project that stays consistent and one that fights its own tool.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
   </step-4>
   <step-5 title="Step 5: see how the agent reads it">
