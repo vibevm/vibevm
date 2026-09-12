@@ -128,7 +128,11 @@ evidence and decisions; unfinished reasoning is not evidence. Retain accepted
 evidence for an unchanged exact subject and review surviving candidates
 before regeneration. Resolve unknown tool outcomes before replay; apply
 interruption-recovery retry rules to the same logical episode across
-restarts. Mutation diagnostics require concrete suspicion and lower cost than
+restarts. Bind affected build/test targets before case filters and retain
+the required behavioral and consumer-contract proof. A completed atom,
+milestone or push does not trigger a full panel; use verification-selection
+for scoped checks, evidence reuse and failed/invalidated/unrun panel steps.
+Keep the designated final comprehensive gate. Mutation diagnostics require concrete suspicion and lower cost than
 the named alternative proof; their bounded episode never resets on restart. When execution
 is authorized, continue across accepted intermediate atoms until the requested
 boundary, completion, an owner-only decision, external blocker, conflicting
@@ -159,7 +163,10 @@ only with accounted-for revision/input changes. Inspect artifacts and live
 workers before retries; resolve unknown tool outcomes before replay. Recover
 durable decisions, not unfinished reasoning; unchanged exact-subject acceptance
 survives. Follow interruption-recovery; retry and mutation episodes survive
-restart. Mutation diagnostics need concrete suspicion and lower cost than
+restart. Select affected build/test targets before case filters; preserve
+behavior/consumer proof. Atom, milestone and push do not trigger full panels.
+Follow verification-selection for scoped checks and step reuse; retain the
+designated final comprehensive gate. Mutation diagnostics need concrete suspicion and lower cost than
 the named alternative proof. During authorized execution continue across intermediate atoms
 until the requested boundary, completion, owner-only decision, external
 blocker, conflicting live writer or explicit formal handoff. Process ending

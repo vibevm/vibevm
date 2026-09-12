@@ -34,8 +34,9 @@ permission; a new action outside that authority does.</EXECUTION-AUTHORITY></p>
       <LOOP-REFINE fact="true" status="spec/done">**Refine:** expand one coherent
   frontier region around the next meaningful accepted outcome, using existing
   stable node ids. Judge viable existing candidates before opening more work.
-  State dependencies, write perimeter, acceptance, essential verification and
-  safe stop; apply `DISPATCH-READINESS` before execution. Add a mutation
+  State dependencies, write perimeter, acceptance, minimum sufficient affected
+  verification and safe stop; select build/test targets and cases under
+  `verification-selection.xml` before applying `DISPATCH-READINESS`. Add a mutation
   diagnostic only after the suspicion and economy conditions in
   `MUTATION-DIAGNOSTIC-LAW` are met.</LOOP-REFINE>
       <LOOP-EXECUTE fact="true" status="spec/done">**Execute:** work directly or
@@ -75,7 +76,8 @@ stable ids to break otherwise equivalent choices.</WORKING-OUTCOME></p>
 verify that required prerequisites have their declared acceptance tier, actual
 inputs and interfaces are available, the write perimeter includes necessary
 registration/integration files, and observable acceptance has named essential
-checks. Distinguish commands that exist now from checks the atom must implement.
+checks with target, filter and expected cases. Distinguish commands that exist
+now from checks the atom must implement; do not derive commands from task ids.
 Name their expected behavior, the safe stop and recovery route; confirm needed
 resources and current authority. Missing information becomes bounded preparation
 or refinement of the affected existing nodes. It does not authorize a worker
@@ -140,19 +142,22 @@ may still be live, and do not lower acceptance because a cheaper model produced
 the result.</PARALLEL-WORK></p>
   </workers>
   <gates title="5. Gate economy">
-    <p><EXACT-GATES fact="true" status="spec/done">Every atom runs formatting,
-diff hygiene and exact affected tests/checks/lints as applicable to its change,
-including applicable
-ordinary negative-case and invariant tests. Those tests are essential
-verification, not counterfactual mutation. A pipe or wrapper that discards the
-child exit status is telemetry, not a gate.</EXACT-GATES></p>
+    <p><EXACT-GATES fact="true" status="spec/done">Every atom establishes
+applicable formatting, diff hygiene and the minimum sufficient affected
+tests/checks/lints, including ordinary negative cases, invariants and named
+dependent interfaces. Select the build/test target before exact cases or a
+small module family; preserve necessary contract oracles. Refresh the selection
+against the actual diff. Zero selected tests and wrappers that lose child exit
+status are not gates. Detailed selection, build reuse and bounded escalation:
+[`verification-selection.xml`](verification-selection.xml).</EXACT-GATES></p>
     <p><VERIFICATION-SUBJECT fact="true" status="spec/done">Evidence names the
 claim and the actual subject checked: relevant source/input bytes, dependencies,
 fixtures, schemas, configuration, command and flags, toolchain, target and any
 consequential environment. Reuse existing evidence only when that complete
 subject still matches and the claim is covered. A commit id alone cannot prove
-an unchanged environment or dependency closure. If closure is unknown, rerun the
-affected gate. Preserve accepted history; a new session, account, model or
+an unchanged environment or dependency closure; a changed whole-repository HEAD
+alone does not invalidate unrelated proof. If closure is unknown, rerun the
+affected step, not automatically the whole panel. Preserve accepted history; a new session, account, model or
 producer alone does not invalidate evidence or require reaccepting unchanged
 work. Changed subjects and previously unaccepted candidates still need the
 applicable review and checks.</VERIFICATION-SUBJECT></p>
@@ -160,18 +165,25 @@ applicable review and checks.</VERIFICATION-SUBJECT></p>
 run may establish evidence for several nodes when it actually executes their
 required cases and retains a claim-to-result mapping for each. Do not substitute
 a broad green exit for omitted cases, delay a prerequisite gate until after its
-dependent action, or silently remove an explicit required command. Consolidate
-duplicate invocations on the same subject; do not consolidate away obligations.
-Broaden or repeat checks when changes, failures, unknown coverage or integration
-boundaries justify it, not to fill an activity quota.</SHARED-GATE-RUN></p>
+dependent action, or silently remove a required claim. The coordinator may
+replace an overbroad command with a narrower proven equivalent under
+`verification-selection.xml#COMMAND-REFINEMENT`, recording the mapping without
+a new permission ritual. Consolidate duplicate invocations on the same subject;
+do not consolidate away obligations. Resume a stopped panel by its failed or
+invalidated steps and unrun tail, retaining the complete required denominator
+and valid earlier results. Report combined proof as an aggregate, not a claim
+that an unexecuted full script passed.</SHARED-GATE-RUN></p>
     <p><FULL-PANEL-TRIGGERS fact="true" status="spec/done">An expensive full
-panel belongs at a coherent integration boundary, after broad shared-foundation
-change, before release/publication, or at final campaign acceptance. Do not run
-it reflexively after every small atom; do not omit it merely because every atom
-had local tests. The panel is the declared integration/release gate for the
-affected subject: publishing one leaf package does not select the entire host
-product or an unstarted campaign's suite. Name that scope and its required
-checks. The panel must run on the unchanged tree being accepted.</FULL-PANEL-TRIGGERS></p>
+whole-product panel runs only for an explicit full-panel request, the designated
+comprehensive final campaign gate, or demonstrated crosscutting impact that has
+no adequate narrower proof. Widen through affected cases, named integration
+consumers and the affected component first. An atom, commit, worker/model
+change, milestone, push/publication, public surface or several changed crates
+is not itself a full-panel trigger. Preserve the final comprehensive gate;
+publishing a leaf package does not select the host product or an unstarted
+campaign's suite. Every required proof must hold for its relevant subject in the
+acceptance tree, with compatible per-step reuse as specified in
+`verification-selection.xml`.</FULL-PANEL-TRIGGERS></p>
     <p><MUTATION-DIAGNOSTIC-LAW fact="true" status="spec/done">**Counterfactual
 mutation is suspicion-triggered diagnostic evidence, never an atom ritual.**
 Essential verification always runs first. A mutation may run only when both a
@@ -206,7 +218,8 @@ reached the asserted path. An equivalent or out-of-contract edit is inconclusive
 an unexpectedly unexercised required path or false-green oracle is a defect to
 repair. If inconclusive or no longer economical, use the named alternative or
 replan without searching for more mutants. Restore the original bytes and
-reproduce essential gates on the restored acceptance subject before acceptance.
+reproduce the essential affected gates on the restored acceptance subject
+before acceptance; restoration is not a full-panel trigger.
 Open-ended mutant search, mutation-score chasing and
 whole-suite mutation loops are forbidden unless the owner separately authorizes
 a diagnostic campaign with its own budget and exit criteria.</MUTATION-DIAGNOSTIC-LAW></p>

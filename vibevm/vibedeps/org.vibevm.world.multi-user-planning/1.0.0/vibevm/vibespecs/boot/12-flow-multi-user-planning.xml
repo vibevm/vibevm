@@ -87,6 +87,16 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
     </facts>
   </planning>
   <verification title="Verification economy">
+    <p><AFFECTED-TARGETS-FIRST fact="true" status="impl/done">Select the
+  build/test target before exact affected cases or a small family, including
+  negative/invariant cases and named contract consumers. Do not default to
+  unfiltered package/workspace suites or global test listing. Zero selected
+  tests is not a pass. Widen for a demonstrated coverage gap; an atom, commit,
+  public surface or milestone alone is not a full-panel trigger. Preserve the
+  designated comprehensive final campaign gate. Reuse compatible artifacts
+  and valid per-step evidence; resume failed/invalidated steps and the unrun
+  tail with the complete required denominator. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#root.</AFFECTED-TARGETS-FIRST></p>
     <p><MUTATION-IS-SUSPICION-TRIGGERED fact="true" status="impl/done">Run
   essential affected checks and ordinary negative/invariant tests for every
   atom. Counterfactual mutation is not a routine gate: use one smallest

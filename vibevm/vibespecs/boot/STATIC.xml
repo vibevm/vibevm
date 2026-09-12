@@ -29,6 +29,7 @@
   A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME → org-vibevm-world-%2Dsource-mirrors-%2DA-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME (org.vibevm.world/source-mirrors)
   ACCEPTANCE-NEVER-TRANSFERS → org-vibevm-world-%2Dmulti-user-planning-%2DACCEPTANCE-NEVER-TRANSFERS (org.vibevm.world/multi-user-planning)
   ADVISORY-CUSTODY → org-vibevm-world-%2Dmulti-user-planning-%2DADVISORY-CUSTODY (org.vibevm.world/multi-user-planning)
+  AFFECTED-TARGETS-FIRST → org-vibevm-world-%2Dmulti-user-planning-%2DAFFECTED-TARGETS-FIRST (org.vibevm.world/multi-user-planning)
   AGENT-CANNOT-ASK-VASYA → org-vibevm-world-%2Ddecision-records-%2DAGENT-CANNOT-ASK-VASYA (org.vibevm.world/decision-records)
   AGENT-READS-THE-TREE-COLD-EVERY-SESSION → org-vibevm-world-%2Dspec-genres-%2DAGENT-READS-THE-TREE-COLD-EVERY-SESSION (org.vibevm.world/spec-genres)
   AI-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DAI-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
@@ -1456,6 +1457,16 @@ output is allowed after the fence; further repository/plan mutation is not.</org
     </facts>
   </org-vibevm-world--multi-user-planning--planning>
   <org-vibevm-world--multi-user-planning--verification title="Verification economy">
+    <p><org-vibevm-world--multi-user-planning--AFFECTED-TARGETS-FIRST fact="true" status="impl/done">Select the
+  build/test target before exact affected cases or a small family, including
+  negative/invariant cases and named contract consumers. Do not default to
+  unfiltered package/workspace suites or global test listing. Zero selected
+  tests is not a pass. Widen for a demonstrated coverage gap; an atom, commit,
+  public surface or milestone alone is not a full-panel trigger. Preserve the
+  designated comprehensive final campaign gate. Reuse compatible artifacts
+  and valid per-step evidence; resume failed/invalidated steps and the unrun
+  tail with the complete required denominator. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#root.</org-vibevm-world--multi-user-planning--AFFECTED-TARGETS-FIRST></p>
     <p><org-vibevm-world--multi-user-planning--MUTATION-IS-SUSPICION-TRIGGERED fact="true" status="impl/done">Run
   essential affected checks and ordinary negative/invariant tests for every
   atom. Counterfactual mutation is not a routine gate: use one smallest

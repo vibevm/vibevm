@@ -14,8 +14,9 @@
   current branch of the hierarchy plus the next risk/dependency boundary,
   decomposed into reviewable atoms.</VIEW-FRONTIER>
       <VIEW-ATOM fact="true" status="spec/done">**Current atom contract:** input,
-  write perimeter, acceptance, essential verification, evidence and safe-stop
-  condition. A counterfactual mutation diagnostic appears only when the
+  write perimeter, acceptance, minimum sufficient affected verification with
+  target and expected cases, evidence and safe-stop condition. Refresh the
+  verification recipe after the real diff. A counterfactual mutation diagnostic appears only when the
   suspicion and economy conditions in
   @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW
   are met.</VIEW-ATOM>
@@ -67,11 +68,18 @@ descendant is non-terminal or while its own exit evidence is absent.</NODE-STATE
   </format>
   <execution-compatibility title="Execution without a plan migration">
     <p><EXECUTION-COMPATIBILITY fact="true" status="spec/done">Working windows,
-bounded worker packets, verification reuse and interruption recovery are
+bounded worker packets, verification selection/reuse and interruption recovery are
 procedures over existing nodes. They do not introduce a second queue, new node
 states or required plan fields. Preserve stable ids, dependencies, dispositions,
 acceptance, evidence and campaign-specific extension fields. Derive a working
 packet from the complete plan; do not replace the plan with that packet.</EXECUTION-COMPATIBILITY></p>
+    <p><VERIFICATION-REFINEMENT fact="true" status="spec/done">Keep a concise
+claim-to-target/case selection note in existing packets and evidence, not new
+required plan fields. A coordinator may refine an overbroad command into proven
+narrower equivalents while retaining its affected acceptance obligations and
+recording the replacement. The designated comprehensive final gate remains
+owed. Canon:
+@spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#root.</VERIFICATION-REFINEMENT></p>
     <p><RECOVERY-EVIDENCE fact="true" status="spec/done">When retries or effects
 need a durable record, use existing evidence references and ordinary local
 reports. Identify the node, input snapshot, completed/unknown effects, consumed
@@ -97,9 +105,11 @@ high-risk or irreversible boundary. Keep distant stages as summary nodes with
 exit criteria. Increase zoom when uncertainty, coupling, public surface or
 reversal cost rises; decrease it after evidence closes uncertainty.</ZOOM-RULE></p>
     <p><ATOM-SHAPE fact="true" status="spec/done">A reviewable atom has one
-coherent purpose, an explicit write perimeter, named essential verification and
-a safe stopping state. Ordinary negative-case and invariant tests remain part of
-that essential floor. Counterfactual mutation is optional diagnostic evidence
+coherent purpose, an explicit write perimeter, named affected verification and
+a safe stopping state. Plan the build/test target before an exact case or small
+family, including named contract consumers. Ordinary negative-case and invariant
+tests remain part of that essential floor; broad suites are not its default.
+Counterfactual mutation is optional diagnostic evidence
 only under
 @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW.
 Atom size is determined by verification cost, not by a fixed line count.</ATOM-SHAPE></p>

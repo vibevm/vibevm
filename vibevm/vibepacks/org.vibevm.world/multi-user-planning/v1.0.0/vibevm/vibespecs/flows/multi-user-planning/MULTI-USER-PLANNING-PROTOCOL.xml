@@ -141,6 +141,11 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
       <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
   [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
+      <DOC-VERIFICATION fact="true" status="spec/done">Selecting affected
+  build/test targets, evidence reuse and partial-panel recovery:
+  [`verification-selection.xml`](verification-selection.xml). Read when binding
+  an execution packet or choosing checks; a milestone alone never selects the
+  full product panel.</DOC-VERIFICATION>
       <DOC-RECOVERY fact="true" status="spec/done">Quota, overload and interrupted
   operation recovery: [`interruption-recovery.xml`](interruption-recovery.xml).
   Read when dispatch may outlive the coordinator or an interruption occurs.</DOC-RECOVERY>

@@ -178,9 +178,13 @@ nor claim preservation of hidden chain-of-thought.</CHECKPOINT-CONTENTS></p>
   checkpoint, use the tree, plan and inspectable artifacts; their absence
   creates uncertainty to resolve, not a compulsory handoff or restart from zero.</RESUME-REASON>
       <RESUME-VERIFY fact="true" status="spec/done">Compare evidence subjects
-  to current inputs. Retain unchanged accepted evidence; rerun only affected or
-  unverifiable gates, plus explicitly required integration/closure gates at
-  their actual boundaries. A recovered candidate still receives central review.</RESUME-VERIFY>
+  to current relevant inputs. Retain unchanged accepted evidence; rerun only
+  affected or unverifiable steps and the unrun tail of an owed gate. Preserve
+  the complete required step/case denominator, including compatible earlier
+  results, and report aggregate proof honestly. A new HEAD or model alone does
+  not require starting the full panel again. Apply
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#PANEL-RESUMPTION.
+  A recovered candidate still receives central review.</RESUME-VERIFY>
       <RESUME-CONTINUE fact="true" status="spec/done">Update existing node
   evidence and state only as justified, refresh the derived goal if stale,
   and select the next bounded authorized action. Status/planning-only requests
@@ -225,6 +229,13 @@ nor claim preservation of hidden chain-of-thought.</CHECKPOINT-CONTENTS></p>
   as candidate, reconstruct the intended obligation from existing node ids and
   sources, and choose a bounded next check. The absence of hidden reasoning is
   neither evidence of correctness nor a reason to discard useful work.</CASE-NO-CHECKPOINT>
+      <CASE-PANEL-RESUME fact="true" status="spec/done">**Fail-fast panel:**
+  three required steps passed, the fourth failed, and two never ran. A fix
+  invalidates the fourth and one earlier step. Rerun those two and the unrun
+  tail, reusing the other passing results only after checking their full
+  relevant input closures. Preserve all six obligations and required cases;
+  report aggregate coverage, not a fictional successful full invocation. If
+  earlier validity is unknown, rerun those steps too.</CASE-PANEL-RESUME>
     </facts>
   </scenarios>
 </spec>

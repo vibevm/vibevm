@@ -11,8 +11,8 @@ epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
-description = "Multi-contributor campaign stewardship with bounded execution, interruption recovery, deterministic goals, and opt-in handoffs"
-keywords = ["planning", "campaigns", "multi-user", "goal", "continuation", "recovery", "handoff", "agents"]
+description = "Multi-contributor campaign stewardship with targeted verification, interruption recovery, deterministic goals, and opt-in handoffs"
+keywords = ["planning", "campaigns", "multi-user", "goal", "verification", "continuation", "recovery", "handoff", "agents"]
 
 [compatibility]
 min_vibe_version = "0.1.0"

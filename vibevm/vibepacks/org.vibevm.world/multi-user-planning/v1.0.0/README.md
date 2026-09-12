@@ -61,6 +61,9 @@ evidence mechanics that any capable agent or human coordinator can use.
   review, gate-economy, recovery and wisdom-promotion discipline in
   `campaign-execution.xml`, including essential-first verification and the
   suspicion-triggered bounded mutation policy. @status:impl/done
+- @fact:CONTENT-VERIFICATION Target-first affected checks, bounded scope
+  escalation, compatible evidence reuse and fail-fast panel resumption in
+  `verification-selection.xml`. @status:impl/done
 - @fact:CONTENT-RECOVERY Bounded provider retries, ambiguous-effect recovery,
   live-worker reconciliation and durable decision summaries in
   `interruption-recovery.xml`. It uses existing plan/evidence surfaces and
@@ -136,6 +139,17 @@ complete-plan understanding after checking revision and input changes; a cold
 session reads the whole plan. Verification can be reused only for the same
 subject and actual covered obligations. Mutation is a bounded diagnostic for
 concrete suspicion, never a routine completion tax. @status:spec/done
+
+@fact:AFFECTED-VERIFICATION-DEFAULT Select the build/test target first, then
+exact affected cases or a small family and named contract consumers. Include
+negative cases and invariants; zero selected tests is not a pass. Atom/commit
+completion, public surfaces and milestone labels do not trigger a full panel.
+Widen only for a named coverage gap, an explicit full-panel request or the
+designated comprehensive final campaign gate. Reuse compatible build artifacts
+and valid per-step evidence; resume failed or invalidated steps and the unrun
+tail. Keep the complete gate denominator and identify aggregate proof honestly.
+Existing overbroad recipes may be narrowed with a recorded equivalent
+claim-to-proof mapping, without changing the plan format. @status:spec/done
 
 @fact:RECOVERY-WITHOUT-REPLAY A model interruption may lose reasoning while
 commands or workers continue. Inspect their status, diffs and receipts first.
