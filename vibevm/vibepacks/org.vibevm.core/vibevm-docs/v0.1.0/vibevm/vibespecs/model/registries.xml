@@ -35,6 +35,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
     <p>The index is a cache, never the truth. If it disagrees with a package repository, the repository wins, and a package resolved through the index is still verified against its content fingerprint when it arrives. A registry without an index works exactly as before, only slower; a missing index is not an error.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REALITY-WINS"/>
     <p>The index location is derived from the registry's address and can be overridden per registry with an environment variable named after the registry, `VIBEVM_INDEX_URL_&lt;NAME&gt;`; the literal value `none` switches index lookups off for that registry.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"/>
     <p>A registry entry may pin its index with `index_url`; without one, a public GitHub organisation maps to its `index` repository on the raw content host and any other host to `&lt;registry-url&gt;/index`. A probe of the index has three outcomes: found, absent, or refused. Only absent falls through quietly to a live listing, because nobody promised an index; an index that is there and cannot be read is reported. `vibe search` asks each configured index the question directly rather than downloading the whole catalogue.</p>
