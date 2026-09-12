@@ -121,7 +121,7 @@ A0.27 в плане отсутствует.
 | A2.11, A2.13, A2.22 | `findings/PACKET-P2-O6.md` | `51695bdd` `feat(doc): resolve rule citations against the current specs`; `fcc32b96` `feat(doc): render islands from the pivot so web and local share one content path`; `6aa578df` `feat(doc): number blocks at build time across every projection`; `cbd3b8e9` lockfile; отчёт `6e822cd4` | 381/381 цитат; остров; `pNN`; PROP-057 сведена (J-076); B-144 |
 | A2.14, A2.24, A2.15, A2.23 | `findings/PACKET-P2-O7.md` | `55dfd646` `feat(doc): derive the page manifest, statuses and llms indexes`; `27de558e` `feat(doc): carry reading time and provenance in the page manifest`; `ff71092a` `feat(doc): check translations page by page`; `5ad8c7a8` `feat(doc): check translations block by block`; отчёт `15763604` | J-079; диск — J-078 |
 | A2.16, A2.17, A2.18, A2.19, A2.20 | `findings/PACKET-P2-O8.md` | в работе | покрытие, плейсхолдеры, `vibe doc` CLI и сервер, MCP `read_doc`, скилл; хвосты P2-O3 и `facts.toml` |
-| — | `findings/PACKET-P1-O6.md` | в работе | `cli_search` ×2, литералы `7`, панель целиком |
+| — | `findings/PACKET-P1-O6.md` | `8df28576` `test(cli): the search fixtures name the no-index rung instead of assuming it`; `aa8d196b` `test: take the lock schema version from the constant in the remaining fixtures`; отчёт `1c143bda` | причина красных `cli_search` — третья ступень лестницы индекса (`764cf517`), тест устарел; панель мертва на шаге 3 (рэтчет wire-derive, `vibe-core` 35 против 34 — `29351a68` без подъёма базы) — J-085 |
 | A2.12, A2.21 | `findings/PACKET-P2-O5.md` | `d608a797` `feat(progress): admit the agent audience`; `b9be9f3b` `chore(facts): keep documentation observed but unjudged`; отчёт `98a91500` | X-024 решён: `[judging] exempt` освобождает и от `--exhaustive`; читатель `vibe facts check` пока не выбирает словарь по виду пакета — хвост в P2-O3 |
 | A2.3, A2.5, A2.6, A2.7 | `findings/PACKET-P2-O3.md` | `cb041f5d` `feat(index): index doc packages with their relations and cards`; `9993148f` `feat(check): gate doc packages, translations and media on their contract`; `09afc33a` `feat(init): scaffold doc packages and their translations`; `93b0d7ff` `feat(cache): warm a doc package's subjects and source so citations resolve offline`; `153e68d9` `chore(cli): let the pivot read documentation and observe the manual` | J-077; отчёт `296a0259`; два кандидата гейта — хвост в P2-O8; попутно починен `rename_wire` кодгена (обе копии искали `"]` вместо `")]`) |
 
@@ -138,6 +138,7 @@ A0.27 в плане отсутствует.
 | A3.6 | страницы фазы P | `audience` стоит в `<status>` всех 45 страниц (31 `user`, 10 `author`, 3 `dev`, 1 `agent`, 1 `user,author`); проверка `vibe doc manifest --json` и порядка `llms.txt` — после посадки P2-O8 |
 | A3.13 | `6607378c` M1 (138), `ad95d7f8` M2 (82), `d93f8b3f`+`cb98cf93` M3 (95), `49faa6b2` M4 (131), `647b1ab7` M5 (50) | 496 пометок `actionstage="doc"` к 20 прежним — 516 обязательств; предсказание 8 подтверждено (было 20, из них 0 вне PROP-057); статусный барьер — X-032; ложные срабатывания зоны — `9db1cc33`, `7b102c59` |
 | A3.5/A3.9 (частично) | `f81a6b80` | новая страница `model/dependency-visibility` под 24 обязательства PROP-050, которые не цитировала ни одна страница; глоссарий — `effective set`, `friend closure`; регистр корпуса 45/60/408 |
+| A3.5, A3.7, A3.9, A3.10, A3.11 («подключить и проверить») | `6bd8272d` `docs(vibevm-docs): cite every obligation the specifications mark` | 404 непокрытых обязательства закрыты за один проход центральной сессии: аудитории двенадцати страниц расширены до всех читателей, которым они служат (справочники, глоссарий, boot-лейн, lifecycle, воркспейс, публикация, страницы агентов); секции получили правила, которые уже пересказывали, с одной-двумя фразами там, где пересказа не было; три новые страницы — `authoring/facts-and-status-markers` (PROP-043), `reference/tree` (PROP-036/037/042/039), `authoring/bridge-a-repository` (PROP-023/021); два снятия раннером; регистр корпуса 48/62/757/20 |
 
 ## Обновления плана стюарда {#steward}
 
@@ -166,7 +167,8 @@ A0.27 в плане отсутствует.
 
 | Дата | Аудитория | Обязательств | Покрыто |
 |---|---|---|---|
-| 2026-09-12 (разметка A3.13, до гейта) | user / author / dev / agent | 307 / 217 / 6 / 41 упоминаний (516 фактов, 55 с двумя аудиториями) | измеряется `vibe doc check --coverage --min 0` после посадки P2-O8 |
+| 2026-09-12 (разметка A3.13, до цитат) | user / author / dev / agent | 307 / 217 / 5 / 40 (514 фактов) | 107 / 55 / 0 / 3 — предпросмотр скриптом `coverage_preview` по тем же правилам, что A2.16 |
+| 2026-09-12 (после `6bd8272d`) | user / author / dev / agent | 307 / 217 / 5 / 40 | 307 / 217 / 5 / 40 — 100 % по предпросмотру; гейт `vibe doc check --coverage --min 100` подтверждает после посадки P2-O8 |
 
 ## Отставание переводов {#translations}
 
