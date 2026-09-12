@@ -946,7 +946,7 @@ foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"
 
-# ── The registry builder (1 record, 1 JTD), PROP-057 §9.2 ───────────────────
+# ── The registry builder (2 records, 2 JTD), PROP-057 §9.2 ──────────────────
 # `doc-site-config` is `site.toml`, what `vibe doc build-site` is told before
 # it reads anything: the two sources of `##SITE-TWO-SOURCES` in the form of a
 # project's `[[registry]]`, and one `[site]` table for the domain the render
@@ -959,6 +959,19 @@ sunset = "none"
 epoch = 1
 schema = "schemas/doc_site_config.jtd.json"
 recoverable = false
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+# `doc-site-state` is `<out>/.vibe-site/state.json`, what the builder has
+# rendered and what it rendered it from. Recoverable in the sense the axis
+# means it: delete it and the next run renders everything and writes it again,
+# producing the same site — it is a cache key and not a fact about the world.
+# `ours`, and read only by the builder that wrote it, one run later.
+[format.doc-site-state]
+epoch = 1
+schema = "schemas/doc_site_state.jtd.json"
+recoverable = true
 foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"

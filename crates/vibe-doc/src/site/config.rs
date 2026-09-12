@@ -85,6 +85,37 @@ pub struct Registry {
     pub naming: NamingConvention,
 }
 
+impl Registry {
+    /// This registry as the `[[registry]]` section it is shaped after.
+    ///
+    /// It exists so the index-location ladder
+    /// (`vibe_registry::index_client::resolve_index_url`) can read it: the
+    /// site must ask WHERE an index lives through the one law that
+    /// answers that, or it would poll a different address than
+    /// `vibe install` does on the same machine.
+    ///
+    /// Everything that authenticates comes out at its own default,
+    /// because the site has nothing to authenticate with: `auth = none`
+    /// is public read, which is exactly what a documentation site does.
+    pub fn as_section(&self) -> vibe_core::manifest::RegistrySection {
+        vibe_core::manifest::RegistrySection {
+            name: self.name.clone(),
+            url: self.url.clone(),
+            r#ref: DEFAULT_REGISTRY_REF.to_string(),
+            naming: self.naming,
+            auth: vibe_core::manifest::AuthKind::None,
+            token_env: None,
+            enabled: true,
+            index_url: self.index_url.clone(),
+        }
+    }
+}
+
+/// The registry-level ref the ladder reads when it translates a public
+/// GitHub organisation into its raw index. The same default a
+/// `[[registry]]` block takes when it declares none.
+pub const DEFAULT_REGISTRY_REF: &str = "main";
+
 /// The host's source repository, read as a checkout on disk.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Host {

@@ -17,7 +17,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES");
 
 use anyhow::Result;
-use vibe_doc::site::Site;
+use chrono::Utc;
+use vibe_doc::site::{Site, feed, queue, state};
 
 use super::DocEnv;
 use crate::cli::DocBuildSiteArgs;
@@ -26,6 +27,25 @@ use crate::cli::DocBuildSiteArgs;
 pub fn run(args: DocBuildSiteArgs, _env: DocEnv) -> Result<()> {
     let site = Site::read(&args.config)?;
     print!("{}", site.render());
+
+    // The clock is called HERE and nowhere below, like every other `vibe
+    // doc` verb: the debounce is arithmetic over an instant the caller
+    // supplies, so a plan can be replayed and reviewed.
+    let now = Utc::now();
+    let polled = feed::poll(&site)?;
+    for line in &polled.sources {
+        println!("  {line}");
+    }
+
+    let rendered = state::read(&args.out)?;
+    let debounce = site
+        .host
+        .as_ref()
+        .map(|host| host.debounce_minutes)
+        .unwrap_or_default();
+    let plan = queue::plan(&polled.pairs, &rendered, now, debounce);
+    print!("{}", plan.render());
+
     if args.dry_run {
         println!("  dry run — nothing was written");
         return Ok(());

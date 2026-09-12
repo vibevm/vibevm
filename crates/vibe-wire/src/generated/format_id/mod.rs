@@ -47,6 +47,7 @@ pub enum FormatId {
     DocManifest,
     DocReviews,
     DocSiteConfig,
+    DocSiteState,
     DocSurface,
     DocSurfaceDiff,
     DocTodo,
