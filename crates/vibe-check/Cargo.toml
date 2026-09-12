@@ -23,6 +23,10 @@ vibe-resolver.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 walkdir.workspace = true
+# One key lookup, not a second manifest grammar: a translation's
+# `[i18n].canonical` must be WRITTEN, and the parsed manifest fills the
+# default in (PROP-057 `##LOC-LANGUAGE-FIELD`).
+toml.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
