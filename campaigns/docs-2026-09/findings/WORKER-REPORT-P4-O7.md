@@ -909,6 +909,160 @@ EXIT=0
 - `specmap.json` возвращён к HEAD.
 - Своих процессов не осталось (`vibe.exe` — 0), чужих не останавливал.
 
+## Хвост 2 — агентские файлы под изданием
+
+Один атом, один коммит: **`3c96b78c` `feat(doc): serve the agent files
+under the edition too`**. Это закрывает находку хвоста 1.
+
+### Проверка по `tools/build.mjs`: `manifest.json` под издание сайт кладёт
+
+Пакет хвоста просил свериться. Ответ — **да, кладёт**, и это две разные
+руки в одной сборке:
+
+- `tools/doc-surfaces.mjs::copySurfaces` под `base` издания копирует
+  `<документ>.md`, `<документ>.xml`, четыре имени из `LLMS_FILES` и
+  `media/**` — но `manifest.json` в этом цикле нет;
+- `tools/build.mjs` (строки «The page manifest of each edition, at both
+  spellings of the version») **пишет** `${base}manifest.json` отдельно,
+  пересериализуя манифест, который написал конвейер.
+
+Проверено и по выходу: в `dist/doc/<координата>/0.1.0/` лежат
+`index.html`, `llms.txt`, `llms-full.txt` (фикстура несёт два тира из
+четырёх) и `manifest.json`. Код, который его пишет, **закоммичен** — это
+не незакоммиченная работа P5-O1 (её диф `tools/build.mjs` этих строк не
+трогает).
+
+Отсюда: под изданием читатель отдаёт **пять** файлов — четыре тира и
+манифест. Таблица A4.5 в отчёте P4-O3 («`manifest.json` не копируется»)
+верна про `copySurfaces` и неполна про сборку целиком; строчку стоит
+поправить, когда до неё дойдут руки.
+
+### Решение 17 — одно снятие префикса, и адрес перестаёт быть двумя адресами
+
+`machine_file` снимает `reader.prefix` с адреса перед тем, как сверить
+имя. Всё остальное — прежнее: те же пять имён, те же байты, тот же
+рендер. `latest` не стоил ничего: адрес приходит сюда уже переведённым в
+номер (`as_numbered`, хвост 1), так что три написания одного файла
+(`<base>`, `<base><координата>/<версия>/`, `…/latest/`) — это один
+ответ, а не три реализации.
+
+Локально пять файлов одинаковы в корне и под изданием — потому что
+читатель наведён на **один** пакет, и «поверхности издания» и
+«поверхности монтажа» здесь одно и то же. На сайте это два разных файла
+(`/doc/manifest.json` — каталог всех изданий, `<издание>/manifest.json` —
+страницы одного), и это не расхождение: локальный читатель несёт ровно
+одно издание, так что его каталог и есть его издание.
+
+### Решение 18 — починка слэша спрашивает, страница ли это, а не похоже ли
+
+Развилка `page()` срабатывала на **любом** адресе с точкой, чьё
+расширение не `.md` и не `.xml`, и отправляла запрос на файл, которого
+читатель не отдаёт, на прыжок дальше — чтобы отказать там:
+`…/llms.txt` → `308` → `…/llms.txt/` → `404` про страницу
+`llms.txt.xml`. Теперь `308` выдаётся, только если пакет действительно
+несёт `<адрес>.xml`; иначе — `404` там, где спросили, с именем в
+сообщении. Набор страниц уже читался строкой ниже, так что лишнего
+чтения нет — только порядок.
+
+Это та самая находка хвоста 1 («тупик в обоих написаниях»), и закрыта
+она с двух сторон: адрес `llms*.txt` под изданием теперь **отвечает**, а
+имя, которого нет, отказывает без прыжка.
+
+### Решение 19 — тестовая ячейка разрезана по шву «адреса одного издания»
+
+`conform check` поймал файл: `routes/tests.rs` дорос до 615 строк при
+бюджете 600. Разрез — по предмету, а не по размеру: в
+`routes/tests/editions.rs` уехало всё про **адреса одного издания в обоих
+написаниях версии** — страница пакета, закон алиаса, сторож имени
+картинки, «`latest` читается только на позиции версии», агентские файлы
+под изданием и отказ без прыжка. Харнесс (`package`, `reader`,
+`get_path`, `get_bytes`) остался в родителе; ни один тест не переписан.
+Родитель — 449 строк, ячейка — 185.
+
+### Живой прогон
+
+`vibe doc serve` над руководством, оболочка настоящая, `curl --path-as-is`:
+
+```
+файл             корень                              <версия>                            latest
+manifest.json    200 application/json 32855          200 application/json 32855          200 application/json 32855
+llms.txt         200 text/plain 17900                200 text/plain 17900                200 text/plain 17900
+llms-small.txt   200 text/plain 127469               200 text/plain 127469               200 text/plain 127469
+llms-medium.txt  200 text/plain 509607               200 text/plain 509607               200 text/plain 509607
+llms-full.txt    200 text/plain 915341               200 text/plain 915341               200 text/plain 915341
+nothing.txt      404                                 404                                 404
+vibe.toml        404                                 404                                 404
+```
+
+Байты `manifest.json` во всех трёх адресах сверены `cmp` — **identical**.
+
+Отказ без прыжка и сохранённая починка:
+
+```
+0.1.0/nothing.txt  -> 404 redirect=''
+latest/nothing.txt -> 404 redirect=''
+0.1.0/start/index  -> 308 <base><координата>/0.1.0/start/index/
+latest/start/index -> 308 <base><координата>/0.1.0/start/index/
+страница latest/start/index/          200 text/html 44005
+картинка latest/media/<хэш>.svg       200 image/svg+xml 622
+```
+
+### Гейты хвоста 2, дословно
+
+```
+$ cargo fmt --all --check
+FMT_EXIT=0
+
+$ cargo clippy -p vibe-doc -p vibe-doc-server -p vibe-doc-shell --all-targets -- -D warnings
+CLIPPY_EXIT=0
+
+$ cargo test -p vibe-doc -p vibe-doc-server -p vibe-doc-shell
+test result: ok. 554 passed; … / 5 / 3 / 5 / 39 passed / 19 / 64 / 6 / 11
+EXIT_A=0
+
+$ cargo test … --features vibe-doc-shell/embedded-shell
+те же девять строк, 39 в vibe-doc-server
+EXIT_B=0
+
+$ cargo xtask conform check --scope crates/vibe-doc-server
+  conform: NEW file-length crates/vibe-doc-server/src/routes/tests.rs:1 — violates REQ discipline://rust-ai-native-lang/guide#surface-form: 615 lines exceeds the 600-line file budget; fix surface: split along the file's responsibility seams into module-grain cells
+conform check: 1 finding(s) in scope crates/vibe-doc-server ({"file-length": 1}), 0 frozen in baseline, 1 new
+… после разреза:
+conform check: 0 finding(s) in scope crates/vibe-doc-server ({}), 0 frozen in baseline, 0 new; SARIF at target\conform\report.sarif.
+
+$ cargo xtask conform check --scope crates/vibe-doc
+conform check: 0 finding(s) in scope crates/vibe-doc ({}), 0 frozen in baseline, 0 new; SARIF at target\conform\report.sarif.
+
+$ cargo xtask specmap
+specmap: wrote …\specmap.json (7930 spec units, 3600 tagged code items, 3112 edges, 0 suspects, 31 warnings).
+$ git checkout -- specmap.json
+
+$ npx playwright test -c site/tests/playwright.config.ts site/tests/local-reader.spec.ts
+  5 passed (14.6s)
+```
+
+Тестов в `vibe-doc-server` было 37, стало **39**: агентские файлы под
+изданием в обоих написаниях и отказ без прыжка. Плюс два адреса
+добавлены в закон алиаса хвоста 1 (`llms.txt` и `nothing.txt`), и его
+комментарий про «расхождение с сайтом» снят — расхождения больше нет.
+
+### Состояние дерева после хвоста 2
+
+- `git status --short` по `crates/**` — пусто: всё в коммите `3c96b78c`.
+- Бинарник дерева **без фичи** (`--print-shell` → `"provenance":
+  "fallback"`).
+- `specmap.json` возвращён к HEAD.
+- Своих процессов не осталось (`vibe.exe` — 0), чужих не останавливал.
+
+### Что осталось после всех трёх хвостов
+
+1. **Фикстурные копии острова в web-пакете** всё ещё байтовые копии
+   старых голденов (А-5) — чужой периметр.
+2. **Строчка A4.5 в отчёте P4-O3** неполна: `manifest.json` под издание
+   сайт кладёт, просто не в `copySurfaces`.
+3. **Полная панель Playwright** красна на чужих спеках поверх чужой
+   незакоммиченной работы; спека моего периметра зелёная.
+
 ## R-25
 
 Путей вне репозитория в отчёте нет: scratch обозначен `<scratch>`, база
