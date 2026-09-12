@@ -633,6 +633,45 @@ run_step "cargo test --workspace (go-ai-native-lang pkg)" \
 run_step "cargo clippy --all-targets (go-ai-native-lang pkg)" \
   cargo clippy --manifest-path "$GOPKG_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
 
+# 8b. The site package `org.vibevm.doc/web` — the only TypeScript product
+# in the tree, authored under the same discipline as the stacks above and
+# gated the same way: the seven-step floor (prettier → tsc → tests →
+# eslint → conform → specmap → test-gate) plus the APCA contrast audit of
+# both themes, which is the eighth step of ITS floor and lives in the
+# package (PROP-057 ##STACK-FLOOR, ##STACK-DESIGN-FLOOR).
+#
+# Driven from the host root through the discipline's built binary with
+# `--path`, which is route A of the campaign's A0.14 finding: the slot is
+# already built for the stacks above, so the package needs neither its own
+# `vibe install` nor a second copy of `vibedeps/`.
+#
+# A missing tool FAILS WITH A RECIPE and never skips, which is the
+# discipline's own rule for its floor and this panel's rule for itself: a
+# floor that quietly runs seven of eight steps reports a number with no
+# denominator (the same lesson as step 0b).
+WEBPKG_DIR="vibevm/vibepacks/org.vibevm.doc/web/v0.1.0"
+TSNATIVE_SLOT="vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release"
+
+check_web_floor() {
+  local bin="$TSNATIVE_SLOT/typescript-ai-native"
+  [ -x "$bin" ] || bin="$bin.exe"
+  if [ ! -x "$bin" ]; then
+    echo "self-check: the discipline binary \`typescript-ai-native\` is not built." >&2
+    echo "self-check: fix: target/debug/vibe.exe bin build typescript-ai-native --assume-yes" >&2
+    return 1
+  fi
+  if [ ! -d "$WEBPKG_DIR/node_modules" ]; then
+    echo "self-check: \`$WEBPKG_DIR/node_modules\` is absent — the floor's own" >&2
+    echo "self-check: tools (prettier, tsc, eslint) live there and nothing else has them." >&2
+    echo "self-check: fix: corepack enable && (cd $WEBPKG_DIR && pnpm install --frozen-lockfile)" >&2
+    return 1
+  fi
+  "$bin" floor --path "$WEBPKG_DIR" || return 1
+  node "$WEBPKG_DIR/design/audit/contrast.mjs"
+}
+run_step "typescript-ai-native floor + APCA audit (org.vibevm.doc/web pkg)" \
+  check_web_floor || OVERALL=$?
+
 # 9. The packages' own traceability self-traces (Traceability Relocation Plan
 # Phase 4; the authored-engine half moved with the consolidation). Every gated
 # package crate's public surface must carry a scope!/#[spec] tag, so no

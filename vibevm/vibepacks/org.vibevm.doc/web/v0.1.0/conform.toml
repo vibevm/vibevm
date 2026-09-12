@@ -19,8 +19,10 @@ max_file_lines = 600
 roots = ["design/src", "site/src"]
 # `site/src/fixtures/` holds bytes copied from the Rust pipeline's goldens
 # (an island, a page manifest). They are inputs to be compared against,
-# never code to be judged.
-exclude_substrings = ["/fixtures/"]
+# never code to be judged. `site/src/generated/` is emitted by
+# `cargo xtask codegen` from the wire schema and diffed against the
+# generator's output: judging its shape would be judging the generator's.
+exclude_substrings = ["/fixtures/", "/generated/"]
 gated = []
 # No `cells_dir`: the cell layout addresses a domain split into isolated
 # units with one seam each, and this package's units are a component

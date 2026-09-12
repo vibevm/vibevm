@@ -28,6 +28,7 @@ export default tseslint.config(
       "design/audit/",
       "design/fonts/",
       "site/src/fixtures/",
+      "site/src/generated/",
     ],
   },
   ...tseslint.configs.recommended,

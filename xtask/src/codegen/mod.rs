@@ -31,6 +31,7 @@ mod reader_projection;
 mod shared_module;
 mod snake_case;
 mod strictness;
+mod typescript;
 mod vocabulary;
 mod wire_order;
 mod write;
@@ -44,6 +45,7 @@ use layout::{
 use output_tree::StagedOutputTree;
 use postproc::{StrictnessSource, rewrite_generated};
 use strictness::Strictness;
+use typescript::{generate_typescript, typescript_out_files};
 use vocabulary::{Vocabularies, vocabularies_path};
 use write::write_generated;
 
@@ -177,6 +179,14 @@ pub(crate) fn run_codegen() -> Result<()> {
             )
         })?;
     }
+
+    // The second language. It runs after the Rust trees are published
+    // rather than beside them because it shares nothing with them but
+    // the generator and the resolver: its output is one file per target
+    // in a package's own source tree, not a module tree of its own, so
+    // the staging-and-install dance those trees need would be ceremony
+    // around a single write.
+    generate_typescript(&binary, &root, &mut vocabularies)?;
     Ok(())
 }
 
@@ -421,10 +431,13 @@ fn generate_into(
 pub(crate) fn run_check_codegen() -> Result<()> {
     run_codegen()?;
     let root = repo_root()?;
-    // Diff every generated tree codegen may write, so drift in any owning
+    // Diff every generated path codegen may write, so drift in any owning
     // crate is caught (schema-home routing fans the engine home out to the
-    // engine crate `core-ai-native-specmap`, the rest to vibe-wire).
-    let out_dirs = [vibe_wire_generated_dir(&root), specmap_generated_dir(&root)];
+    // engine crate `core-ai-native-specmap`, the rest to vibe-wire) — and
+    // the second language with them, because a TypeScript consumer left
+    // out of the diff is a contract with a gate on one side only.
+    let mut out_dirs = vec![vibe_wire_generated_dir(&root), specmap_generated_dir(&root)];
+    out_dirs.extend(typescript_out_files(&root));
     let mut cmd = Command::new("git");
     cmd.arg("diff").arg("--exit-code").arg("--");
     for dir in &out_dirs {
