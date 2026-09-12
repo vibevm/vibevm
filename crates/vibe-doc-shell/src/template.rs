@@ -1,5 +1,28 @@
-//! The route template: where the island goes, and what the policy has to
-//! name (PROP-057 `##LOCAL-CSP`, deferral X-035).
+//! The route template: where the island goes, what the policy has to
+//! name, and the one edit a served head may take (PROP-057
+//! `##LOCAL-CSP`, deferral X-035).
+//!
+//! ## The head is corrected in place, never added to
+//!
+//! Two things in a prerendered route name a PAGE rather than the shell —
+//! the tab's title and the addresses of the page's projections — and the
+//! server corrects both. It corrects them by rewriting the text and the
+//! attributes of elements the template ALREADY DECLARES, and it inserts
+//! nothing, removes nothing and moves nothing.
+//!
+//! That is a measured law. A resumable document carries a serialised
+//! description of itself, and the description and the head agree on which
+//! elements are there and in what order. Three `<link rel="alternate">`
+//! inserted after `</title>` broke that agreement on this shell: the
+//! framework stopped resuming, and with it every behaviour of the page —
+//! the contents, the anchors, the reading settings, the rule panel, the
+//! reading of the manifest — silently never started. No error reached a
+//! gate; the page simply became text.
+//!
+//! So a template that declares no `<title>` and no `<link>` gets neither.
+//! The shell writes the head it wants (it is the only party that knows
+//! what the page is for), and this module repairs the two values in it
+//! that a prerender could not have known.
 //!
 //! The shell ships pages with inline scripts that cannot become files.
 //! The theme has to reach the root element before the first stylesheet is
@@ -185,6 +208,17 @@ pub fn glue(template: &str, marker: &str, island: &str) -> String {
 /// page the build rendered. The reader knows which page it is actually
 /// serving, and a browser tab is the one place that difference is visible
 /// before anything else on the page.
+///
+/// A template that declares no title gets none written in — for the
+/// reason in this module's header, and because a blank tab is worse than
+/// a tab the shell fills in for itself.
+///
+/// ```
+/// use vibe_doc_shell::template::retitle;
+///
+/// assert_eq!(retitle("<head><title>A</title></head>", "B"), "<head><title>B</title></head>");
+/// assert_eq!(retitle("<head></head>", "B"), "<head></head>");
+/// ```
 pub fn retitle(html: &str, title: &str) -> String {
     let Some(open) = html.find("<title") else {
         return html.to_string();
@@ -198,22 +232,59 @@ pub fn retitle(html: &str, title: &str) -> String {
     format!("{}{}{}", &html[..close + 1], escape(title), &html[end..])
 }
 
-/// One machine projection of the page being served: its media type, its
-/// address and the words a browser shows in a link menu.
+/// One machine projection of the page being served: the media type that
+/// identifies its `<link rel="alternate">`, the address that element
+/// should carry, and the words a browser shows for it in a menu of a
+/// document's alternate versions.
 pub struct Alternate<'a> {
     pub media_type: &'a str,
     pub href: &'a str,
     pub title: &'a str,
 }
 
-/// Replace the template's `<link rel="alternate">` elements with the ones
-/// the page actually being served has.
+/// Repoint the template's `<link rel="alternate">` elements at the page
+/// actually being served.
 ///
-/// The template is a prerendered route, so the projections it names are
-/// the build's fixture — a Markdown file at an address that exists on no
-/// reader's machine. Dropping them and writing the real ones is the same
-/// edit as the title, for the same reason: these are the parts of a
-/// prerendered head that name a PAGE rather than the shell.
+/// One attribute of elements that are already standing, matched by
+/// `type`, and **nothing else**: no element is inserted, none is removed,
+/// none is moved. That is not tidiness — it is the whole contract. A
+/// resumable document and the state serialised beside it agree on what
+/// the head CONTAINS and in what ORDER; an element inserted into the
+/// middle of it breaks that agreement, the framework stops resuming, and
+/// every behaviour of the page — its contents, its anchors, its settings,
+/// its reading of the manifest — silently never starts. Measured on this
+/// shell: three `<link rel="alternate">` inserted after `</title>` took a
+/// working reader down to static text with no error a gate could see.
+///
+/// So a template that declares no such element gets no such element. The
+/// shell writes the head it wants, and the server corrects the addresses
+/// in it.
+///
+/// ```
+/// use vibe_doc_shell::template::{Alternate, relink};
+///
+/// let head = "<head><title>A</title>\
+///             <link rel=\"alternate\" type=\"text/markdown\" href=\"/fixture.md\" \
+///             title=\"a fixture\"></head>";
+/// let markdown = Alternate {
+///     media_type: "text/markdown",
+///     href: "/real.md",
+///     title: "This page as Markdown",
+/// };
+/// let out = relink(head, &[markdown]);
+/// assert!(out.contains("href=\"/real.md\""));
+/// // The element is the one that was already there, with its values
+/// // corrected: no second element joined it and nothing moved.
+/// assert_eq!(out.matches("<link").count(), 1);
+/// assert!(out.starts_with("<head><title>A</title><link rel=\"alternate\""));
+/// // A head that declares nothing is left exactly as it was.
+/// let markdown = Alternate {
+///     media_type: "text/markdown",
+///     href: "/real.md",
+///     title: "This page as Markdown",
+/// };
+/// assert_eq!(relink("<head></head>", &[markdown]), "<head></head>");
+/// ```
 pub fn relink(html: &str, alternates: &[Alternate<'_>]) -> String {
     let mut out = String::with_capacity(html.len());
     let mut rest = html;
@@ -223,31 +294,73 @@ pub fn relink(html: &str, alternates: &[Alternate<'_>]) -> String {
         };
         let tag = &rest[at..=close];
         out.push_str(&rest[..at]);
-        if !tag.contains("rel=\"alternate\"") && !tag.contains("rel='alternate'") {
-            out.push_str(tag);
-        }
+        out.push_str(&repointed(tag, alternates));
         rest = &rest[close + 1..];
     }
     out.push_str(rest);
+    out
+}
 
-    let written: String = alternates
-        .iter()
-        .map(|one| {
-            format!(
-                "<link rel=\"alternate\" type=\"{}\" href=\"{}\" title=\"{}\">",
-                escape(one.media_type),
-                escape(one.href),
-                escape(one.title)
-            )
-        })
-        .collect();
-    match out.find("</title>") {
-        Some(at) => {
-            let split = at + "</title>".len();
-            format!("{}{written}{}", &out[..split], &out[split..])
-        }
-        None => out,
+/// One `<link>` tag with the values of the page it is serving, or the tag
+/// exactly as it stands.
+///
+/// An attribute the tag does not declare is not written in: the length of
+/// the head is the head's own business, and only the VALUES in it are the
+/// server's.
+fn repointed(tag: &str, alternates: &[Alternate<'_>]) -> String {
+    let attributes = tag.trim_start_matches("<link").trim_end_matches('>');
+    if attribute(attributes, "rel").as_deref() != Some("alternate") {
+        return tag.to_string();
     }
+    let Some(media_type) = attribute(attributes, "type") else {
+        return tag.to_string();
+    };
+    let Some(wanted) = alternates
+        .iter()
+        .find(|one| one.media_type == media_type.trim())
+    else {
+        return tag.to_string();
+    };
+    let out = set_attribute(tag, "href", wanted.href).unwrap_or_else(|| tag.to_string());
+    set_attribute(&out, "title", wanted.title).unwrap_or(out)
+}
+
+/// Rewrite one attribute's value in place, keeping every other byte of
+/// the tag — or `None` when the tag does not declare that attribute,
+/// because writing one in would be adding to the head rather than
+/// correcting it.
+fn set_attribute(tag: &str, name: &str, value: &str) -> Option<String> {
+    let mut at = 0usize;
+    let bytes = tag.as_bytes();
+    while let Some(found) = tag[at..].find(name).map(|i| at + i) {
+        at = found + name.len();
+        let before_ok = bytes
+            .get(found.checked_sub(1)?)
+            .is_some_and(|b| b.is_ascii_whitespace() || *b == b'/');
+        if !before_ok {
+            continue;
+        }
+        let rest = &tag[at..];
+        let trimmed = rest.trim_start();
+        let Some(after_equals) = trimmed.strip_prefix('=') else {
+            continue;
+        };
+        let after_equals = after_equals.trim_start();
+        let mark = after_equals.chars().next()?;
+        if mark != '"' && mark != '\'' {
+            continue;
+        }
+        let inside = after_equals.get(1..)?;
+        let end = inside.find(mark)?;
+        let opens = tag.len() - after_equals.len() + 1;
+        return Some(format!(
+            "{}{}{}",
+            &tag[..opens],
+            escape(value),
+            &tag[opens + end..]
+        ));
+    }
+    None
 }
 
 /// The four characters that cannot stand as themselves in element text or

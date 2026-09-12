@@ -245,6 +245,101 @@ fn the_templates_fixture_projections_are_replaced_by_the_served_pages_own() {
     assert_eq!(out.matches("rel=\"alternate\"").count(), 1);
 }
 
+/// The head a served page wears is the head the template declared: the
+/// same elements, in the same order, with two values corrected.
+///
+/// This is a BYTE law and not a preference. A resumable document and the
+/// state serialised with it agree on the head's contents and their order;
+/// an element inserted into the middle of it stops the framework from
+/// resuming, and a page that never resumes has no behaviour at all — no
+/// contents, no anchors, no settings, no manifest read. The failure is
+/// silent, which is why the law is measured here rather than trusted.
+#[test]
+fn the_head_keeps_every_element_it_had_in_the_order_it_had_them() {
+    let html = concat!(
+        "<head><meta charset=\"utf-8\">",
+        "<title>Built page</title>",
+        "<meta name=\"description\" content=\"a fixture\">",
+        "<link rel=\"alternate\" type=\"text/markdown\" href=\"/doc/fixture.md\" ",
+        "title=\"This page as Markdown\">",
+        "<link rel=\"alternate\" type=\"application/xml\" href=\"/doc/fixture.xml\">",
+        "<link rel=\"alternate\" type=\"text/plain\" href=\"/doc/fixture/llms.txt\">",
+        "<link rel=\"stylesheet\" href=\"/doc/assets/a.css\">",
+        "<script>var t=1;</script></head>",
+    );
+    let out = template::relink(
+        html,
+        &[
+            template::Alternate {
+                media_type: "text/markdown",
+                href: "/doc/org.example/a/1.0.0/guide.md",
+                title: "This page as Markdown",
+            },
+            template::Alternate {
+                media_type: "application/xml",
+                href: "/doc/org.example/a/1.0.0/guide.xml",
+                title: "This page as the dialect XML",
+            },
+            template::Alternate {
+                media_type: "text/plain",
+                href: "/doc/llms.txt",
+                title: "llms.txt of this documentation",
+            },
+        ],
+    );
+    let out = template::retitle(&out, "Guide");
+
+    assert_eq!(tags_of(&out), tags_of(html), "the head's tags moved");
+    // Exactly two kinds of value changed: the title's text and the three
+    // addresses.
+    assert!(out.contains("<title>Guide</title>"), "{out}");
+    for href in [
+        "/doc/org.example/a/1.0.0/guide.md",
+        "/doc/org.example/a/1.0.0/guide.xml",
+        "/doc/llms.txt",
+    ] {
+        assert!(out.contains(&format!("href=\"{href}\"")), "{out}");
+    }
+    // And nothing else did: the description, the stylesheet and the
+    // script are the template's, untouched.
+    assert!(out.contains("content=\"a fixture\""), "{out}");
+    assert!(out.contains("href=\"/doc/assets/a.css\""), "{out}");
+    assert!(out.contains("var t=1;"), "{out}");
+}
+
+/// A template that declares no head of its own is left alone by both
+/// edits — which is what the shell in this binary actually ships, and the
+/// reason the defect above is not live today.
+#[test]
+fn a_template_without_a_head_is_left_exactly_as_it_is() {
+    let html = "<html><head></head><body><!--vibe-doc-island--></body></html>";
+    let out = template::relink(
+        html,
+        &[template::Alternate {
+            media_type: "text/markdown",
+            href: "/doc/org.example/a/1.0.0/guide.md",
+            title: "This page as Markdown",
+        }],
+    );
+    assert_eq!(out, html);
+    assert_eq!(template::retitle(&out, "Guide"), html);
+}
+
+/// The tag names of a document, in document order — the sequence a
+/// resumable container and its serialised state have to agree on.
+fn tags_of(html: &str) -> Vec<String> {
+    let mut found = Vec::new();
+    let mut rest = html;
+    while let Some(at) = rest.find('<') {
+        rest = &rest[at + 1..];
+        let end = rest
+            .find(|c: char| c.is_whitespace() || c == '>')
+            .unwrap_or(rest.len());
+        found.push(rest[..end].to_ascii_lowercase());
+    }
+    found
+}
+
 #[test]
 fn rebasing_moves_the_shells_own_addresses_and_leaves_an_equal_base_alone() {
     let html = "<link href=\"/doc/assets/a.css\"><script src=\"/doc/build/b.js\">";

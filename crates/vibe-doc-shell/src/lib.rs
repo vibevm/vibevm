@@ -35,10 +35,16 @@
 //! depend on axum or on `vibe-doc`. It reads no ambient environment: the
 //! store root arrives as an argument, resolved at the composition root
 //! like every other path in this tree. And it renders nothing: the
-//! template arrives finished from the build, and the only edits made to
-//! it are the three a server must make — the island into its marker, the
-//! title of the page actually being served, and the base a reader mounted
-//! at ([`template`]).
+//! template arrives finished from the build, and the edits made to it are
+//! the few a server must make — the island into its marker, the title and
+//! the projection addresses of the page actually being served, and the
+//! base a reader mounted at ([`template`]).
+//!
+//! Every one of those edits is a value REPLACED where it already stands.
+//! Nothing is inserted into a served head and nothing is reordered in
+//! one: the framework's resumption depends on the head being the head it
+//! serialised, and a page that stops resuming stops doing anything at all
+//! — silently. [`template`] carries the measurement.
 
 #![forbid(unsafe_code)]
 
