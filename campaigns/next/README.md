@@ -2,6 +2,8 @@
 
 The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml). This is an implementation plan, not implemented product behavior. The owner's current instruction is planning only: Phase 0 and implementation are unstarted. NEXT-EXECUTION-AUTHORITY must remain blocked until a later explicit instruction starts execution; a generated GOAL is not authorization.
 
+Pending research: [fractal planning, lowering and staged delivery](../../vibevm/vibespecs/design/fractal-planning-and-staged-delivery.xml) preserves the owner's concept and this discussion. It is a non-normative design idea, not an activated exception to existing rules or a change to this campaign's task graph.
+
 The baseline is refined plan revision 4 at commit b1291b06d5704ee32f7486c86e1fae617fcbbddf. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributes four supplemental groups and 11 tasks, for 212 tasks and 425 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
 
 ## Start in an exact local context
