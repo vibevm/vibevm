@@ -962,6 +962,70 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "doc_site_config",
+      "end_line": 180
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema-def",
+      "line": 158,
+      "symbol": "doc_site_config::site_analytics",
+      "end_line": 178
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema-def",
+      "line": 87,
+      "symbol": "doc_site_config::site_host_source",
+      "end_line": 122
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema-def",
+      "line": 52,
+      "symbol": "doc_site_config::site_registry_source",
+      "end_line": 86
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema-def",
+      "line": 31,
+      "symbol": "doc_site_config::site_sources",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_config.jtd.json",
+      "item_kind": "schema-def",
+      "line": 123,
+      "symbol": "doc_site_config::site_table",
+      "end_line": 157
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_state.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "doc_site_state",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_site_state.jtd.json",
+      "item_kind": "schema-def",
+      "line": 32,
+      "symbol": "doc_site_state::rendered_version",
+      "end_line": 76
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/doc_surface.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -6510,6 +6574,33 @@
       "symbol": "vibe_cli::commands::doc::shell::fetch",
       "end_line": 24,
       "fingerprint": "tok1:4be72d457368b2c011926a1b6eed47341f0cbcb33d33ac71df309f90886c5809"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/doc/site.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_cli::commands::doc::site",
+      "end_line": 17,
+      "fingerprint": "tok1:51517175f363e5d50d628557d54c66f812f036721bdfca997b09aa3da27deace"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/doc/site/prepare.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "vibe_cli::commands::doc::site::prepare",
+      "end_line": 19,
+      "fingerprint": "tok1:db40ba3e73286d15ee9a5909bf43d2c27891ea79e647141ceb17bc11b6048bbd"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/doc/site/web.rs",
+      "item_kind": "mod",
+      "line": 28,
+      "symbol": "vibe_cli::commands::doc::site::web",
+      "end_line": 28,
+      "fingerprint": "tok1:5a50e26821ce65ab0d675b6eafdbbd632331d28c810512c1d21ff31c01402eec"
     },
     {
       "crate_name": "vibe-cli",
@@ -12167,9 +12258,9 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/lib.rs",
       "item_kind": "mod",
-      "line": 157,
+      "line": 165,
       "symbol": "vibe_doc",
-      "end_line": 157,
+      "end_line": 165,
       "fingerprint": "tok1:584fd88b88b679119e96d88c1633b710d40ecbb9b4dbd3bc85f61394a3b3c223"
     },
     {
@@ -12295,8 +12386,8 @@
       "item_kind": "enum",
       "line": 16,
       "symbol": "vibe_doc::error::DocError",
-      "end_line": 224,
-      "fingerprint": "tok1:48c7c441a771676c6f1564a4f5c74805b43186fac358f12ccdc6da216525802f"
+      "end_line": 238,
+      "fingerprint": "tok1:0a7d63149c56abc6a5d9aa6ebcf277af39943108ba32f5c94c2fee2b16f8957b"
     },
     {
       "crate_name": "vibe-doc",
@@ -12405,6 +12496,15 @@
       "symbol": "vibe_doc::html::inline",
       "end_line": 32,
       "fingerprint": "tok1:b50a72244068ba2953ec8e40dd90248b6c6069ea7db0663e0584e451009dba5f"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/html/links.rs",
+      "item_kind": "mod",
+      "line": 47,
+      "symbol": "vibe_doc::html::links",
+      "end_line": 47,
+      "fingerprint": "tok1:80f4bfdcffb03d31cecec0fc962364f9cb2be9df9af30db2f3e26c0f7ec9d1b3"
     },
     {
       "crate_name": "vibe-doc",
@@ -12594,6 +12694,114 @@
       "symbol": "vibe_doc::prompts::report",
       "end_line": 11,
       "fingerprint": "tok1:6b955196f9d410b480bcc5d7c2106f81a8918989206abc8b6114d5a86e95fd7e"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site.rs",
+      "item_kind": "mod",
+      "line": 31,
+      "symbol": "vibe_doc::site",
+      "end_line": 31,
+      "fingerprint": "tok1:51517175f363e5d50d628557d54c66f812f036721bdfca997b09aa3da27deace"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/addresses.rs",
+      "item_kind": "mod",
+      "line": 29,
+      "symbol": "vibe_doc::site::addresses",
+      "end_line": 29,
+      "fingerprint": "tok1:f7f49858a4f0da92ed4097612b394956e9940e1e30d72898a1ccf21a5c1a0c4b"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/config.rs",
+      "item_kind": "mod",
+      "line": 32,
+      "symbol": "vibe_doc::site::config",
+      "end_line": 32,
+      "fingerprint": "tok1:51517175f363e5d50d628557d54c66f812f036721bdfca997b09aa3da27deace"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/feed.rs",
+      "item_kind": "mod",
+      "line": 39,
+      "symbol": "vibe_doc::site::feed",
+      "end_line": 39,
+      "fingerprint": "tok1:d0c374989853511380746172175fbd61ee805dae0195c7415eb63bdf50c53917"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0.rs",
+      "item_kind": "mod",
+      "line": 43,
+      "symbol": "vibe_doc::site::level0",
+      "end_line": 43,
+      "fingerprint": "tok1:5765336363ea77c369431c741545e784689a21e801e391a78cfefb86e8961238"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0/card.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_doc::site::level0::card",
+      "end_line": 17,
+      "fingerprint": "tok1:ab2898a62edd76f0bd0924c4011670dc662871026c8019b8eb79879572e7d541"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0/page.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_doc::site::level0::page",
+      "end_line": 18,
+      "fingerprint": "tok1:5765336363ea77c369431c741545e784689a21e801e391a78cfefb86e8961238"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0/readme.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "vibe_doc::site::level0::readme",
+      "end_line": 26,
+      "fingerprint": "tok1:5765336363ea77c369431c741545e784689a21e801e391a78cfefb86e8961238"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/queue.rs",
+      "item_kind": "mod",
+      "line": 33,
+      "symbol": "vibe_doc::site::queue",
+      "end_line": 33,
+      "fingerprint": "tok1:0243b21ba04aa1878616a7aea692a27389e6736364e5a2e6ab0c55b74f5e3689"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/render.rs",
+      "item_kind": "mod",
+      "line": 31,
+      "symbol": "vibe_doc::site::render",
+      "end_line": 31,
+      "fingerprint": "tok1:3c127eeefa05eb6c7c8500f4a72465c471fe7d49ef7e190662020aea4e2a5d53"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/shelves.rs",
+      "item_kind": "mod",
+      "line": 37,
+      "symbol": "vibe_doc::site::shelves",
+      "end_line": 37,
+      "fingerprint": "tok1:c26d085a6f4bcb076ea3ac9aeb9d4788e79f102f5d89e026c1b13e97f2bb33e2"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/state.rs",
+      "item_kind": "mod",
+      "line": 29,
+      "symbol": "vibe_doc::site::state",
+      "end_line": 29,
+      "fingerprint": "tok1:29ad6ff9fc84323c9b28847928cc16e054e151466b8e56959758947faf3b3bd2"
     },
     {
       "crate_name": "vibe-doc",
@@ -12806,9 +13014,9 @@
       "crate_name": "vibe-doc-server",
       "file": "crates/vibe-doc-server/src/lib.rs",
       "item_kind": "mod",
-      "line": 72,
+      "line": 84,
       "symbol": "vibe_doc_server",
-      "end_line": 72,
+      "end_line": 84,
       "fingerprint": "tok1:02599e36033d6f734996c851554bd58bee3056a8dd0bae2fe722a6959075513b"
     },
     {
@@ -12833,10 +13041,19 @@
       "crate_name": "vibe-doc-server",
       "file": "crates/vibe-doc-server/src/routes.rs",
       "item_kind": "mod",
-      "line": 37,
+      "line": 46,
       "symbol": "vibe_doc_server::routes",
-      "end_line": 37,
+      "end_line": 46,
       "fingerprint": "tok1:80f4bfdcffb03d31cecec0fc962364f9cb2be9df9af30db2f3e26c0f7ec9d1b3"
+    },
+    {
+      "crate_name": "vibe-doc-server",
+      "file": "crates/vibe-doc-server/src/routes/media.rs",
+      "item_kind": "mod",
+      "line": 28,
+      "symbol": "vibe_doc_server::routes::media",
+      "end_line": 28,
+      "fingerprint": "tok1:026748db20f8ca33e1302d56156d5a69a12c360161ef3ae668a0f0d00908a02b"
     },
     {
       "crate_name": "vibe-doc-server",
@@ -12860,9 +13077,9 @@
       "crate_name": "vibe-doc-shell",
       "file": "crates/vibe-doc-shell/src/lib.rs",
       "item_kind": "mod",
-      "line": 45,
+      "line": 51,
       "symbol": "vibe_doc_shell",
-      "end_line": 45,
+      "end_line": 51,
       "fingerprint": "tok1:9c9ccce6d146a0978cee8268ed960ac3ece242e8b850e1bad18da4dc6f541a86"
     },
     {
@@ -12923,9 +13140,9 @@
       "crate_name": "vibe-doc-shell",
       "file": "crates/vibe-doc-shell/src/template.rs",
       "item_kind": "mod",
-      "line": 23,
+      "line": 46,
       "symbol": "vibe_doc_shell::template",
-      "end_line": 23,
+      "end_line": 46,
       "fingerprint": "tok1:e96c83b8f7e7111b9baa061b34c895dedd0d75c586d4cdbf0878f6134b8604fe"
     },
     {
@@ -14336,9 +14553,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/primary.rs",
       "item_kind": "mod",
-      "line": 8,
+      "line": 16,
       "symbol": "vibe_index::index::primary",
-      "end_line": 8,
+      "end_line": 16,
       "fingerprint": "tok1:5cd37479f727211c71f73c50e6e711ad2714cf2ccac58e6a7b2c3973db3e2d8b"
     },
     {
@@ -23039,9 +23256,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "enum",
-      "line": 74,
+      "line": 76,
       "symbol": "vibe_registry::index_client::IndexError",
-      "end_line": 107,
+      "end_line": 109,
       "fingerprint": "tok1:71cd0162a7af8fcfc92cce3c5e8a241a6779d6da34e40feb8e23a5155fa08814"
     },
     {
@@ -23052,6 +23269,15 @@
       "symbol": "vibe_registry::index_client::auth",
       "end_line": 20,
       "fingerprint": "tok1:5be1f6f3e071f41fa5f7b9f253eb8fb2a7389f5aa5167456a440e301c1651f34"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/catalog.rs",
+      "item_kind": "mod",
+      "line": 36,
+      "symbol": "vibe_registry::index_client::catalog",
+      "end_line": 36,
+      "fingerprint": "tok1:5cd37479f727211c71f73c50e6e711ad2714cf2ccac58e6a7b2c3973db3e2d8b"
     },
     {
       "crate_name": "vibe-registry",
@@ -31756,6 +31982,22 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/doc_site_config.jtd.json",
+      "from_symbol": "doc_site_config",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/doc_site_state.jtd.json",
+      "from_symbol": "doc_site_state",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-KEY",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/doc_surface.jtd.json",
       "from_symbol": "doc_surface",
       "line": 1,
@@ -33662,6 +33904,30 @@
       "line": 24,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/doc/site.rs",
+      "from_symbol": "vibe_cli::commands::doc::site",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/doc/site/prepare.rs",
+      "from_symbol": "vibe_cli::commands::doc::site::prepare",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-WARMUP-CLOSURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/doc/site/web.rs",
+      "from_symbol": "vibe_cli::commands::doc::site::web",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-CONTAINERS",
       "verb": "implements"
     },
     {
@@ -38839,7 +39105,7 @@
     {
       "file": "crates/vibe-doc/src/lib.rs",
       "from_symbol": "vibe_doc",
-      "line": 157,
+      "line": 165,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY",
       "verb": "implements"
@@ -39053,6 +39319,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-doc/src/html/links.rs",
+      "from_symbol": "vibe_doc::html::links",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-doc/src/llms.rs",
       "from_symbol": "vibe_doc::llms",
       "line": 30,
@@ -39218,6 +39492,102 @@
       "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site.rs",
+      "from_symbol": "vibe_doc::site",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/addresses.rs",
+      "from_symbol": "vibe_doc::site::addresses",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CANONICAL-LATEST",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/config.rs",
+      "from_symbol": "vibe_doc::site::config",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/feed.rs",
+      "from_symbol": "vibe_doc::site::feed",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-SOURCE-REGISTRY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/level0.rs",
+      "from_symbol": "vibe_doc::site::level0",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/level0/card.rs",
+      "from_symbol": "vibe_doc::site::level0::card",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/level0/page.rs",
+      "from_symbol": "vibe_doc::site::level0::page",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/level0/readme.rs",
+      "from_symbol": "vibe_doc::site::level0::readme",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/queue.rs",
+      "from_symbol": "vibe_doc::site::queue",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-HOST-POLL",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/render.rs",
+      "from_symbol": "vibe_doc::site::render",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-IDEMPOTENT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/shelves.rs",
+      "from_symbol": "vibe_doc::site::shelves",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/site/state.rs",
+      "from_symbol": "vibe_doc::site::state",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-KEY",
       "verb": "implements"
     },
     {
@@ -39407,7 +39777,7 @@
     {
       "file": "crates/vibe-doc-server/src/lib.rs",
       "from_symbol": "vibe_doc_server",
-      "line": 72,
+      "line": 84,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE",
       "verb": "implements"
@@ -39431,9 +39801,17 @@
     {
       "file": "crates/vibe-doc-server/src/routes.rs",
       "from_symbol": "vibe_doc_server::routes",
-      "line": 37,
+      "line": 46,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc-server/src/routes/media.rs",
+      "from_symbol": "vibe_doc_server::routes::media",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-SITE-COPIES",
       "verb": "implements"
     },
     {
@@ -39455,7 +39833,7 @@
     {
       "file": "crates/vibe-doc-shell/src/lib.rs",
       "from_symbol": "vibe_doc_shell",
-      "line": 45,
+      "line": 51,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-SERVE-SOURCES",
       "verb": "implements"
@@ -39511,7 +39889,7 @@
     {
       "file": "crates/vibe-doc-shell/src/template.rs",
       "from_symbol": "vibe_doc_shell::template",
-      "line": 23,
+      "line": 46,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-CSP",
       "verb": "implements"
@@ -40859,7 +41237,7 @@
     {
       "file": "crates/vibe-index/src/index/primary.rs",
       "from_symbol": "vibe_index::index::primary",
-      "line": 8,
+      "line": 16,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "implements"
@@ -48839,7 +49217,7 @@
     {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client::IndexError",
-      "line": 75,
+      "line": 77,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -48850,6 +49228,14 @@
       "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/catalog.rs",
+      "from_symbol": "vibe_registry::index_client::catalog",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "implements"
     },
     {
