@@ -115,7 +115,7 @@ extern "C" {
       </facts>
     </solver-features>
     <features title="2.4 Optional components (features) — cargo-tradition with vibevm twists">
-      <p><FEATURES-TABLE fact="true" status="impl/done">**Decision.** A package's `vibe-package.toml` gains a `[features]` table describing optional, conditionally-activated components:</FEATURES-TABLE></p>
+      <p><FEATURES-TABLE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Decision.** A package's `vibe-package.toml` gains a `[features]` table describing optional, conditionally-activated components:</FEATURES-TABLE></p>
       <fence lang="toml">[features]
 default = ["wal-protocol", "atomic-commits-section"]
 wal-protocol = []                    # zero-cost feature toggle
@@ -131,13 +131,13 @@ stacks = ["rust-stack", "python-stack"]</fence>
       <p><features-semantics-lead fact="true" status="impl/done">**Semantics — copied from cargo's feature resolver v2 with one reduction and one extension.**</features-semantics-lead></p>
       <p><cargo-keep-lead fact="true" status="impl/done">The cargo subset we keep, verbatim:</cargo-keep-lead></p>
       <facts ordered="false">
-        <KEEP-ADDITIVE fact="true" status="impl/done">**Additive only.** Enabling a feature can introduce additional content; never remove or contradict existing content. (Cargo enforces this informally; vibevm enforces it via `vibe check` since spec content collisions are easier to detect than code-level ones.)</KEEP-ADDITIVE>
-        <KEEP-DEFAULT fact="true" status="impl/done">**Default features.** `default = [...]` lists features active when no override is given. `--no-default-features` on the install / update CLI omits them.</KEEP-DEFAULT>
+        <KEEP-ADDITIVE fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Additive only.** Enabling a feature can introduce additional content; never remove or contradict existing content. (Cargo enforces this informally; vibevm enforces it via `vibe check` since spec content collisions are easier to detect than code-level ones.)</KEEP-ADDITIVE>
+        <KEEP-DEFAULT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Default features.** `default = [...]` lists features active when no override is given. `--no-default-features` on the install / update CLI omits them.</KEEP-DEFAULT>
         <KEEP-FEATURE-DEP fact="true" status="impl/done">**Feature-feature dependency.** `feat-A = ["feat-B"]` — enabling A enables B transitively.</KEEP-FEATURE-DEP>
         <KEEP-OPTIONAL-DEP fact="true" status="impl/done">**Optional dep activation.** A `[dependencies.foo] optional = true` entry creates an implicit feature named `foo` that activates the dep; alternatively the explicit `dep:foo` syntax in a feature list activates the dep without exposing the implicit feature name.</KEEP-OPTIONAL-DEP>
         <KEEP-WEAK-FEATURE fact="true" status="impl/done">**Weak feature** (cargo's `dep?/feat` syntax): `feat-A = ["other-pkg?/some-feat"]` — if `other-pkg` is *already* in the graph, request `some-feat` on it; otherwise no-op. The `?` prevents activation-by-default of `other-pkg`.</KEEP-WEAK-FEATURE>
         <KEEP-PER-TARGET fact="true" status="impl/done">**Per-target feature activation** (cargo's `[target."cfg(...)".dependencies]` shape): for vibevm this maps onto `[target."context(stack:rust)".dependencies]` — see §2.6.</KEEP-PER-TARGET>
-        <KEEP-UNIFICATION fact="true" status="impl/done">**Feature unification across the dep graph.** If `pkg-A` and `pkg-B` both depend on `pkg-C` and request different features, the solver unifies — `pkg-C` is built/materialised once with the union of requested features.</KEEP-UNIFICATION>
+        <KEEP-UNIFICATION fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**Feature unification across the dep graph.** If `pkg-A` and `pkg-B` both depend on `pkg-C` and request different features, the solver unifies — `pkg-C` is built/materialised once with the union of requested features.</KEEP-UNIFICATION>
       </facts>
       <p><cargo-drop-lead fact="true" status="impl/done">The cargo subset we **drop**:</cargo-drop-lead></p>
       <facts ordered="false">
@@ -175,9 +175,9 @@ stacks = ["rust-stack", "python-stack"]</fence>
     └── llm-coordinator/anthropic/
         ├── vibe-subskill.toml
         └── claude-prompt-templates.md</fence>
-      <p><SUBSKILL-DEFINITION fact="true" status="impl/done">A **subskill** is the smallest activatable content unit inside a package. Structurally it looks like a tiny package: own manifest, own files, own optional further subskill children (§2.5.5). What changes per subskill is the **delivery mode** (§2.5.0 below) and the **activation rules** (§2.5.2): together they decide when the subskill's content reaches the agent and how.</SUBSKILL-DEFINITION></p>
+      <p><SUBSKILL-DEFINITION fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A **subskill** is the smallest activatable content unit inside a package. Structurally it looks like a tiny package: own manifest, own files, own optional further subskill children (§2.5.5). What changes per subskill is the **delivery mode** (§2.5.0 below) and the **activation rules** (§2.5.2): together they decide when the subskill's content reaches the agent and how.</SUBSKILL-DEFINITION></p>
       <delivery-modes title="2.5.0 Three delivery modes — eager, lazy-push, lazy-pull">
-        <p><DELIVERY-PRIMARY-AXIS fact="true" status="impl/done">A subskill's `delivery` field is the **primary axis** of the manifest, not a follow-up bolt-on. It picks how the subskill's content reaches the agent. Three values, each well-defined:</DELIVERY-PRIMARY-AXIS></p>
+        <p><DELIVERY-PRIMARY-AXIS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A subskill's `delivery` field is the **primary axis** of the manifest, not a follow-up bolt-on. It picks how the subskill's content reaches the agent. Three values, each well-defined:</DELIVERY-PRIMARY-AXIS></p>
         <facts ordered="false">
           <MODE-EAGER fact="true" status="impl/done">**`eager`** (default — the only mode in revision r1). Once activation matches, the subskill's files materialise into the project tree under `vibevm/vibespecs/...` at install time. They stay on disk until uninstall. Every agent session that opens the project sees them — analogous to PROP-002 §2.5 base-package behaviour. **Use for** rules-of-the-house content that should always be visible: foundational protocols, boot snippets, mandatory disciplines.</MODE-EAGER>
           <MODE-LAZY-PUSH fact="true" status="impl/done">**`lazy-push`**. Files are *not* materialised at install time. Instead, when an agent connects via the `vibe-mcp` server (M1.7), and the agent's current task description matches the subskill's natural-language `description` field (§2.5.1), `vibe-mcp` materialises the files **into the agent's current MCP context** — pushed to the agent on its behalf without disk-side cache. The push leaves no on-disk artefact unless `--persist` is passed. **Use for** workflow guidance (procedural skills) that's relevant only sometimes, and only on disk for the duration of one agent task.</MODE-LAZY-PUSH>
@@ -269,11 +269,11 @@ files_written = [
                                             # gates this at install time.
 ]</fence>
         <p><MANIFEST-STRICT-SUBSET fact="true" status="impl/done">The manifest is intentionally a strict subset of `vibe-package.toml` — same TOML idioms, same fields where applicable, same `deny_unknown_fields` discipline. New per-subskill fields (revision r2): `delivery`, `description`, `describes`, plus the expanded `[activation].context.*` probes.</MANIFEST-STRICT-SUBSET></p>
-        <p><DESCRIPTION-REQUIRED fact="true" status="impl/done">**`description` is required for `delivery = "lazy-push"` and `lazy-pull`.** The activation trigger is the entire mechanism for those modes — without it, `vibe-mcp` has nothing to match against. `eager` mode also benefits but is not required. `vibe check` errors out (not warns) on a lazy-push subskill missing `description`.</DESCRIPTION-REQUIRED></p>
+        <p><DESCRIPTION-REQUIRED fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**`description` is required for `delivery = "lazy-push"` and `lazy-pull`.** The activation trigger is the entire mechanism for those modes — without it, `vibe-mcp` has nothing to match against. `eager` mode also benefits but is not required. `vibe check` errors out (not warns) on a lazy-push subskill missing `description`.</DESCRIPTION-REQUIRED></p>
         <p><description-length-policy fact="true" status="spec/done">**`description` length policy.** No hard limit, but `vibe review` activation-axis scoring penalises descriptions over ~600 characters as "vague when long" — Tessl's empirical finding (their skills cap at 500 lines for the body and ~5 lines for the description). Authors are expected to be precise.</description-length-policy></p>
       </subskill-manifest>
       <subskill-activation title="2.5.2 Subskill activation channels — broader probe surface">
-        <p><ACTIVATION-ANY-MATCH fact="true" status="impl/done">A subskill becomes "active" if any one of these channels matches. Channels compose orthogonally; an active subskill activates once regardless of how many matched. The full set, more comprehensive than revision r1:</ACTIVATION-ANY-MATCH></p>
+        <p><ACTIVATION-ANY-MATCH fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A subskill becomes "active" if any one of these channels matches. Channels compose orthogonally; an active subskill activates once regardless of how many matched. The full set, more comprehensive than revision r1:</ACTIVATION-ANY-MATCH></p>
         <facts ordered="false">
           <CH-MANUAL-FEATURE fact="true" status="impl/done">**Manual via parent feature.** The parent's `[features]` table includes the subskill in some feature's activation list (`rust-stack = ["subskill:stack/rust"]`); the feature is active; the subskill activates.</CH-MANUAL-FEATURE>
           <CH-IF-PRESENT fact="true" status="impl/done">**Context-based: `if_present`.** Activates if the project's effective dep graph contains a named package or capability (`stack:rust`, `capability:wal-protocol`).</CH-IF-PRESENT>
@@ -318,7 +318,7 @@ files_written = [
         <p><RECURSIVE-SUBSKILLS fact="true" status="impl/done">A subskill may itself carry a `subskills/` directory; activation rules apply recursively. Practical limit: depth ≤ 3 (anything deeper is almost certainly a smell — the package should be split). `vibe check` warns at depth 4. Each nested subskill carries its own `delivery` mode independently of its parent; an `eager` parent can have a `lazy-pull` deep reference subskill nested inside.</RECURSIVE-SUBSKILLS></p>
       </subskill-recursion>
       <subskill-describes title="2.5.6 `describes` PURL on subskills">
-        <p><DESCRIBES-ON-SUBSKILLS fact="true" status="impl/done">Per §2.7 of [PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#purl), Tessl's headline marketing claim — version-matched documentation — rides on the `describes` field at the tile level. vibevm goes one step further: the field is available **on subskills as well as packages**. A `flow:wal` package as a whole may not bind to any one library, but its `subskills/stack/rust/` cut binds specifically to `pkg:cargo/sqlx@0.8.0`; another `subskills/stack/rust-diesel/` cut binds to `pkg:cargo/diesel@2.x`. The two coexist in the same package, and the activation channel `context.if_describes_match` selects the right one for the consumer's actual library version.</DESCRIBES-ON-SUBSKILLS></p>
+        <p><DESCRIBES-ON-SUBSKILLS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Per §2.7 of [PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#purl), Tessl's headline marketing claim — version-matched documentation — rides on the `describes` field at the tile level. vibevm goes one step further: the field is available **on subskills as well as packages**. A `flow:wal` package as a whole may not bind to any one library, but its `subskills/stack/rust/` cut binds specifically to `pkg:cargo/sqlx@0.8.0`; another `subskills/stack/rust-diesel/` cut binds to `pkg:cargo/diesel@2.x`. The two coexist in the same package, and the activation channel `context.if_describes_match` selects the right one for the consumer's actual library version.</DESCRIBES-ON-SUBSKILLS></p>
         <p><DESCRIBES-FORMAT fact="true" status="impl/done">**Format.** Standard Package URL spec ([`https://github.com/package-url/purl-spec`](https://github.com/package-url/purl-spec)) — `pkg:&lt;type&gt;/&lt;namespace&gt;/&lt;name&gt;@&lt;version&gt;` or `pkg:&lt;type&gt;/&lt;name&gt;@&lt;version&gt;` for unscoped. `&lt;version&gt;` may be a SemVer requirement (`^0.8`) rather than an exact version when the subskill applies to a range.</DESCRIBES-FORMAT></p>
         <p><DESCRIBES-LOCKFILE-RECORD fact="true" status="impl/done">**Lockfile impact.** When a subskill activates via `if_describes_match`, the lockfile records both the subskill's `describes` PURL and the matched in-graph PURL.</DESCRIBES-LOCKFILE-RECORD></p>
         <facts ordered="false">
@@ -382,7 +382,7 @@ flow:migration-discipline = "^0.1"</fence>
       </req-conditional-composition>
     </conditional-deps>
     <i18n title="2.7 Internationalization (i18n) — multi-language package content">
-      <p><I18N-DECISION fact="true" status="impl/done">**Decision.** Adopt a **sidecar file naming pattern** with **BCP-47 language tags** as suffixes, plus first-class language-preference declarations at three levels (CLI flag, project manifest, package manifest).</I18N-DECISION></p>
+      <p><I18N-DECISION fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">**Decision.** Adopt a **sidecar file naming pattern** with **BCP-47 language tags** as suffixes, plus first-class language-preference declarations at three levels (CLI flag, project manifest, package manifest).</I18N-DECISION></p>
       <i18n-naming title="2.7.1 File naming — the chosen pattern">
         <fence>flow-wal/
 ├── README.md                        # canonical (default language: en)
@@ -395,7 +395,7 @@ flow:migration-discipline = "^0.1"</fence>
     ├── WAL-PROTOCOL.xml
     ├── WAL-PROTOCOL.ru.md
     └── morning-routine.xml           # only canonical — no translation yet, fallback used</fence>
-        <p><SIDECAR-PATTERN fact="true" status="impl/done">A localised file is the canonical filename with a `.&lt;lang&gt;` segment inserted before the extension. `&lt;lang&gt;` is a [BCP-47](https://datatracker.ietf.org/doc/html/rfc5646) language tag — `en`, `ru`, `ja`, `zh-Hans`, `pt-BR`. We also accept short ISO-639-1 codes alone (`ru`, `ja`) as a convenience; they map to the BCP-47 tag with no region.</SIDECAR-PATTERN></p>
+        <p><SIDECAR-PATTERN fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A localised file is the canonical filename with a `.&lt;lang&gt;` segment inserted before the extension. `&lt;lang&gt;` is a [BCP-47](https://datatracker.ietf.org/doc/html/rfc5646) language tag — `en`, `ru`, `ja`, `zh-Hans`, `pt-BR`. We also accept short ISO-639-1 codes alone (`ru`, `ja`) as a convenience; they map to the BCP-47 tag with no region.</SIDECAR-PATTERN></p>
         <p><sidecar-why-lead fact="true" status="spec/done">**Why sidecar (`README.ru.md`), not directory (`i18n/ru/README.md`) or suffix (`README_RU.md`):**</sidecar-why-lead></p>
         <table>
           <tr>
@@ -434,12 +434,12 @@ flow:migration-discipline = "^0.1"</fence>
           <FB-CANONICAL fact="true" status="impl/done">**Canonical fallback.** Use `&lt;X&gt;.&lt;ext&gt;` (no language suffix; the de-facto canonical form, by convention English in the vibevm registry but nothing prevents a package from declaring its canonical to be Spanish or Mandarin).</FB-CANONICAL>
           <FB-HARD-ERROR fact="true" status="impl/done">**Hard error.** If even the canonical form is missing, fail the install with `MissingFile { logical_path }`.</FB-HARD-ERROR>
         </facts>
-        <p><I18N-CANONICAL-INVARIANT fact="true" status="impl/done">Critical invariant: **every package must ship the canonical form of every file it lists in `[content].files_written`**. Translations are additive. This is what makes step 3 always reachable; it also lets a project install a package that has zero translation coverage for the user's preferred language without seeing errors.</I18N-CANONICAL-INVARIANT></p>
+        <p><I18N-CANONICAL-INVARIANT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">Critical invariant: **every package must ship the canonical form of every file it lists in `[content].files_written`**. Translations are additive. This is what makes step 3 always reachable; it also lets a project install a package that has zero translation coverage for the user's preferred language without seeing errors.</I18N-CANONICAL-INVARIANT></p>
       </i18n-fallback>
       <i18n-prefs title="2.7.3 Language preference declarations — three layers">
         <p><i18n-prefs-lead fact="true" status="impl/done">Same precedence model as PROP-002 §9.5 (CLI flag &gt; env var &gt; project manifest &gt; package manifest &gt; built-in default):</i18n-prefs-lead></p>
         <facts ordered="false">
-          <PREF-CLI-FLAG fact="true" status="impl/done">**CLI flag**: `vibe install flow:wal --language ru` overrides everything else for this invocation.</PREF-CLI-FLAG>
+          <PREF-CLI-FLAG fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**CLI flag**: `vibe install flow:wal --language ru` overrides everything else for this invocation.</PREF-CLI-FLAG>
           <PREF-ENV fact="true" status="spec/done">**Env var**: `VIBE_LANGUAGE=ru` matches the existing `VIBE_LOG` / `VIBE_REGISTRY_CACHE` env-var conventions.</PREF-ENV>
           <PREF-PROJECT-MANIFEST fact="true" status="impl/done">**Project `vibe.toml`**:</PREF-PROJECT-MANIFEST>
         </facts>
@@ -554,7 +554,7 @@ files_written = [
     "spec/boot/10-flow-wal.md",
 ]</fence>
       <p><SUBSKILL-MANIFEST-PER fact="true" status="impl/done">Each subskill carries its own `vibe-subskill.toml` per §2.5.1.</SUBSKILL-MANIFEST-PER></p>
-      <p><DENY-UNKNOWN-FIELDS fact="true" status="impl/done">`deny_unknown_fields` everywhere — vibevm never silently drops unfamiliar manifest keys; we'd rather fail loud and add the section to the schema than corrupt provenance.</DENY-UNKNOWN-FIELDS></p>
+      <p><DENY-UNKNOWN-FIELDS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`deny_unknown_fields` everywhere — vibevm never silently drops unfamiliar manifest keys; we'd rather fail loud and add the section to the schema than corrupt provenance.</DENY-UNKNOWN-FIELDS></p>
     </manifest>
     <lockfile-v3 title="2.9 Lockfile schema impact (v3)">
       <p><lockfile-v3-lead fact="true" status="impl/done">The lockfile gains:</lockfile-v3-lead></p>
@@ -598,7 +598,7 @@ files_written = [
     <cli title="2.10 CLI surface — additions and adjustments">
       <p><cli-new-lead fact="true" status="impl/done">New flags / commands:</cli-new-lead></p>
       <facts ordered="false">
-        <CLI-INSTALL-FEATURES fact="true" status="impl/done">`vibe install &lt;pkgref&gt; [--features &lt;a,b,c&gt;] [--no-default-features] [--all-features]` — control feature activation (cargo-shape).</CLI-INSTALL-FEATURES>
+        <CLI-INSTALL-FEATURES fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe install &lt;pkgref&gt; [--features &lt;a,b,c&gt;] [--no-default-features] [--all-features]` — control feature activation (cargo-shape).</CLI-INSTALL-FEATURES>
         <CLI-INSTALL-LANGUAGE fact="true" status="impl/done">`vibe install &lt;pkgref&gt; [--language &lt;bcp47&gt;]` — override resolved language for this install.</CLI-INSTALL-LANGUAGE>
         <CLI-SHOW-FEATURES fact="true" status="impl/done">`vibe show features &lt;pkgref&gt;` — list the package's features, default state, current activation in the project.</CLI-SHOW-FEATURES>
         <CLI-SHOW-SUBSKILLS fact="true" status="impl/done">`vibe show subskills &lt;pkgref&gt;` — list the package's subskills, activation state with reason ("active because feature `rust-stack`", "active because `stack:rust` is in the project", "available but not active", "would-activate-if-LLM-build" — post-M1.5).</CLI-SHOW-SUBSKILLS>

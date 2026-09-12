@@ -22,7 +22,7 @@ vibevm/vibespecs). Конечно же, совершенно весь код. С
 vibevm и все его пакеты в packages должны быть переделаны под новую
 раскладку директорий. Результаты проверены/протестированы и
 измерены на предмет того, что ничего не сломалось.»</RELAYOUT-MANDATE-VERBATIM></p>
-    <p><THE-LAYOUT fact="true" status="spec/done">The layout: every project and every package carries ONE
+    <p><THE-LAYOUT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,author">The layout: every project and every package carries ONE
 distinctive root directory `vibevm/`, holding `vibevm/vibespecs`
 (was `spec/`), `vibevm/vibepacks` (was `packages/`),
 `vibevm/vibedeps` (was root `vibedeps/`) and `vibevm/vibefacts`
@@ -30,7 +30,7 @@ distinctive root directory `vibevm/`, holding `vibevm/vibespecs`
 the project root.</THE-LAYOUT></p>
   </mandate>
   <laws title="2. Laws">
-    <p><ADDRESSES-SURVIVE-THE-MOVE fact="true" status="spec/done">**L1 — physics moves, addresses do not.** `spec://`
+    <p><ADDRESSES-SURVIVE-THE-MOVE fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**L1 — physics moves, addresses do not.** `spec://`
 addresses, anchors, fact ids, specmap edges, `scope!` citations and
 recorded verdicts are LOGICAL and do not change: only the physical
 prefix maps differently (`vibevm/vibespecs/common/PROP-000.xml`
@@ -44,13 +44,13 @@ exactly ONE place in the product — a layout module in the core
 through it, and a string literal of the old or new root outside
 that module (tests' own scaffolds excepted) is a conform-guarded
 defect.</ONE-LAYOUT-MODULE></p>
-    <p><NO-LEGACY-LAYOUT fact="true" status="spec/done">**L3 — no legacy reading.** The old layout is not read and
+    <p><NO-LEGACY-LAYOUT fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**L3 — no legacy reading.** The old layout is not read and
 not migrated silently: a project carrying root `spec/` beside
 `vibe.toml` (or root `vibedeps/`/`vibefacts/`) fails loudly with
 the migration recipe. The owner's ground: no project in the world
 carries a root `vibevm/` today, so the new root is unambiguous and
 the old one is retired whole.</NO-LEGACY-LAYOUT></p>
-    <p><PACKAGES-CARRY-THE-LAYOUT-TOO fact="true" status="spec/done">**L4 — packages too.** Every package root mirrors the same
+    <p><PACKAGES-CARRY-THE-LAYOUT-TOO fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**L4 — packages too.** Every package root mirrors the same
 layout (`vibevm/vibespecs` inside the package instead of `spec/`);
 materialisation mirrors package layout into the slots, boot-snippet
 paths and INDEX targets follow.</PACKAGES-CARRY-THE-LAYOUT-TOO></p>

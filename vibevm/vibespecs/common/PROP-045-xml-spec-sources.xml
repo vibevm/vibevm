@@ -75,7 +75,7 @@ Markdown by law; for the spec vocabulary this decision stands unchanged.</fact><
     &lt;quote&gt;blockquote unit&lt;/quote&gt;
   &lt;/section&gt;
 &lt;/spec&gt;</fence>
-    <p><NAMED-SECTION-ELEMENTS fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+    <p><NAMED-SECTION-ELEMENTS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Decision (ADR-part; owner ruling 2026-08-22,
 verbatim): «Гораздо логичней `&lt;three-bands title=\"…\"&gt;`. … Вся суть XML
 нотации в том, что у тебя названия тэгов несут названия сущностей, это
 упрощает работу нейросети».** A section serialises with its ANCHOR as the
@@ -97,7 +97,7 @@ writes named sections everywhere the predicate allows (the live redbook
 README golden carries 7 named / 0 generic), both readers accept both
 forms, and the engine mirrors the predicate verbatim across the
 separability seam.</NAMED-SECTION-ELEMENTS></p>
-    <p><NAMED-FACT-ELEMENTS fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+    <p><NAMED-FACT-ELEMENTS fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Decision (ADR-part; owner ruling 2026-08-22,
 verbatim): «сконвертируй и факты тоже. Предлагаю такой формат
 `&lt;fact-name fact="true" ...&gt;`. Таким образом кастомный XML-парсер всегда
 может найти соответствующие элементы».** A fact serialises with its ID
@@ -154,7 +154,7 @@ generic form carries such ids.</NAMED-FACT-ELEMENTS></p>
     `requires` on any non-fact element. This is
     the format-neutral carrier for PROP-043 `##REQUIRES-GRAMMAR`, not a second
     terminality implementation.</TERMINAL-REQUIREMENTS-PIVOT></p>
-    <p><FACTS-GROUP-ELEMENT fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+    <p><FACTS-GROUP-ELEMENT fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">**Decision (ADR-part; owner ruling 2026-08-22,
 near-verbatim): «Не правильней ли не включать внутри list элементы item,
 а сразу ставить в тело list элементы типа `&lt;THE-LAW fact="true"...&gt;`? И
 вместо `&lt;list&gt;` использовать тэг `&lt;facts&gt;` — это новое слово для
@@ -526,7 +526,7 @@ defect.</DOC-VOCAB-REOPENING></p>
       <DOC-VOCAB-VERBATIM-TEXTS fact="true" status="spec/done" action="continue" actionstage="impl">The texts of `run`, `expect`, `stderr`, the body of `prompt` and each `assert` are verbatim like `Fence::text`; CDATA is admitted in exactly these elements by an explicit list.</DOC-VOCAB-VERBATIM-TEXTS>
       <DOC-VOCAB-RULE-ADDRESS fact="true" status="spec/done" action="continue" actionstage="impl">The address of a `rule` drops any `~rN` revision suffix: a pin that strays into the attribute never becomes a pin on the `documents` edge (PROP-057 §14 — citations are live and unpinned).</DOC-VOCAB-RULE-ADDRESS>
       <DOC-VOCAB-NO-TABS fact="true" status="spec/done">There is no tabs element on purpose; `when` replaces it. Step-by-step procedures are an ordered list with `example` blocks inside. Inline content stays Markdown (`##INLINE-STAYS-MARKDOWN`).</DOC-VOCAB-NO-TABS>
-      <DOC-VOCAB-README-LIMIT fact="true" status="spec/done">Known limit: the README and specs of packages of other kinds cannot carry verifiable examples — the vocabulary opens by package kind. Their fences render at level 0 as they are, unverified.</DOC-VOCAB-README-LIMIT>
+      <DOC-VOCAB-README-LIMIT fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">Known limit: the README and specs of packages of other kinds cannot carry verifiable examples — the vocabulary opens by package kind. Their fences render at level 0 as they are, unverified.</DOC-VOCAB-README-LIMIT>
     </facts>
     <p><doc-vocab-table-lead fact="true" status="spec/done">The elements, their Markdown projection and their checker (the semantics of each checker are PROP-057 §10 and §14):</doc-vocab-table-lead></p>
     <table>
