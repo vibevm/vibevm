@@ -21,11 +21,11 @@
   </how-it-works>
   <what-it-is-not title="What it is not">
     <p>VibeVM is not an agent and has no model inside it. It does not write code, does not talk to a language model on its own, and does not replace your editor. It prepares what an agent reads and, later in a project's life, runs the build steps a project declares. Which agent you use is your choice; the same project boots the same way in Claude Code, Codex, OpenCode or Cursor.</p>
-    <p>It is also not a wiki. The text vibe assembles is meant to be short, stable and cheap to read on every session start. Long explanations belong in documentation, like this manual, which an agent opens only when it needs them. Text costs tokens, and vibe is built around that [fact](../glossary/index.xml#fact).</p>
+    <p>It is also not a wiki. The text vibe assembles is meant to be short, stable and cheap to read on every session start. Long explanations belong in documentation, like this manual, which an agent opens only when it needs them. Text costs tokens, and vibe is built around that cost.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#TOKENOMICS-IS-A-DESIGN-PRESSURE"/>
   </what-it-is-not>
   <where-next title="Where to go next">
-    <p>To see it on your own machine, install vibe and create a first project: the newcomer's route walks through both in ten minutes. To understand the pieces, read the pages on the two trees, the boot lane and packages, in that order.</p>
+    <p>To see it on your own machine, [install vibe](install-vibe.xml) and [create a first project](first-project.xml): the newcomer's route walks through both in ten minutes. To understand the pieces, read the pages on [the two trees](../model/two-trees.xml), [the boot lane](../model/boot-lane.xml) and [packages](../model/packages-and-kinds.xml), in that order.</p>
   </where-next>
   <the-licence title="The licence">
     <p>vibe is open source under the Universal Permissive License 1.0. The licence covers what this repository ships, the program and the packages in its own groups; a package you write or install carries its own.</p>
