@@ -10,6 +10,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod shell;
+pub mod site;
 pub mod surface;
 pub mod todo;
 
@@ -69,6 +70,7 @@ pub struct DocEnv {
 pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
     match args.command {
         DocCommand::Build(build) => run_build(build, env),
+        DocCommand::BuildSite(site) => site::run(site, env),
         DocCommand::Check(check) => run_check(check, env),
         DocCommand::Manifest(manifest) => run_manifest(manifest, env),
         DocCommand::Serve(serve) => run_serve(serve, env),

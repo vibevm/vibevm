@@ -419,6 +419,17 @@ cargo run -p vibe-cli -- doc shell status
 
 `--style` joins `doc check` with the prose linter, later in the same phase.
 
+**The whole site, not one package: `doc build-site`.** Every verb above answers about the one package you point `--path` at. `build-site` answers about the site — it reads two sources named in a `site.toml`, and it is the command the renderer container runs.
+
+```sh
+# Read the configuration and print what this site is, writing nothing.
+cargo run -p vibe-cli -- doc build-site --config site.toml --dry-run
+```
+
+The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
+
+Nothing in that file authorises anything. The site reads every source anonymously, so there is no `auth`, no token and no environment name in the shape — a configuration that *could* carry a credential invites one onto a renderer with no use for it.
+
 **What each check asks.** `--examples` runs every documented command against the debug binary in a sandbox and compares the output exactly, after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests, and a red example is fixed in the normalisation rules or in the product, never by loosening the comparison. `--citations` asks one question of every `spec://` a page cites — does the anchor exist. `--derived` rebuilds every generated block and compares it with the record in the package; the cure for a red one is `--derived --accept`. `--translations` checks an adaptation against the documentation it adapts, structure only. `--coverage` requires every spec fact marked `actionstage="doc"` with an audience to be cited by a page for that same audience, and `--min <percent>` lowers the bar for an intermediate run. `--media` judges the card's images by their bytes.
 
 **Two things `doc build` will do that may surprise you.** It runs the product — `derived` blocks are generated from `vibe … --help` and the schemas, one process per block — so a build takes a few seconds; `--no-derived` skips that and marks the blocks as the gaps they are. And it writes the site's own address map (`<group>/<name>/<version>/<document>/index.html`, the projections beside it, `manifest.json` and the four `llms` files at the root), so the output directory is servable as it stands.

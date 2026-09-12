@@ -46,6 +46,7 @@ pub enum FormatId {
     DistributionBundleManifest,
     DocManifest,
     DocReviews,
+    DocSiteConfig,
     DocSurface,
     DocSurfaceDiff,
     DocTodo,

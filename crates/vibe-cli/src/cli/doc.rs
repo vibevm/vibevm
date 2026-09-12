@@ -22,6 +22,13 @@ pub enum DocCommand {
     /// images, at the addresses the site mounts them under.
     Build(DocBuildArgs),
 
+    /// Render the whole site: every version the configured registry
+    /// currently publishes, and the host from the checkout on disk. This
+    /// is the command the renderer container runs — it reads two
+    /// sources, compares them with what it last rendered, and rebuilds
+    /// only what moved.
+    BuildSite(DocBuildSiteArgs),
+
     /// Check a documentation package against the product it documents:
     /// run every documented example and compare its output exactly,
     /// rebuild every `derived` block and compare it with the last build,
@@ -115,6 +122,27 @@ pub struct DocBuildArgs {
     /// running one.
     #[arg(long, value_name = "PATH")]
     pub binary: Option<PathBuf>,
+}
+
+/// `vibe doc build-site` — the registry builder.
+#[derive(Debug, clap::Args)]
+pub struct DocBuildSiteArgs {
+    /// The site's configuration: the two sources it reads, in the form a
+    /// project names a `[[registry]]`, and the one table that says which
+    /// domain the render is for.
+    #[arg(long, default_value = vibe_doc::site::config::FILENAME, value_name = "FILE")]
+    pub config: PathBuf,
+
+    /// Where the rendered site goes. The builder keeps its own state
+    /// under `.vibe-site/` inside it, so pointing a second run at the
+    /// same directory is what makes it rebuild only what moved.
+    #[arg(long, default_value = ".vibe/site", value_name = "DIR")]
+    pub out: PathBuf,
+
+    /// Read the sources and print what would be rebuilt, writing
+    /// nothing.
+    #[arg(long)]
+    pub dry_run: bool,
 }
 
 /// `vibe doc manifest` — what a machine reads about the package.
