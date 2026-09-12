@@ -66,12 +66,23 @@ fn package(root: &Path) {
     fs::write(root.join("README.md"), "# wal\n\nA log.\n").expect("the README");
 }
 
+/// A package the catalog says nothing about — `static`, not `const`,
+/// because the options borrow it and a `const` is a fresh temporary at
+/// every mention.
+static NOTHING: level0::Related = level0::Related {
+    documentation: Vec::new(),
+    translations: Vec::new(),
+    dependants: Vec::new(),
+    adaptation: None,
+};
+
 fn options<'a>(work: &'a Path, sources: &'a SpecSources) -> Options<'a> {
     Options {
         base: "/doc/",
         sources,
         work,
         rendered_at: Utc.with_ymd_and_hms(2026, 9, 12, 12, 0, 0).unwrap(),
+        related: &NOTHING,
     }
 }
 

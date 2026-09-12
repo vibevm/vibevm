@@ -60,7 +60,7 @@ fn plain(root: &Path) {
 
 fn composed(root: &Path, work: &Path) -> Composed {
     plain(root);
-    compose(root, work).expect("a composition")
+    compose(root, work, &Related::default()).expect("a composition")
 }
 
 #[test]
@@ -131,7 +131,7 @@ fn a_package_with_neither_title_nor_description_is_still_described() {
         &root.join("vibe.toml"),
         "[package]\nname = \"bare\"\ngroup = \"org.example\"\nversion = \"0.1.0\"\nkind = \"lang\"\n",
     );
-    let out = compose(&root, &tmp.path().join("work")).expect("a composition");
+    let out = compose(&root, &tmp.path().join("work"), &Related::default()).expect("a composition");
     let manifest = fs::read_to_string(out.dir.join("vibe.toml")).expect("the manifest");
     assert!(manifest.contains("title = \"bare\""), "{manifest}");
     assert!(manifest.contains("wrote no abstract"), "{manifest}");
@@ -149,7 +149,7 @@ fn a_project_is_addressed_the_way_a_package_is() {
         &root.join("vibe.toml"),
         "[project]\nname = \"vibevm\"\ngroup = \"org.vibevm.core\"\nversion = \"1.0.0\"\n",
     );
-    let out = compose(&root, &tmp.path().join("work")).expect("a composition");
+    let out = compose(&root, &tmp.path().join("work"), &Related::default()).expect("a composition");
     let manifest = fs::read_to_string(out.dir.join("vibe.toml")).expect("the manifest");
     assert!(manifest.contains("name = \"vibevm\""), "{manifest}");
     assert!(
@@ -171,7 +171,7 @@ fn an_authored_page_under_a_reserved_name_is_kept() {
          <title id=\"root\">Mine</title>\n\
          </spec>\n",
     );
-    let out = compose(&root, &tmp.path().join("work")).expect("a composition");
+    let out = compose(&root, &tmp.path().join("work"), &Related::default()).expect("a composition");
     assert!(!out.generated.contains(&README_PAGE.to_string()));
     assert!(
         out.notes.iter().any(|n| n.contains(README_PAGE)),
@@ -210,7 +210,7 @@ fn the_relation_tables_are_carried_across_unchanged() {
          package = \"org.example/wal-docs\"\n\
          version = \"^0.1\"\n",
     );
-    let out = compose(&root, &tmp.path().join("work")).expect("a composition");
+    let out = compose(&root, &tmp.path().join("work"), &Related::default()).expect("a composition");
     let manifest = fs::read_to_string(out.dir.join("vibe.toml")).expect("the manifest");
     assert!(manifest.contains("[[documents]]"), "{manifest}");
     assert!(manifest.contains("org.example/wal"), "{manifest}");
@@ -225,9 +225,9 @@ fn a_page_from_an_earlier_composition_does_not_survive_into_the_next() {
     let root = tmp.path().join("pkg");
     let work = tmp.path().join("work");
     plain(&root);
-    compose(&root, &work).expect("the first composition");
+    compose(&root, &work, &Related::default()).expect("the first composition");
     fs::remove_file(root.join("vibevm/vibespecs/common/PROP-001.xml")).expect("the removal");
-    let out = compose(&root, &work).expect("the second composition");
+    let out = compose(&root, &work, &Related::default()).expect("the second composition");
     assert_eq!(out.copied, 0);
     let set = crate::pages::read_package(&out.dir).expect("a page set");
     assert!(
@@ -249,7 +249,7 @@ fn a_declared_image_that_is_missing_is_a_note_and_not_a_refusal() {
          name = \"wal\"\ngroup = \"org.example\"\nversion = \"1.0.0\"\nkind = \"flow\"\n\
          \n[media]\nicon = \"media/icon.png\"\n",
     );
-    let out = compose(&root, &tmp.path().join("work")).expect("a composition");
+    let out = compose(&root, &tmp.path().join("work"), &Related::default()).expect("a composition");
     assert!(
         out.notes.iter().any(|n| n.contains("media/icon.png")),
         "{:?}",
