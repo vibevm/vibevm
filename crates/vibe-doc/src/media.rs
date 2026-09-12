@@ -57,6 +57,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURC
 pub(crate) mod image;
 pub mod placeholder;
 pub mod png;
+pub mod published;
 
 use std::path::{Path, PathBuf};
 
@@ -66,6 +67,7 @@ use crate::error::{DocError, Result};
 use image::{Format, Probe};
 
 pub use placeholder::{Card, banner_svg, icon_svg, preview_png};
+pub use published::{PUBLISHED_DIR, Slot, address_of, slots};
 
 /// The three roles a card knows, in the order D-20 lists them.
 pub const ROLES: [&str; 3] = ["icon", "banner", "preview"];

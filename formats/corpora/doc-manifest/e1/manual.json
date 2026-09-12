@@ -21,6 +21,11 @@
       "user",
       "dev"
     ],
+    "media": {
+      "icon": "media/48972302d470b3ba.svg",
+      "banner": "media/3dbc0d03689fcc08.svg",
+      "preview": "media/ec9d1a1a18535a59.png"
+    },
     "published_at": "2026-09-01T12:00:00Z",
     "rendered_at": "2026-09-12T09:00:00Z"
   },

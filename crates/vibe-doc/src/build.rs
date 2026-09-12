@@ -213,34 +213,28 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
         });
     }
 
+    // The card's images, at the addresses the MANIFEST already names.
+    // One rule, read twice: `media::slots` decides where a picture is
+    // served from, the manifest carries that address, and this writes the
+    // file there. A build that named its own files would be the second
+    // opinion the shell has no way to choose between.
     let coordinate = format!("{}/{}", card.group.as_str(), card.name);
     let kind = vibe_core::PackageKind::Doc;
-    let declared = media::declared_media(package_dir)?;
-    for (role, path) in &declared {
-        let from = package_dir.join(path);
-        let bytes = std::fs::read(&from).map_err(|e| DocError::io("reading", &from, e))?;
-        files.push(BuiltFile {
-            path: format!("media/{}", media::hashed_name(&bytes, path)),
-            bytes,
-        });
-        let _ = role;
-    }
     let mut generated_roles = Vec::new();
-    for role in media::ROLES {
-        if declared.iter().any(|(declared, _)| declared == role) {
-            continue;
-        }
-        generated_roles.push(role.to_string());
-        let (extension, bytes) = match role {
-            "icon" => ("svg", media::icon_svg(&coordinate, kind).into_bytes()),
-            "banner" => ("svg", media::banner_svg(&coordinate, kind).into_bytes()),
-            _ => ("png", media::preview_png(&coordinate, kind, &card.title)),
+    for slot in media::slots(package_dir, &coordinate)? {
+        let bytes = match slot.bytes {
+            Some(bytes) => bytes,
+            None => {
+                generated_roles.push(slot.role.to_string());
+                match slot.role {
+                    "icon" => media::icon_svg(&coordinate, kind).into_bytes(),
+                    "banner" => media::banner_svg(&coordinate, kind).into_bytes(),
+                    _ => media::preview_png(&coordinate, kind, &card.title),
+                }
+            }
         };
         files.push(BuiltFile {
-            path: format!(
-                "media/{}",
-                media::generated_name(&coordinate, role, extension)
-            ),
+            path: slot.address,
             bytes,
         });
     }

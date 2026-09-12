@@ -80,6 +80,54 @@ fn the_policy_names_no_outside_source_and_only_frames_are_a_parameter() {
     );
 }
 
+/// A shell whose head carries inline scripts is named in the policy by
+/// the sha256 of each one's bytes, computed from the shell the reader is
+/// actually carrying — X-035's answer, and the reason the hashes are not
+/// a constant anywhere.
+#[test]
+fn the_policy_names_every_inline_script_of_the_shell_by_its_bytes() {
+    let theme = "var t=1;";
+    let scroll = "var s=2;";
+    let template = format!(
+        "<!doctype html><html><head><script>{theme}</script>\
+         <script type=\"module\">{scroll}</script>\
+         <script src=\"/doc/build/q-a.js\"></script>\
+         <script type=\"qwik/state\">{{}}</script></head>\
+         <body><!--vibe-doc-island--></body></html>"
+    );
+    let policy = content_policy(&vibe_doc_shell::Shell::bare(), &template, None);
+
+    for body in [theme, scroll] {
+        let hash = vibe_doc_shell::template::hash_of(body);
+        assert!(policy.contains(&hash), "{hash} missing from {policy}");
+    }
+    // Two, not four: a script with a `src` is covered by `'self'`, and a
+    // data block is never executed.
+    assert_eq!(policy.matches("'sha256-").count(), 2, "{policy}");
+    for source in ["http:", "https:", "*", "'unsafe-eval'"] {
+        assert!(!policy.contains(source), "{source} in {policy}");
+    }
+}
+
+/// A reader wearing the bare shell sends the policy `##LOCAL-CSP` spells
+/// out, to the byte — which is why the norm's own string is still a
+/// constant in this crate and why this compares against it rather than
+/// against a copy.
+///
+/// A real shell widens `style-src` to `'unsafe-inline'`, and the widening
+/// is recorded here rather than discovered in a browser: the framework
+/// inlines each component's stylesheet, and the reading settings write a
+/// `style` attribute, which no hash can name.
+#[test]
+fn a_bare_reader_sends_the_policy_the_norm_spells_out() {
+    let bare = content_policy(&vibe_doc_shell::Shell::bare(), "<html></html>", None);
+    assert_eq!(
+        bare,
+        format!("{CSP_WITHOUT_FRAME_ANCESTORS}; frame-ancestors 'none'")
+    );
+    assert!(!bare.contains("unsafe-inline"), "{bare}");
+}
+
 /// One package is one language, so `--lang` is the caller stating which
 /// one it wants; a package in another is refused at START-UP rather than
 /// served under a label that is not true.

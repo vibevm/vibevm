@@ -44,7 +44,7 @@ use std::path::Path;
 
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
-    AdaptedSource, Audience, DocManifest, DocPackage, DocPage, DocumentedSubject,
+    AdaptedSource, Audience, CardMedia, DocManifest, DocPackage, DocPage, DocumentedSubject,
 };
 
 use crate::citations::SpecSources;
@@ -128,7 +128,12 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
     let card = Card::read(package_dir)?;
     let set = pages::read_package(package_dir)?;
     let reviews = Reviews::read(package_dir.join(REVIEWS))?;
-    Ok(assemble(&card, &set, &reviews, sources, options))
+    // The card's images: their addresses, from the one place that decides
+    // them. A declared image is read to take its content name, which is
+    // the price of an address a cache may keep forever.
+    let coordinate = format!("{}/{}", card.group, card.name);
+    let media = crate::media::slots(package_dir, &coordinate)?;
+    Ok(assemble(&card, &set, &reviews, &media, sources, options))
 }
 
 /// One built manifest and the pages that did not parse.
@@ -143,6 +148,7 @@ fn assemble(
     card: &Card,
     set: &PageSet,
     reviews: &Reviews,
+    media: &[crate::media::Slot],
     sources: &SpecSources,
     options: &Options,
 ) -> Built {
@@ -197,6 +203,16 @@ fn assemble(
         subjects,
         translation,
         audiences,
+        // Named, never re-derived: the shell parses nothing and computes
+        // nothing, and a content name is exactly the kind of thing a
+        // second implementation would get subtly wrong (X-042). Every
+        // build writes it; the member is optional on the wire because a
+        // document written before it existed is still a document.
+        media: Some(CardMedia {
+            icon: crate::media::address_of(media, "icon"),
+            banner: crate::media::address_of(media, "banner"),
+            preview: crate::media::address_of(media, "preview"),
+        }),
         published_at: options.published_at,
         rendered_at: options.rendered_at,
     };

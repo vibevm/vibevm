@@ -25,6 +25,11 @@
     "audiences": [
       "user"
     ],
+    "media": {
+      "icon": "media/0b49378201a06859.svg",
+      "banner": "media/b42a86813100e785.svg",
+      "preview": "media/5c2ffd1deb2018c2.png"
+    },
     "published_at": "2026-09-01T12:00:00Z",
     "rendered_at": "2026-09-12T09:00:00Z"
   },
