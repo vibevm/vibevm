@@ -40,19 +40,38 @@
   <the-documents title="The documents">
     <table>
       <tr><td>Command</td><td>Document</td><td>Schema</td></tr>
-      <tr><td>`vibe init --json`</td><td>the scaffold report</td><td><derived kind="jtd-schema" ref="schemas/init_report.jtd.json"/></td></tr>
-      <tr><td>`vibe install --json`</td><td>the plan, then the report</td><td><derived kind="jtd-schema" ref="schemas/install_plan.jtd.json"/> <derived kind="jtd-schema" ref="schemas/install_report.jtd.json"/></td></tr>
-      <tr><td>`vibe update --json`</td><td>the update report</td><td><derived kind="jtd-schema" ref="schemas/update_report.jtd.json"/></td></tr>
-      <tr><td>`vibe uninstall --json`</td><td>the removal report</td><td><derived kind="jtd-schema" ref="schemas/uninstall_report.jtd.json"/></td></tr>
-      <tr><td>`vibe reinstall --json`</td><td>the regeneration report</td><td><derived kind="jtd-schema" ref="schemas/reinstall_report.jtd.json"/></td></tr>
-      <tr><td>`vibe list --json`</td><td>the installed packages</td><td><derived kind="jtd-schema" ref="schemas/list_report.jtd.json"/></td></tr>
-      <tr><td>`vibe registry publish --json`, `vibe registry sync --json`</td><td>the publish and sync reports</td><td><derived kind="jtd-schema" ref="schemas/registry_publish_report.jtd.json"/> <derived kind="jtd-schema" ref="schemas/registry_sync_report.jtd.json"/></td></tr>
-      <tr><td>`vibe extensions --json`, `vibe extensions analyze --json`</td><td>the extension registry and the lane analysis</td><td><derived kind="jtd-schema" ref="schemas/extensions_report.jtd.json"/> <derived kind="jtd-schema" ref="schemas/extensions_analyze.jtd.json"/></td></tr>
-      <tr><td>the lifecycle verbs with `--json`</td><td>the plan, the report, the state and the parked tasks</td><td><derived kind="jtd-schema" ref="schemas/lifecycle_plan.jtd.json"/> <derived kind="jtd-schema" ref="schemas/lifecycle_report.jtd.json"/> <derived kind="jtd-schema" ref="schemas/lifecycle_state.jtd.json"/> <derived kind="jtd-schema" ref="schemas/lifecycle_tasks.jtd.json"/></td></tr>
-      <tr><td>`vibe deploy`, `vibe deployments --json`</td><td>the deploy intent, the receipts, the inverse plan and the checkpoints</td><td><derived kind="jtd-schema" ref="schemas/deploy_intent.jtd.json"/> <derived kind="jtd-schema" ref="schemas/deploy_receipt.jtd.json"/></td></tr>
-      <tr><td>`vibe requirements --json`</td><td>the requirements report</td><td><derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/></td></tr>
+      <tr><td>`vibe init --json`</td><td>the scaffold report</td><td>`init_report.jtd.json`</td></tr>
+      <tr><td>`vibe install --json`</td><td>the plan, then the report</td><td>`install_plan.jtd.json`, `install_report.jtd.json`</td></tr>
+      <tr><td>`vibe update --json`</td><td>the update report</td><td>`update_report.jtd.json`</td></tr>
+      <tr><td>`vibe uninstall --json`</td><td>the removal report</td><td>`uninstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe reinstall --json`</td><td>the regeneration report</td><td>`reinstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe list --json`</td><td>the installed packages</td><td>`list_report.jtd.json`</td></tr>
+      <tr><td>`vibe registry publish --json`, `vibe registry sync --json`</td><td>the publish and sync reports</td><td>`registry_publish_report.jtd.json`, `registry_sync_report.jtd.json`</td></tr>
+      <tr><td>`vibe extensions --json`, `vibe extensions analyze --json`</td><td>the extension registry and the lane analysis</td><td>`extensions_report.jtd.json`, `extensions_analyze.jtd.json`</td></tr>
+      <tr><td>the lifecycle verbs with `--json`</td><td>the plan, the report, the state and the parked tasks</td><td>`lifecycle_plan.jtd.json`, `lifecycle_report.jtd.json`, `lifecycle_state.jtd.json`, `lifecycle_tasks.jtd.json`</td></tr>
+      <tr><td>`vibe deploy`, `vibe deployments --json`</td><td>the deploy intent, the receipts, the inverse plan and the checkpoints</td><td>`deploy_intent.jtd.json`, `deploy_receipt.jtd.json`</td></tr>
+      <tr><td>`vibe requirements --json`</td><td>the requirements report</td><td>`requirements_report.jtd.json`</td></tr>
       <tr><td>`vibe tree --json`</td><td>the package tree</td><td>a JSON Schema document, `package-tree.schema.v1.json`</td></tr>
     </table>
+    <p>The fields of every schema in the table, generated from the schema files in the order above:</p>
+    <derived kind="jtd-schema" ref="schemas/init_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/update_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/uninstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/reinstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/list_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_publish_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_sync_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_analyze.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_state.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_tasks.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_intent.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_receipt.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/>
     <p>The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the compiler trace and the native ABI have schemas of their own in the same folder; the registry lists all of them.</p>
   </the-documents>
   <edge-cases title="Edge cases and rules">

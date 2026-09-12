@@ -2011,6 +2011,8 @@ pub struct OriginRename {
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
+    App,
+    Doc,
     Feat,
     Flow,
     Lang,
@@ -2030,6 +2032,8 @@ impl Serialize for PackageKind {
         S: serde::Serializer,
     {
         let wire: &str = match self {
+            PackageKind::App => "app",
+            PackageKind::Doc => "doc",
             PackageKind::Feat => "feat",
             PackageKind::Flow => "flow",
             PackageKind::Lang => "lang",
@@ -2049,6 +2053,8 @@ impl<'de> Deserialize<'de> for PackageKind {
     {
         let wire = String::deserialize(deserializer)?;
         Ok(match wire.as_str() {
+            "app" => PackageKind::App,
+            "doc" => PackageKind::Doc,
             "feat" => PackageKind::Feat,
             "flow" => PackageKind::Flow,
             "lang" => PackageKind::Lang,

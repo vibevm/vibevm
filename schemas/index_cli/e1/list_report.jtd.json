@@ -60,7 +60,7 @@
           "type": "string",
           "nullable": true,
           "metadata": {
-            "description": "The kind read from the package's versions — metadata per PROP-008 §2.3, `null` only for the (rare) package row whose every version this build refused (a zero-version usable set leaves nothing to read a kind from). The key is always present: the writer's `Option` carries no skip. A plain string, not a `package_kind` ref: the field is nullable, and the codegen pass has no shape rule for a nullable vocabulary enum (`optional_shapes.rs` refuses rather than guess) — the open vocabulary (flow, feat, stack, tool, mcp, lang, or any future kind an older reader must carry verbatim) is stated here in prose; the day the pass learns that shape, this field should return to the ref."
+            "description": "The kind read from the package's versions — metadata per PROP-008 §2.3, `null` only for the (rare) package row whose every version this build refused (a zero-version usable set leaves nothing to read a kind from). The key is always present: the writer's `Option` carries no skip. A plain string, not a `package_kind` ref: the field is nullable, and the codegen pass has no shape rule for a nullable vocabulary enum (`optional_shapes.rs` refuses rather than guess) — the open vocabulary (flow, feat, stack, tool, mcp, lang, doc, app, or any future kind an older reader must carry verbatim) is stated here in prose; the day the pass learns that shape, this field should return to the ref."
           }
         },
         "group": {
