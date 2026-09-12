@@ -16,6 +16,7 @@ use anyhow::{Result, bail};
 use vibe_doc::citations::{self, SpecSources};
 use vibe_doc::derived;
 use vibe_doc::examples::{self, RunnerEnv};
+use vibe_doc::translations;
 
 use crate::cli::{DocArgs, DocCheckArgs, DocCommand};
 
@@ -47,10 +48,10 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
-    if !args.examples && !args.derived && !args.citations {
+    if !args.examples && !args.derived && !args.citations && !args.translations {
         bail!(
             "`vibe doc check` needs a check to run: `--examples`, `--derived`, \
-             `--citations`, or any combination \
+             `--citations`, `--translations`, or any combination \
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
@@ -104,6 +105,19 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
                 "a documented rule cites an address that no longer resolves (violates \
                  spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED; \
                  fix: correct the address, or leave a tombstone where the rule was renamed)"
+            );
+        }
+    }
+
+    if args.translations {
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let report = translations::check(&args.path, &sources)?;
+        print!("{}", report.render());
+        if !report.ok() {
+            bail!(
+                "a translation does not mirror the documentation it adapts (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR; \
+                 fix: repair the translation against its source — never the other way round)"
             );
         }
     }
@@ -211,6 +225,7 @@ mod tests {
             examples: false,
             derived: false,
             citations: false,
+            translations: false,
             accept: false,
             force: false,
             only: None,
@@ -225,7 +240,28 @@ mod tests {
     fn a_check_with_no_check_named_says_which_ones_exist() {
         let e = run_check(args(), DocEnv::default()).expect_err("refused");
         assert!(e.to_string().contains("--examples"), "{e}");
+        assert!(e.to_string().contains("--translations"), "{e}");
         assert!(e.to_string().contains("PROP-057#PIPE-LIBRARY"), "{e}");
+    }
+
+    /// A package that adapts nothing passes `--translations` and says
+    /// why. The surface is thin on purpose: the verdict, the wording and
+    /// the exit code all come from the library, and this proves the flag
+    /// reaches it.
+    #[test]
+    fn the_translations_check_is_green_on_a_source_documentation() {
+        let tmp = tempfile::tempdir().expect("temp dir");
+        std::fs::write(
+            tmp.path().join("vibe.toml"),
+            "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n",
+        )
+        .expect("write");
+        let checked = DocCheckArgs {
+            translations: true,
+            path: tmp.path().to_path_buf(),
+            ..args()
+        };
+        run_check(checked, DocEnv::default()).expect("nothing to mirror is a green state");
     }
 
     #[test]

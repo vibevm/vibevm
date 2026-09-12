@@ -158,6 +158,22 @@ pub enum DocError {
          fix: declare the card fields a package of kind `doc` must carry)"
     )]
     Manifest { path: PathBuf, message: String },
+
+    /// A translation cannot be checked against the documentation it
+    /// adapts — the coordinate is malformed, or no source holds it. The
+    /// check itself asks about STRUCTURE alone, and this is the state
+    /// where it has nothing to ask the question of
+    /// (PROP-057 `##LOC-MIRROR`).
+    ///
+    /// The coordinate is spelled `adapts` rather than `source`: a field
+    /// called `source` is what `thiserror` reads as the wrapped error,
+    /// and a coordinate is not one.
+    #[error(
+        "the translation adapts `{adapts}`: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR; \
+         fix: name a documentation this machine can reach, and mirror it)"
+    )]
+    Translation { adapts: String, message: String },
 }
 
 impl DocError {

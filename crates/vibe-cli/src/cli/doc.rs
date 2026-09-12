@@ -20,7 +20,8 @@ pub enum DocCommand {
     /// Check a documentation package against the product it documents:
     /// run every documented example and compare its output exactly,
     /// rebuild every `derived` block and compare it with the last build,
-    /// and resolve every `rule` citation against the current specs.
+    /// resolve every `rule` citation against the current specs, and check
+    /// a translation against the documentation it adapts.
     Check(DocCheckArgs),
 }
 
@@ -42,6 +43,13 @@ pub struct DocCheckArgs {
     /// exist now. One question and no other: does the anchor exist.
     #[arg(long)]
     pub citations: bool,
+
+    /// Check a translation against the documentation it adapts: the same
+    /// pages, the same anchors, examples borrowed rather than authored.
+    /// Structure only — there is no «how far behind» here, because that
+    /// needs a history this product does not keep.
+    #[arg(long)]
+    pub translations: bool,
 
     /// Record a capture on the page when the example has no golden yet.
     /// Never replaces a golden that already holds text — see `--force`.
