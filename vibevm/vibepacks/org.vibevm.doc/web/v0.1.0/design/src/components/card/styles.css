@@ -1,0 +1,112 @@
+/* A shelf entry. The placeholder is a warm gradient out of the theme's
+   own tokens — the `.photo-ph` of the design system — so a package with
+   no icon still has a shape, and no picture is ever fetched from
+   anyone else's host. */
+
+.card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-raise);
+  transition:
+    border-color var(--speed) ease,
+    box-shadow var(--speed) ease;
+}
+
+.card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.card__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.card__icon,
+.card__placeholder {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+}
+
+.card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--accent);
+  background: linear-gradient(145deg, var(--accent-soft), var(--bg-sink) 70%);
+  border: 1px solid var(--line);
+}
+
+.card__body {
+  min-width: 0;
+}
+
+.card__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.15rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.card__link {
+  color: var(--text);
+  transition: color var(--speed) ease;
+}
+
+.card__link:hover {
+  color: var(--accent);
+}
+
+.card__publisher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.card__coordinate {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.card__description {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+
+.card__abstract {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+.card__abstract > summary {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.card__abstract > summary:hover {
+  color: var(--accent);
+}
+
+.card__abstract > p {
+  margin: 0.5rem 0 0;
+  white-space: pre-line;
+}

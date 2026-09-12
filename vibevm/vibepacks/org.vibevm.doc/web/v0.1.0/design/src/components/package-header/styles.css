@@ -1,0 +1,101 @@
+/* The head of a package page. The drawn banner is the design system's
+   warm placeholder (`.photo-ph`) expressed in tokens, so it changes with
+   the theme and never leaves the bundle for a picture. */
+
+.package-header {
+  margin: 0 0 2rem;
+}
+
+.package-header__banner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+}
+
+.package-header__banner--drawn {
+  background:
+    radial-gradient(
+      120% 180% at 12% 10%,
+      var(--accent-soft) 0%,
+      transparent 60%
+    ),
+    linear-gradient(120deg, var(--bg-sink), var(--bg-raise) 65%);
+}
+
+.package-header__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: -2rem;
+  padding: 0 1rem;
+}
+
+.package-header__icon,
+.package-header__placeholder {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raise);
+}
+
+.package-header__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.package-header__body {
+  min-width: 0;
+  padding-top: 2rem;
+}
+
+.package-header__title {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.package-header__publisher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+.package-header__coordinate {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-3);
+}
+
+.package-header__description {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  color: var(--text-2);
+}
+
+.package-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+@media (max-width: 700px) {
+  .package-header__row {
+    padding: 0;
+  }
+}
