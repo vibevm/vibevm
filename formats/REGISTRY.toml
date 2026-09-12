@@ -946,6 +946,23 @@ foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"
 
+# ── The registry builder (1 record, 1 JTD), PROP-057 §9.2 ───────────────────
+# `doc-site-config` is `site.toml`, what `vibe doc build-site` is told before
+# it reads anything: the two sources of `##SITE-TWO-SOURCES` in the form of a
+# project's `[[registry]]`, and one `[site]` table for the domain the render
+# is for. NOT recoverable — it is authored beside the deploy and nothing in
+# any tree remembers which domain a renderer was pointed at. `ours`, like the
+# maintenance records above: the only parser is this project's, and it is a
+# `vibe` rebuilt from `main` far more often than the file changes, which is
+# the skew a version field is for.
+[format.doc-site-config]
+epoch = 1
+schema = "schemas/doc_site_config.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

@@ -115,6 +115,14 @@
 //!   the norm's own instruction: it calls a real agent and costs real
 //!   money.
 //!
+//! * [`site`] — the registry builder. Everything above answers about ONE
+//!   package the caller points at; this answers about the whole site —
+//!   which packages the registry holds now, which of their versions moved
+//!   since the last render, and what the host's checkout currently says.
+//!   Two sources, configured in the form a project's `[[registry]]`
+//!   already has, and no memory of any publication but the current one
+//!   (`##SITE-TWO-SOURCES`, `##SITE-VERSION-SHOWS-CURRENT`).
+//!
 //! Below all four sits [`pages`], the one place that reads a
 //! documentation package: the pivot's documentation vocabulary is a
 //! parameter of the READER, and choosing it from the package's kind is
@@ -172,6 +180,7 @@ pub mod media;
 pub mod numbering;
 pub mod pages;
 pub mod prompts;
+pub mod site;
 pub mod style;
 pub mod surface;
 pub mod todo;

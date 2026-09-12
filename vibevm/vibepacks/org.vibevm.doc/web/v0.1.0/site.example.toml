@@ -1,0 +1,83 @@
+# `site.toml` — what the registry builder is told before it reads anything.
+#
+# Copy this beside the deploy and edit it; `vibe doc build-site --config
+# <this file> --out <directory>` is the command the renderer container
+# runs. The shape is `schemas/doc_site_config.jtd.json` in the vibevm
+# repository, registered as the format `doc-site-config`.
+#
+# Every value below is a DEFAULT written out, so this file says the same
+# thing as an empty one that names only its sources. Nothing here
+# authorises anything: the site reads every source anonymously, and there
+# is no `auth`, no token and no environment name in the shape.
+#
+# Why this file lives in the site package rather than beside the
+# renderer's compose file: the renderer's build configuration is part of
+# the package (PROP-057 `##SITE-WHO-COMMITS-WHAT`), while the compose
+# services and the deploy script are the owner's, on the server.
+
+schema = 1
+
+# ── Source one: the package registry ────────────────────────────────────
+# The same shape a project's `[[registry]]` has, minus everything that
+# authenticates. Its index is the change feed: the builder reads
+# `repomd.json` and `primary.jsonl`, compares «coordinate, version,
+# content hash» with what it last rendered, and rebuilds only what moved
+# (PROP-057 `##SITE-SOURCE-REGISTRY`).
+#
+# The table is repeatable because mirrors and second registries are the
+# declared future; the first wave ships one.
+[[source.registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+# Where the index lives. Omit for the default `<url>/index`; the exact
+# value `"none"` switches the index off, and a registry with no index has
+# no change feed to offer.
+# index_url = "https://github.com/vibespecs/index"
+# How a coordinate becomes a repository name: `fqdn` (the default),
+# `kind-name`, `name` or `kind/name`.
+# naming = "fqdn"
+
+# ── Source two: the host ────────────────────────────────────────────────
+# The host root is a `[project]` and not a publishable package, so it is
+# never fetched: the deploy keeps a checkout on disk (`git checkout main
+# && git pull`) and the renderer reads it (PROP-057
+# `##SITE-HOST-CHECKOUT`). `git` is therefore an identity — which
+# repository this checkout is of — and not a fetch instruction.
+[source.host]
+git = "https://github.com/vibevm/vibevm"
+# The branch whose CURRENT state is the release: the host has no release
+# tags, and what `main` holds now is what `vibe self install latest`
+# builds.
+ref = "main"
+# The directory the deploy keeps that checkout in, relative to this file
+# when relative. Omit for the directory this file sits in.
+checkout = "checkout"
+# How long a successful host render is left alone, however often the
+# branch moves. The recommended default of `##SITE-HOST-POLL` is once an
+# hour, pending the owner's word on the frequency.
+debounce_minutes = 60
+
+# ── The domain this render is for ───────────────────────────────────────
+[site]
+# Where the documentation is mounted (`##SITE-MOUNT`).
+base_path = "/doc"
+# Scheme and host, no trailing slash. A default and never a constant:
+# `canonical`, `hreflang` and the sitemap are absolute addresses, and a
+# fork builds this same source for somewhere else.
+origin = "https://vibevm.org"
+# What a first-time reader gets: `system`, `light` or `dark`. `system`
+# means the reader's own operating-system setting.
+default_theme = "system"
+
+# The first-party, self-hosted, cookie-less analytics tag the landing
+# already carries (PROP-057 `##SITE-ANALYTICS`). Both values identify a
+# LIVE property, so they belong to the deployment and not to the
+# repository. Empty is the instruction and not a hole for whoever
+# notices: no website id means no tag in the page at all — never a tag
+# with an empty attribute, which would load the script and report
+# nothing.
+[site.analytics]
+website_id = ""
+# Where the tag reports to. Omit for the site's own origin, which is what
+# a first-party tag served by the domain itself reports to.
+host_url = ""

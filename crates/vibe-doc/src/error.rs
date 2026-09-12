@@ -221,6 +221,20 @@ pub enum DocError {
          readings recorded is reported as one, never as a clean one)"
     )]
     Todo { message: String },
+
+    /// The site build cannot start, or cannot finish a step that is not
+    /// about one package: `site.toml` does not read, a source names
+    /// nothing, the index does not answer, or the builder's state file is
+    /// not a state file. A failure to RENDER one version is deliberately
+    /// not here — that one becomes a page (`##SITE-RENDER-IDEMPOTENT`),
+    /// because one bad package must not take the registry down with it.
+    #[error(
+        "the site cannot be built: {message} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES; \
+         fix: name both sources in `site.toml` the way a project names a \
+         `[[registry]]`, and point `--out` at a directory the builder may write)"
+    )]
+    Site { message: String },
 }
 
 impl DocError {
