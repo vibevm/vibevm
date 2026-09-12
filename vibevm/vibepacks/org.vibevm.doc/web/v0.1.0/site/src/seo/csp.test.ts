@@ -1,9 +1,10 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR */
 
 import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-import { cspPolicy, hashOf, hashesIn, inlineScripts } from "./csp.ts";
+import { cspConf, cspPolicy, hashOf, hashesIn, inlineScripts } from "./csp.ts";
 
 /**
  * What the policy is FOR is the difference between a script a browser
@@ -67,4 +68,69 @@ test("the policy names no host at all", () => {
   assert.match(policy, /default-src 'self'/);
   assert.match(policy, /object-src 'none'/);
   assert.match(policy, /frame-ancestors 'none'/);
+});
+
+/**
+ * The header the serving container sends is generated from the line this
+ * build wrote and from nothing else. A `map` over the media type rather
+ * than a header on the whole server, because the policy is one hash per
+ * distinct inline script and only a document can execute one: sending
+ * the list with every chunk and every font would spend kilobytes per
+ * request protecting a file that cannot run anything (X-044).
+ */
+test("the serving fragment carries the policy on documents and nowhere else", () => {
+  const policy = cspPolicy([hashOf("theme()"), hashOf("scroll()")]);
+  const conf = cspConf(policy);
+  assert.match(conf, /map \$sent_http_content_type \$vibe_csp \{/);
+  assert.match(conf, /default\s+"";/);
+  assert.match(
+    conf,
+    new RegExp(
+      `~\\*\\^text/html\\s+"${policy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}";`,
+    ),
+  );
+  assert.match(conf, /\}\n$/);
+});
+
+/**
+ * A policy that cannot be written as one quoted value is refused rather
+ * than emitted: a configuration file that parses differently from how it
+ * reads would take the whole domain down at the next restart, and the
+ * cause would be a quote nobody looked at.
+ */
+test("a policy that cannot be quoted is refused", () => {
+  assert.throws(() => cspConf('script-src "self"'), /quote/);
+  assert.throws(
+    () => cspConf("default-src 'self'\nscript-src 'self'"),
+    /newline/,
+  );
+});
+
+/**
+ * The generator over the real thing: the `csp.txt` this package's own
+ * build wrote, with every hash it found in the pages it rendered. A
+ * fixture would prove the shape; only the build's own output proves that
+ * what the build writes is what the generator accepts — which is the one
+ * failure that would reach a reader rather than a test.
+ *
+ * It runs when a build has been made. A clone with nothing built has no
+ * output to read, and a test that invented one would be testing the
+ * fixture above a second time.
+ */
+test("the generator accepts the policy this package's build wrote", () => {
+  const built = new URL("../../dist/csp.txt", import.meta.url);
+  if (!existsSync(built)) return;
+  const policy = readFileSync(built, "utf8");
+  const hashes = hashesIn(policy);
+  assert.ok(hashes.length > 0, "the built policy names at least one hash");
+  const conf = cspConf(policy);
+  for (const hash of hashes) assert.ok(conf.includes(hash));
+  assert.equal(hashesIn(conf).length, hashes.length);
+  /* The fragment is one map and one line inside it: a policy of a
+     hundred and fifty hashes is still one value, not a hundred and
+     fifty directives. */
+  assert.equal(
+    conf.split("\n").filter((one) => one.includes("text/html")).length,
+    1,
+  );
 });
