@@ -238,10 +238,7 @@ impl Shell {
                 .get_file(relative)
                 .map(|file| file.contents().to_vec()),
             Source::Store(root) => {
-                let mut path = root.clone();
-                for segment in relative.split('/') {
-                    path.push(segment);
-                }
+                let path = under(root, relative)?;
                 std::fs::read(path).ok()
             }
             Source::Fallback => match relative {
@@ -311,6 +308,15 @@ impl Shell {
 }
 
 /// Is `relative` a plain `/`-separated sequence of ordinary names?
+///
+/// A colon is refused along with the obvious things, and that is not
+/// belt-and-braces: on Windows a segment like `C:` carries a DRIVE PREFIX,
+/// and [`std::path::PathBuf::push`] of a prefixed component replaces the
+/// whole path rather than extending it. Measured, not assumed —
+/// `PathBuf::from(r"C:\root\sub")` pushed `C:` then `Windows` comes out
+/// as `C:Windows`, which is drive-relative to the process's own directory
+/// and nowhere near the shell. No file the bundler writes has a colon in
+/// its name, so nothing legitimate is lost.
 fn is_plain_path(relative: &str) -> bool {
     !relative.is_empty()
         && relative.split('/').all(|segment| {
@@ -319,7 +325,23 @@ fn is_plain_path(relative: &str) -> bool {
                 && segment != ".."
                 && !segment.contains('\\')
                 && !segment.contains('\0')
+                && !segment.contains(':')
         })
+}
+
+/// Join `relative` under `root`, or `None` when the result is not under
+/// it after all.
+///
+/// The check above says the NAME is ordinary; this says the PATH stayed
+/// where it was put. Two checks on one question, because they answer it
+/// differently: one reads the request, the other reads what the platform
+/// made of it, and the platform is the half that surprises.
+fn under(root: &Path, relative: &str) -> Option<PathBuf> {
+    let mut path = root.to_path_buf();
+    for segment in relative.split('/') {
+        path.push(segment);
+    }
+    path.starts_with(root).then_some(path)
 }
 
 #[cfg(feature = "embedded-shell")]

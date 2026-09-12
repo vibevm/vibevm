@@ -112,12 +112,35 @@ fn an_asset_path_that_is_not_a_sequence_of_names_never_reaches_the_filesystem() 
         "assets\\style.css",
         "",
         "assets//style.css",
+        // A drive prefix. `PathBuf::push` REPLACES the path on one of
+        // these rather than extending it, so a name that looks like one
+        // segment walks off the volume.
+        "C:",
+        "C:/Windows/win.ini",
+        "assets/C:/Windows/win.ini",
     ] {
         assert!(
             shell.asset(spelling).is_none(),
             "`{spelling}` must not resolve"
         );
     }
+    // …and the ordinary name beside them still does, so the refusals are
+    // a rule about escapes and not a rule about reading anything. Only
+    // on the store lane: under the feature the compiled-in shell wins and
+    // carries its own names, which is the order working as intended.
+    if shell.provenance() == Provenance::Store {
+        assert!(shell.asset("assets/style.css").is_some());
+    }
+}
+
+/// The join itself is checked, not only the name: the name says
+/// «ordinary», and this says «still under the root the shell was placed
+/// at» after the platform has had its say.
+#[test]
+fn a_join_that_leaves_the_shell_root_answers_nothing() {
+    let root = Path::new("shell-root").join("sub");
+    assert!(under(&root, "assets/style.css").is_some());
+    assert!(under(&root, "C:").is_none() || !cfg!(windows));
 }
 
 #[test]
