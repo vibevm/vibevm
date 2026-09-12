@@ -46,7 +46,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-QUERY-PACKAGE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-READ-SUBSKILL"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-MATERIALISE-SUBSKILL"/>
-    <p>The language packages of the `mcp` kind bring servers of their own with four tools, `tcg_validate`, `tcg_scope`, `tcg_complete` and `tcg_type`: thin adapters over the operations of the same names, each taking a required `language`, `typescript` or `rust`, and the operation's own parameters unchanged, and answering with the enriched result as structured content plus a short text with the findings first.</p>
+    <p>The language packages of the `mcp` kind bring servers of their own with four tools, `tcg_validate`, `tcg_scope`, `tcg_complete` and `tcg_type`: thin adapters over the operations of the same names. Each takes a required `language`, `typescript` or `rust`, and the operation's own parameters unchanged. Each answers with the enriched result as structured content plus a short text with the findings first.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#TOOLS-NEW-HOME"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#FOUR-TOOLS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#PARAM-LANGUAGE"/>
