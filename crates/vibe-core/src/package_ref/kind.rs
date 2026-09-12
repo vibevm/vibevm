@@ -13,10 +13,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::{Error, Result};
 
-/// One of the four installable package kinds.
+/// One of the eight installable package kinds.
 ///
-/// Spec: `VIBEVM-SPEC.md` §4.1. This enum is closed; adding a fifth kind is a
-/// spec change, not a code change.
+/// Spec: `VIBEVM-SPEC.md` §4.1. This enum is closed; admitting another kind
+/// is a spec change the owner makes in the register, not a code change —
+/// and once admitted, every exhaustive `match` on this type grows a branch
+/// that says what the kind DOES. A wildcard arm hiding a kind is forbidden
+/// (PROP-057 `##KIND-CODE-LAW`).
 ///
 /// ```
 /// use vibe_core::PackageKind;
@@ -51,6 +54,37 @@ pub enum PackageKind {
     /// never by its group, so a third party can publish one in its own
     /// namespace and be recognised.
     Lang,
+    /// Documentation as a package: it documents one or more other
+    /// packages — its *subjects*, named in `[[documents]]` — and is
+    /// **read, never executed**.
+    ///
+    /// It carries the card the site and the shelf show without
+    /// downloading it (`title`, `abstract`), and it may not declare
+    /// `[boot_snippet]`, `[[mcp_server]]` or `[[binary]]`: documentation
+    /// never enters a boot lane. `vibe install` refuses it — the reading
+    /// path is `vibe cache add`, which warms the package into the
+    /// machine store for the local reader, the site and the agent
+    /// skill — and a translation of it is another `doc` package, one per
+    /// language.
+    ///
+    /// Admitted by owner amendment 2026-09-12 (VIBEVM-SPEC §4.1);
+    /// semantics: PROP-057 `##KIND-DOC-LEAD`.
+    Doc,
+    /// A standalone product with its own deployment profile in the
+    /// build, package and deploy planes (PROP-054).
+    ///
+    /// The boundary with `tool` is mechanical, not a matter of taste: a
+    /// `tool` lives in a consumer project and runs through `vibe bin
+    /// exec` by the lock file, while an `app` runs in no consumer
+    /// project at all and is built and deployed on its own. Everywhere
+    /// the spec draws no line between them — a package is publishable,
+    /// resolvable, indexable, may carry skills — an `app` behaves
+    /// exactly as a `tool` does.
+    ///
+    /// Example: `org.vibevm.doc/web`, the documentation site. Admitted
+    /// by owner amendment 2026-09-12 (VIBEVM-SPEC §4.1); semantics:
+    /// PROP-057 `##KIND-APP-VS-TOOL`.
+    App,
 }
 
 impl PackageKind {
@@ -62,17 +96,30 @@ impl PackageKind {
             PackageKind::Tool => "tool",
             PackageKind::Mcp => "mcp",
             PackageKind::Lang => "lang",
+            PackageKind::Doc => "doc",
+            PackageKind::App => "app",
         }
     }
 
-    pub const ALL: [PackageKind; 6] = [
+    pub const ALL: [PackageKind; 8] = [
         PackageKind::Flow,
         PackageKind::Feat,
         PackageKind::Stack,
         PackageKind::Tool,
         PackageKind::Mcp,
         PackageKind::Lang,
+        PackageKind::Doc,
+        PackageKind::App,
     ];
+
+    /// `true` for the one kind that is read instead of installed.
+    ///
+    /// `vibe install` refuses such a package and names `vibe cache add`
+    /// instead (PROP-057 `##KIND-DOC-NOT-INSTALLED`); every other kind
+    /// materialises into a consumer's dependency root as always.
+    pub const fn is_read_only(self) -> bool {
+        matches!(self, PackageKind::Doc)
+    }
 }
 
 impl fmt::Display for PackageKind {
@@ -92,6 +139,8 @@ impl FromStr for PackageKind {
             "tool" => Ok(PackageKind::Tool),
             "mcp" => Ok(PackageKind::Mcp),
             "lang" => Ok(PackageKind::Lang),
+            "doc" => Ok(PackageKind::Doc),
+            "app" => Ok(PackageKind::App),
             other => Err(Error::BadPackageKind(other.to_owned())),
         }
     }

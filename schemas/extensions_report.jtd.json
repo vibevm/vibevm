@@ -35,7 +35,7 @@
       }
     },
     "manifest_kind": {
-      "enum": ["project", "workspace", "flow", "feat", "stack", "tool", "mcp", "lang"],
+      "enum": ["project", "workspace", "flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "selector_subject": {
@@ -149,7 +149,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "package_kind": {
-      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"],
+      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "pass_kind": {
