@@ -28,6 +28,12 @@ fn sample_entry() -> VersionEntry {
         homepage: None,
         keywords: vec!["wal".into()],
         describes: None,
+        title: None,
+        abstract_: None,
+        documents: vec![],
+        documentation: None,
+        translates: None,
+        media: None,
         bridge: false,
         embedded_sources: vec![],
         // Empty projections are ABSENCE, not present-but-empty: the

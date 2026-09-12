@@ -12,8 +12,8 @@
 //! impl rather than silenced crate-wide.
 
 use crate::generated::shared::{
-    CompatibilityEntry, ConflictsEntry, FeaturesEntry, I18nEntry, ObsoletesEntry, ProvidesEntry,
-    RequiresEntry,
+    CompatibilityEntry, ConflictsEntry, DocumentationEntry, FeaturesEntry, I18nEntry, MediaEntry,
+    ObsoletesEntry, ProvidesEntry, RequiresEntry,
 };
 
 impl CompatibilityEntry {
@@ -121,6 +121,46 @@ impl Default for I18nEntry {
         I18nEntry {
             available: Vec::new(),
             default: None,
+        }
+    }
+}
+
+impl DocumentationEntry {
+    /// `true` when the subject named no documentation at all — the
+    /// table exists in the manifest grammar but says nothing, and an
+    /// empty `[documentation]` is absence on the wire like every other
+    /// empty projection.
+    pub fn is_empty(&self) -> bool {
+        self.primary.is_none() && self.official.is_empty()
+    }
+}
+
+#[allow(clippy::derivable_impls)]
+impl Default for DocumentationEntry {
+    fn default() -> Self {
+        DocumentationEntry {
+            primary: None,
+            official: Vec::new(),
+        }
+    }
+}
+
+impl MediaEntry {
+    /// `true` when the card declares no image. The site and the local
+    /// reader then generate a placeholder from the coordinate's hash,
+    /// so absence here is a complete answer, never a gap to fill.
+    pub fn is_empty(&self) -> bool {
+        self.icon.is_none() && self.banner.is_none() && self.preview.is_none()
+    }
+}
+
+#[allow(clippy::derivable_impls)]
+impl Default for MediaEntry {
+    fn default() -> Self {
+        MediaEntry {
+            icon: None,
+            banner: None,
+            preview: None,
         }
     }
 }

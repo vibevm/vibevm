@@ -3,10 +3,10 @@
   "registry": "vibespecs",
   "registry_url": "https://gitverse.ru/vibespecs",
   "naming": "fqdn",
-  "generated_at": "2026-08-06T10:00:00Z",
+  "generated_at": "2026-08-09T10:00:00Z",
   "generator": "vibe-index 1.0.0",
-  "package_count": 3,
-  "version_count": 5,
+  "package_count": 6,
+  "version_count": 8,
   "files": {
     "by-cap": {
       "kind": "directory",
@@ -29,12 +29,27 @@
     },
     "by-name": {
       "kind": "directory",
-      "entries": 2
+      "entries": 5
     },
     "by-name/golden-probe.json": {
       "kind": "file",
       "size": "1210",
       "sha256": "sha256:b4619dc941af64bb7e851101acc11e1f95af21bcc0bfd434c29c8a1b9b8b1861"
+    },
+    "by-name/wal-docs-ru.json": {
+      "kind": "file",
+      "size": "1397",
+      "sha256": "sha256:e9b3b491885e441b5893f8d09f07c90fab879f09e37d6f328782f1d7ceb488ca"
+    },
+    "by-name/wal-docs.json": {
+      "kind": "file",
+      "size": "1448",
+      "sha256": "sha256:bf26201f1b466425e4c153084815456ca6bf08d7e3ac9e50b8db892296f4a478"
+    },
+    "by-name/wal-viewer.json": {
+      "kind": "file",
+      "size": "1041",
+      "sha256": "sha256:b0679935867608e5f59b3051b9f679d8e5731924622cf3fb7e9fc1ee24a9ec83"
     },
     "by-name/wal.json": {
       "kind": "file",
@@ -67,13 +82,13 @@
     },
     "primary.jsonl": {
       "kind": "file",
-      "size": "3951",
-      "sha256": "sha256:578fdb991ad057d0a61bd8e2db7624ce92ebd7834ab4100f7f12ea1a7f4c52ef"
+      "size": "5976",
+      "sha256": "sha256:f12ff0e46f628bfc00de98fc159beadba409f37351b3dff6d7b8a23b217c3463"
     },
     "primary.jsonl.gz": {
       "kind": "file",
-      "size": "1364",
-      "sha256": "sha256:addd3779a7ee190a8340339c36a32eb5873f0c00154ca586d75113f4b04f4908"
+      "size": "1879",
+      "sha256": "sha256:be6c6c925f415fa868007a8aa7efc7b8a5b49750840b7439959b5ba69cb1f9e7"
     }
   }
 }

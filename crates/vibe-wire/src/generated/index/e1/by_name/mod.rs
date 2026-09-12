@@ -31,6 +31,10 @@ pub use crate::generated::shared::ConflictsEntry;
 
 pub use crate::generated::shared::DeliveryMode;
 
+pub use crate::generated::shared::DocumentationEntry;
+
+pub use crate::generated::shared::DocumentsEntry;
+
 pub use crate::generated::shared::EmbeddedSourceEntry;
 
 pub use crate::generated::shared::FeaturesEntry;
@@ -38,6 +42,8 @@ pub use crate::generated::shared::FeaturesEntry;
 pub use crate::generated::shared::Group;
 
 pub use crate::generated::shared::I18nEntry;
+
+pub use crate::generated::shared::MediaEntry;
 
 pub use crate::generated::shared::ObsoletesEntry;
 
@@ -86,6 +92,8 @@ pub struct Tombstone {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub superseded_by: Option<String>,
 }
+
+pub use crate::generated::shared::TranslatesEntry;
 
 pub use crate::generated::shared::Version;
 

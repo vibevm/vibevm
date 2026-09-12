@@ -25,18 +25,23 @@ use chrono::{DateTime, Utc};
 use semver::Version;
 
 use vibe_index::types::{
-    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, Group,
-    I18nEntry, ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry, RequiresEntry,
-    SubskillEntry, VersionEntry, WorkspaceOriginEntry,
+    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, DocumentationEntry,
+    DocumentsEntry, FeaturesEntry, Group, I18nEntry, MediaEntry, ObsoletesEntry, PackageKind,
+    ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry, TranslatesEntry, VersionEntry,
+    WorkspaceOriginEntry,
 };
 use vibe_wire::generated::index::e1::entry::Entry;
 
 /// How many keys a fully populated entry puts on the wire: 12 required
-/// fields plus 21 optional ones, every optional present. Declared as a
+/// fields plus 27 optional ones, every optional present. Declared as a
 /// constant so the fixture's own exhaustiveness is asserted, not assumed —
 /// a fixture whose optional field stayed empty would prove nothing about
-/// that field.
-const FULLY_POPULATED_KEY_COUNT: usize = 33;
+/// that field. The last six to arrive are the documentation card and
+/// relations of PROP-057 `##REL-INDEX-FIELDS`; `abstract` is also the
+/// only key here whose Rust identifier is escaped (`abstract_` — the word
+/// is reserved), so this count is what would notice if its rename ever
+/// stopped reaching the wire.
+const FULLY_POPULATED_KEY_COUNT: usize = 39;
 
 fn fixed_instant() -> DateTime<Utc> {
     DateTime::parse_from_rfc3339("2026-08-15T10:15:30Z")
@@ -85,6 +90,29 @@ fn fully_populated_entry() -> VersionEntry {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
+        title: Some("The WAL Discipline".to_string()),
+        abstract_: Some(
+            "What a write-ahead log is for, who keeps one, what it assumes \
+             about the tree, and what it deliberately leaves to review."
+                .to_string(),
+        ),
+        documents: vec![DocumentsEntry {
+            package: "org.vibevm/wal-subject".to_string(),
+            version: "^1.0".to_string(),
+        }],
+        documentation: Some(DocumentationEntry {
+            primary: Some("org.vibevm/wal-docs".to_string()),
+            official: vec!["org.vibevm/wal-tutorials".to_string()],
+        }),
+        translates: Some(TranslatesEntry {
+            package: "org.vibevm/wal-docs".to_string(),
+            version: "^0.3".to_string(),
+        }),
+        media: Some(MediaEntry {
+            icon: Some("media/icon.png".to_string()),
+            banner: Some("media/banner.jpg".to_string()),
+            preview: Some("media/preview.webp".to_string()),
+        }),
         bridge: false,
         embedded_sources: vec![],
         compatibility: Some(CompatibilityEntry {

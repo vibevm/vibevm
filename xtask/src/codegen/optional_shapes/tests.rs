@@ -454,6 +454,44 @@ pub struct RefreshedEntry {
     Ok(())
 }
 
+/// An OPTIONAL member whose wire name is a Rust keyword is keyed by the
+/// rename, never by the escaped identifier. The rename is the only thing
+/// carrying `abstract` to the wire — the generator escapes the field to
+/// `abstract_` and the snake_case pass keeps the rename precisely because
+/// it no longer repeats the identifier — so a pass that read the
+/// identifier instead would look up a member (`abstract_`) the schema
+/// cannot describe and refuse a correct schema. The required half of this
+/// class (`ref_`) is covered above; this is the optional half, which is
+/// the one that reaches this pass at all.
+#[test]
+fn a_keyword_renamed_optional_is_keyed_by_its_wire_name() -> Result<()> {
+    let src = r#"#[derive(Serialize, Deserialize)]
+pub struct VersionEntry {
+    #[serde(rename = "abstract")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub abstract_: Option<Box<String>>,
+}
+"#;
+    let doc = json!({
+        "optionalProperties": {
+            "abstract": {
+                "type": "string",
+                "metadata": { "x-default": null }
+            }
+        }
+    });
+    let out = apply(src, "shared/mod.rs", doc)?;
+    assert!(
+        out.contains(r#"#[serde(rename = "abstract")]"#),
+        "the rename rides through — it is the wire name: {out}"
+    );
+    assert!(
+        out.contains("pub abstract_: Option<String>,"),
+        "the box is lifted and the escaped identifier is untouched: {out}"
+    );
+    Ok(())
+}
+
 /// An optional collection is not this pass's site — `empty_policy`
 /// collapsed it one pass earlier — so the document describes zero sites
 /// and the file rides through untouched.

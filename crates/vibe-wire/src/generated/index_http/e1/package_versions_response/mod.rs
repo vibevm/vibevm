@@ -47,6 +47,10 @@ pub use crate::generated::shared::ConflictsEntry;
 
 pub use crate::generated::shared::DeliveryMode;
 
+pub use crate::generated::shared::DocumentationEntry;
+
+pub use crate::generated::shared::DocumentsEntry;
+
 pub use crate::generated::shared::EmbeddedSourceEntry;
 
 pub use crate::generated::shared::FeaturesEntry;
@@ -54,6 +58,8 @@ pub use crate::generated::shared::FeaturesEntry;
 pub use crate::generated::shared::Group;
 
 pub use crate::generated::shared::I18nEntry;
+
+pub use crate::generated::shared::MediaEntry;
 
 pub use crate::generated::shared::ObsoletesEntry;
 
@@ -68,6 +74,8 @@ pub use crate::generated::shared::RequiresEntry;
 pub use crate::generated::shared::SubskillEntry;
 
 pub use crate::generated::shared::Timestamp;
+
+pub use crate::generated::shared::TranslatesEntry;
 
 /// One package version this build refuses and the recovery recipe, mirroring
 /// `crates/vibe-index/src/index/quarantine.rs::Unavailable`.
