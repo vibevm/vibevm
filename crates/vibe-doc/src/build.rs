@@ -228,17 +228,10 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
     let kind = declared_kind(package_dir);
     let mut generated_roles = Vec::new();
     for slot in media::slots(package_dir, &coordinate)? {
-        let bytes = match slot.bytes {
-            Some(bytes) => bytes,
-            None => {
-                generated_roles.push(slot.role.to_string());
-                match slot.role {
-                    "icon" => media::icon_svg(&coordinate, kind).into_bytes(),
-                    "banner" => media::banner_svg(&coordinate, kind).into_bytes(),
-                    _ => media::preview_png(&coordinate, kind, &card.title),
-                }
-            }
-        };
+        if slot.generated() {
+            generated_roles.push(slot.role.to_string());
+        }
+        let bytes = slot.render(&coordinate, kind, &card.title);
         files.push(BuiltFile {
             path: slot.address,
             bytes,
