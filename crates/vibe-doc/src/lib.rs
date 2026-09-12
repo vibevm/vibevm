@@ -40,6 +40,14 @@
 //!   order — stable text before text that moves with the product
 //!   (`##SEO-LLMS-FILES`, PROP-048 `##THE-LAYER-LAW`).
 //!
+//! * [`translations`] — the mirror check. An adaptation carries the same
+//!   pages, the same anchors and the same blocks as the documentation it
+//!   adapts, and borrows every example rather than authoring one. That
+//!   is what lets the language selector keep a reader's place and a
+//!   citation mean one thing in every language (`##LOC-MIRROR`). It asks
+//!   about structure and nothing else: whether the prose still says what
+//!   the source says is a human's question at a full reconciliation.
+//!
 //! * [`html`] — the island. A page's content as finished HTML, with no
 //!   script, no style and no page furniture: the public site's shell and
 //!   the local reader receive the same bytes, which is what keeps the two
@@ -100,6 +108,7 @@ pub mod manifest;
 pub mod md;
 pub mod numbering;
 pub mod pages;
+pub mod translations;
 pub mod xml;
 
 pub use error::{DocError, Result};

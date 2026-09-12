@@ -299,6 +299,35 @@ impl Card {
     }
 }
 
+/// One relation table of a package's manifest — `documents` or
+/// `translates` — as `(coordinate, version constraint)` pairs, read
+/// straight off the file.
+///
+/// The narrow door for a caller that wants one relation and not a whole
+/// card: the translation check asks what a package adapts, and making it
+/// build a card first would make a missing `title` look like a
+/// translation defect.
+///
+/// ```
+/// let dir = tempfile::tempdir().unwrap();
+/// std::fs::write(
+///     dir.path().join("vibe.toml"),
+///     "[translates]\npackage = \"org.demo/lib-docs\"\nversion = \"^0.1\"\n",
+/// )
+/// .unwrap();
+///
+/// let adapted = vibe_doc::manifest::relations(dir.path(), "translates").unwrap();
+/// assert_eq!(adapted, vec![("org.demo/lib-docs".to_owned(), "^0.1".to_owned())]);
+/// assert!(vibe_doc::manifest::relations(dir.path(), "documents").unwrap().is_empty());
+/// ```
+pub fn relations(package_dir: &Path, key: &str) -> Result<Vec<(String, String)>> {
+    let path = package_dir.join(crate::derived::manifest::MANIFEST);
+    let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
+    let parsed: toml::Value = toml::from_str(&text)
+        .map_err(|e| DocError::manifest(&path, format!("does not parse: {e}")))?;
+    Ok(relation(&parsed, key))
+}
+
 /// Read `[[documents]]` or `[translates]` as pairs. Both spellings are
 /// accepted for both keys — a table and an array of tables read the same
 /// here — because which one a relation takes is the manifest's law

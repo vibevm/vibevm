@@ -122,11 +122,16 @@ fn map_audience(a: progress_core::model::Audience) -> Audience {
 /// then, section by section, the section's id and the ids of the facts
 /// its units carry.
 ///
+/// Public because "the anchors of a page" must mean ONE thing in this
+/// crate: the manifest row and the translation mirror check both ask the
+/// question, and two walks would answer it differently the first time a
+/// block grew a new place to carry a fact.
+///
 /// These are the addresses a citation may point at, and they are
 /// immutable by law (`##INV-ANCHORS-IMMUTABLE`). The positional `pNN`
 /// numbers are deliberately absent: they live by the current text, and a
 /// manifest listing them would be a promise the next edit breaks.
-fn anchors_of(doc: &SpecDoc) -> Vec<String> {
+pub fn anchors_of(doc: &SpecDoc) -> Vec<String> {
     let mut out: Vec<String> = Vec::new();
     if let Some(title) = &doc.title
         && let Some(id) = &title.id
@@ -252,7 +257,12 @@ fn word_count(doc: &SpecDoc) -> usize {
 }
 
 /// Every block of the document in reading order, preamble first.
-pub(crate) fn walk(doc: &SpecDoc, visit: &mut impl FnMut(&Block)) {
+///
+/// The visitor borrows for the DOCUMENT's lifetime, not the call's, so a
+/// caller may keep what it is handed — the translation check collects a
+/// page's blocks to compare them, and a walk that forbade that would have
+/// to be written a second time.
+pub(crate) fn walk<'a>(doc: &'a SpecDoc, visit: &mut impl FnMut(&'a Block)) {
     for node in &doc.preamble {
         visit(&node.block);
     }
@@ -261,7 +271,7 @@ pub(crate) fn walk(doc: &SpecDoc, visit: &mut impl FnMut(&Block)) {
     }
 }
 
-fn walk_section(section: &Section, visit: &mut impl FnMut(&Block)) {
+fn walk_section<'a>(section: &'a Section, visit: &mut impl FnMut(&'a Block)) {
     for node in &section.blocks {
         visit(&node.block);
     }
