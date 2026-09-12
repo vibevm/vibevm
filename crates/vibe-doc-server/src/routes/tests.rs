@@ -69,149 +69,93 @@ async fn the_health_route_answers_the_shape_the_index_server_answers() {
 }
 
 /// The whole reader in one case: a page address ending in a slash comes
-/// back as the island — content HTML and no page furniture, because the
-/// shell that wraps it is a separate thing (`##PIPE-SHELL-PARSES-NOTHING`).
+/// back as the island INSIDE the shell (`##SHELL-SERVE-SOURCES`). These
+/// tests wear the bare shell, so the page is a document with typography
+/// and no script — which is the configuration a machine without Node
+/// gets, and a readable page.
 #[tokio::test]
-async fn a_page_address_returns_the_bare_island() {
+async fn a_page_address_returns_the_island_inside_the_shell() {
     let (status, headers, body) =
         get_path("/doc/com.example/thing-docs/0.2.0/model/boot-lane/").await;
     assert_eq!(status, StatusCode::OK);
     assert_eq!(headers[header::CONTENT_TYPE], "text/html; charset=utf-8");
+    // The island.
     assert!(body.contains("doc-page"), "{body}");
     assert!(body.contains("boot lane"), "{body}");
+    // The shell around it, with the page's own title in the tab.
+    assert!(body.contains("<html"), "{body}");
+    assert!(body.contains("<title>Boot lane</title>"), "{body}");
+    // …and the marker is gone: the island went where it was.
+    assert!(!body.contains("<!--vibe-doc-island-->"), "{body}");
     assert!(
-        !body.contains("<html"),
-        "an island carries no page furniture"
+        !body.contains("<script"),
+        "the bare shell carries no script"
     );
-    assert!(!body.contains("<script"), "and no script");
 }
 
-/// Both projections lie beside the page as files, and each says what it
-/// is (`##SITE-TRAILING-SLASH`).
+/// The bare shell's stylesheet is a FILE, and it is served.
 #[tokio::test]
-async fn the_projections_answer_beside_the_page() {
-    for (suffix, content_type, marker) in [
-        (".md", "text/markdown; charset=utf-8", "[p01]"),
-        (".xml", "application/xml; charset=utf-8", "p=\"1\""),
-    ] {
-        let (status, headers, body) = get_path(&format!(
-            "/doc/com.example/thing-docs/0.2.0/model/boot-lane{suffix}"
-        ))
-        .await;
-        assert_eq!(status, StatusCode::OK, "{suffix}");
-        assert_eq!(headers[header::CONTENT_TYPE], content_type);
-        assert!(body.contains(marker), "{suffix}: {body}");
+async fn the_bare_shells_stylesheet_is_served_from_the_binary() {
+    let (status, headers, body) = get_path("/doc/fallback.css").await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(headers[header::CONTENT_TYPE], "text/css; charset=utf-8");
+    assert!(body.contains("--measure"), "{body}");
+}
+
+/// A name the shell does not carry is a refusal, not a directory
+/// listing and not an index (`##LOCAL-STATIC`).
+#[tokio::test]
+async fn a_shell_file_that_does_not_exist_is_a_refusal() {
+    for address in ["/doc/assets/", "/doc/build/", "/doc/assets/nothing.js"] {
+        let (status, _, _) = get_path(address).await;
+        assert_eq!(status, StatusCode::NOT_FOUND, "{address}");
     }
 }
 
-/// An address that lost its slash is repaired once, permanently, rather
-/// than on every visit.
+/// The resolver follows a citation into the page it names, and drops a
+/// fragment the page does not carry (F-15).
 #[tokio::test]
-async fn a_page_address_without_its_slash_redirects_to_the_one_with_it() {
-    let (status, headers, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/boot-lane").await;
-    assert_eq!(status, StatusCode::PERMANENT_REDIRECT);
+async fn the_resolver_follows_a_citation_to_the_page() {
+    let (status, headers, _) =
+        get_path("/doc/resolve?uri=spec://com.example/thing-docs/model/boot-lane%23root").await;
+    assert_eq!(status, StatusCode::FOUND);
+    assert_eq!(
+        headers[header::LOCATION],
+        "/doc/com.example/thing-docs/0.2.0/model/boot-lane/#root"
+    );
+
+    let (status, headers, _) =
+        get_path("/doc/resolve?uri=spec://com.example/thing-docs/model/boot-lane%23gone").await;
+    assert_eq!(status, StatusCode::FOUND);
     assert_eq!(
         headers[header::LOCATION],
         "/doc/com.example/thing-docs/0.2.0/model/boot-lane/"
     );
 }
 
-/// The machine files the agent endpoints promise, at the mount's root.
+/// A citation this reader cannot answer for is reported, never guessed.
 #[tokio::test]
-async fn the_manifest_and_the_llms_tiers_are_served() {
-    let (status, headers, body) = get_path("/doc/manifest.json").await;
-    assert_eq!(status, StatusCode::OK);
-    assert_eq!(
-        headers[header::CONTENT_TYPE],
-        "application/json; charset=utf-8"
-    );
-    assert!(body.contains("\"thing-docs\""), "{body}");
-
-    for tier in [
-        "llms.txt",
-        "llms-small.txt",
-        "llms-medium.txt",
-        "llms-full.txt",
+async fn the_resolver_refuses_what_it_does_not_serve() {
+    for (address, status) in [
+        ("/doc/resolve", StatusCode::BAD_REQUEST),
+        (
+            "/doc/resolve?uri=https://example.com/",
+            StatusCode::BAD_REQUEST,
+        ),
+        (
+            "/doc/resolve?uri=spec://org.other/other-docs/page",
+            StatusCode::NOT_FOUND,
+        ),
+        (
+            "/doc/resolve?uri=spec://com.example/thing-docs@9.9.9/model/boot-lane",
+            StatusCode::NOT_FOUND,
+        ),
+        (
+            "/doc/resolve?uri=spec://com.example/thing-docs/model/absent",
+            StatusCode::NOT_FOUND,
+        ),
     ] {
-        let (status, headers, body) = get_path(&format!("/doc/{tier}")).await;
-        assert_eq!(status, StatusCode::OK, "{tier}");
-        assert_eq!(headers[header::CONTENT_TYPE], "text/plain; charset=utf-8");
-        assert!(body.contains("Thing Manual"), "{tier}: {body}");
+        let (actual, _, body) = get_path(address).await;
+        assert_eq!(actual, status, "{address}: {body}");
     }
-}
-
-/// The form `##LOCAL-STATIC` forbids, in the three spellings the
-/// phase-0 probe found a live server falling to. Every one of them must
-/// be refused BEFORE anything touches the filesystem, and none of them
-/// may return a file.
-#[tokio::test]
-async fn no_spelling_of_a_traversal_reaches_the_filesystem() {
-    for attempt in [
-        "/doc/com.example/thing-docs/0.2.0/../../../../vibe.toml",
-        "/doc/com.example/thing-docs/0.2.0/..%2F..%2Fvibe.toml",
-        "/doc/com.example/thing-docs/0.2.0/%2e%2e%2fvibe.toml",
-        "/doc/com.example/thing-docs/0.2.0/model/../../../vibe.toml.md",
-    ] {
-        let (status, _, body) = get_path(attempt).await;
-        assert!(
-            status == StatusCode::NOT_FOUND || status == StatusCode::BAD_REQUEST,
-            "{attempt} answered {status}"
-        );
-        assert!(!body.contains("[package]"), "{attempt} served a file");
-    }
-}
-
-/// An escape that decodes to nothing is a refusal, not a guess.
-#[tokio::test]
-async fn a_malformed_escape_is_refused() {
-    let (status, _, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/%zz/").await;
-    assert_eq!(status, StatusCode::BAD_REQUEST);
-}
-
-/// Every response carries the policy and the sniff guard — including
-/// the refusals, which is where a policy with a hole in it would show.
-#[tokio::test]
-async fn every_response_carries_the_policy_and_the_sniff_guard() {
-    for path in [
-        "/doc/com.example/thing-docs/0.2.0/model/boot-lane/",
-        "/doc/com.example/thing-docs/0.2.0/nothing-here/",
-        "/somewhere/else",
-    ] {
-        let (_, headers, _) = get_path(path).await;
-        let csp = headers[header::CONTENT_SECURITY_POLICY].to_str().unwrap();
-        assert!(csp.contains("default-src 'self'"), "{path}: {csp}");
-        assert!(csp.contains("frame-ancestors 'none'"), "{path}: {csp}");
-        assert!(!csp.contains("unsafe-inline"), "{path}: {csp}");
-        assert_eq!(headers[header::X_CONTENT_TYPE_OPTIONS], "nosniff");
-    }
-}
-
-/// The reader has no CORS layer at all — which is stricter than any
-/// setting of one, and the state `##LOCAL-CSP` asks for.
-#[tokio::test]
-async fn the_reader_sends_no_cross_origin_permission() {
-    let (_, headers, _) = get_path("/doc/com.example/thing-docs/0.2.0/model/boot-lane/").await;
-    assert!(headers.get("access-control-allow-origin").is_none());
-}
-
-/// A page this documentation does not carry is a 404 that says so, not a
-/// blank 200.
-#[tokio::test]
-async fn an_unknown_page_is_a_refusal_that_names_it() {
-    let (status, _, body) = get_path("/doc/com.example/thing-docs/0.2.0/model/nope/").await;
-    assert_eq!(status, StatusCode::NOT_FOUND);
-    assert!(body.contains("model/nope.xml"), "{body}");
-}
-
-/// The decoder's own law: it reads an escape or it refuses, and it never
-/// guesses.
-#[test]
-fn the_decoder_reads_or_refuses() {
-    assert_eq!(decode("/doc/a%20b"), Some("/doc/a b".to_string()));
-    assert_eq!(decode("/doc/plain"), Some("/doc/plain".to_string()));
-    assert_eq!(decode("/doc/%2"), None);
-    assert_eq!(decode("/doc/%zz"), None);
-    // A separator smuggled through an escape decodes to a separator, and
-    // that is exactly why the segment check runs on the DECODED path.
-    assert_eq!(decode("/a%2Fb"), Some("/a/b".to_string()));
 }

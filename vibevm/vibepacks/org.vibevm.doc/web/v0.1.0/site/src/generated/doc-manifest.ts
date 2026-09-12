@@ -78,6 +78,39 @@ export const Audience = {
 export type Audience = (typeof Audience)[keyof typeof Audience];
 
 /**
+ * The addresses of the card's three images, exactly as `vibe doc build`
+ * writes them (PROP-057 `##CARD-MEDIA-ROLES`, `##CARD-SITE-COPIES`, design
+ * decision D-20). Each is relative to the base the documentation is served
+ * under: `media/<content name>`, beside `manifest.json` rather than under
+ * the package's own segment, because one image is one file however many pages
+ * show it. A declared image is copied under a name taken from its BYTES, so a
+ * changed picture is a changed address and a cache may keep either forever; a
+ * role that declares nothing gets the placeholder generated from the coordinate
+ * and the kind, whose name is taken from the coordinate for the same reason.
+ * The shell shows what this names and computes nothing (`##PIPE-SHELL-PARSES-
+ * NOTHING`): the alternative was a second hashing rule written in TypeScript,
+ * which would have put one law in two languages.
+ */
+export interface CardMedia {
+  /**
+   * The wide image across the head of the package page.
+   */
+  banner: string;
+
+  /**
+   * The square mark that heads the package page and sits on shelf cards.
+   */
+  icon: string;
+
+  /**
+   * The link card — `og:image`, `twitter:image`, JSON-LD's `image`. Its
+   * proportions are incompatible with the banner's on purpose, which is why it
+   * is its own role and never a crop.
+   */
+  preview: string;
+}
+
+/**
  * The documentation's card, its language and its officiality — the arXiv-style
  * row of PROP-057 `##CARD-DECISION`: a title a person reads, the publisher
  * beside it, the abstract that says what the thing covers and for whom.
@@ -154,6 +187,20 @@ export interface DocPackage {
    * when the package declares none.
    */
   description?: string;
+
+  /**
+   * Where the card's three images are published. Every build of this pipeline
+   * writes it, and writes all three: a role that declares nothing is not a role
+   * without a picture — the placeholder is generated (`##CARD-PLACEHOLDERS-
+   * GENERATED`) — so a card that carries `media` carries three addresses
+   * and never two. It is optional because the registry rules this format
+   * `foreign_parsers = "many"` and its readers are permissive by design (PROP-
+   * 044 §4.4): a manifest written before the addresses were carried is still a
+   * manifest, and a reader that refused one would refuse every document already
+   * published. Absent means «this document predates the field», never «this
+   * package has no picture».
+   */
+  media?: CardMedia;
 
   /**
    * When this version of the package was published, for the sitemap's `lastmod`

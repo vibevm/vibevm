@@ -408,7 +408,9 @@ cargo run -p vibe-cli -- doc build --out .vibe/doc --format html
 cargo run -p vibe-cli -- doc manifest --json
 cargo run -p vibe-cli -- doc manifest --llms index
 
-# Read it locally. Loopback only; bare islands until the shell ships.
+# Read it locally. Loopback only, and the pages come dressed in the
+# reader's shell — the real one when this binary carries it, the bare one
+# otherwise.
 cargo run -p vibe-cli -- doc serve --port 8413
 
 # Which shell does this binary carry, and is it the one the build pinned?
@@ -421,7 +423,7 @@ cargo run -p vibe-cli -- doc shell status
 
 **Two things `doc build` will do that may surprise you.** It runs the product — `derived` blocks are generated from `vibe … --help` and the schemas, one process per block — so a build takes a few seconds; `--no-derived` skips that and marks the blocks as the gaps they are. And it writes the site's own address map (`<group>/<name>/<version>/<document>/index.html`, the projections beside it, `manifest.json` and the four `llms` files at the root), so the output directory is servable as it stands.
 
-**The local reader binds `127.0.0.1` and only that.** There is no host flag and there is not going to be one: the reader serves proprietary packages' documentation, and one reachable from another machine is serving it to them. It sends a content policy naming no external source, no CORS header at all, and `frame-ancestors 'none'` unless `--frame-ancestor <origin>` names an editor's webview.
+**The local reader binds `127.0.0.1` and only that.** There is no host flag and there is not going to be one: the reader serves proprietary packages' documentation, and one reachable from another machine is serving it to them. It sends a content policy naming no external source, no CORS header at all, and `frame-ancestors 'none'` unless `--frame-ancestor <origin>` names an editor's webview. Every inline script the shell carries is named in that policy by the sha256 of its own bytes, computed at start-up from the shell the binary is holding — so a rebuilt shell cannot leave a stale hash behind.
 
 **The reader's shell, and why your build has the bare one.** A page a person reads is the *island* — the content HTML the Rust pipeline renders — inside the *shell*: the head, the styles, the navigation, the behaviour, which are a build of the site package `org.vibevm.doc/web`. A release build compiles that shell into `vibe`; a plain `cargo build` on a machine with no Node compiles the **bare shell** instead, which is typography and no scripts and still a page you can read. `vibe doc shell status` says which one you have and whether it matches `crates/vibe-doc-shell/doc-shell.lock`.
 

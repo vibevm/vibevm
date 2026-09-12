@@ -97,6 +97,32 @@
         "status": { "ref": "translation_status" }
       }
     },
+    "card_media": {
+      "metadata": {
+        "description": "The addresses of the card's three images, exactly as `vibe doc build` writes them (PROP-057 `##CARD-MEDIA-ROLES`, `##CARD-SITE-COPIES`, design decision D-20). Each is relative to the base the documentation is served under: `media/<content name>`, beside `manifest.json` rather than under the package's own segment, because one image is one file however many pages show it. A declared image is copied under a name taken from its BYTES, so a changed picture is a changed address and a cache may keep either forever; a role that declares nothing gets the placeholder generated from the coordinate and the kind, whose name is taken from the coordinate for the same reason. The shell shows what this names and computes nothing (`##PIPE-SHELL-PARSES-NOTHING`): the alternative was a second hashing rule written in TypeScript, which would have put one law in two languages.",
+        "x-wire-order": ["icon", "banner", "preview"]
+      },
+      "properties": {
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "description": "The square mark that heads the package page and sits on shelf cards."
+          }
+        },
+        "banner": {
+          "type": "string",
+          "metadata": {
+            "description": "The wide image across the head of the package page."
+          }
+        },
+        "preview": {
+          "type": "string",
+          "metadata": {
+            "description": "The link card — `og:image`, `twitter:image`, JSON-LD's `image`. Its proportions are incompatible with the banner's on purpose, which is why it is its own role and never a crop."
+          }
+        }
+      }
+    },
     "doc_package": {
       "metadata": {
         "description": "The documentation's card, its language and its officiality — the arXiv-style row of PROP-057 `##CARD-DECISION`: a title a person reads, the publisher beside it, the abstract that says what the thing covers and for whom.",
@@ -113,6 +139,7 @@
           "subjects",
           "translation",
           "audiences",
+          "media",
           "published_at",
           "rendered_at"
         ]
@@ -190,6 +217,13 @@
           "ref": "timestamp",
           "metadata": {
             "description": "When this version of the package was published, for the sitemap's `lastmod` (`##SEO-SITEMAP`). Absent for a documentation that has never been published — an in-tree package being read from a developer's own checkout has no publication date, and inventing one would be a lie a crawler believes.",
+            "x-default": null
+          }
+        },
+        "media": {
+          "ref": "card_media",
+          "metadata": {
+            "description": "Where the card's three images are published. Every build of this pipeline writes it, and writes all three: a role that declares nothing is not a role without a picture — the placeholder is generated (`##CARD-PLACEHOLDERS-GENERATED`) — so a card that carries `media` carries three addresses and never two. It is optional because the registry rules this format `foreign_parsers = \"many\"` and its readers are permissive by design (PROP-044 §4.4): a manifest written before the addresses were carried is still a manifest, and a reader that refused one would refuse every document already published. Absent means «this document predates the field», never «this package has no picture».",
             "x-default": null
           }
         }

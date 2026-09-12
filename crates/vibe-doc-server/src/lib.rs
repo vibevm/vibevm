@@ -9,18 +9,43 @@
 //! a proprietary package is read, and content that leaves the machine
 //! has already failed.
 //!
-//! ## What it serves in this wave
+//! ## What it serves
 //!
-//! **Bare islands.** A page comes back as the finished HTML of its
-//! content and nothing else — no `<html>`, no navigation, no styles.
-//! The shell that wraps them is a separate package and a later phase;
-//! until then what this server returns is exactly what the public site
-//! will glue into its own frame, which is the point of there being one
-//! content path at all (`##PIPE-SHELL-PARSES-NOTHING`).
+//! **Pages, in the shell.** A request for a page renders the island out
+//! of the package on THAT request and glues it into the route template
+//! the shell carries — the same prerendered route the public site serves,
+//! built from the same source by the same adapter, with a marked hole
+//! where the island goes (`##SHELL-SERVE-SOURCES`). The bytes around the
+//! island are provably the site's, which is what makes the parity test in
+//! this crate worth running. A binary carrying no shell serves the bare
+//! one: typography, no scripts, still a page a person reads.
 //!
-//! Beside them: the two projections a page has as files, the page
-//! manifest, and the four `llms` tiers — the endpoints an agent reads
-//! (§7.3 of the vision, `##SEO-LLMS-FILES`).
+//! Beside them: the shell's own statics, the two projections a page has
+//! as files, the page manifest, the four `llms` tiers — the endpoints an
+//! agent reads (§7.3 of the vision, `##SEO-LLMS-FILES`) — and the
+//! `spec://` resolver, which is a route here and a redirect table on a
+//! static host (the plan's fork F-15).
+//!
+//! ## The embedding contract is the shell's, and this server's job is
+//! not to break it
+//!
+//! `##LOCAL-EMBEDDING-CONTRACT` is a conversation between a host
+//! application and the PAGE: the host opens an address with
+//! `{ "open": "spec://…" }`, the reader answers a local link with
+//! `{ "openFile": "<path>" }`, the theme arrives as `{ "theme": … }` and
+//! reading settings travel both ways as `{ "settings": {…} }`. Every one
+//! of those is implemented in the shell's own behaviour and none of them
+//! is a request, so there is nothing here to implement — only two things
+//! not to get wrong. The page must be FRAMEABLE by the host that launched
+//! it, which is what `--frame-ancestor <origin>` is for and why it is a
+//! launch parameter rather than a setting (a webview's origin changes
+//! from window to window). And the shell's scripts must actually run,
+//! which is why the policy names each one by the hash of its bytes
+//! instead of forbidding them all.
+//!
+//! One half of the contract does have a server answer here: a host that
+//! opens a `spec://` address can ask `<base>resolve?uri=…` and be told
+//! which page it is, rather than parsing a coordinate itself.
 //!
 //! ## Why it repeats `vibe-index`'s form instead of importing it
 //!
@@ -79,6 +104,71 @@ pub const DEFAULT_PORT: u16 = 8413;
 pub const CSP_WITHOUT_FRAME_ANCESTORS: &str = "default-src 'self'; script-src 'self'; \
      style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; \
      media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'";
+
+/// The policy for a reader wearing `shell`, with its scripts named by
+/// their bytes.
+///
+/// Two directives move away from the constant above, and both move
+/// because the SHELL is there:
+///
+/// **`script-src` gains a hash per inline script.** The shell's head
+/// carries scripts that cannot become files — the theme, which must run
+/// before the first stylesheet or a reader watches their own setting
+/// fail; the router's scroll restoration, which must be undone before the
+/// router's bootstrap; the framework's own loader. Each is named by the
+/// sha256 of its bytes, computed HERE, at start-up, from the shell this
+/// binary is carrying — never written into a constant, which is exactly
+/// what the deferral X-035 asked for. No external source is named at any
+/// point: the whole page comes from this process.
+///
+/// **`style-src` gains `'unsafe-inline'`, and only with a real shell.**
+/// The framework inlines each component's stylesheet into the document,
+/// and the reading settings write the measure and the font size onto an
+/// element as a `style` attribute — which no hash can cover, because a
+/// hash names an element's CONTENT and an attribute has none. The public
+/// site's own build reached the same place for the same reason. The bare
+/// shell needs none of it and does not get it: its stylesheet is a file.
+///
+/// ```
+/// use vibe_doc_server::content_policy;
+/// use vibe_doc_shell::{Shell, template};
+///
+/// // The canonical use: the shell a reader resolved, the template it
+/// // carries, and the origin allowed to frame it.
+/// let shell = Shell::open(None);
+/// let page = shell.page_template();
+/// let policy = content_policy(&shell, &page, Some("vscode-webview://abc"));
+///
+/// assert!(policy.starts_with("default-src 'self'"));
+/// assert!(policy.ends_with("frame-ancestors vscode-webview://abc"));
+/// // Every inline script the shell carries is named by its own bytes.
+/// for body in template::inline_scripts(&page) {
+///     assert!(policy.contains(&template::hash_of(body)));
+/// }
+/// ```
+pub fn content_policy(
+    shell: &vibe_doc_shell::Shell,
+    template: &str,
+    frame_ancestor: Option<&str>,
+) -> String {
+    let hashes = vibe_doc_shell::template::hashes(template);
+    let script = if hashes.is_empty() {
+        "'self'".to_string()
+    } else {
+        format!("'self' {}", hashes.join(" "))
+    };
+    let style = if shell.provenance() == vibe_doc_shell::Provenance::Fallback {
+        "'self'"
+    } else {
+        "'self' 'unsafe-inline'"
+    };
+    format!(
+        "default-src 'self'; script-src {script}; style-src {style}; img-src 'self' data:; \
+         font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; \
+         base-uri 'none'; form-action 'none'; frame-ancestors {}",
+        frame_ancestor.unwrap_or("'none'")
+    )
+}
 
 /// What the reader was started with.
 ///
@@ -169,6 +259,12 @@ pub struct Reader {
     pub sources: SpecSources,
     pub derived: std::collections::BTreeMap<String, String>,
     pub rendered_at: DateTime<Utc>,
+    /// The shell this reader wears, and the route template it carries
+    /// with the reader's own base already in it. Both are resolved ONCE:
+    /// the shell cannot change while a process runs, and re-reading a
+    /// megabyte of it per request would buy nothing.
+    pub shell: vibe_doc_shell::Shell,
+    pub template: String,
 }
 
 impl Reader {
@@ -182,21 +278,43 @@ impl Reader {
         sources: SpecSources,
         rendered_at: DateTime<Utc>,
     ) -> ServerResult<Reader> {
+        Reader::wearing(config, sources, rendered_at, vibe_doc_shell::Shell::bare())
+    }
+
+    /// The same, wearing a shell the caller resolved.
+    ///
+    /// The shell arrives rather than being looked up, for the reason
+    /// everything else in this pipeline does: where a machine keeps its
+    /// files is the composition root's knowledge, and a server that went
+    /// looking would be a server with an opinion about a home directory.
+    pub fn wearing(
+        config: &Config,
+        sources: SpecSources,
+        rendered_at: DateTime<Utc>,
+        shell: vibe_doc_shell::Shell,
+    ) -> ServerResult<Reader> {
         if let Some(lang) = &config.lang {
             vibe_doc::build::expect_language(&config.package_dir, lang)?;
         }
         let (coordinate, version) = coordinate_of(&config.package_dir)?;
+        // The template is repointed at this reader's mount before
+        // anything else touches it: the shell was built for one base, and
+        // every address inside it is the build's own.
+        let template = vibe_doc_shell::template::rebase(
+            &shell.page_template(),
+            &shell.index().base,
+            &config.base,
+        );
         Ok(Reader {
             package_dir: config.package_dir.clone(),
             base: config.base.clone(),
             prefix: format!("{coordinate}/{version}/"),
-            csp: format!(
-                "{CSP_WITHOUT_FRAME_ANCESTORS}; frame-ancestors {}",
-                config.frame_ancestor.as_deref().unwrap_or("'none'")
-            ),
+            csp: content_policy(&shell, &template, config.frame_ancestor.as_deref()),
             sources,
             derived: std::collections::BTreeMap::new(),
             rendered_at,
+            shell,
+            template,
         })
     }
 

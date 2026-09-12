@@ -177,15 +177,31 @@ fn run_manifest(args: DocManifestArgs, env: DocEnv) -> Result<()> {
 
 /// `vibe doc serve` — the local reader.
 fn run_serve(args: DocServeArgs, env: DocEnv) -> Result<()> {
+    // The shell is resolved before anything else, because `--print-shell`
+    // is a question about this binary and not about any package: it must
+    // answer on a machine with no documentation to point at.
+    let dressed = shell::resolve(&env, args.bare_shell);
+    if args.print_shell {
+        println!("{}", serde_json::to_string_pretty(&dressed.report())?);
+        return Ok(());
+    }
     let config = vibe_doc_server::Config {
         package_dir: args.path.clone(),
         base: args.base.clone(),
         port: args.port,
         frame_ancestor: args.frame_ancestor.clone(),
-        lang: args.lang.clone(),
+        // «The language preference comes from the project's
+        // `[i18n].preferred` when present» (`##LOCAL-SERVE`), and the flag
+        // overrides it. One reader serves one package, so a preference has
+        // nothing to choose between — what it does is state which language
+        // was expected, and the refusal names the adaptation that holds it.
+        lang: args
+            .lang
+            .clone()
+            .or_else(|| env.cwd.as_deref().and_then(preferred_language)),
     };
     let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
-    let reader = vibe_doc_server::Reader::open(&config, sources, Utc::now())?;
+    let reader = vibe_doc_server::Reader::wearing(&config, sources, Utc::now(), dressed)?;
     let derived = if args.no_derived {
         BTreeMap::new()
     } else {
@@ -521,6 +537,23 @@ fn self_coordinate(root: &Path) -> (Option<String>, String) {
         .or_else(|| read("package", "name"))
         .unwrap_or_default();
     (group, name)
+}
+
+/// The language the project the operator is standing in prefers to read
+/// in — `[i18n].preferred`, absent when the project declares none or
+/// there is no project at all.
+///
+/// Read as TOML data for the reason `self_coordinate` is: the one
+/// question is what this directory says about itself, and a strict
+/// manifest parse would fail over a field this command never looks at.
+fn preferred_language(root: &Path) -> Option<String> {
+    let text = std::fs::read_to_string(root.join("vibe.toml")).ok()?;
+    let value: toml::Value = toml::from_str(&text).ok()?;
+    value
+        .get("i18n")?
+        .get("preferred")?
+        .as_str()
+        .map(str::to_owned)
 }
 
 /// The real per-user settings directory the tripwire guards: the

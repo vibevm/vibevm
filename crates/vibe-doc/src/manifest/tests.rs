@@ -47,6 +47,57 @@ fn the_card_is_read_out_of_the_packages_own_manifest() {
     assert!(m.package.description.is_some());
 }
 
+/// The card names where its three images are served from, and the
+/// addresses are the ones the build actually writes (X-042).
+///
+/// Two claims, and the second is the one that matters: the shell shows
+/// what this names and computes nothing, so a manifest whose addresses
+/// disagreed with the build's files would be a picture that silently
+/// stops loading. The comparison is against the build's own output rather
+/// than against a spelling typed here, which is the only way the two can
+/// be checked to agree instead of merely both looking plausible.
+#[test]
+fn the_card_names_the_addresses_the_build_writes_its_images_at() {
+    let card = built().manifest.package;
+    let media = card.media.expect("every build of this pipeline writes the addresses");
+    for address in [&media.icon, &media.banner, &media.preview] {
+        assert!(
+            address.starts_with("media/"),
+            "`{address}` is not published where the build puts images"
+        );
+    }
+    // Three roles, three distinct files: a preview is never a crop of the
+    // banner, so it is never the same address either.
+    let named = std::collections::BTreeSet::from([
+        media.icon.clone(),
+        media.banner.clone(),
+        media.preview.clone(),
+    ]);
+    assert_eq!(named.len(), 3);
+
+    let built = crate::build::build(
+        &fixture("manual"),
+        &SpecSources::new(),
+        &crate::build::Options {
+            format: crate::build::Format::Html,
+            base: crate::content::SITE_BASE.to_string(),
+            manifest: Options::at(rendered_at()),
+            derived: std::collections::BTreeMap::new(),
+        },
+    )
+    .expect("the fixture builds");
+    let written: std::collections::BTreeSet<String> = built
+        .files
+        .iter()
+        .filter(|file| file.path.starts_with("media/"))
+        .map(|file| file.path.clone())
+        .collect();
+    assert_eq!(
+        named, written,
+        "the manifest names files the build did not write"
+    );
+}
+
 /// The subject is the one `[[documents]]` names, with the constraint it
 /// names it under. No source holds it here, so only this documentation's
 /// own edge is known — which is what community means.

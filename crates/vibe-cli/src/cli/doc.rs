@@ -36,9 +36,10 @@ pub enum DocCommand {
     Manifest(DocManifestArgs),
 
     /// Read the documentation locally: an HTTP server on the loopback
-    /// that renders a page on every request. Until the reader's shell
-    /// ships it serves bare islands — the same content HTML the public
-    /// site glues into its own frame.
+    /// that renders a page on every request and glues it into the
+    /// reader's shell — the same shell the public site wears, built into
+    /// this binary or placed in the machine store, and the bare one when
+    /// neither is there.
     Serve(DocServeArgs),
 
     /// The reader's shell: what this binary carries, and how to get the
@@ -172,6 +173,17 @@ pub struct DocServeArgs {
     /// Do not run the product to generate `derived` blocks at start-up.
     #[arg(long)]
     pub no_derived: bool,
+
+    /// Print what shell this reader would serve — where it came from, the
+    /// package it was built from, and the three digests that have to
+    /// agree — as JSON, and start no server.
+    #[arg(long)]
+    pub print_shell: bool,
+
+    /// Serve the bare shell even when a real one is available. For
+    /// reading a page the way a machine with no Node sees it.
+    #[arg(long)]
+    pub bare_shell: bool,
 
     /// The `vibe` binary the `derived` generators run. Defaults to the
     /// running one.

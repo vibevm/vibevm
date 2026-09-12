@@ -16,15 +16,23 @@
 //!
 //! | address | what comes back |
 //! |---|---|
-//! | `<base><coordinate>/<version>/<document>/` | the island, `text/html` |
+//! | `<base><coordinate>/<version>/<document>/` | the page: the island in the shell |
 //! | `<base><coordinate>/<version>/<document>.md` | `text/markdown` |
 //! | `<base><coordinate>/<version>/<document>.xml` | `application/xml` |
 //! | `<base>manifest.json` | the page manifest |
 //! | `<base>llms.txt`, `llms-small.txt`, `llms-medium.txt`, `llms-full.txt` | the agent files |
+//! | `<base>resolve?uri=spec://…` | a citation, followed |
+//! | `<base>assets/…`, `<base>build/…` | the shell's own files |
 //! | `/healthz` | `{"status":"ok"}` |
 //!
 //! A page address without its trailing slash is a 308 to the one with
 //! it, on the web and locally alike.
+//!
+//! The order of those lanes is not arbitrary. The machine files and the
+//! resolver are the mount's own names; the package's pages live under a
+//! prefix nothing else can match; and the shell's files are tried LAST,
+//! so a shell can never shadow a document — the shell is a build product
+//! and the documentation is the point.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT");
 
@@ -40,6 +48,9 @@ use vibe_doc::{llms, manifest};
 
 use crate::Reader;
 use crate::error::ApiError;
+
+mod resolve;
+mod statics;
 
 /// Build the router.
 pub fn router(reader: Arc<Reader>) -> Router {
@@ -61,7 +72,7 @@ async fn dispatch(
     uri: Uri,
 ) -> Response {
     let csp = reader.csp.clone();
-    match answer(&reader, uri.path()) {
+    match answer(&reader, uri.path(), uri.query()) {
         Ok(response) => with_guards(response, &csp),
         Err(error) => with_guards(error.into_response(), &csp),
     }
@@ -83,7 +94,7 @@ fn with_guards(mut response: Response, csp: &str) -> Response {
 }
 
 /// Resolve one address.
-fn answer(reader: &Reader, raw_path: &str) -> Result<Response, ApiError> {
+fn answer(reader: &Reader, raw_path: &str, query: Option<&str>) -> Result<Response, ApiError> {
     let path = decode(raw_path).ok_or_else(|| {
         ApiError::bad_request(
             "the address carries an escape this reader cannot decode; a documentation \
@@ -100,14 +111,54 @@ fn answer(reader: &Reader, raw_path: &str) -> Result<Response, ApiError> {
     if let Some(response) = machine_file(reader, rest)? {
         return Ok(response);
     }
+    if rest == resolve::ROUTE || rest == concat_slash(resolve::ROUTE) {
+        return resolve::answer(reader, query);
+    }
+    // The mount itself, and the door above it. A reader is pointed at ONE
+    // package, so both mean «the documentation» and both send the reader
+    // to its first page in reading order — rather than to a package page
+    // this reader cannot render, or to a 404 for the address it printed
+    // on start-up.
+    if rest.is_empty() || rest == reader.prefix {
+        return first_page(reader);
+    }
 
-    let Some(address) = rest.strip_prefix(&reader.prefix) else {
-        return Err(ApiError::not_found(format!(
-            "`{rest}` is not under `{}`, which is the one package this reader was pointed at",
-            reader.prefix
-        )));
+    if let Some(address) = rest.strip_prefix(&reader.prefix) {
+        return page(reader, address);
+    }
+
+    // Last, and only after nothing about the documentation matched: the
+    // shell's own files. The shell checks the name again before it
+    // becomes a path.
+    if let Some(response) = statics::asset(reader, rest) {
+        return Ok(response);
+    }
+    Err(ApiError::not_found(format!(
+        "`{rest}` is not under `{}`, which is the one package this reader was pointed at, \
+         and is no file of the reader's shell",
+        reader.prefix
+    )))
+}
+
+/// `resolve/` beside `resolve` — the trailing slash a link may carry.
+fn concat_slash(route: &str) -> String {
+    format!("{route}/")
+}
+
+/// Send the reader to the first page, in the order the layer law gives
+/// the manifest (PROP-048 `##THE-LAYER-LAW`) — the same order the
+/// navigation is built in, so «the first page» means the same thing here
+/// and on the site.
+fn first_page(reader: &Reader) -> Result<Response, ApiError> {
+    let built = manifest::build(&reader.package_dir, &reader.sources, &options(reader))
+        .map_err(|e| ApiError::internal(e.to_string()))?;
+    let Some(first) = built.manifest.pages.first() else {
+        return Err(ApiError::not_found(
+            "this documentation carries no pages yet",
+        ));
     };
-    page(reader, address)
+    let stem = first.path.strip_suffix(".xml").unwrap_or(&first.path);
+    Ok(found(&format!("{}{}{stem}/", reader.base, reader.prefix)))
 }
 
 /// The files that describe the whole mount rather than one page.
@@ -206,14 +257,62 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
         base: reader.base.clone(),
     };
     let body = build::render_page(found, &content, format);
-    Ok(text(
-        body,
-        match format {
-            Format::Html => "text/html; charset=utf-8",
-            Format::Md => "text/markdown; charset=utf-8",
-            Format::Xml => "application/xml; charset=utf-8",
-        },
-    ))
+    match format {
+        // The island goes into the shell, and the two things in the
+        // template that name a PAGE rather than the shell are corrected:
+        // its title, and the projections it offers. Everything else — the
+        // head, the chunks, the layout — is the site's own bytes,
+        // untouched, which is what makes the parity test meaningful.
+        Format::Html => Ok(text(
+            in_shell(reader, found, &body),
+            "text/html; charset=utf-8",
+        )),
+        Format::Md => Ok(text(body, "text/markdown; charset=utf-8")),
+        Format::Xml => Ok(text(body, "application/xml; charset=utf-8")),
+    }
+}
+
+/// One rendered island, dressed in the reader's shell.
+pub(crate) fn in_shell(reader: &Reader, page: &vibe_doc::pages::Page, island: &str) -> String {
+    let stem = page.rel.strip_suffix(".xml").unwrap_or(&page.rel);
+    let at = format!("{}{}{stem}", reader.base, reader.prefix);
+    let md = format!("{at}.md");
+    let xml = format!("{at}.xml");
+    let llms = format!("{}llms.txt", reader.base);
+    let dressed = vibe_doc_shell::template::relink(
+        &reader.template,
+        &[
+            vibe_doc_shell::template::Alternate {
+                media_type: "text/markdown",
+                href: &md,
+                title: "This page as Markdown",
+            },
+            vibe_doc_shell::template::Alternate {
+                media_type: "application/xml",
+                href: &xml,
+                title: "This page as the dialect XML",
+            },
+            vibe_doc_shell::template::Alternate {
+                media_type: "text/plain",
+                href: &llms,
+                title: "llms.txt of this documentation",
+            },
+        ],
+    );
+    let dressed = match title_of(page) {
+        Some(title) => vibe_doc_shell::template::retitle(&dressed, &title),
+        None => dressed,
+    };
+    vibe_doc_shell::template::glue(&dressed, &reader.shell.index().island_marker, island)
+}
+
+/// The page's own heading, for the browser tab.
+///
+/// A page with no H1 leaves the template's title alone rather than
+/// blanking it: the pivot admits a document without one, and an empty tab
+/// is worse than a stale one.
+fn title_of(page: &vibe_doc::pages::Page) -> Option<String> {
+    page.doc.title.as_ref().map(|title| title.text.clone())
 }
 
 /// The two instants a manifest carries. The reader supplies the one it
@@ -241,6 +340,19 @@ fn text(body: String, content_type: &'static str) -> Response {
 fn redirect(target: &str) -> Response {
     match HeaderValue::from_str(target) {
         Ok(value) => (StatusCode::PERMANENT_REDIRECT, [(header::LOCATION, value)]).into_response(),
+        Err(_) => ApiError::bad_request("the address cannot be spelled as a location header")
+            .into_response(),
+    }
+}
+
+/// A resolver's answer: `302`, not `308`.
+///
+/// A followed citation is a lookup that can come out differently
+/// tomorrow — a page renamed, a version moved on — and a permanent
+/// redirect would be cached by the browser and never asked again.
+fn found(target: &str) -> Response {
+    match HeaderValue::from_str(target) {
+        Ok(value) => (StatusCode::FOUND, [(header::LOCATION, value)]).into_response(),
         Err(_) => ApiError::bad_request("the address cannot be spelled as a location header")
             .into_response(),
     }
