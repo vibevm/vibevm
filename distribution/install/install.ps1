@@ -56,8 +56,18 @@ function Get-VibeTarget {
         Throw-VibeInstallError 'install.ps1 supports native Windows only; use install.sh on Linux, macOS, or WSL'
     }
 
-    $architecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
-    if ($architecture -ne [System.Runtime.InteropServices.Architecture]::X64) {
+    # Not `RuntimeInformation.OSArchitecture`: on .NET Framework older than
+    # 4.7.1 the type Windows PowerShell 5.1 resolves carries no such property,
+    # and under StrictMode a missing property is an error — the installer
+    # stopped on exactly the machines it was written for. The process
+    # environment states the same fact on every Windows: PROCESSOR_ARCHITEW6432
+    # names the OS architecture when the shell itself is a 32-bit process under
+    # WOW64, PROCESSOR_ARCHITECTURE names it otherwise.
+    $architecture = $env:PROCESSOR_ARCHITEW6432
+    if ([string]::IsNullOrEmpty($architecture)) {
+        $architecture = $env:PROCESSOR_ARCHITECTURE
+    }
+    if ($architecture -ne 'AMD64') {
         Throw-VibeInstallError "unsupported Windows architecture '$architecture'; this release supports x64 only"
     }
     return 'x86_64-pc-windows-msvc'

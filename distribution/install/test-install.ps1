@@ -44,6 +44,12 @@ try {
     if (-not (Test-VibeSemVer '1.2.3-rc.1+build.7')) {
         throw 'SemVer validation rejected a valid version'
     }
+    # A real probe of this machine: the harness runs on Windows x64, the only
+    # target the release ships, and the probe must not touch any .NET member
+    # that Windows PowerShell 5.1 lacks (it once read OSArchitecture and died).
+    if ((Get-VibeTarget) -cne 'x86_64-pc-windows-msvc') {
+        throw 'target detection did not name the Windows x64 target on a Windows x64 machine'
+    }
     $refreshUri = Add-VibeRefreshNonce `
         -Uri 'https://example.invalid/DISTRIBUTIONS.json' `
         -Nonce 'acceptance-nonce'
