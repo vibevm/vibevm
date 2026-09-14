@@ -37,7 +37,10 @@ debounce_minutes = 60
 [site]
 base_path = "/doc"
 origin = "https://vibevm.org"
-default_theme = "system"
+# What a first-time reader gets. `dark` is the site's own default and is
+# written out rather than left to the build, so a reader of the
+# deployment sees which palette the domain serves without going to look.
+default_theme = "dark"
 
 # The first-party, self-hosted, cookie-less tag the landing already
 # carries (D-24, `##SITE-ANALYTICS`).

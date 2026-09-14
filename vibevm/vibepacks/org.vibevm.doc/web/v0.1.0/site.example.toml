@@ -65,9 +65,12 @@ base_path = "/doc"
 # `canonical`, `hreflang` and the sitemap are absolute addresses, and a
 # fork builds this same source for somewhere else.
 origin = "https://vibevm.org"
-# What a first-time reader gets: `system`, `light` or `dark`. `system`
-# means the reader's own operating-system setting.
-default_theme = "system"
+# What a first-time reader gets: `system`, `light` or `dark`. `dark` is
+# the default, and `system` means the reader's own operating-system
+# setting. Whatever this says, a reader who has chosen a theme on this
+# domain keeps it: the choice is read before the first stylesheet is
+# parsed and is stronger than the default.
+default_theme = "dark"
 
 # The first-party, self-hosted, cookie-less analytics tag the landing
 # already carries (PROP-057 `##SITE-ANALYTICS`). Both values identify a

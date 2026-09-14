@@ -156,6 +156,10 @@ test("the shipped configuration carries the defaults and no live value", () => {
   assert.match(SITE_TOML, /^ref = "main"$/m);
   assert.match(SITE_TOML, /^origin = "https:\/\/vibevm\.org"$/m);
   assert.match(SITE_TOML, /^base_path = "\/doc"$/m);
+  /* The palette a first-time reader gets is a decision of the design
+     review, not a build-time accident, so the file the container ships
+     with says it out loud (F-48). */
+  assert.match(SITE_TOML, /^default_theme = "dark"$/m);
   assert.match(SITE_TOML, /^website_id = ""$/m);
   /* Over the settings and not over the prose around them: the shape has
      no `auth`, no token and no environment name in it, and a comment

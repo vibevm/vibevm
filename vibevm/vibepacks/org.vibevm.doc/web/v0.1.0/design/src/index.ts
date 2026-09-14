@@ -108,6 +108,10 @@ export {
   type SettingsPanelProps,
 } from "./components/settings-panel/index.tsx";
 export {
+  ThemeSwitch,
+  type ThemeSwitchProps,
+} from "./components/theme-switch/index.tsx";
+export {
   ReturnToPlace,
   type ReturnToPlaceProps,
 } from "./components/return-to-place/index.tsx";
