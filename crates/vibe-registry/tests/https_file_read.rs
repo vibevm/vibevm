@@ -235,7 +235,7 @@ const MANIFEST_BASE64: &str = "W3BhY2thZ2Vd\\nCmdyb3VwID0gIm9yZy52aWJldm0iCm5hbW
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 2
+    r = 3
 )]
 fn github_manifest_is_read_over_https_without_git() {
     let mock = Mock::start(Answer::status(404));
@@ -268,7 +268,7 @@ fn github_manifest_is_read_over_https_without_git() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 2
+    r = 3
 )]
 fn github_absent_marker_at_a_tag_is_answered_without_git() {
     // The ordinary redirect probe: no marker, at a release tag. This is
@@ -429,7 +429,7 @@ fn a_credentialed_read_that_misses_carries_no_token_into_its_error() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 2
+    r = 3
 )]
 fn gitverse_manifest_is_read_over_https_without_git() {
     let mock = Mock::start(gitverse_missing_file());
@@ -453,7 +453,7 @@ fn gitverse_manifest_is_read_over_https_without_git() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 2
+    r = 3
 )]
 fn gitverse_reports_an_absent_marker_but_only_for_its_own_miss_code() {
     // 4305 — the file is not there. Answerable at a tag, without git.
@@ -497,7 +497,7 @@ const MANIFEST_TARGET: &str = "/vibespecs/org.vibevm.wal/v1.0.0/vibe.toml";
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 2
+    r = 3
 )]
 fn a_rate_limited_read_asks_again_instead_of_paying_for_git() {
     // The measured case: one 429 in a resolve walk used to cost the
@@ -608,6 +608,10 @@ fn an_answer_about_the_file_is_never_asked_for_twice() {
 }
 
 #[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
+    r = 3
+)]
 fn hosts_and_shapes_outside_the_fast_path_never_reach_the_read() {
     let mock = Mock::start(Answer::ok(MANIFEST));
     for url in [
