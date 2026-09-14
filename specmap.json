@@ -870,15 +870,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "doc_manifest",
-      "end_line": 407
+      "end_line": 422
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 167,
+      "line": 174,
       "symbol": "doc_manifest::adapted_source",
-      "end_line": 187
+      "end_line": 194
     },
     {
       "crate_name": "<schema>",
@@ -900,33 +900,33 @@
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 73,
+      "line": 80,
       "symbol": "doc_manifest::bridge_authorship",
-      "end_line": 103
+      "end_line": 110
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 188,
+      "line": 195,
       "symbol": "doc_manifest::card_media",
-      "end_line": 213
+      "end_line": 220
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 214,
+      "line": 221,
       "symbol": "doc_manifest::doc_package",
-      "end_line": 342
+      "end_line": 357
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 343,
+      "line": 358,
       "symbol": "doc_manifest::doc_page",
-      "end_line": 405
+      "end_line": 420
     },
     {
       "crate_name": "<schema>",
@@ -940,25 +940,33 @@
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 146,
+      "line": 153,
       "symbol": "doc_manifest::documented_subject",
-      "end_line": 166
+      "end_line": 173
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 104,
+      "line": 111,
       "symbol": "doc_manifest::navigation",
-      "end_line": 125
+      "end_line": 132
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/doc_manifest.jtd.json",
       "item_kind": "schema-def",
-      "line": 126,
+      "line": 133,
       "symbol": "doc_manifest::navigation_section",
-      "end_line": 145
+      "end_line": 152
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/doc_manifest.jtd.json",
+      "item_kind": "schema-def",
+      "line": 73,
+      "symbol": "doc_manifest::package_kind",
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
@@ -77643,7 +77651,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cb01dde65e6f4587fe49f5e67a08f9044cea050baa29448fbe702c38352cdc1e",
+      "content_hash": "sha256:b53fe3342fd5208552a7fc6cb9590a6c8007ac18d304693738f6e1287f709140",
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "PROP-057 — Documentation packages and the documentation site",
@@ -78687,7 +78695,7 @@
     },
     {
       "anchor": "site",
-      "content_hash": "sha256:19c80b14fe162f1af7f71274f97a24a6db42ac3b19c92faf8a1fc0f6bc3f5ba7",
+      "content_hash": "sha256:6c1f755b6676873d615efa56b779867d7fd5e563ebbadbdbcec8f55056d0972c",
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9. The site: addresses, sources, the host channel, hosting",
@@ -78696,7 +78704,7 @@
     },
     {
       "anchor": "addresses",
-      "content_hash": "sha256:e7c5d405446bd05f49b47d7fe0cc76bfd6c7f8cf6a617831ff250b1e2f89fd26",
+      "content_hash": "sha256:fa1ec3122e7dc43874f3a1ef7dd3e7669d43679a59404c54a3ae72aec98054eb",
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9.1 Addresses",
@@ -78740,12 +78748,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-VERSION-SHOWS-CURRENT"
     },
     {
+      "anchor": "VERSION-OVERWRITE-POLICY",
+      "content_hash": "sha256:e0fd4192b483cb8d5007694e335d21e56cadb42662f5a8a99453d23739f584c6",
+      "doc_path": "common/PROP-057",
+      "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
+      "heading": "Until the owner decides otherwise (ruling 2026-09-14), every package this repository publishes carries the number `1.0.0`, and a change is published under the same number in place: the registry keeps no past publication, the site shows the current content of the number, and the changelog records what changed by date rather than by a new number. A consumer who pinned the number keeps the bytes the lock file recorded, and a fresh install gets the current ones (`##SITE-VERSION-SHOWS-CURRENT`, PROP-002 `##PUBLISH-MUTABLE-VERSIONS`). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
+      "line": 233,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#VERSION-OVERWRITE-POLICY"
+    },
+    {
       "anchor": "SITE-ONE-SITE",
       "content_hash": "sha256:993770d6aa35205edc011a0f436a8073ff23a993ed046037f5412ab70694552b",
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The whole domain is one site: the landing `vibevm.org/` and `vibevm.org/ru/` and the documentation `/doc/…` are built by one build from one package. The root machine files — `robots.txt`, `llms.txt`, `llms-full.txt`, `sitemap.xml`, `feed.xml`, the IndexNow key file — are generated by the same build, keeping the addresses and content of the present landing: `robots.txt` is one per domain, ASCII-only, an allow-list of crawlers, and carries `Sitemap:` lines for `/sitemap.xml` and `/doc/sitemap.xml`; the root `llms.txt` opens with the paragraph disambiguating the name «VibeVM» and links `/doc/llms.txt`; the documentation publishes its own files under `/doc/`: `/doc/sitemap.xml`, `/doc/llms.txt`, `/doc/llms-full.txt`, `/doc/manifest.json`. The root `llms-full.txt` is the landing, not a copy of the documentation. @status:spec/done",
-      "line": 233,
+      "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE"
     },
     {
@@ -78754,7 +78771,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** a path under the main domain shares its authority for SEO; the same scheme on the web and locally means a link in the documentation works in both worlds; the language in the path, not in a parameter, is how it is indexed and cited; the landing is already indexed and carries the name disambiguation for AI crawlers, so its addresses and root files survive the move byte for byte where possible and are checked by the landing parity test. @status:spec/done",
-      "line": 234,
+      "line": 235,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-addresses-why"
     },
     {
@@ -78763,7 +78780,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a subdomain `docs.vibevm.org`; the language in a query parameter; the language in a subdomain; two sites on one domain — an Astro landing plus a Qwik documentation with a three-line contract between repositories. @status:spec/done",
-      "line": 235,
+      "line": 236,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-addresses-rejected"
     },
     {
@@ -78772,7 +78789,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** never within the wave; changing the address scheme is a breaking change with redirects. @status:spec/done",
-      "line": 236,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-addresses-revisit"
     },
     {
@@ -78781,7 +78798,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9.2 Sources and the host channel",
-      "line": 239,
+      "line": 240,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#sources"
     },
     {
@@ -78790,7 +78807,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The site has two sources, both configured in the form of the project's `[[registry]]`: @status:spec/done",
-      "line": 240,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES"
     },
     {
@@ -78799,7 +78816,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**the package registry** — one, by default the GitHub organisation `vibespecs`; its index is a change feed: the site polls `repomd.json` and `primary.jsonl` (or receives a webhook), compares the pairs «coordinate, content hash» with what is rendered, and rebuilds only what changed; @status:spec/done",
-      "line": 242,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-SOURCE-REGISTRY"
     },
     {
@@ -78808,7 +78825,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**the host source repository** — one, by default `github.com/vibevm/vibevm`; from it the host `org.vibevm.core/vibevm` is rendered by the **current state of the branch `main`**, and only by it. @status:spec/done",
-      "line": 243,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-SOURCE-HOST"
     },
     {
@@ -78817,7 +78834,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The host channel is a **checkout on disk**: the deploy runs `git checkout main && git pull` in the renderer's directory, and the renderer reads the host from there as a *project* (level 0: `README.md`, `vibevm/vibespecs/**`, the boot snippet, the `[project]` manifest) and the core documentation as an in-tree package through the project-local registry `vibevm/vibepacks`. The host is not published to the registry for the sake of rendering, no git source of packages is used, and `vibe cache add` is not run on the server. The host has no release tags; the release is what `main` holds now. @status:spec/done",
-      "line": 246,
+      "line": 247,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-HOST-CHECKOUT"
     },
     {
@@ -78826,7 +78843,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The render cache is keyed by an **internal content hash** of the source (the store's recorded hash for store packages, a recomputation for the checkout), never by `(group, name, version)`: in-tree packages keep their version number while their content moves. The key is never shown to a reader (§14). @status:spec/done",
-      "line": 247,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-KEY"
     },
     {
@@ -78835,7 +78852,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Rendering is idempotent and cached; a render error is shown as the version's page; reverse links — dependants, «explained in», «translated into» — come from the index and from the maps packages carry (`vibe specmap`), never by hand. @status:spec/done",
-      "line": 248,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-IDEMPOTENT"
     },
     {
@@ -78844,7 +78861,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The site polls the host branch and, when it changed, rebuilds the host render with a debounce, keeping one current render plus the previous one until the new one completes; no history of states is kept. The poll interval is a configuration value of the site build; the recommended default is once an hour (campaign atom A5.1, the measured render cost of the phase-0 spike A0.28 is the evidence), pending the owner's word. @status:spec/work",
-      "line": 249,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-HOST-POLL"
     },
     {
@@ -78853,7 +78870,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Mirrors and a second registry are the future; the owner opens them. @status:spec/done",
-      "line": 250,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MIRRORS-FUTURE"
     },
     {
@@ -78862,7 +78879,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** this is how docs.rs stands over the crates.io index, and cheaper here — a version is frozen by content hash. The host is not a registry package, and forcing it to become one for the site's sake would be a false generalisation; the owner's word is «the repository named in the settings, GitHub by default». @status:spec/done",
-      "line": 251,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-sources-why"
     },
     {
@@ -78871,7 +78888,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a full rebuild on a schedule; publishing the host into the registry for the render; reading the host from a mirror; rendering by release tags (there are none); keeping host states by tree or commit hash (a feature that needs history — §14). @status:spec/done",
-      "line": 252,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-sources-rejected"
     },
     {
@@ -78880,7 +78897,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the owner opens mirrors or a second registry. @status:spec/done",
-      "line": 253,
+      "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-sources-revisit"
     },
     {
@@ -78889,7 +78906,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9.3 Hosting and deploy",
-      "line": 256,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#hosting"
     },
     {
@@ -78898,7 +78915,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The site lives on the same server and domain as today's landing, by the existing «bring up the site» runbook of the owner's private infrastructure document. **The content of that document — addresses, ports, traffic scheme, VPN — is never transferred into this repository, its campaign zone or its commits**; only the form of the decision is recorded here. @status:spec/done",
-      "line": 257,
+      "line": 258,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-HOSTING-FORM"
     },
     {
@@ -78907,7 +78924,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Two containers instead of today's one. Serving: a stock `nginx:alpine` with a volume holding the rendered site for the whole domain — `/`, `/ru/`, `/doc/…`, the root machine files. Rendering: `vibevm-site-renderer`, an image in which `vibe` is built from the current `main` and the shell is built; it fills the volume with `vibe doc build-site` (level 0 and the documentation from the registry and the host) and the static Qwik build. In the first wave the renderer runs from the deploy script after the pattern of today's landing script (`git pull` of the checkout → `docker compose run --rm vibevm-site-renderer` → `docker compose up -d <serving service>`); a timer or an index webhook is the second wave. @status:spec/done",
-      "line": 259,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-CONTAINERS"
     },
     {
@@ -78916,7 +78933,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Until the new site is ready the domain is served by the present Astro landing from `vibevm-org`. The cutover is one step: the serving container of the new site takes the place of the landing's container — the same compose service and the same port, so that the host nginx is not touched — after a green landing parity test and a local rehearsal of the full stack. Rollback is restoring the previous service. Neither cutover nor rollback touches the host nginx, the ports, the certificates, the neighbours' compose blocks or the VPN: that is the rule of the runbook itself and the boundary of the owner's VPN directive. @status:spec/done",
-      "line": 260,
+      "line": 261,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CUTOVER"
     },
     {
@@ -78925,7 +78942,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The site's container nginx inherits `vibevm-org/nginx.conf`: `charset utf-8` with `charset_types` for the text types; `absolute_redirect off; port_in_redirect off;` (TLS terminates outside); `expires -1` for HTML and an immutable cache for the hashed asset directories and `/fonts/`; the redirect `/en/` → `/` (301); `X-Content-Type-Options nosniff`; `Referrer-Policy strict-origin-when-cross-origin`; `X-Frame-Options SAMEORIGIN`; `error_page 404`; `try_files` with the directory index; and `location = /q-manifest.json { return 404; }` (§12). @status:spec/done",
-      "line": 261,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-CONTAINER-NGINX"
     },
     {
@@ -78934,7 +78951,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Deploy is «a git checkout on the server plus `docker compose up -d --build`»: the checkout is the vibevm repository (the renderer needs `vibe` from source and the site package lives in its tree); the image is built on the server and pushed nowhere; the run is one command over SSH from the developer machine with the native Windows OpenSSH (the Git Bash `ssh` swallows output). After a deploy: `curl -sI https://vibevm.org/` and `/doc/` answer 200, no redirect carries `Location: http://`, `/llms.txt` is served with `charset=utf-8`, and IndexNow receives the changed URLs. @status:spec/done",
-      "line": 262,
+      "line": 263,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-DEPLOY-MODEL"
     },
     {
@@ -78943,7 +78960,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The renderer's `Dockerfile` and `docker/nginx.conf` are in the package `org.vibevm.doc/web` (build configuration, not an artifact); the compose services, the deploy script, the checkout switch and the private document's entry are done on the server by the owner's hand or under his explicit supervision; in `vibevm-org` only the final decommission commit lands after the cutover, by the owner's word. @status:spec/done",
-      "line": 263,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-WHO-COMMITS-WHAT"
     },
     {
@@ -78952,7 +78969,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "DNS, TLS and the domain's ports already exist; nothing new is issued; the domain is not behind Cloudflare. @status:spec/done",
-      "line": 264,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-DNS-TLS-EXIST"
     },
     {
@@ -78961,7 +78978,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** the owner's hosting exists, is documented and works; one site on the domain means one serving container and no proxy between containers; the renderer as a separate container because `vibe` (Rust) and Qwik (Node) must not live in the serving image; taking the landing container's place with the same service and port is the only way to switch the domain without touching the host nginx the VPN depends on. @status:spec/done",
-      "line": 265,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-hosting-why"
     },
     {
@@ -78970,7 +78987,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a separate domain or subdomain; third-party static hosting (domain authority, an existing infrastructure); edits to the host nginx; two sites on the domain with a `/doc/` proxy between containers; building the image on the developer machine and pushing it to an image registry; the `vibevm-org` checkout as the site source after the cutover. @status:spec/done",
-      "line": 266,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-hosting-rejected"
     },
     {
@@ -78979,7 +78996,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** a move to another hosting or a CDN; a second server or a mirror. @status:spec/done",
-      "line": 267,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-hosting-revisit"
     },
     {
@@ -78988,7 +79005,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9.4 The reader",
-      "line": 270,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#reader"
     },
     {
@@ -78997,7 +79014,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A documentation page (level 1; the README and specs of level 0 in the same reader) behaves as a reader for long texts. The normative part of that behaviour: @status:spec/done",
-      "line": 271,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LEAD"
     },
     {
@@ -79006,7 +79023,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Numbered blocks.** Every flow block of the pivot — paragraph, list, table, fence, quote, `example`, `rule`, `note`, `figure`, `prompt`; a heading keeps its own id and is not numbered (clarified 2026-09-12 at implementation, following `PIPE-NUMBERING`) — receives an ordinal number and the id `pNN` **at build time** in the Rust pipeline (§10), never by a client script. The number is the block's position in the **current** text of the page, counted before `when` filtering, so that `p12` names the same block in the build for any platform and agent and in every translation; gaps in the rendered output are accepted. The number appears in the HTML island, in the `.md` and `.xml` projections (as `[p12]` at the start of the block) and in `llms-full.txt`, so a human and an agent cite one place. After an edit an old `#p12` may point at a neighbouring block, as a link to a file line does after an edit; this is accepted and nothing tries to «remember» it. Headings keep their named anchors `{#id}` above the number; named anchors are immutable and renamed only by tombstone, positional `pNN` live by the current text. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,agent\"/>",
-      "line": 273,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"
     },
     {
@@ -79015,7 +79032,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Switching the language keeps the place.** The language selector leads to the same page in the other language **with the same fragment** (`#pNN` or `#id`), which the block-for-block mirror of §5 makes possible. When the page does not exist in the chosen language, the site serves the source language under the chosen language's address as a statically materialised fallback (`<html lang>` of the source, `rel=canonical` to the source page, `noindex`), shows a bilingual notice «this page is only in … so far» once per session, and rewrites internal links so navigation stays in the chosen language. The chosen language is remembered in the cookie `lang` for 365 days — the same name the landing uses, so the domain root and `/doc/` remember one choice. @status:spec/done",
-      "line": 274,
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"
     },
     {
@@ -79024,7 +79041,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Reading settings** — theme (dark, light, system), font size, column width, anchors on or off — are kept in `localStorage` (in embedded mode by the host through `postMessage`); the theme is applied before the stylesheet loads to avoid a flash. The default theme is the system's, with a manual switch. @status:spec/done",
-      "line": 275,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS"
     },
     {
@@ -79033,7 +79050,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Return to the reading place.** The nearest anchor above the top of the viewport is remembered while scrolling; on the next visit the reader **does not** scroll by itself — a «return to place» button appears and disappears as soon as the reader scrolls past the first heading. @status:spec/done",
-      "line": 276,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL"
     },
     {
@@ -79042,7 +79059,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The «for agent» button** shows the `spec://…#pNN` address of the current place, the links to the `.md`, `.xml` and `llms.txt` of the package, and copies with one click. In embedded mode the `prompt` block's «hand to agent» button sends the prompt text to the host (§11). @status:spec/done",
-      "line": 277,
+      "line": 278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT"
     },
     {
@@ -79051,7 +79068,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A documentation package MAY declare `[navigation]`: `pinned`, the document paths the site and the local reader list first, in the order given; and `[[navigation.section]]`, one row per top-level folder of the page tree with the title the navigation shows for it. Pinning changes only where the named pages stand; every other page keeps the manifest's order. A pinned path that names no page is an error of `vibe check`. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 278,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"
     },
     {
@@ -79060,7 +79077,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The page's meta block shows the publisher, the package version and whether it is `latest`, the publication date, for a translation the package it adapts, the audiences, the reading time, and the `.md`, `.xml` and «for agent» links. A print style prints without panels, with block numbers and with link addresses in footnotes. The page carries exactly two dates: when it was rendered and when it was last read aloud. @status:spec/done",
-      "line": 279,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT"
     },
     {
@@ -79069,7 +79086,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The visual language (tokens, fonts, components) and the remaining reader details are design, not contract: they live in the vision (`design/documentation-vision.xml`, D-21 and D-22) as a working hypothesis until the design review after the first live render, and the normative floor for the shell is in §12. @status:spec/work",
-      "line": 281,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-DESIGN-PROVISIONAL"
     },
     {
@@ -79078,7 +79095,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "9.5 Analytics",
-      "line": 283,
+      "line": 284,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#analytics"
     },
     {
@@ -79087,7 +79104,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Public documentation pages carry the same self-hosted first-party Umami tag as the landing — the same website id, moved from the landing's base layout into the site configuration; the paths `/u/s.js` and `/u/e` are served by the domain, the site does not touch them. Nothing beyond: no GA, no Metrika, no consent modal — Umami runs without cookies and personal data. The local reader and the embedded mode carry no tag. @status:spec/done",
-      "line": 284,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ANALYTICS"
     },
     {
@@ -79096,7 +79113,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** an own analytics instance; GA and Metrika; reading events (which paragraphs are read) — deferred. @status:spec/done",
-      "line": 286,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-analytics-rejected"
     },
     {
@@ -79105,7 +79122,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** a request for events (search, copying an address for an agent). @status:spec/done",
-      "line": 287,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#site-analytics-revisit"
     },
     {
@@ -79114,7 +79131,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "10. The content pipeline: a Rust library and thin surfaces",
-      "line": 292,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#pipeline"
     },
     {
@@ -79123,7 +79140,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Everything with content lives in a Rust library, working name `vibe-doc`: the HTML backend of the pivot that produces a page's «island»; the JSON page manifest; `llms.txt` of every tier and language; the Markdown and XML projections; the checks of examples, citations, translations, coverage, media and style; placeholder and preview generation; the reading of sources (the store, the lock file, a registry, the checkout). The surfaces above it — the CLI `vibe doc build | serve | check | manifest | todo | surface | diff | shell install`, the MCP tools, the HTTP server — are projections of the library (PROP-000 §21). @status:spec/done",
-      "line": 293,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY"
     },
     {
@@ -79132,7 +79149,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The Qwik shell parses nothing: it receives the island as finished HTML and its data by a JTD contract with generated TypeScript types. Every wire between Rust and TypeScript is a JTD schema registered in `formats/REGISTRY.toml`; the types are generated by `cargo xtask codegen` (PROP-000 §16, PROP-044). Launch parameters reach the page as a non-executable block `<script type=\"application/json\" id=\"vibe-doc-config\">`, so the content security policy needs no `'unsafe-inline'`. @status:spec/done",
-      "line": 295,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING"
     },
     {
@@ -79141,7 +79158,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Crates: `vibe-doc` (the library) → `vibe-doc-shell` (the embedded shell, §12) → `vibe-doc-server` (the local HTTP server, §11). The server repeats the form of `vibe-index` (axum 0.8, one router builder, RFC 7807 errors, `oneshot` tests) without importing its code; axum never enters `vibe-doc`, `vibe-mcp` or the site generator. Each new crate follows the campaign's new-crate checklist: workspace membership, `#[spec]` marks, `specmap.toml` entry, `conform` gating, README, the self-check panel. @status:spec/done",
-      "line": 296,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CRATES"
     },
     {
@@ -79150,7 +79167,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The `rule` element is read on the **host side**: a host module scans documentation pages and injects into the traceability engine through its public `CodeScanner` seam (`build_with_scanner`, `check_with_scanner`, `write_with_scanner`, `CompositeScanner`). The engine and its vendored copies are not edited and `sync-engines` is not run. Documentation pages lie **outside** `spec_roots`, the page-scan policy lives in a host file rather than in `specmap.toml`, and the scanner is injected at both points of `xtask/src/specmap.rs` — the main pass and the resolve gate — so the coverage gate cannot be green by emptiness. The edge's tail is a `CodeItem` with the sentinel `crate_name = \"<doc>\"`, after the precedent of the JTD scanner's `\"<schema>\"`; the engine's wire schema does not change. @status:spec/done",
-      "line": 297,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EDGES-HOST-SIDE"
     },
     {
@@ -79159,7 +79176,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Block numbering is a pure function `number_blocks(&SpecDoc) -> Numbering` in `vibe-doc`, called after `derived` blocks are expanded and before `when` filtering and the backends; `BlockPath` is the section path plus the block index; the backends of `vibe-doc` take `(doc, numbering)` side by side; the pivot's own `to_xml` and `to_markdown` do not change and `Numbering` never enters the pivot. Every flow block is numbered; list items, table cells, the children of `prompt` and headings are not. @status:spec/done",
-      "line": 298,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-NUMBERING"
     },
     {
@@ -79168,7 +79185,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The example runner** (`vibe doc check --examples`) runs every `example` against the built binary and compares exactly after the declared normalisation; there are no match templates — every non-deterministic line is closed by a named `replace` rule visible in review. A page carries `run`, `expect` (stdout) and an optional `stderr`; the attribute `exit` defaults to `0`; an absent `stderr` asserts «stderr is empty». A fixture is a directory with a tree and an `example.toml` declaring the normalisation rules and the map «`--json` document → JTD schema» by the `command` field. The command's working directory is a fresh sandbox with a copy of the fixture, never the source tree; the command names no paths; isolation is one variable `VIBE_SETTINGS` in the native path spelling plus `NO_COLOR`; the behavioural variables (`VIBE_OFFLINE`, `VIBE_UNATTENDED`, `VIBE_INVOKED_BY`, `VIBETERM`, `VIBEFRAME`) are cleared and the flags stand in the example itself; a tripwire checks that the real `~/.vibe` and the source tree stayed unchanged; stdout and stderr are captured separately; examples document the non-TTY branch of the product and interactive prompts are described in prose; a `--json` stream is parsed document by document and each is validated by the fixture's schema map with a JTD validator written in `vibe-doc` (none exists in `vibe-wire`, whose schemas are codegen input); a document without a schema is reported as unchecked, never as passed. Normalisation: `<TMP>`, `<HOME>`, `<REPO>`, slashes, CRLF in expected files, `vibe <VERSION>` (package versions untouched), ANSI, block sorting by a declared line form, the fixture's local `replace` rules; the order is path replacements before slash unification and sorting after all replacements. Loosening a comparison to turn a check green is forbidden: the normalisation or the product is fixed. @status:spec/done",
-      "line": 299,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EXAMPLE-RUNNER"
     },
     {
@@ -79177,7 +79194,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`derived` blocks — CLI help, JTD schemas, manifest fields — are generated at build time from the product and are never committed as page text; a divergence is red except under an explicit `--accept`. `expect` is committed as golden output. @status:spec/done",
-      "line": 300,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-DERIVED"
     },
     {
@@ -79186,7 +79203,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** the omnichannel law. If the site parsed Markdown anew, anchors and facts would lose their identity and the local and public renders would diverge. @status:spec/done",
-      "line": 301,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#pipe-why"
     },
     {
@@ -79195,7 +79212,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a static generator on the TypeScript side that reads the sources itself. @status:spec/done",
-      "line": 302,
+      "line": 303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#pipe-rejected"
     },
     {
@@ -79204,7 +79221,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** never within the wave. @status:spec/done",
-      "line": 303,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#pipe-revisit"
     },
     {
@@ -79213,7 +79230,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "11. The local reader and the embedding contract",
-      "line": 307,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#local"
     },
     {
@@ -79222,7 +79239,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`vibe doc serve` starts an HTTP server **on 127.0.0.1 only**, serves the shell and, on every request, glues in the island rendered from the machine store, the current project's lock file or a private registry. The language preference comes from the project's `[i18n].preferred` when present. The mode is fully autonomous: no request to vibevm.org, no external CDN or fonts, everything in the bundle. The server serves files only from known roots (the store, the shell), without path traversal and without directory listing, with a content security policy naming no external source. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 308,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE"
     },
     {
@@ -79231,7 +79248,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The policy is sent as a header, not a `<meta>`: `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors <origin>`, where `frame-ancestors` names only the origin of the host that launched the reader — the launch parameter `vibe doc serve --frame-ancestor <origin>`, because a webview's origin changes from window to window — and is `'none'` without the parameter. The reader has no CORS layer at all and sends `x-content-type-options: nosniff`. The public site is not embeddable in frames. @status:spec/done",
-      "line": 310,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-CSP"
     },
     {
@@ -79240,7 +79257,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Shell statics are served through `ServeDir` with `append_index_html_on_directories(false)` for a shell from the store, and by exact name match for the embedded shell; pages are served only by the server's own routes; hashed names get `cache-control: immutable`, pages `no-store`. The form `data_dir.join(<capture>)` of a percent-decoded path capture is never repeated in the reader. @status:spec/done",
-      "line": 311,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-STATIC"
     },
     {
@@ -79249,7 +79266,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The store is warmed with `vibe cache add <coordinate>` from a registry, or `vibe cache add --offline <coordinate>` from a project root whose project-local registry holds the package in-tree; the sources of `vibe-doc` are the store (`lookup`, `list_all`), the lock file (`Lockfile::read`, `slot_abs_path`), a registry (`resolve_and_fetch`) and a checkout (`LocalRegistry`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 312,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP"
     },
     {
@@ -79258,7 +79275,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "When the instance's shell pin names a shell that is not in the shell store and there is no network, the reader falls back to the bare shell and warns; it never contacts the network without consent (§12). @status:spec/done",
-      "line": 313,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL"
     },
     {
@@ -79267,7 +79284,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The embedding contract for a webview:** relative addresses and a base path set at launch; the host opens an address through the URL fragment or `postMessage` `{ \"open\": \"spec://…\" }`; the reader sends `{ \"openFile\": \"<path>\" }` when a local link is clicked, so the host application opens the file in its editor; the theme is a launch parameter and `{ \"theme\": \"dark\" | \"light\" }` on the fly (a VS Code plugin follows the editor's theme); reading settings travel as `{ \"settings\": {…} }` in both directions; the language comes from `[i18n].preferred` or a parameter; the «hand to agent» button of a `prompt` block sends `{ \"prompt\": \"<text>\" }` outward and the host decides what to do with it; no external resources. @status:spec/done",
-      "line": 314,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-EMBEDDING-CONTRACT"
     },
     {
@@ -79276,7 +79293,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The local reader publishes nothing, contacts nothing, and carries no analytics tag. @status:spec/done",
-      "line": 315,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-NO-TELEMETRY"
     },
     {
@@ -79285,7 +79302,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** this is how the documentation of proprietary packages is read; how a VS Code plugin gets the interface through an iframe; how content never leaves the machine and is never visible to other users of the machine. @status:spec/done",
-      "line": 316,
+      "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#local-why"
     },
     {
@@ -79294,7 +79311,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a separate «local application» with its own code; binding to `0.0.0.0`. @status:spec/done",
-      "line": 317,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#local-rejected"
     },
     {
@@ -79303,7 +79320,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the owner opens work on the VS Code plugin and wants a native interface instead of a webview. @status:spec/done",
-      "line": 318,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#local-revisit"
     },
     {
@@ -79312,7 +79329,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "12. The web stack and the shell",
-      "line": 322,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#stack"
     },
     {
@@ -79321,7 +79338,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The site is TypeScript under the `typescript-ai-native` discipline, on Qwik 2.0 beta (next.qwik.dev), pinned exactly together with the versions of Node and pnpm: `@qwik.dev/core` and `@qwik.dev/router` `2.0.0-beta.43` (the 2.0 line lives under the npm tag `beta`; `latest` is 1.x and is not used), Vite `8.2.1`, Node `24.18.0`, pnpm `10.33.2`, lockfile v9, `packageManager` in `package.json`; the static adapter is `ssg` (`@qwik.dev/router/adapters/ssg/vite`). One shell code base, two adapters: static for the server (every route prerendered, the island glued at build time) and embedded for `vibe`. @status:spec/done",
-      "line": 323,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-QWIK"
     },
     {
@@ -79330,7 +79347,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "One site is built with `base: \"/\"`, and `/`, `/ru/` and `/doc/…` are route directories; the embedded adapter is a separate configuration with `base: \"/doc/\"` and the documentation routes at the root, without the landing routes. @status:spec/done",
-      "line": 325,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-ONE-BASE"
     },
     {
@@ -79339,7 +79356,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The static generator silently under-generates with exit code 0 (`trailingSlash: false` yields one page of seven; a wrong `base` yields none and an empty sitemap), so the site build gate counts pages — the generator's `Generated: N pages` against the page manifest — and never trusts the exit code. @status:spec/done",
-      "line": 326,
+      "line": 327,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-PAGE-COUNT-GATE"
     },
     {
@@ -79348,7 +79365,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`q-manifest.json` is removed from the build output and answered 404 by nginx; the starter's `public/manifest.json` is rewritten without a foreign `$schema`; `pnpm-workspace.yaml` declares `allowBuilds` with `sharp: false` and `@parcel/watcher: false`; the base path and every path in the environment and arguments of build scripts are passed in a form MSYS does not rewrite (`MSYS_NO_PATHCONV=1` or values without a leading `/`) — a rule for `DEV-GUIDE.md`. @status:spec/done",
-      "line": 327,
+      "line": 328,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-BUILD-HYGIENE"
     },
     {
@@ -79357,7 +79374,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The package `org.vibevm.doc/web` is one pnpm workspace of two parts: `design/` — tokens, themes, fonts and components; `site/` — the Qwik application with the landing routes (`/`, `/ru/`) and the documentation routes (`/doc/…`). Header, footer, theme, language selector and fonts are shared components, not copies. The package is published as source only; built assets never enter it (PROP-024 §2.2). @status:spec/done",
-      "line": 328,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-WORKSPACE"
     },
     {
@@ -79366,7 +79383,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The web package passes the discipline's seven-step floor before every commit (`prettier → tsc → tests → eslint → conform → specmap → test-gate`), invoked from the host root through the host's built `typescript-ai-native` binary with `--path`; unit tests are `.test.ts` without JSX; component behaviour is proven by the island parity test on the Rust side and by the build; the `tsconfig` is the full floor of the discipline guide plus the Qwik blocks (`jsx`, `jsxImportSource`, `moduleResolution: \"Bundler\"`, `paths`), with `exactOptionalPropertyTypes` kept; `any`, unchecked `as`, `!` and `@ts-ignore` are forbidden in domain code; the resolution of the discipline's eslint plugin outside the repository layout is decided when the package is initialised. @status:spec/done",
-      "line": 329,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-FLOOR"
     },
     {
@@ -79375,7 +79392,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The design floor of the shell: colours only through semantic tokens (`--bg`, `--text`, `--text-2`, `--line`, `--accent`, …) — a colour literal in a component is a review error; two value maps (light, dark) in one palette file, switched by `prefers-color-scheme` and `[data-theme]`; both themes pass an APCA contrast audit as a floor step, with thresholds by role — body text Lc ≥ 75, secondary and tertiary text ≥ 60, interactive outlines ≥ 45; separators and the block numbers at reduced opacity are decorative and outside the gate; the APCA formula is the project's own implementation of the published algorithm (the reference library is AGPL and does not enter the tree); no Tailwind anywhere on the site; fonts self-hosted in the bundle as separate Latin and Cyrillic woff2 subsets with `unicode-range`, no external font service; motion only where meaningful and off under `prefers-reduced-motion`. @status:spec/done",
-      "line": 330,
+      "line": 331,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR"
     },
     {
@@ -79384,7 +79401,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Node is needed only for the server build, in Docker after the landing's pattern: a build stage on a Node image builds the shell and renders the pages, the serving stage is stock nginx (§9.3). A reader's machine needs no Node. @status:spec/done",
-      "line": 331,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-NODE-SERVER-ONLY"
     },
     {
@@ -79393,7 +79410,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The embedding mechanism (proposed; the owner asked to see it before confirming — §1).** @status:spec/work",
-      "line": 333,
+      "line": 334,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-SHELL-EMBEDDING-PROPOSED"
     },
     {
@@ -79402,7 +79419,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A step `cargo xtask embed-doc-shell` builds the web package from source (`pnpm build` with the embedded adapter) and places the result — the route template with the island slot, scripts, styles — in a directory the crate `vibe-doc-shell` includes into the binary through `include_dir` (0.7.4, MIT, four dependencies; `rust-embed` reads from disk in debug builds) behind the feature flag `embedded-shell`; a `build.rs` declares `rerun-if-changed=shell`, stops under the feature when `shell/index.html` is missing with the recipe in the message, and exports the shell's digest as the compile-time constant `VIBE_DOC_SHELL_SHA256`. @status:spec/work",
-      "line": 335,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-XTASK-EMBED"
     },
     {
@@ -79411,7 +79428,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A release build of `vibe` enables the flag and fails when the shell is absent. A plain `cargo build` without Node compiles with a fallback shell — bare HTML without scripts. @status:spec/work",
-      "line": 336,
+      "line": 337,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-BUILD"
     },
     {
@@ -79420,7 +79437,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A build from source (`vibe self install`, first-run) does not stay with the bare shell forever: on the first `vibe doc serve` the reader offers to download the shell matching its version from the release assets; `vibe doc shell install [--assume-yes]` downloads it with consent after the pattern of `install`, verifies the digest against the pin, and stores it in the shared content-addressed directory `~/.vibe/opt/vibevm/doc-shell/<sha256>/` — outside the immutable version instance, which carries a `DOC-SHELL.lock.toml` written at staging. On refusal or offline the fallback shell works. Downloading happens only by explicit consent, never automatically. @status:spec/work",
-      "line": 337,
+      "line": 338,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-INSTALL-COMMAND"
     },
     {
@@ -79429,7 +79446,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`vibe doc serve` serves the shell statics from the binary or from the shell store and glues the island rendered by the Rust pipeline into every page; one `Shell` type with three sources and a `provenance()` the command can report. @status:spec/work",
-      "line": 338,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-SERVE-SOURCES"
     },
     {
@@ -79438,7 +79455,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The shell's coordinate and digest are pinned beside `vibe`; the self-check compares the embedded shell with the pin; `vibe doc serve` can say what it carries. @status:spec/work",
-      "line": 339,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN"
     },
     {
@@ -79447,7 +79464,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The shell is built with a configurable base path and relative addresses; it has no external scripts. @status:spec/work",
-      "line": 340,
+      "line": 341,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELATIVE"
     },
     {
@@ -79456,7 +79473,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "A parity test runs both adapters over one package and compares the island byte for byte. @status:spec/work",
-      "line": 341,
+      "line": 342,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PARITY-TEST"
     },
     {
@@ -79465,7 +79482,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "In a release the shell is a **separate asset** `vibevm-doc-shell-<version>.zip` without a platform target, with its own manifest `DOC-SHELL.json` beside `DISTRIBUTIONS.json` and of the same form (`schema_version`, `product`, `repository`, `version`, `tag`, `source_commit`, `asset{name, size, digest}`), verified by the same digest check. `DISTRIBUTIONS.json` gains no field: its schema is closed, and every installed `vibe 1.0.0` would lose `self update`. The release check that counts the platform assets is extended to the additional shell asset. @status:spec/work",
-      "line": 342,
+      "line": 343,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET"
     },
     {
@@ -79474,7 +79491,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Decision:** Qwik 2.0 beta with exact pins; one island shared by the public and the local render; the shell embedded at release and downloadable with consent. @status:spec/done",
-      "line": 344,
+      "line": 345,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DECISION"
     },
     {
@@ -79483,7 +79500,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** the owner chose Qwik 2.0, variant Б for the local reader and variant А for the server build; a beta is admissible under the project's law for a fresh but well-designed library, with an exact pin and a review trigger; the identity of the public and the local render rests on the shared island, not on a shared JavaScript runtime; the download step closes the hole where everyone building `vibe` from source would get a crippled reader. @status:spec/done",
-      "line": 346,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#stack-why"
     },
     {
@@ -79492,7 +79509,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** Qwik SSR locally through an embedded JavaScript engine (QuickJS); the built shell beside the binary in the release zip instead of embedding; built assets inside the package `org.vibevm.doc/web`; requiring Node to build `vibe` from source. @status:spec/done",
-      "line": 347,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#stack-rejected"
     },
     {
@@ -79501,7 +79518,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the stable Qwik 2.0 ships, or a breaking change of the beta demands a rewrite; the pin moves only in its own commit with the reason recorded in the campaign ledger. @status:spec/done",
-      "line": 348,
+      "line": 349,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#stack-revisit"
     },
     {
@@ -79510,7 +79527,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "13. The SEO and LLM-SEO contract",
-      "line": 352,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#seo"
     },
     {
@@ -79519,7 +79536,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The public site MUST: @status:spec/done",
-      "line": 353,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LEAD"
     },
     {
@@ -79528,7 +79545,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "serve fully server-rendered HTML, with no content behind scripts; @status:spec/done",
-      "line": 355,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SSR"
     },
     {
@@ -79537,7 +79554,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "keep one canonical page per fact and language: older versions carry `rel=canonical` to `latest` of their language; between languages, `hreflang` for every available language and `x-default` for the documentation's source language; @status:spec/done",
-      "line": 356,
+      "line": 357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CANONICAL-HREFLANG"
     },
     {
@@ -79546,7 +79563,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "publish a sitemap index by packages and languages with `lastmod` from the publication date, listing `latest` only; @status:spec/done",
-      "line": 357,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-SITEMAP"
     },
     {
@@ -79555,7 +79572,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "explicitly allow the crawlers of OpenAI, Anthropic, Google, Perplexity and the others in `robots.txt`; the list of agent names is **verified against the providers' documentation at every build**, never rewritten from memory, and the verification is recorded in the campaign ledger; `robots.txt` is one per domain, generated by the site build together with the root `llms.txt`, `sitemap.xml` and `feed.xml`, kept ASCII-only as the earlier landing kept it; the domain is not behind Cloudflare, so no crawler block is to be lifted there; @status:spec/done",
-      "line": 358,
+      "line": 359,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-ROBOTS"
     },
     {
@@ -79564,7 +79581,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "serve every text format with `charset=utf-8` and every redirect relative (`absolute_redirect off; port_in_redirect off;`) — TLS terminates outside the container, and an absolute `Location: http://…` sends strict fetchers into a redirect loop; @status:spec/done",
-      "line": 359,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-CHARSET-AND-REDIRECTS"
     },
     {
@@ -79573,7 +79590,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "after every deploy that changed pages, send the list of changed URLs to IndexNow with the landing's key (the key file already exists at the domain root); @status:spec/done",
-      "line": 360,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-INDEXNOW"
     },
     {
@@ -79582,7 +79599,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "carry JSON-LD (`TechArticle` with `headline`, `abstract`, `author`, `inLanguage`, `keywords`, `datePublished`, `image`; `SoftwareApplication`; `BreadcrumbList`; `FAQPage` where apt), Open Graph and a Twitter Card `summary_large_image` with the preview from `[media].preview` or the composed card (§7); @status:spec/done",
-      "line": 361,
+      "line": 362,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-STRUCTURED-DATA"
     },
     {
@@ -79591,7 +79608,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "publish `llms.txt` (an index with one-line summaries) and `llms-full.txt` for the base corpus, plus `llms-small.txt` and `llms-medium.txt` under a token budget, all derived from the same manifest as the navigation, the full corpus ordered by the layer law (stable before mutable); the same files per language and per package; the registry `llms.txt` is a catalogue of documentations in the arXiv style — title, officiality star, publisher, language, audiences, abstract, link; <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"agent\"/>",
-      "line": 362,
+      "line": 363,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"
     },
     {
@@ -79600,7 +79617,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "serve every page as clean Markdown at the address with the `.md` suffix and as raw XML at the `.xml` suffix; <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"agent\"/>",
-      "line": 363,
+      "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"
     },
     {
@@ -79609,7 +79626,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "serve the JSON page manifest with officiality statuses, languages, audiences, genres, anchors and summaries (`/doc/manifest.json`), a resolver endpoint for `spec://` addresses (`/doc/resolve?uri=…`), and optionally an MCP server of the site; <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"agent\"/>",
-      "line": 364,
+      "line": 365,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"
     },
     {
@@ -79618,7 +79635,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "keep a dense internal link graph: dependants, «explained in», «translated into», specification ↔ documentation; @status:spec/done",
-      "line": 365,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LINK-GRAPH"
     },
     {
@@ -79627,7 +79644,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "build pages by one template: the answer in the first sentence, one concept per page, a glossary of canonical terms, questions written as questions, examples with expected output; scenario pages prompt first, mechanism second, manual steps only when they are needed (§16). @status:spec/done",
-      "line": 366,
+      "line": 367,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-PAGE-TEMPLATE"
     },
     {
@@ -79636,7 +79653,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The local mode publishes none of this and contacts nothing external. @status:spec/done",
-      "line": 369,
+      "line": 370,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LOCAL-EXEMPT"
     },
     {
@@ -79645,7 +79662,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** the owner's word — maximal SEO including LLM SEO; every item is either a standard or a consequence of a project law. @status:spec/done",
-      "line": 370,
+      "line": 371,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#seo-why"
     },
     {
@@ -79654,7 +79671,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** blocking AI crawlers; hand-written page descriptions; a link preview cropped from the banner; a separate `robots.txt` under `/doc/`. @status:spec/done",
-      "line": 371,
+      "line": 372,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#seo-rejected"
     },
     {
@@ -79663,7 +79680,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** a new standard of machine index appears. @status:spec/done",
-      "line": 372,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#seo-revisit"
     },
     {
@@ -79672,7 +79689,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "14. Observed, checked, covering obligations — never judged",
-      "line": 376,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#observability"
     },
     {
@@ -79681,7 +79698,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`doc` packages enter the include globs of `facts.toml` and the traceability map: the documentation is observed like every authored text of the project. @status:spec/done",
-      "line": 378,
+      "line": 379,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-IN-SCOPE"
     },
     {
@@ -79690,7 +79707,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "They are **not judged**: their facts do not enter the judging debt, because the genre is non-normative. The mechanism is the key `[judging] exempt = [\"<glob>\", …]` in `facts.toml` — «observed, not judged» — read by the debt script now and by the shipped verb later (PROP-047 `##DEBT-MUST-BE-ASKABLE`); the corpus of `facts check` and the map do not change. A `vibe check` cell verifies that the path of every in-tree package of kind `doc` is covered by `exempt`, so the list cannot go stale. @status:spec/done",
-      "line": 379,
+      "line": 380,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-NOT-JUDGED"
     },
     {
@@ -79699,7 +79716,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Every `rule` yields a `documents` edge **without a pin**: the citation is live, and the page shows the fact's current text by address at every render. `vibe doc check --citations` checks one thing — that the anchor exists; a vanished anchor without a tombstone fails the build. There are no revisions, no text hashes and no «the spec moved ahead»: such checks would need a history the project does not keep by design. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 380,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
     },
     {
@@ -79708,7 +79725,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Whether the **prose around** a citation went stale is a human's question at full reconciliation, not a machine's. @status:spec/done",
-      "line": 381,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-PROSE-STALENESS-IS-HUMAN"
     },
     {
@@ -79717,7 +79734,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Examples with `expect` run in the self-check panel as golden tests — the only technical link between the product and the documentation. Whether to keep it there or move it to a measurer is the owner's open question (vision §10, question 12); until his word it stays in the panel. @status:spec/work",
-      "line": 382,
+      "line": 383,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-EXAMPLES-GOLDEN"
     },
     {
@@ -79726,7 +79743,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The coverage gate.** Spec facts marked `actionstage=\"doc\"` with an audience are *obligations*; `vibe doc check --coverage` requires every obligation to be cited by a page for the same audience — this is the ratchet PROP-047 `##DOC-COVERAGE-RATCHET` names, and `vibe progress report --view doc --audience …` is its listing of obligations, a source for the gate and not a navigation. Marking the obligations in the spec corpus is a campaign atom of its own. The site's navigation is derived from the page manifest, never from this report. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 383,
+      "line": 384,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-COVERAGE-GATE"
     },
     {
@@ -79735,7 +79752,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The audience vocabulary of PROP-043 gains `agent`; `user`, `author` and `dev` stay. Text marked `audience=\"agent\"` obeys the laws of agent text: a token budget, no narration, and **never in a boot prefix** — the site serves it in the «for agents» section and first in `llms.txt`. Audiences are not declared in the manifest; they are derived from the page markup. @status:spec/done",
-      "line": 384,
+      "line": 385,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"
     },
     {
@@ -79744,7 +79761,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**A version is a behavioural contract, not a frozen set of files.** Inside a version the product changes as often as it likes — amend, rewritten history, `vibe self update --force` — and this is invisible by design. The only event by which the documentation computes «a difference between versions» is the owner's conscious bump of the version number: no checksums, no file hashes, no history. @status:spec/done",
-      "line": 385,
+      "line": 386,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-VERSION-CONTRACT"
     },
     {
@@ -79753,7 +79770,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The pseudo-history of versions is the documentation developers' kitchen: the documentation package keeps a **surface snapshot** of the product per declared version — `maintenance/surface/<version>.json`: a structural description, not a hash — commands and flags from `--help`, manifest and lock-file fields, schemas, the text of the spec facts marked `actionstage=\"doc\"`, the format registry. `vibe doc surface --record <version>` writes it at a version bump and at the end of every full reconciliation; `vibe doc diff <old> <new>` compares two snapshots and, through the citation graph, the `derived` sources and the coverage map, lists **the pages to update, each with its reason**. The same `vibe doc diff <version> now` may run inside a version as a hint to reconciliation — kitchen, never a fact for a reader. @status:spec/done",
-      "line": 386,
+      "line": 387,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS"
     },
     {
@@ -79762,7 +79779,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Nothing of the kitchen reaches a reader: no «checked against», no «stale since», no drift counters, no fingerprints, no hash permalinks, no «a new version is available». The only dates on a page are when it was rendered and when it was last read aloud. A human changelog between versions is written by hand from the output of `vibe doc diff`. @status:spec/done",
-      "line": 387,
+      "line": 388,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-NOTHING-LEAKS"
     },
     {
@@ -79771,7 +79788,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**There are no locks.** No technical gate binds a product release to the documentation: `vibe doc todo` prints the gaps as a number; the checkbox «documentation: updated / debt recorded / not needed» in the pull-request template is a habit; only internal breakage of the documentation stays red — a red example, a `derived` that fails to build, a vanished citation anchor. Drift between full reconciliations is an accepted risk; the full reconciliation is a team promise on a calendar — once a quarter and before a major milestone — not a release condition. @status:spec/done",
-      "line": 388,
+      "line": 389,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-NO-RELEASE-LOCK"
     },
     {
@@ -79780,7 +79797,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The maintenance tools: `vibe doc todo` (the queue by the current state of product and documentation — coverage gaps, red examples, unresolvable citations, page age, debt, linter statistics), `vibe doc surface` and `vibe doc diff`, `reviews.toml` (the last read-aloud date per page and the «page of the week» order), the package `CHANGELOG.md` written from the journal, and documentation debt as `docs:` lines in `BACKLOG.md`. The maintenance regulation itself is derived from the campaign journal in phase 6 and becomes the next PROP; every rule of it cites a journal entry. @status:spec/done",
-      "line": 389,
+      "line": 390,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS"
     },
     {
@@ -79789,7 +79806,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Decision:** observed and checked, never judged; coverage by obligations; versions as contracts; no release lock. @status:spec/done",
-      "line": 391,
+      "line": 392,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-DECISION"
     },
     {
@@ -79798,7 +79815,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** a one-way relation without reverse discovery rots silently; coverage measured by a gate answers «is everything told», which navigation does not; the sixth edition of the vision confused a contract with a frozen file set and tried to distinguish the indistinguishable — the owner's word restored the version number as the only event; the release lock was rejected by the owner on 2026-09-10 as untrue for a project that releases ten times a day. @status:spec/done",
-      "line": 393,
+      "line": 394,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#obs-why"
     },
     {
@@ -79807,7 +79824,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** a hand-kept page list as the source of truth; a table of contents from the obligations report; judging documentation facts; checksums, tree and commit hashes, fingerprints as product identity; surface snapshots per change instead of per declared version; any state marks on pages for readers; permanent links to past publications; «new version» notifications; the technical gate «the product does not ship without documentation». @status:spec/done",
-      "line": 394,
+      "line": 395,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#obs-rejected"
     },
     {
@@ -79816,7 +79833,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the owner wants to publish a machine changelog between versions for readers — then the output of `vibe doc diff` gets a human projection, still only by declared versions; a second project wants the same maintenance ritual for its `doc` packages — then the regulation becomes a flow package. @status:spec/done",
-      "line": 395,
+      "line": 396,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#obs-revisit"
     },
     {
@@ -79825,7 +79842,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "15. The fate of docs/",
-      "line": 399,
+      "line": 400,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#legacy"
     },
     {
@@ -79834,7 +79851,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`docs/` moves to `docs-legacy/` in one move-only commit that changes nothing else — an archive, not a deletion, after the precedent of `legacy-spec/`. @status:spec/done",
-      "line": 401,
+      "line": 402,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEGACY-MOVE"
     },
     {
@@ -79843,7 +79860,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The new documentation is written against it: a claim that was there and is absent from the new documentation is either dropped with a recorded reason or a regression to fix. The inventory (`campaigns/docs-2026-09/LEGACY-INVENTORY.md`: every claim of the old tree with its disposition) is closed before the documentation package ships — no empty rows. @status:spec/done",
-      "line": 402,
+      "line": 403,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEGACY-REGRESSION-RULE"
     },
     {
@@ -79852,7 +79869,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Nothing in the living corpus cites `docs-legacy/` as a normative source; it joins no include glob; it is history kept readable. @status:spec/done",
-      "line": 403,
+      "line": 404,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEGACY-NOT-NORMATIVE"
     },
     {
@@ -79861,7 +79878,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "`README.md`, `DEV-GUIDE.md` and `RUNTIME-GUIDE.md` stay in place and are updated by the same-commit law of PROP-000 §19. @status:spec/done",
-      "line": 404,
+      "line": 405,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LEGACY-ROOT-FILES-STAY"
     },
     {
@@ -79870,7 +79887,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** deleting `docs/`; rewriting it in place. @status:spec/done",
-      "line": 405,
+      "line": 406,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#legacy-rejected"
     },
     {
@@ -79879,7 +79896,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the regression list is closed and the owner confirms; then `docs-legacy/` may be deleted in its own commit. @status:spec/done",
-      "line": 406,
+      "line": 407,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#legacy-revisit"
     },
     {
@@ -79888,7 +79905,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "16. The style law of the documentation prose",
-      "line": 410,
+      "line": 411,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#style"
     },
     {
@@ -79897,7 +79914,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "The style norm is the document `AUTHORING.md` of the package `org.vibevm.core/vibevm-docs` (during the campaign: `campaigns/docs-2026-09/STYLE.md`); this section states its binding facts. @status:spec/done",
-      "line": 411,
+      "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-NORM"
     },
     {
@@ -79906,7 +79923,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The source language is English.** `org.vibevm.core/vibevm-docs` carries `[i18n].canonical = \"en\"`. Every other language, Russian included, is an **adaptation** published as its own package (§5): a mirror block for block, free sentence for sentence, with its own jokes and its own glossary of terms. Machine translation may produce a draft and never the text. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 413,
+      "line": 414,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-SOURCE-LANGUAGE"
     },
     {
@@ -79915,7 +79932,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The reader** is intelligent, busy and has read nothing of ours. A page MUST work as the only page the reader ever opens: terms introduced on the page, the explanation complete without the specs, the spec cited as confirmation and never as a deferral. @status:spec/done",
-      "line": 414,
+      "line": 415,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-READER"
     },
     {
@@ -79924,7 +79941,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Where complexity lives.** Only in containers the reader sees coming: `rule` blocks, tables, `derived` blocks, fences, the glossary. Narrative paragraphs are corridors: a term is introduced before use (a link to its glossary entry or a gloss in the same sentence), at most two glossary terms per narrative sentence, one new idea per paragraph named in its first sentence, «see the specification» in place of an explanation is forbidden, concepts ordered as a ladder where each rung uses only the rungs below it. @status:spec/done",
-      "line": 415,
+      "line": 416,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-CONTAINERS-AND-CORRIDORS"
     },
     {
@@ -79933,7 +79950,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Technical passages follow ASD-STE100:** one word, one meaning — technical nouns have no synonyms; one instruction per sentence, imperative, present tense, active voice; at most 20 words in a procedural sentence and 25 in a descriptive one, at most six sentences in a paragraph; a warning before the step; sequences as numbered lists. @status:spec/done",
-      "line": 416,
+      "line": 417,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-STE"
     },
     {
@@ -79942,7 +79959,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The register is an essay, not a manual**, after the writers who explain mechanisms to intelligent readers for a living: mechanism first and in plain words, short words over long, the first sentence carries the news, concrete detail over abstraction, honesty about trade-offs. @status:spec/done",
-      "line": 417,
+      "line": 418,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-REGISTER"
     },
     {
@@ -79951,7 +79968,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Humour is rare, dry and placed:** at most one joke per page, never in a procedure, a warning, a reference table, an explanation of an error, a `rule` block or a title; informative, understood by an educated person of any country without an IT background; replaced or dropped in an adaptation, never translated. @status:spec/done",
-      "line": 418,
+      "line": 419,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-HUMOUR"
     },
     {
@@ -79960,7 +79977,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Model tics are deleted on sight.** The banned words and phrases per language are data for the linter and live in the documentation package as `style/banned.en.txt` and `style/banned.ru.txt` (source, not generated). Headings named Overview, Summary, Conclusion, Next steps or Key takeaways, exclamation marks, emoji, bold in prose and a closing summary sentence are errors. @status:spec/done",
-      "line": 419,
+      "line": 420,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-TICS"
     },
     {
@@ -79969,7 +79986,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The page skeleton.** A concept page: a noun-phrase title; a first paragraph saying what this is and when it is needed with no glossary term at all (it is also the page's line in `llms.txt`; clarified 2026-09-12 at the first corpus check: a glossary word used in its ordinary English sense — package, project, kind, feature, workspace, translation — does not count, a word that means something only in vibe — lock file, manifest, registry, store, index, anchor, skill, contribution, fingerprint, receipt — does); an `example` with its `expect`; the mechanism as a ladder; edge cases through `rule`; questions only if real. A task page: an imperative title; the first paragraph without terms; then the `prompt` (§16 `##STYLE-PROMPT-FIRST`); «what happens» in three to six sentences as a corridor; «by hand» as numbered STE steps only where the manual road is worth walking; edge cases and questions. No page ends with a conclusion, a summary or a «next steps» box. @status:spec/done",
-      "line": 420,
+      "line": 421,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PAGE-SKELETON"
     },
     {
@@ -79978,7 +79995,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Prompt first.** Any action in VibeVM is done by an agent or by hand, and the agent is the main road. A scenario page opens with a `prompt` block: the plain request in the user's voice, self-contained (coordinates, paths and registry named, never implied), one prompt for one outcome, free of secrets, neutral to the agent (it works for any agent with the `vibevm` skill), at most sixty words; beside it `needs` (what the agent must have) and `outcome` (what the person sees when it worked), and at least one `assert` — a shell command that must exit zero after the agent's work, because a prompt cannot be checked by its output the way a shell example can. A prompt without an assert on a scenario page is a style-linter error; an illustrative prompt on an explanation page is marked `assert=\"none\"`. `vibe doc check --prompts` runs every prompt through the configured agent runner (`[doc.prompts] runner`) in a clean temporary directory with the fixture and then runs the asserts; it is not part of the panel — it runs in the prose phase before acceptance, as a sample in the monthly loop, and in full at reconciliation. The skill `vibevm-docs` takes a page's `prompt` as the task when the user asks for what the page describes. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 421,
+      "line": 422,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"
     },
     {
@@ -79987,7 +80004,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Who writes.** Prose — pages, first paragraphs, `title` and `abstract`, the glossary, questions, the skill text, adaptations — is written by the strongest model in the central session (the owner named Fable, Astra and Sol), never by a delegated worker; a worker's draft of prose is rewritten, not edited. Workers do the work around the prose: fixtures, expected output, the block mirrors of adaptations, code, checks, the shell. @status:spec/done",
-      "line": 422,
+      "line": 423,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-WHO-WRITES"
     },
     {
@@ -79996,7 +80013,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The mechanical check** `vibe doc check --style` gates a page: banned words and phrases by the page's language; sentence and paragraph length by block kind (errors in procedures and warnings, warnings in corridors); a glossary term used before its introduction; more than two glossary terms in one narrative sentence; deferral phrases («see the specification», «as described in») without an explanation on the same page; forbidden headings; exclamation marks, emoji, bold in prose; a readability score per page reported and not gated. A false positive is fixed in the linter's rule with a BACKLOG entry, never worked around in the text. A page is committed only after the author's self-edit against the norm and a green `--style`. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 423,
+      "line": 424,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT"
     },
     {
@@ -80005,7 +80022,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The human check:** the owner reads three pages aloud at the phase gate — the newcomer's route, a reference page, an architecture explanation; a page that cannot be read aloud without stumbling goes back. @status:spec/done",
-      "line": 424,
+      "line": 425,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-OWNER-READ"
     },
     {
@@ -80014,7 +80031,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Why:** the owner's word — model prose suffers tics, but the greater harm is misplaced density: an agent writes as if the reader had read every spec; STE gives checkable rules for the technical places, the essay register for the rest, and the container/corridor split makes «where it is hard» predictable and checkable; English as the source is how the project is built and how AI crawlers read; adaptation rather than translation because jokes and rhythm do not translate; prose is the most expensive and most visible part of the work and the one worth the strongest model, since a gate can check code and fixtures but not text. @status:spec/done",
-      "line": 425,
+      "line": 426,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#style-why"
     },
     {
@@ -80023,7 +80040,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Considered and rejected:** Russian as the source language; literal translation; delegating prose to cheaper models for speed; pure infostyle for Russian (too dry — only its war on clutter is taken); developers' in-jokes; the Thing Explainer extreme (STE applies to technical places, not to the essay); AI «smoothing» of finished pages. @status:spec/done",
-      "line": 426,
+      "line": 427,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#style-rejected"
     },
     {
@@ -80032,7 +80049,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Revisit when:** the owner's style review at the phase gate yields remarks; a human editor appears; the linter starts to hinder more than help — two false positives in a row on one rule are a BACKLOG entry. @status:spec/done",
-      "line": 427,
+      "line": 428,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#style-revisit"
     },
     {
@@ -80041,7 +80058,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "Invariants",
-      "line": 431,
+      "line": 432,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#invariants"
     },
     {
@@ -80050,7 +80067,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "(The load-bearing rules of this PROP in one place. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done",
-      "line": 432,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INVARIANTS-LEAD"
     },
     {
@@ -80059,7 +80076,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Documentation cites an anchor and never restates a normative value** — a number, a flag, a path, a field name. Where the prose must mention a value, the same sentence carries the source address. @status:spec/done",
-      "line": 434,
+      "line": 435,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-CITES-NEVER-COPIES"
     },
     {
@@ -80068,7 +80085,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**No documentation page enters `STATIC.xml`, `INDEX.md` or a boot snippet.** A `doc` package has no `[boot_snippet]`; agent-audience text is never in a boot prefix. @status:spec/done",
-      "line": 435,
+      "line": 436,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"
     },
     {
@@ -80077,7 +80094,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The relation is one-way in the source and two-way in the render.** A spec's text knows nothing of documentation; «explained in», «translated into» and «depends on» are computed from the index and the maps and never written by hand. @status:spec/done",
-      "line": 436,
+      "line": 437,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-ONE-WAY-SOURCE-TWO-WAY-RENDER"
     },
     {
@@ -80086,7 +80103,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Officiality is computed from the convergence of edges at every render and stored nowhere as a flag.** @status:spec/done",
-      "line": 437,
+      "line": 438,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-OFFICIALITY-COMPUTED"
     },
     {
@@ -80095,7 +80112,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Derived things are generated, never kept by hand:** the command reference, field tables, navigation, page manifests, `llms*.txt`, placeholders, previews, reverse links, block numbers. @status:spec/done",
-      "line": 438,
+      "line": 439,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-DERIVED-NEVER-HAND-KEPT"
     },
     {
@@ -80104,7 +80121,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Every example runs.** An `example` without `expect` is not an example; a comparison is never loosened to turn green. @status:spec/done",
-      "line": 439,
+      "line": 440,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-EXAMPLES-RUN"
     },
     {
@@ -80113,7 +80130,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Anchors are immutable; a rename is a tombstone** — for published documentation pages as for specs, and for translations, which must match their source. @status:spec/done",
-      "line": 440,
+      "line": 441,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE"
     },
     {
@@ -80122,7 +80139,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**A translation mirrors the source tree file for file and block for block and authors no examples.** @status:spec/done",
-      "line": 441,
+      "line": 442,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-TRANSLATION-MIRRORS"
     },
     {
@@ -80131,7 +80148,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**A version is a behavioural contract.** Nothing in the documentation machinery depends on real history, checksums or tree hashes; the only version event is the owner's bump; readers never see the kitchen. @status:spec/done",
-      "line": 442,
+      "line": 443,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-VERSION-IS-A-CONTRACT"
     },
     {
@@ -80140,7 +80157,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**No technical gate binds a product release to the documentation.** Drift between reconciliations is accepted; only internal breakage of the documentation is red. @status:spec/done",
-      "line": 443,
+      "line": 444,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-NO-RELEASE-GATE"
     },
     {
@@ -80149,7 +80166,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**The local reader listens on 127.0.0.1 only, serves only known roots, loads nothing external, and contacts the network only for a shell download the user explicitly confirmed.** @status:spec/done",
-      "line": 444,
+      "line": 445,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE"
     },
     {
@@ -80158,7 +80175,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**A package carries source only:** no build artifacts in the web package, images as source files within the card limits. @status:spec/done",
-      "line": 445,
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-PACKAGE-IS-SOURCE"
     },
     {
@@ -80167,7 +80184,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Content logic lives in the Rust library; every surface — CLI, MCP, HTTP, the shell — is a thin projection over a JTD contract.** @status:spec/done",
-      "line": 446,
+      "line": 447,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOGIC-IN-THE-LIBRARY"
     },
     {
@@ -80176,7 +80193,7 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Prose is written by the strongest model in the central session and never by a worker; English is the source and every other language an adaptation.** @status:spec/done",
-      "line": 447,
+      "line": 448,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-PROSE-BY-THE-STRONGEST"
     },
     {
@@ -80185,12 +80202,12 @@
       "doc_path": "common/PROP-057",
       "file": "vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml",
       "heading": "**Nothing from the private infrastructure document enters the repository, and nothing in the campaign touches the host nginx, ports, certificates, neighbouring services or the VPN.** @status:spec/done",
-      "line": 448,
+      "line": 449,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#INV-INFRA-STAYS-PRIVATE"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:55a89e94873cd3d9ca9c4f1d0058ac5998bb85abf5132880a03d432f4e5d3ba0",
+      "content_hash": "sha256:53cce9538e19fe7f8780c855be39ba1e8e6fb5bfedffa2c2d76ea84e059f60a3",
       "doc_path": "common/PROP-058",
       "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
       "heading": "PROP-058 — Documentation maintenance",
@@ -80298,7 +80315,7 @@
     },
     {
       "anchor": "loops",
-      "content_hash": "sha256:d7cfeddb6a6f3374019431de91fe986e616c4beb22d4a036c488e4cede8f58a2",
+      "content_hash": "sha256:6af3db723898aacc8e5c43620c5d725cd0035e2a5ff22bba83349ea75261159e",
       "doc_path": "common/PROP-058",
       "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
       "heading": "3. Five loops",
@@ -80352,10 +80369,10 @@
     },
     {
       "anchor": "LOOP-MONTHLY",
-      "content_hash": "sha256:db139a9a33bc315cec9f9c1ec43b1d0f77a5c0311601bd8aa6e179636c0fd954",
+      "content_hash": "sha256:82ffa505b8e477b33ef0c9df7b6a7ef34da875abfc7d06ed372ab9c2bcdeaa3d",
       "doc_path": "common/PROP-058",
       "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
-      "heading": "**The monthly loop**, half a day, with the owner: the eight metrics of §9 as a table with their trend; an audit of the corpus — every top-level command, manifest field and kind has a page, the glossary keeps one word to one meaning, terms are introduced where readers look for them, duplicates and dead pages, the `llms` tiers within their budgets, a sample of ten prompts run through an agent; the analytics of the site; the lag of adaptations; the drain of `docs:` debt — every line closed, given an atom or re-rated with a reason; the ticks that slipped past the linter go into its lists and false positives fix the rule; every journal entry of the month still owing a decision gets one, and the regulation is amended with a date and the entries; the owner reads three pages aloud — one new, one most visited, one oldest by `reviews.toml`; the documentation package ships a minor version with a changelog written by hand from the journal (hypothesis until the first monthly rehearsal, A6.3). <status stage=\"spec\" state=\"work\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "heading": "**The monthly loop**, half a day, with the owner: the eight metrics of §9 as a table with their trend; an audit of the corpus — every top-level command, manifest field and kind has a page, the glossary keeps one word to one meaning, terms are introduced where readers look for them, duplicates and dead pages, the `llms` tiers within their budgets, a sample of ten prompts run through an agent; the analytics of the site; the lag of adaptations; the drain of `docs:` debt — every line closed, given an atom or re-rated with a reason; the ticks that slipped past the linter go into its lists and false positives fix the rule; every journal entry of the month still owing a decision gets one, and the regulation is amended with a date and the entries; the owner reads three pages aloud — one new, one most visited, one oldest by `reviews.toml`; the documentation package is published again under the same number, with a dated entry in the changelog written by hand from the journal, for as long as PROP-057 `##VERSION-OVERWRITE-POLICY` holds (hypothesis until the first monthly rehearsal, A6.3). <status stage=\"spec\" state=\"work\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
       "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-MONTHLY"
     },
@@ -80379,10 +80396,10 @@
     },
     {
       "anchor": "LOOP-VERSION",
-      "content_hash": "sha256:16570a28f667ecf461285db001f485326e8b1e17683d7134538a19eb30fa4c82",
+      "content_hash": "sha256:1f909c75cbf8d59cb1fa9291581a0502ca5cea6f4047a62612a1c10c6e2f16f5",
       "doc_path": "common/PROP-058",
       "file": "vibevm/vibespecs/common/PROP-058-documentation-maintenance.xml",
-      "heading": "**The version change**, hours: the owner bumps the product version — no gate on that step; a cheap model records the surface snapshot of the new version against the current release binary, `vibe doc surface --record <new>`, beside the snapshot the last reconciliation or version change left; `vibe doc diff <old> <new>` names the pages to update with a reason each — an empty list is also an answer; the central session updates only the pages named and writes new ones for what appeared without a page, the rest becomes `docs:` debt with an atom; a human changelog between versions is written from the diff by hand and the diff itself is never published; the package ships with the new `[[documents]] version` and the site shows it as `latest`; the journal records how many pages the diff named, how many were updated, and the time (J-017, J-099; PROP-057 `##OBS-SURFACE-SNAPSHOTS`, `##OBS-NOTHING-LEAKS`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "heading": "**The version change**, hours: the owner bumps the product version — no gate on that step; a cheap model records the surface snapshot of the new version against the current release binary, `vibe doc surface --record <new>`, beside the snapshot the last reconciliation or version change left — one snapshot while the number stands still, overwritten in place by `vibe doc surface --record 1.0.0`, for as long as PROP-057 `##VERSION-OVERWRITE-POLICY` holds; `vibe doc diff <old> <new>` names the pages to update with a reason each — an empty list is also an answer; the central session updates only the pages named and writes new ones for what appeared without a page, the rest becomes `docs:` debt with an atom; a human changelog between versions is written from the diff by hand and the diff itself is never published; the package is published again under that same number, with a dated entry in the changelog and the new `[[documents]] version`, and the site shows it as `latest`; the journal records how many pages the diff named, how many were updated, and the time (J-017, J-099; PROP-057 `##OBS-SURFACE-SNAPSHOTS`, `##OBS-NOTHING-LEAKS`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
       "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-VERSION"
     },
