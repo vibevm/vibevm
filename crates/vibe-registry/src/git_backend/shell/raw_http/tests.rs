@@ -25,7 +25,7 @@ fn token_for(repo_url: &str) -> Option<String> {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 1
+    r = 2
 )]
 fn github_https_repositories_map_to_the_raw_host() {
     // With and without the `.git` suffix, with and without userinfo, and
@@ -66,7 +66,7 @@ fn github_takes_branches_and_shas_verbatim() {
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
-    r = 1
+    r = 2
 )]
 fn gitverse_https_repositories_map_to_the_contents_api() {
     assert_eq!(
