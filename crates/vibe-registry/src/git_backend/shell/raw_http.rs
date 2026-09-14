@@ -20,6 +20,13 @@
 //! module cannot interpret, falls through to the archive → clone ladder
 //! below it, unchanged.
 //!
+//! **When a host says "not now".** A rate limit and a server fault are
+//! the two answers that are about the moment rather than about the file,
+//! and falling through to the ladder on either is paying a clone for a
+//! condition that often clears in under a second. Those two, alone, are
+//! retried — briefly, a bounded number of times, and never past the
+//! budget in [`retry`]. Everything else keeps the behaviour below.
+//!
 //! **What it must never do** is turn a cheap read into a wrong answer. A
 //! host that cannot find something answers with one code for several
 //! different facts — the file is absent in that ref, the ref does not
@@ -143,17 +150,90 @@ struct AddressedRead {
 /// `client` is the backend's one client, so a walk over a whole
 /// dependency graph reuses connections instead of shaking hands anew for
 /// every file (see [`build_client`]). `base_override` replaces the
-/// matched host's production base; only a test passes it (see
-/// [`super::ShellGit::with_raw_base`]).
+/// matched host's production base and `sleeper` is where the pauses
+/// between attempts go; only a test passes either (see
+/// [`super::ShellGit::with_raw_base`] and
+/// [`super::ShellGit::with_raw_sleeper`]).
 pub(super) fn try_read(
     client: &reqwest::blocking::Client,
     base_override: Option<&str>,
+    sleeper: &super::Sleeper,
     url: &str,
     refname: &str,
     path: &str,
 ) -> Option<Result<Vec<u8>, GitError>> {
     let read = address(base_override, url, refname, path)?;
 
+    // Ask, and — for the two answers that are about the moment rather
+    // than about the file — ask again. Both bounds are the point: after
+    // [`retry::MAX_ATTEMPTS`] asks, or once the pause budget is gone,
+    // this is the ladder's problem again and nothing below has changed.
+    let mut waited = Duration::ZERO;
+    let mut refusal = None;
+    for attempt in 1..=retry::MAX_ATTEMPTS {
+        let asked = match attempt_read(client, &read, refname, path) {
+            Attempt::Settled(outcome) => return outcome,
+            Attempt::Again { status, after } => {
+                refusal = status;
+                after
+            }
+        };
+        let Some(pause) = retry::pause_before_next(attempt, asked, waited) else {
+            break;
+        };
+        tracing::debug!(
+            target: "vibe_registry::git",
+            url = %read.url,
+            status = refusal,
+            attempt,
+            wait_ms = pause.as_millis() as u64,
+            "https read was refused for now; waiting and asking again"
+        );
+        sleeper.sleep(pause);
+        waited += pause;
+    }
+    match refusal {
+        Some(status) => tracing::debug!(
+            target: "vibe_registry::git",
+            url = %read.url,
+            status,
+            "https read did not answer with the file; falling back to git"
+        ),
+        None => tracing::debug!(
+            target: "vibe_registry::git",
+            url = %read.url,
+            "https read never reached the host; falling back to git"
+        ),
+    }
+    None
+}
+
+/// What one request settled, from the point of view of the read above.
+enum Attempt {
+    /// Nothing is gained by asking again: the file itself, a miss that
+    /// may be reported, or a decision to ask git. The three outcomes of
+    /// [`try_read`], reached on the spot.
+    Settled(Option<Result<Vec<u8>, GitError>>),
+    /// The host refused *now*, not the file. Carries the status that
+    /// said so — `None` when no answer arrived at all — and whatever the
+    /// host's own `Retry-After` asked for.
+    Again {
+        status: Option<u16>,
+        after: Option<Duration>,
+    },
+}
+
+/// One request, and the reading of its answer.
+///
+/// Every `Settled(None)` here logs its own reason: this is where the
+/// read decides it cannot explain what it got, and the line it prints is
+/// the one an operator reads when a package took the long way round.
+fn attempt_read(
+    client: &reqwest::blocking::Client,
+    read: &AddressedRead,
+    refname: &str,
+    path: &str,
+) -> Attempt {
     let mut request = client.get(&read.url);
     if let Some(token) = read.token.as_deref() {
         // Both hosts accept, for a private repository, the same token the
@@ -169,47 +249,39 @@ pub(super) fn try_read(
     );
     let response = match request.send() {
         Ok(r) => r,
-        Err(e) => {
-            tracing::debug!(
-                target: "vibe_registry::git",
-                url = %read.url,
-                error = %e,
-                "https read failed; falling back to git"
-            );
-            return None;
-        }
+        Err(e) => return transport_failure(&read.url, &e, "https read failed"),
     };
     let status = response.status().as_u16();
+    // Before the body: reading it consumes the response, headers and all.
+    let after = retry::retry_after(response.headers());
     let body = match response.bytes() {
         Ok(b) => b,
-        Err(e) => {
-            tracing::debug!(
-                target: "vibe_registry::git",
-                url = %read.url,
-                error = %e,
-                "https read body failed; falling back to git"
-            );
-            return None;
-        }
+        Err(e) => return transport_failure(&read.url, &e, "https read body failed"),
     };
 
     if (200..300).contains(&status) {
         if let Some(bytes) = (read.host.read_body)(&body) {
-            return Some(Ok(bytes));
+            return Attempt::Settled(Some(Ok(bytes)));
         }
         tracing::debug!(
             target: "vibe_registry::git",
             url = %read.url,
             "https read answered a body shape this reader does not know; falling back to git"
         );
-        return None;
+        return Attempt::Settled(None);
     }
     if (read.host.is_miss)(status, &body) && absence_is_authoritative(refname, path) {
-        return Some(Err(GitError::FileNotFoundInRef {
-            url: read.plain_url,
+        return Attempt::Settled(Some(Err(GitError::FileNotFoundInRef {
+            url: read.plain_url.clone(),
             refname: refname.to_string(),
             path: path.to_string(),
-        }));
+        })));
+    }
+    if retry::refused_for_now(status) {
+        return Attempt::Again {
+            status: Some(status),
+            after,
+        };
     }
     tracing::debug!(
         target: "vibe_registry::git",
@@ -217,7 +289,30 @@ pub(super) fn try_read(
         status,
         "https read did not answer with the file; falling back to git"
     );
-    None
+    Attempt::Settled(None)
+}
+
+/// A request that produced no answer: retryable unless the failure
+/// already carries its verdict (see [`retry::worth_another_try`]).
+///
+/// The log line is deliberately printed only for the settling case. A
+/// failure that is about to be retried is announced by the retry line
+/// instead, which says what is waited and for how long; one that is not
+/// retried says why here, exactly as it always did.
+fn transport_failure(url: &str, error: &reqwest::Error, what: &str) -> Attempt {
+    if retry::worth_another_try(error) {
+        return Attempt::Again {
+            status: None,
+            after: None,
+        };
+    }
+    tracing::debug!(
+        target: "vibe_registry::git",
+        url = %url,
+        error = %error,
+        "{what}; falling back to git"
+    );
+    Attempt::Settled(None)
 }
 
 /// The addressing half of [`try_read`]: which URL this read goes to,
@@ -534,6 +629,11 @@ fn is_plain(s: &str) -> bool {
                 })
         })
 }
+
+/// When a refusal is worth asking again, and how long the read waits
+/// before it does — every bound of the backoff, and nothing that makes a
+/// request.
+mod retry;
 
 #[cfg(test)]
 #[path = "raw_http/tests.rs"]

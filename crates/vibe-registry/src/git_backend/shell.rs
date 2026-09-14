@@ -24,6 +24,7 @@ use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
 use std::sync::{Arc, OnceLock};
+use std::time::Duration;
 
 use super::{GitBackend, GitError};
 
@@ -56,6 +57,10 @@ pub struct ShellGit {
     // is no fast path and every read goes to git, which is the same
     // answer as "not a host we know".
     raw_client: OnceLock<Option<reqwest::blocking::Client>>,
+    // Where the fast path's pauses between retries go. Real time in
+    // production; a test hands in a recorder, so a suite that asserts
+    // the backoff schedule never spends it.
+    raw_sleeper: Sleeper,
     // Cached preflight result — populated on first `preflight()` call
     // for this instance. Kept per-instance (not global) so tests with
     // bogus binaries do not poison the cache for instances pointing at
@@ -66,6 +71,35 @@ pub struct ShellGit {
 impl Default for ShellGit {
     fn default() -> Self {
         ShellGit::new()
+    }
+}
+
+/// Where the HTTPS read fast path's pauses go.
+///
+/// A named type rather than a bare closure field for two reasons: the
+/// backend keeps its derived [`Debug`] (a closure has nothing to print),
+/// and `anonymized_for_public` can hand its copy the very same waiting
+/// behaviour instead of quietly reverting to real time.
+#[derive(Clone)]
+pub(super) struct Sleeper(Arc<dyn Fn(Duration) + Send + Sync>);
+
+impl Sleeper {
+    /// Wait `how_long` — really, or however the test that installed this
+    /// one chooses to.
+    pub(super) fn sleep(&self, how_long: Duration) {
+        (self.0)(how_long)
+    }
+}
+
+impl Default for Sleeper {
+    fn default() -> Self {
+        Sleeper(Arc::new(std::thread::sleep))
+    }
+}
+
+impl std::fmt::Debug for Sleeper {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Sleeper(..)")
     }
 }
 
@@ -87,6 +121,7 @@ impl ShellGit {
             force_anonymous: false,
             raw_base: None,
             raw_client: OnceLock::new(),
+            raw_sleeper: Sleeper::default(),
             preflight_cache: OnceLock::new(),
         }
     }
@@ -123,6 +158,21 @@ impl ShellGit {
     /// be shared by every test running in parallel in the same binary.
     pub fn with_raw_base(mut self, raw_base: impl Into<String>) -> Self {
         self.raw_base = Some(raw_base.into());
+        self
+    }
+
+    /// Rebind where the read fast path's pauses between retries go.
+    ///
+    /// Exists for tests, by the same reasoning as [`with_raw_base`] and
+    /// with one more of its own: a suite that asserts a backoff schedule
+    /// by sleeping through it is a suite that gets slower every time the
+    /// schedule grows, and slow tests are how a schedule stops being
+    /// asserted at all. The pause the read decided on is handed here
+    /// instead, where a test can record it and return at once.
+    ///
+    /// [`with_raw_base`]: ShellGit::with_raw_base
+    pub fn with_raw_sleeper(mut self, sleeper: impl Fn(Duration) + Send + Sync + 'static) -> Self {
+        self.raw_sleeper = Sleeper(Arc::new(sleeper));
         self
     }
 
@@ -292,8 +342,14 @@ impl GitBackend for ShellGit {
         // ahead of `preflight` — a read this path serves needs no `git`
         // on the machine at all.
         if let Some(client) = self.raw_client()
-            && let Some(outcome) =
-                raw_http::try_read(client, self.raw_base.as_deref(), url, refname, &normalized)
+            && let Some(outcome) = raw_http::try_read(
+                client,
+                self.raw_base.as_deref(),
+                &self.raw_sleeper,
+                url,
+                refname,
+                &normalized,
+            )
         {
             return outcome;
         }
@@ -408,6 +464,7 @@ impl GitBackend for ShellGit {
             // header the read decides on — so the anonymous variant
             // shares this one's pool rather than opening a second.
             raw_client: OnceLock::from(self.raw_client().cloned()),
+            raw_sleeper: self.raw_sleeper.clone(),
             preflight_cache: OnceLock::new(),
         }))
     }
