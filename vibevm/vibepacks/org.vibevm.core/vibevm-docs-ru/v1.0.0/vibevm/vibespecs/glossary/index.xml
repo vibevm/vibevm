@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Глоссарий</title>
+  <status stage="doc" state="work" audience="user,author,dev,agent"/>
+  <p>Одно определение на термин, и это единственное место, где термин определён. Каждая другая страница ведёт сюда, когда впервые употребляет слово из этого списка; рядом с русским термином стоит английский, потому что команды, манифесты и спецификации говорят по-английски.</p>
+  <adaptation title="адаптация">
+    <p>Версия документации на другом языке (*adaptation*): отдельный пакет, который зеркалит источник блок в блок и свободен предложение за предложением. В этом руководстве «перевод» и «адаптация» значат одно и то же. См. *перевод*.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-SOURCE-LANGUAGE"/>
+  </adaptation>
+  <agent-session title="сессия агента">
+    <p>Один запуск агента-кодера в проекте (*agent session*): от момента, когда он читает файл с инструкциями, до момента, когда останавливается. Стартовая полоса — это то, что vibe готовит к началу сессии.</p>
+  </agent-session>
+  <anchor title="якорь">
+    <p>Идентификатор раздела или факта внутри спецификации (*anchor*), часть адреса после `#`. Опубликованный якорь никогда не меняется; переименование оставляет надгробие.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE"/>
+  </anchor>
+  <block-number title="номер блока">
+    <p>Порядковый номер `pNN`, который каждый блок страницы документации получает при сборке (*block number*); он один и тот же в веб-странице, в Markdown и в XML, так что человек и агент ссылаются на одно место. Он называет текущий текст и может сдвинуться после правки, как номер строки.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"/>
+  </block-number>
+  <boot-lane title="стартовая полоса">
+    <p>Упорядоченный список чтения, по которому агент идёт в начале сессии (*boot lane*): управляемый блок в файле с инструкциями, затем `STATIC.md` целиком, затем записи `INDEX.md`. Вычисляется vibe из графа зависимостей, руками не пишется никогда.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
+  </boot-lane>
+  <boot-snippet title="стартовый фрагмент">
+    <p>Вклад пакета в стартовую полосу (*boot snippet*): один короткий текст, объявленный в `[boot_snippet]` с категорией, который каждый потребитель читает при каждом старте сессии. У пакетов документации его нет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
+  </boot-snippet>
+  <capability title="возможность">
+    <p>Абстрактное умение, которое пакет предоставляет или требует (*capability*), записывается как `namespace:name` с необязательным ограничением версии; при установке резолвер сводит требующих с предоставляющими.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+  </capability>
+  <community title="документация сообщества">
+    <p>Документация пакета, которая объявляет свой предмет, но предметом не названа (*community documentation*): на сайте показывается со своим издателем, ниже официальной полки. См. *официальная документация*.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE"/>
+  </community>
+  <companion title="компаньон">
+    <p>Пакет, связанный с другим по имени ради умолчания об официальности и ничем больше (*companion*): документация `&lt;name&gt;-docs` пакета или перевод `&lt;docname&gt;-&lt;lang&gt;` документации. Компаньон держит собственную линию версий и не входит в унисон семейства.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-DOCS"/>
+  </companion>
+  <contribution title="вклад">
+    <p>Привязка обработчика к точке расширения (*contribution*), объявленная таблицей `[[extension]]` в пакете или проекте; единица, которую жизненный цикл выполняет и о которой отчитывается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+  </contribution>
+  <coordinate title="координата">
+    <p>Имя пакета (*coordinate*): группа, косая черта и имя, `org.vibevm.world/wal`, с `@version`, когда имеется в виду версия. Вид в неё не входит.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"/>
+  </coordinate>
+  <deploy-profile title="профиль выкладки">
+    <p>Именованный упорядоченный список целей и провайдеров, которые применяют к ним упакованные артефакты (*deploy profile*); `vibe deploy` выполняет один профиль, `vibe undeploy` откатывает его.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
+  </deploy-profile>
+  <effective-set title="действующее множество">
+    <p>Пакеты, которые метки видимости пропускают от вашего корня (*effective set*): то, что видит подбор версий, что записывает лок-файл и что держит дерево зависимостей. Приватное ребро пакета, который не ваш корень, лежит вне его.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"/>
+  </effective-set>
+  <embedded-registry title="встроенный реестр">
+    <p>Пакеты из дерева исходников собранного из них vibe, к которым он обращается автоматически как к реестру (*embedded registry*): первым — в сборке разработчика, после объявленных реестров — в распространяемой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT"/>
+  </embedded-registry>
+  <extension-point title="точка расширения">
+    <p>Именованное место в жизненном цикле, к которому привязывается вклад (*extension point*): фаза, слот внутри фазы или позиция в компиляторе полосы, записывается как `family:name`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
+  </extension-point>
+  <section id="fact" title="факт">
+    <p>Одна заякоренная единица спецификации со статусом (*fact*): правило, решение, вводная. В XML — элемент, названный по своему идентификатору, с `fact="true"`; в Markdown — абзац, начинающийся с `@fact:ID`. Адресуемый атом, на который ссылается агент.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
+  </section>
+  <family title="семейство">
+    <p>Набор пакетов с общей основой имени, которые движутся в унисон (*family*): бандл `&lt;family&gt;`, языковой гайд `&lt;family&gt;-lang`, сервер `&lt;family&gt;-mcp`. Изменение любого члена поднимает всех до одной версии.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>
+  </family>
+  <feature title="фича">
+    <p>Необязательный добавочный набор содержимого пакета (*feature*), объявленный в `[features]` и включаемый при установке; фичи могут зависеть от фич.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE"/>
+  </feature>
+  <fingerprint title="отпечаток">
+    <p>Хэш поставляемого дерева пакета (*fingerprint*), половина идентичности версии пакета; записывается как `content_hash` в лок-файл и проверяется при каждом скачивании.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HASH-UNCHANGED"/>
+  </fingerprint>
+  <freshness-fingerprint title="отпечаток свежести">
+    <p>Хэш объявленных входов прогона фазы (*freshness fingerprint*), записанный под `.vibe/`; фаза, чей отпечаток свежести не изменился, при следующем прогоне пропускается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
+  </freshness-fingerprint>
+  <friend-closure title="замыкание друзей">
+    <p>Пакеты, с которыми проект подружился (*friend closure*): напрямую, через `friend = true` или строку `friends`, либо по цепочке рёбер «только для друзей». Зависимость «только для друзей» доходит лишь до проектов, чьё замыкание друзей содержит её поставщика.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-FRIENDS"/>
+  </friend-closure>
+  <git-source title="git-источник">
+    <p>Зависимость, объявленная git-репозиторием и тегом, коммитом или веткой вместо реестра (*git source*); дисциплина идентичности и отпечатков та же, а ветка при обновлении обходится заново.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY"/>
+  </git-source>
+  <handler title="обработчик">
+    <p>То, что выполняет вклад (*handler*): встроенная функция, скрипт, бинарник, нативная библиотека или промпт агента.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"/>
+  </handler>
+  <hook title="хук">
+    <p>Скрипт пакета `pre-install` или `post-install` (*hook*), выполняемый в слоте пакета; установка пакета и есть согласие его запустить, а его последствия не отслеживаются.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#WHAT-HOOKS-ARE"/>
+  </hook>
+  <index-registry title="индекс (реестра)">
+    <p>Репозиторий рядом с пакетами реестра, где записаны сводка и отпечаток каждой опубликованной версии (*index*); кэш, который ускоряет поиск и холодные установки и никогда не служит истиной.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE"/>
+  </index-registry>
+  <kind title="вид">
+    <p>Для чего пакет нужен (*kind*), один из восьми: `flow`, `feat`, `stack`, `tool`, `lang`, `mcp`, `doc`, `app`. Метаданные, а не идентичность; набор растёт только поправкой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
+  </kind>
+  <lifecycle title="жизненный цикл">
+    <p>Фиксированный порядок шагов сборки, которые выполняет vibe (*lifecycle*): однофазный цикл `clean` и девятифазный цикл `default` от `validate` до `deploy`. См. *фаза*.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
+  </lifecycle>
+  <link-type title="тип связи">
+    <p>Как стартовый фрагмент зависимости попадает в полосу потребителя (*link type*): `static` — вкомпилирован в `STATIC.md`, или `dynamic` — перечислен в `INDEX.md` и читается по требованию; задаёт потребитель, предлагает пакет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUSION-TYPES"/>
+  </link-type>
+  <lock-file title="лок-файл">
+    <p>`vibe.lock`: записанный результат подбора (*lock file*), один на рабочее пространство, с точной версией, отпечатком и происхождением каждого пакета. Пишет vibe, коммитите вы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
+  </lock-file>
+  <managed-block title="управляемый блок">
+    <p>Область между строками `&lt;vibevm&gt;` и `&lt;/vibevm&gt;` в конце `CLAUDE.md`, `AGENTS.md` и `GEMINI.md` (*managed block*), единственная часть этих файлов, которую пишет vibe; она указывает агенту на стартовую полосу.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW"/>
+  </managed-block>
+  <manifest title="манифест">
+    <p>`vibe.toml`: единственный файл, который вы пишете, чтобы описать проект, пакет или рабочее пространство (*manifest*); его таблицы решают, какую роль играет узел.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>
+  </manifest>
+  <mcp-server title="MCP-сервер">
+    <p>Программа, с которой агент общается по Model Context Protocol (*MCP server*). Собственный сервер vibe открывает пакеты проекта; пакет вида `mcp` поставляет свои серверы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#MCP-KIND-DEF"/>
+  </mcp-server>
+  <mirror title="зеркало">
+    <p>Запасной адрес того же реестра (*mirror*), к которому обращаются ради доступности и который проверяют по тем же отпечаткам; в лок-файл не записывается никогда.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
+  </mirror>
+  <official title="официальная документация">
+    <p>Документация, у которой сходятся рёбра (*official documentation*): предмет называет пакет в `[documentation]` или по соглашению `-docs`, а пакет называет предмет в `[[documents]]`. Одна из них может быть первичной. Вычисляется при каждом рендере, флагом не хранится нигде.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-NO-OFFICIAL-FLAG"/>
+  </official>
+  <override title="переопределение">
+    <p>Замещающий источник для одной координаты, который обходит реестры (*override*); в лок-файле помечен, чтобы никто не принял его за опубликованную версию. Тем же словом названа таблица `[override]`, переписывающая метки видимости рёбер, которыми вы не владеете.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE"/>
+  </override>
+  <package title="пакет">
+    <p>Единица, которую устанавливает vibe (*package*): папка с манифестом и тем текстом или инструментами, которые она приносит; публикуется как собственный репозиторий, опознаётся по координате, версии и хэшу содержимого. Пакет — это проект, который сделали устанавливаемым.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
+  </package>
+  <phase title="фаза">
+    <p>Один шаг жизненного цикла (*phase*): `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Назвать фазу — значит выполнить все фазы до неё.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"/>
+  </phase>
+  <project title="проект">
+    <p>Любая папка с `vibe.toml` (*project*); потребитель пакетов, помеченный таблицей `[project]`, или рабочее пространство таких потребителей.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
+  </project>
+  <provider title="провайдер">
+    <p>То, что отвечает за исполнение механизма (*provider*): встроенная или поставленная пакетом реализация шага сборки, упаковки или выкладки либо модельная конечная точка за обработчиком-агентом. Выбирается точным маршрутом или пином.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER"/>
+  </provider>
+  <receipt title="квитанция">
+    <p>Запись, которую выкладка делает о каждом созданном ресурсе (*receipt*): что, где, под каким поколением, каким профилем владеется. Единственное основание для удаления.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"/>
+  </receipt>
+  <registry title="реестр">
+    <p>Хостинг-организация, где публикуются пакеты, по репозиторию на пакет (*registry*); проект перечисляет реестры, которым доверяет, по порядку.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
+  </registry>
+  <relay title="эстафета">
+    <p>Почтовый ящик под `.vibe/agentic/`, куда vibe кладёт инструкцию, которую не может выполнить сам (*relay*); агент разбирает его командой `vibe command`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS"/>
+  </relay>
+  <scrape title="scrape">
+    <p>Окончательное снятие слоя vibe с проекта, по контракту, с планом и доказательством здоровья; у слова нет устоявшегося русского эквивалента, команда так и называется — `vibe scrape`. Не путать с `clean`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY"/>
+  </scrape>
+  <skill title="навык">
+    <p>Файл, который пакет объявляет в `[[skill]]` и который чему-то учит агента (*skill*); `vibe skill install` проецирует его в папки навыков агентов.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"/>
+  </skill>
+  <specification title="спецификация">
+    <p>Нормативный текст пакета или проекта под `vibevm/vibespecs/` (*specification*): адресуемые единицы со статусами, в Markdown или в XML-диалекте. То, что документация цитирует и никогда не пересказывает.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL"/>
+  </specification>
+  <store title="хранилище">
+    <p>Общий для машины кэш скачанных версий пакетов под `~/.vibe/cache/` (*store*), с ключом по идентичности, общий для всех проектов, очищается только по просьбе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"/>
+  </store>
+  <subject title="предмет">
+    <p>Пакет, который документирует пакет документации (*subject*); назван в его таблице `[[documents]]` с диапазоном версий.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED"/>
+  </subject>
+  <subskill title="поднавык">
+    <p>Выбираемый срез содержимого пакета (*subskill*), включаемый контекстом потребителя, например версией библиотеки, которую использует проект.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-ON-SUBSKILLS"/>
+  </subskill>
+  <traceability-map title="карта прослеживаемости">
+    <p>`specmap.json`: сгенерированный граф единиц спецификации, помеченных элементов кода и рёбер между ними (*traceability map*); его проверяет сборка и запрашивают `vibe explain`, `vibe query` и `vibe select`.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#FORCE-INVARIANTS-ARE-MACHINE-CHECKED"/>
+  </traceability-map>
+  <translation title="перевод">
+    <p>Отдельный пакет документации на другом языке (*translation*), который называет свой источник в `[translates]` и зеркалит его дерево; официален, когда опубликован группой источника под именем `&lt;docname&gt;-&lt;lang&gt;`. См. *адаптация*.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION"/>
+  </translation>
+  <version-constraint title="ограничение версии">
+    <p>То, что просит манифест (*version constraint*): диапазон вроде `^1.0`, точная `=1.2.0` или ничего — тогда новейшая стабильная. Лок-файл записывает ту одну версию, которую резолвер выбрал внутри него.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
+  </version-constraint>
+  <workspace title="рабочее пространство">
+    <p>Репозиторий, разрабатывающий несколько пакетов вместе (*workspace*); объявляется таблицей `[workspace]` со списком путей участников; один лок-файл в корне и один общий подбор версий на всех участников.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#WORKSPACE-TABLE"/>
+  </workspace>
+</spec>
