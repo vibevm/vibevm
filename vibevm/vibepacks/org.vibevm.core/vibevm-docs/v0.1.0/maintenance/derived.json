@@ -226,8 +226,8 @@
       "bytes": 4193
     },
     "reference/machine-formats.xml#jtd-schema:schemas/doc_manifest.jtd.json": {
-      "sha256": "0b9abfa4c3cb695828b5d6ca7d0a55aae15c73394c596385e0ba0d87e093be1e",
-      "bytes": 8286
+      "sha256": "edf83e906e26f9fc3515813f9249eb01d5a19f7b5dbbd90b3e0751af1291a10a",
+      "bytes": 9742
     },
     "reference/machine-formats.xml#jtd-schema:schemas/doc_surface.jtd.json": {
       "sha256": "4070a2e8d810f2a7d7d5792f18e69795e12614498dbb75d153be3a76459ccb14",
@@ -302,8 +302,8 @@
       "bytes": 3136
     },
     "reference/manifest.xml#manifest-field:org.vibevm.core/vibevm-docs": {
-      "sha256": "ed080c2e039a59ce988a5483e8e7be9fcf19ad204962f6ee73f7b3c65fd2d02d",
-      "bytes": 2494
+      "sha256": "64ff4c952bea4296f1aeaf36b482ee9ac2051fe19255d00fa7998f46ec93b999",
+      "bytes": 3522
     }
   }
 }

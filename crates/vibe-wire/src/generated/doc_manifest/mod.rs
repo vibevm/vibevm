@@ -19,6 +19,13 @@ pub struct DocManifest {
     /// a language selector and a catalogue row show before any page is opened.
     pub package: DocPackage,
 
+    /// What the package asked its navigation to look like (PROP-057 `##NAV-
+    /// PINNED`), present only when it asked. Absent means the navigation is
+    /// the pages in the order below and nothing else, which is what every
+    /// documentation written before the field said.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub navigation: Option<Navigation>,
+
     /// Every page of the package, in the reading order the layer law gives them
     /// — stable text before text that moves with the product (PROP-048 `##THE-
     /// LAYER-LAW`). A package with no pages yet writes `[]`, never an absent
@@ -304,6 +311,41 @@ pub struct DocumentedSubject {
 }
 
 pub use crate::generated::shared::Group;
+
+/// The two things a package may say about how its pages are listed (PROP-057
+/// `##NAV-PINNED`): which of them stand first, and what the folders they live
+/// in are called. It changes only where the named pages stand — every other
+/// page keeps the order the layer law gave it — so a navigation is a small
+/// correction to a list the manifest already holds, never a second table of
+/// contents beside it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Navigation {
+    /// The document paths the site and the local reader list first, in the
+    /// order given — `start/what-vibevm-is`, the page's address under the spec
+    /// root without its extension. Written even when empty: a package that
+    /// declared `[navigation]` for its section titles alone pins nothing, and
+    /// the emptiness is the statement.
+    pub pinned: Vec<String>,
+
+    /// One row per top-level folder of the page tree, with the title the
+    /// navigation shows for it. A folder the package does not name is shown
+    /// under its own directory name, which is a fallback and not a translation.
+    pub sections: Vec<NavigationSection>,
+}
+
+/// One folder of the page tree under the name a reader sees.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NavigationSection {
+    /// The folder, as the page paths spell it: the first segment of
+    /// `start/index.xml` is `start`. An id, not a title, so a translation of
+    /// the manual names the same sections as its source while showing other
+    /// words.
+    pub id: String,
+
+    /// What the navigation shows for that folder, in the package's own language
+    /// — one documentation is one language, so this needs no second field.
+    pub title: String,
+}
 
 /// Which of the two page skeletons a page follows (the package's own
 /// `AUTHORING.md` §7, under PROP-057 `##SEO-PAGE-TEMPLATE` and `##MANDATE-

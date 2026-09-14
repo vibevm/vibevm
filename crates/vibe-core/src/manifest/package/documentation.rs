@@ -176,6 +176,107 @@ impl MediaDecl {
     }
 }
 
+/// `[navigation]` — where a documentation asks its own pages to stand.
+///
+/// Two statements and no third: which pages are listed first, and what
+/// the folders of the page tree are called. Everything else keeps the
+/// order the layer law already gave it (PROP-048 `##THE-LAYER-LAW`,
+/// PROP-057 `##NAV-PINNED`), so this is a correction to a list the
+/// manifest already holds rather than a second table of contents that
+/// would have to be kept in step with the first.
+///
+/// ```
+/// use vibe_core::manifest::NavigationDecl;
+///
+/// let n: NavigationDecl = toml::from_str(r#"
+///     pinned = ["start/what-vibevm-is", "start/index"]
+///
+///     [[section]]
+///     id = "start"
+///     title = "Start"
+/// "#).unwrap();
+/// assert_eq!(n.pinned, vec!["start/what-vibevm-is", "start/index"]);
+/// assert_eq!(n.sections[0].title, "Start");
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NavigationDecl {
+    /// The document paths listed first, in the order given — a page's
+    /// address under the spec root WITHOUT its extension, so that the
+    /// pin survives a projection into another format.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pinned: Vec<String>,
+    /// `[[navigation.section]]` — one row per top-level folder of the
+    /// page tree.
+    #[serde(default, rename = "section", skip_serializing_if = "Vec::is_empty")]
+    pub sections: Vec<NavigationSectionDecl>,
+}
+
+impl NavigationDecl {
+    /// `true` when the table says nothing at all.
+    pub fn is_empty(&self) -> bool {
+        self.pinned.is_empty() && self.sections.is_empty()
+    }
+}
+
+/// `[[navigation.section]]` — one folder of the page tree under the name
+/// a reader sees.
+///
+/// The id is the folder as the page paths spell it, never the title, so
+/// an adaptation names the same sections as its source and shows other
+/// words for them.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NavigationSectionDecl {
+    /// The first path segment of the pages it holds — `start`.
+    pub id: String,
+    /// What the navigation shows, in the package's own language.
+    pub title: String,
+}
+
+/// `true` for a well-formed pinned document path: relative, spelled with
+/// forward slashes, no extension, no `.` or `..` segment, no empty
+/// segment.
+///
+/// A form check and not an existence check, for the same reason
+/// `[media]` refuses only a shape that could point outside the package:
+/// whether the page is there is a question about a tree, and the gate is
+/// where a tree is read (PROP-057 `##NAV-PINNED`).
+pub(crate) fn pinned_path_form_is_valid(value: &str) -> bool {
+    if value.is_empty() || value.starts_with('/') || value.contains('\\') {
+        return false;
+    }
+    if value.chars().any(char::is_whitespace) {
+        return false;
+    }
+    let mut segments = value.split('/').peekable();
+    let mut any = false;
+    while let Some(segment) = segments.next() {
+        if segment.is_empty() || segment == "." || segment == ".." {
+            return false;
+        }
+        // The extension is the pipeline's business: a pinned path names
+        // a DOCUMENT, and the same document is served as three
+        // projections under three extensions.
+        if segments.peek().is_none() && segment.contains('.') {
+            return false;
+        }
+        any = true;
+    }
+    any
+}
+
+/// `true` for a section id: exactly one path segment, which is what a
+/// top-level folder of the page tree is.
+pub(crate) fn section_id_form_is_valid(value: &str) -> bool {
+    !value.is_empty()
+        && !value.contains('/')
+        && !value.contains('\\')
+        && !value.chars().any(char::is_whitespace)
+        && value != "."
+        && value != ".."
+}
+
 /// The upper bound on `abstract`, in characters (PROP-057
 /// `##CARD-DESCRIPTION-AND-ABSTRACT`: «bounded at about a thousand
 /// characters»). Counted in `char`s, not bytes, so a Russian adaptation

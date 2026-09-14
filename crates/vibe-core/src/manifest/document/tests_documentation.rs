@@ -366,6 +366,86 @@ fn only_a_doc_package_may_declare_authorship() {
     );
 }
 
+/// `[navigation]` carries two statements and nothing else: the pages
+/// listed first, in the order written, and the names of the folders.
+#[test]
+fn a_documentation_may_pin_pages_and_name_its_sections() {
+    let manifest = doc_manifest(
+        "\n[navigation]\npinned = [\"start/what-vibevm-is\", \"start/index\"]\n\n\
+         [[navigation.section]]\nid = \"start\"\ntitle = \"Start\"\n\n\
+         [[navigation.section]]\nid = \"model\"\ntitle = \"Model\"\n",
+    )
+    .expect("the navigation parses");
+    let navigation = manifest.navigation.as_ref().expect("the table");
+    assert_eq!(
+        navigation.pinned,
+        vec!["start/what-vibevm-is", "start/index"]
+    );
+    assert_eq!(navigation.sections.len(), 2);
+    assert_eq!(navigation.sections[0].id, "start");
+    assert_eq!(navigation.sections[1].title, "Model");
+
+    assert!(doc_manifest("").expect("optional").navigation.is_none());
+}
+
+/// A pin names a DOCUMENT, so it carries no extension: one document is
+/// served as three projections, and a pin at one of them would be a pin
+/// at one format.
+#[test]
+fn a_pinned_path_carrying_an_extension_is_refused() {
+    // Spelled as TOML writes them, so the backslash is the escaped one a
+    // Windows author would reach for.
+    for (spelled, value) in [
+        ("start/index.xml", "start/index.xml"),
+        ("/start/index", "/start/index"),
+        ("start\\\\index", "start\\index"),
+        ("../x", "../x"),
+        ("", ""),
+    ] {
+        let message = doc_manifest(&format!("\n[navigation]\npinned = [\"{spelled}\"]\n"))
+            .expect_err("not a document path")
+            .to_string();
+        assert!(message.contains(value), "{message}");
+        assert!(
+            message.contains("spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"),
+            "{message}"
+        );
+    }
+}
+
+/// A section is one folder of the page tree, and it is named because a
+/// reader sees the name — so a nested id and an empty title are both
+/// refused.
+#[test]
+fn a_section_is_one_folder_under_a_name_a_reader_sees() {
+    let nested = doc_manifest("\n[[navigation.section]]\nid = \"start/deep\"\ntitle = \"Start\"\n")
+        .expect_err("a section is one segment")
+        .to_string();
+    assert!(nested.contains("start/deep"), "{nested}");
+
+    let blank = doc_manifest("\n[[navigation.section]]\nid = \"start\"\ntitle = \"  \"\n")
+        .expect_err("an empty title shows a blank heading")
+        .to_string();
+    assert!(blank.contains("title"), "{blank}");
+}
+
+/// Only documentation has a page tree, so only documentation may say
+/// how it is listed.
+#[test]
+fn only_a_doc_package_may_declare_a_navigation() {
+    let message = Manifest::parse_str(
+        "[package]\nname = \"wal\"\ngroup = \"org.vibevm\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\
+         \n[navigation]\npinned = [\"start/index\"]\n",
+    )
+    .expect_err("a flow has no pages")
+    .to_string();
+    assert!(message.contains("kind = \"flow\""), "{message}");
+    assert!(
+        message.contains("spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"),
+        "{message}"
+    );
+}
+
 /// The card is optional for every other kind — nothing here forces a
 /// flow to grow a title.
 #[test]

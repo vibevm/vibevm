@@ -45,7 +45,7 @@ use std::path::Path;
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
     AdaptedSource, Audience, Authorship, CardMedia, DocManifest, DocPackage, DocPage,
-    DocumentedSubject,
+    DocumentedSubject, Navigation, NavigationSection,
 };
 
 use crate::citations::SpecSources;
@@ -226,6 +226,12 @@ fn assemble(
         manifest: DocManifest {
             schema_version: SCHEMA_VERSION,
             package,
+            // Carried as the package wrote it, and applied to nothing
+            // here: `pages` stays in the layer law's order, and where a
+            // pinned page STANDS is the reader's business
+            // (`##NAV-PINNED`). A projection that also reordered the
+            // list would give the site two orders to choose between.
+            navigation: card.navigation.clone(),
             pages: rows,
         },
         unreadable: set.unreadable.iter().map(|u| u.rel.clone()).collect(),
@@ -265,6 +271,9 @@ struct Card {
     lang: String,
     /// Who wrote the prose, when the package says so.
     authorship: Option<Authorship>,
+    /// What the package asked its navigation to look like, when it
+    /// asked.
+    navigation: Option<Navigation>,
     /// `<coordinate>` → the semver constraint, in declaration order.
     documents: Vec<(String, String)>,
     translates: Option<(String, String)>,
@@ -317,6 +326,7 @@ impl Card {
                     vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE.to_owned()
                 }),
             authorship: field("authorship").as_deref().and_then(authorship),
+            navigation: navigation(&parsed),
             documents: relation(&parsed, "documents"),
             translates: relation(&parsed, "translates").into_iter().next(),
         })
@@ -338,6 +348,47 @@ fn authorship(word: &str) -> Option<Authorship> {
         "mixed" => Some(Authorship::Mixed),
         _ => None,
     }
+}
+
+/// Read `[navigation]` as the wire carries it: the pinned paths in the
+/// order they were written, and one row per named section.
+///
+/// Read as data like the rest of the card, and `None` when the package
+/// says nothing — which is the state of every documentation written
+/// before the table existed, and the state the site renders as «the
+/// pages in the order the manifest gives them».
+fn navigation(parsed: &toml::Value) -> Option<Navigation> {
+    let table = parsed.get("navigation")?;
+    let strings = |value: Option<&toml::Value>| -> Vec<String> {
+        value
+            .and_then(toml::Value::as_array)
+            .map(|entries| {
+                entries
+                    .iter()
+                    .filter_map(toml::Value::as_str)
+                    .map(str::to_owned)
+                    .collect()
+            })
+            .unwrap_or_default()
+    };
+    let sections = table
+        .get("section")
+        .and_then(toml::Value::as_array)
+        .map(|rows| {
+            rows.iter()
+                .filter_map(|row| {
+                    Some(NavigationSection {
+                        id: row.get("id").and_then(toml::Value::as_str)?.to_owned(),
+                        title: row.get("title").and_then(toml::Value::as_str)?.to_owned(),
+                    })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    Some(Navigation {
+        pinned: strings(table.get("pinned")),
+        sections,
+    })
 }
 
 /// One relation table of a package's manifest — `documents` or

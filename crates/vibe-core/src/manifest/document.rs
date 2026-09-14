@@ -49,8 +49,8 @@ use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
     DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, LinkType, ManifestWire,
-    McpServerDecl, MediaDecl, Obsoletes, OverrideTable, PackageMeta, Provides, Recommends,
-    Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl, VisibilityMeta,
+    McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable, PackageMeta, Provides,
+    Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl, VisibilityMeta,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -177,6 +177,13 @@ pub struct Manifest {
     /// own tree (PROP-057 §7). Optional for every kind.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub media: Option<MediaDecl>,
+
+    /// `[navigation]` — the pages a documentation lists first and the
+    /// names of its sections (PROP-057 `##NAV-PINNED`). Legal only in a
+    /// `doc` package: it is a statement about a page tree, and only
+    /// documentation has one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub navigation: Option<NavigationDecl>,
 
     /// `[hooks]` — pre/post-install scripts this package runs in its slot
     /// (PROP-020). Universal, not bridge-only (package-role).

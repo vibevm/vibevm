@@ -31,6 +31,9 @@ use std::path::Path;
 use specmark::cell;
 use vibe_core::PackageKind;
 use vibe_core::manifest::Manifest;
+// Where a package's pages live (PROP-052), borrowed from the pipeline
+// that walks them rather than spelled a second time here.
+use vibe_doc::pages::SPEC_ROOT;
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
 
@@ -41,6 +44,10 @@ pub struct DocPackageContractCheck;
 /// The front door of a package tree, and the one file this cell asks a
 /// `doc` package for by name.
 const README: &str = "README.md";
+
+/// The extension a page is authored in. A pin names the DOCUMENT, so
+/// this is added back to find the file the pin points at.
+const PAGE_EXTENSION: &str = "xml";
 
 /// Read the project's own manifest, or `None` when there is none or it
 /// is refused. A refused manifest is `manifest_validity`'s finding, not
@@ -125,6 +132,37 @@ impl Check for DocPackageContractCheck {
                      kind and point at it with [documentation])"
                 ),
             );
+        }
+
+        // A pin names a page, and the manifest grammar can only check
+        // that it LOOKS like one: whether the page is there is a
+        // question about a tree, and this is where a tree is read. The
+        // path is spelled as the pin spells it — without the extension —
+        // because that is the spelling the author has to correct.
+        if let Some(navigation) = manifest.navigation.as_ref() {
+            for pinned in &navigation.pinned {
+                if project_root
+                    .join(SPEC_ROOT)
+                    .join(format!("{pinned}.{PAGE_EXTENSION}"))
+                    .is_file()
+                {
+                    continue;
+                }
+                report.err(
+                    CheckId::DocPackageContract,
+                    Some(manifest_path.clone()),
+                    None,
+                    format!(
+                        "[navigation].pinned names `{pinned}`, and this package carries no page \
+                         at `{SPEC_ROOT}/{pinned}.{PAGE_EXTENSION}` — a pin moves a page to the \
+                         top of the navigation, so a pin at nothing moves nothing and hides a \
+                         typo in plain sight \
+                         (violates \
+                         spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED; \
+                         fix: correct the path, or drop the pin if the page is gone)"
+                    ),
+                );
+            }
         }
 
         // The front door. A reader who arrived at the repository rather
