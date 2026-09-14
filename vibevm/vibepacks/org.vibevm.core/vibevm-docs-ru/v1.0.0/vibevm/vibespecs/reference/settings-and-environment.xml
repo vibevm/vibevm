@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Настройки, пути и окружение</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>vibe держит собственные файлы в одной папке в вашей домашней директории и читает несколько переменных окружения. Эта страница перечисляет содержимое папки, каждую переменную и то, что побеждает, когда они расходятся.</p>
+  <example ref="vars"/>
+  <the-folder title="Папка: ~/.vibe/">
+    <table>
+      <tr><td>Путь</td><td>Что держит</td></tr>
+      <tr><td>`~/.vibe/cache/`</td><td>машинное хранилище скачанных пакетов, по идентичности</td></tr>
+      <tr><td>`~/.vibe/registries/`</td><td>git-клоны реестров, используемые для скачивания пакетов</td></tr>
+      <tr><td>`~/.vibe/opt/`</td><td>установленные версии vibe, их лаунчеры в `opt/bin/` и скачанная оболочка читалки</td></tr>
+      <tr><td>`~/.vibe/registry.toml`</td><td>машинные реестры, зеркала и переопределения, подмешиваемые после проектных</td></tr>
+      <tr><td>`~/.vibe/config.toml`</td><td>пользовательская конфигурация: `[env]`, `[install]`, `[net]`</td></tr>
+      <tr><td>`~/.vibe/settings.toml`</td><td>ваши предпочтения приложения, первый из трёх слоёв</td></tr>
+      <tr><td>`~/.vibe/&lt;host&gt;.publish.token`, `~/.vibe/git.publish.token`</td><td>токены публикации, доступные для чтения только вам; никогда не печатаются, никогда не копируются</td></tr>
+      <tr><td>`~/.vibe/search-cache/`</td><td>кэшированные результаты поиска со сроком жизни</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REGISTRIES-KEEP-THEIR-OWN-FILE"/>
+    <p>На Windows папка — `%USERPROFILE%\.vibe\`. Старое место под `~/.vibevm/` не читается никогда; перенесите всё, что там держали.</p>
+  </the-folder>
+  <inside-a-project title="Внутри проекта">
+    <table>
+      <tr><td>Путь</td><td>Что держит</td></tr>
+      <tr><td>`.vibe/settings.toml`</td><td>общие предпочтения команды, закоммичены; второй слой</td></tr>
+      <tr><td>`.vibe/settings.local.toml`</td><td>ваша тонкая настройка для одного проекта, игнорируется git; третий слой</td></tr>
+      <tr><td>`.vibe/lifecycle.toml`, `.vibe/trace/`, `.vibe/agentic/`</td><td>отпечатки жизненного цикла, трассы компиляции и почтовый ящик эстафеты агента; машинное состояние, не коммитится</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L2-REPO-SHARED"/>
+    <p>Предпочтения сливаются слой за слоем: скаляр из более высокого слоя заменяет, таблицы сливаются глубоко, массивы заменяются целиком. `vibe prefs list` показывает каждое разрешённое значение с его происхождением, `vibe prefs show-origins` — [вклад](../glossary/index.xml#contribution) каждого слоя, а `vibe prefs set` пишет один ключ в один слой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-SCALARS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#MERGE-ARRAYS"/>
+    <p>Три слоя: машина, `~/.vibe/settings.toml`, репозиторий, `.vibe/settings.toml`, и ваша собственная копия для одного проекта, `.vibe/settings.local.toml`, которую `vibe init` добавляет в `.gitignore`, чтобы она никогда не закоммитилась случайно. Старшинство между ними — один фиксированный закон, записанный в бинарнике. Отсутствующий или сломанный файл считается отсутствующим с предупреждением, никогда не ошибкой. Каждый ключ объявлен с типом и умолчанием, а неизвестный ключ — громкое предупреждение на старте и в `vibe prefs check`. Эти файлы держат то, как vibe выглядит и ведёт себя для вас; свойства проекта живут в манифесте, а закоммиченный файл настроек не может нести секретов. Команды: `vibe prefs get`, `set` с `--layer`, `list`, `check`, `migrate` и `show-origins`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L1-USER-MACHINE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#L3-USER-PROJECT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#gitignore-autogen"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#precedence-law"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#app-prefs-not-project"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#no-secrets-in-committed"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command"/>
+    <p>`vibe prefs` без аргументов открывает экран настроек в терминале: дерево страниц слева, отрисованное тем же виджетом, что и `vibe tree`, и форма справа. Правка поля пишет в слой, который вы выбираете: по умолчанию ваш собственный проектный слой внутри проекта и машинный слой вне его. Поле по запросу показывает происхождение, побеждающий слой и затенённые, а задать или очистить можно один слой, не трогая остальные. Поиск находит настройки по ключу, имени, описанию и синонимам.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget-req"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-context"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-view"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-edit"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#settings-search"/>
+  </inside-a-project>
+  <variables title="Переменные окружения">
+    <table>
+      <tr><td>Переменная</td><td>Эффект</td></tr>
+      <tr><td>`VIBE_SETTINGS`</td><td>переносит всю папку `~/.vibe/` по заданному пути, используемому как есть</td></tr>
+      <tr><td>`VIBE_REGISTRY_CACHE`</td><td>переносит кэш клонов реестров</td></tr>
+      <tr><td>`VIBE_OFFLINE`</td><td>запрещает доступ к сети, как `--offline`; истинные значения `1`, `true`, `yes`, `on`</td></tr>
+      <tr><td>`VIBE_INVOKED_BY`</td><td>называет вызывающего агента, как `--invoked-by`; проставляется в каждый JSON-отчёт</td></tr>
+      <tr><td>`VIBE_UNATTENDED`</td><td>отвечает на все подтверждения и отказывает мастерам, как `--unattended`</td></tr>
+      <tr><td>`VIBE_NO_DEFAULT_REGISTRY`</td><td>игнорирует встроенный реестр vibe, собранного из исходников</td></tr>
+      <tr><td>`VIBEVM_INDEX_URL_&lt;REGISTRY&gt;`</td><td>расположение индекса одного реестра; `none` выключает его индекс</td></tr>
+      <tr><td>`VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;`</td><td>токен, который читает реестр с `auth = "token-env"`</td></tr>
+      <tr><td>`VIBEVM_PUBLISH_TOKEN`</td><td>токен публикации; побеждает файлы токенов</td></tr>
+      <tr><td>`VIBEVM_HOME`, `VIBEVM_INSTALL_ROOT`</td><td>справочно: где живут установленные версии; истина — собственное расположение работающего бинарника, а `vibe vars diff` показывает, где они расходятся</td></tr>
+      <tr><td>`VIBE_LOG`</td><td>фильтр журнала процесса</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-ENV-DEFAULTING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-ENV-ADVISORY"/>
+  </variables>
+  <precedence title="Старшинство">
+    <p>Для одной и той же настройки флаг в командной строке побеждает переменную окружения, та побеждает конфигурацию проекта, та — пользовательскую, та — встроенное умолчание. Тот же порядок для [реестров](../glossary/index.xml#registry): список проекта побеждает список машины.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
+  </precedence>
+  <edge-cases title="Особые случаи и правила">
+    <p>Файлы токенов — поверхностные секреты: ограничьте их своим пользователем, никогда не коммитьте, никогда никуда не вставляйте их содержимое. vibe затирает токен в каждом выводе и ошибке, и дисциплина с вашей стороны та же.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-SURFACE-SECRET"/>
+    <p>`vibe show config` — вид конфигурации проекта с происхождением каждого значения; `vibe prefs` — файл предпочтений приложения. Это разные файлы и разные команды.</p>
+  </edge-cases>
+</spec>

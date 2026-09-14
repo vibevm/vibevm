@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Использовать приватный реестр</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Компания может держать пакеты у себя и пользоваться vibe без изменений. Эта страница нацеливает проект или целую машину на это место, с поисковым каталогом рядом или без него, а публичный оставляет запасным.</p>
+  <prompt id="private-registry">Добавь приватный реестр с именем acme по адресу git@github.com:acme-specs первым реестром проекта VibeVM в текущей папке, с аутентификацией по SSH, оставь публичный реестр vibespecs запасным и проверь, что оба доступны.
+    <needs>навык vibevm, установленный у вашего агента; SSH-ключ, который принимает приватный хост, загруженный у агента; проект с `vibe.toml`</needs>
+    <outcome>`vibe registry list` показывает `acme` первым и `vibespecs` вторым; `vibe registry test` сообщает, что оба доступны</outcome>
+    <assert>vibe registry list --quiet</assert>
+    <assert>vibe registry test</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`: команда записывает новый блок [реестра](../glossary/index.xml#registry) в начало списка в [манифесте](../glossary/index.xml#manifest). С этого момента каждое разрешение спрашивает сначала `acme`, потом публичный реестр, а пакет, который есть в обоих, приходит из `acme`. `vibe registry test` проверяет каждый реестр на доступность и аутентификацию, ничего не скачивая.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Добавьте реестр в проект. Адрес — корень организации, а не репозиторий пакета:</p>
+    <example ref="registry-add"/>
+    <p>2. Выберите режим аутентификации флагом `--auth`. Значения: `none` для публичного чтения, `ssh` для ключей и `credential-helper` для системного помощника git. `token-env` читает токен из переменной окружения, названной по хосту.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>
+    <p>3. Проверьте командой `vibe registry test`: она сообщает по каждому реестру, ответила ли организация и какую аутентификацию приняла, ничего не скачивая.</p>
+  </by-hand>
+  <machine-wide title="Для каждого проекта на машине">
+    <p>Положите тот же блок реестра в `~/.vibe/registry.toml`. Он подмешивается после собственного списка каждого проекта, так что проекты, которые называют свои реестры, ничего не замечают, а проекты без реестров наследуют машинные. Проект, который не называет ни одного реестра, а `vibe init` сегодня создаёт именно такие, пользуется списком машины; так корпоративное умолчание становится умолчанием каждого нового проекта.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
+  </machine-wide>
+  <redirects title="Делегировать пакет другому реестру">
+    <p>Реестр может указывать на пакет, который живёт в другом месте. Вместо пакета репозиторий с его именем несёт один файл, `vibe-redirect.toml`, с таблицей `[redirect]`: `target_url` называет репозиторий, где пакет лежит на самом деле, а `ref_policy` говорит, какой тег там брать: тот же самый по умолчанию или один `pinned_ref` для всех версий. Потребитель, который ставит пакет, разницы не видит; резолвер идёт по указателю один раз, никогда по цепочке, и записывает адрес заглушки в [лок-файл](../glossary/index.xml#lock-file) полем `via_redirect`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-STUB"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-MARKER-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-STEP-HOP-LIMIT"/>
+    <p>Версии, которые видит потребитель, — это теги заглушки, а не цели: владелец реестра допускает каждую версию, помечая тегом заглушку. `vibe registry redirect` создаёт заглушку, `redirect-sync` после подтверждения копирует в неё теги цели, а `redirect-update` меняет указатель. Когда у заглушки меняется цель, потому что сопровождающий переехал на другой хост, потребитель принимает переезд флагом `--trust-redirect`; молча vibe за изменившейся целью не идёт.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-TAG-VISIBILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-CLI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-TRUST-FLAG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
+  </redirects>
+  <tokens title="Токены">
+    <p>Токен никогда не попадает в файл, который пишет vibe, и никогда не появляется в его выводе. С `--auth token-env` vibe читает его из `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` во время работы и отправляет только по шифрованному соединению. Держите переменную в профиле оболочки или в секретном [хранилище](../glossary/index.xml#store) вашего CI, а не в репозитории.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
+  </tokens>
+  <edge-cases title="Особые случаи и правила">
+    <p>Приватный реестр без [индекса](../glossary/index.xml#index-registry) всё равно работает: поиск его пропускает, а установка клонирует, что нужно. Добавьте рядом с пакетами репозиторий индекса и укажите на него переменной `VIBEVM_INDEX_URL_ACME`, чтобы поиск и холодные установки стали быстрыми.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
+    <p>[Зеркало](../glossary/index.xml#mirror) — не второй реестр. Для альтернативного адреса тех же пакетов, проверяемых по тем же [отпечаткам](../glossary/index.xml#fingerprint), используйте `vibe registry set-mirror`; для другого источника пакетов — `registry add`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
+    <p>В скрипте, который должен заметить, что приватный реестр лежит, передайте `vibe install` флаг `--auth-required`: тогда ошибка аутентификации останавливает установку, вместо того чтобы идти дальше к публичному запасному.</p>
+  </edge-cases>
+</spec>

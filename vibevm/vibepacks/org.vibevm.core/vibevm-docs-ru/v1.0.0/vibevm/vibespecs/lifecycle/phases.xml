@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Жизненный цикл: от validate до deploy</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>У сборки программ есть фиксированный порядок шагов, и vibe называет их: проверить дерево, произвести сгенерированные исходники, собрать, протестировать, дать агенту создать то, что может только агент, проверить результат, упаковать, выложить. Каждый шаг выполняется, только когда изменилось что-то, от чего он зависит.</p>
+  <example ref="deploy-plan"/>
+  <the-phases title="Девять фаз">
+    <p>У vibe два [жизненных цикла](../glossary/index.xml#lifecycle). У `clean` одна [фаза](../glossary/index.xml#phase), и он удаляет выведенное состояние. У `default` девять фаз в фиксированном порядке: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Назвать фазу — значит выполнить и все фазы до неё: `vibe test` проверяет, ставит, генерирует, собирает и тестирует.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"/>
+    <table>
+      <tr><td>Фаза</td><td>Что делает</td></tr>
+      <tr><td>`validate`</td><td>дешёвая предварительная проверка: манифест разбирается, объявленные расширения и профили правильно оформлены; без сети</td></tr>
+      <tr><td>`install`</td><td>установка пакетов, описанная в других местах этого руководства: разрешить, скачать, скопировать, сгенерировать стартовые файлы</td></tr>
+      <tr><td>`generate`</td><td>выведенные исходники из спецификаций и промптов, записанные туда, куда говорит стек проекта</td></tr>
+      <tr><td>`build`</td><td>детерминированная сборка стека проекта</td></tr>
+      <tr><td>`test`</td><td>детерминированные проверки: тестовый прогон стека и ворота дисциплины, которые вносят установленные пакеты</td></tr>
+      <tr><td>`create`</td><td>необязательный агентный шаг: работа, которую может сделать только агент, долгая и недетерминированная, выключена, пока проект её не включит</td></tr>
+      <tr><td>`verify`</td><td>поздние ворота качества над тем, что собрано и создано</td></tr>
+      <tr><td>`package`</td><td>собрать дистрибутивы, не трогая ни одного места назначения</td></tr>
+      <tr><td>`deploy`</td><td>применить упакованные артефакты к явным местам назначения через именованный профиль</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-BUILD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-DEPLOY"/>
+  </the-phases>
+  <fresh title="Ничто не выполняется дважды впустую">
+    <p>Каждый прогон фазы записывает [отпечаток](../glossary/index.xml#fingerprint) входов, которые она объявила; следующий прогон пропускает фазу, чьи входы не изменились. Свежесть судится по каждому [вкладу](../glossary/index.xml#contribution) отдельно, так что один устаревший шаг перезапускается сам по себе, а соседи остаются пропущенными. Именно поэтому `vibe deploy` дёшево набрать дважды: во второй раз он в основном сообщает, что всё свежее.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#FRESHNESS-IS-PER-CONTRIBUTION"/>
+  </fresh>
+  <the-plan title="Увидеть прежде, чем сделать">
+    <p>`--plan` сообщает, что сделал бы прогон фазы, и ничего не меняет; каждый настоящий прогон печатает перед выполнением вклады, которые выполнит: их идентификатор, точку, к которой они привязаны, вид обработчика и откуда они взялись. Ничто в жизненном цикле не выполняется невидимо.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL"/>
+    <p>`vibe clean &lt;phase&gt;` ставит цикл очистки перед любой фазой `default`: `vibe clean build` удаляет выведенное состояние, а затем проверяет, ставит, генерирует и собирает.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL"/>
+  </the-plan>
+  <where-steps-come-from title="Откуда берутся шаги">
+    <p>Фазы фиксированы; то, что выполняется внутри них, вносят пакеты. Пакет стека привязывает сборщик и тестовый прогон языка, пакет дисциплины привязывает свои ворота, проект может привязать собственные скрипты. Установить пакет — значит согласиться на выполнение его вкладов, а [манифест](../glossary/index.xml#manifest) проекта может выключить вклад или заменить его по идентификатору.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INSTALL-IS-CONSENT"/>
+    <p>Жизненный цикл — каркас, а не универсальный агент для кода: он выполняет детерминированную механику, а агентную работу передаёт тому агенту, который его запустил.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLE-IS-FRAMEWORK"/>
+  </where-steps-come-from>
+  <edge-cases title="Особые случаи и правила">
+    <p>Упавший шаг останавливает цепочку; фазы до него сохраняют результаты, а сообщение об ошибке называет вклад, который упал.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE"/>
+    <p>Старые глаголы сохраняют смысл рядом с жизненным циклом: `vibe check`, `vibe bin build`, `vibe skill` и `vibe cache` не фазы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#EXISTING-VERBS-STAY"/>
+    <p>Отпечатки и записи о последнем прогоне живут в `.vibe/lifecycle.toml`, машинном состоянии, которое не коммитят; удалить его стоит одного полного прогона.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME"/>
+  </edge-cases>
+</spec>

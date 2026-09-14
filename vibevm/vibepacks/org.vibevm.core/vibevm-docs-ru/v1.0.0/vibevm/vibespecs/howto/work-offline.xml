@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Работать без сети</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>В самолёте или за файрволом vibe продолжает работать из того, что уже есть на машине. Эта страница скачивает нужное до отъезда и ставит из него без сети.</p>
+  <prompt id="work-offline">Перед тем как я уйду в офлайн, скачай в машинное хранилище всё, что нужно проекту VibeVM в текущей папке, плюс пакет org.vibevm.world/multi-user-planning, затем проверь хранилище и покажи мне, что офлайн-установка этого проекта проходит.
+    <needs>навык vibevm, установленный у вашего агента; доступ по сети сейчас; проект с `vibe.toml`</needs>
+    <outcome>`vibe cache list` показывает пакеты проекта и лишний; `vibe cache check` сообщает, что каждая запись цела; `vibe install --offline` завершается без единого запроса по сети</outcome>
+    <assert>vibe cache check</assert>
+    <assert>vibe reinstall --force --offline --assume-yes</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe cache add` для лишнего пакета: команда разрешает его вместе со всем замыканием зависимостей и скачивает каждый узел в [хранилище](../glossary/index.xml#store), не касаясь проекта. Один раз, пока сеть есть, он выполняет `vibe install`, чтобы собственные пакеты проекта тоже оказались в хранилище, затем `vibe cache check`, чтобы сверить каждую запись с её [отпечатком](../glossary/index.xml#fingerprint). Наконец он выполняет `vibe install --offline`: подбор версий и скачивание обслуживаются только из хранилища, и если чего-то не хватает, команда громко падает, а не ставит частичный граф.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Прогрейте хранилище пакетом и его зависимостями. Внутри проекта источник — его [реестры](../glossary/index.xml#registry); вне проекта — реестры всей машины:</p>
+    <example ref="cache-add"/>
+    <p>2. Посмотрите и проверьте, что лежит в хранилище:</p>
+    <example ref="cache-list"/>
+    <example ref="cache-check"/>
+    <p>3. Установите без сети:</p>
+    <example ref="install-offline"/>
+  </by-hand>
+  <switching-it-on title="Три способа включить офлайн-режим">
+    <p>Флаг `--offline` у любой команды; переменная окружения `VIBE_OFFLINE=1`; или настройка `offline = true` в секции `[net]` файла `~/.vibe/config.toml`. Флаг сильнее переменной, переменная сильнее настройки. По умолчанию vibe работает онлайн.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING"/>
+  </switching-it-on>
+  <air-gapped title="Целая команда без сети">
+    <p>Для машины, которая никогда не видит реестр, `vibe registry vendor` записывает папку со всеми пакетами, на которые ссылается [лок-файл](../glossary/index.xml#lock-file), готовую служить [зеркалом](../glossary/index.xml#mirror) по адресу `file://` на той стороне. Отпечатки едут вместе с ней, так что зеркало проверяется, как любое другое.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
+  </air-gapped>
+  <edge-cases title="Особые случаи и правила">
+    <p>Если офлайн-установка отказывает пакету, который уже лежит в хранилище, значит, реестры проекта на этой машине ни разу не клонировали и vibe не может узнать, какие версии существуют; одна онлайн-установка в любом проекте клонирует их, а зеркалу `file://` клон не нужен вовсе.</p>
+    <p>Офлайн-подбор видит хранилище по состоянию на последнее обновление: версия, опубликованная после того, как вы ушли в офлайн, невидима, пока вы не вернётесь и не выполните `vibe registry sync` или онлайн-установку.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH"/>
+    <p>Пакетом в хранилище можно пользоваться, даже когда его реестр больше не перечисляет; пакет, который до хранилища не добрался, — жёсткая ошибка с именем недостающей [координаты](../glossary/index.xml#coordinate).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
+  </edge-cases>
+</spec>

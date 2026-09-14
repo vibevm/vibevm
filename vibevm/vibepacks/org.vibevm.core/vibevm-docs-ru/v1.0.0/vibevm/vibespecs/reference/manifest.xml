@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Манифест: vibe.toml</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>`vibe.toml` — единственный файл, который вы пишете, чтобы описать проект или пакет: его имя, от чего он зависит, откуда берутся пакеты и что он доставляет. Эта страница перечисляет каждую таблицу и поле с их смыслом.</p>
+  <one-file title="Один файл, три роли">
+    <p>У каждого узла, будь то проект-потребитель, публикуемый пакет или корень рабочего пространства, есть файл с именем `vibe.toml`. Присутствующие таблицы решают роль: `[project]` помечает потребителя, который никогда не публикуется, `[package]` — публикуемый пакет, `[workspace]` — координатора участников; первые две исключают друг друга, третья сочетается с любой из них или ни с одной.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
+    <p>Неизвестные ключи отвергаются, а не игнорируются: [манифест](../glossary/index.xml#manifest), написанный для более нового vibe, чем тот, что его читает, не разбирается, и ошибка называет виновный ключ.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DENY-UNKNOWN-FIELDS"/>
+  </one-file>
+  <package-table title="[package]">
+    <table>
+      <tr><td>Поле</td><td>Смысл</td></tr>
+      <tr><td>`name`</td><td>имя пакета, kebab-case, уникальное внутри группы</td></tr>
+      <tr><td>`group`</td><td>пространство имён издателя, перевёрнутый домен вроде `org.vibevm.world`; обязательно; `(group, name)` — идентичность</td></tr>
+      <tr><td>`kind`</td><td>один из восьми видов; метаданные, а не идентичность</td></tr>
+      <tr><td>`version`</td><td>семантическая версия этого пакета</td></tr>
+      <tr><td>`epoch`, `format`</td><td>эпоха манифеста пакета и форма его содержимого (`simple` по умолчанию, `normal` для раскладки из contract и source)</td></tr>
+      <tr><td>`authors`, `license`, `description`, `homepage`, `keywords`</td><td>карточка, которую показывает каждый реестр</td></tr>
+      <tr><td>`title`, `abstract`</td><td>человекочитаемое имя и сводка из четырёх вопросов, показываемые на полках документации; обязательны для пакетов `doc`, иначе необязательны</td></tr>
+      <tr><td>`describes`</td><td>Package URL исходной библиотеки, которую этот пакет документирует или оборачивает, для поиска по совпадению версий</td></tr>
+      <tr><td>`publish`</td><td>позиция участника рабочего пространства при публикации</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-MANDATORY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS"/>
+    <p>`[project]` несёт те же описательные поля для потребителя, без строки версии и без вида.</p>
+  </package-table>
+  <requirements title="[requires] и его соседи">
+    <table>
+      <tr><td>Таблица</td><td>Смысл</td></tr>
+      <tr><td>`[requires.packages]`</td><td>по ключу на требуемую координату; значение — строка ограничения или инлайновая таблица с `version`, источником `git` или `path`, `link` для типа включения в старт и метками видимости `access`, `friend` и `exclude`</td></tr>
+      <tr><td>`[visibility]`</td><td>`friends`, `unfriend`, `allow-friends` и `ignore-concept-warnings` для пакета в целом; см. [Видимость зависимостей](../model/dependency-visibility.xml)</td></tr>
+      <tr><td>`[override]` (таблица)</td><td>переписывает метки видимости на рёбрах, которыми вы не владеете, ключом `"a -&gt; b"`, или `allow-friends` провайдера, ключом по его координате</td></tr>
+      <tr><td>`[requires] capabilities`</td><td>абстрактные умения, которые может удовлетворить любой провайдер, `namespace:name@constraint`</td></tr>
+      <tr><td>`[[requires_any]]`</td><td>дизъюнкция: ровно одно из `one_of` должно быть удовлетворено</td></tr>
+      <tr><td>`[provides] capabilities`</td><td>умения, которые предлагает этот пакет</td></tr>
+      <tr><td>`[obsoletes]`, `[conflicts]`</td><td>пакеты, которые этот вытесняет, и пакеты, которые не могут сосуществовать с ним</td></tr>
+      <tr><td>`[features]`</td><td>необязательные, аддитивные наборы содержимого со списком `default`; фичи могут зависеть от фич</td></tr>
+      <tr><td>`[compatibility]`</td><td>`min_vibe_version` и `requires_kinds`</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LINK-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-PACKAGES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-CAPABILITIES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-ANY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-PROVIDES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-OBSOLETES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-CONFLICTS"/>
+    <p>[Фича](../glossary/index.xml#feature) добавляет содержимое и никогда ничего не убирает и не противоречит; `default` перечисляет фичи, активные, когда ничего не сказано, а `--no-default-features` их опускает. Когда два пакета требуют один пакет с разными фичами, резолвер материализует его один раз с объединением. В командной строке активацией управляют `vibe install &lt;coordinate&gt; --features a,b`, `--no-default-features` и `--all-features`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-ADDITIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-UNIFICATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-INSTALL-FEATURES"/>
+  </requirements>
+  <sources title="Откуда берутся пакеты">
+    <table>
+      <tr><td>Таблица</td><td>Смысл</td></tr>
+      <tr><td>`[[registry]]`</td><td>упорядоченный список источников пакетов: `name`, `url` (корень организации), `naming`, `auth`, необязательные `index_url` и `token_env`</td></tr>
+      <tr><td>`[[mirror]]`</td><td>альтернативный адрес для одного реестра или для любого, пробуется по `priority` и проверяется по отпечатку</td></tr>
+      <tr><td>`[[override]]`</td><td>замена источника для одной координаты, в обход реестров</td></tr>
+      <tr><td>`[boot]`</td><td>настройки загрузки для всего рабочего пространства; сегодня `link` по умолчанию</td></tr>
+      <tr><td>`[i18n]`</td><td>языки `preferred` и `fallback` в проекте; `canonical` и `available` в пакете</td></tr>
+      <tr><td>`[workspace] members`</td><td>пути участников рабочего пространства, глобы разрешены</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-ARRAY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION"/>
+    <p>Локализованный файл лежит рядом с каноническим, с тегом языка перед расширением, `README.ru.md` рядом с `README.md`. Каждый пакет поставляет каноническую форму каждого файла, который перечисляет, а переводы только добавляют к ней, так что проект без перевода на предпочитаемый язык ставится без ошибки. `vibe install --language ru` задаёт предпочтение на один запуск.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SIDECAR-PATTERN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
+  </sources>
+  <deliveries title="Что доставляет пакет">
+    <table>
+      <tr><td>Таблица</td><td>Смысл</td><td>Где законна</td></tr>
+      <tr><td>`[boot_snippet]`</td><td>`source`, файл фрагмента внутри пакета, и `category` для его места в порядке старта; необязательные `when` и предлагаемый `link`</td><td>все виды, кроме `doc`</td></tr>
+      <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, необязательные целевые `agents`: [навык](../glossary/index.xml#skill), который агент может установить</td><td>все виды</td></tr>
+      <tr><td>`[[binary]]`</td><td>`name` и `crate`: инструмент, который vibe собирает при установке и запускает через `vibe bin exec`</td><td>виды с кодом; не `doc`</td></tr>
+      <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: сервер, регистрируемый у агентов</td><td>только `mcp`</td></tr>
+      <tr><td>`[hooks]`</td><td>базовые пути скриптов `pre-install` и `post-install`</td><td>пакеты</td></tr>
+      <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, необязательные селектор и config: вклад в жизненный цикл</td><td>пакеты и проекты</td></tr>
+      <tr><td>`[[embedded_source]]`</td><td>неизменяемый внешний источник, на который пакет ссылается, не вендоря его</td><td>пакеты-мосты</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
+    <p>[Навык](../glossary/index.xml#skill) — секция манифеста, а не отдельный вид. `include` сужает, какие файлы из `path` проецируются в папку навыков агента, а его отсутствие проецирует всё дерево. Навык может взять своё тело из объявленного `[[embedded_source]]` и добавить ресурсы под папкой `references/`, с тем же отбором include и теми же проверками обхода.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-LAWS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOKS-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+  </deliveries>
+  <documentation-tables title="Документация и её предметы">
+    <table>
+      <tr><td>Таблица</td><td>Смысл</td><td>Где законна</td></tr>
+      <tr><td>`[[documents]]`</td><td>`package` и ограничение `version`: [предмет](../glossary/index.xml#subject), который описывает эта документация; обязательно, повторяемо</td><td>`doc`</td></tr>
+      <tr><td>`[documentation]`</td><td>`primary` (не больше одной координаты) и `official` (сколько угодно): документация, которую пакет называет своей</td><td>все виды</td></tr>
+      <tr><td>`[translates]`</td><td>`package` и `version` документации, которую зеркалит этот перевод</td><td>`doc`</td></tr>
+      <tr><td>`[media]`</td><td>`icon`, `banner`, `preview`: исходные файлы изображений в пределах ограничений карточки</td><td>все виды</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE"/>
+  </documentation-tables>
+  <example-manifest title="Полный пример">
+    <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs-ru"/>
+    <p>Манифест этого перевода, сгенерированный из самого пакета, показывает пакет `doc` с карточкой, [предметом](../glossary/index.xml#subject) и таблицей `[translates]`, которая называет источник.</p>
+  </example-manifest>
+</spec>

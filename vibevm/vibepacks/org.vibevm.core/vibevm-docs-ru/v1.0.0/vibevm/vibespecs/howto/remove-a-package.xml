@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Удалить пакет</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Удаление пакета убирает его текст из проекта и из списка чтения агента, а всё написанное вами оставляет нетронутым.</p>
+  <prompt id="remove-a-package">Удали пакет org.vibevm.world/wal из проекта VibeVM в текущей папке и подтверди, что в списке чтения от него ничего не осталось.
+    <needs>навык vibevm, установленный у вашего агента; проект, в котором пакет установлен</needs>
+    <outcome>требование исчезло из `vibe.toml`, запись — из `vibe.lock`, папка пакета — из `vibevm/vibedeps/`, а `vibe tree` больше не перечисляет его фрагмент; `vibe check` не находит ошибок</outcome>
+    <assert>test ! -e vibevm/vibedeps/org.vibevm.world.wal</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe uninstall org.vibevm.world/wal`. vibe показывает, что уйдёт: строка требования в [манифесте](../glossary/index.xml#manifest), запись в локе, папка пакета в дереве зависимостей и любая зависимость, которая была нужна только этому пакету. После подтверждения он удаляет их и пересобирает стартовые файлы, так что следующая [сессия агента](../glossary/index.xml#agent-session) больше не читает фрагмент пакета. Ваши файлы, включая два ваших стартовых файла и всё в `vibevm/vibespecs/`, не трогаются никогда.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-AUTHORED"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Удалите по [координате](../glossary/index.xml#coordinate); версия не нужна:</p>
+    <example ref="uninstall"/>
+    <p>2. Проверьте список чтения:</p>
+    <example ref="tree"/>
+  </by-hand>
+  <derived-state title="Как убрать выведенное состояние, не удаляя пакеты">
+    <p>Иногда нужен чистый лист, а не граф поменьше: перед сборкой, после обновления инструмента или чтобы доказать, что дерево можно собрать заново. `vibe clean` удаляет дерево зависимостей и сгенерированные стартовые файлы, а манифест, [лок-файл](../glossary/index.xml#lock-file), всё написанное вами и машинное [хранилище](../glossary/index.xml#store) оставляет. `vibe clean install` соединяет два шага в один.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"/>
+    <p>Команда отказывается работать вне проекта, чтобы по ошибке не вымести постороннюю папку.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT"/>
+  </derived-state>
+  <edge-cases title="Особые случаи и правила">
+    <p>Удаление пакета, который нужен другому установленному пакету, оставляет общую зависимость на месте; удаляются только пакеты, которые больше никому не нужны.</p>
+    <p>Машинное хранилище сохраняет байты пакета после удаления. Поставить его снова позже — бесплатно по сети; `vibe cache clean --package` освобождает место, если вы хотите убрать его с машины совсем.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE"/>
+    <p>Удаление пакета не отменяет того, что сделал его установочный скрипт, если он был: последствия [хука](../glossary/index.xml#hook) не отслеживаются, и это намеренно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+  </edge-cases>
+</spec>

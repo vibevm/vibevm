@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Написать пакет lang</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Пакет lang учит агента писать на языке или в нотации: идиомы, ограничения, форма хорошего файла. Эта страница пишет такой пакет и объясняет, как vibe распознаёт в нём языковую дисциплину.</p>
+  <prompt id="write-a-lang-package">Создай пакет lang org.acme/sql-style в текущем проекте VibeVM, как пакет в дереве под vibevm/vibepacks/: руководство о том, как наша команда пишет SQL. Дай ему стартовый фрагмент, который называет три правила, которым агент должен следовать всегда, и документ-руководство с полными идиомами, примерами и причинами. Запусти на нём vibe check.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в корне</needs>
+    <outcome>`vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibe.toml` объявляет `kind = "lang"` со стартовым фрагментом; у руководства под `vibevm/vibespecs/` разделы с якорями, которые цитирует фрагмент; `vibe check` не находит ошибок</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/sql-style/v0.1.0 --quiet</assert>
+    <assert>grep -q "kind = \"lang\"" vibevm/vibepacks/org.acme/sql-style/v0.1.0/vibe.toml</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент создаёт скелет пакета, пишет руководство и его фрагмент так же, как пишут их для flow, и ставит вид `lang`. От flow это отличается жанром, а не механикой. Flow говорит, как работает команда; пакет lang говорит, как писать на чём-то. Вид сообщает агенту, [реестру](../glossary/index.xml#registry) и сайту, что перед ними, ещё до того, как файл открыт.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
+  </what-happens>
+  <what-a-lang-is title="Что такое пакет lang, а что нет">
+    <p>Жанр шире языков программирования: подходит руководство по языку запросов, нотации конфигурации, диалекту документации или домашнему стилю языка. Не подходит связка инструментов; это stack. Примеры в публичном реестре — руководства по языкам AI-Native для Rust, TypeScript и Go, каждое поставляет руководство, набор карточек и запускаемый тулчейн.</p>
+    <p>Язык AI-Native распознаётся ровно по одному признаку: по зависимости от общего ядра дисциплины, `org.vibevm.ai-native/core-ai-native`. Не по группе и не по имени. Третья сторона может опубликовать собственную языковую дисциплину в своей группе, и её распознают так же, так что дисциплина — не закрытый клуб.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAM-CORE"/>
+  </what-a-lang-is>
+  <families title="Когда язык приносит инструменты">
+    <p>Языковое руководство, которое поставляет ещё и инструменты, проверщик, форматер, оракул типов, становится [семейством](../glossary/index.xml#family). Пакет руководства — `&lt;family&gt;-lang`; пакет сервера `&lt;family&gt;-mcp` обслуживает те же инструменты для агентов; бандл `&lt;family&gt;` закрепляет оба на одной версии. Участники двигаются в унисон; потребитель требует бандл и получает проверенный набор.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#FAMILY-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#UNISON-LAW"/>
+    <p>Основа семейства ведёт каждую именованную поверхность: крейты, бинарники, [навыки](../glossary/index.xml#skill) и сервер несут префикс `&lt;family&gt;`, так что всё одного языка сортируется и читается вместе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#SURFACE-NAMING-LAW"/>
+  </families>
+  <by-hand title="Руками">
+    <p>1. Создайте слот пакета, затем поставьте `kind = "lang"` в его [манифесте](../glossary/index.xml#manifest):</p>
+    <example ref="init-lang"/>
+    <p>2. Внутри слота напишите `vibevm/vibespecs/boot/sql-style.xml` с правилами, которым агент должен следовать каждый раз. Руководство положите под `vibevm/vibespecs/lang/sql-style/`, с причинами, идиомами и примерами.</p>
+    <p>3. Объявите `[boot_snippet] source = "vibevm/vibespecs/boot/sql-style.xml"`, `category = "stack"`, чтобы правила языка шли после flow-пакетов команды в списке чтения потребителя.</p>
+    <p>4. Проверьте: `vibe check --path vibevm/vibepacks/org.acme/sql-style/v0.1.0`.</p>
+  </by-hand>
+  <edge-cases title="Особые случаи и правила">
+    <p>Что из принесённого языком можно запустить, отвечает `vibe tools`, а не вид: [стартовая полоса](../glossary/index.xml#boot-lane) говорит, какие дисциплины установлены, реестр инструментов — что они принесли.</p>
+    <p>Пока вида `lang` не было, языковые руководства были stack-пакетами; пакет `stack`, который на самом деле руководство, должен перейти в `lang` при следующей версии, чтобы слово значило одно.</p>
+  </edge-cases>
+</spec>

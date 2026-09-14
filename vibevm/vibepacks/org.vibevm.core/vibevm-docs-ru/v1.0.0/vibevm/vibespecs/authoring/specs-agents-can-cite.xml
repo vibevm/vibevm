@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Пишите спецификации, которые агент может процитировать</title>
+  <status stage="doc" state="work" audience="author,agent"/>
+  <p>Текст в пакете полезен агенту, только если у каждого правила в нём есть адрес. Эта страница показывает форму такого текста: именованные разделы, одна мысль на единицу, статус на каждой и адрес, который после публикации не меняется никогда.</p>
+  <two-processes title="Зачем адрес">
+    <p>Человек и агент делят один репозиторий и ничего больше: ни коридора, ни общей памяти, ни интонации. Дерево [спецификаций](../glossary/index.xml#specification) — единственный канал между ними, а канал работает, когда на сообщение можно указать. «Поправь число повторов» отправляет агента гадать; «поправь `spec://org.acme/notes-flow/flows/notes/PROTOCOL#RETRY-COUNT`» отправляет его к одной строке. Второе стоит около двадцати токенов; первое стоит сотни и может попасть не в то правило.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#THE-SPEC-TREE-IS-THE-ONLY-CHANNEL"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#FOR-POINT-CORRECTIONS-THE-URI-WINS"/>
+  </two-processes>
+  <the-address title="Адрес">
+    <p>`spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;path&gt;/&lt;document&gt;#&lt;anchor&gt;`: [координата](../glossary/index.xml#coordinate) пакета, необязательная версия, путь документа внутри `vibevm/vibespecs/` без расширения и [якорь](../glossary/index.xml#anchor). Версия — удобство, а не обязанность: без неё адрес разрешается по самой свежей установленной версии. Якоря — это идентификаторы разделов и [фактов](../glossary/index.xml#fact) в одном адресном пространстве, так что правило цитируется одинаково, будь оно разделом или одним предложением.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#URI-SCHEME-IS-THE-FULL-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-VERSION-OPTIONAL"/>
+    <example ref="explain"/>
+  </the-address>
+  <the-unit title="Единица">
+    <p>Единица — один заголовок с якорем и текст под ним до следующего заголовка; она несёт одно решение или одно правило, понятна сама по себе и помещается на страницу. Если единице нужно «а ещё», это две единицы. Контрактные утверждения используют MUST, SHOULD и MAY; читатель никогда не должен гадать, обязывает ли предложение. Проверяемые утверждения стоят вне блоков кода, потому что у блока нет якоря, а инструкция внутри него не проверена по построению.</p>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#ONE-UNIT-CARRIES-ONE-DECISION"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#CONTRACT-STATEMENTS-USE-RFC-2119-VERBS"/>
+    <rule ref="spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE"/>
+  </the-unit>
+  <the-dialect title="Две сериализации, одна модель">
+    <p>Спецификация пишется в Markdown или на XML-диалекте проекта, и обе формы разбираются в одну модель документа. В XML раздел — элемент, названный по своему якорю, `&lt;retry-policy title="3. Повторы"&gt;`. Правило — элемент, названный по своему идентификатору, с атрибутом `fact="true"` и статусом. В Markdown то же правило — абзац, который открывается `@fact:RETRY-COUNT` и закрывается `@status:spec/done`. Инструмент, который ничего не знает о вашем словаре, всё равно находит каждое правило одной проверкой атрибута, а конвертер переводит одну форму в другую, сообщая обо всём, что не пережило бы обратный путь.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-SECTION-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#FACTS-GROUP-ELEMENT"/>
+    <p>Статус на каждой единице говорит, где она стоит: `spec/done` для устоявшегося правила, `impl/done`, когда оно уже воплощено в коде, `spec/work` для черновика. Два регистра идентификаторов несут сигнал бесплатно: идентификатор в верхнем регистре помечает правило с обязывающим весом, в нижнем — вводную или заметку.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
+    <example ref="convert"/>
+    <p>`vibe refactor convert-source --to xml` или `--to markdown` конвертирует файлы или целые папки, пропуская дерево зависимостей и сгенерированные файлы. Он пишет соседнюю форму и удаляет оригинал одним действием, так что дерево никогда не держит обе формы одного документа. Перед записью он конвертирует результат обратно и сравнивает: побайтно совпавший обратный путь конвертируется молча, а потеря комментариев или раскладки отвергается с описанием по каждому файлу, пока вы не подтвердите или не передадите `--force`. Изменение смысла отвергается всегда, потому что это дефект конвертера, а не вашего файла. `--dry-run` сообщает о каждом файле и ничего не пишет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-SOURCE-SURFACE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"/>
+  </the-dialect>
+  <directives title="Директивы: use, embed и read">
+    <p>Спецификация может подтянуть другую по адресу. `#use spec://…` подтягивает весь раздел верхнего уровня, содержащий адресованный узел, но не его соседей; `#embed` вклеивает ровно адресованный узел, не больше. Слияние по умолчанию — `:add`, так что текст интерфейса не нужно повторять, чтобы он попал в результат. Каждый файл, который называет директива, должен быть объявлен в [манифесте](../glossary/index.xml#manifest) пакета. Циклы законны в слое контрактов и запрещены между телами исходников, и именно это гарантирует, что сборка всегда заканчивается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-ANCESTOR-RULE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-EXACT-RULE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-DEFAULT-ADD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-MANIFEST-AGREE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#NO-DEADLOCK-INVARIANT"/>
+    <p>В прозе, которую читает агент, `@spec://…` с собакой обязателен: агент читает его на месте, один раз, при первой встрече, а компилятор никогда его не вклеивает. Голый `spec://…` остаётся на усмотрение агента.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#AT-SPEC-MANDATORY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#READ-ONCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#BARE-SPEC-DISCRETIONARY"/>
+  </directives>
+  <immutable title="Адрес никогда не двигается">
+    <p>После публикации якорь неизменяем. Переименование раздела или правила оставляет на старом якоре надгробие, указывающее на новый, так что ссылка, написанная год назад, всё ещё попадает куда надо. Перемещение файлов адреса тоже не меняет: адрес логический, путь — физика.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE"/>
+  </immutable>
+  <edge-cases title="Особые случаи и правила">
+    <p>Сгенерированный файл никогда не цель цитаты: цитируйте исходный документ, а не скомпилированную [стартовую полосу](../glossary/index.xml#boot-lane).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
+    <p>`vibe facts check` проверяет разметку спецификаций пакета; `vibe check` проверяет пакет целиком; обе запускаются перед публикацией.</p>
+    <p>Код тоже может цитировать спецификации, атрибутом на элементе, который воплощает правило, и тогда карта отвечает, какой код стоит за каким правилом, в обе стороны; эту карту объясняют страницы об архитектуре этого руководства.</p>
+  </edge-cases>
+</spec>

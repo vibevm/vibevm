@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Машинные форматы и JSON-отчёты</title>
+  <status stage="doc" state="work" audience="user,author,agent"/>
+  <p>Каждая команда умеет отвечать в JSON для скриптов и агентов. Эта страница перечисляет документы, их схемы и поля конверта, которые несёт каждый документ.</p>
+  <example ref="list-json"/>
+  <the-rule title="Одно правило для каждого формата">
+    <p>Всё, что читает чужой парсер, будь то отчёт, который разбирает скрипт, файл, который пишет другой язык, или [манифест](../glossary/index.xml#manifest), который получает браузер, описано схемой и зарегистрировано в одном реестре. Типы Rust и типы TypeScript генерируются из схемы, никогда не пишутся руками, так что две стороны не могут разойтись. Незарегистрированный формат не просто не поощряется: его нельзя выразить в системе типов, которая его пишет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#jtd"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
+    <p>Схемы — документы JSON Typedef под `schemas/` в дереве исходников. [Реестр](../glossary/index.xml#registry) — `formats/REGISTRY.toml`. Для каждого формата он записывает эпоху, схему, можно ли пересобрать формат из другого состояния и сколько парсеров его читают. Он же называет корпус золотых документов, с которым сверяется сборка.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"/>
+  </the-rule>
+  <the-envelope title="Конверт">
+    <p>Документ `--json` — один JSON-объект на команду или поток объектов для команд, которые отчитываются по стадиям, например установка. Каждый объект несёт `ok`, `command`, которая его произвела, и поля отчёта, которые называет схема; когда вызывающий представился через `--invoked-by`, объект несёт `invoked_by`, а под `--unattended` — `unattended: true`.</p>
+  </the-envelope>
+  <the-documents title="Документы">
+    <table>
+      <tr><td>Команда</td><td>Документ</td><td>Схема</td></tr>
+      <tr><td>`vibe init --json`</td><td>отчёт скаффолда</td><td>`init_report.jtd.json`</td></tr>
+      <tr><td>`vibe install --json`</td><td>план, затем отчёт</td><td>`install_plan.jtd.json`, `install_report.jtd.json`</td></tr>
+      <tr><td>`vibe update --json`</td><td>отчёт обновления</td><td>`update_report.jtd.json`</td></tr>
+      <tr><td>`vibe uninstall --json`</td><td>отчёт удаления</td><td>`uninstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe reinstall --json`</td><td>отчёт регенерации</td><td>`reinstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe list --json`</td><td>установленные пакеты</td><td>`list_report.jtd.json`</td></tr>
+      <tr><td>`vibe registry publish --json`, `vibe registry sync --json`</td><td>отчёты публикации и синхронизации</td><td>`registry_publish_report.jtd.json`, `registry_sync_report.jtd.json`</td></tr>
+      <tr><td>`vibe extensions --json`, `vibe extensions analyze --json`</td><td>реестр расширений и анализ полосы</td><td>`extensions_report.jtd.json`, `extensions_analyze.jtd.json`</td></tr>
+      <tr><td>глаголы жизненного цикла с `--json`</td><td>план, отчёт, состояние и отложенные задачи</td><td>`lifecycle_plan.jtd.json`, `lifecycle_report.jtd.json`, `lifecycle_state.jtd.json`, `lifecycle_tasks.jtd.json`</td></tr>
+      <tr><td>`vibe deploy`, `vibe deployments --json`</td><td>намерение выкладки, квитанции, обратный план и контрольные точки</td><td>`deploy_intent.jtd.json`, `deploy_receipt.jtd.json`</td></tr>
+      <tr><td>`vibe requirements --json`</td><td>отчёт о требованиях</td><td>`requirements_report.jtd.json`</td></tr>
+      <tr><td>`vibe tree --json`</td><td>дерево пакетов</td><td>документ JSON Schema, `package-tree.schema.v1.json`</td></tr>
+      <tr><td>`vibe doc manifest --json`, `vibe doc todo --format json`, `vibe doc surface --record`</td><td>манифест страниц пакета документации, очередь сопровождения, снимок поверхности версии и диф двух снимков</td><td>`doc_manifest.jtd.json`, `doc_todo.jtd.json`, `doc_surface.jtd.json`, `doc_surface_diff.jtd.json`</td></tr>
+    </table>
+    <p>Поля каждой схемы из таблицы, сгенерированные из файлов схем в порядке выше:</p>
+    <derived kind="jtd-schema" ref="schemas/init_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/update_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/uninstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/reinstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/list_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_publish_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_sync_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_analyze.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_state.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_tasks.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_intent.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_receipt.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_manifest.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_todo.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_surface.jtd.json"/>
+    <p>У документов сервера [индекса](../glossary/index.xml#index-registry), контракта и плана [зачистки](../glossary/index.xml#scrape), трассы компилятора и нативного ABI есть собственные схемы в той же папке; реестр перечисляет их все.</p>
+  </the-documents>
+  <edge-cases title="Особые случаи и правила">
+    <p>Документ, который не описывает ни одна схема, — дефект, а не задумка; кампания, которая писала это руководство, занесла найденные в бэклог продукта, а примеры на этих страницах помечают такие документы как непроверенные, а не как прошедшие.</p>
+    <p>Форматы несут эпоху; пока продукт ещё не публичен, несовместимое изменение формата бесплатно и без миграции, и реестр так и говорит. Опубликованный формат меняется только с заметкой о разрыве и, где нужно, с миграцией.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"/>
+    <p>Сырой разбор инструментами оболочки считается парсером: реестр предполагает, что кто-то направляет отчёт в JSON-инструмент, и относится к формату соответственно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"/>
+  </edge-cases>
+</spec>

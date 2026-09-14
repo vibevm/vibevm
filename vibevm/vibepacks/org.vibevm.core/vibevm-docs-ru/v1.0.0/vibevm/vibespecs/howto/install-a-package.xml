@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Установить пакет</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Вы нашли пакет, которому должен следовать ваш проект. Эта страница добавляет его в проект, записывает точную версию и показывает, как проверить, что агент теперь будет его читать.</p>
+  <prompt id="install-a-package">Установи пакет org.vibevm.world/wal в проект VibeVM в текущей папке, прими план и скажи мне, какая версия записана и что агент прочитает из неё в начале сессии.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в текущей папке; доступ по сети к реестрам проекта или пакет, уже лежащий в машинном хранилище</needs>
+    <outcome>`vibe.toml` перечисляет пакет среди требований, `vibe.lock` закрепляет одну версию с отпечатком содержимого, дерево пакета лежит под `vibevm/vibedeps/`, а `vibe tree` показывает его стартовый фрагмент в списке чтения</outcome>
+    <assert>grep -q "org.vibevm.world/wal" vibe.lock</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe install org.vibevm.world/wal`. vibe обходит [реестры](../glossary/index.xml#registry) проекта по порядку и спрашивает у первого, который знает пакет, его версии; без ограничения он берёт новейший стабильный выпуск. Он разрешает собственные зависимости пакета вместе с остальным графом проекта, скачивает всё, чего ещё нет в машинном [хранилище](../glossary/index.xml#store), и сверяет каждый [отпечаток](../glossary/index.xml#fingerprint). Потом печатает план: какие пакеты будут добавлены в каких версиях и какие файлы изменятся. Пока вы не подтвердили, ничего не записывается. После подтверждения vibe копирует пакеты в `vibevm/vibedeps/`, записывает требование в `vibe.toml` и пины в `vibe.lock` и пересобирает стартовые файлы. Затем агент запускает `vibe tree`, чтобы показать вам новый список чтения.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-RESOLUTION"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Установите по [координате](../glossary/index.xml#coordinate). Добавьте `@` и ограничение, чтобы попросить диапазон или точную версию:</p>
+    <example ref="install"/>
+    <p>2. Подтвердите план, когда спросят. `--assume-yes` отвечает «да» за скрипты и агентов.</p>
+    <p>3. Проверьте, что записано и что агент будет читать:</p>
+    <example ref="list"/>
+    <example ref="tree"/>
+  </by-hand>
+  <constraints title="Как попросить версию">
+    <p>`vibe install org.vibevm.world/wal@^1.0` принимает любую 1.x; `@=1.0.0` — ровно одну; `--exact` записывает разрешённую версию в [манифест](../glossary/index.xml#manifest) точным пином вместо диапазона. Манифест хранит ограничение, о котором вы просили; [лок-файл](../glossary/index.xml#lock-file) хранит версию, которую вы получили.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#CF-RANGE"/>
+    <p>Префикс вида, как в `flow:org.vibevm.world/wal`, необязателен; когда он есть, vibe его проверяет: если пакет оказывается другого вида, установка останавливается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ROW-QUALIFIED-KIND-BEHAVIOUR"/>
+  </constraints>
+  <after-a-clone title="После клонирования проекта">
+    <p>`vibe install` без имён пакетов ставит то, что манифест уже требует, в версиях, которые закрепил лок-файл. Когда ни манифест, ни лок не менялись с прошлой установки, vibe даже не запускает резолвер: лок-файл и есть ответ, а команда только проверяет, что дерево ему соответствует.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
+  </after-a-clone>
+  <edge-cases title="Особые случаи и правила">
+    <p>Установка пакета по имени разрешает весь граф заново, но каждая зависимость, которой изменение не касается, сохраняет закреплённую версию; только настоящий конфликт запускает полный пересчёт.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HOLD-THE-LOCK"/>
+    <p>Пакет может объявить скрипт, который выполняется после его установки. Установить пакет — значит согласиться его запустить; скрипт работает внутри собственной папки пакета, и его последствия не отслеживаются. Прочитайте манифест пакета, которому не доверяете, прежде чем ставить его.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#INSTALLATION-CONSENT-SUCCESSOR"/>
+    <p>Уже установленный пакет не ставится второй раз: vibe говорит об этом и указывает на `vibe update`.</p>
+    <p>Публичный реестр, который на отсутствующий пакет отвечает ошибкой аутентификации, обходится стороной и не считается сбоем; добавьте `--auth-required` в скрипт, который должен заметить, что приватный реестр лежит.</p>
+    <p>Пакет, который приносит инструменты, записывается при установке и собирается по требованию: `vibe bin build` компилирует названные инструменты или все сразу из точно установленного пакета, а `vibe bin exec &lt;name&gt;` разрешает инструмент через лок-файл проекта до его папки и запускает, при необходимости сначала собрав. Установить пакет — значит согласиться на сборку, и vibe рассказывает, что собирается компилировать. Без сети сборка, которой нужны крейты из сети, падает так же, как падает Cargo, с ручным рецептом в подсказке. Когда вашему коду нужен поставленный крейт, ссылайтесь на него путём в папку пакета и держите `vibevm/vibedeps/` вне своего Cargo-workspace, потому что папка не может принадлежать двум workspace сразу.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-TIMING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BIN-BUILD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BIN-EXEC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PATH-DEP-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#WORKSPACE-EXCLUDE"/>
+  </edge-cases>
+</spec>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Написать пакет flow</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Flow говорит агенту, как работает команда: как коммитить, что проверить перед пушем, как вести заметки между сессиями. Эта страница пишет такой пакет с нуля, включая короткий текст, который агент читает на каждом старте сессии.</p>
+  <prompt id="write-a-flow">Создай пакет flow org.acme/review-notes в текущем проекте VibeVM, как пакет в дереве под vibevm/vibepacks/. Он должен научить агента оставлять короткую заметку REVIEW.md в корне проекта после каждого сделанного изменения, с датой и описанием, что изменилось. Напиши стартовый фрагмент, документ протокола и манифест, затем запусти vibe check на пакете.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в корне</needs>
+    <outcome>`vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` объявляет пакет `flow` со стартовым фрагментом; фрагмент короче двухсот слов и называет протокол по адресу; у документа протокола разделы с якорями; `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` не находит ошибок</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0 --quiet</assert>
+    <assert>test -f vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/review-notes.xml</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe init package org.acme/review-notes`: команда добавляет в проект слот пакета по пути `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`: [манифест](../glossary/index.xml#manifest) с таблицей `[package]`, README и фрагмент-заглушку. Собственный [реестр](../glossary/index.xml#registry) проекта видит слот, так что flow можно установить и попробовать на месте до публикации. Затем агент пишет три вещи. [Стартовый фрагмент](../glossary/index.xml#boot-snippet) — короткая инструкция, которую агент проекта-потребителя читает на каждом старте сессии. Протокол — полный набор правил под `vibevm/vibespecs/flows/review-notes/`, с разделами-якорями, которые цитирует фрагмент. Таблица `[boot_snippet]` манифеста указывает на фрагмент с категорией `flow`. Наконец агент запускает на пакете `vibe check`, который проверяет манифест и раскладку так же, как у любого проекта.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Создайте слот пакета:</p>
+    <example ref="init-package"/>
+    <p>2. Отредактируйте манифест, который написал скаффолд: поставьте `kind = "flow"`, заполните описание и направьте `[boot_snippet]` на ваш фрагмент. Как сгенерировано:</p>
+    <example ref="manifest"/>
+    <p>3. Внутри слота напишите фрагмент по пути `vibevm/vibespecs/boot/review-notes.xml`. Держите его коротким: что делать и адрес правила, которое говорит почему. Его читает каждый агент, в каждой сессии, каждого проекта, который установил ваш flow.</p>
+    <p>4. Напишите протокол под `vibevm/vibespecs/flows/review-notes/`: один раздел с якорем на правило, одна мысль на раздел, маркер статуса на каждом.</p>
+    <p>5. Проверьте и опубликуйте:</p>
+    <example ref="check"/>
+  </by-hand>
+  <the-snippet title="Фрагмент — самая дорогая часть">
+    <p>За фрагмент платит каждый потребитель на каждом старте сессии. Пишите его как инструкцию, а не как объяснение: назовите правило, адрес, команду. Рассуждения положите в протокол, где агент прочитает их один раз, когда понадобится. И никогда не предполагайте, что установлен другой пакет: фрагмент, который говорит «как требует протокол WAL», в проекте без этого протокола отправляет агента искать правило, которого нет. Если ваш flow строится на другом, объявите концепцию, на которую он опирается, и дайте vibe предупредить, когда концепции нет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE"/>
+    <p>Потребитель решает, как подключить ваш фрагмент: скомпилировать в приоритетную полосу или перечислить в `INDEX.md`; умолчание можно предложить в `[boot_snippet]`, и выбор потребителя побеждает.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
+  </the-snippet>
+  <subskills title="Поднавыки: содержимое, которое приходит, когда нужно">
+    <p>Пакет может разделить содержимое на [поднавыки](../glossary/index.xml#subskill), мельчайшие единицы, которые агент может активировать: каждый выглядит как крошечный пакет с собственным манифестом и файлами. Различает поднавыки их `delivery`, главная ось: `eager` кладёт содержимое на диск при установке, `lazy-push` и `lazy-pull` придерживают его, пока не сработает правило активации. Поднавык активируется, когда совпадает любой из его каналов, один раз. Для ленивых режимов обязательно `description`, потому что оно и есть весь триггер, и `vibe check` отказывает ленивому поднавыку без него.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILL-DEFINITION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DELIVERY-PRIMARY-AXIS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ACTIVATION-ANY-MATCH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIPTION-REQUIRED"/>
+  </subskills>
+  <layout title="Что где лежит">
+    <p>Пути даны относительно корня пакета, слота `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`.</p>
+    <table>
+      <tr><td>Путь</td><td>Назначение</td></tr>
+      <tr><td>`vibe.toml`</td><td>манифест: `[package]`, `[boot_snippet]`, необязательные `[[skill]]`, `[requires]`</td></tr>
+      <tr><td>`README.md`</td><td>что такое этот flow; показывается в реестре и на сайте</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>стартовый фрагмент</td></tr>
+      <tr><td>`vibevm/vibespecs/flows/&lt;name&gt;/`</td><td>протокол и сопутствующие документы</td></tr>
+      <tr><td>`vibevm/vibespecs/skills/&lt;skill&gt;/SKILL.md`</td><td>навыки, которые flow предлагает агентам, объявленные в `[[skill]]`</td></tr>
+      <tr><td>`LICENSE.md`</td><td>лицензия; в публичном реестре только разрешительные</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SPEC-SUBTREE"/>
+    <p>Всё под корнем пакета, кроме результатов сборки, и есть пакет: это то, с чего снимается отпечаток, что копируется потребителям и что показывает сайт.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF"/>
+    <p>Пакет по умолчанию `simple`: его файлы переносятся целиком и читаются, потому что присутствуют. `format = "normal"` включает разделение на `contract/`, маленький и дешёвый для загрузки, как заголовочный файл, и `source/`, тяжёлое тело, которое подтягивается, только когда директива его попросит; нормальный пакет, которым никто не пользуется, в сборку не входит вовсе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-NORMAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-TREE-SHAKING"/>
+  </layout>
+  <edge-cases title="Особые случаи и правила">
+    <p>Перекрёстные ссылки внутри пакета — адреса, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, а не относительные пути к файлам; они переживают копирование в любого потребителя.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"/>
+    <p>Пока вы разрабатываете пакет внутри того же репозитория, правьте его исходник и запускайте `vibe install`: изменение доходит до дерева зависимостей без флага, обновления или принудительной переустановки.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#AUTOMATIC-NO-FLAG"/>
+    <p>Версии никогда не двигаются: чтобы изменить опубликованный фрагмент, поднимите версию и опубликуйте снова. Потребитель увидит изменение при следующем обновлении, не раньше.</p>
+    <p>Flow может требовать другие пакеты; потребитель, который ставит ваш, получает и их, и их фрагменты входят в полосу потребителя после вашего.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Написать feat или stack</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Feat говорит, что построить, не говоря как; stack говорит, как это делает технология. Эта страница пишет по одному и соединяет их через умения, которые одному нужны, а другой предоставляет.</p>
+  <prompt id="write-a-feat-or-stack">Создай два пакета в дереве под vibevm/vibepacks/ в текущем проекте VibeVM. Первый — feat org.acme/welcome-page, который описывает страницу приветствия с критериями приёмки и требует возможность ui:page-host. Второй — stack org.acme/static-site, который предоставляет ui:page-host и объясняет, как страница собирается статическим HTML-файлом. Запусти vibe check на обоих.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в корне</needs>
+    <outcome>манифест feat требует `ui:page-host`, манифест stack его предоставляет, у каждого есть документы спецификации под `vibevm/vibespecs/`, и `vibe check` не находит ошибок ни у одного</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/welcome-page/v0.1.0 --quiet</assert>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/static-site/v0.1.0 --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент создаёт оба слота через `vibe init package`, задаёт их виды в [манифестах](../glossary/index.xml#manifest), пишет спецификацию feat, критерии приёмки и требование [возможности](../glossary/index.xml#capability), пишет описание stack, его соглашения и возможность, которую он предоставляет, и проверяет каждый. Когда проект позже ставит feat, резолвер ищет пакет, предоставляющий `ui:page-host`, среди stack-пакетов проекта; stack ему подходит, и двое сопоставляются, хотя ни один не называет другого.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY"/>
+  </what-happens>
+  <a-feat title="Feat">
+    <p>Feat описывает, что фича делает для своего пользователя, в терминах, которые может реализовать любой stack: назначение, поведение, критерии приёмки, нужные данные, что происходит, когда что-то идёт не так. Он никогда не называет фреймворк. Его [манифест](../glossary/index.xml#manifest) объявляет умения, которые ему нужны от stack, как возможности, `namespace:name@constraint`, и больше ничего о технологии.</p>
+    <table>
+      <tr><td>Путь</td><td>Назначение</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/SPEC.md`</td><td>что фича делает, для кого и зачем</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/acceptance.md`</td><td>наблюдаемые критерии, которым должна отвечать сборка</td></tr>
+      <tr><td>`vibevm/vibespecs/feats/&lt;name&gt;/data-model.md`, `api.md`, `ui-flows.md`, `failure-modes.md`</td><td>те части, что применимы, по одной теме на файл</td></tr>
+    </table>
+    <p>В манифесте: `[requires] capabilities = ["ui:page-host@^1"]` и, для feat, которому вообще нужен stack, `[compatibility] requires_kinds = ["stack"]`.</p>
+  </a-feat>
+  <a-stack title="Stack">
+    <p>Stack — технологический контекст: он говорит, как абстрактные умения, о которых просит feat, реализуются одним набором инструментов, и может привязать [фазы](../glossary/index.xml#phase) сборки и тестирования [жизненного цикла](../glossary/index.xml#lifecycle) к этому тулчейну. Его манифест объявляет, что он предоставляет, `[provides] capabilities = ["ui:page-host@1.0"]`, а документы спецификации описывают каждую предоставляемую возможность в отдельном файле, плюс соглашения, инструменты и выкладку.</p>
+    <table>
+      <tr><td>Путь</td><td>Назначение</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/STACK.md`</td><td>что такое этот stack и когда его выбирать</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/capabilities/&lt;capability&gt;.md`</td><td>по файлу на предоставляемое умение: как оно реализовано</td></tr>
+      <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/conventions.md`, `tooling.md`, `deployment.md`</td><td>именование и раскладка, команды сборки и тестов, как сборка поставляется</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>необязательный фрагмент, который показывает активный stack на старте сессии</td></tr>
+    </table>
+    <p>Stack может также привязать в манифесте [вклады](../glossary/index.xml#contribution) жизненного цикла, чтобы `vibe build` и `vibe test` в проекте-потребителе запускали тулчейн stack без дополнительной настройки.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET"/>
+  </a-stack>
+  <capabilities title="Возможности">
+    <p>Возможность — абстрактный интерфейс: пространство имён, двоеточие, имя и, необязательно, [ограничение версии](../glossary/index.xml#version-constraint). Feat требует; stack предоставляет; резолвер сопоставляет их при установке и отказывает проекту, чьим feat нужно умение, которого не предоставляет ни один установленный stack. Выбирайте имена по тому, что умение делает для фичи, а не по технологии: `ui:page-host`, `db:relational`, `auth:oauth-callback`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+  </capabilities>
+  <edge-cases title="Особые случаи и правила">
+    <p>Слово `stack` называет и бандл [семейства](../glossary/index.xml#family): пакет вида `stack`, в котором нет ничего, кроме точных пинов участников языкового семейства. В реестре и то и другое stack; различает их описание.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-028#ROLE-AGGREGATOR"/>
+    <p>Критерии приёмки feat — то, что агент проверяет после сборки; пишите их как наблюдаемые [факты](../glossary/index.xml#fact), а не как пожелания.</p>
+    <p>Два feat, требующие одну возможность, могут быть удовлетворены одним stack; проект с несколькими stack помечает один как активный для сборки.</p>
+  </edge-cases>
+</spec>
