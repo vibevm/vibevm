@@ -41,6 +41,22 @@
   color: var(--text-2);
 }
 
+/* The third axis: whose words these are. Quieter than a standing and
+   drawn as an outline over the page's own ground, because it is one more
+   fact about the document rather than a rank among documents. The `ai`
+   and `human` marks differ in weight and not in hue — a colour would
+   make one of the two read as a warning, and the field is not a
+   judgement (`##CARD-AUTHORSHIP`). */
+.badge--authorship {
+  border-color: var(--line);
+  background: none;
+  color: var(--text-2);
+}
+
+.badge--authorship-human {
+  border-color: var(--line-strong);
+}
+
 .badge__star {
   color: var(--accent-hover);
 }

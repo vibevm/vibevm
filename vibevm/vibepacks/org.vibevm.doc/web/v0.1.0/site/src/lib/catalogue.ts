@@ -19,7 +19,10 @@
 
 import type { LanguageChoice } from "@vibe-docs/design";
 
-import type { DocumentationStatus } from "../generated/doc-manifest.ts";
+import type {
+  Authorship,
+  DocumentationStatus,
+} from "../generated/doc-manifest.ts";
 
 import { catalogueHref, packageHref } from "./href.ts";
 import {
@@ -46,6 +49,13 @@ export type CatalogueEntry = {
   readonly projection: boolean;
   /** True when the deployment named this documentation on the first shelf. */
   readonly featured: boolean;
+  /**
+   * Who wrote this edition's prose, when it says so (`##CARD-
+   * AUTHORSHIP`). Absent where the documentation declared nothing, which
+   * is a card with no mark and a card no named group admits — never a
+   * card quietly counted as one of them.
+   */
+  readonly authorship?: Authorship;
 };
 
 /** Which of the door's three shelves an entry stands on. */
@@ -99,6 +109,12 @@ export function catalogueEntries(
             : "community",
       projection: isProjection(one.card),
       featured: named,
+      /* The edition's own answer and never the source's: a translation
+         is prose somebody wrote, and which hand wrote it is a fact about
+         that text rather than about the one it adapts. */
+      ...(one.card.authorship === undefined
+        ? {}
+        : { authorship: one.card.authorship }),
     }));
   });
 }

@@ -113,3 +113,71 @@ test("the language filter works inside the shelf a reader is on", async ({
   ).toHaveCount(1);
   await expect(page.locator('[data-tab-panel="documents"]')).toBeVisible();
 });
+
+/**
+ * The third question the door answers: whose words are in a
+ * documentation.
+ *
+ * The fixture pair is written to be the interesting case — the source
+ * says a model wrote it, the adaptation says both hands did — so «human-
+ * authored» is measured on a document that is also in the other group.
+ * A mark on a card and a group in a menu have to agree, and this is
+ * where they are asked together.
+ */
+test("the shelf narrows to who wrote the prose, both hands in both groups", async ({
+  page,
+}) => {
+  await door(page);
+  const documents = page.locator('[data-tab-panel="documents"]');
+  const standing = documents.locator(".card").filter({ visible: true });
+  await expect(standing).toHaveCount(2);
+  await expect(documents.locator(".badge--authorship")).toHaveText([
+    "AI",
+    "Mixed",
+  ]);
+
+  await page.locator("[data-authorship-filter] summary").click();
+  await page.locator('[data-authorship-choice="human"]').click();
+  await expect(standing).toHaveCount(1);
+  await expect(standing.locator(".badge--authorship")).toHaveText("Mixed");
+  await expect(
+    page.locator("[data-authorship-filter] .authorship-filter__tag"),
+  ).toHaveText("human");
+
+  // The same document is in the other group, because both hands are in it.
+  await page.locator("[data-authorship-filter] summary").click();
+  await page.locator('[data-authorship-choice="ai"]').click();
+  await expect(standing).toHaveCount(2);
+});
+
+/**
+ * Two filters over one shelf, and the shelf is what is left when both
+ * admit a card. Neither may quietly widen the other, which is exactly
+ * what would happen if each hid cards on its own.
+ */
+test("the two filters narrow together, and a shelf they empty says so", async ({
+  page,
+}) => {
+  await door(page);
+  const documents = page.locator('[data-tab-panel="documents"]');
+  const standing = documents.locator(".card").filter({ visible: true });
+
+  await page.locator("[data-authorship-filter] summary").click();
+  await page.locator('[data-authorship-choice="human"]').click();
+  await expect(standing).toHaveCount(1);
+
+  // The source is the one a model wrote, so asking for it and for what a
+  // person wrote asks for nothing — and the shelf says so rather than
+  // looking broken.
+  await page.locator("[data-language-selector] summary").click();
+  await page.locator('[data-doc-lang="en"]').click();
+  await expect(standing).toHaveCount(0);
+  await expect(documents.locator(".shelf__empty")).toBeVisible();
+
+  // And the authorship the reader chose survives the page, as the
+  // language and the shelf do.
+  await door(page);
+  await expect(
+    page.locator("[data-authorship-filter] .authorship-filter__tag"),
+  ).toHaveText("human");
+});

@@ -1,7 +1,13 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION */
 
 import { component$, useStyles$ } from "@qwik.dev/core";
-import { Badge, GeneratedBadge, type DocStatus } from "../badge/index.tsx";
+import {
+  AuthorshipBadge,
+  Badge,
+  GeneratedBadge,
+  type AuthorshipMark,
+  type DocStatus,
+} from "../badge/index.tsx";
 import styles from "./styles.css?inline";
 
 export type CardProps = {
@@ -48,6 +54,15 @@ export type CardProps = {
    * because the two answer different questions.
    */
   readonly generated?: boolean;
+  /**
+   * Who wrote the prose, when the documentation says so
+   * (`##CARD-AUTHORSHIP`). Absent is not a third state to draw: a
+   * document that declared nothing wears no mark, and the shelf's filter
+   * leaves it out of both named groups. The value is written onto the
+   * card as data as well as shown, because the filter narrows a shelf
+   * the build already wrote and has nothing else to read.
+   */
+  readonly authorship?: AuthorshipMark;
 };
 
 /**
@@ -79,6 +94,9 @@ export const Card = component$<CardProps>((props) => {
       {...(props.editionLang === undefined
         ? {}
         : { "data-edition-lang": props.editionLang })}
+      {...(props.authorship === undefined
+        ? {}
+        : { "data-authorship": props.authorship })}
     >
       <div class="card__row">
         {props.icon === undefined ? (
@@ -101,6 +119,9 @@ export const Card = component$<CardProps>((props) => {
             </a>
             <Badge status={props.status} />
             {props.generated === true ? <GeneratedBadge /> : null}
+            {props.authorship === undefined ? null : (
+              <AuthorshipBadge authorship={props.authorship} />
+            )}
           </h3>
           <p class="card__publisher">
             {props.publisher}

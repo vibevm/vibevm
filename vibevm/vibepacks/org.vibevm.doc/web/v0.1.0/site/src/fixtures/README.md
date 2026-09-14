@@ -83,6 +83,16 @@ on (`##READER-LANGUAGE-SWITCH-KEEPS-PLACE`). Neither invents a field: both
 are the same schema the generator emits, and `manifest.test.ts` parses
 them with the same parser the site uses at build time.
 
+What each of them declares is chosen the same way — to be the case worth
+measuring. The source says a model wrote its prose and the adaptation
+says both hands did (`##CARD-AUTHORSHIP`), so the shelf's authorship
+filter is exercised on the interesting pair: «human-authored» is measured
+over a document that also stands in the other group, which is the rule a
+reader is most likely to be surprised by. The two libraries in
+`doc-build-pair*/` declare nothing, so the third state — a documentation
+that says nothing about who wrote it, and therefore stands in neither
+named group — has a document of its own to be measured on.
+
 The addresses are the source's. A translation is served under the source
 package's coordinate with a language segment in front of it, never under
 its own name (D-06) — which is exactly what lets the language selector

@@ -466,11 +466,13 @@ describe("the door", () => {
   });
 
   /**
-   * The one signal a manifest carries today. A level-zero rendering is a
-   * package printing its own bytes, so its own coordinate stands among
-   * its subjects; a `doc` package names something other than itself. The
-   * fixtures are all the second kind, which is what makes the first kind
-   * worth asserting rather than assuming.
+   * The field first and the signal second. A manifest that says how it
+   * came to exist is believed, both ways round — a rendering that says
+   * `false` is not a rendering, whatever its subjects look like. The
+   * fallback is for documents rather than deployments: a manifest
+   * written before the field carries no answer, and a level-zero
+   * rendering is then told by the one signal it already has, its own
+   * coordinate standing among its subjects.
    */
   it("tells a rendering of a package from a documentation about one", () => {
     const documentation = fixture("manifest.json").package;
@@ -483,16 +485,34 @@ describe("the door", () => {
     };
     assert.equal(isProjection(rendering), true);
 
-    /* And the field the manifest is gaining is believed over the signal.
-       It is composed rather than written as a literal because the
-       generated type does not carry it yet: a manifest from a newer
-       pipeline is exactly a card with one more member on it. */
-    assert.equal(
-      isProjection(Object.assign({}, rendering, { projection: false })),
-      false,
+    assert.equal(isProjection({ ...rendering, projection: false }), false);
+    assert.equal(isProjection({ ...documentation, projection: true }), true);
+  });
+
+  /**
+   * Who wrote the prose travels onto the card as its own edition's
+   * answer. A translation is prose somebody wrote, so the adaptation
+   * carries its own word rather than the source's — which is the whole
+   * reason a shelf can be narrowed by the question at all.
+   */
+  it("carries each edition's own authorship onto its card", () => {
+    assert.deepEqual(
+      catalogueEntries(librariesOf(bothFixtures()), []).map((one) => [
+        one.tag,
+        one.authorship,
+      ]),
+      [
+        ["en", "ai"],
+        ["ru", "mixed"],
+      ],
     );
+
+    /* And a documentation that declared nothing puts nothing on the
+       card: the member is absent rather than present and empty, so the
+       markup carries no fourth answer for a filter to read. */
+    const pair = fromTrees(TREE, PAIR, PAIR_RU);
     assert.equal(
-      isProjection(Object.assign({}, documentation, { projection: true })),
+      catalogueEntries(pair, []).some((one) => !("authorship" in one)),
       true,
     );
   });

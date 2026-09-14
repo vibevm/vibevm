@@ -2,6 +2,7 @@
 
 import { component$, useVisibleTask$ } from "@qwik.dev/core";
 import {
+  AuthorshipFilter,
   Card,
   LanguageSelector,
   Prose,
@@ -11,6 +12,7 @@ import {
 } from "@vibe-docs/design";
 
 import { SITE } from "../../config.ts";
+import { authorshipChoices } from "../../lib/authorship.ts";
 import {
   catalogueDoors,
   catalogueShelves,
@@ -123,10 +125,12 @@ export const Catalogue = component$<CatalogueProps>((props) => {
         moreHref={docFileHref("llms.txt")}
         moreLabel="the catalogue for an agent"
       />
-      {/* Two controls, two questions. Which shelf to stand at, and which
-          language of the DOCUMENTATION to be offered on it — neither of
-          them the language the buttons are in, which is the switch in
-          the corner of the header above. */}
+      {/* Three controls, three questions. Which shelf to stand at, which
+          language of the DOCUMENTATION to be offered on it, and whose
+          words are in it — none of them the language the buttons are in,
+          which is the switch in the corner of the header above. The two
+          filters narrow together: a reader may ask for the Russian half
+          of what a person wrote. */}
       <DocBar>
         <TabPills
           label="Catalogue"
@@ -140,6 +144,10 @@ export const Catalogue = component$<CatalogueProps>((props) => {
         <LanguageSelector
           label="Documentation language"
           items={shelfLanguageChoices(BUILT, props.lang)}
+        />
+        <AuthorshipFilter
+          label="Who wrote the prose"
+          items={authorshipChoices()}
         />
       </DocBar>
       {shelves.map((shelf) => (
@@ -171,6 +179,9 @@ export const Catalogue = component$<CatalogueProps>((props) => {
                 abstractLabel="what it covers"
                 editionLang={one.tag}
                 generated={one.projection}
+                {...(one.authorship === undefined
+                  ? {}
+                  : { authorship: one.authorship })}
               />
             ))}
           </Shelf>

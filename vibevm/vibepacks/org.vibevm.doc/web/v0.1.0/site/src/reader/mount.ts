@@ -22,6 +22,7 @@
 
 import { startAnchors } from "./anchors.ts";
 import { startAgentSurface } from "./agent.ts";
+import { startAuthorship } from "./authorship.ts";
 import { startCitedRules } from "./cited-rules.ts";
 import { startCodeChrome } from "./code.ts";
 import { startOverlay } from "./overlay.ts";
@@ -133,10 +134,12 @@ export function startReader(context: ReaderContext): () => void {
  *
  * It shares nothing with the page's reader because it has nothing to
  * share — there is no island, no block to cite and no place to return
- * to. What it does have is two narrowings of one list, which are
- * deliberately two behaviours: a tab says what KIND of thing a reader
- * wants and a filter says which language of it, and a reader changing
- * one is not changing the other.
+ * to. What it does have is three narrowings of one list, which are
+ * deliberately three behaviours: a tab says what KIND of thing a reader
+ * wants, one filter says which language of it and the other whose words
+ * are in it, and a reader changing one is not changing the others. What
+ * they do share is the answer — which cards are left standing is decided
+ * once, out of all of them, in `reader/shelf.ts`.
  */
 export function startCatalogueReader(
   editions: readonly CatalogueEdition[],
@@ -146,6 +149,7 @@ export function startCatalogueReader(
     startCatalogueTabs(),
     startLanguageSwitch(),
     startDocLanguage(addressLanguage),
+    startAuthorship(),
     startCatalogue(editions),
   ];
   return () => {

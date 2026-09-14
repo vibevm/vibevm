@@ -57,6 +57,72 @@ test("an absent optional field stays absent rather than becoming undefined", () 
   assert.equal("translation" in parsed.value.package, false);
 });
 
+/**
+ * This parser is the one door from bytes into the type, so a member it
+ * drops is a member the whole shell cannot see — whatever the generated
+ * type promises about it. Both fixtures declare who wrote their prose,
+ * and the assertion is that the word survives the crossing.
+ */
+test("who wrote the prose survives the crossing from bytes to type", () => {
+  const source = parseDocManifest(fixture());
+  const adapted = parseDocManifest(fixture(ADAPTATION));
+  assert.equal(source.ok, true);
+  assert.equal(adapted.ok, true);
+  if (!source.ok || !adapted.ok) return;
+  assert.equal(source.value.package.authorship, "ai");
+  assert.equal(adapted.value.package.authorship, "mixed");
+});
+
+/**
+ * Absence is permissive and nonsense is not. A manifest written before
+ * the field existed is still a manifest; a fourth word is a document
+ * claiming something the vocabulary cannot say, and it is refused by the
+ * name of the field it stands in.
+ */
+test("a fourth authorship is refused, and none at all is not", () => {
+  const broken = JSON.parse(JSON.stringify(fixture()));
+  broken.package.authorship = "committee";
+  const refused = parseDocManifest(broken);
+  assert.equal(refused.ok, false);
+  if (refused.ok) return;
+  assert.equal(refused.error.path, "$.package.authorship");
+  assert.match(refused.error.reason, /mixed/);
+
+  const silent = JSON.parse(JSON.stringify(fixture()));
+  delete silent.package.authorship;
+  const parsed = parseDocManifest(silent);
+  assert.equal(parsed.ok, true);
+  if (!parsed.ok) return;
+  assert.equal("authorship" in parsed.value.package, false);
+});
+
+/**
+ * The level-zero mark. It is `false` by being absent on the wire, so the
+ * three states a reader of the type sees are «said true», «said false»
+ * and «said nothing» — and the last one is what a manifest written
+ * before the field says.
+ */
+test("the level-zero mark is read as written, and absence is not false", () => {
+  const marked = JSON.parse(JSON.stringify(fixture()));
+  marked.package.projection = true;
+  const rendering = parseDocManifest(marked);
+  assert.equal(rendering.ok, true);
+  if (!rendering.ok) return;
+  assert.equal(rendering.value.package.projection, true);
+
+  const parsed = parseDocManifest(fixture());
+  assert.equal(parsed.ok, true);
+  if (!parsed.ok) return;
+  assert.equal("projection" in parsed.value.package, false);
+
+  const broken = JSON.parse(JSON.stringify(fixture()));
+  broken.package.projection = "yes";
+  const refused = parseDocManifest(broken);
+  assert.equal(refused.ok, false);
+  if (refused.ok) return;
+  assert.equal(refused.error.path, "$.package.projection");
+});
+
 test("a value outside a closed vocabulary is refused by name", () => {
   const document = fixture();
   assert.equal(typeof document, "object");

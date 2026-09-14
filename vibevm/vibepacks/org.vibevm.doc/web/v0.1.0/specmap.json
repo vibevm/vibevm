@@ -2,6 +2,13 @@
   "code_items": [
     {
       "crate_name": "src",
+      "file": "design/src/components/authorship-filter/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/authorship-filter/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/badge/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -338,6 +345,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/lib/authorship.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/authorship.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/lib/catalogue.ts",
       "item_kind": "module",
       "line": 1,
@@ -485,6 +499,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/reader/authorship.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/authorship.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/reader/catalogue-tabs.ts",
       "item_kind": "module",
       "line": 1,
@@ -608,6 +629,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/reader/settings.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/shelf.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/shelf.ts"
     },
     {
       "crate_name": "src",
@@ -835,6 +863,14 @@
     }
   ],
   "edges": [
+    {
+      "file": "design/src/components/authorship-filter/index.tsx",
+      "from_symbol": "design/src/components/authorship-filter/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP",
+      "verb": "implements"
+    },
     {
       "file": "design/src/components/badge/index.tsx",
       "from_symbol": "design/src/components/badge/index.tsx",
@@ -1220,6 +1256,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/lib/authorship.ts",
+      "from_symbol": "site/src/lib/authorship.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/lib/catalogue.ts",
       "from_symbol": "site/src/lib/catalogue.ts",
       "line": 1,
@@ -1388,6 +1432,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/reader/authorship.ts",
+      "from_symbol": "site/src/reader/authorship.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/reader/catalogue-tabs.ts",
       "from_symbol": "site/src/reader/catalogue-tabs.ts",
       "line": 1,
@@ -1529,6 +1581,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/shelf.ts",
+      "from_symbol": "site/src/reader/shelf.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
       "verb": "implements"
     },
     {
@@ -1792,6 +1852,12 @@
   "spec_units": [],
   "suspects": [],
   "warnings": [
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/authorship-filter/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/authorship-filter/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP`: no spec unit carries this anchor"
+    },
     {
       "code": "dangling-edge",
       "file": "design/src/components/badge/index.tsx",
@@ -2082,6 +2148,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/lib/authorship.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/authorship.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/lib/catalogue.ts",
       "line": 1,
       "message": "edge `site/src/lib/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
@@ -2208,6 +2280,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/reader/authorship.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/authorship.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/reader/catalogue-tabs.ts",
       "line": 1,
       "message": "edge `site/src/reader/catalogue-tabs.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
@@ -2313,6 +2391,12 @@
       "file": "site/src/reader/settings.ts",
       "line": 1,
       "message": "edge `site/src/reader/settings.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/shelf.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/shelf.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
