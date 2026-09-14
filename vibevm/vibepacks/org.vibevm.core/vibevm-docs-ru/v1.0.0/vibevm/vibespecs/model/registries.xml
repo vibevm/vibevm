@@ -90,5 +90,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
+    <p>На GitHub и GitVerse один файл читается по HTTPS прежде, чем спрашивать git, а чтение, которое хост отверг на минуту, из-за лимита частоты или ошибки сервера, повторяется несколько раз с короткой паузой, прежде чем читатель откатится к git; обычное «не найдено» не повторяется никогда.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-BACKOFF"/>
   </edge-cases>
 </spec>
