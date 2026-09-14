@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Лок-файл и машинное хранилище</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Один файл в вашем проекте записывает, какие именно версии пакетов он получил, вплоть до контрольной суммы их содержимого, чтобы коллега поставил те же байты. Одна папка на вашей машине держит эти байты по разу на компьютер, чтобы второй проект или день без сети не стоили ничего сверх.</p>
+  <example ref="cache-path"/>
+  <identity title="Идентичность — это содержимое, а не адрес">
+    <p>Версию пакета определяют четыре вещи: его группа, имя, версия и [отпечаток](../glossary/index.xml#fingerprint) каждого файла внутри. Адрес, откуда её скачали, записан только для сведения. Поэтому зеркало, переехавший репозиторий или вендоренная копия никогда не меняют [лок-файл](../glossary/index.xml#lock-file): пока байты те же, пакет тот же.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+    <p>Отпечаток — ещё и ворота целостности. Если источник отдаёт под известной версией другие байты, потому что тег перезаписали силой или зеркало подменили, vibe отказывает раньше, чем что-то запишет, и говорит, какой отпечаток ждал и какой увидел.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
+  </identity>
+  <the-lock-file title="Лок-файл">
+    <p>`vibe.lock` перечисляет каждый пакет разрешённого графа, прямой и транзитивный, с точной версией, отпечатком, [реестром](../glossary/index.xml#registry), откуда он пришёл, и способом, которым его разрешили. vibe пишет его при каждой установке и обновлении; вы его коммитите и никогда не правите. Свежий клон с лок-файлом ставит тот же самый граф, а пулл-реквест, который его меняет, показывает ровно то, что сдвинулось.</p>
+    <p>Лок-файл сохраняется, даже когда выведенное состояние удалено: `vibe clean` стирает дерево зависимостей и сгенерированные стартовые файлы, но лок не трогает, потому что лок — это записанное решение, а дерево — только его следствие.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"/>
+  </the-lock-file>
+  <the-store title="Машинное хранилище">
+    <p>Каждый пакет, который vibe скачивает для любого проекта, попадает в одно [хранилище](../glossary/index.xml#store) в вашем домашнем каталоге, `~/.vibe/cache/`, с ключом по идентичности пакета, а не по тому, откуда он пришёл. Версия, скачанная для одного проекта, доступна каждому другому проекту на машине, какие бы реестры они ни настроили, и хранилище никогда не очищается у вас за спиной: освободить место — это команда, которую запускаете вы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-STORE-IS-DOT-VIBE-CACHE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#EXPLICIT-RECLAIM"/>
+    <p>Хранилище можно прогреть намеренно. `vibe cache add` скачивает пакет и всё, от чего он зависит, не касаясь ни одного проекта; так готовятся к перелёту и так машина получает руководство пакета для чтения без сети. `vibe cache list` показывает, что лежит в хранилище; `vibe cache check` сверяет каждую запись с её отпечатком.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-ADD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-LIST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CHECK"/>
+    <p>`vibe cache clean` освобождает место: всё целиком, по возрасту или по пакету, и только когда вы скажете, что именно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CLEAN"/>
+  </the-store>
+  <offline title="Без сети">
+    <p>С `--offline` или с `VIBE_OFFLINE=1` в окружении vibe не касается сети вовсе. Подбор версий и скачивание обслуживаются из хранилища, локальных зеркал, собственного дерева зависимостей проекта и путевых источников. Всего, чего там нет, — жёсткая ошибка с именем недостающего пакета; vibe никогда молча не ставит частичный результат.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-FLAG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
+    <p>Версией в хранилище можно пользоваться, даже если её больше не перечисляет ни один реестр. Хранилище держит байты, которые проверили, когда они пришли; замолчавший реестр не делает их хуже.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY"/>
+  </offline>
+  <edge-cases title="Особые случаи и правила">
+    <p>Папка настроек, включая хранилище, — это `~/.vibe/` на любой платформе; переменная окружения `VIBE_SETTINGS` переносит всю папку, и так тесты и сборочные серверы держат приватную копию.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
+    <p>Хранилище и кэш клонов реестров — две разные папки: хранилище держит распакованные версии пакетов, кэш клонов под `~/.vibe/registries/` держит git-чекауты, которыми их скачивают. Очистка одной не очищает другую.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#LAYOUT-EXTRACTED-DIRECTORIES"/>
+  </edge-cases>
+</spec>

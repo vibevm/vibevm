@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Реестры и индекс</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Пакеты публикуются в место, которое vibe умеет читать: по умолчанию это публичная организация на GitHub, по репозиторию на пакет. Проект перечисляет такие места в том порядке, в каком им доверяет. Каталог рядом с каждым из них отвечает на поиск, ничего не клонируя.</p>
+  <example ref="registry-list"/>
+  <what-a-registry-is title="Что такое реестр">
+    <p>[Реестр](../glossary/index.xml#registry) — не сервер, который запускает vibe. Это хостинг-организация вроде `https://github.com/vibespecs`, где каждый пакет — собственный git-репозиторий, названный по [координате](../glossary/index.xml#coordinate) пакета. Опубликовать — значит запушить репозиторий и поставить тег версии; установить — значит клонировать по тегу. Кому можно публиковать, решают права самого хостинга, так что у vibe нет собственных аккаунтов.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
+    <p>Проект объявляет свои реестры в [манифесте](../glossary/index.xml#manifest) упорядоченным списком. У каждой записи есть локальное имя, корневой адрес организации и соглашение об именовании, которое превращает координату в имя репозитория. Когда просят пакет, vibe идёт по списку по порядку, и первый реестр, где есть подходящая версия, выигрывает.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+    <p>Список — массив в порядке приоритета; рядом с ним [зеркало](../glossary/index.xml#mirror) — второй адрес того же реестра, а [переопределение](../glossary/index.xml#override) обходит обход списка для одной координаты. `url` записи — корень организации, никогда не репозиторий пакета, и это обычный git-адрес: `https://`, `ssh://`, `git@host:` или `file://`, без сокращений под какой-либо хост. Его `naming` говорит, как координата становится именем репозитория; умолчание соединяет группу и имя точкой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-URL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-PLAIN-GIT-URL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-NAMING"/>
+    <p>К следующему реестру обход переходит, только когда один ответил, что пакета у него нет. Сбой соединения, ошибка сервера или испорченный манифест останавливают установку с этой ошибкой, потому что о простое или опечатке вы хотите знать. В реестре, объявленном публичным, требование учётных данных считается за «здесь нет», и обход продолжается; в реестре, который объявил режим аутентификации, это настоящий сбой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-SEMANTICS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-AWARE-401"/>
+    <p>Запись можно выключить, не удаляя: `enabled = false` заставляет каждую команду пропускать этот реестр, пока вы не включите его обратно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ENABLED-FLAG"/>
+    <p>Машина может добавить собственные реестры в `~/.vibe/registry.toml`; они подмешиваются после проектных, и список проекта всегда сильнее машинного. Так компания нацеливает каждый проект на ноутбуке на свой приватный реестр, не правя каждый проект. Файл несёт те же секции `[[registry]]`, `[[mirror]]` и `[[override]]`, что и манифест проекта, для любого реестра, удалённого или локального; имя, объявленное в обоих местах, принадлежит проекту.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PROJECT-OVERRIDES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GLOBAL-REGISTRY-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MERGE-PROJECT-FIRST"/>
+    <p>Набор доверия по умолчанию, который называет [спецификация](../glossary/index.xml#specification), — ровно два корня: `https://github.com/vibespecs` и `https://gitverse.ru/vibespecs`. Проект, который сегодня создаёт `vibe init`, не несёт блока реестров вовсе, так что перед первой установкой добавьте его через `vibe registry add` или дайте машинному файлу его подставить. Любому другому реестру доверяют только потому, что вы его добавили.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#DEFAULT-TRUSTED-REGISTRIES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#INIT-DEFAULT-REGISTRY"/>
+  </what-a-registry-is>
+  <the-index title="Индекс">
+    <p>Клонировать репозиторий, чтобы узнать, что в нём, — медленно, а перечислить организацию для поиска без аккаунта невозможно. Поэтому реестр может держать *[индекс](../glossary/index.xml#index-registry)*: отдельный репозиторий рядом с пакетами, где для каждой опубликованной версии записаны сводка манифеста и [отпечаток](../glossary/index.xml#fingerprint) содержимого. `vibe search` читает индекс; свежая установка читает его, чтобы пропустить круг клонов.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
+    <p>Индекс — кэш, никогда не истина. Если он расходится с репозиторием пакета, побеждает репозиторий, а пакет, разрешённый через индекс, всё равно сверяется с отпечатком содержимого, когда приходит. Реестр без индекса работает ровно как раньше, только медленнее; отсутствие индекса — не ошибка.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOS-AUTHORITATIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REALITY-WINS"/>
+    <p>Адрес индекса выводится из адреса реестра, и его можно переопределить для каждого реестра переменной окружения, названной по имени реестра, `VIBEVM_INDEX_URL_&lt;NAME&gt;`; буквальное значение `none` выключает обращения к индексу для этого реестра.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"/>
+    <p>Запись реестра может закрепить свой индекс через `index_url`; без него публичная организация на GitHub отображается в свой репозиторий `index` на хосте сырого содержимого, а любой другой хост — в `&lt;registry-url&gt;/index`. У пробы индекса три исхода: найден, отсутствует, отказано. Только «отсутствует» тихо проваливается к живому перечислению, потому что индекса никто не обещал; индекс, который есть, но не читается, — это сообщение об ошибке. `vibe search` задаёт вопрос каждому настроенному индексу напрямую, а не скачивает весь каталог.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-CONFIG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-SEARCH"/>
+  </the-index>
+  <mirrors-and-overrides title="Зеркала, переопределения и git-источники">
+    <p>*Зеркало* — другой адрес того же реестра, к которому обращаются первым ради доступности и который сверяют по тем же отпечаткам; зеркало, отдающее под известной версией другие байты, отвергается, а не получает доверие. Зеркала никогда не попадают в [лок-файл](../glossary/index.xml#lock-file): записывается канонический адрес, так что смена зеркала ничего не меняет для ваших коллег.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-INTEGRITY-MANDATORY"/>
+    <p>*Переопределение* заменяет один пакет копией из другого места — ради хотфикса или патча, который ждёт своей очереди наверху; оно обходит обход реестров для этой одной координаты и помечено в лок-файле, чтобы никто не принял его за опубликованную версию.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SHORT-CIRCUIT"/>
+    <p>Переопределение ничего не ослабляет: отпечаток копии по-прежнему закреплён в лок-файле и сверяется при каждой установке, а запись несёт `overridden = true`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OVERRIDE-SEMANTICS"/>
+    <p>Зависимость может указывать и прямо на git-репозиторий — на тег, коммит или ветку. Тег и коммит закреплены; ветка при обновлении проходится заново, а лок-файл записывает коммит, который был установлен на самом деле.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-GS-BRANCH-MEANING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GIT-SOURCE-DECL"/>
+    <p>[Git-источник](../glossary/index.xml#git-source) записывается инлайновой таблицей на требовании: адрес `git` и ровно одно из `tag`, `rev` или `branch`; ни одного или два — отказ, потому что угадывать ветку по умолчанию недопустимо там, где решается, какой код входит в ваш проект. `auth` источника объявляется на самом источнике и никогда не заимствуется у реестра на том же хосте. Когда репозиторий приходит, vibe читает собственный манифест пакета и отвергает тот, чьи вид и имя расходятся с тем, что вы потребовали.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-WIRE-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-EXACTLY-ONE-REF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-AUTH-EXPLICIT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-IDENTITY-VERIFICATION"/>
+    <p>Источник требования выбирается в фиксированном порядке: сначала переопределение, затем git-источник, объявленный на требовании, затем обход реестров. За веткой идёт только `vibe update`; `vibe install` держит коммит, который записал лок.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-RESOLUTION-ORDER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GS-MUTABILITY"/>
+  </mirrors-and-overrides>
+  <authentication title="Аутентификация">
+    <p>Публичному реестру учётные данные не нужны, и vibe их не посылает: он глушит помощники учётных данных git, чтобы установка в скрипте никогда не зависла на запросе пароля. Приватный реестр объявляет свой режим в манифесте: токен из переменной окружения, системный помощник учётных данных или SSH-ключи. Токен приходит из вашего окружения и никогда не попадает в файл, который пишет vibe.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
+  </authentication>
+  <local-sources title="Пакеты на этой машине">
+    <p>vibe, собранный из чекаута исходников, считает пакеты из дерева этого чекаута [встроенным реестром](../glossary/index.xml#embedded-registry): у такой сборки он включён по умолчанию, у распространяемой выключен, а на одну команду выключается через `--no-default-registry`. Перечисление версий всё равно объединяет встроенный и объявленные реестры, так что более новая опубликованная версия видна; переопределение или git-источник на требовании остаются выше встроенного реестра. `--embedded-short-circuit` останавливает перечисление на встроенном реестре для пакетов, которые он отдаёт, так что полностью встроенный граф разрешается вообще без сети.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#KNOB-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#KNOB-SUPPRESS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#ENUM-UNION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#EXPLICIT-ABOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#FLAG-EMBEDDED-SHORT-CIRCUIT"/>
+    <p>Пакет, разрешённый таким путём, записывается с `source_kind = "embedded"`, и `vibe check` предупреждает, что такой лок непереносим. В `--frozen` и других неинтерактивных запусках встроенный реестр выключен, так что лок, который работает только на машине одного разработчика, не пройдёт на сборочном сервере.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCK-EMBEDDED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#GUARD-WARN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#GUARD-CI-OFF"/>
+    <p>Проект, у которого рядом с манифестом лежит папка `packages/`, получает эту папку открытой как локальный реестр вообще без объявления. Пакеты, разрешённые из неё, записываются с `source_kind = "local"`, и это переносимо, потому что каждый чекаут разрешает ту же папку в то же содержимое. `--no-prefer-local` обходит папку на одну команду.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-AUTO-OPEN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-SOURCE-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-NO-PREFER-FLAG"/>
+  </local-sources>
+  <edge-cases title="Особые случаи и правила">
+    <p>vibe, собранный из чекаута исходников, считает пакеты из дерева этого чекаута окружающим реестром, к которому обращается первым: разработчик vibe ставит разрабатываемые пакеты, не публикуя их. У распространяемого vibe такого реестра нет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT"/>
+    <p>Репозиторий с исходниками самого vibe зеркалится на двух хостах, но это другое дело, чем реестр пакетов: зеркала несут исходники программы, реестр несёт пакеты, и учётные данные для них никогда не делятся.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-016#ORTHOGONALITY-LAW"/>
+    <p>С реестрами vibe работает через программу `git` в вашем `PATH` и проверяет её наличие до начала; `VIBE_GIT_BINARY` указывает ему на другую копию. Клон реестра старше часа обновляется перед установкой, моложе — берётся как есть, а `vibe registry sync` обновляет независимо от возраста.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
+  </edge-cases>
+</spec>
