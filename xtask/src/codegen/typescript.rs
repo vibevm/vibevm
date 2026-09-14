@@ -45,7 +45,7 @@ use super::write::write_generated;
 /// was is a table with the destination written in it.
 const TARGETS: [TypescriptTarget; 1] = [TypescriptTarget {
     schema: "schemas/doc_manifest.jtd.json",
-    out_dir: "vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/src/generated",
+    out_dir: "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/src/generated",
     file: "doc-manifest.ts",
 }];
 

@@ -2225,7 +2225,7 @@ design-документ рядом с виженом (A1.9). Коммит:
 set -e
 cargo build -p vibe-cli
 V=target/debug/vibe.exe
-D=vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0
+D=vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0
 R=crates/vibe-doc/tests/fixture/translations/adaptation   # фикстура фазы 2; боевая адаптация — волна C (D-29)
 $V --help | grep -q ' doc '                                   # команда есть
 $V init --help | grep -q 'flow, feat, stack, tool, mcp, lang, doc, app'

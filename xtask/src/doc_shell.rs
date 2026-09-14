@@ -31,7 +31,7 @@ use anyhow::{Context, Result, bail};
 use vibe_doc_shell::{digest, index::Index};
 
 /// The web package the shell is built from, repo-relative.
-const WEB_PACKAGE: &str = "vibevm/vibepacks/org.vibevm.doc/web/v0.1.0";
+const WEB_PACKAGE: &str = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0";
 
 /// Its coordinate, which the pin and the index name.
 const WEB_COORDINATE: &str = "org.vibevm.doc/web";

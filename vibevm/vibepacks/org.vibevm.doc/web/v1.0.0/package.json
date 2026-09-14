@@ -1,7 +1,7 @@
 {
   "name": "@vibe-docs/web",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "The vibevm.org site: the landing, the documentation reader, the design system they share, and the two adapters that build them.",
   "packageManager": "pnpm@10.33.2",

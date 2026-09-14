@@ -82,7 +82,7 @@ vibe check --path hello-vibe
 vibe install --path hello-vibe
 ```
 
-The manual's [command reference](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/reference/commands.xml) lists every command with its options, and [the newcomer's route](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/start/index.xml) walks from an empty folder to a project an agent understands.
+The manual's [command reference](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/reference/commands.xml) lists every command with its options, and [the newcomer's route](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/start/index.xml) walks from an empty folder to a project an agent understands.
 
 ## Registries and search
 
@@ -96,7 +96,7 @@ naming = "fqdn"
 index_url = "https://github.com/vibespecs/index"
 ```
 
-Use `vibe registry list` to inspect effective project registry declarations, `vibe registry test` to probe them, and `vibe search <query>` to query configured indexes. The manual explains [what a registry is](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/registries.xml) and [how to use a private one](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml).
+Use `vibe registry list` to inspect effective project registry declarations, `vibe registry test` to probe them, and `vibe search <query>` to query configured indexes. The manual explains [what a registry is](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/registries.xml) and [how to use a private one](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/howto/use-a-private-registry.xml).
 
 ## Machine-global package store and offline work
 
@@ -116,7 +116,7 @@ vibe cache check --repair --path hello-vibe
 vibe install --offline --path hello-vibe
 ```
 
-`--offline` is also available through `VIBE_OFFLINE` and the user setting `[net].offline`. An offline miss is a hard, actionable error; it never silently falls back to a partial result. `vibe cache clean` removes content only after the operator chooses `--package`, `--older-than`, or `--all`. The manual covers [the lock file and the store](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/lock-and-store.xml) and [working offline](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/howto/work-offline.xml).
+`--offline` is also available through `VIBE_OFFLINE` and the user setting `[net].offline`. An offline miss is a hard, actionable error; it never silently falls back to a partial result. `vibe cache clean` removes content only after the operator chooses `--package`, `--older-than`, or `--all`. The manual covers [the lock file and the store](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/lock-and-store.xml) and [working offline](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/howto/work-offline.xml).
 
 ## What a project contains
 
@@ -126,11 +126,11 @@ vibe install --offline --path hello-vibe
 - `vibevm/vibespecs/boot/STATIC.xml` and `vibevm/vibespecs/boot/INDEX.md` — the computed agent boot lanes.
 - `vibevm/vibespecs/WAL.xml` — the project's living session checkpoint.
 
-`vibe` keeps authored project specs separate from materialised dependencies. The manual explains the rule in [Two trees](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/two-trees.xml), the computed reading order in [The boot lane](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/boot-lane.xml), and the crates behind them in [How vibe is built](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml).
+`vibe` keeps authored project specs separate from materialised dependencies. The manual explains the rule in [Two trees](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/two-trees.xml), the computed reading order in [The boot lane](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/boot-lane.xml), and the crates behind them in [How vibe is built](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml).
 
 ## Documentation
 
-The manual is itself a package, [`org.vibevm.core/vibevm-docs`](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/README.md) of kind `doc`, and lives in this checkout. Its pages are written in the same XML dialect as the specifications; the local reader and, later, the site render them. Read them on your own machine with nothing sent anywhere:
+The manual is itself a package, [`org.vibevm.core/vibevm-docs`](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/README.md) of kind `doc`, and lives in this checkout. Its pages are written in the same XML dialect as the specifications; the local reader and, later, the site render them. Read them on your own machine with nothing sent anywhere:
 
 ```bash
 vibe cache add org.vibevm.core/vibevm-docs
@@ -139,14 +139,14 @@ vibe doc serve
 
 The pages are grouped by what the reader is doing:
 
-- [Start here](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/start/index.xml) — what VibeVM is, installing `vibe`, the first project, what a project contains.
-- [The model](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/two-trees.xml) — two trees, packages and kinds, registries, versions, the lock file and the store, the boot lane.
-- [How to](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/howto/install-a-package.xml) — install, update and remove packages, work offline, use a private registry, publish, set up a workspace, read documentation locally.
-- [Agents](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/agent/ask-your-agent.xml) — ask your agent to do the work, give it the skill, how agents read this manual.
-- [Lifecycle](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/lifecycle/phases.xml) — the phases, build, package and deploy, scrape, extensions and providers.
-- [Reference](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/reference/commands.xml) — commands, the manifest, the lock file, settings and environment, machine formats.
-- [Authoring](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/authoring/write-a-flow.xml) — flows, feats and stacks, lang packages, tools and MCP servers, specs an agent can cite, documentation and its translations.
-- [Architecture](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml), [Glossary](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/glossary/index.xml), [FAQ](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/faq/index.xml) and [Diagnostics](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/diagnostics/errors.xml).
+- [Start here](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/start/index.xml) — what VibeVM is, installing `vibe`, the first project, what a project contains.
+- [The model](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/two-trees.xml) — two trees, packages and kinds, registries, versions, the lock file and the store, the boot lane.
+- [How to](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/howto/install-a-package.xml) — install, update and remove packages, work offline, use a private registry, publish, set up a workspace, read documentation locally.
+- [Agents](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/agent/ask-your-agent.xml) — ask your agent to do the work, give it the skill, how agents read this manual.
+- [Lifecycle](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/lifecycle/phases.xml) — the phases, build, package and deploy, scrape, extensions and providers.
+- [Reference](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/reference/commands.xml) — commands, the manifest, the lock file, settings and environment, machine formats.
+- [Authoring](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/authoring/write-a-flow.xml) — flows, feats and stacks, lang packages, tools and MCP servers, specs an agent can cite, documentation and its translations.
+- [Architecture](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml), [Glossary](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/glossary/index.xml), [FAQ](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/faq/index.xml) and [Diagnostics](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/diagnostics/errors.xml).
 
 Every example on those pages runs against the real binary, every rule they quote resolves against the current specifications, and `vibe doc check` is the gate; [DEV-GUIDE.md §8](DEV-GUIDE.md#8-documentation) says how to run it.
 

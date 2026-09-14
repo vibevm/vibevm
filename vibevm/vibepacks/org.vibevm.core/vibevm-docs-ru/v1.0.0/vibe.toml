@@ -44,7 +44,7 @@ version = "^1.0"
 # `<docname>-<lang>` (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION).
 [translates]
 package = "org.vibevm.core/vibevm-docs"
-version = "^0.1"
+version = "^1.0"
 
 # Где страницы стоят в навигации
 # (spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED). Пути те же, что

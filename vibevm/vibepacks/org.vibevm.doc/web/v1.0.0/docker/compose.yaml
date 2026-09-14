@@ -46,7 +46,7 @@ services:
   site: # placeholder: the service name the domain already points at
     build:
       context: ../../../../../..
-      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile
+      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/Dockerfile
       target: serve
     ports:
       # placeholder: whatever the owner's proxy already sends here.
@@ -64,7 +64,7 @@ services:
   renderer: # placeholder: the owner's name for it
     build:
       context: ../../../../../..
-      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile
+      dockerfile: vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/Dockerfile
       target: render
     volumes:
       - rendered:/out

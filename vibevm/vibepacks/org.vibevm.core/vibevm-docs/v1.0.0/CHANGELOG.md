@@ -1,8 +1,18 @@
 # Changelog of the VibeVM manual {#root}
 
-What changed for a reader, by version of this package. Written by hand from `JOURNAL.md`; the product's own versions are named where a change follows them.
+What changed for a reader, by date. This package carries one number and is republished under it in place, so a date and not a number says which edition a line belongs to. Written by hand from `JOURNAL.md`; the product's own versions are named where a change follows them.
 
-## 0.1.0 — the first edition (unreleased)
+## 1.0.0 — 2026-09-14
+
+What is new for a reader since the pages were first laid out:
+
+- **The pages open in the dark, and a switch keeps the other theme.** The choice is remembered on the reader's own machine and is sent nowhere.
+- **Search finds a page by a word from it.** The box reaches the title and the leading fact of every page and of every documentation on the site; it asks no search service, because the index is part of the site.
+- **A card says what it stands for.** It now wears the mark of its package's kind, the hand that wrote its prose, and, for a bridge, the two authorships kept apart — where one drawing stood before that distinguished nothing.
+- **Keeping `vibe` current is written down.** `self update` follows where the running copy came from, `self reinstall` fetches the running version again without changing which one it is, and `self rollback` goes back.
+- **The manual reads in Russian.** The adaptation is a package of its own, `vibevm-docs-ru`, mirroring these pages block for block in its own sentences.
+
+## 1.0.0 — the first edition
 
 The first complete manual of VibeVM 1.0, forty-nine pages in English:
 

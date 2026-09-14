@@ -34,7 +34,7 @@ use anyhow::{Result, bail};
 use vibe_doc::site::Site;
 
 /// Where the site package lives inside a checkout of the host.
-pub(crate) const WEB_PACKAGE: &str = "vibevm/vibepacks/org.vibevm.doc/web/v0.1.0";
+pub(crate) const WEB_PACKAGE: &str = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0";
 
 /// The build script, relative to the package.
 const BUILD_SCRIPT: &str = "tools/build.mjs";

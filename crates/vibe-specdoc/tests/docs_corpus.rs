@@ -127,7 +127,7 @@ fn corpus() -> Vec<(String, String)> {
 /// Every page on disk, quarantine included.
 fn all_pages() -> Vec<(String, String)> {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs");
+        .join("../../vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs");
     let mut files = Vec::new();
     let mut stack = vec![root.clone()];
     while let Some(dir) = stack.pop() {

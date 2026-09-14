@@ -1,6 +1,6 @@
 # Runtime Guide
 
-What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md). For how to use `vibe` once it runs, read the manual, the `doc` package `org.vibevm.core/vibevm-docs`: its [newcomer's route](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/start/index.xml) starts from an empty folder, and its [settings and environment](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/reference/settings-and-environment.xml) page quotes the paths listed below. This guide keeps the machine-level facts.
+What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md). For how to use `vibe` once it runs, read the manual, the `doc` package `org.vibevm.core/vibevm-docs`: its [newcomer's route](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/start/index.xml) starts from an empty folder, and its [settings and environment](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/reference/settings-and-environment.xml) page quotes the paths listed below. This guide keeps the machine-level facts.
 
 **Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](vibevm/vibespecs/common/PROP-000.xml).
 
@@ -68,7 +68,7 @@ vibe cache add org.vibevm.core/vibevm-docs
 vibe doc serve
 ```
 
-A `doc` package is never installed into a project; `vibe install` refuses it and names the command above. The manual's [Read documentation locally](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml) page covers private packages and the reader's interface.
+A `doc` package is never installed into a project; `vibe install` refuses it and names the command above. The manual's [Read documentation locally](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/howto/read-documentation-locally.xml) page covers private packages and the reader's interface.
 
 ### 4.1 `vibe trace` (needs the discipline toolchain)
 
@@ -76,4 +76,4 @@ A `doc` package is never installed into a project; `vibe install` refuses it and
 
 ## 5. Troubleshooting
 
-An error from `vibe` names the rule it enforces by its `spec://` address; `vibe explain <address>` prints that rule. The manual's [Diagnostics](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/diagnostics/errors.xml) page says how to read one and lists the refusals a user meets most often. Report anything it does not cover as an issue, with the full error text.
+An error from `vibe` names the rule it enforces by its `spec://` address; `vibe explain <address>` prints that rule. The manual's [Diagnostics](vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/diagnostics/errors.xml) page says how to read one and lists the refusals a user meets most often. Report anything it does not cover as an issue, with the full error text.

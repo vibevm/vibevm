@@ -37,11 +37,11 @@ ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 WORKDIR /web
 
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/package.json \
-     vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/pnpm-lock.yaml \
-     vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/pnpm-workspace.yaml ./
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/design/package.json design/
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/package.json site/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/package.json \
+     vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-lock.yaml \
+     vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-workspace.yaml ./
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/package.json design/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/package.json site/
 
 RUN corepack enable && pnpm install --frozen-lockfile
 
@@ -57,7 +57,7 @@ RUN corepack enable && pnpm install --frozen-lockfile
 # ─────────────────────────────────────────────────────────────────────
 FROM web-deps AS web-build
 
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/ ./
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/ ./
 RUN pnpm build:static && rm -rf site/dist site/server
 
 # ─────────────────────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ RUN apt-get update \
 
 COPY --from=vibe-build /usr/local/bin/vibe /usr/local/bin/vibe
 COPY . /checkout
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/site.toml /site.toml
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/site.toml /site.toml
 
 # `/out` is the directory the serving container reads. It is a mount in
 # every real run; the declaration is here so that a renderer started with
@@ -143,9 +143,9 @@ CMD ["vibe", "doc", "build-site", "--config", "/site.toml", "--out", "/out", "--
 FROM nginx:alpine AS serve
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/nginx.conf /etc/nginx/conf.d/vibevm-site.conf
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/csp.default.conf /etc/nginx/csp.conf
-COPY vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/csp-from-render.sh /docker-entrypoint.d/20-csp-from-render.sh
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/nginx.conf /etc/nginx/conf.d/vibevm-site.conf
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/csp.default.conf /etc/nginx/csp.conf
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/csp-from-render.sh /docker-entrypoint.d/20-csp-from-render.sh
 RUN chmod +x /docker-entrypoint.d/20-csp-from-render.sh \
     && nginx -t -c /etc/nginx/nginx.conf
 

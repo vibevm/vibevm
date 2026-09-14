@@ -188,7 +188,7 @@ pub fn content_policy(
 /// use vibe_doc_server::{Config, DEFAULT_PORT};
 ///
 /// // A reader for one package, on the site's own mount.
-/// let config = Config::new("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0");
+/// let config = Config::new("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0");
 /// assert_eq!(config.base, "/doc/");
 /// assert_eq!(config.port, DEFAULT_PORT);
 /// // There is no host field: the reader binds the loopback and nothing
@@ -434,7 +434,7 @@ pub fn build_app(reader: Arc<Reader>) -> Router {
 /// use vibe_doc_server::{Config, DEFAULT_PORT, Reader, serve};
 ///
 /// // The canonical use: open a package, then read it until Ctrl-C.
-/// let config = Config::new("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0");
+/// let config = Config::new("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0");
 /// let reader = Reader::open(&config, SpecSources::new(), Utc::now())?;
 /// serve(reader, DEFAULT_PORT)?;
 /// # Ok::<(), vibe_doc_server::ServerError>(())

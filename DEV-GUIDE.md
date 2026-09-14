@@ -78,7 +78,7 @@ The versions are pinned exactly, together with the framework, by [PROP-057 §12 
 
 ```sh
 corepack enable
-cd vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
+cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
 pnpm install --frozen-lockfile
 ```
 
@@ -100,8 +100,8 @@ From the repo root the same floor runs without pnpm at all, which is the form `t
 
 ```sh
 vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native.exe \
-  floor --path vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
-node vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/design/audit/contrast.mjs
+  floor --path vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
+node vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/audit/contrast.mjs
 ```
 
 **Building the site.** `pnpm build:static` prerenders every route for the server; `pnpm build:embedded` builds only the documentation routes for the shell `vibe` embeds. Both count the pages the generator reports against the pages the manifest declares and fail on a mismatch — the static generator under-generates silently and still exits 0 ([`##STACK-PAGE-COUNT-GATE`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack)).
@@ -401,7 +401,7 @@ The user-facing documentation of vibevm is being rebuilt as a *documentation pac
 # Check it. Every flag is independent; ask for the ones you want.
 cargo run -p vibe-cli -- doc check --examples --citations --derived \
     --translations --coverage --media \
-    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0
 
 # Render it into a directory that can be served as it stands.
 cargo run -p vibe-cli -- doc build --out .vibe/doc --format html
@@ -434,7 +434,7 @@ cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site
 cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site --no-web
 ```
 
-The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
+The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
 
 Nothing in that file authorises anything. The site reads every source anonymously, so there is no `auth`, no token and no environment name in the shape — a configuration that *could* carry a credential invites one onto a renderer with no use for it.
 
@@ -446,12 +446,12 @@ Two consequences worth knowing before you point it at a directory. **The state f
 
 The deployment is two containers and a directory between them ([PROP-057 `##SITE-TWO-CONTAINERS`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#site)): a **renderer**, which carries `vibe` built from this checkout and the site package with its dependencies, runs `doc build-site` into the directory and exits; and a **serving** container, stock nginx with `docker/nginx.conf`, which serves that directory and knows nothing else. A new render is a new directory, never a new image.
 
-Both are stages of one file, `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/docker/Dockerfile`, and its build context is **the repository root** — the renderer needs the binary built from this source, the site package, and the checkout itself, which is one of the two sources it reads. What of the root actually enters the context is an allow-list in `docker/Dockerfile.dockerignore` beside it; a working tree's `target/` alone is hundreds of gigabytes, so a deny-list that forgot one entry would send it all to the daemon.
+Both are stages of one file, `vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/Dockerfile`, and its build context is **the repository root** — the renderer needs the binary built from this source, the site package, and the checkout itself, which is one of the two sources it reads. What of the root actually enters the context is an allow-list in `docker/Dockerfile.dockerignore` beside it; a working tree's `target/` alone is hundreds of gigabytes, so a deny-list that forgot one entry would send it all to the daemon.
 
 To build and run the whole stack locally:
 
 ```sh
-cd vibevm/vibepacks/org.vibevm.doc/web/v0.1.0
+cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
 docker compose -f docker/compose.yaml up --build   # renders, then serves on 127.0.0.1:8080
 docker compose -f docker/compose.yaml down
 ```
