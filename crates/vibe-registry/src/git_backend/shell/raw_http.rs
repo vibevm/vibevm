@@ -154,6 +154,9 @@ struct AddressedRead {
 /// between attempts go; only a test passes either (see
 /// [`super::ShellGit::with_raw_base`] and
 /// [`super::ShellGit::with_raw_sleeper`]).
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-FAST-PATH"
+)]
 pub(super) fn try_read(
     client: &reqwest::blocking::Client,
     base_override: Option<&str>,
