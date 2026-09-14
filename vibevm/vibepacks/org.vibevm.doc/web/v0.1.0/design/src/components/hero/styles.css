@@ -238,6 +238,12 @@
   align-items: center;
   gap: 12px;
   width: 100%;
+  max-width: 100%;
+  /* A grid item's automatic minimum is its content's, and the content is
+     one unbreakable command: without this the panel is as wide as the
+     longest line and the page overflows sideways on a phone. The line
+     that scrolls is inside; this box may shrink to nothing. */
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text-2);
@@ -245,7 +251,17 @@
   border: 1px solid var(--line);
   border-radius: 9px;
   padding: 11px 15px;
-  max-width: 100%;
+}
+
+/* The command scrolls; the button beside it does not. A control that
+   travelled with the text it belongs to would be a control a reader has
+   to scroll to find. */
+.install__line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -258,6 +274,39 @@
 .install__cmd code {
   font: inherit;
   color: inherit;
+}
+
+/* Empty until a copy actually happens, so the line reads as a line and
+   not as a line with a label on it. */
+.install__copied {
+  flex: none;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.install__copy {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg-raise);
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.install__copy:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .install__next {

@@ -24,6 +24,12 @@
  * in its string table — the install commands and the 404 page — because
  * a port that left them inline would have no way to prove they came
  * across unchanged.
+ *
+ * A few entries are the PORT's own and say so where they stand:
+ * `documentation` for the way in to the manual the shared header gained
+ * (D-28), and the two words the copy button beside an install line needs.
+ * They are marked rather than mixed in, so that «every other value is the
+ * owner's, byte for byte» stays a claim a reader can check.
  */
 
 export const LOCALES = ["en", "ru"] as const;
@@ -58,6 +64,10 @@ export type Strings = {
   readonly installBash: string;
   readonly installPowerShell: string;
   readonly installNext: string;
+  /** What the copy button beside an install line IS; it shows no word. */
+  readonly copyCommand: string;
+  /** What the page says back once the command is on the clipboard. */
+  readonly copied: string;
   readonly caps: readonly [Cap, Cap, Cap];
   readonly footerTagline: string;
   readonly copyright: string;
@@ -85,6 +95,8 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     installBash: "Linux · macOS · WSL",
     installPowerShell: "Windows PowerShell",
     installNext: "Then add a spec stack:",
+    copyCommand: "Copy",
+    copied: "Copied",
     caps: [
       {
         label: "Registry",
@@ -125,6 +137,8 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     installBash: "Linux · macOS · WSL",
     installPowerShell: "Windows PowerShell",
     installNext: "Затем добавьте стек спецификаций:",
+    copyCommand: "Скопировать",
+    copied: "Скопировано",
     caps: [
       {
         label: "Реестр",
