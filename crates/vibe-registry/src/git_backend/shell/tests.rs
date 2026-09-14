@@ -30,11 +30,7 @@ fn preflight_succeeds_when_git_installed() {
 
 #[test]
 fn preflight_reports_not_installed_for_bogus_binary() {
-    let g = ShellGit {
-        binary: PathBuf::from("definitely-not-git-xyz"),
-        force_anonymous: false,
-        preflight_cache: OnceLock::new(),
-    };
+    let g = ShellGit::new().with_binary("definitely-not-git-xyz");
     let err = g.preflight().unwrap_err();
     assert!(
         matches!(err, GitError::NotInstalled),

@@ -10,7 +10,7 @@ use super::*;
 /// `vibe-redirect.toml` marker. Returns `Some(parsed)` when the
 /// marker exists; `None` when the file is absent (the common case
 /// — non-stub package). Surfaces parse errors and other I/O errors
-/// directly. Cheap: one extra `git archive` call per registry-walk
+/// directly. Cheap: one extra single-file read per registry-walk
 /// success.
 pub(super) fn try_fetch_redirect(
     backend: &Arc<dyn GitBackend>,
@@ -26,18 +26,24 @@ pub(super) fn try_fetch_redirect(
 /// for a `vibe-redirect.toml`. Used both for the initial probe at
 /// the stub layer and the hop-limit check at the target.
 ///
-/// Two-path read shape — same idea as `fetch_dep_manifest`:
+/// Three-path read shape — same ladder as `fetch_dep_manifest`:
 ///
-/// 1. `git archive --remote=<url> <ref> -- vibe-redirect.toml` is the
-///    cheap, no-clone read. Works against `file://` and the handful
-///    of hosts that expose `upload-archive`.
-/// 2. When the host refuses `upload-archive` (GitHub, by design) the
+/// 1. One HTTPS GET, on the hosts that serve a single file that way
+///    (GitHub, GitVerse). No subprocess at all, and the answer that
+///    matters most here is the cheap one: a marker that is not there
+///    comes back as `FileNotFoundInRef` from the first round-trip. That
+///    is the answer for very nearly every package, and it is why this
+///    probe stopped being expensive.
+/// 2. `git archive --remote=<url> <ref> -- vibe-redirect.toml` is the
+///    cheap, no-clone read for every other host. Works against
+///    `file://` and the handful of hosts that expose `upload-archive`.
+/// 3. When the host refuses `upload-archive` (GitHub, by design) the
 ///    archive call returns `ArchiveUnsupported`. Fall back to a
 ///    shallow clone of the repo at `refname` and read the file from
 ///    the working tree. The clone directory is the same the install
 ///    pipeline would use later, so this is also pre-warming.
 ///
-/// Returns `Ok(None)` when neither path finds the marker — the common
+/// Returns `Ok(None)` when no path finds the marker — the common
 /// "non-stub package" case where `vibe-redirect.toml` simply isn't
 /// part of the package payload.
 fn try_fetch_redirect_for_url(
