@@ -146,8 +146,8 @@
       "bytes": 4715
     },
     "reference/commands.xml#cli-help:vibe self --help": {
-      "sha256": "023d7c2d9e3f1de5d06fd8de9bad5680660a49ddeed8d54236101b5454d77198",
-      "bytes": 5078
+      "sha256": "14f9c96db4d8ed3fe3f6e4b658057811fad6729f6f8b9ef5fbce0a14e6fcdc5e",
+      "bytes": 5166
     },
     "reference/commands.xml#cli-help:vibe show --help": {
       "sha256": "89348a7ce83c36baab7b9ef29c0662d5a7fcd91b46a0014d852731f0e28bb7d7",

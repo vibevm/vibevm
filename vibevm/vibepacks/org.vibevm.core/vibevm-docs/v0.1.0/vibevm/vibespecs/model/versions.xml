@@ -36,11 +36,12 @@ org.vibevm.world      wal                           1.0.0           -           
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#SEL-STABLE"/>
     <p>Switching versions never overwrites a running binary and never requires a new terminal: the active version is a pointer the shim follows on the next call.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ACTIVATION-LAW"/>
-    <p>The manager looks after the program on the machine, not a project's dependencies, and its launcher folder goes on `PATH` once. `self use` repoints the active version; `--eval` prints a shell line for a one-terminal switch instead. `self update` follows where the running copy came from: a source checkout rebuilds at the tip, an installed binary refreshes its own version number and never jumps to another. `self rollback` swaps to the previous version and back again. The active version needs `--force` to be removed, and the copy that is running cannot be removed at all. Every prompt has a flag, so the whole thing works from a script or an agent, and `vibe vars` prints the variables the installation reads, without the publish token.</p>
+    <p>The manager looks after the program on the machine, not a project's dependencies, and its launcher folder goes on `PATH` once. `self use` repoints the active version; `--eval` prints a shell line for a one-terminal switch instead. `self update` follows where the running copy came from: a source checkout rebuilds at the tip, an installed binary moves to the newest published release. The same number is fetched again only when its release was rebuilt underneath it; `self reinstall` fetches the running version again without changing which one it is. `self rollback` swaps to the previous version and back again. The active version needs `--force` to be removed, and the copy that is running cannot be removed at all. Every prompt has a flag, so the whole thing works from a script or an agent, and `vibe vars` prints the variables the installation reads, without the publish token.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#VVM-IS-TOOL"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#PATH-SHIM-DIR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-USE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-UPDATE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-REINSTALL"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-ROLLBACK"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#RM-PROTECTED"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#FULLY-SCRIPTABLE"/>
