@@ -93,6 +93,14 @@ reader is most likely to be surprised by. The two libraries in
 that says nothing about who wrote it, and therefore stands in neither
 named group — has a document of its own to be measured on.
 
+Both of them also say what their list of pages should look like
+(`##NAV-PINNED`): the source pins its guide page and names the folder its
+other page lives in, and the adaptation names that same folder in its own
+words. Without those two tables every page the package builds shows the
+fallback — no pinned page, and a heading made from a directory name — so
+the rule that a documentation decides its own navigation would be true in
+the code and invisible in every build.
+
 The source is also the library's bridge. It declares the two authorships
 a bridge keeps apart — who maintains the wrapper, who wrote the bytes it
 wraps, and the licence of those bytes (PROP-023

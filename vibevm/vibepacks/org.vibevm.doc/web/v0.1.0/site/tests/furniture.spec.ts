@@ -48,17 +48,50 @@ test("the manual's pages stand in a column, grouped by their folders", async ({
 
   const column = page.locator("[data-contents]");
   await expect(column.locator(".contents__summary")).toBeHidden();
+  /* The manifest pins this page and names one folder, so the column is
+     the documentation's own statement about itself: the pinned page
+     first and outside every group, then the folder under the words the
+     package chose rather than the name of the directory. */
+  await expect(column.locator("a").first()).toHaveText("Every block once");
   await expect(column.locator(".contents__heading")).toHaveText([
-    "Reference",
-    "Guide",
+    "Reference pages",
   ]);
   await expect(column.locator("a")).toHaveText([
-    "Addresses",
     "Every block once",
+    "Addresses",
   ]);
   await expect(column.locator("a[aria-current='page']")).toHaveText(
     "Every block once",
   );
+});
+
+/**
+ * A section's identity is the source's and its name is the reader's
+ * edition's: the folder is the same in every language, and what stands
+ * over it is what that edition's own manifest calls it.
+ */
+test("a folder is named in the words of the edition being read", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(
+    "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/",
+  );
+
+  const column = page.locator("[data-contents]");
+  await expect(column.locator(".contents__heading")).toHaveText([
+    "Справочные страницы",
+  ]);
+  /* The pins are the source's — a pin names a document, and a document
+     is the same one in every language — and they lead to the
+     adaptation's own addresses. The words on the links are the source's
+     as well, which is this column's own rule about titles and not
+     something the navigation decides. */
+  await expect(column.locator("a").first()).toHaveAttribute(
+    "href",
+    "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/",
+  );
+  await expect(column.locator("a")).toHaveCount(2);
 });
 
 test("a phone gets the same pages as a block it opens itself", async ({

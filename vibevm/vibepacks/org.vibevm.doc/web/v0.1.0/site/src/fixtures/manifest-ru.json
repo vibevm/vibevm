@@ -30,6 +30,15 @@
     "published_at": "2026-09-02T12:00:00Z",
     "rendered_at": "2026-09-12T09:00:00Z"
   },
+  "navigation": {
+    "pinned": [],
+    "sections": [
+      {
+        "id": "reference",
+        "title": "Справочные страницы"
+      }
+    ]
+  },
   "pages": [
     {
       "path": "guide/every-block.xml",
