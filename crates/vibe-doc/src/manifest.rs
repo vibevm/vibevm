@@ -44,8 +44,8 @@ use std::path::Path;
 
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
-    AdaptedSource, Audience, Authorship, CardMedia, DocManifest, DocPackage, DocPage,
-    DocumentedSubject, Navigation, NavigationSection,
+    AdaptedSource, Audience, Authorship, BridgeAuthorship, CardMedia, DocManifest, DocPackage,
+    DocPage, DocumentedSubject, Navigation, NavigationSection,
 };
 
 use crate::citations::SpecSources;
@@ -204,6 +204,11 @@ fn assemble(
         // about its prose is unknown, and the site shows no badge for it
         // rather than deciding on its behalf (`##CARD-AUTHORSHIP`).
         authorship: card.authorship.clone(),
+        // What the site made and what an author wrote are different
+        // pages, and only the manifest can tell a shelf which one it is
+        // looking at (`##LEVEL-ZERO-MARKED`).
+        projection: card.projection,
+        bridge: card.bridge.clone(),
         status: status::strongest(&subjects),
         subjects,
         translation,
@@ -274,6 +279,11 @@ struct Card {
     /// What the package asked its navigation to look like, when it
     /// asked.
     navigation: Option<Navigation>,
+    /// Whether this rendering is the site's own projection of a
+    /// package's bytes rather than pages an author wrote.
+    projection: bool,
+    /// The two authorships a bridge keeps apart, when this is one.
+    bridge: Option<BridgeAuthorship>,
     /// `<coordinate>` → the semver constraint, in declaration order.
     documents: Vec<(String, String)>,
     translates: Option<(String, String)>,
@@ -327,11 +337,23 @@ impl Card {
                 }),
             authorship: field("authorship").as_deref().and_then(authorship),
             navigation: navigation(&parsed),
+            // A rendering is a projection unless the package it renders
+            // is documentation. Read off the KIND rather than off a
+            // marker the composition would have to remember to write:
+            // the level-0 render of a `doc` package is the pages its
+            // author wrote, and of everything else it is the site's own
+            // view of bytes (`##LEVEL-ZERO-MARKED`).
+            projection: field("kind").as_deref() != Some(DOC_KIND),
+            bridge: bridge(&parsed),
             documents: relation(&parsed, "documents"),
             translates: relation(&parsed, "translates").into_iter().next(),
         })
     }
 }
+
+/// The kind whose pages an author wrote, and therefore the one kind
+/// whose rendering is not a projection.
+const DOC_KIND: &str = "doc";
 
 /// Read `[package].authorship` as the wire spells it.
 ///
@@ -348,6 +370,72 @@ fn authorship(word: &str) -> Option<Authorship> {
         "mixed" => Some(Authorship::Mixed),
         _ => None,
     }
+}
+
+/// The two authorships of a bridge, when this package is one.
+///
+/// Both lists are already in the manifest and neither is computed here:
+/// `[package].authors` names who wrote the WRAPPER, and the
+/// `upstream_authors` of `[[embedded_source]]` name who wrote the bytes
+/// it points at. PROP-023 `##AUTHORSHIP-SEPARATION` keeps them apart in
+/// the manifest, and this keeps them apart on the wire, so no shell has
+/// to decide which of two lists a name belongs to.
+///
+/// `None` for a package that is not a bridge: the block would then be an
+/// invitation to print «maintainers» over the authors of the work
+/// itself.
+fn bridge(parsed: &toml::Value) -> Option<BridgeAuthorship> {
+    let package = parsed.get("package")?;
+    if package.get("bridge").and_then(toml::Value::as_bool) != Some(true) {
+        return None;
+    }
+    let list = |value: Option<&toml::Value>| -> Vec<String> {
+        value
+            .and_then(toml::Value::as_array)
+            .map(|entries| {
+                entries
+                    .iter()
+                    .filter_map(toml::Value::as_str)
+                    .map(str::to_owned)
+                    .collect()
+            })
+            .unwrap_or_default()
+    };
+    let sources: Vec<&toml::Value> = match parsed.get("embedded_source") {
+        Some(toml::Value::Array(entries)) => entries.iter().collect(),
+        Some(entry) => vec![entry],
+        None => Vec::new(),
+    };
+
+    // Declaration order, each name once: a reader is being told who
+    // wrote the work, not how many sources repeat a name.
+    let mut upstream_authors: Vec<String> = Vec::new();
+    for source in &sources {
+        for author in list(source.get("upstream_authors")) {
+            if !upstream_authors.contains(&author) {
+                upstream_authors.push(author);
+            }
+        }
+    }
+
+    // One line cannot state two licences, so sources that disagree
+    // state none: a page naming the first would be asserting a legal
+    // fact that is not true.
+    let licenses: Vec<&str> = sources
+        .iter()
+        .filter_map(|source| source.get("upstream_license"))
+        .filter_map(toml::Value::as_str)
+        .collect();
+    let upstream_license = match licenses.split_first() {
+        Some((first, rest)) if rest.iter().all(|other| other == first) => Some((*first).to_owned()),
+        _ => None,
+    };
+
+    Some(BridgeAuthorship {
+        maintainers: list(package.get("authors")),
+        upstream_authors,
+        upstream_license,
+    })
 }
 
 /// Read `[navigation]` as the wire carries it: the pinned paths in the

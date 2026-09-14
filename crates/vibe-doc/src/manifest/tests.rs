@@ -144,6 +144,81 @@ fn the_navigation_is_carried_and_the_page_order_is_left_alone() {
     assert_eq!(navigation.sections[0].title, "Start");
 }
 
+/// A documentation package's pages were written by somebody, so its
+/// rendering is not a projection; the level-zero view of any other kind
+/// is one, and the manifest is the only place a shelf can learn which
+/// of the two it is showing.
+#[test]
+fn a_rendering_says_whether_the_site_derived_it() {
+    assert!(!built().manifest.package.projection);
+
+    let tmp = tempfile::tempdir().expect("temp");
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[package]\nname = \"wal\"\ngroup = \"org.demo\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\
+         title = \"WAL\"\nabstract = \"a\"\n",
+    )
+    .expect("write");
+    let built =
+        build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at())).expect("it builds");
+    assert!(built.manifest.package.projection);
+    assert!(built.manifest.package.bridge.is_none());
+}
+
+/// A bridge has two authorships and the manifest keeps them apart: the
+/// wrapper's own authors on one side, the upstream names on the other,
+/// each upstream name once, and a licence only when every source
+/// carries the same one.
+#[test]
+fn a_bridge_carries_the_two_authorships_it_keeps_apart() {
+    let source = |name: &str, license: &str, authors: &str| {
+        format!(
+            "\n[[embedded_source]]\nname = \"{name}\"\nkind = \"git\"\n\
+             url = \"https://example.invalid/{name}\"\ncommit = \"abc\"\n\
+             content_hash = \"sha256:0\"\nupstream_authors = [{authors}]\n\
+             upstream_license = \"{license}\"\nlicense_path = \"LICENSE\"\n\
+             license_url = \"https://example.invalid/{name}/LICENSE\"\n"
+        )
+    };
+    let head = "[package]\nname = \"wrapped\"\ngroup = \"org.demo\"\nkind = \"flow\"\n\
+                version = \"0.1.0\"\ntitle = \"Wrapped\"\nabstract = \"a\"\nbridge = true\n\
+                authors = [\"The Bridge Maintainer\"]\n";
+
+    let agreed = card_of(&format!(
+        "{head}{}{}",
+        source("one", "MIT", "\"A. Upstream\", \"B. Upstream\""),
+        source("two", "MIT", "\"A. Upstream\"")
+    ));
+    let bridge = agreed.bridge.expect("a bridge carries both lists");
+    assert_eq!(bridge.maintainers, vec!["The Bridge Maintainer"]);
+    assert_eq!(bridge.upstream_authors, vec!["A. Upstream", "B. Upstream"]);
+    assert_eq!(bridge.upstream_license.as_deref(), Some("MIT"));
+
+    let disagreeing = card_of(&format!(
+        "{head}{}{}",
+        source("one", "MIT", "\"A. Upstream\""),
+        source("two", "Apache-2.0", "\"A. Upstream\"")
+    ));
+    assert!(
+        disagreeing
+            .bridge
+            .expect("still a bridge")
+            .upstream_license
+            .is_none(),
+        "one line cannot state two licences"
+    );
+}
+
+/// One manifest written to a temporary package, projected.
+fn card_of(manifest: &str) -> vibe_wire::generated::doc_manifest::DocPackage {
+    let tmp = tempfile::tempdir().expect("temp");
+    std::fs::write(tmp.path().join("vibe.toml"), manifest).expect("write");
+    build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at()))
+        .expect("it builds")
+        .manifest
+        .package
+}
+
 /// The subject is the one `[[documents]]` names, with the constraint it
 /// names it under. No source holds it here, so only this documentation's
 /// own edge is known — which is what community means.

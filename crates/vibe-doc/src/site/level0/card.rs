@@ -51,6 +51,32 @@ impl Manifest {
         self.value.get(key)
     }
 
+    /// One boolean from `[package]`, false unless the package said so.
+    pub fn flag(&self, key: &str) -> bool {
+        self.value
+            .get("package")
+            .and_then(|p| p.get(key))
+            .and_then(toml::Value::as_bool)
+            .unwrap_or(false)
+    }
+
+    /// One list of strings from `[package]`, empty unless the package
+    /// wrote one.
+    pub fn strings(&self, key: &str) -> Vec<String> {
+        self.value
+            .get("package")
+            .and_then(|p| p.get(key))
+            .and_then(toml::Value::as_array)
+            .map(|entries| {
+                entries
+                    .iter()
+                    .filter_map(toml::Value::as_str)
+                    .map(str::to_owned)
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
+
     /// The kind the package declares, or `pack` — the neutral word for a
     /// package whose manifest does not say.
     pub fn kind(&self) -> String {
@@ -151,6 +177,18 @@ pub fn synthesise(manifest: &Manifest) -> String {
     if let Some(authorship) = manifest.field("authorship") {
         out.push_str(&format!("authorship = {}\n", quote(&authorship)));
     }
+    // A bridge's page has two names to show and must never merge them
+    // (PROP-023 `##AUTHORSHIP-SEPARATION`). The flag and the wrapper's
+    // own authors travel here; the upstream names travel with
+    // `[[embedded_source]]` below, which is where the package wrote
+    // them.
+    if manifest.flag("bridge") {
+        out.push_str("bridge = true\n");
+    }
+    let authors = manifest.strings("authors");
+    if !authors.is_empty() {
+        out.push_str(&format!("authors = {}\n", quote_all(&authors)));
+    }
     for table in CARRIED {
         if let Some(value) = manifest.table(table) {
             out.push('\n');
@@ -162,10 +200,11 @@ pub fn synthesise(manifest: &Manifest) -> String {
 
 /// The tables a level-0 render carries across from the package it
 /// renders. Each is a statement the author made about relations,
-/// language, pictures or navigation, and each is read further down the
-/// pipeline — the card's images by `media::slots`, the relations by the
-/// manifest's officiality, the language by every address that carries
-/// one, the navigation by the page manifest the site reads.
+/// language, pictures, navigation or provenance, and each is read
+/// further down the pipeline — the card's images by `media::slots`, the
+/// relations by the manifest's officiality, the language by every
+/// address that carries one, the navigation and the upstream authors of
+/// `[[embedded_source]]` by the page manifest the site reads.
 const CARRIED: &[&str] = &[
     "i18n",
     "documents",
@@ -173,6 +212,7 @@ const CARRIED: &[&str] = &[
     "translates",
     "media",
     "navigation",
+    "embedded_source",
 ];
 
 /// Emit one carried table in TOML, under its own name.
@@ -183,6 +223,12 @@ fn emit(name: &str, value: &toml::Value) -> String {
     let mut document = toml::map::Map::new();
     document.insert(name.to_string(), value.clone());
     toml::to_string(&toml::Value::Table(document)).unwrap_or_default()
+}
+
+/// A TOML array of string literals, quoted the same way one string is.
+fn quote_all(values: &[String]) -> String {
+    let quoted: Vec<String> = values.iter().map(|value| quote(value)).collect();
+    format!("[{}]", quoted.join(", "))
 }
 
 /// A TOML string literal. Basic strings with the four escapes TOML asks

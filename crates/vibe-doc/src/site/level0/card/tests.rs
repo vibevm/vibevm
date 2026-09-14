@@ -63,6 +63,47 @@ fn a_quotation_mark_in_a_card_survives_into_the_manifest() {
     );
 }
 
+/// A bridge's provenance travels with the render: the flag and the
+/// wrapper's own authors on the card, the upstream names in the table
+/// the package wrote them in. Without them a level-0 page would print
+/// one authorship where the package states two.
+#[test]
+fn a_bridge_carries_its_two_authorships_into_the_render() {
+    let card = manifest(
+        "[package]\nname = \"wrapped\"\ngroup = \"org.example\"\nversion = \"1.0.0\"\n\
+         kind = \"flow\"\nbridge = true\nauthors = [\"The \\\"Bridge\\\" Maintainer\"]\n\
+         \n[[embedded_source]]\nname = \"upstream\"\nkind = \"git\"\n\
+         url = \"https://example.invalid/u\"\ncommit = \"abc\"\ncontent_hash = \"sha256:0\"\n\
+         upstream_authors = [\"A. Upstream\"]\nupstream_license = \"MIT\"\n\
+         license_path = \"LICENSE\"\nlicense_url = \"https://example.invalid/u/LICENSE\"\n",
+    );
+    let written = synthesise(&card);
+    let back: toml::Value = toml::from_str(&written).expect("the synthesised manifest parses");
+    let package = back.get("package").expect("a card");
+    assert_eq!(
+        package.get("bridge").and_then(toml::Value::as_bool),
+        Some(true)
+    );
+    assert_eq!(
+        package
+            .get("authors")
+            .and_then(toml::Value::as_array)
+            .and_then(|a| a.first())
+            .and_then(toml::Value::as_str),
+        Some("The \"Bridge\" Maintainer")
+    );
+    assert!(written.contains("[[embedded_source]]"), "{written}");
+    assert_eq!(
+        back.get("embedded_source")
+            .and_then(toml::Value::as_array)
+            .and_then(|s| s.first())
+            .and_then(|s| s.get("upstream_authors"))
+            .and_then(toml::Value::as_array)
+            .map(Vec::len),
+        Some(1)
+    );
+}
+
 #[test]
 fn a_manifest_that_names_no_coordinate_is_refused() {
     let tmp = tempfile::tempdir().expect("a temporary directory");

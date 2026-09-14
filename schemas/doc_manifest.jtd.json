@@ -70,6 +70,37 @@
         "description": "Who wrote the prose a documentation package carries (PROP-057 `##CARD-AUTHORSHIP`). `human` — a person wrote it; `ai` — a model wrote it; `mixed` — both hands are in the text. It is metadata of the DOCUMENT, kept for the reader who filters a shelf by it, and it is never an attribution of the commits or of the repository, whose authorship law is `spec://org.vibevm.core/vibevm/common/PROP-000#commits`. Closed: the three answers exhaust who can hold the pen, and a fourth name would be a second way of saying one of them."
       }
     },
+    "bridge_authorship": {
+      "metadata": {
+        "description": "Who wrote the bridge and who wrote what it bridges to (PROP-023 `##AUTHORSHIP-SEPARATION`). A bridge is a wrapper one maintainer publishes around somebody else's repository, so the page has two names to show and must never merge them into one line.",
+        "x-wire-order": ["maintainers", "upstream_authors", "upstream_license"]
+      },
+      "properties": {
+        "maintainers": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Who wrote the bridge — the package's own `[package].authors`, which name the authors of the wrapper, its metadata and its adapters, and of nothing upstream. Written even when empty, because an empty list of maintainers is a fact about a published bridge and not a hole to fill with the upstream names."
+          }
+        },
+        "upstream_authors": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Who wrote the bytes the bridge points at — the `upstream_authors` of every `[[embedded_source]]`, in declaration order and without repetition. One name appears once however many sources carry it, because a reader is being told who wrote the work and not how many times the manifest says so."
+          }
+        }
+      },
+      "optionalProperties": {
+        "upstream_license": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The licence of the upstream bytes, present only when every source carries the same one. Absent when the sources disagree: one line cannot state two licences, and a page that picked the first would be stating a legal fact that is not true."
+          }
+        }
+      }
+    },
     "navigation": {
       "metadata": {
         "description": "The two things a package may say about how its pages are listed (PROP-057 `##NAV-PINNED`): which of them stand first, and what the folders they live in are called. It changes only where the named pages stand — every other page keeps the order the layer law gave it — so a navigation is a small correction to a list the manifest already holds, never a second table of contents beside it.",
@@ -193,6 +224,8 @@
           "abstract",
           "lang",
           "authorship",
+          "projection",
+          "bridge",
           "status",
           "subjects",
           "translation",
@@ -270,6 +303,19 @@
           "metadata": {
             "x-default": null,
             "description": "Who wrote the prose this package carries, from `[package].authorship` (`##CARD-AUTHORSHIP`). Absent means unknown, which is what a package that declares nothing says: the site then shows no badge, and a filter by authorship leaves the package out of both named groups rather than guessing it into one."
+          }
+        },
+        "projection": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "True when this rendering is the site's own projection of a package's bytes — the level-zero view every package gets for free (`##LEVEL-ZERO-MARKED`), whose manifest page, README and boot snippet nobody wrote as pages. False, and therefore absent, for a documentation package, whose pages an author wrote. A shelf reads it to mark the first as generated and to leave the second alone."
+          }
+        },
+        "bridge": {
+          "ref": "bridge_authorship",
+          "metadata": {
+            "description": "The two authorships a bridge keeps apart (PROP-023 `##AUTHORSHIP-SEPARATION`), present only for a package that declares `[package].bridge = true`. Carried rather than recomputed by the shell: both lists are already in the package's own manifest, and the one thing a reader must never see is the maintainer of a wrapper printed as the author of the work it wraps."
           }
         },
         "translation": {
