@@ -366,6 +366,20 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/lib/search.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/search.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/lib/search.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/search.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/lib/theme-init.test.ts",
       "item_kind": "module",
       "line": 1,
@@ -482,6 +496,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/reader/rules.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/search.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/search.ts"
     },
     {
       "crate_name": "src",
@@ -685,6 +706,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/seo/resolve.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/seo/search.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/seo/search.ts"
     },
     {
       "crate_name": "src",
@@ -1126,6 +1154,22 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/lib/search.test.ts",
+      "from_symbol": "site/src/lib/search.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/lib/search.ts",
+      "from_symbol": "site/src/lib/search.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/lib/theme-init.test.ts",
       "from_symbol": "site/src/lib/theme-init.test.ts",
       "line": 1,
@@ -1259,6 +1303,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/search.ts",
+      "from_symbol": "site/src/reader/search.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
       "verb": "implements"
     },
     {
@@ -1488,6 +1540,14 @@
     {
       "file": "site/src/seo/resolve.ts",
       "from_symbol": "site/src/seo/resolve.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/seo/search.ts",
+      "from_symbol": "site/src/seo/search.ts",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER",
@@ -1836,6 +1896,18 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/lib/search.test.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/search.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/lib/search.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/search.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/lib/theme-init.test.ts",
       "line": 1,
       "message": "edge `site/src/lib/theme-init.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
@@ -1935,6 +2007,12 @@
       "file": "site/src/reader/rules.ts",
       "line": 1,
       "message": "edge `site/src/reader/rules.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-CITATIONS-RESOLVED`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/search.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/search.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -2109,6 +2187,12 @@
       "file": "site/src/seo/resolve.ts",
       "line": 1,
       "message": "edge `site/src/seo/resolve.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/seo/search.ts",
+      "line": 1,
+      "message": "edge `site/src/seo/search.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

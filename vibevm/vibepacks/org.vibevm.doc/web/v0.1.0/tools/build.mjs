@@ -53,6 +53,7 @@ import {
 import { PUBLIC_ONLY } from "../site/src/seo/local.ts";
 import { DOC_MEDIA_ENV } from "../site/src/seo/media.ts";
 import { resolveTableOf, resolverPage } from "../site/src/seo/resolve.ts";
+import { SEARCH_INDEX, searchIndex } from "../site/src/seo/search.ts";
 import { sitemapOf } from "../site/src/seo/sitemap.ts";
 import { islandsOf } from "./doc-library.mjs";
 import {
@@ -351,6 +352,13 @@ function writeDocumentationSurfaces(outDirName) {
     `${JSON.stringify(siteManifest(LIBRARIES), null, 2)}\n`,
   );
   write(docFileHref("llms.txt"), catalogueLlmsTxt(config.origin, LIBRARIES));
+
+  /* The header's search corpus. Written compact, unlike the manifest
+     beside it: this one is fetched by a reader between two keystrokes
+     and read by nobody. */
+  const search = searchIndex(LIBRARIES);
+  write(SEARCH_INDEX, `${JSON.stringify(search)}\n`);
+
   const corpus = fullCorpus(TREES, LIBRARIES, config.origin);
   if (corpus !== null) write(docFileHref("llms-full.txt"), corpus);
 
@@ -365,7 +373,7 @@ function writeDocumentationSurfaces(outDirName) {
   write(docFileHref("resolve/index.html"), resolverPage());
 
   process.stdout.write(
-    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) of ${LIBRARIES.length} librar${LIBRARIES.length === 1 ? "y" : "ies"} (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, ${sitemap.parts.length} sitemap part(s) over ${sitemap.addresses} address(es), resolver\n`,
+    `build (${mode}): ${copied.files} file(s) copied from ${TREES.length} documentation tree(s) for ${copied.editions} edition(s) of ${LIBRARIES.length} librar${LIBRARIES.length === 1 ? "y" : "ies"} (${copied.fallbacks} page(s) in a language that does not carry them); ${written} written — catalogue, manifests, ${sitemap.parts.length} sitemap part(s) over ${sitemap.addresses} address(es), resolver, search index over ${search.entries.length} entr${search.entries.length === 1 ? "y" : "ies"}\n`,
   );
   if (copied.unplaced.length > 0) {
     process.stdout.write(

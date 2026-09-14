@@ -24,6 +24,7 @@ export { DocCard, type DocCardProps } from "./components/doc-card/index.tsx";
 export {
   SearchBox,
   type SearchBoxProps,
+  type SearchHit,
 } from "./components/search-box/index.tsx";
 export { Tag, type TagProps } from "./components/tag/index.tsx";
 export {

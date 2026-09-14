@@ -124,6 +124,16 @@ const DIFFERENCES = [
       fragment === "Documentation" || fragment === "Документация",
   },
   {
+    id: "D-16",
+    where: "text",
+    reason:
+      "The header gains the search box the documentation's header carries: the field's visually hidden label and the `Ctrl K` pill beside it. One site, one way to look for a page (D-28) — and the box is one widget used by both halves rather than two that drift. The theme switch beside it adds no text at all: its three states are drawn marks with names in `aria-label`.",
+    matches: (fragment) =>
+      fragment === "Search the documentation" ||
+      fragment === "Искать в документации" ||
+      fragment === "Ctrl K",
+  },
+  {
     id: "D-11",
     where: "meta",
     reason:
