@@ -81,7 +81,7 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       </facts>
     </standalone>
     <surface title="2.2 Command surface — `vibe self` (+ `vibe vars`)">
-      <p><req-surface fact="true" status="spec/done">`req r4`</req-surface></p>
+      <p><req-surface fact="true" status="spec/done">`req r5`</req-surface></p>
       <p><SELF-NAMING fact="true" status="spec/done">`vibe self` — named after rustup's `self` (a tool that manages its own
 versions), and unambiguous where `man` collided with the Unix manual page:</SELF-NAMING></p>
       <facts ordered="false">
@@ -112,6 +112,14 @@ versions), and unambiguous where `man` collided with the Unix manual page:</SELF
   exactly as on `update`. The pair is deliberate (owner ruling 2026-09-14):
   refetching the current version and moving to a new release are two acts, so
   they carry two names.</CMD-REINSTALL>
+        <CMD-OFFLINE fact="true" status="impl/done" action="continue" actionstage="doc">Every `self` verb honours the offline posture the process resolved —
+  `--offline`, `VIBE_OFFLINE` or `[net] offline`, layered as PROP-010
+  `##OFFLINE-LAYERING` says. Under it a release-lane verb is refused before its
+  first request, naming the verb and the address it would have needed; a
+  source-lane rebuild runs without fetching when the checkout and the crates
+  are already local, and is refused the same way otherwise. The domain never
+  reads the environment for this: the composition root hands the resolved
+  posture in.</CMD-OFFLINE>
         <CMD-IMPORT fact="true" status="impl/done">`self import &lt;PATH&gt; --tag &lt;X.Y.Z&gt;` — put a legacy READY-BUILT local `vibe`
   executable into the inventory as an immutable `tag:` instance, reusing the
   store/placer/lock/state machinery (built 2026-08-20 for the 1.0.0

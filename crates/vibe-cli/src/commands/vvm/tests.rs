@@ -81,7 +81,7 @@ fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
 /// everything else to the source lane (PROP-019 `##CMD-INSTALL`,
 /// `##CMD-UPDATE`, `##SEL-STABLE`).
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#surface", r = 4)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#surface", r = 5)]
 fn a_binary_execution_routes_stable_to_the_newest_release_and_latest_nowhere() {
     let parse = |raw: &str| model::Selector::parse(raw, None).unwrap();
     assert_eq!(
