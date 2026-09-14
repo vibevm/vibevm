@@ -141,27 +141,28 @@ export function isProjection(card: DocPackage): boolean {
  * What KIND of package a card came from, when the manifest lets it be
  * known — the answer a shelf draws its mark from (VIBEVM-SPEC §4.1).
  *
- * **One kind can be known, and only one.** A rendering that is not a
- * projection came from a package of kind `doc`. That is not an inference
- * about the field above but the pipeline's own definition of it read
- * from the other end: the builder marks a rendering a projection exactly
- * when the package it rendered is NOT documentation
- * (`##LEVEL-ZERO-MARKED`), so «not a projection» and «kind doc» are one
- * statement with two spellings, and the site cannot disagree with the
- * shelf it stands the card on.
+ * **The word arrives named, and all eight of them do.** The manifest
+ * carries the `[package].kind` of the package the rendering came from,
+ * so the `flow`, the `tool`, the `mcp` a reader would most want marked
+ * reach the card as themselves. Nothing is inferred here and nothing is
+ * spelled here: the vocabulary lives in the schema both halves are
+ * generated from, and this function reads a member
+ * (`##PIPE-SHELL-PARSES-NOTHING`).
  *
- * **For a projection the answer is «not told», and that is a gap in the
- * WIRE and not a decision taken here.** The page manifest carries no
- * `kind` member at all, so the kind of the package a projection renders
- * — the `flow`, the `tool`, the `mcp` a reader would most want marked —
- * never reaches the site. The pipeline has it: it reads `[package].kind`
- * and spends the whole of it on the boolean above. Carrying the word
- * named, beside `projection`, is the one change that fills in the other
- * seven marks; until it is made a projection's card keeps the
- * placeholder it has always had, because a card may not guess a kind
- * nobody told it (`##PIPE-SHELL-PARSES-NOTHING`).
+ * **The second half is for manifests written before the member
+ * existed**, exactly as in [`isProjection`] above. Such a document tells
+ * a kind in one case only — a rendering it marks as NOT a projection
+ * came from a package of kind `doc`, which is the builder's own
+ * definition of that boolean read from the other end
+ * (`##LEVEL-ZERO-MARKED`) — and says nothing about the other seven. The
+ * day no manifest without the member is left in the wild, the second
+ * half goes and the first stays.
+ *
+ * «Not told» is an absence and never a guess: a card draws no mark
+ * nobody gave it, and falls back to the placeholder it has always had.
  */
 export function kindOf(card: DocPackage): PackageKind | undefined {
+  if (card.kind !== undefined) return card.kind;
   return isProjection(card) ? undefined : "doc";
 }
 

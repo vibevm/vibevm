@@ -45,7 +45,7 @@ use std::path::Path;
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
     AdaptedSource, Audience, Authorship, BridgeAuthorship, CardMedia, DocManifest, DocPackage,
-    DocPage, DocumentedSubject, Navigation, NavigationSection,
+    DocPage, DocumentedSubject, Navigation, NavigationSection, PackageKind,
 };
 
 use crate::citations::SpecSources;
@@ -204,6 +204,13 @@ fn assemble(
         // about its prose is unknown, and the site shows no badge for it
         // rather than deciding on its behalf (`##CARD-AUTHORSHIP`).
         authorship: card.authorship.clone(),
+        // The word the rendered package calls itself by, carried whole
+        // instead of being spent on the boolean below. A shelf that is
+        // told only «projection or not» can mark documentation and
+        // nothing else, because `doc` is the single kind that boolean
+        // can be read back out of; with the word beside it every other
+        // mark follows (`##PIPE-SHELL-PARSES-NOTHING`).
+        kind: card.kind.clone(),
         // What the site made and what an author wrote are different
         // pages, and only the manifest can tell a shelf which one it is
         // looking at (`##LEVEL-ZERO-MARKED`).
@@ -276,6 +283,9 @@ struct Card {
     lang: String,
     /// Who wrote the prose, when the package says so.
     authorship: Option<Authorship>,
+    /// Which of the eight kinds the package declares itself to be, when
+    /// it declares one the register knows.
+    kind: Option<PackageKind>,
     /// What the package asked its navigation to look like, when it
     /// asked.
     navigation: Option<Navigation>,
@@ -319,6 +329,10 @@ impl Card {
         let version = required("version")?;
         let version = semver::Version::parse(&version)
             .map_err(|e| DocError::manifest(&path, format!("`[package].version`: {e}")))?;
+        // The word the package calls itself by, read once and answering
+        // two questions: which of the eight marks a card wears, and
+        // whether the rendering is a projection at all.
+        let kind = field("kind");
         Ok(Card {
             group,
             group_parsed,
@@ -336,6 +350,7 @@ impl Card {
                     vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE.to_owned()
                 }),
             authorship: field("authorship").as_deref().and_then(authorship),
+            kind: kind.as_deref().and_then(package_kind),
             navigation: navigation(&parsed),
             // A rendering is a projection unless the package it renders
             // is documentation. Read off the KIND rather than off a
@@ -343,7 +358,7 @@ impl Card {
             // the level-0 render of a `doc` package is the pages its
             // author wrote, and of everything else it is the site's own
             // view of bytes (`##LEVEL-ZERO-MARKED`).
-            projection: field("kind").as_deref() != Some(DOC_KIND),
+            projection: kind.as_deref() != Some(DOC_KIND),
             bridge: bridge(&parsed),
             documents: relation(&parsed, "documents"),
             translates: relation(&parsed, "translates").into_iter().next(),
@@ -368,6 +383,29 @@ fn authorship(word: &str) -> Option<Authorship> {
         "human" => Some(Authorship::Human),
         "ai" => Some(Authorship::Ai),
         "mixed" => Some(Authorship::Mixed),
+        _ => None,
+    }
+}
+
+/// Read `[package].kind` as the register spells it (PROP-000
+/// `##KIND-SET`).
+///
+/// A word outside the eight reads as absent, for the reason a misspelled
+/// `authorship` does — and for one more that is not a matter of posture.
+/// A level-0 render of a package that declared no kind writes the neutral
+/// `pack` into its composed card, and `pack` is not a kind: it is the
+/// composition saying it was told nothing. Mapping it to a variant would
+/// mint a ninth kind on the wire out of the absence of one.
+fn package_kind(word: &str) -> Option<PackageKind> {
+    match word {
+        "flow" => Some(PackageKind::Flow),
+        "feat" => Some(PackageKind::Feat),
+        "stack" => Some(PackageKind::Stack),
+        "tool" => Some(PackageKind::Tool),
+        "mcp" => Some(PackageKind::Mcp),
+        "lang" => Some(PackageKind::Lang),
+        DOC_KIND => Some(PackageKind::Doc),
+        "app" => Some(PackageKind::App),
         _ => None,
     }
 }

@@ -165,6 +165,43 @@ fn a_rendering_says_whether_the_site_derived_it() {
     assert!(built.manifest.package.bridge.is_none());
 }
 
+/// The word the package calls itself by reaches the card whole, for all
+/// eight kinds and not only for the one the projection flag can be read
+/// backwards into. A word the register does not know — `pack`, which is
+/// what a level-0 composition writes when the package named no kind — is
+/// an absence and never a ninth kind: the composition is saying it was
+/// told nothing, and a card that was told nothing draws no mark.
+#[test]
+fn the_card_carries_the_kind_the_package_calls_itself_by() {
+    let card = |kind: &str| {
+        card_of(&format!(
+            "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"{kind}\"\n\
+             version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n"
+        ))
+    };
+
+    assert_eq!(built().manifest.package.kind, Some(PackageKind::Doc));
+
+    let tool = card("tool");
+    assert_eq!(tool.kind, Some(PackageKind::Tool));
+    assert!(
+        tool.projection,
+        "a tool's pages were written by nobody, and the two answers are \
+         carried side by side"
+    );
+
+    assert_eq!(card("flow").kind, Some(PackageKind::Flow));
+    assert_eq!(card("feat").kind, Some(PackageKind::Feat));
+    assert_eq!(card("stack").kind, Some(PackageKind::Stack));
+    assert_eq!(card("mcp").kind, Some(PackageKind::Mcp));
+    assert_eq!(card("lang").kind, Some(PackageKind::Lang));
+    assert_eq!(card("app").kind, Some(PackageKind::App));
+
+    let unnamed = card("pack");
+    assert_eq!(unnamed.kind, None);
+    assert!(unnamed.projection);
+}
+
 /// A bridge has two authorships and the manifest keeps them apart: the
 /// wrapper's own authors on one side, the upstream names on the other,
 /// each upstream name once, and a licence only when every source

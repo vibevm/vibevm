@@ -9,6 +9,7 @@
     "description": "One page carrying every block of the documentation genre, for the island golden.",
     "abstract": "What it covers: one page that uses every block of the documentation genre once, so the island backend has a subject with no gaps.\nFor whom: whoever changes the renderer and needs to see what changed.\nWhat it assumes known: nothing; it documents nothing real.\nWhat it leaves out: prose worth reading.",
     "lang": "en",
+    "kind": "doc",
     "status": "community",
     "subjects": [
       {

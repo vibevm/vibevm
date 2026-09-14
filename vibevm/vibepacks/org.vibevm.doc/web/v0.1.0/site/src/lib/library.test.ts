@@ -491,17 +491,23 @@ describe("the door", () => {
   });
 
   /**
-   * The mark a card wears is the same decision read once more.
+   * The mark a card wears is the word the manifest gave it.
    *
-   * A rendering that is not a projection came from a package of kind
-   * `doc` — the builder's own definition of the word — so the card of a
-   * documentation may say so. A projection may not: the kind of the
-   * package it renders is nowhere in the manifest, and «not told» has to
-   * reach the card as an absence, because the card's whole rule is that
-   * a mark it was not given is a mark it does not draw.
+   * A projection of a `tool` wears the wrench: the member says what the
+   * rendered package is, and `projection` says only that nobody wrote
+   * the pages. The fallback under it is for a manifest written before
+   * the member — such a document tells `doc` for a rendering it marks as
+   * no projection, and tells nothing at all for one it does, because
+   * «not told» has to reach the card as an absence and a card draws no
+   * mark it was not given.
    */
-  it("names the kind it may name and says nothing about the one it may not", () => {
+  it("wears the kind the manifest names, and none when it names none", () => {
     const documentation = fixture("manifest.json").package;
+    assert.equal(kindOf({ ...documentation, kind: "tool" }), "tool");
+    assert.equal(
+      kindOf({ ...documentation, kind: "tool", projection: true }),
+      "tool",
+    );
     assert.equal(kindOf(documentation), "doc");
     assert.equal(kindOf({ ...documentation, projection: true }), undefined);
 

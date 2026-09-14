@@ -197,6 +197,18 @@ pub struct DocPackage {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub authorship: Option<Authorship>,
 
+    /// Which of the eight kinds the package this rendering came from declares
+    /// itself to be. Absent when the manifest predates the field, and absent
+    /// when the package named no kind at all or named a word outside the
+    /// register — both of which are «nobody told this card what it is», and a
+    /// card draws no mark it was not given (`##CARD-PLACEHOLDERS-GENERATED`).
+    /// It is a statement about the RENDERED package and not about the
+    /// rendering: a level-0 view of a `tool` carries `tool` and also carries
+    /// `projection`, which is how a shelf marks the wrench and still says the
+    /// page was generated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<PackageKind>,
+
     /// True when this rendering is the site's own projection of a package's
     /// bytes — the level-zero view every package gets for free (`##LEVEL-ZERO-
     /// MARKED`), whose manifest page, README and boot snippet nobody wrote as
@@ -391,6 +403,43 @@ pub struct NavigationSection {
     /// What the navigation shows for that folder, in the package's own language
     /// — one documentation is one language, so this needs no second field.
     pub title: String,
+}
+
+/// What kind of package this rendering came from, in the word the package's
+/// own `[package].kind` spells (PROP-000 `##KIND-SET`, whose register is
+/// `VIBEVM-SPEC.md` §4.1). The eight are the whole vocabulary and a ninth is
+/// an amendment to the specification rather than a value a manifest may invent,
+/// which is why a word outside the list reads as absent rather than as itself:
+/// a level-0 render of a package that declared no kind writes the neutral
+/// `pack`, and `pack` is not a kind. Carried named because the shell parses
+/// nothing and computes nothing (`##PIPE-SHELL-PARSES-NOTHING`) — before it was
+/// carried, a card could mark documentation and nothing else, because `doc` was
+/// the only kind «not a projection» could be read back out of.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PackageKind {
+    #[serde(rename = "app")]
+    App,
+
+    #[serde(rename = "doc")]
+    Doc,
+
+    #[serde(rename = "feat")]
+    Feat,
+
+    #[serde(rename = "flow")]
+    Flow,
+
+    #[serde(rename = "lang")]
+    Lang,
+
+    #[serde(rename = "mcp")]
+    Mcp,
+
+    #[serde(rename = "stack")]
+    Stack,
+
+    #[serde(rename = "tool")]
+    Tool,
 }
 
 /// Which of the two page skeletons a page follows (the package's own

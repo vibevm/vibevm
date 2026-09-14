@@ -163,6 +163,37 @@ test("the level-zero mark is read as written, and absence is not false", () => {
   assert.equal(refused.error.path, "$.package.projection");
 });
 
+/**
+ * The word the rendered package calls itself by. All eight cross, not
+ * just the one a boolean could be read backwards into: the point of
+ * carrying the member is that a projection of a `tool` arrives marked as
+ * a tool. Absence stays permissive for a manifest written before the
+ * member; a ninth word is refused by the name of its field.
+ */
+test("the kind of the rendered package crosses as itself", () => {
+  const tool = JSON.parse(JSON.stringify(fixture()));
+  tool.package.kind = "tool";
+  tool.package.projection = true;
+  const projected = parseDocManifest(tool);
+  assert.equal(projected.ok, true);
+  if (!projected.ok) return;
+  assert.equal(projected.value.package.kind, "tool");
+  assert.equal(projected.value.package.projection, true);
+
+  const parsed = parseDocManifest(fixture());
+  assert.equal(parsed.ok, true);
+  if (!parsed.ok) return;
+  assert.equal("kind" in parsed.value.package, false);
+
+  const broken = JSON.parse(JSON.stringify(fixture()));
+  broken.package.kind = "pack";
+  const refused = parseDocManifest(broken);
+  assert.equal(refused.ok, false);
+  if (refused.ok) return;
+  assert.equal(refused.error.path, "$.package.kind");
+  assert.match(refused.error.reason, /flow/);
+});
+
 test("a value outside a closed vocabulary is refused by name", () => {
   const document = fixture();
   assert.equal(typeof document, "object");

@@ -70,6 +70,13 @@
         "description": "Who wrote the prose a documentation package carries (PROP-057 `##CARD-AUTHORSHIP`). `human` — a person wrote it; `ai` — a model wrote it; `mixed` — both hands are in the text. It is metadata of the DOCUMENT, kept for the reader who filters a shelf by it, and it is never an attribution of the commits or of the repository, whose authorship law is `spec://org.vibevm.core/vibevm/common/PROP-000#commits`. Closed: the three answers exhaust who can hold the pen, and a fourth name would be a second way of saying one of them."
       }
     },
+    "package_kind": {
+      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "What kind of package this rendering came from, in the word the package's own `[package].kind` spells (PROP-000 `##KIND-SET`, whose register is `VIBEVM-SPEC.md` §4.1). The eight are the whole vocabulary and a ninth is an amendment to the specification rather than a value a manifest may invent, which is why a word outside the list reads as absent rather than as itself: a level-0 render of a package that declared no kind writes the neutral `pack`, and `pack` is not a kind. Carried named because the shell parses nothing and computes nothing (`##PIPE-SHELL-PARSES-NOTHING`) — before it was carried, a card could mark documentation and nothing else, because `doc` was the only kind «not a projection» could be read back out of."
+      }
+    },
     "bridge_authorship": {
       "metadata": {
         "description": "Who wrote the bridge and who wrote what it bridges to (PROP-023 `##AUTHORSHIP-SEPARATION`). A bridge is a wrapper one maintainer publishes around somebody else's repository, so the page has two names to show and must never merge them into one line.",
@@ -224,6 +231,7 @@
           "abstract",
           "lang",
           "authorship",
+          "kind",
           "projection",
           "bridge",
           "status",
@@ -303,6 +311,13 @@
           "metadata": {
             "x-default": null,
             "description": "Who wrote the prose this package carries, from `[package].authorship` (`##CARD-AUTHORSHIP`). Absent means unknown, which is what a package that declares nothing says: the site then shows no badge, and a filter by authorship leaves the package out of both named groups rather than guessing it into one."
+          }
+        },
+        "kind": {
+          "ref": "package_kind",
+          "metadata": {
+            "x-default": null,
+            "description": "Which of the eight kinds the package this rendering came from declares itself to be. Absent when the manifest predates the field, and absent when the package named no kind at all or named a word outside the register — both of which are «nobody told this card what it is», and a card draws no mark it was not given (`##CARD-PLACEHOLDERS-GENERATED`). It is a statement about the RENDERED package and not about the rendering: a level-0 view of a `tool` carries `tool` and also carries `projection`, which is how a shelf marks the wrench and still says the page was generated."
           }
         },
         "projection": {
