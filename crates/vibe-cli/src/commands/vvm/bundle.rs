@@ -17,24 +17,27 @@ use vibe_publish::release_manifest::{
 
 use super::env::{EnvPersister, Shell};
 use super::install::InstallLock;
-use super::model::{Kind, Origin};
+use super::model::{InstallRecord, Kind, Origin};
 use super::{
     VvmEnv, output, provenance,
     store::{VersionStore, open_regular_no_follow},
 };
-use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmUpdateArgs};
+use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmReinstallArgs, VvmUpdateArgs};
 
 #[path = "bundle/archive.rs"]
 mod archive;
 
-pub(super) fn installed_bundle_intact(
-    store: &VersionStore,
-    record: &super::model::InstallRecord,
-) -> bool {
+pub(super) fn installed_bundle_intact(store: &VersionStore, record: &InstallRecord) -> bool {
     archive::installed_bundle_intact(store, record)
 }
 
 const GITHUB_RELEASE_ROOT: &str = "https://github.com/vibevm/vibevm/releases/download";
+/// GitHub's stable alias for whatever release is newest right now. It is the
+/// one address from which a running installation can learn that a version
+/// beyond its own exists — every other release URL names a version already
+/// known (PROP-019 `##CMD-UPDATE`).
+const GITHUB_NEWEST_RELEASE_MANIFEST: &str =
+    "https://github.com/vibevm/vibevm/releases/latest/download/DISTRIBUTIONS.json";
 static REQUEST_NONCE: AtomicU64 = AtomicU64::new(1);
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(20);
 const TOTAL_TIMEOUT: Duration = Duration::from_secs(30 * 60);
@@ -115,38 +118,77 @@ fn bootstrap_with_downloader(
         &release_base,
         args.force,
     )
+    .map(|_| ())
 }
 
+/// `self update` (PROP-019 `##CMD-UPDATE`): a binary execution moves to the
+/// newest published release; a source execution rebuilds its checkout at
+/// `latest`, exactly as before.
 pub(super) fn run_update_cmd(
     ctx: &output::Context,
     env: &VvmEnv,
     args: VvmUpdateArgs,
 ) -> Result<()> {
     let store = env.store()?;
-    if let Some(record) = provenance::running_record(&store)?
-        && record.origin == Origin::Binary
-    {
-        if record.kind != Kind::Tag || semver::Version::parse(&record.id).is_err() {
-            bail!(
-                "binary instance `{}` has no semantic release version; use `vibe self install VERSION`",
-                record.selector()
-            );
-        }
-        let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
-        return update_binary(
-            &RemoteContext {
-                ctx,
-                env,
-                store: &store,
-                downloader: &HttpDownloader,
-                persister: persister.as_ref(),
-                command: "self:update",
-            },
-            &record.id,
-            args.force,
-        );
+    if let Some(record) = running_binary_record(&store)? {
+        return install_newest_release(ctx, env, &store, &record, args.force, "self:update");
     }
+    rebuild_latest(ctx, env, args.profile, args.release, args.force)
+}
 
+/// `self reinstall` (PROP-019 `##CMD-REINSTALL`): refetch and reinstall the
+/// version that is running — a binary execution redownloads its own release,
+/// a source execution rebuilds its checkout. Always a fresh immutable `#N`:
+/// that IS the verb, so there is no flag to ask for it.
+pub(super) fn run_reinstall_cmd(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    args: VvmReinstallArgs,
+) -> Result<()> {
+    let store = env.store()?;
+    if let Some(record) = running_binary_record(&store)? {
+        binary_release_version(&record)?;
+        let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+        return install_release_version(
+            &remote_context(ctx, env, &store, persister.as_ref(), "self:reinstall"),
+            &record.id,
+            true,
+        )
+        .map(|_| ());
+    }
+    rebuild_latest(ctx, env, args.profile, args.release, true)
+}
+
+/// The running managed BINARY installation, when this execution is one. A
+/// source or worktree execution has no release to fetch and returns `None`.
+fn running_binary_record(store: &VersionStore) -> Result<Option<InstallRecord>> {
+    Ok(provenance::running_record(store)?.filter(|record| record.origin == Origin::Binary))
+}
+
+/// The logical release version a binary execution can refresh or advance.
+/// An instance inventoried under a non-release identity has no release
+/// lane at all, and says so instead of guessing a URL.
+fn binary_release_version(record: &InstallRecord) -> Result<semver::Version> {
+    if record.kind == Kind::Tag
+        && let Ok(version) = semver::Version::parse(&record.id)
+    {
+        return Ok(version);
+    }
+    bail!(
+        "binary instance `{}` has no semantic release version; use `vibe self install VERSION`",
+        record.selector()
+    )
+}
+
+/// The source lane's refresh, shared by `update` and `reinstall`: rebuild the
+/// running checkout at `latest`.
+fn rebuild_latest(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    profile: Option<String>,
+    release: bool,
+    force: bool,
+) -> Result<()> {
     super::run_install_cmd(
         ctx,
         env,
@@ -157,28 +199,118 @@ pub(super) fn run_update_cmd(
                 branch: false,
                 commit: false,
             },
-            profile: args.profile,
-            release: args.release,
+            profile,
+            release,
             mirror: None,
-            force: args.force,
+            force,
         },
     )
 }
 
-fn update_binary(remote: &RemoteContext<'_>, version: &str, force: bool) -> Result<()> {
-    let tag = format!("v{version}");
-    let release_base = format!("{GITHUB_RELEASE_ROOT}/{tag}");
-    let manifest_path = download_path(remote.store, DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
-    remote.store.guard_mutation_path(&manifest_path)?;
-    remote.downloader.download(
-        &cache_busted(&format!(
-            "{release_base}/{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}"
-        )),
-        &manifest_path,
-        DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
+/// Move a binary installation to the NEWEST published release — the single
+/// function behind both `self update` and `self install stable` (PROP-019
+/// `##CMD-UPDATE`, `##SEL-STABLE`).
+pub(super) fn install_newest_release(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    store: &VersionStore,
+    record: &InstallRecord,
+    force: bool,
+    command: &str,
+) -> Result<()> {
+    let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+    move_to_newest_release(
+        &remote_context(ctx, env, store, persister.as_ref(), command),
+        record,
+        force,
+    )
+}
+
+/// Three outcomes, one manifest read. A newer release is installed and
+/// activated by the same verified path an explicit version number takes.
+/// The SAME version is not a no-op: a release can be rebuilt under its own
+/// number, so the manifest's bundle digest decides between a fresh instance
+/// and a reuse. An OLDER newest release means one was withdrawn on the far
+/// side; `update` never walks a machine backwards on its own.
+fn move_to_newest_release(
+    remote: &RemoteContext<'_>,
+    record: &InstallRecord,
+    force: bool,
+) -> Result<()> {
+    let installed = binary_release_version(record)?;
+    let aggregate = fetch_aggregate(remote, GITHUB_NEWEST_RELEASE_MANIFEST)
+        .context("learning the newest published release")?;
+    let newest = semver::Version::parse(&aggregate.version)
+        .with_context(|| format!("reading newest release version `{}`", aggregate.version))?;
+    if newest < installed {
+        return report_withdrawn_release(remote, record, &installed, &newest);
+    }
+    let platform = select_platform(&aggregate, &newest.to_string(), current_target()?)?;
+    let release_base = format!("{GITHUB_RELEASE_ROOT}/v{newest}");
+    if newest > installed {
+        remote
+            .ctx
+            .summary(&format!("updating {installed} → {newest}"));
+        install_selected(remote, platform, &release_base, force)?;
+        return Ok(());
+    }
+    let reused = install_selected(remote, platform, &release_base, force)?;
+    remote.ctx.summary(&if reused {
+        format!("newest release is {newest} — already installed")
+    } else {
+        format!("newest release is still {newest}, rebuilt since this install — reinstalled")
+    });
+    Ok(())
+}
+
+/// The newest release is older than the installed one: nothing is fetched and
+/// nothing moves. Human output is the one line that explains it; a `--json`
+/// caller still gets the ordinary envelope, reporting the running instance as
+/// the reused, active one — because that is exactly what it now is.
+fn report_withdrawn_release(
+    remote: &RemoteContext<'_>,
+    record: &InstallRecord,
+    installed: &semver::Version,
+    newest: &semver::Version,
+) -> Result<()> {
+    remote.ctx.summary(&format!(
+        "newest release is {newest}, older than the installed {installed} — staying on \
+         {installed}; `vibe self install {newest}` goes back deliberately"
+    ));
+    if !remote.ctx.is_json() {
+        return Ok(());
+    }
+    let outcome = archive::InstallOutcome {
+        record: record.clone(),
+        home: remote
+            .store
+            .instance_dir(&record.version_id(), record.instance),
+        reused: true,
+    };
+    emit_outcome(
+        remote.ctx,
+        remote.command,
+        &outcome,
+        &ActivationReport {
+            path_on_current_process: super::path_has_dir(
+                remote.env.path_var.as_deref(),
+                &remote.store.shim_dir(),
+            ),
+            durable_path_changed: false,
+            advisory_home_warning: None,
+        },
+    )
+}
+
+/// Install one named release version from its own release directory —
+/// `self install X.Y.Z` and `self reinstall`. Returns whether an existing
+/// immutable instance was reused.
+fn install_release_version(remote: &RemoteContext<'_>, version: &str, force: bool) -> Result<bool> {
+    let release_base = format!("{GITHUB_RELEASE_ROOT}/v{version}");
+    let aggregate = fetch_aggregate(
+        remote,
+        &format!("{release_base}/{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}"),
     )?;
-    let _cleanup = DownloadCleanup(manifest_path.clone());
-    let aggregate = read_aggregate(&manifest_path)?;
     let platform = select_platform(&aggregate, version, current_target()?)?;
     install_selected(remote, platform, &release_base, force)
 }
@@ -191,26 +323,71 @@ pub(super) fn install_binary_version(
     force: bool,
 ) -> Result<()> {
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
-    update_binary(
-        &RemoteContext {
-            ctx,
-            env,
-            store,
-            downloader: &HttpDownloader,
-            persister: persister.as_ref(),
-            command: "self:install",
-        },
+    install_release_version(
+        &remote_context(ctx, env, store, persister.as_ref(), "self:install"),
         version,
         force,
     )
+    .map(|_| ())
 }
 
+/// The context every release-lane verb runs in: the real HTTP downloader, the
+/// resolved store, and the command label its report carries.
+fn remote_context<'a>(
+    ctx: &'a output::Context,
+    env: &'a VvmEnv,
+    store: &'a VersionStore,
+    persister: &'a dyn EnvPersister,
+    command: &'a str,
+) -> RemoteContext<'a> {
+    RemoteContext {
+        ctx,
+        env,
+        store,
+        downloader: &HttpDownloader,
+        persister,
+        command,
+    }
+}
+
+/// Fetch and parse one aggregate manifest, cache-busted because every release
+/// URL a running installation reads is mutable.
+fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDistributionManifest> {
+    let manifest_path = download_path(remote.store, DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
+    remote.store.guard_mutation_path(&manifest_path)?;
+    remote.downloader.download(
+        &cache_busted(url),
+        &manifest_path,
+        DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
+    )?;
+    let _cleanup = DownloadCleanup(manifest_path.clone());
+    read_aggregate(&manifest_path)
+}
+
+/// Install one selected platform bundle, returning whether an existing
+/// immutable instance was reused instead of a new one allocated.
+///
+/// The manifest already names the bundle's digest, and an instance already
+/// installed from those exact bytes is verified in place — so an unchanged
+/// release is recognised BEFORE the bundle is fetched, and costs no download
+/// at all. Every actual install still walks the full verified path: fetch,
+/// hash, open, cross-check the embedded manifest, extract.
 fn install_selected(
     remote: &RemoteContext<'_>,
     platform: &PlatformDistributionFragment,
     release_base: &str,
     force: bool,
-) -> Result<()> {
+) -> Result<bool> {
+    if !force
+        && let Some(outcome) = archive::installed_from_published_bundle(
+            remote.store,
+            &platform.bundle,
+            &platform.asset,
+        )?
+    {
+        let _lock = InstallLock::acquire(remote.store)?;
+        return finish_install(remote, &outcome);
+    }
     let bundle_path = download_path(remote.store, &platform.asset.name);
     remote.store.guard_mutation_path(&bundle_path)?;
     remote.downloader.download(
@@ -231,13 +408,19 @@ fn install_selected(
         &platform.asset,
         force,
     )?;
+    finish_install(remote, &outcome)
+}
+
+/// Activate the installed-or-reused instance and report it.
+fn finish_install(remote: &RemoteContext<'_>, outcome: &archive::InstallOutcome) -> Result<bool> {
     let activation = activate_install(
         remote.store,
-        &outcome,
+        outcome,
         remote.persister,
         super::path_has_dir(remote.env.path_var.as_deref(), &remote.store.shim_dir()),
     )?;
-    emit_outcome(remote.ctx, remote.command, &outcome, &activation)
+    emit_outcome(remote.ctx, remote.command, outcome, &activation)?;
+    Ok(outcome.reused)
 }
 
 fn emit_outcome(

@@ -1,6 +1,7 @@
 //! Argument structs for `vibe self …` — the VibeVM Version Manager
-//! (PROP-019 §2.2). Carries the full verb set: `install`, activation
-//! (`use`/`env`), introspection (`ls`/`current`/`which`/`doctor`), `remove`/`gc`.
+//! (PROP-019 §2.2). Carries the full verb set: `install`, the two refresh
+//! verbs (`update`/`reinstall`), activation (`use`/`env`), introspection
+//! (`ls`/`current`/`which`/`doctor`), `remove`/`gc`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
@@ -25,9 +26,13 @@ pub enum VvmSubcommand {
     /// Bootstrap from an aggregate manifest and its release download base.
     Bootstrap(VvmBootstrapArgs),
 
-    /// Refresh and activate the current logical version. Binary executions
-    /// refetch their mutable release; source executions rebuild `latest`.
+    /// Move a binary installation to the newest release; a source execution
+    /// rebuilds `latest`.
     Update(VvmUpdateArgs),
+
+    /// Refetch and reinstall the current version: a binary execution
+    /// redownloads its own release, a source execution rebuilds it.
+    Reinstall(VvmReinstallArgs),
 
     /// Switch the active version; `--eval` creates a shell-local override.
     Use(VvmUseArgs),
@@ -184,6 +189,21 @@ pub struct VvmUpdateArgs {
     /// Rebuild even if this version is already installed.
     #[arg(long)]
     pub force: bool,
+}
+
+/// Flags for `self reinstall`: the profile knobs apply to the source lane
+/// only, exactly as on `update`. There is no `--force` — refetching the
+/// current version always allocates a fresh immutable `#N`, so the flag
+/// would name the only behaviour there is.
+#[derive(Debug, clap::Args)]
+pub struct VvmReinstallArgs {
+    /// Build profile (`debug` | `release`). Defaults to `debug`.
+    #[arg(long, value_name = "PROFILE")]
+    pub profile: Option<String>,
+
+    /// Shorthand for `--profile release`.
+    #[arg(long, conflicts_with = "profile")]
+    pub release: bool,
 }
 
 #[derive(Debug, clap::Args)]

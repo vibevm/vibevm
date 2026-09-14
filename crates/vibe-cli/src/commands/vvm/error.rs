@@ -44,7 +44,7 @@ pub(crate) enum VvmError {
     #[error(
         "`latest` is a source-branch selector, not a binary release version \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
-          fix: use `vibe self update` for the current binary version, `vibe self install X.Y.Z` to change it, or pass `--mirror` for a source build)"
+          fix: use `vibe self update` for the newest release, `vibe self install X.Y.Z` for a specific one, `vibe self reinstall` to refresh the current one, or `--mirror` for a source build)"
     )]
     BinaryFetchUnavailable,
 

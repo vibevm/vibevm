@@ -90,10 +90,28 @@ versions), and unambiguous where `man` collided with the Unix manual page:</SELF
   native release. Flags: `--release` / `--profile &lt;debug|release&gt;` (source
   lane); `--mirror &lt;gitverse|github&gt;` (force the source lane); `--force`
   (always allocate a fresh immutable `#N`).</CMD-INSTALL>
-        <CMD-UPDATE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self update` follows the running origin. A source/worktree execution rebuilds
-  its exact source root at `latest`; a binary execution refreshes its **current
-  logical SemVer** from the mutable release and never jumps versions.
-  `--force` redownloads/reinstalls even when the bundle digest is unchanged.</CMD-UPDATE>
+        <CMD-UPDATE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self update` follows the running origin, and moves versions FORWARD (owner
+  ruling 2026-09-14, replacing the v1 rule that a binary execution refreshes its
+  own number and never jumps). A source/worktree execution rebuilds its exact
+  source root at `latest`. A binary execution reads the release channel's
+  newest-release aggregate manifest and goes to the **newest published
+  release**: newer than the running version installs and activates it by the
+  same verified path an explicit `X.Y.Z` takes. The SAME version is not a no-op
+  — a release may be rebuilt under its own number, so the manifest's bundle
+  digest decides: changed bytes install a fresh immutable `#N`, unchanged bytes
+  reuse the instance already held and cost no bundle download at all. A newest
+  release OLDER than the running one (withdrawn on the far side) never walks the
+  machine backwards. `--force` installs a fresh `#N` whatever the digest says.
+  `self install stable` enters this same path, since `stable` IS the newest
+  release (§2.3).</CMD-UPDATE>
+        <CMD-REINSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`self reinstall` refreshes the version that is RUNNING, without changing which
+  version that is: a binary execution refetches its own release's manifest and
+  bundle, a source/worktree execution rebuilds its exact source root — either
+  way landing a fresh immutable `#N`. It takes no `--force`, because a fresh
+  instance is the whole verb; `--profile` / `--release` steer the source lane
+  exactly as on `update`. The pair is deliberate (owner ruling 2026-09-14):
+  refetching the current version and moving to a new release are two acts, so
+  they carry two names.</CMD-REINSTALL>
         <CMD-IMPORT fact="true" status="impl/done">`self import &lt;PATH&gt; --tag &lt;X.Y.Z&gt;` — put a legacy READY-BUILT local `vibe`
   executable into the inventory as an immutable `tag:` instance, reusing the
   store/placer/lock/state machinery (built 2026-08-20 for the 1.0.0

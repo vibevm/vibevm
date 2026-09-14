@@ -15,12 +15,13 @@ use zip::write::SimpleFileOptions;
 
 use super::archive::install_bundle;
 use super::{
-    Downloader, activate_install, bootstrap_with_downloader, current_target, update_binary,
+    Downloader, activate_install, bootstrap_with_downloader, current_target,
+    install_release_version, move_to_newest_release,
 };
 use crate::cli::VvmBootstrapArgs;
 use crate::commands::vvm::VvmEnv;
 use crate::commands::vvm::env::{EnvPersister, Persisted};
-use crate::commands::vvm::model::{Kind, VersionId};
+use crate::commands::vvm::model::{InstallRecord, Kind, Origin, VersionId};
 use crate::commands::vvm::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
 
 const COMMIT: &str = "0123456789abcdef0123456789abcdef01234567";
@@ -82,9 +83,31 @@ fn write_bundle(
     source: &[u8],
     extra_outer: bool,
 ) -> Fixture {
+    write_versioned_bundle(
+        root,
+        semver::Version::new(1, 0, 0),
+        actual_vibe,
+        declared_vibe,
+        source,
+        extra_outer,
+    )
+}
+
+/// A published bundle under an arbitrary release number. Two bundles of the
+/// SAME version with different payloads are the rebuilt-release case, so the
+/// local file is named by its own digest while the release asset name — the
+/// one the download URL is built from — stays the canonical per-version one.
+fn write_versioned_bundle(
+    root: &Path,
+    version: semver::Version,
+    actual_vibe: &[u8],
+    declared_vibe: &[u8],
+    source: &[u8],
+    extra_outer: bool,
+) -> Fixture {
     let vibe_index = b"index-binary";
     let manifest = BundleDistributionManifest::new(
-        semver::Version::new(1, 0, 0),
+        version.clone(),
         COMMIT,
         current_target().unwrap(),
         vec![
@@ -122,12 +145,13 @@ fn write_bundle(
         entries.push(("surprise", b"no"));
     }
     let bundle = zip_bytes(&entries);
-    let path = root.join("bundle.zip");
+    let outer = digest(&bundle);
+    let path = root.join(format!("bundle-{version}-{}.zip", &outer[7..15]));
     std::fs::write(&path, &bundle).unwrap();
     let asset = DistributionAsset {
-        name: format!("vibevm-1.0.0-{}.zip", current_target().unwrap()),
+        name: format!("vibevm-{version}-{}.zip", current_target().unwrap()),
         size: bundle.len() as u64,
-        digest: digest(&bundle),
+        digest: outer,
     };
     Fixture {
         path,
@@ -138,11 +162,12 @@ fn write_bundle(
 
 fn platform_bundle(
     target: &str,
+    version: &semver::Version,
     source_archive: &DistributionSourceArchive,
 ) -> BundleDistributionManifest {
     let windows = target == "x86_64-pc-windows-msvc";
     BundleDistributionManifest::new(
-        semver::Version::new(1, 0, 0),
+        version.clone(),
         COMMIT,
         target,
         vec![
@@ -170,6 +195,7 @@ fn platform_bundle(
 }
 
 fn aggregate_for(fixture: &Fixture) -> AggregateDistributionManifest {
+    let version = semver::Version::parse(&fixture.manifest.version).unwrap();
     let platforms = SUPPORTED_DISTRIBUTION_TARGETS
         .iter()
         .map(|target| {
@@ -177,9 +203,9 @@ fn aggregate_for(fixture: &Fixture) -> AggregateDistributionManifest {
                 (fixture.manifest.clone(), fixture.asset.clone())
             } else {
                 (
-                    platform_bundle(target, &fixture.manifest.source_archive),
+                    platform_bundle(target, &version, &fixture.manifest.source_archive),
                     DistributionAsset {
-                        name: format!("vibevm-1.0.0-{target}.zip"),
+                        name: format!("vibevm-{version}-{target}.zip"),
                         size: 1,
                         digest: digest(b"x"),
                     },
@@ -322,6 +348,9 @@ impl EnvPersister for FakePersister {
 
 #[path = "network_tests.rs"]
 mod network_tests;
+
+#[path = "release_tests.rs"]
+mod release_tests;
 
 #[test]
 fn verified_bundle_installs_both_tools_source_shims_and_force_refresh() {
