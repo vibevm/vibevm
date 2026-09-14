@@ -34,6 +34,9 @@
 }
 
 .docs-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.15rem;
@@ -42,8 +45,26 @@
   transition: color var(--speed) ease;
 }
 
-.docs-header__brand:hover {
+.docs-header__brand:hover .docs-header__name {
   color: var(--accent);
+}
+
+/* The mark keeps the accent whatever the word beside it is doing: it was
+   the accent on the first site, in both maps of the palette, and a mark
+   that changed colour when the name was hovered would read as two
+   controls rather than one. The size is the original's — 26px — and it
+   is the element the drawing takes `currentColor` from. */
+.docs-header__mark {
+  display: block;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+}
+
+.docs-header__name {
+  font-weight: 600;
+  transition: color var(--speed) ease;
 }
 
 .docs-header__actions {
