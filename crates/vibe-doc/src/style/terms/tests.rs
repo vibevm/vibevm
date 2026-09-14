@@ -141,3 +141,50 @@ fn containers_and_prompts_do_not_carry_a_first_use() {
     );
     assert!(rules.is_empty(), "{rules:?}");
 }
+
+/// The link counts whatever its own text says: an adaptation links the
+/// term in the case its sentence needs, and this linter inflects English
+/// and nothing else. From the link on, the term is introduced.
+#[test]
+fn a_link_to_the_entry_introduces_the_term_whatever_its_text_says() {
+    let rules = rules_of(
+        "<p>Intro without any term at all.</p>\
+         <s title=\"S\"><p>Записано в [лок-файле](../glossary/index.xml#lock-file); then the \
+         lock file is read.</p><p>The lock file again.</p></s>",
+    );
+    assert!(rules.is_empty(), "{rules:?}");
+}
+
+/// A link that comes after the first use sent the reader nowhere yet.
+#[test]
+fn a_link_that_comes_after_the_first_use_does_not_introduce_it() {
+    let rules = rules_of(
+        "<p>Intro without any term at all.</p>\
+         <s title=\"S\"><p>The lock file is read, see \
+         [the record](../glossary/index.xml#lock-file).</p></s>",
+    );
+    assert_eq!(rules, [Rule::TermBeforeIntroduction]);
+}
+
+/// `#registry` is not `#index-registry`: the fragment is matched whole.
+#[test]
+fn a_link_to_another_entry_introduces_nothing() {
+    let rules = rules_of(
+        "<p>Intro without any term at all.</p>\
+         <s title=\"S\"><p>See the [index](../glossary/index.xml#index-registry); the \
+         registry is here.</p></s>",
+    );
+    assert_eq!(rules, [Rule::TermBeforeIntroduction]);
+}
+
+/// A code span may stand between the term and its gloss: in Russian the
+/// qualifier follows the noun — «семейство `phase:`, группа точек…».
+#[test]
+fn a_code_span_between_the_term_and_its_gloss_is_part_of_the_phrase() {
+    let rules = rules_of(
+        "<p>Intro without any term at all.</p>\
+         <s title=\"S\"><p>The store `main`, the place where every fetched byte is kept, \
+         fills up.</p></s>",
+    );
+    assert!(rules.is_empty(), "{rules:?}");
+}

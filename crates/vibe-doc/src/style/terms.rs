@@ -17,12 +17,19 @@
 //! A looser test — «is there a comma anywhere in the sentence» — reports
 //! a page as clean whenever it happens to use a comma, which is a check
 //! that says yes for the wrong reason.
+//!
+//! The link counts whatever its own text says, and from that point on.
+//! An adaptation links the term in the case its sentence needs — «в
+//! [лок-файле](…#lock-file)» — and this linter inflects English and
+//! nothing else, so it would not even see that text as the term; the
+//! target is what says which entry the reader was sent to.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-CONTAINERS-AND-CORRIDORS");
 
 use std::collections::BTreeSet;
 
 use crate::style::glossary::{GLOSSARY_PAGE, Term};
+use crate::style::inline::CODE_MASK;
 use crate::style::prose::{Kind, Node};
 use crate::style::report::{Finding, Rule, Severity, quote};
 use crate::style::sentence;
@@ -70,10 +77,17 @@ pub fn check(page: &str, nodes: &[Node], terms: &[Term]) -> Vec<Finding> {
                 out.push(first_paragraph_finding(page, node, seen));
                 continue;
             }
-            if introduces(node, seen) {
+            if introduces(node, seen) || linked_earlier(node, seen) {
                 continue;
             }
             out.push(first_use_finding(page, node, seen));
+        }
+        for link in &node.inline.links {
+            for term in terms {
+                if links_to(&link.target, &term.anchor) {
+                    introduced.insert(term.anchor.as_str());
+                }
+            }
         }
     }
     out
@@ -171,6 +185,8 @@ fn first_use_finding(page: &str, node: &Node, seen: &Seen<'_>) -> Finding {
 /// Whether this occurrence introduces the term: a link to its glossary
 /// entry, the italics of a definition, or a gloss in the same sentence.
 fn introduces(node: &Node, seen: &Seen<'_>) -> bool {
+    // The term inside a link whose target names it: the glossary entry,
+    // or the page that explains it — «Read [The boot lane](../model/boot-lane.xml)».
     if let Some(link) = node.inline.link_at(seen.range)
         && link.target.contains(&seen.term.anchor)
     {
@@ -182,6 +198,24 @@ fn introduces(node: &Node, seen: &Seen<'_>) -> bool {
     glossed(&node.inline.text, seen.range)
 }
 
+/// A link to the term's glossary entry earlier in the same unit — the
+/// reader was sent to the entry before this use, whatever the link said.
+fn linked_earlier(node: &Node, seen: &Seen<'_>) -> bool {
+    node.inline
+        .links
+        .iter()
+        .any(|l| l.range.1 <= seen.range.0 && links_to(&l.target, &seen.term.anchor))
+}
+
+/// Whether a link target names the glossary entry of `anchor`: the
+/// glossary page, and exactly that fragment — `#registry` is not
+/// `#index-registry`.
+fn links_to(target: &str, anchor: &str) -> bool {
+    target
+        .rsplit_once('#')
+        .is_some_and(|(page, fragment)| fragment == anchor && page.ends_with(GLOSSARY_PAGE))
+}
+
 /// A gloss follows the term in the same sentence.
 fn glossed(text: &str, range: (usize, usize)) -> bool {
     let Some(s) = sentence::split(text)
@@ -191,11 +225,14 @@ fn glossed(text: &str, range: (usize, usize)) -> bool {
         return false;
     };
     // What may stand between the term and its gloss: the marks that
-    // close a quoted or parenthesised term, and whitespace. A WORD may
-    // not — «the lock file is written» glosses nothing, however many
-    // commas the rest of the sentence holds.
+    // close a quoted or parenthesised term, whitespace, and a code span
+    // — «семейство `phase:`, группа точек…» qualifies the term in the
+    // word order Russian has, and the span is one masked character. A
+    // WORD may not — «the lock file is written» glosses nothing, however
+    // many commas the rest of the sentence holds.
     let tail = &text[range.1..s.range.1];
-    let after = tail.trim_start_matches([')', '`', '»', '”', '\'', '"', ' ', '\n', '\t']);
+    let after =
+        tail.trim_start_matches([')', '`', '»', '”', '\'', '"', ' ', '\n', '\t', CODE_MASK]);
     let Some(mark) = after.chars().next() else {
         return false;
     };

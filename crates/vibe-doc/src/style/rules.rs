@@ -72,6 +72,13 @@ const TYPOGRAPHY: &[char] = &[
 /// The em dash a paragraph may carry once (STYLE.md §8).
 const EM_DASH: char = '—';
 
+/// Whether the em dash is an aside in this language, and therefore
+/// rationed. Russian punctuates with it (STYLE.md §10); every other
+/// language this manual is written in treats it as English does.
+fn dash_is_an_aside(lang: &str) -> bool {
+    !lang.eq_ignore_ascii_case("ru")
+}
+
 /// Every tic and deferral in one node's prose.
 ///
 /// A deferral phrase is forgiven in exactly one place: when the block is
@@ -159,7 +166,13 @@ pub fn length(page: &str, node: &Node) -> Vec<Finding> {
 ///
 /// A table cell is left alone: bold marks a header, an arrow belongs in a
 /// column of states, and a cell is a container rather than prose.
-pub fn signs(page: &str, node: &Node) -> Vec<Finding> {
+///
+/// The em dash is counted only where it is an aside. In English it is
+/// (STYLE.md §8: one per paragraph); in Russian the same sign is the тире
+/// of ordinary punctuation — «Пакет — это папка» — and a paragraph that
+/// defines three things carries three of them by grammar, not by tic
+/// (STYLE.md §10). `lang` is the package's own language.
+pub fn signs(page: &str, node: &Node, lang: &str) -> Vec<Finding> {
     if node.kind == Kind::Cell {
         return Vec::new();
     }
@@ -204,7 +217,7 @@ pub fn signs(page: &str, node: &Node) -> Vec<Finding> {
         );
     }
     let dashes = text.chars().filter(|c| *c == EM_DASH).count();
-    if dashes > 1 {
+    if dashes > 1 && dash_is_an_aside(lang) {
         sign(
             Rule::Sign,
             format!("{dashes} em dashes in one paragraph, and the limit is one"),

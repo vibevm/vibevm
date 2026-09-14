@@ -19,7 +19,10 @@
 //! The six ordinary words are spelled here rather than in package data
 //! because the norm spells them: they are the clarification's own list,
 //! and an author who wants a seventh is asking for a change to the rule,
-//! not to a file.
+//! not to a file. They are named by their glossary ANCHOR, not by the
+//! English phrase: an adaptation mirrors the glossary anchor for anchor
+//! (`##LOC-MIRROR`) while its titles are in its own language, so «пакет»
+//! under `package` is as ordinary in Russian as «package» is in English.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-CONTAINERS-AND-CORRIDORS");
 
@@ -30,8 +33,9 @@ use crate::pages::PageSet;
 /// The page a documentation package keeps its glossary on.
 pub const GLOSSARY_PAGE: &str = "glossary/index.xml";
 
-/// The glossary words the norm exempts: used in their ordinary English
-/// sense, they are not terms (`##STYLE-PAGE-SKELETON`, 2026-09-12).
+/// The glossary entries the norm exempts, by anchor: used in their
+/// ordinary sense, they are not terms (`##STYLE-PAGE-SKELETON`,
+/// 2026-09-12), in whichever language the glossary titles them.
 pub const ORDINARY: &[&str] = &[
     "package",
     "project",
@@ -80,7 +84,7 @@ pub fn terms(set: &PageSet) -> Vec<Term> {
             continue;
         };
         let phrase = base_form(&section.title);
-        if phrase.is_empty() || ORDINARY.iter().any(|o| o.eq_ignore_ascii_case(&phrase)) {
+        if phrase.is_empty() || ORDINARY.iter().any(|o| o.eq_ignore_ascii_case(anchor)) {
             continue;
         }
         let Some(pattern) = compile(&phrase) else {

@@ -70,7 +70,7 @@ pub fn check(package_dir: &Path, min_percent: u8) -> Result<Report> {
     let mut findings: Vec<Finding> = Vec::new();
     let mut scores: Vec<PageScore> = Vec::new();
     for page in &set.pages {
-        let (found, readability) = page_findings(page, &list.entries, &terms);
+        let (found, readability) = page_findings(page, &list.entries, &terms, &lang);
         let of = |s: Severity| found.iter().filter(|f| f.severity == s).count();
         scores.push(PageScore {
             page: page.rel.clone(),
@@ -96,13 +96,14 @@ fn page_findings(
     page: &Page,
     list: &[banned::Entry],
     terms: &[glossary::Term],
+    lang: &str,
 ) -> (Vec<Finding>, f64) {
     let nodes = prose::nodes(&page.doc);
     let mut out: Vec<Finding> = Vec::new();
     for node in &nodes {
         out.extend(rules::banned_words(&page.rel, node, list));
         out.extend(rules::length(&page.rel, node));
-        out.extend(rules::signs(&page.rel, node));
+        out.extend(rules::signs(&page.rel, node, lang));
     }
     out.extend(terms::check(&page.rel, &nodes, terms));
     out.extend(rules::headings(&page.rel, &page.doc));

@@ -14,6 +14,12 @@
 //! that documents the field `[requires] capabilities` writes the word
 //! `capabilities` in code font, and a linter that flagged it would be
 //! telling the author to rename the product.
+//!
+//! One exception to case-blindness, for the one tic that IS a case: an
+//! entry the list spells with a capital first letter matches only text
+//! spelled that way. The Russian list bans the honorific «Вы» — the
+//! capital letter, not the pronoun — and a linter that lowered both
+//! would ban addressing the reader at all.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT");
 
@@ -42,8 +48,11 @@ pub const DEFERRALS: &[&str] = &[
 pub struct Entry {
     /// The entry as the file spells it.
     pub phrase: String,
-    /// Its words, lower-cased.
+    /// Its words — lower-cased for an ordinary entry, as spelled for one
+    /// that begins with a capital letter (see the module text).
     words: Vec<String>,
+    /// Whether the entry is matched as spelled rather than case-blind.
+    exact_case: bool,
 }
 
 impl Entry {
@@ -100,9 +109,16 @@ pub fn parse(text: &str) -> Vec<Entry> {
     text.lines()
         .map(str::trim)
         .filter(|line| !line.is_empty() && !line.starts_with('#'))
-        .map(|line| Entry {
-            phrase: line.to_owned(),
-            words: line.split_whitespace().map(lower).collect(),
+        .map(|line| {
+            let exact_case = line.chars().next().is_some_and(char::is_uppercase);
+            Entry {
+                phrase: line.to_owned(),
+                words: line
+                    .split_whitespace()
+                    .map(|w| if exact_case { w.to_owned() } else { lower(w) })
+                    .collect(),
+                exact_case,
+            }
         })
         .filter(|e| !e.words.is_empty())
         .collect()
@@ -129,6 +145,12 @@ pub struct Hit {
 /// assert_eq!(hits.len(), 2);
 /// assert_eq!(hits[0].phrase, "note that");
 /// assert_eq!(hits[1].phrase, "just");
+///
+/// // A capitalised entry is the tic of the capital letter itself — and
+/// // the capital that opens a sentence is grammar, not the tic.
+/// let honorific = parse("Вы");
+/// assert_eq!(scan("Да, Вы можете, и вы можете.", &honorific).len(), 1);
+/// assert_eq!(scan("Вы можете. Вы можете!", &honorific).len(), 0);
 /// ```
 pub fn scan(text: &str, list: &[Entry]) -> Vec<Hit> {
     let words = words_of(text);
@@ -139,7 +161,20 @@ pub fn scan(text: &str, list: &[Entry]) -> Vec<Hit> {
             continue;
         }
         for start in 0..=words.len() - n {
-            if (0..n).all(|k| words[start + k].0 == entry.words[k]) {
+            let same = |k: usize| {
+                let word = &words[start + k];
+                if entry.exact_case {
+                    text[word.1..word.2] == *entry.words[k]
+                } else {
+                    word.0 == entry.words[k]
+                }
+            };
+            if (0..n).all(same) {
+                if entry.exact_case && starts_a_sentence(text, words[start].1) {
+                    // The capital that opens a sentence is grammar, not
+                    // the honorific.
+                    continue;
+                }
                 hits.push(Hit {
                     range: (words[start].1, words[start + n - 1].2),
                     phrase: entry.phrase.clone(),
@@ -159,6 +194,18 @@ pub fn scan(text: &str, list: &[Entry]) -> Vec<Hit> {
 /// A word is a run of alphanumerics and the marks that live inside a word
 /// (`-`, `'`), so `cutting-edge` is one word and `state-of-the-art` is
 /// one word.
+/// Whether the word at `at` opens a sentence: nothing but whitespace and
+/// quotation or bracket marks stands between it and the start of the
+/// text or the end of the previous sentence.
+fn starts_a_sentence(text: &str, at: usize) -> bool {
+    const OPENING: &[char] = &['«', '"', '\'', '(', '[', '“', '‘'];
+    const CLOSING: &[char] = &['»', '"', '\'', ')', ']', '”', '’'];
+    let before = text[..at]
+        .trim_end_matches(|c: char| c.is_whitespace() || OPENING.contains(&c))
+        .trim_end_matches(CLOSING);
+    before.is_empty() || before.ends_with(['.', '!', '?', '…'])
+}
+
 fn words_of(text: &str) -> Vec<(String, usize, usize)> {
     let mut out: Vec<(String, usize, usize)> = Vec::new();
     let mut start: Option<usize> = None;
