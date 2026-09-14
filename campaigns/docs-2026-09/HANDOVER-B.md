@@ -137,18 +137,17 @@ glossary + faq + diagnostics; каркас `0df597b3`; правка фиксту
 
 - **Ветка** `research-preview-1-docs`, переписана без трейлеров (`8aa68d2a` и выше), в обоих remote,
   серверный чекаут на ней. Сайт на домене — выкладка № 2 (леджер): адаптация, тёмная тема, поиск, W1-O1.
-- **Идут два воркера** в этом же дереве: W1-O3 (Rust, поля манифеста — `findings/PACKET-W1-O3.md`) и
-  W1-O4 (web — `findings/PACKET-W1-O4.md`); их коммиты уже частично на ветке (`f950953c`, `824403b9`,
-  `8aa68d2a` и следующие). Отчёты — `findings/WORKER-REPORT-W1-O3.md`, `…-W1-O4.md` (не закоммичены до ревью).
-- **По завершении W1-O3:** прочитать отчёт и дифы; применить прозу руководства о новых полях —
-  `campaigns/docs-2026-09/tasks/prose-manifest-fields.py` (из корня ворктри; EN и RU, три факта
-  `CARD-AUTHORSHIP`, `NAV-PINNED`, `LEVEL-ZERO-MARKED` — проверить `--citations`, `--coverage`,
-  `--translations`); `cargo xtask specmap`; закоммитить отчёт и записи; запустить POST-O3
-  (`--offline` → `vibe self`) и POST-O4 (backoff) — по одному, общий `target/`.
-- **По завершении W1-O4:** ревью; запустить W1-O6 (`findings/PACKET-W1-O6.md`, шесть пунктов G–L, включая
-  панель чтения вниз и один переключатель темы в шапке); потом W1-O3B (`PACKET-W1-O3B.md`), потом W1-O5
-  (глифы нарисованы: `findings/W1-O5-glyphs.svg`), последним W1-O2 (`PACKET-W1-O2.md`, переезд в `v1.0.0`:
-  только когда в web-пакете никого нет; на сервере после него — путь к Dockerfile в compose).
+- **Закрыты и записаны:** W1-O3 (поля манифеста; проза руководства о них — `d68ea275`^, specmap `d68ea275`),
+  W1-O4 (языки, вкладки, версия). Отчёты в `findings/`, леджер — строки W1-O3/W1-O4, журнал J-120, J-121.
+- **Идут два воркера** в этом же дереве: W1-O6 (web, `findings/PACKET-W1-O6.md`, G–L) и POST-O3 (Rust,
+  `findings/PACKET-POST-O3.md`). Отчёты — `findings/WORKER-REPORT-W1-O6.md`, `…-POST-O3.md` (не закоммичены
+  до ревью).
+- **По завершении POST-O3:** ревью; если факт `CMD-OFFLINE` лёг в `#surface` — проверить бамп r5 и ребро;
+  `cargo xtask specmap`; записи; запустить POST-O4 (`findings/PACKET-POST-O4.md`).
+- **По завершении W1-O6:** ревью; запустить W1-O3B (`PACKET-W1-O3B.md`; там же убрать `Reflect.get` в
+  `isProjection` — W1-O4 оставил), потом W1-O5 (`PACKET-W1-O5.md`, глифы в `findings/W1-O5-glyphs.svg`),
+  последним W1-O2 (`PACKET-W1-O2.md`, переезд в `v1.0.0`: только когда в web-пакете никого нет; на сервере
+  после него — путь к Dockerfile в compose). Выкладка № 3 — после W1-O6 или после W1-O3B, одной пересборкой.
 - **Выкладка** после каждой web-волны: серверный скрипт `update-vibevm-org.sh` по SSH, как в леджере
   (A5.6 п. 4–7, выкладка № 2); проверка домена — по строкам леджера выкладки № 2. Перед пушем —
   `git log --grep='Co-Authored-By' <base>..HEAD` должен быть пуст.
