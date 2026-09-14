@@ -59,7 +59,7 @@ impl Index {
     /// ```
     /// use vibe_doc_shell::index::Index;
     ///
-    /// let json = r#"{"schema":1,"package":"org.vibevm.doc/web","version":"0.1.0",
+    /// let json = r#"{"schema":1,"package":"org.vibevm.doc/web","version":"1.0.0",
     ///   "base":"/doc/","island_marker":"<!--vibe-doc-island-->","files":3,
     ///   "sha256":"00"}"#;
     /// let index = Index::parse(json, std::path::Path::new("shell/shell.json")).unwrap();
