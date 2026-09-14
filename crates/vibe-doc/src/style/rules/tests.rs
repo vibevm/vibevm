@@ -115,7 +115,7 @@ fn a_paragraph_of_more_than_six_sentences_is_a_warning() {
 fn exclamation_marks_emoji_bold_and_a_second_dash_are_errors() {
     let found = of(
         "<h title=\"H\"><p>Ship it! Now — really — now. **Bold** and 🎉.</p></h>",
-        signs,
+        |p, n| signs(p, n, "en"),
     );
     assert_eq!(found.len(), 4, "{found:?}");
     assert!(found.iter().all(|f| f.rule == Rule::Sign));
@@ -128,7 +128,7 @@ fn exclamation_marks_emoji_bold_and_a_second_dash_are_errors() {
 fn a_table_cell_is_left_alone_by_the_sign_rules() {
     let found = of(
         "<h title=\"H\"><table><tr><td>**Field**</td><td>a → b — c — d</td></tr></table></h>",
-        signs,
+        |p, n| signs(p, n, "en"),
     );
     assert!(found.is_empty(), "{found:?}");
 }
@@ -136,8 +136,20 @@ fn a_table_cell_is_left_alone_by_the_sign_rules() {
 /// The manual's own typography is not an emoji.
 #[test]
 fn the_quotation_marks_and_the_ellipsis_are_not_signs() {
-    let found = of("<h title=\"H\"><p>It says «yes», and then …</p></h>", signs);
+    let found = of(
+        "<h title=\"H\"><p>It says «yes», and then …</p></h>",
+        |p, n| signs(p, n, "en"),
+    );
     assert!(found.is_empty(), "{found:?}");
+}
+
+/// In Russian the em dash is punctuation, not an aside (STYLE.md §10): a
+/// paragraph that defines three things carries three of them by grammar.
+#[test]
+fn a_russian_paragraph_may_carry_as_many_dashes_as_its_grammar_needs() {
+    let body = "<h title=\"H\"><p>Пакет — это папка. Манифест — её имя. Лок — её память.</p></h>";
+    assert!(of(body, |p, n| signs(p, n, "ru")).is_empty());
+    assert_eq!(of(body, |p, n| signs(p, n, "en")).len(), 1);
 }
 
 #[test]
