@@ -1,9 +1,10 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE */
 
 import { Slot, component$, useStyles$, useVisibleTask$ } from "@qwik.dev/core";
-import { DocsHeader, Footer, ThemeSwitch } from "@vibe-docs/design";
+import { DocsHeader, Footer, SearchBox, ThemeSwitch } from "@vibe-docs/design";
 
 import { href } from "../lib/href.ts";
+import { findInDocumentation } from "../reader/search.ts";
 import { startThemeSwitch } from "../reader/theme.ts";
 import styles from "./chrome.css?inline";
 import {
@@ -31,10 +32,12 @@ export type LandingChromeProps = {
  * documentation and the two source mirrors, which a page already inside
  * the manual has no use for. One shape, two fillings.
  *
- * The theme switch hangs in both, at the same corner. A reader who
- * darkened the manual and then walked back out to the front page should
- * not have to find the control again, and should certainly not find the
- * page light.
+ * The theme switch and the search box hang in both, at the same corner
+ * and in the same order. A reader who darkened the manual and then
+ * walked back out to the front page should not have to find the control
+ * again, and a reader who arrives at the front door already knowing what
+ * they are looking for should not have to enter the manual first to be
+ * allowed to ask for it.
  *
  * The chrome is per-locale rather than per-site, which is why it is a
  * component taking a locale and not a layout reading the URL. The
@@ -75,6 +78,15 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
           >
             GitVerse
           </a>
+          <span class="landing-nav__search">
+            <SearchBox
+              label={t.search}
+              placeholder={t.searchPlaceholder}
+              shortcut="Ctrl K"
+              emptyLabel={t.searchEmpty}
+              find$={findInDocumentation}
+            />
+          </span>
           <span class="landing-nav__lang">
             <a
               class={

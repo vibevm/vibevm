@@ -28,9 +28,10 @@
  * A few entries are the PORT's own and say so where they stand:
  * `documentation` for the way in to the manual the shared header gained
  * (D-28), the two words the copy button beside an install line needs,
- * and the four the theme switch names its three states with. They are
- * marked rather than mixed in, so that «every other value is the
- * owner's, byte for byte» stays a claim a reader can check.
+ * the four the theme switch names its three states with, and the three
+ * the search box needs. They are marked rather than mixed in, so that
+ * «every other value is the owner's, byte for byte» stays a claim a
+ * reader can check.
  */
 
 export const LOCALES = ["en", "ru"] as const;
@@ -79,6 +80,10 @@ export type Strings = {
   readonly themeLight: string;
   readonly themeDark: string;
   readonly themeSystem: string;
+  /** The search box the header shares with the documentation's. */
+  readonly search: string;
+  readonly searchPlaceholder: string;
+  readonly searchEmpty: string;
 };
 
 export const STRINGS: Readonly<Record<Locale, Strings>> = {
@@ -127,6 +132,9 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     themeLight: "Light",
     themeDark: "Dark",
     themeSystem: "System",
+    search: "Search the documentation",
+    searchPlaceholder: "Search",
+    searchEmpty: "Nothing here carries that word.",
   },
   ru: {
     htmlLang: "ru",
@@ -173,6 +181,9 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     themeLight: "Светлая",
     themeDark: "Тёмная",
     themeSystem: "Системная",
+    search: "Искать в документации",
+    searchPlaceholder: "Поиск",
+    searchEmpty: "Здесь нет ничего с этим словом.",
   },
 };
 

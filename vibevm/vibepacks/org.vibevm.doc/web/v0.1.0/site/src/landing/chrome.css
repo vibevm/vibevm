@@ -116,4 +116,15 @@
   .landing-nav__link--wide {
     display: none;
   }
+  /* Four things do not fit across a phone, and the search box is the one
+     that is still one tap away: the documentation's own header carries
+     the same field, and at this width it carries the brand, the field
+     and the language and nothing else. What stays here is what only
+     this page offers — the way in, the language and the theme. */
+  .landing-nav__search {
+    display: none;
+  }
+  .landing-nav {
+    gap: 14px;
+  }
 }
