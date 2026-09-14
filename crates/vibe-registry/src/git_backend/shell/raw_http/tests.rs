@@ -6,6 +6,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf");
 
+use std::time::Duration;
+
 use specmark::verifies;
 
 use super::*;
@@ -290,6 +292,167 @@ fn gitverse_serves_base64_json_and_reports_a_miss_in_the_body() {
         assert!(
             !(gitverse.is_miss)(status, br#"{"code":4305}"#),
             "{status} is not a gitverse miss"
+        );
+    }
+}
+
+// ---- the backoff ----
+
+#[test]
+fn only_a_rate_limit_and_a_server_fault_are_refusals_for_now() {
+    // These say something about the host, not about the file.
+    for status in [429, 500, 502, 503, 504, 599] {
+        assert!(retry::refused_for_now(status), "{status} is worth a retry");
+    }
+    // These are answers, and half a second will not change them.
+    for status in [200, 204, 301, 304, 400, 401, 403, 404, 410, 451, 600] {
+        assert!(
+            !retry::refused_for_now(status),
+            "{status} must not be retried"
+        );
+    }
+}
+
+#[test]
+fn the_pause_doubles_and_the_budget_ends_the_retrying() {
+    let ms = Duration::from_millis;
+    let secs = Duration::from_secs;
+
+    // Left to itself the schedule doubles, and the third attempt is the
+    // last — there is no pause after it to compute.
+    assert_eq!(
+        retry::pause_before_next(1, None, Duration::ZERO),
+        Some(ms(500))
+    );
+    assert_eq!(retry::pause_before_next(2, None, ms(500)), Some(secs(1)));
+    assert_eq!(retry::pause_before_next(3, None, ms(1500)), None);
+
+    // A host that names its own number is obeyed, in both directions.
+    assert_eq!(
+        retry::pause_before_next(1, Some(secs(2)), Duration::ZERO),
+        Some(secs(2))
+    );
+    assert_eq!(
+        retry::pause_before_next(1, Some(ms(100)), Duration::ZERO),
+        Some(ms(100))
+    );
+
+    // Obeyed only as far as the budget reaches: a minute becomes what is
+    // left of it, and an exhausted budget ends the retrying as surely as
+    // a spent attempt does.
+    assert_eq!(
+        retry::pause_before_next(1, Some(secs(60)), Duration::ZERO),
+        Some(secs(5))
+    );
+    assert_eq!(
+        retry::pause_before_next(2, Some(secs(60)), secs(2)),
+        Some(secs(3))
+    );
+    assert_eq!(retry::pause_before_next(2, None, secs(5)), None);
+    assert_eq!(retry::pause_before_next(2, None, secs(9)), None);
+}
+
+#[test]
+fn retry_after_is_read_as_seconds_or_as_a_date() {
+    use reqwest::header::{HeaderMap, HeaderValue, RETRY_AFTER};
+
+    let with = |value: &str| {
+        let mut headers = HeaderMap::new();
+        headers.insert(RETRY_AFTER, HeaderValue::from_str(value).unwrap());
+        retry::retry_after(&headers)
+    };
+
+    assert_eq!(with("2"), Some(Duration::from_secs(2)));
+    assert_eq!(with("0"), Some(Duration::ZERO));
+    // No header is no value, and so is a value this reader cannot make
+    // sense of — in both cases the doubling schedule sets the pause.
+    assert_eq!(retry::retry_after(&HeaderMap::new()), None);
+    for unreadable in [
+        "soon",
+        "-5",
+        "2.5",
+        "Sun, 06 Nov 1994 08:49:37 PST",
+        // The two obsolete date formats, which this deliberately skips.
+        "Sunday, 06-Nov-94 08:49:37 GMT",
+        "Sun Nov  6 08:49:37 1994",
+    ] {
+        assert_eq!(with(unreadable), None, "{unreadable:?} carries no wait");
+    }
+
+    // A date is the wait until it. One long past asks for nothing; one
+    // far ahead asks for more than this path will ever give, which the
+    // budget — not this reader — is what trims.
+    assert_eq!(with("Sun, 06 Nov 1994 08:49:37 GMT"), Some(Duration::ZERO));
+    let far = with("Fri, 31 Dec 2100 23:59:59 GMT").expect("a date in the future is a wait");
+    assert!(
+        far > Duration::from_secs(60 * 60 * 24 * 365 * 50),
+        "{far:?}"
+    );
+}
+
+#[test]
+fn an_http_date_is_read_exactly_as_the_rfc_writes_it() {
+    // RFC 9110's own example, and the instant it names.
+    assert_eq!(
+        retry::imf_fixdate_to_unix("Sun, 06 Nov 1994 08:49:37 GMT"),
+        Some(784_111_777)
+    );
+    // The epoch itself, and both kinds of leap day — the ordinary one
+    // and the century that is a leap year only because 400 divides it.
+    assert_eq!(
+        retry::imf_fixdate_to_unix("Thu, 01 Jan 1970 00:00:00 GMT"),
+        Some(0)
+    );
+    assert_eq!(
+        retry::imf_fixdate_to_unix("Mon, 29 Feb 2016 12:00:00 GMT"),
+        Some(1_456_747_200)
+    );
+    assert_eq!(
+        retry::imf_fixdate_to_unix("Tue, 29 Feb 2000 00:00:00 GMT"),
+        Some(951_782_400)
+    );
+
+    for not_a_date in [
+        "",
+        "Sun, 06 Nov 1994 08:49:37",           // no zone
+        "Sun 06 Nov 1994 08:49:37 GMT",        // no comma
+        "Sun, 06 Nov 1994 08:49 GMT",          // no seconds
+        "Sun, 06 Nov 1994 08:49:37 GMT extra", // a tail
+        "Sun, 06 Xxx 1994 08:49:37 GMT",       // no such month
+        "Sun, 32 Nov 1994 08:49:37 GMT",       // no such day
+        "Sun, 06 Nov 1994 24:49:37 GMT",       // no such hour
+        "Sun, 06 Nov 1969 08:49:37 GMT",       // before the epoch
+    ] {
+        assert_eq!(
+            retry::imf_fixdate_to_unix(not_a_date),
+            None,
+            "{not_a_date:?} is not an IMF-fixdate"
+        );
+    }
+}
+
+#[test]
+fn a_name_that_did_not_resolve_is_not_worth_asking_again() {
+    for chain in [
+        "error sending request; client error (connect); dns error; \
+         failed to lookup address information: no such host is known. ",
+        "failed to lookup address information: name or service not known",
+        "nodename nor servname provided, or not known",
+    ] {
+        assert!(
+            retry::names_an_unknown_host(chain),
+            "the name is the problem here: {chain}"
+        );
+    }
+    // A host that is there and unhappy says none of those things.
+    for chain in [
+        "error sending request; connection reset by peer",
+        "tcp connect error: connection refused (os error 10061)",
+        "error reading a body from connection; unexpected end of file",
+    ] {
+        assert!(
+            !retry::names_an_unknown_host(chain),
+            "nothing here is about the name: {chain}"
         );
     }
 }
