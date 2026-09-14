@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Установить vibe</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>vibe — одна программа без рантайма, который надо ставить. На Windows вы скачиваете архив и распаковываете его; на любой платформе с тулчейном Rust — собираете из исходников. Когда всё готово, одна команда печатает версию.</p>
+  <prompt id="install-vibe">Установи vibe на этой машине: на Windows — из последнего релизного архива на github.com/vibevm/vibevm, иначе — собрав чекаут исходников его скриптом первого запуска. Затем открой новую оболочку и подтверди, что `vibe --version` печатает версию.
+    <needs>доступ по сети к github.com; на платформе, отличной от Windows, — git и тулчейн Rust</needs>
+    <outcome>`vibe --version` печатает `vibe 1.0.0` в новом терминале, а `vibe self doctor` не находит проблем</outcome>
+    <assert>vibe --version</assert>
+    <assert>vibe self doctor</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>На Windows агент скачивает релизный архив, распаковывает его и запускает скрипт-установщик. Скрипт импортирует бинарник в управляемую папку vibe под `~/.vibe/opt`, помечает его активным и добавляет в пользовательский `PATH` одну папку с маленькими скриптами-лаунчерами. На остальных платформах агент клонирует репозиторий с исходниками и запускает его скрипт первого запуска, который собирает программу и устанавливает её через тот же менеджер. В обоих случаях получается одна и та же раскладка: версии под `~/.vibe/opt/vibevm/`, лаунчеры в `~/.vibe/opt/bin/` и указатель на текущую версию.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT"/>
+    <p>vibe работает на Windows, macOS и Linux. Холодный старт одной строкой — это скрипт по устойчивому адресу: `https://vibevm.org/install.sh` для Bash и `install.ps1` для PowerShell. Он скачивает манифест релиза, проверяет по размеру и дайджесту небольшой бутстрап-бинарник, а тот проверяет и устанавливает полный бандл. Менеджеры пакетов вроде Homebrew и WinGet — позже.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#PLATFORMS-TRIO"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#COLD-START-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#BOOTSTRAP-SCRIPT-LATER"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <windows title="На Windows" when="os:windows">
+      <p>1. Скачайте `vibe-&lt;version&gt;-windows-x86_64.zip` со страницы релизов `github.com/vibevm/vibevm`.</p>
+      <p>2. Распакуйте архив в папку на ваш выбор.</p>
+      <p>3. В этой папке запустите установщик:</p>
+      <example ref="windows-install"/>
+      <p>4. Откройте новый терминал, чтобы изменённый `PATH` был прочитан.</p>
+      <p>5. Проверьте результат:</p>
+      <example ref="version"/>
+      <p>В архиве есть и `SHA256SUMS.txt`. Сравните дайджест `vibe.exe` со строкой в этом файле, прежде чем запускать установщик. Установщик делает ту же проверку.</p>
+    </windows>
+    <from-source title="Из исходников, на любой платформе">
+      <p>1. Установите git и тулчейн Rust. OpenSSL не нужен.</p>
+      <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-LIST"/>
+      <p>2. Клонируйте репозиторий: `git clone https://github.com/vibevm/vibevm.git` — и войдите в папку.</p>
+      <p>3. Запустите скрипт первого запуска: `bash tools/first-run.sh` на Linux и macOS, `.\tools\first-run.ps1` на Windows. Он собирает программу, устанавливает её в управляемое [хранилище](../glossary/index.xml#store) и настраивает лаунчеры.</p>
+      <p>4. Откройте новый терминал и выполните `vibe --version`, затем `vibe self doctor`.</p>
+      <p>Позже `vibe self install latest` пересобирает вершину ветки main. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
+      <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
+    </from-source>
+  </by-hand>
+  <where-things-go title="Где что лежит">
+    <p>Всё своё vibe держит в одной папке вашего домашнего каталога, `~/.vibe/`: установленные версии и их лаунчеры под `opt/`, машинное хранилище скачанных пакетов под `cache/`, клоны [реестров](../glossary/index.xml#registry) под `registries/` и ваши файлы настроек. Больше он никуда не пишет, а всю папку можно перенести, задав переменную окружения `VIBE_SETTINGS`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
+    <p>Установщик никогда не перезаписывает работающий бинарник и никогда не правит ваш `PATH` дважды: он добавляет одну запись, огороженную маркером, и не трогает остальное.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#RULE-NEVER-CLOBBER"/>
+  </where-things-go>
+  <edge-cases title="Особые случаи и правила">
+    <p>Если `vibe --version` ничего не печатает в том терминале, где вы запускали установщик, откройте новый: изменение `PATH` действует только для новых оболочек.</p>
+    <p>Готовый бинарник откуда угодно можно принять в управляемое хранилище без тулчейна: `vibe self import ./vibe.exe --tag 1.0.0 --use`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT"/>
+    <p>Собрать произвольный git-ref — значит выполнить произвольный код, как при любой сборке из исходников. Собирайте из репозитория и веток, которым доверяете.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ACE-ACCEPTED"/>
+  </edge-cases>
+</spec>
