@@ -23054,9 +23054,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http.rs",
       "item_kind": "mod",
-      "line": 35,
+      "line": 42,
       "symbol": "vibe_registry::git_backend::shell::raw_http",
-      "end_line": 35,
+      "end_line": 42,
+      "fingerprint": "tok1:ce38b446468459c4c31d37c43b7f342a9ba52c399589653d9b1052b49945669d"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/raw_http/retry.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "vibe_registry::git_backend::shell::raw_http::retry",
+      "end_line": 25,
       "fingerprint": "tok1:ce38b446468459c4c31d37c43b7f342a9ba52c399589653d9b1052b49945669d"
     },
     {
@@ -23072,37 +23081,37 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "item_kind": "fn",
-      "line": 199,
+      "line": 201,
       "symbol": "vibe_registry::git_backend::shell::raw_http::tests::a_miss_is_believed_only_for_a_non_manifest_file_at_a_fixed_ref",
-      "end_line": 237,
+      "end_line": 239,
       "fingerprint": "tok1:d39819f8fb853c3c61f5909d5bacc54eb225b513cb5ff475880ae6fa782fdee7"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "item_kind": "fn",
-      "line": 139,
+      "line": 141,
       "symbol": "vibe_registry::git_backend::shell::raw_http::tests::a_token_is_taken_from_userinfo_and_never_left_in_the_url",
-      "end_line": 169,
+      "end_line": 171,
       "fingerprint": "tok1:e06f7b21853f3f7ed65391e20ff39188981f88e4682b0350f5060af338ea10e6"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "item_kind": "fn",
-      "line": 23,
+      "line": 25,
       "symbol": "vibe_registry::git_backend::shell::raw_http::tests::github_https_repositories_map_to_the_raw_host",
-      "end_line": 45,
-      "fingerprint": "tok1:1ea2a7665ae5af619c948bb60822ac5ce7f86e1c94f700865fbc09ca1a22981d"
+      "end_line": 47,
+      "fingerprint": "tok1:ecd01a9cc68ea01039de36f99b55765f337269b0ebaaf04ec04d67c05debb374"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 66,
       "symbol": "vibe_registry::git_backend::shell::raw_http::tests::gitverse_https_repositories_map_to_the_contents_api",
-      "end_line": 87,
-      "fingerprint": "tok1:a324c52ebdbd728473ee516b95ced24ce91b5f203faf70329ae250e9524c58d8"
+      "end_line": 89,
+      "fingerprint": "tok1:cbb31cb1bceeb4bc7ad5ef4db0afee4665952a85831d12c9362876481d89d24f"
     },
     {
       "crate_name": "vibe-registry",
@@ -23720,73 +23729,82 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 336,
+      "line": 394,
       "symbol": "vibe_registry::tests::https_file_read::a_credentialed_read_that_misses_carries_no_token_into_its_error",
-      "end_line": 369,
+      "end_line": 427,
       "fingerprint": "tok1:5d5dc10b549e7bcdff50fc83d0def613feefea1267bafcfdc37ca5ef2b67fee2"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 301,
-      "symbol": "vibe_registry::tests::https_file_read::a_token_rides_the_header_and_appears_in_no_error",
-      "end_line": 334,
-      "fingerprint": "tok1:b3f64f5953f5f7f201847088c4a1093f87b844512a5bcef8b3077362c56577eb"
+      "line": 497,
+      "symbol": "vibe_registry::tests::https_file_read::a_rate_limited_read_asks_again_instead_of_paying_for_git",
+      "end_line": 524,
+      "fingerprint": "tok1:cb591e22ceb7df7008f3c7bb6aa0d7a55e2de5ec94f38ac629537d3fea867e7c"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 244,
+      "line": 355,
+      "symbol": "vibe_registry::tests::https_file_read::a_token_rides_the_header_and_appears_in_no_error",
+      "end_line": 392,
+      "fingerprint": "tok1:e560ec74bba5c335dfb27fa359cd44fa5af57a2114992f5455681fd6f43bee47"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/tests/https_file_read.rs",
+      "item_kind": "fn",
+      "line": 298,
       "symbol": "vibe_registry::tests::https_file_read::github_absent_manifest_falls_back_to_git",
-      "end_line": 269,
+      "end_line": 323,
       "fingerprint": "tok1:22e45d0ceed943b09af6e47ac71db715ed22ad56a0f75f21a7406785ea5eddd2"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 214,
+      "line": 268,
       "symbol": "vibe_registry::tests::https_file_read::github_absent_marker_at_a_tag_is_answered_without_git",
-      "end_line": 242,
-      "fingerprint": "tok1:62ab7f832d22ecf327df3bf29da9c8b159ae1e6fcb8b6f63b224c1c81433cf33"
+      "end_line": 296,
+      "fingerprint": "tok1:d84ecb235f3a1ed2085715066893a0ae28c27eeaa33504cbfad2f3c74579ea63"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 271,
+      "line": 325,
       "symbol": "vibe_registry::tests::https_file_read::github_absent_marker_on_a_branch_falls_back_to_git",
-      "end_line": 299,
+      "end_line": 353,
       "fingerprint": "tok1:132b737648711dbff4f77cd24a18ca22ea3cfb89d92cf40b91f077e521a97d22"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 181,
+      "line": 235,
       "symbol": "vibe_registry::tests::https_file_read::github_manifest_is_read_over_https_without_git",
-      "end_line": 212,
-      "fingerprint": "tok1:b29c88d7f5580bf9f0ab5589bf13490cbd52f6305627e618f72ed973bcb7e2ef"
+      "end_line": 266,
+      "fingerprint": "tok1:1c6680edb3b39a9403b3c6b605f7a6dc0aec0caa9f3985479730523a0c2e65cc"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 371,
+      "line": 429,
       "symbol": "vibe_registry::tests::https_file_read::gitverse_manifest_is_read_over_https_without_git",
-      "end_line": 393,
-      "fingerprint": "tok1:28cd9c184ba7a85d6f9b0c029b43519604375356e1c38e1d24c623d7a0cb8d4f"
+      "end_line": 451,
+      "fingerprint": "tok1:44d4a28481fe761117880d9bdd3402eedc96b7ab3cbd48bf16c0cf6da11970e6"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "item_kind": "fn",
-      "line": 395,
+      "line": 453,
       "symbol": "vibe_registry::tests::https_file_read::gitverse_reports_an_absent_marker_but_only_for_its_own_miss_code",
-      "end_line": 434,
-      "fingerprint": "tok1:9f01966a9d4c23250bd9e2001f45585cabcc91812c0ab688d61da04765316c15"
+      "end_line": 492,
+      "fingerprint": "tok1:7f491792f061b8d991d05536824c5b3626e102172748c8eb0f646cec577f89a0"
     },
     {
       "crate_name": "vibe-registry",
@@ -49216,7 +49234,15 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http",
-      "line": 35,
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/raw_http/retry.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::raw_http::retry",
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "implements"
@@ -49232,7 +49258,7 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http::tests::a_miss_is_believed_only_for_a_non_manifest_file_at_a_fixed_ref",
-      "line": 200,
+      "line": 202,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "verifies",
@@ -49241,7 +49267,7 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http::tests::a_token_is_taken_from_userinfo_and_never_left_in_the_url",
-      "line": 140,
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
       "verb": "verifies"
@@ -49249,20 +49275,20 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http::tests::github_https_repositories_map_to_the_raw_host",
-      "line": 24,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http::tests::gitverse_https_repositories_map_to_the_contents_api",
-      "line": 65,
+      "line": 67,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
@@ -49820,15 +49846,24 @@
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::a_credentialed_read_that_misses_carries_no_token_into_its_error",
-      "line": 337,
+      "line": 395,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
       "verb": "verifies"
     },
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
+      "from_symbol": "vibe_registry::tests::https_file_read::a_rate_limited_read_asks_again_instead_of_paying_for_git",
+      "line": 498,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::a_token_rides_the_header_and_appears_in_no_error",
-      "line": 302,
+      "line": 356,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
       "verb": "verifies"
@@ -49836,7 +49871,7 @@
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::github_absent_manifest_falls_back_to_git",
-      "line": 245,
+      "line": 299,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "verifies",
@@ -49845,16 +49880,16 @@
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::github_absent_marker_at_a_tag_is_answered_without_git",
-      "line": 215,
+      "line": 269,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::github_absent_marker_on_a_branch_falls_back_to_git",
-      "line": 272,
+      "line": 326,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "verifies",
@@ -49863,29 +49898,29 @@
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::github_manifest_is_read_over_https_without_git",
-      "line": 182,
+      "line": 236,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::gitverse_manifest_is_read_over_https_without_git",
-      "line": 372,
+      "line": 430,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/tests/https_file_read.rs",
       "from_symbol": "vibe_registry::tests::https_file_read::gitverse_reports_an_absent_marker_but_only_for_its_own_miss_code",
-      "line": 396,
+      "line": 454,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
@@ -108572,7 +108607,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:1ef12346c4a08457b87bb10a4786ccffee3f1731979410071a467a980aa055f0",
+      "content_hash": "sha256:29364ff4fae7d80e150544cf3844465bf674ee48c937e51ddba9c8286d857b64",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -108734,7 +108769,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:725759ffc6df1c135ee08b09ff8f6f3f87b283e6d057d41c1895f5557a3e0bb3",
+      "content_hash": "sha256:9a7f28252ef2ff113f88d40ab9e9ebde87a7003ae39cc18d168878d18269e232",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2. Decisions",
@@ -110777,21 +110812,21 @@
     },
     {
       "anchor": "perf",
-      "content_hash": "sha256:216521ec1231253bc25316d63d6a6945af5852369627fb8a06d17c3bab16f3cc",
+      "content_hash": "sha256:95c17e239f1477cda9d5a3edcd056e6c24126efbb4a29d8e89324b04f989d68a",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.12 Performance and resolver I/O strategy",
       "line": 715,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
       "kind": "req",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "perf-req",
-      "content_hash": "sha256:27db3811185e19e92d3c25daa4d2aaeb123452a60e09af74a9b65478e3c1f767",
+      "content_hash": "sha256:603a80c7aa5d17dafcd0e70e1d37dc5fbfb3777b127aaa0742acccfd70e8db81",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
-      "heading": "`req r1` @status:impl/done",
+      "heading": "`req r2` @status:impl/done",
       "line": 716,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf-req"
     },
@@ -110823,12 +110858,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PERF-FETCH-FILE"
     },
     {
+      "anchor": "RAW-READ-BACKOFF",
+      "content_hash": "sha256:dc0f6d9b746c35fa0a1fd9598086776385b00cdb755ee817779256e6d2e97646",
+      "doc_path": "modules/vibe-registry/PROP-002",
+      "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
+      "heading": "A raw read that the host refuses with `429` or a `5xx` is retried a small, bounded number of times with a short pause, honouring `Retry-After` within that bound, before the read falls through to git as any other unexpected answer does. A `404` is never retried: on a tag or a commit it is authoritative, and on a branch it is what git will be asked about next. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "line": 722,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-BACKOFF"
+    },
+    {
       "anchor": "PERF-IN-MEMORY-CACHE",
       "content_hash": "sha256:739fbc4e34343156524ac95a01b13f2dc7b823cff92cc171129e804e551719c7",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "In-memory caching across one `vibe install` invocation: `(registry, kind, name) → Vec<Version>` and `(registry, kind, name, version) → Deps`. Same pkgref touched twice within a resolve pass hits memory, not network. @status:impl/done",
-      "line": 722,
+      "line": 723,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PERF-IN-MEMORY-CACHE"
     },
     {
@@ -110837,7 +110881,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Parallel I/O via `rayon` scoped thread pool: N parallel `ls-remote` subprocess invocations when resolving a multi-dep top-level install. No tokio introduction — our runtime is synchronous, `git` subprocesses are blocking, and a thread pool for blocking-I/O fan-out is exactly rayon's sweet spot. @status:spec/done",
-      "line": 723,
+      "line": 724,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PERF-RAYON-FANOUT"
     },
     {
@@ -110846,7 +110890,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "A full clone happens only once the solver has committed to installing a specific version. The pathological case (resolver evaluates 50 versions of a package, then picks one) clones once, not 50 times. @status:impl/done",
-      "line": 724,
+      "line": 725,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PERF-CLONE-ONCE"
     },
     {
@@ -110855,7 +110899,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Future (Phase B): resolved-graph cache keyed by `sha256((vibe.toml-registries) || all-requires || all-overrides)`. A second `vibe install` in the same project without any input change hits the cache, skipping resolve entirely. Listed here so the cache-key grammar is chosen once, not retrofitted. @status:spec/done",
-      "line": 725,
+      "line": 726,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PERF-RESOLVE-CACHE-FUTURE"
     },
     {
@@ -110864,7 +110908,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.13 Package lifecycle: removal, re-registration, and consent",
-      "line": 727,
+      "line": 728,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lifecycle",
       "kind": "req",
       "revision": 2
@@ -110875,7 +110919,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 728,
+      "line": 729,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lifecycle-req"
     },
     {
@@ -110884,7 +110928,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Owner rulings, 2026-08-13.** A registry must be able to remove a package (legal takedowns included) and later admit a *different* package under the same freed name — nothing technically prevents it; what the machinery guarantees instead is that **the change is always visible**. The mechanics stand on PROP-044's registry facts journal (its ratification pending; these rulings are the registry-side letter): @status:spec/done",
-      "line": 729,
+      "line": 730,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lifecycle-lead"
     },
     {
@@ -110893,7 +110937,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Removal is a journal act, not a file deletion.** Removing a package (or a whole group) appends a `Removed` event plus a name-level tombstone `{reason, superseded_by?}`; the catalog is then reprojected. Deleting only catalog files would not stick (a rebuild would restore them), and deleting only the source repository would leave a dangling entry — the event is what makes removal durable. The *content* may additionally be deleted outright (the legal case): the journal keeps the **fact** of removal, never the bytes. @status:spec/plan",
-      "line": 731,
+      "line": 732,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REMOVAL-IS-A-JOURNAL-ACT"
     },
     {
@@ -110902,7 +110946,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**A removed name is free, and its re-registration is a new lineage — visibly.** A later `Published` under a once-removed `(group, name)` is legal; the journal chain `Removed → Published` marks the lineage break, and resolvers surface it («имя перерегистрировано после удаления <дата> — новая линия») instead of treating the name as continuous. Never silence, never a quiet swap. @status:spec/plan",
-      "line": 732,
+      "line": 733,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#NAME-REUSE-IS-LEGAL-AND-VISIBLE"
     },
     {
@@ -110911,7 +110955,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Every loud identity refusal names a one-command recovery, and consent is per-package.** A lockfile pin that no longer matches (new lineage, or a frozen coordinate served different bytes) refuses loudly and names the recovery: `vibe update <group>:<name> --accept-new` — accept the new lineage/bytes and re-pin. The fresh pin *is* the durable record of consent. There is deliberately **no blanket** `--force`-all: accepting one known break must not silently accept a second, unasked one; the refusal lists each package, and consent is given by name. @status:spec/plan",
-      "line": 733,
+      "line": 734,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CONSENT-IS-PER-PACKAGE"
     },
     {
@@ -110920,7 +110964,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**`--force-replace` is the declared-replacement act — the package-world analogue of a force-push, minus the history rewrite.** `vibe registry publish --force-replace --reason \"…\"` appends `ForceReplaced {group, name, version, old_hash, new_hash, reason}` and republishes the coordinate with different bytes. The journal is append-only and is never rewritten — the old observation stays; what changes is the content an address serves, and that change is loud, dated, and explained. Authorisation: the package's owner or a registry moderator (the legal-emergency path). Consumers pinned to the old bytes get the loud refusal above, with the recorded reason in its text, and recover by `--accept-new`. Every surface that shows the version shows the replacement marker (the same surface obligation as `frozen`). This is not an unfreeze: `frozen` stays one-way; the act *supersedes* frozen content by declaration, never silently. @status:spec/plan",
-      "line": 734,
+      "line": 735,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#FORCE-REPLACE-IS-A-DECLARED-ACT"
     },
     {
@@ -110929,7 +110973,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "3. Rejected alternatives",
-      "line": 738,
+      "line": 739,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#rejected"
     },
     {
@@ -110938,7 +110982,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected for primary role — accepted as explicit fallback (§2.8). libsolv is battle-tested at RPM scale (DNF, zypper, SUSE) and its feature set is a superset of what we need. But its API is C-style Pool / Solvable / Transaction semantics, and modelling vibevm's pkgref / capability types in Solvable form is an ongoing impedance mismatch that would live in the codebase forever. `resolvo` is a generic Rust-native solver with the same feature coverage for our problem, so the Rust-native path wins on architectural consistency. The libsolv slot exists so we can switch if resolvo ever proves inadequate. @status:spec/done",
-      "line": 740,
+      "line": 741,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-LIBSOLV-PRIMARY"
     },
     {
@@ -110947,7 +110991,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected. PubGrub is an excellent algorithm (first-class error messages, used by `uv` and others), but it does not handle virtual packages or disjunctions — and PROP-000 §18 expects both from day one. PubGrub may still be used in the future for explanatory rendering of conflicts in CLI output if its incompatibility-chain format proves superior; not as the authoritative solver. @status:spec/done",
-      "line": 743,
+      "line": 744,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-PUBGRUB"
     },
     {
@@ -110956,7 +111000,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected. In a multi-registry setup, unioning versions from all `[[registry]]` entries into one candidate list requires trusting all of them equally — a lower-trust registry could influence resolution when a higher-trust one already had a valid answer. Priority-ordered resolution (§2.2) gives operators clear control: the registry at array index 0 is always preferred, subsequent ones are fallbacks. @status:spec/done",
-      "line": 746,
+      "line": 747,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-REGISTRY-UNION"
     },
     {
@@ -110965,7 +111009,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected. Treating `vibespecs/flow:wal` and `corporate/flow:wal` as different identities makes mirror-switching impossible and forces every consumer's `vibe.toml` to pin a specific registry for every dep. Identity is package-level (kind, name, version, content_hash); the registry is a runtime resolution detail. @status:spec/done",
-      "line": 749,
+      "line": 750,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-PER-REGISTRY-IDENTITY"
     },
     {
@@ -110974,7 +111018,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected. This is **the** Nix failure mode (§1). Every host-specific shorthand in the URL grammar is an invitation to tie the ecosystem to that host. vibevm accepts any URL that `git` accepts — full stop. Operators type full URLs; the CLI does not do host-specific magic. @status:spec/done",
-      "line": 752,
+      "line": 753,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-URL-SHORTHANDS"
     },
     {
@@ -110983,7 +111027,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected. A global index would reintroduce the Nix centralization problem one level up. Registries are peer-level; operators configure their own `[[registry]]` array per project. Discovery of \"what registries exist\" is out of CLI scope (it's a search-engine / documentation problem, not a package-manager problem). @status:spec/done",
-      "line": 755,
+      "line": 756,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-CENTRAL-INDEX"
     },
     {
@@ -110992,7 +111036,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected for v1 (not rejected forever). `required` + `conflicts` + capabilities + disjunctions + obsoletes cover every concrete use case we've identified. `recommends` / `suggests` / `supplements` (RPM's weak-deps) can be added later as extensions to `[requires]` — the fields slot in without breaking the schema. @status:spec/done",
-      "line": 758,
+      "line": 759,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-WEAK-DEPS-V1"
     },
     {
@@ -111001,7 +111045,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Rejected for v1. Git-over-SSH is what works today on contributor machines with existing GitVerse keys; HTTPS with token auth is a Phase B / M2 add. The `GitBackend` abstraction makes this additive, not architectural. @status:spec/done",
-      "line": 761,
+      "line": 762,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REJ-HTTPS-ONLY"
     },
     {
@@ -111010,7 +111054,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "4. Out of scope for Phase A",
-      "line": 764,
+      "line": 765,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#out-of-scope"
     },
     {
@@ -111019,7 +111063,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Polished multi-registry UX (`vibe registry add / list / remove / set-mirror` commands) — Phase B. @status:spec/done",
-      "line": 766,
+      "line": 767,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-REGISTRY-UX"
     },
     {
@@ -111028,7 +111072,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Live multi-registry exercised end-to-end — Phase B. @status:spec/done",
-      "line": 767,
+      "line": 768,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-MULTI-LIVE"
     },
     {
@@ -111037,7 +111081,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Real mirror fallback chain (code paths exist, tested with fixtures; live mirror comes in Phase B). @status:spec/done",
-      "line": 768,
+      "line": 769,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-MIRROR-CHAIN"
     },
     {
@@ -111046,7 +111090,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "`vibe vendor` — Phase B. @status:spec/done",
-      "line": 769,
+      "line": 770,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-VENDOR"
     },
     {
@@ -111055,7 +111099,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Publish adapters beyond GitVerse — added per adopter demand. @status:spec/done",
-      "line": 770,
+      "line": 771,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-PUBLISH-ADAPTERS"
     },
     {
@@ -111064,7 +111108,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Signed / attested packages (sigstore-style) — M2 design, noted as architectural allowance here. @status:spec/done",
-      "line": 771,
+      "line": 772,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-SIGNED"
     },
     {
@@ -111073,7 +111117,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "LLM-backed publish review — v2 (already spec'd in `VIBEVM-SPEC.md` §8.5). @status:spec/done",
-      "line": 772,
+      "line": 773,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-LLM-REVIEW"
     },
     {
@@ -111082,7 +111126,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "`--offline` install mode — M2 polish. @status:spec/done",
-      "line": 773,
+      "line": 774,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OOS-OFFLINE"
     },
     {
@@ -111091,7 +111135,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "5. Acceptance (Phase A)",
-      "line": 776,
+      "line": 777,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#acceptance"
     },
     {
@@ -111100,7 +111144,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Phase A is code-complete when every item below is green: @status:impl/done",
-      "line": 777,
+      "line": 778,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#acceptance-lead"
     },
     {
@@ -111109,7 +111153,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `VIBEVM-SPEC.md` §7.3 / §7.4 / §7.5 / §8.1 / §8.2 / §8.3 / §8.4 / §8.6 reflect the new design. PROP-001 carries its super-session marker. TASKS.md / ROADMAP / WAL updated. @status:impl/done",
-      "line": 779,
+      "line": 780,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-SPEC-DOCS"
     },
     {
@@ -111118,7 +111162,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `jtd-codegen` vendored under `tools/`; `schemas/` seeded with at least the GitVerse publish-API contract and the `vibe --json` event shape; `cargo xtask codegen` regenerates; CI enforces zero drift. @status:impl/done",
-      "line": 780,
+      "line": 781,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-JTD"
     },
     {
@@ -111127,7 +111171,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe-core` parses `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` into typed values; legacy compact form auto-migrates with a deprecation warning. @status:impl/done",
-      "line": 781,
+      "line": 782,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-CAPABILITY-PARSE"
     },
     {
@@ -111136,7 +111180,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe.toml` parser accepts `[[registry]]` array, `[[mirror]]`, `[[override]]`; singleton legacy `[registry]` auto-migrates. @status:impl/done",
-      "line": 782,
+      "line": 783,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-REGISTRY-PARSE"
     },
     {
@@ -111145,7 +111189,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe.lock` schema v2 written by fresh installs; v1 lockfiles read and migrated on next write. @status:impl/done",
-      "line": 783,
+      "line": 784,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-LOCKFILE-V2"
     },
     {
@@ -111154,7 +111198,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe-resolver` crate exists with `DepSolver` trait and `ResolvoSolver` impl; unit-tested against constructed dep graphs including a virtual-package and a disjunction case. @status:impl/done",
-      "line": 784,
+      "line": 785,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-RESOLVER-CRATE"
     },
     {
@@ -111163,7 +111207,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `GitPackageRegistry` replaces `GitRegistry`; `MultiRegistryResolver` coordinates the array; `ShellGit::list_tags` and `ShellGit::fetch_file_at_ref` implemented. @status:impl/done",
-      "line": 785,
+      "line": 786,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-GIT-PACKAGE-REGISTRY"
     },
     {
@@ -111172,7 +111216,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] Content-hash integrity verified on every fetch; cross-source mismatch fails hard with actionable message. @status:impl/done",
-      "line": 786,
+      "line": 787,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-CONTENT-HASH"
     },
     {
@@ -111181,7 +111225,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe install` runs transitive resolution; plan rendering shows the full subgraph with `(dep of flow:foo)` provenance tags; `--dry-run` surfaces the same. @status:impl/done",
-      "line": 787,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-TRANSITIVE-INSTALL"
     },
     {
@@ -111190,7 +111234,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `vibe-publish` crate with `RepoCreator` trait and `GitVerseCreator` impl; `vibe registry publish <path>` subcommand; non-admin error paths render per §2.10. @status:impl/done",
-      "line": 788,
+      "line": 789,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-PUBLISH-CRATE"
     },
     {
@@ -111199,7 +111243,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] Local fixtures relocated from `packages/` to `fixtures/registry/` in per-package layout; `cli_e2e.rs` updated. @status:impl/done",
-      "line": 789,
+      "line": 790,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-FIXTURES"
     },
     {
@@ -111208,7 +111252,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] Canonical packages publish as one FQDN-named repository per package in the `vibespecs` organization; the current release line is tagged `v1.0.0` and same-version republish follows §2.10's mutable-label transaction. @status:impl/done",
-      "line": 790,
+      "line": 791,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-DEMO-PACKAGES"
     },
     {
@@ -111217,7 +111261,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `manual-tests/M1.5-gate-v2-per-package-smoke.md` written and passes against the live per-package registry. @status:impl/done",
-      "line": 791,
+      "line": 792,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-MANUAL-SMOKE"
     },
     {
@@ -111226,7 +111270,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "[ ] `cargo test --workspace` green; `cargo clippy --workspace --all-targets -- -D warnings` clean. @status:impl/done",
-      "line": 792,
+      "line": 793,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ACC-WORKSPACE-GREEN"
     },
     {
@@ -111235,7 +111279,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "6. Phase B preview (M1.6)",
-      "line": 795,
+      "line": 796,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#phase-b"
     },
     {
@@ -111244,7 +111288,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Pinned here so Phase A does not accidentally foreclose any of these options: @status:impl/done",
-      "line": 796,
+      "line": 797,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#phase-b-preview-lead"
     },
     {
@@ -111253,7 +111297,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Real multi-registry: a second live `[[registry]]` exercised end-to-end; priority ordering verified in smoke-test. @status:impl/done",
-      "line": 798,
+      "line": 799,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-MULTI-LIVE"
     },
     {
@@ -111262,7 +111306,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Mirror fallback chain: the second-live-mirror URL and the integrity hard-fail both ship (the fallback loop in `git_package_registry/fetch.rs`, `fetch_with_expected_hash`, the M1.6 mirror-vendor smoke); the `--trust-mirror` escape hatch does not. @status:impl/done",
-      "line": 799,
+      "line": 800,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-MIRROR-CHAIN"
     },
     {
@@ -111271,7 +111315,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "`vibe vendor [--out <dir>]`: generates a local mirror directory, usable as `file://` `[[mirror]]`. @status:impl/done",
-      "line": 800,
+      "line": 801,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-VENDOR"
     },
     {
@@ -111280,7 +111324,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "CLI management surface: `vibe registry add / list / remove / set-mirror / status`. @status:impl/done",
-      "line": 801,
+      "line": 802,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-CLI-SURFACE"
     },
     {
@@ -111289,7 +111333,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Publish adapters: GitHub, Gitea, Forgejo on adopter demand — one new `RepoCreator` impl per host. @status:impl/done",
-      "line": 802,
+      "line": 803,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-PUBLISH-ADAPTERS"
     },
     {
@@ -111298,7 +111342,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Resolved-graph cache: incremental resolve skipped when inputs unchanged. @status:spec/done",
-      "line": 803,
+      "line": 804,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-RESOLVE-CACHE"
     },
     {
@@ -111307,7 +111351,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "Supply-chain attestation: sigstore-style signing of tags; consumer verification on install. Architectural slot only in Phase B. @status:spec/done",
-      "line": 804,
+      "line": 805,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PBP-ATTESTATION"
     },
     {
@@ -111316,7 +111360,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "7. Open questions",
-      "line": 807,
+      "line": 808,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#open"
     },
     {
@@ -111325,7 +111369,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "None blocking Phase A. Parking lot: @status:spec/done",
-      "line": 808,
+      "line": 809,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#open-lead"
     },
     {
@@ -111334,7 +111378,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Registry-level metadata ref.** `[[registry]] ref = \"main\"` is reserved for a future capability index / trust policy branch at the org level. Design deferred until use case emerges (likely Phase B or M2). @status:spec/work",
-      "line": 810,
+      "line": 811,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OPEN-REGISTRY-META-REF"
     },
     {
@@ -111343,7 +111387,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Cross-registry content-hash cache.** Today each `(registry, kind, name, version)` gets its own cache entry. If two registries mirror the same content (same content_hash), the second fetch does redundant work. Optimization — Phase B. @status:spec/work",
-      "line": 811,
+      "line": 812,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OPEN-CROSS-REGISTRY-CACHE"
     },
     {
@@ -111352,7 +111396,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Registry-level naming beyond `fqdn` / `kind-name` / `name` / `kind/name`.** Real-world adopters may want custom mappings (e.g. `pkg-<kind>-<name>`). If that arises, `naming` becomes a template string. Not speculative engineering today — react to first real request. @status:spec/work",
-      "line": 812,
+      "line": 813,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OPEN-NAMING-TEMPLATES"
     },
     {
@@ -111361,7 +111405,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**Solver-level lockfile verification.** The lockfile records `solver = \"resolvo-<ver>\"`. Should `vibe install --verify-solver` re-run resolution and assert the graph matches the lockfile? Useful audit tool. Phase B. @status:spec/work",
-      "line": 813,
+      "line": 814,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OPEN-VERIFY-SOLVER"
     },
     {
@@ -111370,7 +111414,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "**JTD codegen ergonomics on Windows.** `jtd-codegen` is a Go binary; we vendor it project-local. Whether the experience is clean enough to not require PATH tinkering will be answered during the tooling commit. @status:spec/work",
-      "line": 814,
+      "line": 815,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OPEN-JTD-WINDOWS"
     },
     {
