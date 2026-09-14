@@ -334,6 +334,41 @@ fn a_token_rides_the_header_and_appears_in_no_error() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn a_credentialed_read_that_misses_carries_no_token_into_its_error() {
+    // A 404 on the manifest is the miss that falls through to git, so
+    // this walks both halves of the read: the https attempt, which sends
+    // the token as a header and nothing more, and the git path, which
+    // builds the error. Nothing an operator would see may hold it.
+    let mock = Mock::start(Answer::status(404));
+
+    let err = mock
+        .backend()
+        .fetch_file_at_ref(
+            &format!("https://x-access-token:{TOKEN}@github.com/vibespecs/org.vibevm.wal.git"),
+            "v1.0.0",
+            "vibe.toml",
+        )
+        .expect_err("a manifest 404 falls through to git, which is not installed here");
+    assert!(
+        !err.to_string().contains(TOKEN),
+        "the token must not reach an error message: {err}"
+    );
+
+    let seen = mock.seen();
+    assert_eq!(seen.len(), 1);
+    assert_eq!(
+        seen[0].authorization.as_deref(),
+        Some(format!("Bearer {TOKEN}").as_str())
+    );
+    assert!(
+        !seen[0].target.contains(TOKEN),
+        "request URL: {}",
+        seen[0].target
+    );
+}
+
+#[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf",
     r = 1

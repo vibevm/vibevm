@@ -29,6 +29,31 @@ fn preflight_succeeds_when_git_installed() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn a_credentialed_url_never_reaches_an_error_from_a_real_git() {
+    // End to end with the real binary, and offline: port 1 on loopback
+    // refuses at once, so git fails on connect and we classify what it
+    // says. Whatever variant comes back — the connect-failure one, or
+    // the unclassified fallback carrying the whole argv — the token we
+    // handed git must not be in the text an operator sees. git redacts
+    // its own stderr; this pins the half that is ours.
+    skip_without_git!();
+    let g = ShellGit::new();
+    let err = g
+        .list_tags("https://x-access-token:SECRET-TOKEN-VALUE@127.0.0.1:1/o/r.git")
+        .expect_err("a refused connection is not a tag list");
+    let shown = err.to_string();
+    assert!(
+        !shown.contains("SECRET-TOKEN-VALUE"),
+        "credential leaked into a GitError: {shown}"
+    );
+    assert!(
+        shown.contains("127.0.0.1"),
+        "the plain URL must still be named: {shown}"
+    );
+}
+
+#[test]
 fn preflight_reports_not_installed_for_bogus_binary() {
     let g = ShellGit::new().with_binary("definitely-not-git-xyz");
     let err = g.preflight().unwrap_err();
