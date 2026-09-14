@@ -42,7 +42,7 @@ pub(crate) struct Citation {
 ///
 /// ```text
 /// spec://org.vibevm.core/vibevm-docs/guide/start#install
-/// spec://org.vibevm.core/vibevm-docs@0.1.0/guide/start
+/// spec://org.vibevm.core/vibevm-docs@1.0.0/guide/start
 /// ```
 pub(crate) fn parse(uri: &str) -> Option<Citation> {
     let rest = uri.strip_prefix("spec://")?;
