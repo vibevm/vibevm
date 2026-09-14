@@ -14,12 +14,12 @@ use super::*;
 
 /// The read URL a repository URL maps to, with production bases.
 fn url_for(repo_url: &str, refname: &str, path: &str) -> Option<String> {
-    address(None, repo_url, refname, path).map(|r| r.url)
+    hosts::address(None, repo_url, refname, path).map(|r| r.url)
 }
 
 /// The token a read would carry in its `Authorization` header.
 fn token_for(repo_url: &str) -> Option<String> {
-    address(None, repo_url, "v1.0.0", "vibe.toml").and_then(|r| r.token)
+    hosts::address(None, repo_url, "v1.0.0", "vibe.toml").and_then(|r| r.token)
 }
 
 #[test]
@@ -162,7 +162,7 @@ fn a_token_is_taken_from_userinfo_and_never_left_in_the_url() {
 
     // Whatever the userinfo held, the read URL and the URL named in
     // errors are both free of it.
-    let read = address(
+    let read = hosts::address(
         None,
         "https://x-access-token:ghp_secret@github.com/o/r.git",
         "v1.0.0",
@@ -244,7 +244,7 @@ fn a_miss_is_believed_only_for_a_non_manifest_file_at_a_fixed_ref() {
 
 #[test]
 fn github_serves_the_file_itself() {
-    let github = &HOSTS[0];
+    let github = &hosts::HOSTS[0];
     assert_eq!(github.host, "github.com");
     assert_eq!((github.read_body)(b"[package]\n").unwrap(), b"[package]\n");
     assert!((github.is_miss)(404, b""));
@@ -258,7 +258,7 @@ fn github_serves_the_file_itself() {
 
 #[test]
 fn gitverse_serves_base64_json_and_reports_a_miss_in_the_body() {
-    let gitverse = &HOSTS[1];
+    let gitverse = &hosts::HOSTS[1];
     assert_eq!(gitverse.host, "gitverse.ru");
 
     // 200: base64 in `content`, wrapped across lines as the route sends it.
@@ -463,6 +463,8 @@ fn a_name_that_did_not_resolve_is_not_worth_asking_again() {
 
 #[test]
 fn decode_base64_handles_padding_and_line_wrapping() {
+    use hosts::decode_base64;
+
     assert_eq!(decode_base64("").unwrap(), b"");
     assert_eq!(decode_base64("YQ==").unwrap(), b"a");
     assert_eq!(decode_base64("YWI=").unwrap(), b"ab");
