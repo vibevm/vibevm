@@ -24,6 +24,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MAY-DECLARE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-PAGES-LOCATION"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-NAME"/>
+    <p>Two more declarations are for the reader rather than the site. `authorship` in `[package]` says who wrote the prose, `human`, `ai` or `mixed`; it is a property of the document a shelf can filter by, never an attribution of the commits, whose law is the repository's own. `[navigation]` pins the pages a newcomer should see first and names the sections of the page tree; every other page keeps the order the package declares.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
   </the-manifest>
   <the-vocabulary title="The vocabulary of a page">
     <p>Pages are written in the project's XML dialect, extended for documentation with a small vocabulary that ordinary specifications do not have. Each element is checked by a tool, which is the point of having it.</p>
@@ -64,5 +67,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION"/>
     <p>A package with no documentation at all is still shown: the site renders any published version from its own bytes, the [manifest](../glossary/index.xml#manifest) as a reference page, the README, the boot snippet, the specs with their anchors, and the declared skills, binaries and servers.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO"/>
+    <p>Such a rendering says so in its manifest, so a shelf marks it as generated, and the page of a bridge keeps the maintainer of the bridge apart from the author of what it wraps.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO-MARKED"/>
   </edge-cases>
 </spec>
