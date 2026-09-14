@@ -42,6 +42,14 @@
   border: 1px solid var(--line);
 }
 
+/* A share of the tile rather than a size of its own, so the kind's mark
+   follows the tile through all three of its widths — the 48px square of
+   a narrow shelf, the 1.9rem one beside a title, and whatever a host
+   sets next — without a second number to keep in step. */
+.card__placeholder .kind-glyph {
+  --kind-glyph-size: 58%;
+}
+
 .card__body {
   min-width: 0;
 }

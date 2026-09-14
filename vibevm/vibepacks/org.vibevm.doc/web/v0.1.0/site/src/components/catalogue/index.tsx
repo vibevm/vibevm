@@ -175,6 +175,9 @@ export const Catalogue = component$<CatalogueProps>((props) => {
                   : { description: one.description })}
                 abstract={one.abstract}
                 status={one.status}
+                {...(one.packageKind === undefined
+                  ? {}
+                  : { kind: one.packageKind })}
                 glyph={DOC_GLYPH}
                 abstractLabel="what it covers"
                 editionLang={one.tag}

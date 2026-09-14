@@ -228,6 +228,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
           ? {}
           : { description: view.description })}
         {...(view.bridge === undefined ? {} : { bridge: view.bridge })}
+        {...(view.packageKind === undefined ? {} : { kind: view.packageKind })}
         glyph={DOC_GLYPH}
       >
         <a class="doc-package__llms" href={view.llms}>
@@ -262,6 +263,9 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
               : { description: view.description })}
             abstract={view.abstract}
             status={view.status}
+            {...(view.packageKind === undefined
+              ? {}
+              : { kind: view.packageKind })}
             glyph={DOC_GLYPH}
             abstractLabel="what it covers"
             editionLang={view.textLanguage}
@@ -289,6 +293,9 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
                 : { description: one.description })}
               abstract={one.abstract}
               status={one.official ? "official" : "community"}
+              {...(one.packageKind === undefined
+                ? {}
+                : { kind: one.packageKind })}
               glyph={DOC_GLYPH}
               abstractLabel="what it covers"
               editionLang={one.tag}
@@ -305,6 +312,11 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
           emptyLabel="This documentation has no pages yet."
           empty={view.pages.length === 0}
         >
+          {/* The pages carry the documentation's own mark. A page is not
+              a package, but it is a page OF one, and this shelf answers
+              the same question the two above it do — what am I about to
+              open. Drawing these with a different mark would read as a
+              difference where there is none. */}
           {view.pages.map((page) => (
             <Card
               key={page.href}
@@ -316,6 +328,9 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
                 ? {}
                 : { abstract: page.summary })}
               status={view.status}
+              {...(view.packageKind === undefined
+                ? {}
+                : { kind: view.packageKind })}
               glyph={DOC_GLYPH}
               abstractLabel="what it covers"
             />

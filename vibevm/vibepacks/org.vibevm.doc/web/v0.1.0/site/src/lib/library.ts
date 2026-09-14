@@ -40,6 +40,8 @@
  * own languages.
  */
 
+import type { PackageKind } from "@vibe-docs/design";
+
 import type {
   DocManifest,
   DocPage,
@@ -133,6 +135,34 @@ export function isProjection(card: DocPackage): boolean {
   if (card.projection !== undefined) return card.projection;
   const own = `${card.group}/${card.name}`;
   return card.subjects.some((subject) => subject.package === own);
+}
+
+/**
+ * What KIND of package a card came from, when the manifest lets it be
+ * known — the answer a shelf draws its mark from (VIBEVM-SPEC §4.1).
+ *
+ * **One kind can be known, and only one.** A rendering that is not a
+ * projection came from a package of kind `doc`. That is not an inference
+ * about the field above but the pipeline's own definition of it read
+ * from the other end: the builder marks a rendering a projection exactly
+ * when the package it rendered is NOT documentation
+ * (`##LEVEL-ZERO-MARKED`), so «not a projection» and «kind doc» are one
+ * statement with two spellings, and the site cannot disagree with the
+ * shelf it stands the card on.
+ *
+ * **For a projection the answer is «not told», and that is a gap in the
+ * WIRE and not a decision taken here.** The page manifest carries no
+ * `kind` member at all, so the kind of the package a projection renders
+ * — the `flow`, the `tool`, the `mcp` a reader would most want marked —
+ * never reaches the site. The pipeline has it: it reads `[package].kind`
+ * and spends the whole of it on the boolean above. Carrying the word
+ * named, beside `projection`, is the one change that fills in the other
+ * seven marks; until it is made a projection's card keeps the
+ * placeholder it has always had, because a card may not guess a kind
+ * nobody told it (`##PIPE-SHELL-PARSES-NOTHING`).
+ */
+export function kindOf(card: DocPackage): PackageKind | undefined {
+  return isProjection(card) ? undefined : "doc";
 }
 
 function edition(manifest: DocManifest, segment: string | null): Edition {

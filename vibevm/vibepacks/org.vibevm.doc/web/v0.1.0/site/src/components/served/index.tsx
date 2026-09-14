@@ -181,6 +181,9 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
               ? {}
               : { description: view.description })}
             {...(view.bridge === undefined ? {} : { bridge: view.bridge })}
+            {...(view.packageKind === undefined
+              ? {}
+              : { kind: view.packageKind })}
             glyph={DOC_GLYPH}
           >
             <a class="doc-package__llms" href={view.llms}>
@@ -207,6 +210,9 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
                   ? {}
                   : { abstract: one.summary })}
                 status={view.status}
+                {...(view.packageKind === undefined
+                  ? {}
+                  : { kind: view.packageKind })}
                 glyph={DOC_GLYPH}
                 abstractLabel="what it covers"
               />
