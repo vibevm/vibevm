@@ -20,12 +20,14 @@
       <tr><td>`epoch`, `format`</td><td>the package's manifest epoch and its content form (`simple` by default, `normal` for the contract-and-source layout)</td></tr>
       <tr><td>`authors`, `license`, `description`, `homepage`, `keywords`</td><td>the card every registry shows</td></tr>
       <tr><td>`title`, `abstract`</td><td>the human-readable name and the four-question summary shown on documentation shelves; required for `doc` packages, optional otherwise</td></tr>
+      <tr><td>`authorship`</td><td>who wrote the prose of a `doc` package: `human`, `ai` or `mixed`; a reader's filter, not the commits' attribution</td></tr>
       <tr><td>`describes`</td><td>the Package URL of an upstream library this package documents or wraps, for version-matched discovery</td></tr>
       <tr><td>`publish`</td><td>the publishing posture of a workspace member</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-MANDATORY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
     <p>`[project]` carries the same descriptive fields for a consumer, without a version line or a kind.</p>
   </package-table>
   <requirements title="[requires] and its neighbours">
@@ -102,12 +104,14 @@
       <tr><td>`[[documents]]`</td><td>`package` and a `version` constraint: a [subject](../glossary/index.xml#subject) this documentation describes; required, repeatable</td><td>`doc`</td></tr>
       <tr><td>`[documentation]`</td><td>`primary` (at most one coordinate) and `official` (any number): the documentation a package names as its own</td><td>every kind</td></tr>
       <tr><td>`[translates]`</td><td>`package` and `version` of the documentation this translation mirrors</td><td>`doc`</td></tr>
+      <tr><td>`[navigation]`</td><td>`pinned`, the document paths listed first, and `[[navigation.section]]` rows with `id` and `title` for the folders of the page tree</td><td>`doc`</td></tr>
       <tr><td>`[media]`</td><td>`icon`, `banner`, `preview`: source image files within the card limits</td><td>every kind</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
   </documentation-tables>
   <example-manifest title="A complete example">
     <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs"/>

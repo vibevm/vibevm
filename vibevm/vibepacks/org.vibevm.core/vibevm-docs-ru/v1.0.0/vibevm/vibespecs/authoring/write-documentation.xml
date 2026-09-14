@@ -24,6 +24,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MAY-DECLARE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-PAGES-LOCATION"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-NAME"/>
+    <p>Ещё два объявления адресованы читателю, а не сайту. `authorship` в `[package]` говорит, кто написал прозу: `human`, `ai` или `mixed`; это свойство документа, по которому полка умеет фильтровать, и никогда не атрибуция коммитов, закон которой у репозитория свой. `[navigation]` припиняет страницы, которые новичок должен увидеть первыми, и называет разделы дерева страниц; остальные страницы сохраняют порядок, объявленный пакетом.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
   </the-manifest>
   <the-vocabulary title="Словарь страницы">
     <p>Страницы пишутся на XML-диалекте проекта, расширенном для документации небольшим словарём, которого у обычных спецификаций нет. Каждый элемент проверяется инструментом, и в этом весь смысл его существования.</p>
@@ -64,5 +67,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION"/>
     <p>Пакет вообще без документации всё равно показывается: сайт отрисовывает любую опубликованную версию из её собственных байтов: [манифест](../glossary/index.xml#manifest) как справочную страницу, README, стартовый фрагмент, спецификации с их якорями и объявленные навыки, бинарники и серверы.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO"/>
+    <p>Такая отрисовка говорит об этом в своём манифесте, так что полка помечает её как сгенерированную, а страница моста держит сопровождающего моста отдельно от автора того, что он оборачивает.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO-MARKED"/>
   </edge-cases>
 </spec>
