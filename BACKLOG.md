@@ -1880,3 +1880,13 @@ structure, and it goes when the file does.
 | @fact:B166-SEVERITY **severity** | P3 — вынести классификацию ошибок и рендер argv из `shell.rs` в свои файлы; ссылки в `//!` писать путём от крейта (одна правка на четыре места) |
 | @fact:B166-DISPOSITION **disposition** | `open` |
 | @fact:B166-FILED **filed by** | кампания docs-2026-09, ревью POST-O5 (2026-09-14) |
+
+## B-167 — docs: три золотых примера и константа корпуса отстали от адаптации
+
+| поле | значение |
+|---|---|
+| @fact:B167-WHAT **what** | `vibe doc check --examples` над руководством даёт три расхождения: вывод `vibe explain` и `vibe select` теперь несёт `documents`-рёбра страниц `vibevm-docs-ru` (появились с волны C); `cargo test -p vibe-specdoc --test docs_corpus` ждёт 781 цитируемое правило при 791 в дереве; rustdoc-примеры в `crates/vibe-registry/src/…/resolve.rs:45` и `index.rs:62` пишут координату `@0.1.0`, которой после W1-O2 нет |
+| @fact:B167-EFFECT **effect** | полный гейт `--examples --min 100` красный; тест корпуса красный; примеры в докстрингах называют несуществующую версию |
+| @fact:B167-SEVERITY **severity** | P2 — переблагословить три золотых (решение, а не автоматика), поднять константу корпуса до текущего числа, поправить две координаты в докстринках |
+| @fact:B167-DISPOSITION **disposition** | `open` |
+| @fact:B167-FILED **filed by** | кампания docs-2026-09, ревью W1-O2 (2026-09-14) |
