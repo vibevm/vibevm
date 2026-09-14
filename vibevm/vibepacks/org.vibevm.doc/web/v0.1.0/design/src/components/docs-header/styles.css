@@ -1,7 +1,24 @@
+/* How tall the bar is, published for whatever has to stand clear of it.
+   ---------------------------------------------------------------------
+   It is declared HERE rather than among the tokens, and that is the
+   mechanism: this stylesheet is loaded exactly when a header is on the
+   page, so the variable exists exactly when the header does. The reader
+   `vibe` serves from a machine's own store has no site header at all —
+   its route tree does not carry this layout — and there the fallback
+   answers, so the reading controls sit where they always did instead of
+   holding a gap open under nothing. */
+:root {
+  --site-header-h: 64px;
+}
+
 .docs-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  /* Above the reading controls, which stand clear of the bar but whose
+     panels open into the band below it — and so does this one's language
+     list. Whichever a reader opens, the header's is the one they just
+     reached for. */
+  z-index: 40;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
@@ -13,7 +30,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.25rem;
-  height: 64px;
+  height: var(--site-header-h);
 }
 
 .docs-header__brand {

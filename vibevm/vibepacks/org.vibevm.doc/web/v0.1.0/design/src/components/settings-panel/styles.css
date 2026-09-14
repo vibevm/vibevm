@@ -1,10 +1,26 @@
-/* The gear, the panel and the quick row. Fixed to the top right, above
-   the sticky header, and out of the way of the reading column. */
+/* The gear, the panel and the quick row. Fixed to the top right, UNDER
+   the sticky header, and out of the way of the reading column.
+   ---------------------------------------------------------------------
+   Under it, because the corner is not theirs. The site header ends its
+   right-hand side with the search box and the language pill, and this
+   cluster used to be fixed at the very top of the same corner with a
+   higher z-index: the moment a reader began reading, the quick row
+   appeared and covered the language pill outright and the search box's
+   shortcut along with it.
+
+   So the offset is the header's own height, published by the header's
+   stylesheet, which is loaded exactly when there is a header to stand
+   clear of. In the reader `vibe` embeds there is none, the fallback is
+   zero, and these controls sit where they always did. */
 
 .settings {
   position: fixed;
-  top: 0.7rem;
+  top: calc(var(--site-header-h, 0px) + 0.7rem);
   right: 1rem;
+  /* Below the header (40) and above everything in the page. The two
+     never share space now; what this settles is whose panel wins when
+     both are open, and the answer is the one the reader just opened
+     from the bar. */
   z-index: 32;
   display: flex;
   align-items: center;
