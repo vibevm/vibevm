@@ -288,6 +288,165 @@ fn classify_unknown_message_falls_through() {
     assert!(classify("error: something we have never seen before").is_none());
 }
 
+/// A failed [`Output`] carrying `stderr`, so the classifier can be driven
+/// without a live `git`. `ExitStatus` has no portable constructor; both
+/// platform extensions offer a safe `from_raw`.
+#[cfg(test)]
+fn failed_output(stderr: &str) -> Output {
+    #[cfg(windows)]
+    let status = {
+        use std::os::windows::process::ExitStatusExt;
+        std::process::ExitStatus::from_raw(128)
+    };
+    #[cfg(unix)]
+    let status = {
+        use std::os::unix::process::ExitStatusExt;
+        std::process::ExitStatus::from_raw(128)
+    };
+    Output {
+        status,
+        stdout: Vec::new(),
+        stderr: stderr.as_bytes().to_vec(),
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn without_userinfo_strips_the_credential_and_nothing_else() {
+    // The shape `credentialed_url` / `inject_token` produce.
+    assert_eq!(
+        without_userinfo("https://x-access-token:SECRET@github.com/o/r.git"),
+        "https://github.com/o/r.git"
+    );
+    assert_eq!(
+        without_userinfo("https://SECRET@gitverse.ru/o/r.git"),
+        "https://gitverse.ru/o/r.git"
+    );
+    // No path to keep.
+    assert_eq!(
+        without_userinfo("https://x-access-token:SECRET@github.com"),
+        "https://github.com"
+    );
+    // An ssh URL's userinfo goes too — it could hold a password, and the
+    // account name is not information an error needs.
+    assert_eq!(
+        without_userinfo("ssh://git@host.example/org/repo.git"),
+        "ssh://host.example/org/repo.git"
+    );
+    // Nothing to strip: left exactly as git received it. The scp form in
+    // particular must keep its `git@`, or the URL stops being the URL.
+    for url in [
+        "https://github.com/o/r.git",
+        "git@github.com:vibespecs/org.vibevm.wal.git",
+        "file:///tmp/registry/org.vibevm.wal",
+        "",
+    ] {
+        assert_eq!(without_userinfo(url), url, "must pass through: {url}");
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn without_userinfo_in_arg_reaches_a_url_behind_a_flag() {
+    // `git archive` carries the URL inside `--remote=`; `git clone`
+    // carries it bare after `--`.
+    assert_eq!(
+        without_userinfo_in_arg("--remote=https://x-access-token:SECRET@github.com/o/r.git"),
+        "--remote=https://github.com/o/r.git"
+    );
+    assert_eq!(
+        without_userinfo_in_arg("https://x-access-token:SECRET@github.com/o/r.git"),
+        "https://github.com/o/r.git"
+    );
+    // Every other argv element is left alone, including the ones that
+    // happen to carry an `=` or an `@`.
+    for arg in [
+        "--format=tar",
+        "credential.helper=",
+        "core.askPass=",
+        "+refs/tags/v1.0.0:refs/tags/v1.0.0",
+        "--no-tags",
+        "vibe.toml",
+    ] {
+        assert_eq!(
+            without_userinfo_in_arg(arg),
+            arg,
+            "must pass through: {arg}"
+        );
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn a_classified_failure_names_the_url_without_its_credential() {
+    // The URL git is given carries the token; the error git's failure
+    // produces must not. Both the classified variants (which carry the
+    // URL in a field) and the unclassified fallback (which carries the
+    // whole argv) go through the same scrub.
+    let args = [
+        "clone",
+        "--",
+        "https://x-access-token:SECRET@github.com/o/r.git",
+    ];
+
+    let classified = classify_failure(&args, &failed_output("remote: Repository not found.\n"));
+    assert!(
+        matches!(classified, GitError::RepoNotFound { .. }),
+        "expected RepoNotFound, got: {classified:?}"
+    );
+    let shown = classified.to_string();
+    assert!(!shown.contains("SECRET"), "credential leaked: {shown}");
+    assert!(
+        shown.contains("https://github.com/o/r.git"),
+        "the plain URL must still be named: {shown}"
+    );
+
+    let unclassified = classify_failure(&args, &failed_output("error: something new\n"));
+    assert!(
+        matches!(unclassified, GitError::CommandFailed { .. }),
+        "expected CommandFailed, got: {unclassified:?}"
+    );
+    let shown = unclassified.to_string();
+    assert!(
+        !shown.contains("SECRET"),
+        "credential leaked through the rendered argv: {shown}"
+    );
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
+fn a_rendered_argv_is_safe_to_log() {
+    // The argv is rendered into `Io.cmd`, into `CommandFailed.cmd`, and
+    // into the `running git` debug line — one renderer, so all three are
+    // covered at once.
+    let args = [
+        "archive",
+        "--remote=https://x-access-token:SECRET@github.com/o/r.git",
+        "--format=tar",
+        "v1.0.0",
+        "--",
+        "vibe.toml",
+    ];
+    for rendered in [
+        render_argv(Path::new("git"), &args),
+        render_argv_for_display(&args),
+    ] {
+        assert!(
+            !rendered.contains("SECRET"),
+            "credential leaked: {rendered}"
+        );
+        assert!(
+            rendered.contains("--remote=https://github.com/o/r.git"),
+            "the plain URL must still be shown: {rendered}"
+        );
+        assert!(
+            rendered.contains("--format=tar"),
+            "argv mangled: {rendered}"
+        );
+        assert!(rendered.contains("vibe.toml"), "argv mangled: {rendered}");
+    }
+}
+
 #[test]
 fn classify_specific_matchers_win_over_unable_to_access() {
     // `unable to access` is a wrapper that frames many other

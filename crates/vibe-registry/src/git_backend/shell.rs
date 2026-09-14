@@ -47,6 +47,15 @@ pub struct ShellGit {
     // for each host's own production base — which is every case but a
     // test pointing the read at a local mock server.
     raw_base: Option<String>,
+    // The one HTTP client the fast path reads through, built on first
+    // use. Built once rather than per read because the pool of live
+    // connections lives inside it: a resolve walk over a 26-dependency
+    // graph makes ~80 reads of the same two hosts, and a client per read
+    // paid a fresh TLS handshake for every one of them. `None` inside
+    // the lock means the client could not be built at all — then there
+    // is no fast path and every read goes to git, which is the same
+    // answer as "not a host we know".
+    raw_client: OnceLock<Option<reqwest::blocking::Client>>,
     // Cached preflight result — populated on first `preflight()` call
     // for this instance. Kept per-instance (not global) so tests with
     // bogus binaries do not poison the cache for instances pointing at
@@ -77,8 +86,18 @@ impl ShellGit {
             binary,
             force_anonymous: false,
             raw_base: None,
+            raw_client: OnceLock::new(),
             preflight_cache: OnceLock::new(),
         }
+    }
+
+    /// The shared HTTP client of the read fast path, built on first use.
+    ///
+    /// `None` when it could not be built — a broken TLS backend, not a
+    /// transient condition, so the failed attempt is cached like any
+    /// other and the reads all go to git instead of re-paying it.
+    fn raw_client(&self) -> Option<&reqwest::blocking::Client> {
+        self.raw_client.get_or_init(raw_http::build_client).as_ref()
     }
 
     /// Rebind the `git` binary this backend spawns, overriding both
@@ -272,8 +291,9 @@ impl GitBackend for ShellGit {
         // ladder below is entered exactly as it was before. Deliberately
         // ahead of `preflight` — a read this path serves needs no `git`
         // on the machine at all.
-        if let Some(outcome) =
-            raw_http::try_read(self.raw_base.as_deref(), url, refname, &normalized)
+        if let Some(client) = self.raw_client()
+            && let Some(outcome) =
+                raw_http::try_read(client, self.raw_base.as_deref(), url, refname, &normalized)
         {
             return outcome;
         }
@@ -296,7 +316,7 @@ impl GitBackend for ShellGit {
         if output.status.success() {
             return extract_single_file_from_tar(&output.stdout, &normalized).ok_or_else(|| {
                 GitError::FileNotFoundInRef {
-                    url: url.to_string(),
+                    url: without_userinfo(url),
                     refname: refname.to_string(),
                     path: normalized.clone(),
                 }
@@ -313,7 +333,7 @@ impl GitBackend for ShellGit {
             || combined_lc.contains("did not match any files")
         {
             return Err(GitError::FileNotFoundInRef {
-                url: url.to_string(),
+                url: without_userinfo(url),
                 refname: refname.to_string(),
                 path: normalized,
             });
@@ -325,7 +345,7 @@ impl GitBackend for ShellGit {
                     || combined_lc.contains("disabled"))
         {
             return Err(GitError::ArchiveUnsupported {
-                url: url.to_string(),
+                url: without_userinfo(url),
             });
         }
         // GitHub disables `upload-archive` server-side. The HTTPS smart
@@ -338,7 +358,7 @@ impl GitBackend for ShellGit {
             && combined_lc.contains("git archive")
         {
             return Err(GitError::ArchiveUnsupported {
-                url: url.to_string(),
+                url: without_userinfo(url),
             });
         }
         if combined_lc.contains("git archive")
@@ -346,7 +366,7 @@ impl GitBackend for ShellGit {
             && combined_lc.contains("flush packet")
         {
             return Err(GitError::ArchiveUnsupported {
-                url: url.to_string(),
+                url: without_userinfo(url),
             });
         }
         if combined_lc.contains("unknown revision")
@@ -354,7 +374,7 @@ impl GitBackend for ShellGit {
             || combined_lc.contains("couldn't find remote ref")
         {
             return Err(GitError::RefNotFound {
-                url: url.to_string(),
+                url: without_userinfo(url),
                 refname: refname.to_string(),
             });
         }
@@ -384,6 +404,10 @@ impl GitBackend for ShellGit {
             binary: self.binary.clone(),
             force_anonymous: true,
             raw_base: self.raw_base.clone(),
+            // The client itself carries no posture — it sends whatever
+            // header the read decides on — so the anonymous variant
+            // shares this one's pool rather than opening a second.
+            raw_client: OnceLock::from(self.raw_client().cloned()),
             preflight_cache: OnceLock::new(),
         }))
     }
@@ -513,11 +537,13 @@ fn classify_failure(args: &[&str], output: &Output) -> GitError {
 
     // Extract `--` followed by URL for clone. For fetch, URL is from
     // origin which we don't know here; fall back to an empty string.
+    // Scrubbed on the way out of the argv — this is the URL every
+    // classified variant below will carry in its `Display`.
     let url = args
         .iter()
         .skip_while(|a| **a != "--")
         .nth(1)
-        .map(|s| s.to_string())
+        .map(|s| without_userinfo(s))
         .unwrap_or_default();
 
     let refname = args
@@ -609,11 +635,59 @@ fn classify_stderr_message(combined: &str, url: String, refname: String) -> Opti
     None
 }
 
+/// A URL as it may be *shown*: the same URL with any userinfo removed.
+///
+/// The URL this module hands to git routinely carries a credential —
+/// `https://x-access-token:<TOKEN>@host/…`, put there by
+/// `credentialed_url` / `inject_token` so the spawned `git` can
+/// authenticate. That URL is therefore what a failure here is *about*,
+/// but it is never what a [`GitError`] may carry: a `GitError` is a
+/// `Display` type. It reaches the operator's terminal through
+/// `RegistryError::Git`, and from there any log or bug report they paste.
+/// Every `GitError` built in this module puts its URL through here first,
+/// and so does every rendered argv — one funnel, so a new construction
+/// site cannot quietly reintroduce the leak.
+///
+/// Removes the whole userinfo rather than masking the secret half: the
+/// username in these URLs is the fixed literal `x-access-token`, which
+/// tells an operator nothing their own `vibe.toml` does not. An
+/// scp-style `git@host:org/repo.git` has no `://` and is returned
+/// untouched — that `git` is an ssh account name, not a secret, and
+/// removing it would make the URL wrong rather than safe.
+fn without_userinfo(url: &str) -> String {
+    let Some((scheme, rest)) = url.split_once("://") else {
+        return url.to_string();
+    };
+    let (authority, path) = match rest.split_once('/') {
+        Some((authority, path)) => (authority, Some(path)),
+        None => (rest, None),
+    };
+    let Some((_userinfo, host)) = authority.rsplit_once('@') else {
+        return url.to_string();
+    };
+    match path {
+        Some(path) => format!("{scheme}://{host}/{path}"),
+        None => format!("{scheme}://{host}"),
+    }
+}
+
+/// [`without_userinfo`] for one argv element, which may hold a URL either
+/// bare (`git clone -- <url>`) or behind a flag (`git archive
+/// --remote=<url>`).
+fn without_userinfo_in_arg(arg: &str) -> String {
+    if let Some((flag, value)) = arg.split_once('=')
+        && flag.starts_with("--")
+    {
+        return format!("{flag}={}", without_userinfo(value));
+    }
+    without_userinfo(arg)
+}
+
 fn render_argv(binary: &Path, args: &[&str]) -> String {
     let mut out = OsString::from(binary);
     for a in args {
         out.push(" ");
-        out.push(a);
+        out.push(without_userinfo_in_arg(a));
     }
     out.to_string_lossy().into_owned()
 }
@@ -622,7 +696,7 @@ fn render_argv_for_display(args: &[&str]) -> String {
     let mut out = String::from("git");
     for a in args {
         out.push(' ');
-        out.push_str(a);
+        out.push_str(&without_userinfo_in_arg(a));
     }
     out
 }
