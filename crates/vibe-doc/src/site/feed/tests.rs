@@ -30,21 +30,21 @@ fn checkout(root: &Path) {
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">One</title></spec>\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibe.toml"),
-        "[package]\nname = \"vibevm-docs\"\ngroup = \"org.vibevm.core\"\nversion = \"0.1.0\"\nkind = \"doc\"\n",
+        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibe.toml"),
+        "[package]\nname = \"vibevm-docs\"\ngroup = \"org.vibevm.core\"\nversion = \"1.0.0\"\nkind = \"doc\"\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/page.xml"),
+        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/page.xml"),
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">Page</title></spec>\n",
     );
     // Another kind, with something expensive inside it: the walk must
     // never enter it.
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/vibe.toml"),
-        "[package]\nname = \"web\"\ngroup = \"org.vibevm.doc\"\nversion = \"0.1.0\"\nkind = \"app\"\n",
+        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/vibe.toml"),
+        "[package]\nname = \"web\"\ngroup = \"org.vibevm.doc\"\nversion = \"1.0.0\"\nkind = \"app\"\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/node_modules/x/index.js"),
+        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/node_modules/x/index.js"),
         "module.exports = 1;\n",
     );
 }
@@ -67,7 +67,7 @@ fn the_host_contributes_its_project_and_its_documentation_packages() {
     assert_eq!(pairs.len(), 2);
     assert_eq!(pairs[0].spelled(), "org.vibevm.core/vibevm@1.0.0");
     assert!(matches!(pairs[0].origin, Origin::HostProject { .. }));
-    assert_eq!(pairs[1].spelled(), "org.vibevm.core/vibevm-docs@0.1.0");
+    assert_eq!(pairs[1].spelled(), "org.vibevm.core/vibevm-docs@1.0.0");
     assert!(matches!(pairs[1].origin, Origin::HostPackage { .. }));
     assert!(line.contains("1 documentation package(s)"), "{line}");
 }
@@ -96,7 +96,7 @@ fn an_edit_in_place_moves_the_render_key_although_the_version_stands_still() {
 
     write(
         &tmp.path()
-            .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/page.xml"),
+            .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/page.xml"),
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">Page two</title></spec>\n",
     );
     let after = host_feed(&host(tmp.path())).expect("a feed").0;
@@ -117,7 +117,7 @@ fn a_renamed_page_moves_the_render_key() {
 
     let pages = tmp
         .path()
-        .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs");
+        .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs");
     fs::rename(pages.join("page.xml"), pages.join("renamed.xml")).expect("the rename");
     let after = host_feed(&host(tmp.path())).expect("a feed").0;
     assert_ne!(before[1].content_hash, after[1].content_hash);

@@ -9,9 +9,9 @@
   unmarked — `kind ∈ {flow, feat, stack, tool, mcp, lang, doc, app}` — eight kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml); `doc` and `app` admitted by [PROP-057](PROP-057-documentation-packages-and-site.xml) through the `VIBEVM-SPEC.md` §4.1 amendment of 2026-09-12 (pending the owner's ratification at the merge of the docs-2026-09 branch; the code learns the two kinds in that campaign's phase 2). (§Invariants `INV-VOCABULARY` in this file carries the same list.) &lt;status stage="spec" state="done" action="continue" actionstage="impl"/&gt; (vibevm/vibespecs/common/PROP-000.xml:75)
   hash sha256:1effee7da317e236ec9b0745d0e02f922cd93134fd731a758428dce62db2a81f
   edges in:
-    documents ← `authoring::write-a-lang-package` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml:14)
-    documents ← `glossary::index` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/glossary/index.xml:107)
-    documents ← `model::packages-and-kinds` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/packages-and-kinds.xml:45)</expect>
+    documents ← `authoring::write-a-lang-package` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/authoring/write-a-lang-package.xml:14)
+    documents ← `glossary::index` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/glossary/index.xml:107)
+    documents ← `model::packages-and-kinds` (vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/packages-and-kinds.xml:45)</expect>
   </example>
   <marks title="Marks in the code">
     <p>A Rust item that implements a rule carries an attribute naming the rule's address; a test that verifies one carries a verifying attribute; a module that serves one section as a whole declares a scope. The links live in the code, beside the thing they describe, so they travel with every refactor and every copy. The verbs are `implements`, `verifies`, `documents`, `deviates` and `informs`; a deviation must say why.</p>
@@ -36,9 +36,9 @@
 4 results
 
   d0 spec -          `kind ∈ {flow, feat, stack, tool, mcp, lang, doc, app}` — eight kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml); `doc` and `app` admitted by [PROP-057](PROP-057-documentation-packages-and-site.xml) through the `VIBEVM-SPEC.md` §4.1 amendment of 2026-09-12 (pending the owner's ratification at the merge of the docs-2026-09 branch; the code learns the two kinds in that campaign's phase 2). (§Invariants `INV-VOCABULARY` in this file carries the same list.) &lt;status stage="spec" state="done" action="continue" actionstage="impl"/&gt;  vibevm/vibespecs/common/PROP-000.xml:75  spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET
-  d1 code doc-page   authoring::write-a-lang-package  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml:1
-  d1 code doc-page   glossary::index  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/glossary/index.xml:1
-  d1 code doc-page   model::packages-and-kinds  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs/model/packages-and-kinds.xml:1</expect>
+  d1 code doc-page   authoring::write-a-lang-package  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/authoring/write-a-lang-package.xml:1
+  d1 code doc-page   glossary::index  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/glossary/index.xml:1
+  d1 code doc-page   model::packages-and-kinds  vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/model/packages-and-kinds.xml:1</expect>
     </example>
   </asking>
   <documentation-edges title="Documentation in the map">

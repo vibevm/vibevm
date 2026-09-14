@@ -118,7 +118,7 @@ impl Options {
 /// let world = SpecSources::for_checkout("/repo", Some("org.vibevm.core"), "vibevm");
 /// let when = Utc.with_ymd_and_hms(2026, 9, 12, 0, 0, 0).unwrap();
 /// let built = manifest::build(
-///     std::path::Path::new("/repo/vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0"),
+///     std::path::Path::new("/repo/vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0"),
 ///     &world,
 ///     &Options::at(when),
 /// )

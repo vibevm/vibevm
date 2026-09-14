@@ -25,7 +25,7 @@
 !vibevm/vibepacks/org.vibevm.ai-native/**
 
 # ── The site package ───────────────────────────────────────────────────
-!vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/**
+!vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/**
 
 # ── The checkout the render reads as its second source ─────────────────
 # The project's own card and text, the specifications its citations
@@ -54,10 +54,10 @@
 **/node_modules
 **/target
 **/.git
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/dist
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/dist-embedded
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/server
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/server-embedded
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/site/test-results
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/test-results
-vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/tmp
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/dist
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/dist-embedded
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/server
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/server-embedded
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/test-results
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/test-results
+vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tmp

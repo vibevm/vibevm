@@ -508,7 +508,7 @@ run_step "cargo run -p vibe-cli -- check --path . --quiet" \
 # overflows the Windows path limit.
 run_step "documented examples run and match" \
   cargo run --quiet -p vibe-cli -- doc check --examples \
-    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 \
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0 \
     --sandbox "${TMPDIR:-${TEMP:-/tmp}}/vdocs" || OVERALL=$?
 
 # 4c. The `derived` references (PROP-057 ##PIPE-DERIVED). Command help,
@@ -523,7 +523,7 @@ run_step "documented examples run and match" \
 # --accept` moves the record forward once that human has looked.
 run_step "derived references build to what the record holds" \
   cargo run --quiet -p vibe-cli -- doc check --derived \
-    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 || OVERALL=$?
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0 || OVERALL=$?
 
 # 5. The AI-Native discipline gate (conform). Runs last: it reuses the
 # build cache the steps above populated, and its content-addressed fact
@@ -649,7 +649,7 @@ run_step "cargo clippy --all-targets (go-ai-native-lang pkg)" \
 # discipline's own rule for its floor and this panel's rule for itself: a
 # floor that quietly runs seven of eight steps reports a number with no
 # denominator (the same lesson as step 0b).
-WEBPKG_DIR="vibevm/vibepacks/org.vibevm.doc/web/v0.1.0"
+WEBPKG_DIR="vibevm/vibepacks/org.vibevm.doc/web/v1.0.0"
 TSNATIVE_SLOT="vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release"
 
 check_web_floor() {
