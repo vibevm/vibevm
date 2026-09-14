@@ -28,3 +28,15 @@
 .return-to-place__mark {
   color: var(--accent);
 }
+
+/* On a phone the reading controls come down to the bottom left, and a
+   row of them plus this pill do not both fit across three hundred and
+   ninety pixels. The pill takes the line above: it is the transient one
+   — it is offered once, on arrival, and is gone the moment it is taken
+   or the reader scrolls past their place — so the permanent row keeps
+   the corner and this stands over it. */
+@media (max-width: 900px) {
+  .return-to-place {
+    bottom: 4.6rem;
+  }
+}
