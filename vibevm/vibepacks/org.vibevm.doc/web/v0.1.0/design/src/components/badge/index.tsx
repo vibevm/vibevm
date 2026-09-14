@@ -59,3 +59,49 @@ export const GeneratedBadge = component$(() => {
   useStyles$(styles);
   return <span class="badge badge--generated">GENERATED</span>;
 });
+
+/**
+ * Who wrote the prose a card names: a person, a model, or both.
+ *
+ * The three words are the manifest's own (`##CARD-AUTHORSHIP`) and the
+ * card wears one of them only when the documentation declared it. A
+ * document that says nothing gets no mark at all — not «unknown», not a
+ * question mark — because a badge saying «we do not know» would put a
+ * verdict on a card where the documentation left a silence, and the
+ * shelf's filter treats that silence the same way: such a document
+ * stands in neither named group.
+ *
+ * It is a THIRD mark beside the standing and the generated one, and the
+ * three are three different questions: where this documentation stands
+ * for its subject, how the document came to exist, and whose words are
+ * in it. A rendering nobody wrote is not the same claim as prose a model
+ * wrote, and folding either into the other would lose the difference.
+ *
+ * The words are not translated with the furniture, for the reason the
+ * standings are not: they are the vocabulary of a field, and a reader
+ * comparing a card against the manifest behind it must find the same
+ * three words in both.
+ */
+export type AuthorshipMark = "human" | "ai" | "mixed";
+
+/** The word each authorship is shown with. */
+const AUTHORSHIP_WORDS = {
+  human: "Human",
+  ai: "AI",
+  mixed: "Mixed",
+} as const satisfies Record<AuthorshipMark, string>;
+
+export type AuthorshipBadgeProps = {
+  readonly authorship: AuthorshipMark;
+};
+
+export const AuthorshipBadge = component$<AuthorshipBadgeProps>((props) => {
+  useStyles$(styles);
+  return (
+    <span
+      class={`badge badge--authorship badge--authorship-${props.authorship}`}
+    >
+      {AUTHORSHIP_WORDS[props.authorship]}
+    </span>
+  );
+});

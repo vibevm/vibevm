@@ -20,6 +20,7 @@
 
 import {
   Audience,
+  Authorship,
   DocumentationStatus,
   PageGenre,
   TranslationStatus,
@@ -93,6 +94,42 @@ function member<T extends string>(
   return found === undefined
     ? fail(`${at}.${key}`, `expected one of ${allowed.join(", ")}`)
     : { ok: true, value: found };
+}
+
+/**
+ * A value out of a closed vocabulary when the document carries one, and
+ * «the document said nothing» when it does not.
+ *
+ * The two answers are different and the caller has to be able to tell
+ * them apart: a documentation that declares no authorship is not a
+ * documentation authored by nobody, and the shelf that filters by it
+ * leaves such a package out of both named groups rather than guessing it
+ * into one (`##CARD-AUTHORSHIP`). A word outside the vocabulary is still
+ * a failure, named by the field it stands in — absence is permissive
+ * here, nonsense never is.
+ */
+function optionalMember<T extends string>(
+  source: Record<string, unknown>,
+  key: string,
+  at: string,
+  vocabulary: Readonly<Record<string, T>>,
+): Parsed<T | undefined> {
+  return field(source, key) === undefined
+    ? { ok: true, value: undefined }
+    : member(source, key, at, vocabulary);
+}
+
+/** A boolean when the document carries one; absent is not `false` here. */
+function flag(
+  source: Record<string, unknown>,
+  key: string,
+  at: string,
+): Parsed<boolean | undefined> {
+  const value = field(source, key);
+  if (value === undefined) return { ok: true, value: undefined };
+  return typeof value === "boolean"
+    ? { ok: true, value }
+    : fail(`${at}.${key}`, "expected a boolean when present");
 }
 
 function list(
@@ -294,6 +331,17 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
     parsedMedia = parsed.value;
   }
 
+  /* Who held the pen, and whether anybody did. Both are optional for the
+     reason `media` is — a manifest written before the field existed is
+     still a manifest — and both are read here rather than sniffed for
+     downstream: this function is the one door from bytes into the type,
+     so a member it drops is a member the whole shell cannot see, whatever
+     the generated type says about it. */
+  const authorship = optionalMember(value, "authorship", at, Authorship);
+  if (!authorship.ok) return authorship;
+  const projection = flag(value, "projection", at);
+  if (!projection.ok) return projection;
+
   // Read one by one rather than spread from `read`: an index signature
   // would make every field `string | undefined` again, which is the
   // exact uncertainty this function exists to remove.
@@ -335,6 +383,12 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
       subjects: parsedSubjects,
       audiences: who.value,
       rendered_at: renderedAt,
+      ...(authorship.value === undefined
+        ? {}
+        : { authorship: authorship.value }),
+      ...(projection.value === undefined
+        ? {}
+        : { projection: projection.value }),
       ...(parsedMedia === undefined ? {} : { media: parsedMedia }),
       ...(description === undefined ? {} : { description }),
       ...(published === undefined ? {} : { published_at: published }),

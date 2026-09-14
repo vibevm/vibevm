@@ -84,6 +84,22 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
     "Эта сборка не несёт сгенерированной документации.",
   "what it covers": "что покрывает",
 
+  /* The door's second filter: whose words are in a documentation. The
+     three marks a card wears — Human, AI, Mixed — are not here, for the
+     reason the standings are not: they are a field's vocabulary, and a
+     reader comparing a card against the manifest behind it has to find
+     the same word in both. */
+  "Who wrote the prose": "Кто написал текст",
+  All: "Все",
+  "every documentation, including the ones that do not say who wrote them":
+    "вся документация, включая ту, что не говорит, кто её написал",
+  "Human-authored": "Написано человеком",
+  "a person wrote the prose; a document written by both hands is here too":
+    "текст написал человек; документ, написанный в четыре руки, тоже здесь",
+  "AI-generated": "Сгенерировано ИИ",
+  "a model wrote the prose; a document written by both hands is here too":
+    "текст написала модель; документ, написанный в четыре руки, тоже здесь",
+
   /* The three shelves of a package's own page. */
   "A star marks documentation the subject itself points at. The order says the same thing: primary, then official, then community.":
     "Звёздочка отмечает документацию, на которую указывает сам предмет. Порядок говорит о том же: основная, затем официальная, затем от сообщества.",

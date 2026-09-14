@@ -24,6 +24,8 @@ import type {
   VersionChoice,
 } from "@vibe-docs/design";
 
+import type { Authorship } from "../generated/doc-manifest.ts";
+
 import { contentsOf, type Contents } from "./contents.ts";
 import {
   catalogueHref,
@@ -333,6 +335,13 @@ export type PackageView = {
   readonly textLanguage: string;
   readonly status: "primary" | "official" | "community";
   /**
+   * Who wrote this documentation's prose, when it says so
+   * (`##CARD-AUTHORSHIP`). Absent is a card with no mark, here as on the
+   * door: a documentation that declared nothing is not a documentation a
+   * page may guess about.
+   */
+  readonly authorship?: Authorship;
+  /**
    * The documentation-language filter this page offers: the languages
    * this documentation has, then «Everything». A filter and not a set of
    * addresses, because every edition is already on the shelves below.
@@ -361,6 +370,8 @@ export type PackageView = {
     official: boolean;
     /** The BCP-47 tag of this adaptation, for the language filter. */
     tag: string;
+    /** Who wrote this adaptation's prose, when it says so. */
+    authorship?: Authorship;
   }[];
 };
 
@@ -429,6 +440,7 @@ function packageView(
     abstract: card.abstract,
     textLanguage: card.lang,
     status: card.status,
+    ...(card.authorship === undefined ? {} : { authorship: card.authorship }),
     languages: [
       ...all.map((one) => ({
         tag: one.tag,
@@ -461,6 +473,9 @@ function packageView(
         abstract: one.card.abstract,
         official: one.official,
         tag: one.tag,
+        ...(one.card.authorship === undefined
+          ? {}
+          : { authorship: one.card.authorship }),
       })),
   };
 }

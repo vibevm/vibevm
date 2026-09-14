@@ -264,6 +264,9 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
             glyph={DOC_GLYPH}
             abstractLabel="what it covers"
             editionLang={view.textLanguage}
+            {...(view.authorship === undefined
+              ? {}
+              : { authorship: view.authorship })}
           />
         </Shelf>
         <Shelf
@@ -287,6 +290,9 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
               glyph={DOC_GLYPH}
               abstractLabel="what it covers"
               editionLang={one.tag}
+              {...(one.authorship === undefined
+                ? {}
+                : { authorship: one.authorship })}
             />
           ))}
         </Shelf>

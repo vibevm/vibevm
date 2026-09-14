@@ -29,8 +29,11 @@ export {
 } from "./components/search-box/index.tsx";
 export { Tag, type TagProps } from "./components/tag/index.tsx";
 export {
+  AuthorshipBadge,
   Badge,
   GeneratedBadge,
+  type AuthorshipBadgeProps,
+  type AuthorshipMark,
   type BadgeProps,
   type DocStatus,
 } from "./components/badge/index.tsx";
@@ -81,6 +84,11 @@ export {
   type LanguageChoice,
   type LanguageSelectorProps,
 } from "./components/language-selector/index.tsx";
+export {
+  AuthorshipFilter,
+  type AuthorshipChoice,
+  type AuthorshipFilterProps,
+} from "./components/authorship-filter/index.tsx";
 export {
   SiteLanguageSwitch,
   type SiteLanguageChoice,

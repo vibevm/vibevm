@@ -1,0 +1,105 @@
+/* The authorship pill and the list it opens.
+
+   It is the language selector's twin by intent: two controls answering
+   two questions stand side by side in the same row, and a reader who has
+   learned that one of them opens a list of groups should not have to
+   learn the other. The geometry is therefore written to the same tokens
+   and the same measurements. It is written out rather than shared,
+   because the two lists hold different things — that one carries a star,
+   a publisher and an `hreflang`, this one carries three groups and no
+   address at all — and a common stylesheet for two controls that differ
+   inside would be a third place to look whenever either changes. */
+
+.authorship-filter {
+  position: relative;
+}
+
+.authorship-filter__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.authorship-filter__pill::-webkit-details-marker {
+  display: none;
+}
+
+.authorship-filter__pill:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.authorship-filter__caret {
+  font-size: 0.6rem;
+  transition: transform var(--speed) ease;
+}
+
+.authorship-filter[open] .authorship-filter__caret {
+  transform: rotate(180deg);
+}
+
+.authorship-filter__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 25;
+  min-width: 15rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+/* The reset a button needs to stop looking like one: an entry here is a
+   narrowing of the shelf and has to read as a line of a list. */
+.authorship-filter__item {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--speed) ease;
+}
+
+.authorship-filter__item:hover {
+  background: var(--bg-sink);
+}
+
+.authorship-filter__item--current {
+  background: var(--accent-soft);
+}
+
+.authorship-filter__name {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.authorship-filter__note {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.72rem;
+  color: var(--text-3);
+}

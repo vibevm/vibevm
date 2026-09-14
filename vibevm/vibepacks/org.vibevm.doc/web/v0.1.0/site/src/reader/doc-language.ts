@@ -22,10 +22,14 @@
  */
 
 import { all, one } from "./dom.ts";
+import { narrowShelves, widenShelves } from "./shelf.ts";
 import { readLocal, writeLocal } from "./storage.ts";
 
 /** Where the choice lives, beside the theme and the site's language. */
 const KEY = "doc-lang";
+
+/** The name this control's narrowing is held under on a shelf. */
+const NARROWING = "language";
 
 /** "Everything": the answer that hides nothing. */
 export const EVERY_LANGUAGE = "*";
@@ -80,28 +84,22 @@ function markEntries(filter: string): void {
 }
 
 /**
- * Show the editions in the chosen language and hide the rest, then tell
- * a shelf that has nothing left that it has nothing left.
+ * Say which editions this filter admits, and let the shelf work out what
+ * is left standing.
  *
- * A card with no language on it is not an edition of anything — a page
- * of the documentation already open — and is never hidden: a filter over
- * languages has no opinion about those.
+ * Hiding is not done here on purpose. The authorship filter narrows the
+ * same cards, and a card stands only when both admit it — so the one
+ * thing this module may state is its own half of that answer
+ * (`reader/shelf.ts`). A card with no language on it is not an edition
+ * of anything and is never governed either way: a filter over languages
+ * has no opinion about a page of the documentation already open.
  */
 function filterCards(filter: string): void {
-  for (const card of all("[data-edition-lang]")) {
-    const tag = card.dataset["editionLang"];
-    card.hidden = filter !== EVERY_LANGUAGE && tag !== filter;
-  }
-
-  for (const shelf of all("[data-shelf]")) {
-    const cards = all("[data-edition-lang]", shelf);
-    if (cards.length === 0) continue;
-    const left = cards.some((card) => !card.hidden);
-    const items = one(".shelf__items", shelf);
-    const empty = one("[data-shelf-empty]", shelf);
-    if (items !== null) items.hidden = !left;
-    if (empty !== null) empty.hidden = left;
-  }
+  narrowShelves(
+    NARROWING,
+    (card) =>
+      filter === EVERY_LANGUAGE || card.dataset["editionLang"] === filter,
+  );
 }
 
 /** Put a filter on the page. Everything visual happens here. */
@@ -143,5 +141,11 @@ export function startDocLanguage(addressLanguage: string | null): () => void {
   };
 
   document.addEventListener("click", onClick);
-  return () => document.removeEventListener("click", onClick);
+  return () => {
+    document.removeEventListener("click", onClick);
+    /* The narrowing goes with the listener. A page left with its filter
+       still registered would hand the next shelf a language nobody on it
+       had chosen. */
+    if (shelved) widenShelves(NARROWING);
+  };
 }

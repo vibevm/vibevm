@@ -114,20 +114,23 @@ export function documentOf(path: string): string {
  * is the whole reason the catalogue has a shelf for each.
  *
  * **This is the one place that decides it, and it decides it twice.**
- * `projection` is the field the manifest is gaining, and a card that
+ * `projection` is the field the manifest now carries, and a card that
  * carries it is believed: the builder is the only thing that knows
  * which of its two modes produced a tree, so the answer belongs there
- * and arrives named like every other value (`##PIPE-SHELL-PARSES-
- * NOTHING`). Until every deployment's manifests carry it there is one
- * signal a manifest already has, and it is not a guess: a rendering of a
- * package documents THAT package, so its own coordinate stands among its
+ * and arrives named like every other value (`##LEVEL-ZERO-MARKED`,
+ * `##PIPE-SHELL-PARSES-NOTHING`).
+ *
+ * The second half is the fallback, and it is for documents rather than
+ * for deployments: a manifest written before the field existed carries
+ * no answer, and the site still has to shelve it. The one signal such a
+ * manifest already has is not a guess — a rendering of a package
+ * documents THAT package, so its own coordinate stands among its
  * subjects, while a `doc` package names something other than itself
- * (`##REL-DOCUMENTS-REQUIRED`). The day the field is everywhere, the
- * second half of this function goes and the first stays.
+ * (`##REL-DOCUMENTS-REQUIRED`). The day no unmarked manifest is left in
+ * the wild, the second half goes and the first stays.
  */
 export function isProjection(card: DocPackage): boolean {
-  const declared: unknown = Reflect.get(card, "projection");
-  if (typeof declared === "boolean") return declared;
+  if (card.projection !== undefined) return card.projection;
   const own = `${card.group}/${card.name}`;
   return card.subjects.some((subject) => subject.package === own);
 }
