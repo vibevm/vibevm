@@ -23,6 +23,13 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/cited-rules/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/cited-rules/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/code-block/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -492,6 +499,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/reader/cited-rules.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/cited-rules.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/reader/code.ts",
       "item_kind": "module",
       "line": 1,
@@ -843,6 +857,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/cited-rules/index.tsx",
+      "from_symbol": "design/src/components/cited-rules/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
       "verb": "implements"
     },
     {
@@ -1382,6 +1404,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/reader/cited-rules.ts",
+      "from_symbol": "site/src/reader/cited-rules.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/reader/code.ts",
       "from_symbol": "site/src/reader/code.ts",
       "line": 1,
@@ -1779,6 +1809,12 @@
       "file": "design/src/components/card/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/card/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/cited-rules/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/cited-rules/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -2181,6 +2217,12 @@
       "file": "site/src/reader/catalogue.ts",
       "line": 1,
       "message": "edge `site/src/reader/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/cited-rules.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/cited-rules.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

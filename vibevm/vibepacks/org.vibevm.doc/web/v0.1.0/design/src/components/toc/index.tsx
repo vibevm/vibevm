@@ -4,21 +4,24 @@ import { component$, useStyles$ } from "@qwik.dev/core";
 import styles from "./styles.css?inline";
 
 export type TocProps = {
-  /** What the list is called: «Contents». */
+  /** What the list is called: «On this page». */
   readonly label: string;
-  /** The heading over the rules the page cites. */
-  readonly rulesLabel: string;
 };
 
 /**
- * The table of contents, and the rules the page quotes under it.
+ * The table of contents: this page's own headings, and nothing else.
+ *
+ * The rules the page quotes used to hang under them here, and a
+ * `spec://` address is long enough that a few of them made the block
+ * taller than the contents above it. They are a list of what the page
+ * cites rather than a map of where the reader is in it, and they now
+ * stand folded at the end of the text (`CitedRules`), which leaves this
+ * column answering the one question it is for.
  *
  * It is rendered empty and filled from the island, because the headings
  * are in HTML the pipeline produced and the shell does not parse
  * content: reading `h2` and `h3` out of a document that is already in
- * the page is a walk of the DOM, not a second renderer. The same is true
- * of the rules — every one of them is a `blockquote` already standing in
- * the text, with its `spec://` address on it.
+ * the page is a walk of the DOM, not a second renderer.
  *
  * One element serves both shapes the vision asks for. A `<details>` that
  * is forced open and loses its summary IS the sticky sidebar; the same
@@ -39,10 +42,6 @@ export const Toc = component$<TocProps>((props) => {
       <nav class="toc__nav" aria-label={props.label}>
         <ol class="toc__list" data-toc-list />
       </nav>
-      <section class="toc__rules" data-page-rules hidden>
-        <h2 class="toc__rules-title">{props.rulesLabel}</h2>
-        <ul class="toc__rules-list" data-page-rules-list />
-      </section>
     </details>
   );
 });

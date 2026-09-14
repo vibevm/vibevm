@@ -128,11 +128,41 @@ test("a narrow screen gets both lists as blocks above the text", async ({
   await expect(page.locator("[data-contents] summary")).toBeVisible();
 });
 
-test("the rules the page cites are listed, once each", async ({ page }) => {
-  const rules = page.locator("[data-page-rules-list] li");
+/**
+ * The rules the page cites, folded under the end of it.
+ *
+ * They used to hang in the side column under the headings, where a few
+ * `spec://` addresses made the block taller than the contents above it.
+ * What matters now is that the list is the same list, that the summary
+ * says how many before it is opened, and that it is at the END of the
+ * reading column rather than beside it.
+ */
+test("the rules the page cites are folded under it, once each", async ({
+  page,
+}) => {
+  const block = page.locator("[data-page-rules]");
+  await expect(block).toBeVisible();
+  await expect(block.locator("summary")).toHaveText(
+    "Rules this page cites (2)",
+  );
+
+  const rules = block.locator("li");
+  await expect(rules.first()).toBeHidden();
+  await block.locator("summary").click();
   await expect(rules.first()).toBeVisible();
   expect(await rules.count()).toBe(2);
   await expect(rules.first()).toContainText("spec://com.example/subject");
+
+  // Under the text, not beside it: the column on the right holds the
+  // page's headings and nothing else now.
+  await expect(page.locator("[data-toc] [data-page-rules]")).toHaveCount(0);
+  const meta = await page
+    .locator(".prose")
+    .evaluate((column) => column.getBoundingClientRect().bottom);
+  const rulesTop = await block.evaluate(
+    (element) => element.getBoundingClientRect().top,
+  );
+  expect(rulesTop).toBeLessThan(meta);
 });
 
 test("a table gets a scrolling region and expands into the overlay", async ({

@@ -54,38 +54,6 @@
   color: var(--accent);
 }
 
-.toc__rules {
-  margin-top: 1.2rem;
-}
-
-.toc__rules-title {
-  margin: 0 0 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
-.toc__rules-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.toc__rules-list a {
-  display: block;
-  padding: 0.14rem 0;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--text-3);
-  overflow-wrap: anywhere;
-}
-
-.toc__rules-list a:hover {
-  color: var(--accent);
-}
-
 /* The sidebar shape. The class is put on the page by the behaviour, from
    the window's width and the reader's own column width together. */
 .has-sidebar .toc {
