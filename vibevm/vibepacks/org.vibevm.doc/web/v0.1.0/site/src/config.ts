@@ -36,6 +36,7 @@ export const ENV_NAMES = {
   indexNowKey: "VITE_INDEXNOW_KEY",
   lastmod: "VITE_SITE_LASTMOD",
   defaultTheme: "VITE_SITE_DEFAULT_THEME",
+  featured: "VITE_SITE_FEATURED",
 } as const;
 
 /**
@@ -75,6 +76,25 @@ const THEMES: readonly DefaultTheme[] = ["system", "light", "dark"];
  */
 const DEFAULT_THEME: DefaultTheme = "dark";
 
+/**
+ * The documentations the door puts on its first shelf.
+ *
+ * Coordinates without a version — `<group>/<name>` — because featuring
+ * is about a documentation and not about a publication of it, and a
+ * deployment that had to name a version would be a deployment that
+ * quietly stopped featuring anything the day one was published.
+ *
+ * The default is the two the domain exists for: the manual, and the
+ * level-zero rendering of the package it documents. It is a default and
+ * not a constant for the reason the origin is one — this source builds
+ * somebody else's site too — and the deployment names its own in
+ * `site.toml`, which reaches the build through the environment.
+ */
+const DEFAULT_FEATURED: readonly string[] = [
+  "org.vibevm.core/vibevm",
+  "org.vibevm.core/vibevm-docs",
+];
+
 export type SiteConfig = {
   /** Scheme and host, no trailing slash: `https://vibevm.org`. */
   readonly origin: string;
@@ -96,6 +116,13 @@ export type SiteConfig = {
   readonly lastmod: string;
   /** The theme a reader who has chosen nothing gets; `dark` by default. */
   readonly defaultTheme: DefaultTheme;
+  /**
+   * The `<group>/<name>` of each documentation the door features, in the
+   * order the deployment named them. A coordinate this build does not
+   * carry is simply not on the shelf — a featured list is a wish of the
+   * deployment's and never a claim about what was rendered.
+   */
+  readonly featured: readonly string[];
 };
 
 /** A record read defensively: anything that is not a string is absent. */
@@ -136,6 +163,14 @@ export function siteConfig(env: Readonly<Record<string, unknown>>): SiteConfig {
      reader sees. */
   const theme = read(env, ENV_NAMES.defaultTheme);
   const known = THEMES.find((one) => one === theme);
+  /* A list arrives through an environment variable as one string, so
+     the separator is part of the contract and the trimming is not
+     optional: `a, b` and `a,b` are the same two coordinates, and an
+     empty entry is somebody's trailing comma rather than a package
+     called nothing. An empty variable is «nothing was said» here as it
+     is everywhere else in this file, so it takes the default rather
+     than emptying the shelf. */
+  const featured = read(env, ENV_NAMES.featured);
   return {
     origin: origin.replace(/\/+$/, ""),
     umamiWebsiteId: read(env, ENV_NAMES.umamiWebsiteId) ?? "",
@@ -143,6 +178,13 @@ export function siteConfig(env: Readonly<Record<string, unknown>>): SiteConfig {
     indexNowKey: read(env, ENV_NAMES.indexNowKey) ?? "",
     lastmod: read(env, ENV_NAMES.lastmod) ?? today(),
     defaultTheme: known ?? DEFAULT_THEME,
+    featured:
+      featured === undefined
+        ? DEFAULT_FEATURED
+        : featured
+            .split(",")
+            .map((one) => one.trim())
+            .filter((one) => one.length > 0),
   };
 }
 

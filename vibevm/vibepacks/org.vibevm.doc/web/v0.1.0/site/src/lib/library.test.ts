@@ -40,6 +40,7 @@ import { buildLibrary } from "../../../tools/library-source.mjs";
 import type { DocManifest } from "../generated/doc-manifest.ts";
 import { librariesOf as machineLibrariesOf } from "../seo/editions.ts";
 import {
+  isProjection,
   librariesOf,
   parseLibraries,
   siteAddressesOf,
@@ -47,8 +48,9 @@ import {
   sourceEdition,
   type Library,
 } from "./library.ts";
+import { catalogueEntries, catalogueShelves } from "./catalogue.ts";
 import { parseDocManifest } from "./manifest.ts";
-import { catalogueEntries, viewOf } from "./view.ts";
+import { viewOf } from "./view.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = resolve(HERE, "..", "fixtures");
@@ -412,7 +414,7 @@ describe("the package page of a library out of a tree", () => {
 
 describe("the door", () => {
   it("lists every edition of every library, source before adaptation", () => {
-    const entries = catalogueEntries(fromTrees(TREE, PAIR, PAIR_RU));
+    const entries = catalogueEntries(fromTrees(TREE, PAIR, PAIR_RU), []);
     assert.deepEqual(
       entries.map((one) => [one.title, one.href, one.status]),
       [
@@ -424,6 +426,64 @@ describe("the door", () => {
         ["The Pair", "/doc/com.example.docs/pair/0.1.0/", "community"],
         ["Пара", "/doc/ru/com.example.docs/pair/0.1.0/", "official"],
       ],
+    );
+  });
+
+  /**
+   * Featured names a DOCUMENTATION, so it is matched on the coordinate
+   * every address of a library is built on — the source's. An adaptation
+   * of a featured manual is that manual in another language and belongs
+   * on the same shelf; a coordinate this build does not carry is simply
+   * not there, because a featured list is a wish of the deployment's
+   * and never a claim about what was rendered.
+   */
+  it("features by the documentation's coordinate, adaptations included", () => {
+    const shelves = catalogueShelves(fromTrees(TREE, PAIR, PAIR_RU), [
+      "com.example.docs/pair",
+      "com.example.docs/nothing-here",
+    ]);
+    assert.deepEqual(
+      shelves.map((shelf) => [
+        shelf.tab,
+        shelf.entries.map((one) => one.title),
+      ]),
+      [
+        ["featured", ["The Pair", "Пара"]],
+        ["documents", ["Fixture Manual", "The Pair", "Пара"]],
+        ["projections", []],
+      ],
+    );
+  });
+
+  /**
+   * The one signal a manifest carries today. A level-zero rendering is a
+   * package printing its own bytes, so its own coordinate stands among
+   * its subjects; a `doc` package names something other than itself. The
+   * fixtures are all the second kind, which is what makes the first kind
+   * worth asserting rather than assuming.
+   */
+  it("tells a rendering of a package from a documentation about one", () => {
+    const documentation = fixture("manifest.json").package;
+    assert.equal(isProjection(documentation), false);
+
+    const rendering = {
+      ...documentation,
+      group: "com.example",
+      name: "subject",
+    };
+    assert.equal(isProjection(rendering), true);
+
+    /* And the field the manifest is gaining is believed over the signal.
+       It is composed rather than written as a literal because the
+       generated type does not carry it yet: a manifest from a newer
+       pipeline is exactly a card with one more member on it. */
+    assert.equal(
+      isProjection(Object.assign({}, rendering, { projection: false })),
+      false,
+    );
+    assert.equal(
+      isProjection(Object.assign({}, documentation, { projection: true })),
+      true,
     );
   });
 });

@@ -29,6 +29,18 @@
   color: var(--text-3);
 }
 
+/* The other axis: how the document came to exist, not where it stands.
+   It is drawn as the quietest of the marks — a dashed outline over the
+   sunk ground — because it is a statement of fact beside a card and not
+   a warning about it. The text token is the audited `--text-2`, so the
+   mark is as legible as the standings it stands beside. */
+.badge--generated {
+  border-style: dashed;
+  border-color: var(--line-strong);
+  background: var(--bg-sink);
+  color: var(--text-2);
+}
+
 .badge__star {
   color: var(--accent-hover);
 }

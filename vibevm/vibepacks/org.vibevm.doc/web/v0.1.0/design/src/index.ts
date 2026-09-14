@@ -29,6 +29,7 @@ export {
 export { Tag, type TagProps } from "./components/tag/index.tsx";
 export {
   Badge,
+  GeneratedBadge,
   type BadgeProps,
   type DocStatus,
 } from "./components/badge/index.tsx";

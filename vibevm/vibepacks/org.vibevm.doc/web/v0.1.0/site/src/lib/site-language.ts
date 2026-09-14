@@ -64,13 +64,24 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
   "Site language": "Язык сайта",
   "© 2026 Oleg Chirukhin": "© 2026 Олег Чирухин",
 
-  /* The catalogue behind the door. */
+  /* The catalogue behind the door, and its three shelves. */
   Documentation: "Документация",
   "the catalogue for an agent": "каталог для агента",
-  Editions: "Издания",
-  "A star marks an adaptation the author of the documentation named. Each documentation's source is listed first; it is what officiality is measured against.":
-    "Звёздочка отмечает адаптацию, которую назвал автор документации. Источник каждой документации стоит первым — именно с ним сверяется официальность.",
+  Catalogue: "Каталог",
+  Featured: "Избранное",
+  "Where this site asks a new reader to start. Everything else it carries is on the two shelves beside this one.":
+    "С чего этот сайт предлагает начать новому читателю. Всё остальное, что он несёт, — на двух полках рядом.",
+  "This build carries none of the documentations named as featured.":
+    "В этой сборке нет ни одной из документаций, названных избранными.",
+  Documents: "Документы",
+  "Every documentation somebody wrote, the featured ones included. A star marks an adaptation the author of the documentation named; each documentation's source is listed first, because it is what officiality is measured against.":
+    "Все документации, которые кто-то написал, включая избранные. Звёздочка отмечает адаптацию, которую назвал автор документации; источник каждой документации стоит первым — именно с ним сверяется официальность.",
   "This build carries no documentation.": "Эта сборка не несёт документации.",
+  Projections: "Проекции",
+  "Printed by the pipeline out of a package's own bytes, so that every package has something to read. Nobody wrote these pages, and every card here says so.":
+    "Напечатано конвейером из собственных байтов пакета, чтобы у каждого пакета было что читать. Эти страницы никто не писал, и каждая карточка здесь об этом говорит.",
+  "This build carries no generated documentation.":
+    "Эта сборка не несёт сгенерированной документации.",
   "what it covers": "что покрывает",
 
   /* The three shelves of a package's own page. */

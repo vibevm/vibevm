@@ -1,7 +1,7 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DECISION */
 
 import { component$, useStyles$ } from "@qwik.dev/core";
-import { Badge, type DocStatus } from "../badge/index.tsx";
+import { Badge, GeneratedBadge, type DocStatus } from "../badge/index.tsx";
 import styles from "./styles.css?inline";
 
 export type CardProps = {
@@ -41,6 +41,13 @@ export type CardProps = {
    * which is the same as saying the filter has no business hiding it.
    */
   readonly editionLang?: string;
+  /**
+   * True when the thing on the card is a level-zero rendering: the
+   * pipeline printed it out of a package's own bytes and nobody wrote
+   * it. It travels beside the standing rather than instead of it,
+   * because the two answer different questions.
+   */
+  readonly generated?: boolean;
 };
 
 /**
@@ -93,6 +100,7 @@ export const Card = component$<CardProps>((props) => {
               {props.title}
             </a>
             <Badge status={props.status} />
+            {props.generated === true ? <GeneratedBadge /> : null}
           </h3>
           <p class="card__publisher">
             {props.publisher}

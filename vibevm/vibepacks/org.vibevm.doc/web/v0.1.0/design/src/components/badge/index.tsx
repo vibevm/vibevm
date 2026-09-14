@@ -39,3 +39,23 @@ export const Badge = component$<BadgeProps>((props) => {
     </span>
   );
 });
+
+/**
+ * The mark a level-zero rendering carries: the pipeline printed this out
+ * of a package's own bytes, and nobody wrote it.
+ *
+ * It is a SECOND badge and not a fourth standing, because it answers a
+ * different question. Where a documentation stands for its subject is
+ * about the relation between two packages; how a document came to exist
+ * is about the document. A rendering can be primary for its subject —
+ * it usually is, being the subject itself — and a reader needs both
+ * facts, so both marks travel.
+ *
+ * The word is not softened and is not an apology. A reader deciding
+ * whether to trust a page is owed the plainest available statement of
+ * what it is.
+ */
+export const GeneratedBadge = component$(() => {
+  useStyles$(styles);
+  return <span class="badge badge--generated">GENERATED</span>;
+});
