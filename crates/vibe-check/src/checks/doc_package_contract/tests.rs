@@ -153,6 +153,31 @@ fn a_doc_package_without_a_readme_is_an_error() {
     assert!(hit.message.contains("KIND-DOC-MUST-DOCUMENT"));
 }
 
+/// A pin moves a page to the top of the navigation, so a pin at nothing
+/// moves nothing. The manifest grammar can only see that the path LOOKS
+/// like a document; this cell reads the tree and says which pin is
+/// empty.
+#[test]
+fn a_pin_at_a_page_that_is_not_there_is_an_error() {
+    let project = tempdir().unwrap();
+    write_doc_package(
+        project.path(),
+        "\n[navigation]\npinned = [\"start/index\", \"start/gone\"]\n",
+    );
+    let pages = project.path().join("vibevm/vibespecs/start");
+    fs::create_dir_all(&pages).unwrap();
+    fs::write(pages.join("index.xml"), "<spec/>\n").unwrap();
+
+    let hits: Vec<String> = contract_findings(&findings(project.path()))
+        .into_iter()
+        .filter(|f| f.severity == Severity::Error)
+        .map(|f| f.message.clone())
+        .collect();
+    assert_eq!(hits.len(), 1, "only the empty pin is a finding: {hits:?}");
+    assert!(hits[0].contains("start/gone"), "{}", hits[0]);
+    assert!(hits[0].contains("NAV-PINNED"), "{}", hits[0]);
+}
+
 /// The subject's end of the edge. A `primary` in a foreign group is
 /// legal — a group may hand its documentation to another publisher — so
 /// it warns rather than fails, and only when the groups actually differ.

@@ -119,6 +119,31 @@ fn the_card_carries_who_wrote_the_prose_when_the_package_says() {
     assert_eq!(built.manifest.package.authorship, Some(Authorship::Ai));
 }
 
+/// The navigation reaches the manifest as the package wrote it, and the
+/// page list is NOT reordered by it: where a pinned page stands is the
+/// reader's business, and a projection with its own opinion would give
+/// the site two orders to choose between.
+#[test]
+fn the_navigation_is_carried_and_the_page_order_is_left_alone() {
+    assert!(built().manifest.navigation.is_none());
+
+    let tmp = tempfile::tempdir().expect("temp");
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\n\
+         title = \"t\"\nabstract = \"a\"\n\n[navigation]\npinned = [\"start/index\"]\n\n\
+         [[navigation.section]]\nid = \"start\"\ntitle = \"Start\"\n",
+    )
+    .expect("write");
+    let built =
+        build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at())).expect("it builds");
+    let navigation = built.manifest.navigation.expect("the package asked");
+    assert_eq!(navigation.pinned, vec!["start/index".to_owned()]);
+    assert_eq!(navigation.sections.len(), 1);
+    assert_eq!(navigation.sections[0].id, "start");
+    assert_eq!(navigation.sections[0].title, "Start");
+}
+
 /// The subject is the one `[[documents]]` names, with the constraint it
 /// names it under. No source holds it here, so only this documentation's
 /// own edge is known — which is what community means.

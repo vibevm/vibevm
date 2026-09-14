@@ -48,10 +48,12 @@ mod wire;
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
 pub use documentation::{
-    ABSTRACT_LIMIT, DocumentationDecl, DocumentsDecl, MediaDecl, TranslatesDecl,
+    ABSTRACT_LIMIT, DocumentationDecl, DocumentsDecl, MediaDecl, NavigationDecl,
+    NavigationSectionDecl, TranslatesDecl,
 };
 pub(crate) use documentation::{
-    coordinate_form_is_valid, media_path_is_inside_package, version_constraint_is_valid,
+    coordinate_form_is_valid, media_path_is_inside_package, pinned_path_form_is_valid,
+    section_id_form_is_valid, version_constraint_is_valid,
 };
 pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind};
 pub use features::FeaturesTable;

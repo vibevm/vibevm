@@ -8,7 +8,15 @@
       "package": "vibe_wire::doc_manifest"
     },
     "x-vocabularies": ["group", "version", "timestamp"],
-    "x-wire-order": ["schema_version", "package", "pages"]
+    "x-wire-order": ["schema_version", "package", "navigation", "pages"]
+  },
+  "optionalProperties": {
+    "navigation": {
+      "ref": "navigation",
+      "metadata": {
+        "description": "What the package asked its navigation to look like (PROP-057 `##NAV-PINNED`), present only when it asked. Absent means the navigation is the pages in the order below and nothing else, which is what every documentation written before the field said."
+      }
+    }
   },
   "properties": {
     "schema_version": { "type": "uint32" },
@@ -60,6 +68,48 @@
       "metadata": {
         "x-vocabulary": "closed",
         "description": "Who wrote the prose a documentation package carries (PROP-057 `##CARD-AUTHORSHIP`). `human` — a person wrote it; `ai` — a model wrote it; `mixed` — both hands are in the text. It is metadata of the DOCUMENT, kept for the reader who filters a shelf by it, and it is never an attribution of the commits or of the repository, whose authorship law is `spec://org.vibevm.core/vibevm/common/PROP-000#commits`. Closed: the three answers exhaust who can hold the pen, and a fourth name would be a second way of saying one of them."
+      }
+    },
+    "navigation": {
+      "metadata": {
+        "description": "The two things a package may say about how its pages are listed (PROP-057 `##NAV-PINNED`): which of them stand first, and what the folders they live in are called. It changes only where the named pages stand — every other page keeps the order the layer law gave it — so a navigation is a small correction to a list the manifest already holds, never a second table of contents beside it.",
+        "x-wire-order": ["pinned", "sections"]
+      },
+      "properties": {
+        "pinned": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The document paths the site and the local reader list first, in the order given — `start/what-vibevm-is`, the page's address under the spec root without its extension. Written even when empty: a package that declared `[navigation]` for its section titles alone pins nothing, and the emptiness is the statement."
+          }
+        },
+        "sections": {
+          "elements": { "ref": "navigation_section" },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "One row per top-level folder of the page tree, with the title the navigation shows for it. A folder the package does not name is shown under its own directory name, which is a fallback and not a translation."
+          }
+        }
+      }
+    },
+    "navigation_section": {
+      "metadata": {
+        "description": "One folder of the page tree under the name a reader sees.",
+        "x-wire-order": ["id", "title"]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The folder, as the page paths spell it: the first segment of `start/index.xml` is `start`. An id, not a title, so a translation of the manual names the same sections as its source while showing other words."
+          }
+        },
+        "title": {
+          "type": "string",
+          "metadata": {
+            "description": "What the navigation shows for that folder, in the package's own language — one documentation is one language, so this needs no second field."
+          }
+        }
       }
     },
     "documented_subject": {

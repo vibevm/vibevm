@@ -45,3 +45,54 @@ version = "^1.0"
 [translates]
 package = "org.vibevm.core/vibevm-docs"
 version = "^0.1"
+
+# Где страницы стоят в навигации
+# (spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED). Пути те же, что
+# у источника — адаптация зеркалит дерево страниц; названия разделов свои,
+# на языке этого пакета.
+[navigation]
+pinned = ["start/what-vibevm-is", "start/index"]
+
+[[navigation.section]]
+id = "start"
+title = "Старт"
+
+[[navigation.section]]
+id = "model"
+title = "Модель"
+
+[[navigation.section]]
+id = "howto"
+title = "Как сделать"
+
+[[navigation.section]]
+id = "agent"
+title = "Агент"
+
+[[navigation.section]]
+id = "lifecycle"
+title = "Жизненный цикл"
+
+[[navigation.section]]
+id = "authoring"
+title = "Авторам"
+
+[[navigation.section]]
+id = "reference"
+title = "Справочник"
+
+[[navigation.section]]
+id = "architecture"
+title = "Архитектура"
+
+[[navigation.section]]
+id = "diagnostics"
+title = "Диагностика"
+
+[[navigation.section]]
+id = "faq"
+title = "Вопросы"
+
+[[navigation.section]]
+id = "glossary"
+title = "Глоссарий"

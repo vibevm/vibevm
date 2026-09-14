@@ -162,10 +162,18 @@ pub fn synthesise(manifest: &Manifest) -> String {
 
 /// The tables a level-0 render carries across from the package it
 /// renders. Each is a statement the author made about relations,
-/// language or pictures, and each is read further down the pipeline —
-/// the card's images by `media::slots`, the relations by the manifest's
-/// officiality, the language by every address that carries one.
-const CARRIED: &[&str] = &["i18n", "documents", "documentation", "translates", "media"];
+/// language, pictures or navigation, and each is read further down the
+/// pipeline — the card's images by `media::slots`, the relations by the
+/// manifest's officiality, the language by every address that carries
+/// one, the navigation by the page manifest the site reads.
+const CARRIED: &[&str] = &[
+    "i18n",
+    "documents",
+    "documentation",
+    "translates",
+    "media",
+    "navigation",
+];
 
 /// Emit one carried table in TOML, under its own name.
 fn emit(name: &str, value: &toml::Value) -> String {

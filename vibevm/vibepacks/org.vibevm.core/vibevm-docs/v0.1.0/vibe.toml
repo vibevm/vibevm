@@ -39,6 +39,58 @@ canonical = "en"
 package = "org.vibevm.core/vibevm"
 version = "^1.0"
 
+# Where the pages stand in the navigation
+# (spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED). The two pinned
+# pages are the ones a newcomer opens first; every other page keeps the order
+# the layer law gives it. The sections are the folders of the page tree, under
+# the names this manual already calls them by.
+[navigation]
+pinned = ["start/what-vibevm-is", "start/index"]
+
+[[navigation.section]]
+id = "start"
+title = "Start"
+
+[[navigation.section]]
+id = "model"
+title = "Model"
+
+[[navigation.section]]
+id = "howto"
+title = "How to"
+
+[[navigation.section]]
+id = "agent"
+title = "Agent"
+
+[[navigation.section]]
+id = "lifecycle"
+title = "Lifecycle"
+
+[[navigation.section]]
+id = "authoring"
+title = "Authoring"
+
+[[navigation.section]]
+id = "reference"
+title = "Reference"
+
+[[navigation.section]]
+id = "architecture"
+title = "Architecture"
+
+[[navigation.section]]
+id = "diagnostics"
+title = "Diagnostics"
+
+[[navigation.section]]
+id = "faq"
+title = "Questions"
+
+[[navigation.section]]
+id = "glossary"
+title = "Glossary"
+
 [[skill]]
 name = "vibevm-docs"
 path = "vibevm/vibespecs/skills/vibevm-docs"

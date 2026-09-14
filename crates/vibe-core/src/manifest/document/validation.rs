@@ -6,7 +6,8 @@ use crate::error::{Error, Result};
 use crate::manifest::extension::validate_extension_declarations;
 use crate::manifest::package::{
     ABSTRACT_LIMIT, MCP_ARG_VARS, coordinate_form_is_valid, media_path_is_inside_package,
-    validate_visibility, version_constraint_is_valid,
+    pinned_path_form_is_valid, section_id_form_is_valid, validate_visibility,
+    version_constraint_is_valid,
 };
 use crate::manifest::plane::validate_plane;
 
@@ -357,6 +358,62 @@ impl Manifest {
             }
             check_coordinate("[translates].package", &translates.package)?;
             check_constraint("[translates].version", &translates.version)?;
+        }
+
+        // `[navigation]` — a statement about a page tree, and only
+        // documentation has one. The paths are checked for FORM here;
+        // whether a pinned page exists is a question about a tree, and
+        // `vibe check` is where a tree is read.
+        if let Some(navigation) = &self.navigation {
+            if !is_doc {
+                return Err(Error::InvalidManifest {
+                    reason: format!(
+                        "[navigation] is legal only in `doc`-kind packages (this manifest is {}) \
+                         — it names pages and sections, and only documentation has a page tree \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED; \
+                          fix: set [package] kind = \"doc\", or drop the [navigation] table)",
+                        kind.map_or("not a package".to_string(), |k| format!("kind = \"{k}\"")),
+                    ),
+                });
+            }
+            for path in &navigation.pinned {
+                if !pinned_path_form_is_valid(path) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[navigation].pinned `{path}` is not a document path — a pin names a \
+                             page under the spec root with forward slashes and WITHOUT its \
+                             extension, because one document is served as three projections \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED; \
+                              fix: write the path alone, e.g. `start/what-vibevm-is`)"
+                        ),
+                    });
+                }
+            }
+            for section in &navigation.sections {
+                if !section_id_form_is_valid(&section.id) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[[navigation.section]].id `{}` is not a folder — a section is one \
+                             top-level folder of the page tree, named as the page paths spell it \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED; \
+                              fix: write the first segment alone, e.g. `start`)",
+                            section.id
+                        ),
+                    });
+                }
+                if section.title.trim().is_empty() {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[[navigation.section]] `{}` carries an empty `title` — the title is \
+                             the whole reason a section is named, and an empty one would show a \
+                             blank heading over the pages \
+                             (violates spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED; \
+                              fix: give the section its name in this package's own language)",
+                            section.id
+                        ),
+                    });
+                }
+            }
         }
 
         // `[documentation]` — the subject's pointer, legal in any kind,
