@@ -4,6 +4,7 @@
 //! that actually works.
 
 use super::*;
+use crate::manifest::Authorship;
 use crate::package_ref::PackageKind;
 
 /// A `doc` package with everything required and nothing more, as a TOML
@@ -307,6 +308,60 @@ fn a_stored_translations_table_is_refused() {
     assert!(message.contains("[translates]"), "{message}");
     assert!(
         message.contains("spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NO-TRANSLATIONS-TABLE"),
+        "{message}"
+    );
+}
+
+/// One card field spelled beside the title, so a test can say what a
+/// `doc` package declares ABOUT ITSELF rather than inside a table.
+fn card_field(line: &str) -> Result<Manifest> {
+    Manifest::parse_str(&format!(
+        "[package]\nname = \"vibevm-docs\"\ngroup = \"org.vibevm.core\"\nkind = \"doc\"\n\
+         version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n{line}{SUBJECT}"
+    ))
+}
+
+/// `authorship` says who wrote the PROSE, in one of the three words the
+/// vocabulary holds. A documentation that says nothing says «unknown»,
+/// which is why the field is an option and not a defaulted value.
+#[test]
+fn a_documentation_may_say_who_wrote_its_prose() {
+    let manifest = card_field("authorship = \"ai\"\n").expect("a documentation may declare it");
+    assert_eq!(
+        manifest.require_package().unwrap().authorship,
+        Some(Authorship::Ai)
+    );
+
+    let silent = card_field("").expect("the field is optional");
+    assert!(silent.require_package().unwrap().authorship.is_none());
+}
+
+/// A word outside the three is refused, and the refusal names the field
+/// and the words that work: the value is a closed vocabulary, not free
+/// text a reader of a shelf would have to interpret.
+#[test]
+fn an_unknown_authorship_is_refused_by_name() {
+    let message = card_field("authorship = \"robot\"\n")
+        .expect_err("`robot` is not one of the three")
+        .to_string();
+    assert!(message.contains("authorship"), "{message}");
+    assert!(message.contains("human"), "{message}");
+    assert!(message.contains("mixed"), "{message}");
+}
+
+/// Prose is what a `doc` package carries, so only a `doc` package may
+/// say whose it is.
+#[test]
+fn only_a_doc_package_may_declare_authorship() {
+    let message = Manifest::parse_str(
+        "[package]\nname = \"wal\"\ngroup = \"org.vibevm\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\
+         authorship = \"human\"\n",
+    )
+    .expect_err("a flow carries no prose")
+    .to_string();
+    assert!(message.contains("kind = \"flow\""), "{message}");
+    assert!(
+        message.contains("spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"),
         "{message}"
     );
 }

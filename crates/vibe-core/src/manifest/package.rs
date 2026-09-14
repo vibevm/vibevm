@@ -144,6 +144,13 @@ pub struct PackageMeta {
     /// `##CARD-DESCRIPTION-AND-ABSTRACT`). REQUIRED for `kind = "doc"`.
     #[serde(default, rename = "abstract", skip_serializing_if = "Option::is_none")]
     pub abstract_text: Option<String>,
+    /// `[package].authorship` — who wrote the prose this documentation
+    /// carries: `human`, `ai` or `mixed` (PROP-057 `##CARD-AUTHORSHIP`).
+    /// A field of documentation packages, so `validate` refuses it in
+    /// every other kind; absent means unknown, and a reader filtering a
+    /// shelf by authorship sees such a package in neither named group.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authorship: Option<Authorship>,
     /// `[package].lang` — **refused, and read only so the refusal can
     /// say why.**
     ///
@@ -243,6 +250,55 @@ impl PackageFormat {
     /// boot linker compiles rather than concatenates.
     pub fn is_normal(&self) -> bool {
         matches!(self, PackageFormat::Normal)
+    }
+}
+
+/// `[package].authorship` — who wrote the prose a documentation package
+/// carries (PROP-057 `##CARD-AUTHORSHIP`).
+///
+/// Metadata of the DOCUMENT and of nothing else. It says whose hand is in
+/// the text a reader is about to read, so that a shelf can be filtered by
+/// it; it is never an attribution of the commits or of the repository,
+/// whose authorship law is PROP-000 `##commits`. The two questions only
+/// look alike: a manual written by a model is still committed by the
+/// person who reviewed and signed it.
+///
+/// Absent means unknown, which is the honest state of every package that
+/// declares nothing — and the reason the field is an `Option` rather than
+/// a defaulted value: `human` as a default would put an assertion in
+/// every manifest that never made one.
+///
+/// ```
+/// use vibe_core::manifest::{Authorship, PackageMeta};
+///
+/// let p: PackageMeta = toml::from_str(r#"
+///     name = "manual"
+///     group = "org.example"
+///     kind = "doc"
+///     version = "1.0.0"
+///     authorship = "ai"
+/// "#).unwrap();
+/// assert_eq!(p.authorship, Some(Authorship::Ai));
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Authorship {
+    /// A person wrote the prose.
+    Human,
+    /// A model wrote the prose.
+    Ai,
+    /// Both hands are in the text.
+    Mixed,
+}
+
+impl Authorship {
+    /// The word a manifest spells.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Authorship::Human => "human",
+            Authorship::Ai => "ai",
+            Authorship::Mixed => "mixed",
+        }
     }
 }
 

@@ -289,6 +289,29 @@ impl Manifest {
             });
         }
 
+        // `authorship` — a statement about prose, so only a package that
+        // carries prose may make it. A `flow` or a `stack` has no
+        // document whose hand a reader could ask about, and a field that
+        // meant nothing where it was legal would be read as meaning
+        // something.
+        if let Some(meta) = &self.package
+            && let Some(authorship) = meta.authorship
+            && !is_doc
+        {
+            return Err(Error::InvalidManifest {
+                reason: format!(
+                    "`authorship = \"{}\"` is legal only in `doc`-kind packages (this manifest \
+                     is kind = \"{}\") — it says who wrote the PROSE a documentation carries, \
+                     and it is never an attribution of the commits or of the repository \
+                     (violates spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP; \
+                      fix: drop `authorship`, or set [package] kind = \"doc\" if this package \
+                      really is documentation)",
+                    authorship.as_str(),
+                    meta.kind,
+                ),
+            });
+        }
+
         // `[[documents]]` — required in documentation, meaningless
         // anywhere else: declaring a subject is what makes a package
         // documentation, so the kind and the table cannot disagree.

@@ -78,6 +78,23 @@ export const Audience = {
 export type Audience = (typeof Audience)[keyof typeof Audience];
 
 /**
+ * Who wrote the prose a documentation package carries (PROP-057 `##CARD-
+ * AUTHORSHIP`). `human` — a person wrote it; `ai` — a model wrote it;
+ * `mixed` — both hands are in the text. It is metadata of the DOCUMENT,
+ * kept for the reader who filters a shelf by it, and it is never an
+ * attribution of the commits or of the repository, whose authorship law is
+ * `spec://org.vibevm.core/vibevm/common/PROP-000#commits`. Closed: the three
+ * answers exhaust who can hold the pen, and a fourth name would be a second way
+ * of saying one of them.
+ */
+export const Authorship = {
+  Ai: "ai",
+  Human: "human",
+  Mixed: "mixed",
+} as const;
+export type Authorship = (typeof Authorship)[keyof typeof Authorship];
+
+/**
  * The addresses of the card's three images, exactly as `vibe doc build`
  * writes them (PROP-057 `##CARD-MEDIA-ROLES`, `##CARD-SITE-COPIES`, design
  * decision D-20). Each is relative to the base the documentation is served
@@ -181,6 +198,15 @@ export interface DocPackage {
    */
   title: string;
   version: Version;
+
+  /**
+   * Who wrote the prose this package carries, from `[package].authorship`
+   * (`##CARD-AUTHORSHIP`). Absent means unknown, which is what a package
+   * that declares nothing says: the site then shows no badge, and a filter by
+   * authorship leaves the package out of both named groups rather than guessing
+   * it into one.
+   */
+  authorship?: Authorship;
 
   /**
    * The one-line subtitle for lists and the page's meta description; absent

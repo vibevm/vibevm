@@ -100,6 +100,25 @@ fn the_card_names_the_addresses_the_build_writes_its_images_at() {
     );
 }
 
+/// Who wrote the prose reaches the card in the word the package spells,
+/// and a package that says nothing leaves the member absent — the state
+/// a shelf shows no badge for, rather than a guess at «human».
+#[test]
+fn the_card_carries_who_wrote_the_prose_when_the_package_says() {
+    assert!(built().manifest.package.authorship.is_none());
+
+    let tmp = tempfile::tempdir().expect("temp");
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\n\
+         title = \"t\"\nabstract = \"a\"\nauthorship = \"ai\"\n",
+    )
+    .expect("write");
+    let built =
+        build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at())).expect("it builds");
+    assert_eq!(built.manifest.package.authorship, Some(Authorship::Ai));
+}
+
 /// The subject is the one `[[documents]]` names, with the constraint it
 /// names it under. No source holds it here, so only this documentation's
 /// own edge is known — which is what community means.

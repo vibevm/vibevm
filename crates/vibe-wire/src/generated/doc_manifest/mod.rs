@@ -67,6 +67,26 @@ pub enum Audience {
     User,
 }
 
+/// Who wrote the prose a documentation package carries (PROP-057 `##CARD-
+/// AUTHORSHIP`). `human` — a person wrote it; `ai` — a model wrote it;
+/// `mixed` — both hands are in the text. It is metadata of the DOCUMENT,
+/// kept for the reader who filters a shelf by it, and it is never an
+/// attribution of the commits or of the repository, whose authorship law is
+/// `spec://org.vibevm.core/vibevm/common/PROP-000#commits`. Closed: the three
+/// answers exhaust who can hold the pen, and a fourth name would be a second
+/// way of saying one of them.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Authorship {
+    #[serde(rename = "ai")]
+    Ai,
+
+    #[serde(rename = "human")]
+    Human,
+
+    #[serde(rename = "mixed")]
+    Mixed,
+}
+
 /// The addresses of the card's three images, exactly as `vibe doc build`
 /// writes them (PROP-057 `##CARD-MEDIA-ROLES`, `##CARD-SITE-COPIES`, design
 /// decision D-20). Each is relative to the base the documentation is served
@@ -133,6 +153,14 @@ pub struct DocPackage {
     /// and no list of languages here: another language is another package,
     /// found through its `translates` edge.
     pub lang: String,
+
+    /// Who wrote the prose this package carries, from `[package].authorship`
+    /// (`##CARD-AUTHORSHIP`). Absent means unknown, which is what a package
+    /// that declares nothing says: the site then shows no badge, and a filter
+    /// by authorship leaves the package out of both named groups rather than
+    /// guessing it into one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authorship: Option<Authorship>,
 
     /// The strongest standing this documentation holds over any of its subjects
     /// — the one value a shelf, a star and a catalogue row need when a package

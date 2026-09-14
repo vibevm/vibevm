@@ -44,7 +44,8 @@ use std::path::Path;
 
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
-    AdaptedSource, Audience, CardMedia, DocManifest, DocPackage, DocPage, DocumentedSubject,
+    AdaptedSource, Audience, Authorship, CardMedia, DocManifest, DocPackage, DocPage,
+    DocumentedSubject,
 };
 
 use crate::citations::SpecSources;
@@ -199,6 +200,10 @@ fn assemble(
         description: card.description.clone(),
         abstract_: card.abstract_.clone(),
         lang: card.lang.clone(),
+        // Carried, never inferred: a documentation that says nothing
+        // about its prose is unknown, and the site shows no badge for it
+        // rather than deciding on its behalf (`##CARD-AUTHORSHIP`).
+        authorship: card.authorship.clone(),
         status: status::strongest(&subjects),
         subjects,
         translation,
@@ -258,6 +263,8 @@ struct Card {
     description: Option<String>,
     abstract_: String,
     lang: String,
+    /// Who wrote the prose, when the package says so.
+    authorship: Option<Authorship>,
     /// `<coordinate>` → the semver constraint, in declaration order.
     documents: Vec<(String, String)>,
     translates: Option<(String, String)>,
@@ -309,9 +316,27 @@ impl Card {
                 .unwrap_or_else(|| {
                     vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE.to_owned()
                 }),
+            authorship: field("authorship").as_deref().and_then(authorship),
             documents: relation(&parsed, "documents"),
             translates: relation(&parsed, "translates").into_iter().next(),
         })
+    }
+}
+
+/// Read `[package].authorship` as the wire spells it.
+///
+/// A word outside the three reads as absent, which is this reader's
+/// standing posture towards a manifest it did not write: the question
+/// here is «what does this package say about itself», and the place that
+/// REFUSES a misspelled value is the manifest grammar (`vibe check`), not
+/// a projection that would otherwise refuse to render a whole package
+/// over one word.
+fn authorship(word: &str) -> Option<Authorship> {
+    match word {
+        "human" => Some(Authorship::Human),
+        "ai" => Some(Authorship::Ai),
+        "mixed" => Some(Authorship::Mixed),
+        _ => None,
     }
 }
 
