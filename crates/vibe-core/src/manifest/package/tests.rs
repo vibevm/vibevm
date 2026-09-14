@@ -87,6 +87,7 @@ fn package_meta_as_package_ref_pins_exact() {
         description: None,
         title: None,
         abstract_text: None,
+        authorship: None,
         lang: None,
         homepage: None,
         keywords: vec![],

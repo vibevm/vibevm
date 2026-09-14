@@ -144,6 +144,13 @@ pub fn synthesise(manifest: &Manifest) -> String {
     if let Some(description) = manifest.field("description") {
         out.push_str(&format!("description = {}\n", quote(&description)));
     }
+    // Who wrote the prose is the package's own statement about its text
+    // (`##CARD-AUTHORSHIP`), so it travels with the card like the title:
+    // a render that dropped it would show no badge on a documentation
+    // that had declared one.
+    if let Some(authorship) = manifest.field("authorship") {
+        out.push_str(&format!("authorship = {}\n", quote(&authorship)));
+    }
     for table in CARRIED {
         if let Some(value) = manifest.table(table) {
             out.push('\n');

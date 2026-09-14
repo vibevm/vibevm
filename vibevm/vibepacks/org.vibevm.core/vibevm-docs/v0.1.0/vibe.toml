@@ -14,6 +14,11 @@ license = "UPL-1.0"
 description = "The VibeVM manual: install vibe, understand packages and the boot lane, work with an agent, author and publish packages."
 keywords = ["documentation", "manual", "vibevm", "packages", "agents", "lifecycle"]
 title = "VibeVM Manual"
+# Who wrote the prose of these pages, for the reader who wants to know
+# (spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP). A
+# statement about the text and never about the commits: the repository's
+# authorship law is PROP-000 `##commits`, and it is unchanged by this.
+authorship = "ai"
 abstract = """
 What it covers: what VibeVM is and how it gives a coding agent the right text to read; installing vibe; creating a project; packages, registries, the lock file and the machine store; installing, updating, publishing and working offline; giving an agent the vibevm skill and asking it to do the work; the lifecycle from validate to deploy; a full command, manifest, lock-file and settings reference; writing packages of every kind, including documentation and its translations.
 For whom: people who run vibe in their projects, people who write packages, and the agents that read on their behalf.

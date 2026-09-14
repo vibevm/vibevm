@@ -57,14 +57,14 @@ pub use mechanism::{
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub use package::{
-    ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, BinaryDecl, BootCategory, BootSnippet,
-    BootSnippetFragment, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
-    DocumentsDecl, EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind, FeaturesTable,
-    GitPackageDep, GitRefKind, HooksDecl, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl,
-    MediaDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget, PackageFormat, PackageMeta,
-    PathPackageDep, Provides, PublishPosture, Recommends, Requires, RequiresAny, SkillDecl,
-    SkillResourceDecl, Suggests, TargetOs, TranslatesDecl, VarRegistryDep, VisibilityMeta,
-    WhenCondition,
+    ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, Authorship, BinaryDecl, BootCategory,
+    BootSnippet, BootSnippetFragment, Compatibility, ConditionalTarget, ConflictsList,
+    DocumentationDecl, DocumentsDecl, EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind,
+    FeaturesTable, GitPackageDep, GitRefKind, HooksDecl, LinkType, MCP_ARG_VARS, Materialization,
+    McpServerDecl, MediaDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget,
+    PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture, Recommends, Requires,
+    RequiresAny, SkillDecl, SkillResourceDecl, Suggests, TargetOs, TranslatesDecl, VarRegistryDep,
+    VisibilityMeta, WhenCondition,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
