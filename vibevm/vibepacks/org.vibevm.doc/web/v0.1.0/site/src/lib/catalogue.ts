@@ -17,13 +17,14 @@
  * lets the whole of it be measured without a browser or a build.
  */
 
-import type { LanguageChoice } from "@vibe-docs/design";
+import type { BridgeAuthorship, LanguageChoice } from "@vibe-docs/design";
 
 import type {
   Authorship,
   DocumentationStatus,
 } from "../generated/doc-manifest.ts";
 
+import { bridgeOf } from "./bridge.ts";
 import { catalogueHref, packageHref } from "./href.ts";
 import {
   coordinate,
@@ -56,6 +57,13 @@ export type CatalogueEntry = {
    * card quietly counted as one of them.
    */
   readonly authorship?: Authorship;
+  /**
+   * The two authorships this edition keeps apart, when it is a bridge
+   * (PROP-023 `##AUTHORSHIP-SEPARATION`). Absent for everything else,
+   * and never derived from the publisher or from a group's name: a card
+   * shows the fields or it shows nothing.
+   */
+  readonly bridge?: BridgeAuthorship;
 };
 
 /** Which of the door's three shelves an entry stands on. */
@@ -90,32 +98,36 @@ export function catalogueEntries(
        manual in another language and stands on the same shelf. */
     const source = library.source.card;
     const named = featured.includes(`${source.group}/${source.name}`);
-    return editions(library).map((one) => ({
-      tag: one.tag,
-      segment: one.segment,
-      title: one.title,
-      href: packageHref(coordinate(library, one.segment)),
-      publisher: one.publisher,
-      coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
-      ...(one.card.description === undefined
-        ? {}
-        : { description: one.card.description }),
-      abstract: one.card.abstract,
-      status:
-        one.segment === null
-          ? one.card.status
-          : one.official
-            ? "official"
-            : "community",
-      projection: isProjection(one.card),
-      featured: named,
-      /* The edition's own answer and never the source's: a translation
+    return editions(library).map((one) => {
+      const bridged = bridgeOf(one.card);
+      return {
+        tag: one.tag,
+        segment: one.segment,
+        title: one.title,
+        href: packageHref(coordinate(library, one.segment)),
+        publisher: one.publisher,
+        coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
+        ...(one.card.description === undefined
+          ? {}
+          : { description: one.card.description }),
+        abstract: one.card.abstract,
+        status:
+          one.segment === null
+            ? one.card.status
+            : one.official
+              ? "official"
+              : "community",
+        projection: isProjection(one.card),
+        featured: named,
+        /* The edition's own answer and never the source's: a translation
          is prose somebody wrote, and which hand wrote it is a fact about
          that text rather than about the one it adapts. */
-      ...(one.card.authorship === undefined
-        ? {}
-        : { authorship: one.card.authorship }),
-    }));
+        ...(one.card.authorship === undefined
+          ? {}
+          : { authorship: one.card.authorship }),
+        ...(bridged === undefined ? {} : { bridge: bridged }),
+      };
+    });
   });
 }
 

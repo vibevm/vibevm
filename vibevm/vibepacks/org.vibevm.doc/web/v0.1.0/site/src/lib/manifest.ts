@@ -25,6 +25,7 @@ import {
   PageGenre,
   TranslationStatus,
   type AdaptedSource,
+  type BridgeAuthorship,
   type CardMedia,
   type DocManifest,
   type DocPackage,
@@ -237,6 +238,44 @@ function cardMedia(value: unknown, at: string): Parsed<CardMedia> {
   };
 }
 
+/**
+ * The two authorships a bridge keeps apart (PROP-023 `##AUTHORSHIP-
+ * SEPARATION`): who wrote the wrapper, and who wrote the bytes it wraps.
+ *
+ * Both lists are read even when they are empty, and an empty one is kept
+ * empty. A bridge that names no maintainer is a fact about that bridge —
+ * and the one thing this parser must never do is let a missing list be
+ * filled from the other, which is exactly how the maintainer of a
+ * wrapper ends up printed as the author of the work it wraps.
+ *
+ * The licence is optional because the pipeline carries it only when
+ * every embedded source states the same one. Absent means the sources
+ * disagree, or none said: either way one line cannot state two licences,
+ * and inventing one would be stating a legal fact that is not true.
+ */
+function bridgeAuthorship(
+  value: unknown,
+  at: string,
+): Parsed<BridgeAuthorship> {
+  if (!isRecord(value)) return fail(at, "expected an object");
+  const maintainers = strings(value, "maintainers", at);
+  if (!maintainers.ok) return maintainers;
+  const upstream = strings(value, "upstream_authors", at);
+  if (!upstream.ok) return upstream;
+  const license = field(value, "upstream_license");
+  if (license !== undefined && typeof license !== "string") {
+    return fail(`${at}.upstream_license`, "expected a string when present");
+  }
+  return {
+    ok: true,
+    value: {
+      maintainers: maintainers.value,
+      upstream_authors: upstream.value,
+      ...(license === undefined ? {} : { upstream_license: license }),
+    },
+  };
+}
+
 function page(value: unknown, at: string): Parsed<DocPage> {
   if (!isRecord(value)) return fail(at, "expected an object");
   const path = str(value, "path", at);
@@ -342,6 +381,17 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
   const projection = flag(value, "projection", at);
   if (!projection.ok) return projection;
 
+  /* Present only for a package that declares itself a bridge, so absent
+     is «this is not a bridge» and never «this bridge named nobody» —
+     which the empty lists inside it are for. */
+  const bridged = field(value, "bridge");
+  let parsedBridge: BridgeAuthorship | undefined = undefined;
+  if (bridged !== undefined) {
+    const parsed = bridgeAuthorship(bridged, `${at}.bridge`);
+    if (!parsed.ok) return parsed;
+    parsedBridge = parsed.value;
+  }
+
   // Read one by one rather than spread from `read`: an index signature
   // would make every field `string | undefined` again, which is the
   // exact uncertainty this function exists to remove.
@@ -389,6 +439,7 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
       ...(projection.value === undefined
         ? {}
         : { projection: projection.value }),
+      ...(parsedBridge === undefined ? {} : { bridge: parsedBridge }),
       ...(parsedMedia === undefined ? {} : { media: parsedMedia }),
       ...(description === undefined ? {} : { description }),
       ...(published === undefined ? {} : { published_at: published }),

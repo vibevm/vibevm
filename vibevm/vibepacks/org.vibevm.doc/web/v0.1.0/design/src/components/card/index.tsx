@@ -8,6 +8,10 @@ import {
   type AuthorshipMark,
   type DocStatus,
 } from "../badge/index.tsx";
+import {
+  BridgeSignatures,
+  type BridgeAuthorship,
+} from "../bridge-signatures/index.tsx";
 import styles from "./styles.css?inline";
 
 export type CardProps = {
@@ -63,6 +67,13 @@ export type CardProps = {
    * the build already wrote and has nothing else to read.
    */
   readonly authorship?: AuthorshipMark;
+  /**
+   * The two authorships of a bridge, when the thing on the card is one
+   * (PROP-023 `##AUTHORSHIP-SEPARATION`). Absent for everything else,
+   * which leaves the card exactly as it was: the publisher, and no claim
+   * about who wrote what it points at.
+   */
+  readonly bridge?: BridgeAuthorship;
 };
 
 /**
@@ -127,6 +138,9 @@ export const Card = component$<CardProps>((props) => {
             {props.publisher}
             <span class="card__coordinate">{props.coordinate}</span>
           </p>
+          {props.bridge === undefined ? null : (
+            <BridgeSignatures bridge={props.bridge} />
+          )}
           {props.description === undefined ? null : (
             <p class="card__description">{props.description}</p>
           )}

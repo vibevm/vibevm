@@ -1,0 +1,42 @@
+/* The two names, shaped like the meta row of a page rather than like
+   prose: a small capitalised label and the value beside it, so that the
+   pair reads as two separate facts at a glance and neither can be
+   mistaken for a continuation of the other.
+
+   They stack rather than sit side by side. Two names on one line, at a
+   card's width, wrap into each other at the first long list — and two
+   authorships that run together on the page are the failure this block
+   exists to prevent. */
+
+.bridge-signatures {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.bridge-signatures__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.bridge-signatures__row dt {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.bridge-signatures__row dd {
+  margin: 0;
+}
+
+.bridge-signatures__row code {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}

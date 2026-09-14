@@ -182,6 +182,7 @@ export const Catalogue = component$<CatalogueProps>((props) => {
                 {...(one.authorship === undefined
                   ? {}
                   : { authorship: one.authorship })}
+                {...(one.bridge === undefined ? {} : { bridge: one.bridge })}
               />
             ))}
           </Shelf>

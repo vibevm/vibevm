@@ -227,6 +227,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
         {...(view.description === undefined
           ? {}
           : { description: view.description })}
+        {...(view.bridge === undefined ? {} : { bridge: view.bridge })}
         glyph={DOC_GLYPH}
       >
         <a class="doc-package__llms" href={view.llms}>
@@ -267,6 +268,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
             {...(view.authorship === undefined
               ? {}
               : { authorship: view.authorship })}
+            {...(view.bridge === undefined ? {} : { bridge: view.bridge })}
           />
         </Shelf>
         <Shelf
@@ -293,6 +295,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
               {...(one.authorship === undefined
                 ? {}
                 : { authorship: one.authorship })}
+              {...(one.bridge === undefined ? {} : { bridge: one.bridge })}
             />
           ))}
         </Shelf>

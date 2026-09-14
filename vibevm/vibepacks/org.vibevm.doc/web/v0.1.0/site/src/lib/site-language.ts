@@ -100,6 +100,13 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
   "a model wrote the prose; a document written by both hands is here too":
     "текст написала модель; документ, написанный в четыре руки, тоже здесь",
 
+  /* The two names a bridge keeps apart, on its card and at the head of
+     its page. The names themselves are the package's and are never in
+     this table. */
+  "Bridge maintainer": "Сопровождает мост",
+  "Destination author": "Автор оригинала",
+  "Upstream licence": "Лицензия оригинала",
+
   /* The three shelves of a package's own page. */
   "A star marks documentation the subject itself points at. The order says the same thing: primary, then official, then community.":
     "Звёздочка отмечает документацию, на которую указывает сам предмет. Порядок говорит о том же: основная, затем официальная, затем от сообщества.",

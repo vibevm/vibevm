@@ -10,6 +10,15 @@
     "abstract": "What it covers: one page that uses every block of the documentation genre once, so the island backend has a subject with no gaps.\nFor whom: whoever changes the renderer and needs to see what changed.\nWhat it assumes known: nothing; it documents nothing real.\nWhat it leaves out: prose worth reading.",
     "lang": "en",
     "authorship": "ai",
+    "bridge": {
+      "maintainers": [
+        "The fixture's maintainer"
+      ],
+      "upstream_authors": [
+        "The author of the bytes the fixture wraps"
+      ],
+      "upstream_license": "Apache-2.0"
+    },
     "status": "community",
     "subjects": [
       {

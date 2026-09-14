@@ -93,6 +93,15 @@ reader is most likely to be surprised by. The two libraries in
 that says nothing about who wrote it, and therefore stands in neither
 named group — has a document of its own to be measured on.
 
+The source is also the library's bridge. It declares the two authorships
+a bridge keeps apart — who maintains the wrapper, who wrote the bytes it
+wraps, and the licence of those bytes (PROP-023
+`##AUTHORSHIP-SEPARATION`) — because a card and the head of a package's
+page both have to show them, and this is the only library the package
+builds by itself. The adaptation beside it declares no bridge, so the
+unchanged case is on the same shelf as the changed one: one card with
+two names under it, one with the publisher and nothing else.
+
 The addresses are the source's. A translation is served under the source
 package's coordinate with a language segment in front of it, never under
 its own name (D-06) — which is exactly what lets the language selector

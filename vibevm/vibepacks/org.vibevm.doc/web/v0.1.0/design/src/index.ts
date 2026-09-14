@@ -100,6 +100,11 @@ export {
   type VersionSwitchProps,
 } from "./components/version-switch/index.tsx";
 export { Card, type CardProps } from "./components/card/index.tsx";
+export {
+  BridgeSignatures,
+  type BridgeAuthorship,
+  type BridgeSignaturesProps,
+} from "./components/bridge-signatures/index.tsx";
 export { Shelf, type ShelfProps } from "./components/shelf/index.tsx";
 export {
   PackageHeader,
