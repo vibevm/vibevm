@@ -1,6 +1,7 @@
-/* The head of a package page. The drawn banner is the design system's
-   warm placeholder (`.photo-ph`) expressed in tokens, so it changes with
-   the theme and never leaves the bundle for a picture. */
+/* The head of a package page. The banner is a picture the package
+   shipped or nothing at all: the negative margin below lifts the icon
+   over the band's lower edge, so without a band there is nothing to lift
+   over and the row starts where the page does. */
 
 .package-header {
   margin: 0 0 2rem;
@@ -15,22 +16,22 @@
   border: 1px solid var(--line);
 }
 
-.package-header__banner--drawn {
-  background:
-    radial-gradient(
-      120% 180% at 12% 10%,
-      var(--accent-soft) 0%,
-      transparent 60%
-    ),
-    linear-gradient(120deg, var(--bg-sink), var(--bg-raise) 65%);
-}
-
 .package-header__row {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
   margin-top: -2rem;
   padding: 0 1rem;
+}
+
+/* No band, so no overlap and no room held open for one. */
+.package-header--unbannered .package-header__row {
+  margin-top: 0;
+  padding: 0;
+}
+
+.package-header--unbannered .package-header__body {
+  padding-top: 0;
 }
 
 .package-header__icon,

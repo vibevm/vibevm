@@ -21,31 +21,39 @@ export type PackageHeaderProps = {
 };
 
 /**
- * The head of a package's page: the banner, the icon, the title, the
- * publisher.
+ * The head of a package's page: the banner when there is one, the icon,
+ * the title, the publisher.
  *
- * A package that ships no banner gets one anyway. It is drawn here out
- * of the theme's own tokens rather than fetched, because the law is that
- * placeholders are generated and never stored, and because a site that
- * went to someone else's host for a decorative picture would tell that
- * host who is reading the documentation (D-20, R-09).
+ * **A package that ships no banner gets no banner.** It used to get a
+ * drawn one — a wash of the theme's own tokens at three-to-one — and on
+ * a page it read as a wide empty field held open above the name for a
+ * picture that does not exist. A card's placeholder is a different
+ * thing and stays: it stands in a row of cards, where a gap would break
+ * the row and where the glyph tells one kind of package from another
+ * (`##CARD-PLACEHOLDERS-GENERATED`). A page has no row to keep, so the
+ * band appears with a picture in it or not at all (F-32), and the page
+ * begins at the title.
  *
- * What this placeholder does NOT yet do is vary with the coordinate. The
- * vision asks for a gradient computed from the package's own address, so
- * two packages are told apart at a glance and look the same on the site
- * and in the local reader — and the pipeline already derives exactly
- * that. It does not reach the shell: the page manifest carries no media
- * fields, and computing a second hash here in TypeScript would put the
- * same rule in two languages, where the two would drift apart quietly.
- * The gap is a field in the manifest, not a function in this file.
+ * Nothing is fetched for the missing one and nothing ever will be: a
+ * site that went to someone else's host for a decorative picture would
+ * tell that host who is reading the documentation (D-20, R-09).
+ *
+ * The addresses are still not in the shell. The pipeline derives a
+ * package's pictures, the manifest is gaining the fields, and the day
+ * they arrive this component already knows what to do with them — the
+ * gap is a field in the manifest, not a function in this file.
  */
 export const PackageHeader = component$<PackageHeaderProps>((props) => {
   useStyles$(styles);
   return (
-    <header class="package-header">
-      {props.banner === undefined ? (
-        <div class="package-header__banner package-header__banner--drawn" />
-      ) : (
+    <header
+      class={
+        props.banner === undefined
+          ? "package-header package-header--unbannered"
+          : "package-header"
+      }
+    >
+      {props.banner === undefined ? null : (
         <img class="package-header__banner" src={props.banner} alt="" />
       )}
       <div class="package-header__row">
