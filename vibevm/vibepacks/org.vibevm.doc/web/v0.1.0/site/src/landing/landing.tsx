@@ -77,6 +77,8 @@ export const Landing = component$<LandingProps>((props) => {
           nextLabel={t.installNext}
           nextCommandHead={INSTALL.nextCommandHead}
           nextCommandTail={INSTALL.nextCommandTail}
+          copyLabel={t.copyCommand}
+          copiedLabel={t.copied}
         />
         <div q:slot="aside">
           <DepGraph />
