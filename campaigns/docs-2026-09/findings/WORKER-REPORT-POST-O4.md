@@ -19,7 +19,7 @@ b709a02e perf(registry): retry a rate-limited raw read briefly before asking git
          3 files changed, 12 insertions(+), 7 deletions(-)
 ```
 
-Оба — `Oleg Chirukhin <oleg@anarchic.pro>`, без трейлеров и без упоминаний
+Оба — владелец репозитория, без трейлеров и без упоминаний
 модели или агента, формой `git commit -m … -- <пути>`; новый файл добавлен
 `git add -- <файл>`. `git push` не выполнялся, `specmap.json` не
 регенерирован, чужих процессов не останавливал, `CARGO_TARGET_DIR` не
