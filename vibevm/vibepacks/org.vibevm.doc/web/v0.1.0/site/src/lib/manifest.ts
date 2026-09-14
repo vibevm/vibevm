@@ -22,6 +22,7 @@ import {
   Audience,
   Authorship,
   DocumentationStatus,
+  PackageKind,
   PageGenre,
   TranslationStatus,
   type AdaptedSource,
@@ -381,6 +382,16 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
   const projection = flag(value, "projection", at);
   if (!projection.ok) return projection;
 
+  /* What the rendered package calls itself. Optional for the same reason
+     the two above are, and permissive in the same one direction: an
+     absent kind is a card that was told nothing and draws no mark, while
+     a word outside the eight is a failure named by its field — the
+     pipeline writes only the register's words, so anything else is a
+     document this shell should say it cannot read rather than one it
+     quietly renders half of. */
+  const kind = optionalMember(value, "kind", at, PackageKind);
+  if (!kind.ok) return kind;
+
   /* Present only for a package that declares itself a bridge, so absent
      is «this is not a bridge» and never «this bridge named nobody» —
      which the empty lists inside it are for. */
@@ -436,6 +447,7 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
       ...(authorship.value === undefined
         ? {}
         : { authorship: authorship.value }),
+      ...(kind.value === undefined ? {} : { kind: kind.value }),
       ...(projection.value === undefined
         ? {}
         : { projection: projection.value }),

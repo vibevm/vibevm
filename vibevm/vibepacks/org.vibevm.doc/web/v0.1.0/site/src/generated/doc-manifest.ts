@@ -265,6 +265,18 @@ export interface DocPackage {
   description?: string;
 
   /**
+   * Which of the eight kinds the package this rendering came from declares
+   * itself to be. Absent when the manifest predates the field, and absent when
+   * the package named no kind at all or named a word outside the register —
+   * both of which are «nobody told this card what it is», and a card draws no
+   * mark it was not given (`##CARD-PLACEHOLDERS-GENERATED`). It is a statement
+   * about the RENDERED package and not about the rendering: a level-0 view of
+   * a `tool` carries `tool` and also carries `projection`, which is how a shelf
+   * marks the wrench and still says the page was generated.
+   */
+  kind?: PackageKind;
+
+  /**
    * Where the card's three images are published. Every build of this pipeline
    * writes it, and writes all three: a role that declares nothing is not a role
    * without a picture — the placeholder is generated (`##CARD-PLACEHOLDERS-
@@ -455,6 +467,30 @@ export interface NavigationSection {
    */
   title: string;
 }
+
+/**
+ * What kind of package this rendering came from, in the word the package's
+ * own `[package].kind` spells (PROP-000 `##KIND-SET`, whose register is
+ * `VIBEVM-SPEC.md` §4.1). The eight are the whole vocabulary and a ninth is
+ * an amendment to the specification rather than a value a manifest may invent,
+ * which is why a word outside the list reads as absent rather than as itself: a
+ * level-0 render of a package that declared no kind writes the neutral `pack`,
+ * and `pack` is not a kind. Carried named because the shell parses nothing and
+ * computes nothing (`##PIPE-SHELL-PARSES-NOTHING`) — before it was carried, a
+ * card could mark documentation and nothing else, because `doc` was the only
+ * kind «not a projection» could be read back out of.
+ */
+export const PackageKind = {
+  App: "app",
+  Doc: "doc",
+  Feat: "feat",
+  Flow: "flow",
+  Lang: "lang",
+  Mcp: "mcp",
+  Stack: "stack",
+  Tool: "tool",
+} as const;
+export type PackageKind = (typeof PackageKind)[keyof typeof PackageKind];
 
 /**
  * Which of the two page skeletons a page follows (the package's own
