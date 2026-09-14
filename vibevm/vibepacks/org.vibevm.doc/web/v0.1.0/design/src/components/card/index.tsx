@@ -19,8 +19,13 @@ export type CardProps = {
    * What it covers, for whom, what it assumes known, what it leaves out.
    * Shown on click rather than on the shelf: a shelf of six abstracts is
    * a wall of text, and the question a shelf answers is «which one».
+   *
+   * Absent when the thing on the card carries none of its own — in which
+   * case the disclosure is not rendered at all. Borrowing the abstract
+   * of whatever the card happens to sit under would put four answers
+   * about a documentation under the name of one page of it.
    */
-  readonly abstract: string;
+  readonly abstract?: string;
   /** Where this documentation stands for its subject. */
   readonly status: DocStatus;
   /** The address of the package's icon, when it has one. */
@@ -43,7 +48,9 @@ export type CardProps = {
  *
  * The abstract is a `<details>` and not a hover card or a script. It
  * opens on click, it prints when the page prints, it survives a reader
- * with no pointer, and it costs no behaviour at all.
+ * with no pointer, and it costs no behaviour at all. A card whose
+ * subject has no abstract of its own shows no disclosure — an empty
+ * promise and a borrowed answer are both worse than nothing.
  *
  * When a package declares no icon, the placeholder is drawn from tokens
  * and a glyph rather than fetched: a shelf that reached out to someone
@@ -84,10 +91,12 @@ export const Card = component$<CardProps>((props) => {
           )}
         </div>
       </div>
-      <details class="card__abstract">
-        <summary>{props.abstractLabel}</summary>
-        <p>{props.abstract}</p>
-      </details>
+      {props.abstract === undefined ? null : (
+        <details class="card__abstract">
+          <summary>{props.abstractLabel}</summary>
+          <p>{props.abstract}</p>
+        </details>
+      )}
     </article>
   );
 });
