@@ -11,7 +11,7 @@
  * document.
  */
 
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const PAGE = "/doc/com.example.docs/fixture-manual/0.1.0/guide/every-block/";
 
@@ -23,7 +23,72 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("the contents are built from the page and stick beside it", async ({
+/** Whether the document is wider than the window a reader is holding. */
+async function scrolls(page: Page): Promise<boolean> {
+  return page.evaluate(
+    () =>
+      document.documentElement.scrollWidth >
+      document.documentElement.clientWidth,
+  );
+}
+
+/**
+ * The manual's own pages, in a column and never in a row.
+ *
+ * The row they used to stand in held about six entries and then scrolled
+ * sideways, so a manual of thirty pages put everything after the sixth
+ * behind a gesture. What is measured here is the column's two shapes and
+ * the promise that replaced the row: no sideways scroll at either width.
+ */
+test("the manual's pages stand in a column, grouped by their folders", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(PAGE);
+
+  const column = page.locator("[data-contents]");
+  await expect(column.locator(".contents__summary")).toBeHidden();
+  await expect(column.locator(".contents__heading")).toHaveText([
+    "Reference",
+    "Guide",
+  ]);
+  await expect(column.locator("a")).toHaveText([
+    "Addresses",
+    "Every block once",
+  ]);
+  await expect(column.locator("a[aria-current='page']")).toHaveText(
+    "Every block once",
+  );
+});
+
+test("a phone gets the same pages as a block it opens itself", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(PAGE);
+
+  const column = page.locator("[data-contents]");
+  await expect(column.locator(".contents__summary")).toBeVisible();
+  await expect(column.locator("a").first()).toBeHidden();
+
+  // `<details>` and nothing else: the browser opens it, not a script.
+  await column.locator("summary").click();
+  await expect(column.locator("a").first()).toBeVisible();
+});
+
+test("nothing on a documentation page or the door scrolls sideways", async ({
+  page,
+}) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const at of [PAGE, "/doc/"]) {
+      await page.goto(at);
+      expect(await scrolls(page), `${at} at ${width}px`).toBe(false);
+    }
+  }
+});
+
+test("the page's own headings are built from it and stick beside it", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -36,7 +101,7 @@ test("the contents are built from the page and stick beside it", async ({
   await expect(page.locator("[data-toc] summary")).toBeHidden();
 });
 
-test("widening the column past the sidebar's limit folds the contents", async ({
+test("widening the column past the sidebar's limit folds both lists", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -50,15 +115,17 @@ test("widening the column past the sidebar's limit folds the contents", async ({
 
   await expect(page.locator(".doc-view--page")).not.toHaveClass(/has-sidebar/);
   await expect(page.locator("[data-toc] summary")).toBeVisible();
+  await expect(page.locator("[data-contents] summary")).toBeVisible();
 });
 
-test("a narrow screen gets the contents as a block above the text", async ({
+test("a narrow screen gets both lists as blocks above the text", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(PAGE);
   await expect(page.locator(".doc-view--page")).not.toHaveClass(/has-sidebar/);
   await expect(page.locator("[data-toc] summary")).toBeVisible();
+  await expect(page.locator("[data-contents] summary")).toBeVisible();
 });
 
 test("the rules the page cites are listed, once each", async ({ page }) => {

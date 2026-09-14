@@ -100,9 +100,11 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
   "This documentation has no pages yet.":
     "У этой документации пока нет страниц.",
 
-  /* The furniture of one page. */
-  "Pages of this documentation": "Страницы этой документации",
+  /* The furniture of one page. The two lists on either side of the text
+     are named for what each one is a list OF: the manual, and the page
+     open in it. */
   Contents: "Оглавление",
+  "On this page": "На этой странице",
   "Rules this page cites": "Правила, которые цитирует эта страница",
   "Documentation language": "Язык документации",
   Everything: "Все языки",

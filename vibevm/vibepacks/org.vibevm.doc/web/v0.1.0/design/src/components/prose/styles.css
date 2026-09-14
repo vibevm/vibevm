@@ -190,8 +190,15 @@
   color: var(--text);
 }
 
+/* A citation the build could not resolve prints its ADDRESS instead of
+   the rule's words, and a `spec://` address has nothing a browser will
+   break a line at. On a phone that one unresolved quotation pushed the
+   whole document eight pixels wider than the screen and gave the page a
+   sideways scrollbar. It breaks wherever it has to now: the address is
+   a machine's string and is read a piece at a time either way. */
 .prose blockquote.rule a.rule {
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .prose [data-unresolved="true"] {

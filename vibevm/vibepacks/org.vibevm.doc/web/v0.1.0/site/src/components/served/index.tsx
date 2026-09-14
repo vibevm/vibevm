@@ -9,7 +9,7 @@ import {
 import {
   Card,
   CodeChrome,
-  DocsNav,
+  Contents,
   Fab,
   ForAgent,
   Lightbox,
@@ -101,8 +101,8 @@ export const ServedReader = component$(() => {
 
   return (
     <div class="doc-view doc-view--page">
-      <ServedNav served={served} />
-      <Toc label="Contents" rulesLabel="Rules this page cites" />
+      <ServedContents served={served} />
+      <Toc label="On this page" rulesLabel="Rules this page cites" />
       <Prose measure={MEASURE}>
         <ServedHead served={served} />
         <CodeChrome>
@@ -127,17 +127,27 @@ export const ServedReader = component$(() => {
 });
 
 /**
- * The navigation of the documentation being served.
+ * The pages of the documentation being served, as the column beside the
+ * text.
  *
  * Empty until the manifest is in, and empty is the right thing to show
  * meanwhile: the alternative is the fixture's list of pages, which names
  * documents this reader does not carry and addresses that answer 404.
  */
-const ServedNav = component$<{ served: Signal<ServedPage | null> }>((props) => {
-  const view = props.served.value?.view;
-  const items = view === undefined || view.kind === "catalogue" ? [] : view.nav;
-  return <DocsNav label="Pages of this documentation" items={[...items]} />;
-});
+const ServedContents = component$<{ served: Signal<ServedPage | null> }>(
+  (props) => {
+    const view = props.served.value?.view;
+    const contents =
+      view === undefined || view.kind === "catalogue" ? null : view.contents;
+    return (
+      <Contents
+        label="Contents"
+        pinned={contents === null ? [] : [...contents.pinned]}
+        sections={contents === null ? [] : [...contents.sections]}
+      />
+    );
+  },
+);
 
 /**
  * What stands above the island: the switches and the meta row of a page,

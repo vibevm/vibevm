@@ -19,12 +19,12 @@
  */
 
 import type {
-  DocsNavItem,
   LanguageChoice,
   MetaLink,
   VersionChoice,
 } from "@vibe-docs/design";
 
+import { contentsOf, type Contents } from "./contents.ts";
 import {
   catalogueHref,
   docHref,
@@ -236,33 +236,6 @@ export function packageVersionChoices(
   );
 }
 
-/**
- * The documentation's own navigation, in the manifest's order.
- *
- * It lists the SOURCE's pages in every language, not the pages the
- * chosen edition happens to have. The reason is that an adaptation in
- * progress is not a smaller manual: every page exists at every language's
- * address, and one an adaptation has not reached yet is served in the
- * source's words with a notice. A navigation built from the edition's own
- * manifest would silently hide the pages a reader most needs to be told
- * about.
- */
-export function navItems(
-  library: Library,
-  at: string | null,
-  currentDocument: string | null,
-): DocsNavItem[] {
-  const pages = sourceEdition(library).pages;
-  return pages.map((page) => {
-    const document = documentOf(page.path);
-    return {
-      label: page.title,
-      href: docHref(addressOf(library, at, document)),
-      current: document === currentDocument,
-    };
-  });
-}
-
 /** One page of a documentation, as the «Pages» shelf shows it. */
 export type PageCard = {
   readonly title: string;
@@ -344,7 +317,8 @@ export type PageView = {
   readonly links: readonly MetaLink[];
   readonly languages: readonly LanguageChoice[];
   readonly versions: readonly VersionChoice[];
-  readonly nav: readonly DocsNavItem[];
+  /** The manual's own pages, grouped as the column beside the text shows them. */
+  readonly contents: Contents;
 };
 
 /** Everything one package page needs, as values. */
@@ -371,8 +345,9 @@ export type PackageView = {
    * they are being shown without reading the address bar.
    */
   readonly versions: readonly VersionChoice[];
-  readonly nav: readonly DocsNavItem[];
-  /** The same pages as `nav`, with what each one is about on it. */
+  /** The manual's own pages, as the column beside the shelves shows them. */
+  readonly contents: Contents;
+  /** The same pages as `contents`, with what each one is about on them. */
   readonly pages: readonly PageCard[];
   readonly llms: string;
   readonly subjects: readonly { package: string; version: string }[];
@@ -429,7 +404,7 @@ function pageView(library: Library, address: DocAddress): PageView | null {
     links: projectionLinks(address),
     languages: pageLanguageChoices(library, address.document, address.lang),
     versions: versionChoices(library, address),
-    nav: navItems(library, address.lang, address.document),
+    contents: contentsOf(library, address.lang, address.document),
   };
 }
 
@@ -466,7 +441,7 @@ function packageView(
       everyLanguage(address.lang === null),
     ],
     versions: packageVersionChoices(library, address),
-    nav: navItems(library, address.lang, null),
+    contents: contentsOf(library, address.lang, null),
     pages: pageCards(library, address.lang),
     llms: llmsHref(address),
     subjects: card.subjects.map((subject) => ({

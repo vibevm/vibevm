@@ -8,34 +8,51 @@
   display: block;
 }
 
-/* The sticky sidebar. The class is put on by the behaviour rather than
-   by a media query, because the decision needs two widths and only one
-   of them is the window's: a reader who widens the reading column past
-   the sidebar's limit has taken its room, and the contents move above
-   the text. The navigation row spans both columns, since it belongs to
-   the documentation rather than to the page. */
+/* The two sticky columns. The class is put on by the behaviour rather
+   than by a media query, because the decision needs two widths and only
+   one of them is the window's: a reader who widens the reading column
+   past the limit has taken the room, and both lists fold above the text.
+
+   Left is the MANUAL and right is the PAGE — where in the documentation
+   the reader is, and where in the document. They are placed by column
+   rather than by their order in the markup, so the source order can stay
+   what it has to be when the page folds: both lists above the text, the
+   manual's first.
+
+   The columns are `minmax` rather than fixed so that the text keeps the
+   room it has left at the narrow end of the range, where the window is
+   barely wider than the threshold. */
 .doc-view--page.has-sidebar {
   display: grid;
-  grid-template-columns: 190px minmax(0, 1fr);
-  gap: 0 2.5rem;
+  grid-template-columns:
+    minmax(150px, 200px)
+    minmax(0, 1fr)
+    minmax(140px, 190px);
+  gap: 0 2rem;
   align-items: start;
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
 
-.doc-view--page.has-sidebar > .docs-nav {
-  grid-column: 1 / -1;
-}
-
-.doc-view--page.has-sidebar > .toc {
+.doc-view--page.has-sidebar > .contents {
+  grid-column: 1;
+  grid-row: 1;
   padding-top: 2.5rem;
 }
 
 .doc-view--page.has-sidebar > .prose {
+  grid-column: 2;
+  grid-row: 1;
   padding-left: 0;
   padding-right: 0;
   margin: 0;
+}
+
+.doc-view--page.has-sidebar > .toc {
+  grid-column: 3;
+  grid-row: 1;
+  padding-top: 2.5rem;
 }
 
 .doc-view__unaddressed {

@@ -166,7 +166,7 @@ test("a page names the pages of its own documentation and no other's", async ({
   page,
 }) => {
   await page.goto(`${origin}${PAIR}`);
-  const nav = page.locator(".docs-nav a");
+  const nav = page.locator(".contents a");
   await expect(nav).toHaveCount(2);
   for (const href of await nav.evaluateAll((items) =>
     items.map((item) => item.getAttribute("href") ?? ""),

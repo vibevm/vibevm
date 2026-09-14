@@ -9,7 +9,7 @@ import {
 import {
   Card,
   CodeChrome,
-  DocsNav,
+  Contents,
   Fab,
   FallbackNotice,
   ForAgent,
@@ -125,8 +125,16 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
 
   return (
     <div class="doc-view doc-view--page" lang={view.textLanguage}>
-      <DocsNav label="Pages of this documentation" items={view.nav} />
-      <Toc label="Contents" rulesLabel="Rules this page cites" />
+      {/* The manual on the left, this page on the right, the text
+          between them. Which is which is the whole of the reader's
+          question: one list says where in the manual they are, the
+          other where in the page. */}
+      <Contents
+        label="Contents"
+        pinned={view.contents.pinned}
+        sections={view.contents.sections}
+      />
+      <Toc label="On this page" rulesLabel="Rules this page cites" />
       <Prose measure={MEASURE}>
         {view.fallback ? (
           <FallbackNotice
@@ -240,7 +248,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
         >
           <Card
             title={view.title}
-            href={view.nav[0]?.href ?? view.llms}
+            href={view.pages[0]?.href ?? view.llms}
             publisher={view.publisher}
             coordinate={view.coordinate}
             {...(view.description === undefined

@@ -44,6 +44,7 @@ import type {
   DocManifest,
   DocPage,
   DocPackage,
+  Navigation,
 } from "../generated/doc-manifest.ts";
 import { parseDocManifest } from "./manifest.ts";
 import type { DocAddress, PackageAddress } from "./href.ts";
@@ -72,6 +73,13 @@ export type Edition = {
   readonly card: DocPackage;
   /** The pages this edition actually carries, by manifest path. */
   readonly pages: readonly DocPage[];
+  /**
+   * What this edition asked its list of pages to look like — which of
+   * them stand first, and what their folders are called (`##NAV-PINNED`).
+   * Absent when the documentation said nothing, which every document
+   * written before the field did.
+   */
+  readonly navigation?: Navigation;
 };
 
 /**
@@ -134,6 +142,9 @@ function edition(manifest: DocManifest, segment: string | null): Edition {
     official: card.translation?.status === "official",
     card,
     pages: manifest.pages,
+    ...(manifest.navigation === undefined
+      ? {}
+      : { navigation: manifest.navigation }),
   };
 }
 
