@@ -276,16 +276,18 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
           title="Pages"
           caption="In the order the layer law gives them: text that stands still before text that moves with the product."
           emptyLabel="This documentation has no pages yet."
-          empty={view.nav.length === 0}
+          empty={view.pages.length === 0}
         >
-          {view.nav.map((page) => (
+          {view.pages.map((page) => (
             <Card
               key={page.href}
-              title={page.label}
+              title={page.title}
               href={page.href}
               publisher={view.publisher}
               coordinate={view.coordinate}
-              abstract={view.abstract}
+              {...(page.summary === undefined
+                ? {}
+                : { abstract: page.summary })}
               status={view.status}
               glyph={DOC_GLYPH}
               abstractLabel="what it covers"
@@ -428,16 +430,18 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
             title="Pages"
             caption="In the order the layer law gives them: text that stands still before text that moves with the product."
             emptyLabel="This documentation has no pages yet."
-            empty={view.nav.length === 0}
+            empty={view.pages.length === 0}
           >
-            {view.nav.map((one) => (
+            {view.pages.map((one) => (
               <Card
                 key={one.href}
-                title={one.label}
+                title={one.title}
                 href={one.href}
                 publisher={view.publisher}
                 coordinate={view.coordinate}
-                abstract={view.abstract}
+                {...(one.summary === undefined
+                  ? {}
+                  : { abstract: one.summary })}
                 status={view.status}
                 glyph={DOC_GLYPH}
                 abstractLabel="what it covers"

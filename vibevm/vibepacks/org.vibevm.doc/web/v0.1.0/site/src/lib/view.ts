@@ -235,6 +235,50 @@ export function navItems(
   });
 }
 
+/** One page of a documentation, as the «Pages» shelf shows it. */
+export type PageCard = {
+  readonly title: string;
+  readonly href: string;
+  /**
+   * The page's own leading fact, from the manifest. Absent when the page
+   * declares none — in which case the card shows no disclosure at all,
+   * rather than the documentation's abstract under a page's name.
+   */
+  readonly summary?: string;
+};
+
+/**
+ * The pages of a documentation as CARDS, which is not the same list as
+ * its navigation.
+ *
+ * The navigation lists the source's pages, in the source's words, in
+ * every language: an adaptation in progress is not a smaller manual, and
+ * a reader must be told which pages exist before being told which of
+ * them have been adapted. A card is the other question — «what is this
+ * one about» — so it is the page as the chosen edition HAS it, with the
+ * source's text standing in where the adaptation has not reached, which
+ * is exactly what the reader will find on opening it.
+ *
+ * The summary is the page's own leading fact and never the
+ * documentation's abstract. They answer different questions and are
+ * about different things; the shelf was showing the second under the
+ * name of the first, once per page, so every page of a manual claimed to
+ * cover the whole of it.
+ */
+export function pageCards(library: Library, at: string | null): PageCard[] {
+  return sourceEdition(library).pages.map((declared) => {
+    const document = documentOf(declared.path);
+    const resolved = resolvePage(library, at, document);
+    const page = resolved?.page ?? declared;
+    const summary = page.summary.trim();
+    return {
+      title: page.title,
+      href: docHref(addressOf(library, at, document)),
+      ...(summary.length === 0 ? {} : { summary }),
+    };
+  });
+}
+
 /** One card of the catalogue: one edition of one library the site carries. */
 export type CatalogueEntry = {
   readonly tag: string;
@@ -338,6 +382,8 @@ export type PackageView = {
   readonly status: "primary" | "official" | "community";
   readonly editions: readonly LanguageChoice[];
   readonly nav: readonly DocsNavItem[];
+  /** The same pages as `nav`, with what each one is about on it. */
+  readonly pages: readonly PageCard[];
   readonly llms: string;
   readonly subjects: readonly { package: string; version: string }[];
   readonly adaptations: readonly {
@@ -426,6 +472,7 @@ function packageView(
       current: one.segment === address.lang,
     })),
     nav: navItems(library, address.lang, null),
+    pages: pageCards(library, address.lang),
     llms: llmsHref(address),
     subjects: card.subjects.map((subject) => ({
       package: subject.package,
