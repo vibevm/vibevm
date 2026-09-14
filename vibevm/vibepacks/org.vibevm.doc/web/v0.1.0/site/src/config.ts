@@ -52,15 +52,28 @@ const DEFAULT_ORIGIN = "https://vibevm.org";
 /**
  * What a reader who has chosen nothing gets (F-48).
  *
- * `system` is the reader's own operating-system setting and is the
- * default until the design review says otherwise; the other two are a
- * decision the site takes on the reader's behalf, and `theme-init.js`
- * stamps them on the document before the first stylesheet is parsed.
+ * `system` is the reader's own operating-system setting; the other two
+ * are a decision the site takes on the reader's behalf, and
+ * `theme-init.js` stamps them on the document before the first
+ * stylesheet is parsed.
  */
 export type DefaultTheme = "system" | "light" | "dark";
 
 /** The three spellings, which is also the order a refusal would list. */
 const THEMES: readonly DefaultTheme[] = ["system", "light", "dark"];
+
+/**
+ * The theme a build gets when the deployment names none.
+ *
+ * `dark`, by the design review of 2026-09-14 — the site is drawn on the
+ * ink ground first and read on it by the people who read it most, and a
+ * first-time reader whose machine happens to prefer light was being
+ * shown the paler of two correct palettes by accident rather than by
+ * anyone's decision. The reader's own stored choice is still stronger
+ * than this, in `theme-init.js` and in `reader/theme.ts` alike: a
+ * default answers «nobody has said», never «ignore what they said».
+ */
+const DEFAULT_THEME: DefaultTheme = "dark";
 
 export type SiteConfig = {
   /** Scheme and host, no trailing slash: `https://vibevm.org`. */
@@ -81,7 +94,7 @@ export type SiteConfig = {
   readonly indexNowKey: string;
   /** `YYYY-MM-DD` for `sitemap.xml`; the build date unless told otherwise. */
   readonly lastmod: string;
-  /** The theme a reader who has chosen nothing gets. */
+  /** The theme a reader who has chosen nothing gets; `dark` by default. */
   readonly defaultTheme: DefaultTheme;
 };
 
@@ -113,9 +126,9 @@ function today(): string {
  */
 export function siteConfig(env: Readonly<Record<string, unknown>>): SiteConfig {
   const origin = read(env, ENV_NAMES.origin) ?? DEFAULT_ORIGIN;
-  /* A theme this build does not know is «system», not a refusal. The
-     configuration is read and refused on the other side of the seam,
-     where the file and its line number are still in hand
+  /* A theme this build does not know is the site's default, not a
+     refusal. The configuration is read and refused on the other side of
+     the seam, where the file and its line number are still in hand
      (`vibe_doc::site::config`); by the time a word has travelled through
      an environment variable there is nothing useful left to say about
      it, and a build that stopped here would fail a deploy over a value
@@ -129,7 +142,7 @@ export function siteConfig(env: Readonly<Record<string, unknown>>): SiteConfig {
     umamiHostUrl: (read(env, ENV_NAMES.umamiHostUrl) ?? "").replace(/\/+$/, ""),
     indexNowKey: read(env, ENV_NAMES.indexNowKey) ?? "",
     lastmod: read(env, ENV_NAMES.lastmod) ?? today(),
-    defaultTheme: known ?? "system",
+    defaultTheme: known ?? DEFAULT_THEME,
   };
 }
 

@@ -11,15 +11,18 @@
  * bridge decides where that goes. A module that reached for storage
  * directly would be a module that cannot run inside an editor.
  *
- * The theme has THREE states and the third one is the default. `dark`
- * and `light` are stamped on the root element; `system` stamps nothing,
- * because the absence of the attribute is what hands the decision to
- * `prefers-color-scheme`. A two-state toggle would silently take the
- * default away, and the reader would never get it back.
+ * The theme is the one setting a page may carry without a reader — the
+ * landing offers it in the header and offers nothing else — so what a
+ * theme IS lives in `theme.ts` and this module is one of its two
+ * callers. Everything below about the theme is therefore a delegation,
+ * and the three states, the storage key and the stamping are stated
+ * once, there.
  */
 
+import { SITE } from "../config.ts";
 import { all } from "./dom.ts";
 import { readLocal, removeLocal, writeLocal } from "./storage.ts";
+import { applyTheme, isTheme, storedTheme, type Theme } from "./theme.ts";
 
 /** The steps the text size moves in, as percentages of the page's own. */
 const FONT_STEPS = [80, 90, 100, 110, 120, 135, 150] as const;
@@ -27,7 +30,7 @@ const FONT_STEPS = [80, 90, 100, 110, 120, 135, 150] as const;
 /** The column widths, in pixels. Desktop only; a phone has one. */
 const WIDTH_STEPS = [740, 900, 1100, 1400] as const;
 
-export type Theme = "dark" | "light" | "system";
+export type { Theme };
 
 export type ReaderSettings = {
   readonly theme: Theme;
@@ -39,8 +42,16 @@ export type ReaderSettings = {
   readonly anchors: boolean;
 };
 
+/**
+ * What a reader who has chosen nothing gets.
+ *
+ * The theme is the deployment's rather than a constant here (F-48): the
+ * same value `theme-init.js` was built with, so the panel's marked
+ * button and the page painted before it agree. The other three are the
+ * reading defaults and belong to the reader rather than to a domain.
+ */
 export const DEFAULT_SETTINGS: ReaderSettings = {
-  theme: "system",
+  theme: SITE.defaultTheme,
   font: 100,
   width: 740,
   anchors: true,
@@ -53,10 +64,6 @@ export type SettingsBridge = {
   /** Called after every change the reader makes. */
   readonly publish: (settings: ReaderSettings) => void;
 };
-
-function isTheme(value: unknown): value is Theme {
-  return value === "dark" || value === "light" || value === "system";
-}
 
 function nearest(steps: readonly number[], value: number): number {
   let best = steps[0] ?? value;
@@ -76,12 +83,11 @@ function isStep(steps: readonly number[], value: number): boolean {
 }
 
 function stored(): ReaderSettings {
-  const theme = readLocal("theme");
   const font = Number.parseInt(readLocal("font") ?? "", 10);
   const width = Number.parseInt(readLocal("width") ?? "", 10);
   const anchors = readLocal("anchors");
   return {
-    theme: isTheme(theme) ? theme : DEFAULT_SETTINGS.theme,
+    theme: storedTheme(),
     font: isStep(FONT_STEPS, font) ? font : DEFAULT_SETTINGS.font,
     width: isStep(WIDTH_STEPS, width) ? width : DEFAULT_SETTINGS.width,
     anchors: anchors === null ? DEFAULT_SETTINGS.anchors : anchors !== "off",
@@ -101,9 +107,7 @@ function forget(): void {
 
 /** Put the settings on the document. Everything visual happens here. */
 function apply(settings: ReaderSettings): void {
-  const root = document.documentElement;
-  if (settings.theme === "system") root.removeAttribute("data-theme");
-  else root.setAttribute("data-theme", settings.theme);
+  applyTheme(settings.theme);
 
   for (const column of all(".prose")) {
     column.style.setProperty("--reader-font", String(settings.font / 100));
@@ -111,10 +115,6 @@ function apply(settings: ReaderSettings): void {
     column.classList.toggle("no-anchors", !settings.anchors);
   }
 
-  for (const button of all("[data-theme-choice]")) {
-    const choice = button.dataset["themeChoice"];
-    button.classList.toggle("is-current", choice === settings.theme);
-  }
   for (const button of all("[data-toggle='anchors']")) {
     button.setAttribute("aria-pressed", settings.anchors ? "true" : "false");
     if (button.classList.contains("settings__button")) {

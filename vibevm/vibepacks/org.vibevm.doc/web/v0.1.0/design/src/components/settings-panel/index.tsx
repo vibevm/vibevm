@@ -1,6 +1,7 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS */
 
 import { component$, useStyles$ } from "@qwik.dev/core";
+import { ThemeSwitch } from "../theme-switch/index.tsx";
 import styles from "./styles.css?inline";
 
 export type SettingsPanelProps = {
@@ -18,11 +19,11 @@ export type SettingsPanelProps = {
  * behaviour built out of strings would be a panel with its colours
  * outside the contrast audit and its structure outside review.
  *
- * Three states of theme, not two. `dark` and `light` are the reader's
- * explicit choice and are stamped on the root element; `system` stamps
- * nothing, because the ABSENCE of the attribute is what hands the
- * decision back to the media query. A two-way toggle would quietly
- * remove the default.
+ * The theme row is the `ThemeSwitch` component and not three buttons
+ * written out here, because the landing's header carries the same
+ * control and a reader must not meet two switches that disagree about
+ * how many states a theme has. It has three: the absence of the
+ * attribute is one of them.
  *
  * The column control is hidden on a narrow screen rather than disabled:
  * there is no second column width to choose between on a phone, and a
@@ -87,27 +88,13 @@ export const SettingsPanel = component$<SettingsPanelProps>((props) => {
       >
         <fieldset class="settings__group">
           <legend>Theme</legend>
-          <button
-            class="settings__button"
-            type="button"
-            data-theme-choice="light"
-          >
-            light
-          </button>
-          <button
-            class="settings__button"
-            type="button"
-            data-theme-choice="dark"
-          >
-            dark
-          </button>
-          <button
-            class="settings__button"
-            type="button"
-            data-theme-choice="system"
-          >
-            system
-          </button>
+          <ThemeSwitch
+            label="Theme"
+            lightLabel="light"
+            darkLabel="dark"
+            systemLabel="system"
+            compact={false}
+          />
         </fieldset>
         <fieldset class="settings__group">
           <legend>Text</legend>

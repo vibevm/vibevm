@@ -10,7 +10,9 @@
  * instruction: publish no tag at all, because a tag with an empty
  * attribute loads a script that reports to nobody. An absent analytics
  * host is the domain itself, which is what first-party means. An absent
- * theme is the reader's own system setting (F-48).
+ * theme is `dark`, the site's own (F-48, the review of 2026-09-14) —
+ * which is a decision and therefore has to be pinned somewhere a change
+ * to it is visible.
  *
  * They are asserted over a literal environment rather than the ambient
  * one, which is why `siteConfig` takes its input: a test that had to set
@@ -29,7 +31,7 @@ test("a build told nothing publishes no analytics tag and claims one domain", ()
   assert.equal(config.umamiWebsiteId, "");
   assert.equal(config.umamiHostUrl, "");
   assert.equal(config.indexNowKey, "");
-  assert.equal(config.defaultTheme, "system");
+  assert.equal(config.defaultTheme, "dark");
   assert.match(config.lastmod, /^\d{4}-\d{2}-\d{2}$/);
 });
 
@@ -74,24 +76,31 @@ test("each of the three themes arrives as itself", () => {
 });
 
 /**
- * A word this build does not know is the system setting rather than a
- * refusal. The configuration is read and refused where the file and its
- * line are still in hand; by the time a value has travelled through an
- * environment variable there is nothing useful left to say about it, and
- * stopping a deploy over which of two correct palettes a first-time
+ * A word this build does not know is the site's own default rather than
+ * a refusal. The configuration is read and refused where the file and
+ * its line are still in hand; by the time a value has travelled through
+ * an environment variable there is nothing useful left to say about it,
+ * and stopping a deploy over which of two correct palettes a first-time
  * reader sees would be the wrong trade.
+ *
+ * `system` stays reachable — by asking for it. What it is no longer is
+ * the answer to a question nobody asked.
  */
-test("a theme nobody defined is the reader's own setting", () => {
+test("a theme nobody defined is the site's own", () => {
   assert.equal(
     siteConfig({ [ENV_NAMES.defaultTheme]: "sepia" }).defaultTheme,
-    "system",
+    "dark",
   );
   assert.equal(
     siteConfig({ [ENV_NAMES.defaultTheme]: "  " }).defaultTheme,
-    "system",
+    "dark",
   );
   assert.equal(
     siteConfig({ [ENV_NAMES.defaultTheme]: 7 }).defaultTheme,
+    "dark",
+  );
+  assert.equal(
+    siteConfig({ [ENV_NAMES.defaultTheme]: "system" }).defaultTheme,
     "system",
   );
 });

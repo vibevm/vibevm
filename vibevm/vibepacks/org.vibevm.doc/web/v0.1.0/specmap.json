@@ -205,6 +205,13 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/theme-switch/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/theme-switch/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/toc/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -496,6 +503,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/reader/storage.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/theme.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/theme.ts"
     },
     {
       "crate_name": "src",
@@ -928,6 +942,14 @@
       "verb": "implements"
     },
     {
+      "file": "design/src/components/theme-switch/index.tsx",
+      "from_symbol": "design/src/components/theme-switch/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
       "file": "design/src/components/toc/index.tsx",
       "from_symbol": "design/src/components/toc/index.tsx",
       "line": 1,
@@ -1258,6 +1280,14 @@
     {
       "file": "site/src/reader/storage.ts",
       "from_symbol": "site/src/reader/storage.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/theme.ts",
+      "from_symbol": "site/src/reader/theme.ts",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS",
@@ -1668,6 +1698,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "design/src/components/theme-switch/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/theme-switch/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "design/src/components/toc/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/toc/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT`: no spec unit carries this anchor"
@@ -1917,6 +1953,12 @@
       "file": "site/src/reader/storage.ts",
       "line": 1,
       "message": "edge `site/src/reader/storage.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/theme.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/theme.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
