@@ -1,7 +1,6 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#READER-SETTINGS */
 
 import { component$, useStyles$ } from "@qwik.dev/core";
-import { ThemeSwitch } from "../theme-switch/index.tsx";
 import styles from "./styles.css?inline";
 
 export type SettingsPanelProps = {
@@ -19,11 +18,13 @@ export type SettingsPanelProps = {
  * behaviour built out of strings would be a panel with its colours
  * outside the contrast audit and its structure outside review.
  *
- * The theme row is the `ThemeSwitch` component and not three buttons
- * written out here, because the landing's header carries the same
- * control and a reader must not meet two switches that disagree about
- * how many states a theme has. It has three: the absence of the
- * attribute is one of them.
+ * **The theme is not in here.** It used to be, and a reader who opened
+ * this panel on a documentation page met the second switch of the two:
+ * the header carries one on every page of the site, and one control in
+ * two places is two controls a reader has to work out the relationship
+ * between. What stays is what is about THIS text — its size, the width
+ * of its column, whether its blocks show their numbers — and the theme
+ * is about the site, which is where it is offered.
  *
  * The column control is hidden on a narrow screen rather than disabled:
  * there is no second column width to choose between on a phone, and a
@@ -86,16 +87,6 @@ export const SettingsPanel = component$<SettingsPanelProps>((props) => {
         data-settings-panel
         hidden
       >
-        <fieldset class="settings__group">
-          <legend>Theme</legend>
-          <ThemeSwitch
-            label="Theme"
-            lightLabel="light"
-            darkLabel="dark"
-            systemLabel="system"
-            compact={false}
-          />
-        </fieldset>
         <fieldset class="settings__group">
           <legend>Text</legend>
           <button
