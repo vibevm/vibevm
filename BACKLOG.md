@@ -1888,5 +1888,5 @@ structure, and it goes when the file does.
 | @fact:B167-WHAT **what** | `vibe doc check --examples` над руководством даёт три расхождения: вывод `vibe explain` и `vibe select` теперь несёт `documents`-рёбра страниц `vibevm-docs-ru` (появились с волны C); `cargo test -p vibe-specdoc --test docs_corpus` ждёт 781 цитируемое правило при 791 в дереве; rustdoc-примеры в `crates/vibe-doc-server/src/routes/resolve.rs:45` и `crates/vibe-doc-shell/src/index.rs:62` пишут координату `@0.1.0`, которой после W1-O2 нет |
 | @fact:B167-EFFECT **effect** | полный гейт `--examples --min 100` красный; тест корпуса красный; примеры в докстрингах называют несуществующую версию |
 | @fact:B167-SEVERITY **severity** | P2 — переблагословить три золотых (решение, а не автоматика), поднять константу корпуса до текущего числа, поправить две координаты в докстринках |
-| @fact:B167-DISPOSITION **disposition** | `open` |
+| @fact:B167-DISPOSITION **disposition** | `open` — сужен 2026-09-14: константа корпуса поднята до 791 (`25775078`), обе координаты в докстринках — `1.0.0` (`90dbbc13`); остаётся переблагословение трёх золотых — решение владельца |
 | @fact:B167-FILED **filed by** | кампания docs-2026-09, ревью W1-O2 (2026-09-14) |
