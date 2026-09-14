@@ -10,6 +10,12 @@
 //! - Error classification is substring-based against the stable
 //!   C-locale stderr.
 //!
+//! One operation does not always reach `git` at all:
+//! [`GitBackend::fetch_file_at_ref`] first offers the read to the
+//! `raw_http` module, which serves a single file over plain HTTPS on the
+//! two hosts that expose one. See that module for what it may and may
+//! not conclude on its own.
+//!
 //! [prop]: ../../../../../vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend");
@@ -37,6 +43,10 @@ pub struct ShellGit {
     // as "no answer here" and the registry walk continues. `false` on the
     // default backend, whose silencing stays TTY-derived.
     force_anonymous: bool,
+    // Base the HTTPS read fast path (`raw_http`) reads from, or `None`
+    // for each host's own production base — which is every case but a
+    // test pointing the read at a local mock server.
+    raw_base: Option<String>,
     // Cached preflight result — populated on first `preflight()` call
     // for this instance. Kept per-instance (not global) so tests with
     // bogus binaries do not poison the cache for instances pointing at
@@ -66,8 +76,35 @@ impl ShellGit {
         ShellGit {
             binary,
             force_anonymous: false,
+            raw_base: None,
             preflight_cache: OnceLock::new(),
         }
+    }
+
+    /// Rebind the `git` binary this backend spawns, overriding both
+    /// `PATH` and `VIBE_GIT_BINARY`.
+    ///
+    /// Clears the cached preflight result — the new binary has not been
+    /// probed, and answering for it from the old one's probe would be a
+    /// lie in either direction.
+    pub fn with_binary(mut self, binary: impl Into<PathBuf>) -> Self {
+        self.binary = binary.into();
+        self.preflight_cache = OnceLock::new();
+        self
+    }
+
+    /// Rebind the base the HTTPS read fast path reads from — for every
+    /// host it knows, so one local server can stand in for all of them.
+    ///
+    /// Exists for tests. The crate's own precedent for this is
+    /// `GitPerPackageRegistry::open_with_explicit_token`: an explicit
+    /// constructor argument rather than an environment variable, because
+    /// `#![forbid(unsafe_code)]` bars a test from mutating the process
+    /// environment on Rust 2024, and a process-global would in any case
+    /// be shared by every test running in parallel in the same binary.
+    pub fn with_raw_base(mut self, raw_base: impl Into<String>) -> Self {
+        self.raw_base = Some(raw_base.into());
+        self
     }
 
     /// Verify that the configured git binary responds to `--version`.
@@ -222,10 +259,25 @@ impl GitBackend for ShellGit {
     }
 
     fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError> {
-        self.preflight()?;
         // Normalise platform separators to forward slash — `git archive`
-        // expects in-repo paths in posix form.
+        // expects in-repo paths in posix form, and so do both hosts the
+        // HTTPS read addresses.
         let normalized = path.replace('\\', "/");
+
+        // The HTTPS read, first and without a subprocess: on GitHub and
+        // GitVerse a single file is one plain GET away, and the archive
+        // below would only be refused there anyway (PROP-002 §2.12 — see
+        // `raw_http`). It answers for the file or for its absence, or it
+        // declines, and declining costs nothing: the archive → clone
+        // ladder below is entered exactly as it was before. Deliberately
+        // ahead of `preflight` — a read this path serves needs no `git`
+        // on the machine at all.
+        if let Some(outcome) =
+            raw_http::try_read(self.raw_base.as_deref(), url, refname, &normalized)
+        {
+            return outcome;
+        }
+        self.preflight()?;
 
         // `git archive --remote=<url> --format=tar <refname> -- <path>`
         // emits a tar of just the requested path on stdout. We block on
@@ -331,6 +383,7 @@ impl GitBackend for ShellGit {
         Some(Arc::new(ShellGit {
             binary: self.binary.clone(),
             force_anonymous: true,
+            raw_base: self.raw_base.clone(),
             preflight_cache: OnceLock::new(),
         }))
     }
@@ -341,6 +394,10 @@ use tar::extract_single_file_from_tar;
 
 /// Clone/fetch and ref-kind-aware checkout mechanics.
 mod checkout;
+
+/// The HTTPS single-file read that runs before `git archive` on the two
+/// hosts that serve one, and the rules that keep its misses honest.
+mod raw_http;
 
 /// The read-only checkout queries (`last_commit_iso`, `branch`) — an
 /// `impl ShellGit` block of its own, split out per the file-length budget.

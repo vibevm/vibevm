@@ -1,8 +1,8 @@
 //! Clone-free lookups for the per-package registry — tag-based version
-//! listing, archive-first manifest reads with the clone fallback, and
-//! version resolution against the upstream tag set (PROP-002 §2.3 /
-//! §2.5). The clone / cache-materialisation half lives in
-//! [`super::fetch`].
+//! listing, manifest reads that try HTTPS first and archive next before
+//! falling back to a clone, and version resolution against the upstream
+//! tag set (PROP-002 §2.3 / §2.5). The clone / cache-materialisation
+//! half lives in [`super::fetch`].
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
@@ -16,10 +16,17 @@ impl GitPerPackageRegistry {
     /// `branch = "..."` / `rev = "..."` and we cannot enumerate
     /// versions through `list_versions` (which is tag-shaped).
     ///
-    /// Same auth / token-injection discipline as
-    /// [`Self::fetch_dep_manifest`]: token from env at construction,
-    /// credentialed URL only for the spawned `git archive`, plain
-    /// URL recorded in error messages.
+    /// Same read ladder as [`Self::fetch_dep_manifest`] — HTTPS, then
+    /// archive, then clone — and the same auth / token-injection
+    /// discipline: token from env at construction, credentialed URL only
+    /// for the spawned `git archive` (or, on the HTTPS step, for that
+    /// request's `Authorization` header), plain URL recorded in error
+    /// messages.
+    ///
+    /// `refname` is any git ref, not only a version tag: the git-source
+    /// path passes whatever the operator declared, so a branch name or a
+    /// commit SHA arrives here too. Every step of the ladder takes it as
+    /// given.
     pub fn fetch_manifest_at_ref(
         &self,
         group: &Group,
@@ -259,8 +266,23 @@ impl GitPerPackageRegistry {
     /// Read a candidate version's `vibe.toml` *without cloning*. The
     /// depsolver calls this during the resolve walk to read declared
     /// `[requires]` of a candidate before committing to install. A walk
-    /// over N candidates of one package costs N `git archive` round-trips,
-    /// not N clones.
+    /// over N candidates of one package costs N single-file reads, not N
+    /// clones.
+    ///
+    /// Three ways to read one file, in order of what they cost:
+    ///
+    /// 1. **One HTTPS GET**, on the hosts that serve a single file that
+    ///    way — GitHub and GitVerse (the `raw_http` module inside
+    ///    [`git_backend::shell`](crate::git_backend::shell)). No
+    ///    subprocess, no working tree, one round-trip. This is the
+    ///    step that makes the "not N clones" promise true on GitHub,
+    ///    where `git archive` is refused and step 2 could never keep it.
+    /// 2. **`git archive --remote`**, for every other host that allows
+    ///    `upload-archive` — also no working tree, one subprocess.
+    /// 3. **A shallow clone**, when the host refuses the archive and the
+    ///    read is not one step 1 could serve. The clone lands in the
+    ///    per-package cache directory the install would use anyway, so
+    ///    it doubles as pre-warming.
     ///
     /// Mirror-aware on the archive path: the primary URL is tried
     /// first, then each mirror in priority order. The clone-fallback
