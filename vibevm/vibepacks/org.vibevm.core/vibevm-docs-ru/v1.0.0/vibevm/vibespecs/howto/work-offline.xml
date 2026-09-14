@@ -36,5 +36,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH"/>
     <p>Пакетом в хранилище можно пользоваться, даже когда его реестр больше не перечисляет; пакет, который до хранилища не добрался, — жёсткая ошибка с именем недостающей [координаты](../glossary/index.xml#coordinate).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
+    <p>Менеджер версий самой программы подчиняется той же позиции: под ней `vibe self update`, `install` и `reinstall` отказывают до первого запроса, называя адрес, который им понадобился бы, а `self ls`, `current` и `which` отвечают с машины как обычно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-OFFLINE"/>
   </edge-cases>
 </spec>

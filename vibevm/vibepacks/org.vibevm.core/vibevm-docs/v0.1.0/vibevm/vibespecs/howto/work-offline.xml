@@ -65,5 +65,7 @@ Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#AS-OF-LAST-REFRESH"/>
     <p>A package in the store is usable even when its registry no longer lists it; a package that never reached the store is a hard error naming the missing [coordinate](../glossary/index.xml#coordinate).</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"/>
+    <p>The program's own version manager obeys the same posture: under it `vibe self update`, `install` and `reinstall` refuse before their first request, naming the address they would have needed, and `self ls`, `current` and `which` answer from the machine as usual.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-OFFLINE"/>
   </edge-cases>
 </spec>

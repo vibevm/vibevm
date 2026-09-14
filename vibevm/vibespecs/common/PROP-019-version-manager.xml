@@ -112,7 +112,7 @@ versions), and unambiguous where `man` collided with the Unix manual page:</SELF
   exactly as on `update`. The pair is deliberate (owner ruling 2026-09-14):
   refetching the current version and moving to a new release are two acts, so
   they carry two names.</CMD-REINSTALL>
-        <CMD-OFFLINE fact="true" status="impl/done" action="continue" actionstage="doc">Every `self` verb honours the offline posture the process resolved —
+        <CMD-OFFLINE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Every `self` verb honours the offline posture the process resolved —
   `--offline`, `VIBE_OFFLINE` or `[net] offline`, layered as PROP-010
   `##OFFLINE-LAYERING` says. Under it a release-lane verb is refused before its
   first request, naming the verb and the address it would have needed; a
