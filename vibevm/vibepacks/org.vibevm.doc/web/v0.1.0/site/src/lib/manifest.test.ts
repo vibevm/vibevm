@@ -97,6 +97,46 @@ test("a fourth authorship is refused, and none at all is not", () => {
 });
 
 /**
+ * A bridge's two lists, and the one thing that must never happen to
+ * them: either being filled from the other. An empty list is a published
+ * fact and is kept empty.
+ */
+test("a bridge's two authorships arrive apart and stay apart", () => {
+  const source = parseDocManifest(fixture());
+  assert.equal(source.ok, true);
+  if (!source.ok) return;
+  const bridge = source.value.package.bridge;
+  assert.notEqual(bridge, undefined);
+  assert.deepEqual(bridge?.maintainers, ["The fixture's maintainer"]);
+  assert.deepEqual(bridge?.upstream_authors, [
+    "The author of the bytes the fixture wraps",
+  ]);
+  assert.equal(bridge?.upstream_license, "Apache-2.0");
+
+  const nobody = JSON.parse(JSON.stringify(fixture()));
+  nobody.package.bridge.maintainers = [];
+  delete nobody.package.bridge.upstream_license;
+  const parsed = parseDocManifest(nobody);
+  assert.equal(parsed.ok, true);
+  if (!parsed.ok) return;
+  assert.deepEqual(parsed.value.package.bridge?.maintainers, []);
+  assert.deepEqual(parsed.value.package.bridge?.upstream_authors, [
+    "The author of the bytes the fixture wraps",
+  ]);
+  assert.equal(
+    "upstream_license" in (parsed.value.package.bridge ?? {}),
+    false,
+  );
+
+  const broken = JSON.parse(JSON.stringify(fixture()));
+  delete broken.package.bridge.upstream_authors;
+  const refused = parseDocManifest(broken);
+  assert.equal(refused.ok, false);
+  if (refused.ok) return;
+  assert.equal(refused.error.path, "$.package.bridge.upstream_authors");
+});
+
+/**
  * The level-zero mark. It is `false` by being absent on the wire, so the
  * three states a reader of the type sees are «said true», «said false»
  * and «said nothing» — and the last one is what a manifest written

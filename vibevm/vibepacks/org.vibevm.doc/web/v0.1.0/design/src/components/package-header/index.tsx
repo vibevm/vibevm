@@ -1,6 +1,10 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED */
 
 import { Slot, component$, useStyles$ } from "@qwik.dev/core";
+import {
+  BridgeSignatures,
+  type BridgeAuthorship,
+} from "../bridge-signatures/index.tsx";
 import styles from "./styles.css?inline";
 
 export type PackageHeaderProps = {
@@ -18,6 +22,13 @@ export type PackageHeaderProps = {
   readonly icon?: string;
   /** One character for the generated placeholder, chosen by package kind. */
   readonly glyph: string;
+  /**
+   * The two authorships of a bridge, when this package is one (PROP-023
+   * `##AUTHORSHIP-SEPARATION`). Absent for everything else: a package
+   * that wraps nobody's work has one authorship and needs no line
+   * separating it from a second.
+   */
+  readonly bridge?: BridgeAuthorship;
 };
 
 /**
@@ -42,6 +53,12 @@ export type PackageHeaderProps = {
  * package's pictures, the manifest is gaining the fields, and the day
  * they arrive this component already knows what to do with them — the
  * gap is a field in the manifest, not a function in this file.
+ *
+ * A bridge shows two names under the publisher and an ordinary package
+ * shows none. Who maintains a wrapper and who wrote what it wraps are
+ * two facts, and the head of a page is exactly where a reader decides
+ * whose work they are about to read (PROP-023 `##AUTHORSHIP-
+ * SEPARATION`).
  */
 export const PackageHeader = component$<PackageHeaderProps>((props) => {
   useStyles$(styles);
@@ -76,6 +93,9 @@ export const PackageHeader = component$<PackageHeaderProps>((props) => {
             {props.publisher}
             <span class="package-header__coordinate">{props.coordinate}</span>
           </p>
+          {props.bridge === undefined ? null : (
+            <BridgeSignatures bridge={props.bridge} />
+          )}
           {props.description === undefined ? null : (
             <p class="package-header__description">{props.description}</p>
           )}

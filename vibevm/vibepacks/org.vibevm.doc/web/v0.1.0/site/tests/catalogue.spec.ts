@@ -151,6 +151,54 @@ test("the shelf narrows to who wrote the prose, both hands in both groups", asyn
 });
 
 /**
+ * A bridge has two names to show and the one failure worth a test is
+ * the two becoming one line: the maintainer of a wrapper printed as the
+ * author of the work it wraps (PROP-023 `##AUTHORSHIP-SEPARATION`).
+ *
+ * The fixture source is the bridge and the adaptation beside it is not,
+ * so both answers are on one shelf — and the head of the package's own
+ * page has to give the same one as its card.
+ */
+test("a bridge names its maintainer and the upstream's author apart", async ({
+  page,
+}) => {
+  await door(page);
+  const cards = page.locator('[data-tab-panel="documents"] .card');
+  const bridged = cards.first();
+  await expect(bridged.locator(".bridge-signatures__row dt")).toHaveText([
+    "Bridge maintainer",
+    "Destination author",
+    "Upstream licence",
+  ]);
+  await expect(bridged.locator(".bridge-signatures__row dd")).toHaveText([
+    "The fixture's maintainer",
+    "The author of the bytes the fixture wraps",
+    "Apache-2.0",
+  ]);
+  // The adaptation is not a bridge, and its card is what it always was.
+  await expect(cards.nth(1).locator(".bridge-signatures")).toHaveCount(0);
+  await expect(cards.nth(1).locator(".card__publisher")).toContainText(
+    "com.example.docs",
+  );
+
+  await page.goto("/doc/com.example.docs/fixture-manual/0.1.0/");
+  const head = page.locator(".package-header");
+  await expect(head.locator(".bridge-signatures__row dd")).toHaveText([
+    "The fixture's maintainer",
+    "The author of the bytes the fixture wraps",
+    "Apache-2.0",
+  ]);
+  await expect(head.locator(".package-header__publisher")).toContainText(
+    "com.example.docs",
+  );
+
+  await page.goto("/doc/ru/com.example.docs/fixture-manual/0.1.0/");
+  await expect(page.locator(".package-header .bridge-signatures")).toHaveCount(
+    0,
+  );
+});
+
+/**
  * Two filters over one shelf, and the shelf is what is left when both
  * admit a card. Neither may quietly widen the other, which is exactly
  * what would happen if each hid cards on its own.

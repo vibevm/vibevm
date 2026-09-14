@@ -152,9 +152,14 @@
     font-size: 1rem;
   }
 
+  /* Every child of the body, named. The body is `display: contents` here,
+     so a child that is not placed lands in column one under the mark and
+     takes the rest of the card with it — which is what a bridge's two
+     names did the first time they were drawn. */
   .card__title,
   .card__publisher,
-  .card__description {
+  .card__description,
+  .card .bridge-signatures {
     grid-column: 2;
   }
 }

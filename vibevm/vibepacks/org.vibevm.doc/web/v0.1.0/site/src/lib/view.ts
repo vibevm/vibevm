@@ -19,6 +19,7 @@
  */
 
 import type {
+  BridgeAuthorship,
   LanguageChoice,
   MetaLink,
   VersionChoice,
@@ -26,6 +27,7 @@ import type {
 
 import type { Authorship } from "../generated/doc-manifest.ts";
 
+import { bridgeOf } from "./bridge.ts";
 import { contentsOf, type Contents } from "./contents.ts";
 import {
   catalogueHref,
@@ -342,6 +344,13 @@ export type PackageView = {
    */
   readonly authorship?: Authorship;
   /**
+   * The two authorships this documentation keeps apart, when it is a
+   * bridge (PROP-023 `##AUTHORSHIP-SEPARATION`). The head of the page
+   * shows both names or neither; nothing about them is worked out from
+   * the publisher, and a package that is not a bridge is unchanged.
+   */
+  readonly bridge?: BridgeAuthorship;
+  /**
    * The documentation-language filter this page offers: the languages
    * this documentation has, then «Everything». A filter and not a set of
    * addresses, because every edition is already on the shelves below.
@@ -372,6 +381,8 @@ export type PackageView = {
     tag: string;
     /** Who wrote this adaptation's prose, when it says so. */
     authorship?: Authorship;
+    /** Its own two authorships, when the adaptation is itself a bridge. */
+    bridge?: BridgeAuthorship;
   }[];
 };
 
@@ -427,6 +438,7 @@ function packageView(
   const here = all.find((one) => one.segment === address.lang);
   if (here === undefined) return null;
   const card = here.card;
+  const bridge = bridgeOf(card);
 
   return {
     kind: "package",
@@ -441,6 +453,7 @@ function packageView(
     textLanguage: card.lang,
     status: card.status,
     ...(card.authorship === undefined ? {} : { authorship: card.authorship }),
+    ...(bridge === undefined ? {} : { bridge }),
     languages: [
       ...all.map((one) => ({
         tag: one.tag,
@@ -462,21 +475,25 @@ function packageView(
     })),
     adaptations: all
       .filter((one) => one.segment !== null)
-      .map((one) => ({
-        title: one.title,
-        href: packageHref(coordinate(library, one.segment)),
-        publisher: one.publisher,
-        coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
-        ...(one.card.description === undefined
-          ? {}
-          : { description: one.card.description }),
-        abstract: one.card.abstract,
-        official: one.official,
-        tag: one.tag,
-        ...(one.card.authorship === undefined
-          ? {}
-          : { authorship: one.card.authorship }),
-      })),
+      .map((one) => {
+        const adapted = bridgeOf(one.card);
+        return {
+          title: one.title,
+          href: packageHref(coordinate(library, one.segment)),
+          publisher: one.publisher,
+          coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
+          ...(one.card.description === undefined
+            ? {}
+            : { description: one.card.description }),
+          abstract: one.card.abstract,
+          official: one.official,
+          tag: one.tag,
+          ...(one.card.authorship === undefined
+            ? {}
+            : { authorship: one.card.authorship }),
+          ...(adapted === undefined ? {} : { bridge: adapted }),
+        };
+      }),
   };
 }
 

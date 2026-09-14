@@ -180,6 +180,7 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
             {...(view.description === undefined
               ? {}
               : { description: view.description })}
+            {...(view.bridge === undefined ? {} : { bridge: view.bridge })}
             glyph={DOC_GLYPH}
           >
             <a class="doc-package__llms" href={view.llms}>
