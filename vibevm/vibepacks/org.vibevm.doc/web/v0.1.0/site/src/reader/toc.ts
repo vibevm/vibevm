@@ -1,8 +1,8 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#READER-META-AND-PRINT */
 
 /**
- * The table of contents: built from the page, highlighted as it is read,
- * and laid out by the room it has.
+ * The table of contents: this page's headings, built from the page,
+ * highlighted as it is read, and laid out by the room it has.
  *
  * It is built here rather than at build time because the pipeline's
  * manifest carries the page's NAMED anchors — its sections and its facts
@@ -10,6 +10,11 @@
  * rendered document distinguishes. Reading `h2` and `h3` out of a
  * document already in the page is a walk of the DOM, not a second
  * renderer: nothing is parsed and nothing is re-rendered.
+ *
+ * The class it decides — `has-sidebar` — is the whole page's, not this
+ * column's: the manual's pages stand in a column on the other side of
+ * the text and appear and fold with this one, because the decision is
+ * about the room the page has and is the same decision for both.
  *
  * The active item is found by an IntersectionObserver with the margin
  * the design system arrived at — `-15% 0px -70% 0px`. It is not a taste:
@@ -57,35 +62,6 @@ function buildList(region: HTMLElement, list: HTMLElement): Element[] {
   return targets;
 }
 
-/**
- * The rules the page cites, collected from the quotations themselves.
- *
- * Each one is already in the text with its `spec://` address on it, so
- * this list is a second view of the same facts and never a second
- * source: a page that quotes no rule gets no block at all rather than an
- * empty heading.
- */
-function buildRules(region: HTMLElement): void {
-  const block = one("[data-page-rules]");
-  const list = one("[data-page-rules-list]");
-  if (block === null || list === null) return;
-
-  list.replaceChildren();
-  const seen = new Set<string>();
-  for (const quote of all("a.rule[data-uri]", region)) {
-    const uri = quote.getAttribute("data-uri");
-    if (uri === null || seen.has(uri)) continue;
-    seen.add(uri);
-    const item = document.createElement("li");
-    const link = document.createElement("a");
-    link.href = quote.getAttribute("href") ?? "#";
-    link.textContent = uri;
-    item.appendChild(link);
-    list.appendChild(item);
-  }
-  block.hidden = seen.size === 0;
-}
-
 export function startToc(): () => void {
   const region = island();
   const details = one("[data-toc]");
@@ -95,7 +71,6 @@ export function startToc(): () => void {
   }
 
   const targets = buildList(region, list);
-  buildRules(region);
 
   const page = details.closest(".doc-view");
 

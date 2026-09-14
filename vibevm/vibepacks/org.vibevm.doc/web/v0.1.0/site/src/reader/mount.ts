@@ -22,6 +22,7 @@
 
 import { startAnchors } from "./anchors.ts";
 import { startAgentSurface } from "./agent.ts";
+import { startCitedRules } from "./cited-rules.ts";
 import { startCodeChrome } from "./code.ts";
 import { startOverlay } from "./overlay.ts";
 import { startToc } from "./toc.ts";
@@ -98,6 +99,7 @@ export function startReader(context: ReaderContext): () => void {
     startCodeChrome(),
     startOverlay(),
     startToc(),
+    startCitedRules(),
     startPlatformSwitch(),
     startRuleTransclusion(),
     startAnchors(),

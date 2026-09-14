@@ -8,6 +8,7 @@ import {
 } from "@qwik.dev/router";
 import {
   Card,
+  CitedRules,
   CodeChrome,
   Contents,
   Fab,
@@ -134,7 +135,7 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
         pinned={view.contents.pinned}
         sections={view.contents.sections}
       />
-      <Toc label="On this page" rulesLabel="Rules this page cites" />
+      <Toc label="On this page" />
       <Prose measure={MEASURE}>
         {view.fallback ? (
           <FallbackNotice
@@ -181,6 +182,10 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
           copyLabel="copy"
           compact={false}
         />
+        {/* Last in the column, folded: what the page stands on, for a
+            reader who has finished reading it. The markers in the text
+            are where a rule is read — this is only the list of them. */}
+        <CitedRules label="Rules this page cites" />
       </Prose>
       <RulePanel
         label="The rule this page quotes"

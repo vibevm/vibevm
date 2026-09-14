@@ -62,6 +62,21 @@
     display: none;
   }
 
+  /* The rules the page cites print open. They are addresses a reader
+     quotes, which is the half of a page that paper must keep, and a
+     folded block on paper is a block nobody can open. */
+  .cited-rules::details-content {
+    content-visibility: visible;
+  }
+
+  .cited-rules > .cited-rules__list {
+    display: block;
+  }
+
+  .cited-rules__summary {
+    list-style: none;
+  }
+
   /* The numbers are the addresses; they print at full strength and in
      the margin, where they do not interrupt a line of text. */
   .prose .p-anchor {

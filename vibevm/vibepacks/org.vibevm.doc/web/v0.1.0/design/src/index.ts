@@ -124,6 +124,10 @@ export {
   type ReturnToPlaceProps,
 } from "./components/return-to-place/index.tsx";
 export { Toc, type TocProps } from "./components/toc/index.tsx";
+export {
+  CitedRules,
+  type CitedRulesProps,
+} from "./components/cited-rules/index.tsx";
 export { Lightbox, type LightboxProps } from "./components/lightbox/index.tsx";
 export { CodeChrome } from "./components/code-block/index.tsx";
 export {

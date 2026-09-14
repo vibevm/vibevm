@@ -8,6 +8,7 @@ import {
 } from "@qwik.dev/core";
 import {
   Card,
+  CitedRules,
   CodeChrome,
   Contents,
   Fab,
@@ -102,13 +103,14 @@ export const ServedReader = component$(() => {
   return (
     <div class="doc-view doc-view--page">
       <ServedContents served={served} />
-      <Toc label="On this page" rulesLabel="Rules this page cites" />
+      <Toc label="On this page" />
       <Prose measure={MEASURE}>
         <ServedHead served={served} />
         <CodeChrome>
           <Island html={ISLAND_PLACEHOLDER} />
         </CodeChrome>
         <ServedAgent served={served} compact={false} />
+        <CitedRules label="Rules this page cites" />
       </Prose>
       <RulePanel
         label="The rule this page quotes"
