@@ -1818,7 +1818,7 @@ structure, and it goes when the file does.
 | @fact:B160-WHAT **what** | корневой `--offline` принят разбором и виден в `vibe self … --help`, но `main.rs` не передаёт его в `VvmEnv`, а `output::Context` его не несёт; `vibe --offline self update` идёт в сеть и успешно обновляется (измерено воркером POST-O2 на изолированном корне) |
 | @fact:B160-EFFECT **effect** | скрипт, который запретил сеть, всё равно получает скачивание; честных офлайн-отказов для `update`, `install stable` и `reinstall` нет |
 | @fact:B160-SEVERITY **severity** | P2 — одно поле в корне композиции плюс три места вызова в `bundle.rs`; чинить отдельным PR |
-| @fact:B160-DISPOSITION **disposition** | `open` |
+| @fact:B160-DISPOSITION **disposition** | `closed` — POST-O3 (`a031e804`, `09f647d7`), проза `75be0ac5`^ (2026-09-14) |
 | @fact:B160-FILED **filed by** | кампания docs-2026-09, ревью POST-O2 (2026-09-14) |
 
 ## B-161 — registry: один HTTP 429 от raw-хоста стоит целого клона
@@ -1828,7 +1828,7 @@ structure, and it goes when the file does.
 | @fact:B161-WHAT **what** | быстрый путь чтения по HTTPS на неожиданный статус, включая 429, падает в штатную лестницу `git archive` → clone → fetch → checkout → submodule: пять запусков git и около 20 с из 90 с фазы разрешения на графе redbook; ретрая с задержкой нет |
 | @fact:B161-EFFECT **effect** | одно ограничение частоты у хоста удлиняет холодную установку на пятую часть |
 | @fact:B161-SEVERITY **severity** | P2 — короткий backoff-ретрай на 429/5xx до падения в git; решение за владельцем, поведение при неожиданном статусе задумано как «спроси git» |
-| @fact:B161-DISPOSITION **disposition** | `open` |
+| @fact:B161-DISPOSITION **disposition** | `closed` — POST-O4 (`b709a02e`, `87799488`), проза `54038d89`^ (2026-09-14) |
 | @fact:B161-FILED **filed by** | кампания docs-2026-09, отчёт POST-O1 «Аномалии» п. 1 (2026-09-14) |
 
 ## B-162 — registry: `index_client` открывает соединение на каждый запрос индекса
@@ -1868,5 +1868,15 @@ structure, and it goes when the file does.
 | @fact:B165-WHAT **what** | POST-O1 (`b058098f`, `818247cd`) научил бэкенд читать один файл по HTTPS с GitHub и GitVerse до `git archive`, но PROP-002 §2.12 (`PERF-FETCH-FILE`) по-прежнему описывает чтение одного файла как `git archive`; POST-O4 положил рядом факт о повторах (`RAW-READ-BACKOFF`), и норма о повторе стоит раньше нормы о самом пути |
 | @fact:B165-EFFECT **effect** | руководство цитирует правило о повторах, а правила о быстром пути, его хостах, авторитетности промаха (тег/SHA против ветки) и токене-в-заголовке нет; `raw_http.rs` на 605 строках против бюджета 600 — адаптеры хостов просятся в `raw_http/hosts.rs` |
 | @fact:B165-SEVERITY **severity** | P2 — один факт `RAW-READ-FAST-PATH` в §2.12 по тексту докстрингов `raw_http.rs` (таблица хостов, промах авторитетен только для тега или SHA, токен только заголовком), правка `PERF-FETCH-FILE`, ребро `implements` из `raw_http.rs`; вместе с ним — вынос адаптеров в `hosts.rs` |
-| @fact:B165-DISPOSITION **disposition** | `open` |
+| @fact:B165-DISPOSITION **disposition** | `closed` — POST-O5 (`633856c2`, `4d1138ab`), проза `d2e786b2`^ (2026-09-14) |
 | @fact:B165-FILED **filed by** | кампания docs-2026-09, ревью POST-O4 (2026-09-14) |
+
+## B-166 — registry: `shell.rs` сверх бюджета строк; rustdoc-ссылки в `//!` подмодулей разрешаются в области родителя
+
+| поле | значение |
+|---|---|
+| @fact:B166-WHAT **what** | `crates/vibe-registry/src/git_backend/shell.rs` — 767 строк против совещательного бюджета 600 (сверх бюджета ещё до POST-O1); в `raw_http.rs`, `raw_http/retry.rs` и `raw_http/hosts.rs` ссылки rustdoc в `//!`-документации подмодулей (`super::absence_is_authoritative`, `MAX_ATTEMPTS`, `PAUSE_BUDGET`, `retry`) разрешаются в области родителя и дают четыре предупреждения `unresolved link`; `cargo doc` не гейт и выходит 0 |
+| @fact:B166-EFFECT **effect** | файл-хаб бэкенда git растёт с каждым пакетом; предупреждения rustdoc копятся и однажды спрячут настоящее |
+| @fact:B166-SEVERITY **severity** | P3 — вынести классификацию ошибок и рендер argv из `shell.rs` в свои файлы; ссылки в `//!` писать путём от крейта (одна правка на четыре места) |
+| @fact:B166-DISPOSITION **disposition** | `open` |
+| @fact:B166-FILED **filed by** | кампания docs-2026-09, ревью POST-O5 (2026-09-14) |
