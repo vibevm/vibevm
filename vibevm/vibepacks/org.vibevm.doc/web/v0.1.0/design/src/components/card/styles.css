@@ -110,3 +110,51 @@
   margin: 0.5rem 0 0;
   white-space: pre-line;
 }
+
+/* From a width where a shelf holds more than one card, the mark stands
+   ON the title's line rather than beside the whole entry.
+   ---------------------------------------------------------------------
+   A 48px square against a three-line body reads as a column of its own,
+   and the eye has to travel down and back to pair a mark with the name
+   it belongs to. On the title's line the two are one object, which is
+   what the reader is actually scanning for.
+
+   The markup does not change: the body becomes `display: contents`, so
+   its three children are grid items of the row, and only the mark is
+   placed — column one, row one, centred on the line the title sets.
+   Everything else keeps column two and falls into the rows below it in
+   its own order, with no row gap, so the body's rhythm is the one it
+   already had.
+
+   Below this width a card is the whole measure and the mark has the room
+   to be a mark: it stays where it was, at the top left of the entry. */
+@media (min-width: 768px) {
+  .card__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 0.6rem;
+  }
+
+  .card__body {
+    display: contents;
+  }
+
+  .card__icon,
+  .card__placeholder {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .card__placeholder {
+    font-size: 1rem;
+  }
+
+  .card__title,
+  .card__publisher,
+  .card__description {
+    grid-column: 2;
+  }
+}
