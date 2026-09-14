@@ -8836,8 +8836,8 @@
       "item_kind": "struct",
       "line": 38,
       "symbol": "vibe_cli::commands::vvm::builder::CargoBuilder",
-      "end_line": 42,
-      "fingerprint": "tok1:fc9b9c9e5aed50f8744f5561367785cdc83b4b99a531ce3866015e1a78a38e3b"
+      "end_line": 49,
+      "fingerprint": "tok1:32f6770f080da9cfdc627bd6fe8050e6afcee3966d3319cf26ed0260c7b5ab15"
     },
     {
       "crate_name": "vibe-cli",
@@ -8944,8 +8944,8 @@
       "item_kind": "enum",
       "line": 12,
       "symbol": "vibe_cli::commands::vvm::error::VvmError",
-      "end_line": 101,
-      "fingerprint": "tok1:86436c5bf821d4375858548b104e21d8b0e41a8023bbfdc1e8a10d6260dfa628"
+      "end_line": 118,
+      "fingerprint": "tok1:079042f4ebae38dad4099029a1adb65f346496840578225aea88b80a1f651c02"
     },
     {
       "crate_name": "vibe-cli",
@@ -9250,8 +9250,8 @@
       "item_kind": "fn",
       "line": 328,
       "symbol": "vibe_cli::commands::vvm::relocate::tests::run_rejects_a_non_source_tree_target",
-      "end_line": 350,
-      "fingerprint": "tok1:c944bf204526623058a98fb90a15348425a8ee9e806342b326aa57fb53b1f394"
+      "end_line": 351,
+      "fingerprint": "tok1:5e109bd0a5649267ab4f937660c6b434567ff95fc07df9a8b2f4b75f0918442b"
     },
     {
       "crate_name": "vibe-cli",
@@ -9431,15 +9431,15 @@
       "line": 80,
       "symbol": "vibe_cli::commands::vvm::tests::a_binary_execution_routes_stable_to_the_newest_release_and_latest_nowhere",
       "end_line": 103,
-      "fingerprint": "tok1:48c5001d209f2fe9ec6266b5fcd57db093471ec2e0c74ce17f2bf8066b546816"
+      "fingerprint": "tok1:3eb2f93b3f6ba26a28f7997994fcd19c8c09658b07fa1cfe5430cb1f98408401"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/tests.rs",
       "item_kind": "fn",
-      "line": 132,
+      "line": 222,
       "symbol": "vibe_cli::commands::vvm::tests::resolve_installed_picks_the_newest_instance_per_selector",
-      "end_line": 181,
+      "end_line": 271,
       "fingerprint": "tok1:41611c8d64dabe71652dbd3ceff4098e978a914a342cc4206341a13dcab31804"
     },
     {
@@ -9572,9 +9572,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 405,
+      "line": 406,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 530,
+      "end_line": 531,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -36667,12 +36667,12 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#surface",
       "verb": "verifies",
-      "pinned_r": 4
+      "pinned_r": 5
     },
     {
       "file": "crates/vibe-cli/src/commands/vvm/tests.rs",
       "from_symbol": "vibe_cli::commands::vvm::tests::resolve_installed_picks_the_newest_instance_per_selector",
-      "line": 133,
+      "line": 223,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#selectors",
       "verb": "verifies",
@@ -36797,7 +36797,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 483,
+      "line": 484,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -62954,7 +62954,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:8e2ef37746b4d5d4165311e509742830e086ff842d367f1b57eedb8cd2259919",
+      "content_hash": "sha256:d95bd6fd43c6253831ef06ad25deaf180c1ec9c1b3eff95d2609963a64c1a260",
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "PROP-019 — VibeVM Version Manager (VVM)",
@@ -63136,7 +63136,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:cc9ae3117d998db5593cfe3191d62b838a16cb459722e3a16434c764a8a74928",
+      "content_hash": "sha256:a90e8853cfb364373bf4e9d885a67d76095769a825bf2b5e402f526005f230e2",
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2. Decisions",
@@ -63192,21 +63192,21 @@
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:151bcc3679de8700592c35e24deb10da9150557f006a73b5efec156d55bbd185",
+      "content_hash": "sha256:785c08a97692b97f4678e618e8ea7dcea52ade9bf2c06e67d2ea92841926aecf",
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.2 Command surface — `vibe self` (+ `vibe vars`)",
       "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#surface",
       "kind": "req",
-      "revision": 4
+      "revision": 5
     },
     {
       "anchor": "req-surface",
-      "content_hash": "sha256:afc38ea92280e73ddffdd43113982f4689b514eff99ec868b37f46cf2b423bc9",
+      "content_hash": "sha256:8f1294ad17dfe060f90986d12c85e8de7e3ead302168c0b231fad387bbed1cdc",
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
-      "heading": "`req r4` @status:spec/done",
+      "heading": "`req r5` @status:spec/done",
       "line": 84,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-surface"
     },
@@ -63247,12 +63247,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-REINSTALL"
     },
     {
+      "anchor": "CMD-OFFLINE",
+      "content_hash": "sha256:1a06101a42158c5e4fd7ba58634bb92c8f51b8e1f60c0fe8b79a7946037c9ec1",
+      "doc_path": "common/PROP-019",
+      "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
+      "heading": "Every `self` verb honours the offline posture the process resolved —\n  `--offline`, `VIBE_OFFLINE` or `[net] offline`, layered as PROP-010\n  `##OFFLINE-LAYERING` says. Under it a release-lane verb is refused before its\n  first request, naming the verb and the address it would have needed; a\n  source-lane rebuild runs without fetching when the checkout and the crates\n  are already local, and is refused the same way otherwise. The domain never\n  reads the environment for this: the composition root hands the resolved\n  posture in. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "line": 115,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-OFFLINE"
+    },
+    {
       "anchor": "CMD-IMPORT",
       "content_hash": "sha256:6ac18e4b81533a025770a48ec97cd869efcb711b1af626ad0d7ba1b2d9a1364b",
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self import <PATH> --tag <X.Y.Z>` — put a legacy READY-BUILT local `vibe`\n  executable into the inventory as an immutable `tag:` instance, reusing the\n  store/placer/lock/state machinery (built 2026-08-20 for the 1.0.0\n  distributive; the install.ps1 of the zip calls it instead of duplicating\n  `state.toml`). Local by construction: no network, no signature machinery —\n  the file is streamed through SHA-256 once, and that digest drives\n  idempotence: same tag + same digest reuses the instance; same mutable tag +\n  different digest creates a new local `#N` beside the preserved old one.\n  `--replace-candidate` remains compatibility spelling. Optional `--commit`, `--profile`\n  (default `release`); inactive by default — `--use` runs the same complete\n  shim/PATH/pointer/advisory-HOME activation as every other lane. @status:impl/done",
-      "line": 115,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT"
     },
     {
@@ -63261,7 +63270,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self bootstrap --manifest DISTRIBUTIONS.json --version X.Y.Z\n  --release-base URL` is the narrow machine-facing cold-start verb. It verifies\n  the temporary bootstrap against the aggregate, downloads one bounded native\n  bundle anonymously, verifies/extracts it, and activates it; `--force` makes\n  another generation. @status:impl/done",
-      "line": 126,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-BOOTSTRAP"
     },
     {
@@ -63270,7 +63279,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self use <selector>` — make a version active by repointing the live\n  `current` file — **no console reload** (§2.5). `--eval` prints the shell\n  line for an integrity-checked shell-local override instead of touching the\n  durable environment. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 131,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-USE"
     },
     {
@@ -63279,7 +63288,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self rollback` atomically swaps to the immediate `previous` instance;\n  repeating it toggles the two pointers without deleting either generation. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 135,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-ROLLBACK"
     },
     {
@@ -63288,7 +63297,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self ls` (alias `list`) prints copyable `<kind>:<id>#N` selectors and\n  provenance. `*` marks the active pointer; `>` independently marks the\n  actually running executable, including a direct developer-worktree binary. @status:impl/done",
-      "line": 137,
+      "line": 145,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-LS"
     },
     {
@@ -63297,7 +63306,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self current` shows active and running identities separately. `self which\n  [vibe|vibe-index|source]` prints that member's absolute path; `self source`\n  prints exactly the running/active source root for shell composition. @status:impl/done",
-      "line": 140,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-CURRENT-WHICH"
     },
     {
@@ -63306,7 +63315,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove <selector>` (aliases `rm`, `del`, `uninstall`) — safe by\n  default (§2.9). @status:spec/done",
-      "line": 143,
+      "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-REMOVE"
     },
     {
@@ -63315,7 +63324,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self gc` — reclaim disk (§2.10). @status:spec/done",
-      "line": 145,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-GC"
     },
     {
@@ -63324,7 +63333,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self doctor` (+ `--fix`) — verify the install and environment (§2.11). @status:spec/done",
-      "line": 146,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-DOCTOR"
     },
     {
@@ -63333,7 +63342,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self env` — print safely quoted `VIBEVM_SHELL_HOME` + advisory\n  `VIBEVM_HOME` activation for a shell. @status:impl/done",
-      "line": 147,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-ENV"
     },
     {
@@ -63342,7 +63351,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self relocate <path>` — repoint source provenance to a moved checkout and\n  clear the instances built from the abandoned tree (§2.17). Flags:\n  `--from <old-path>` (override the inferred old location); `-y`/`--yes`\n  (non-interactive); `--dry-run`. @status:spec/done",
-      "line": 149,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-RELOCATE"
     },
     {
@@ -63351,7 +63360,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Top-level **`vibe vars`** (§2.14) prints the runtime variable context —\nthe values vibevm *actually* uses (derived from `current_exe`) versus what\nthe environment says — so scripts never break on a stale `$VIBEVM_HOME`. @status:spec/done",
-      "line": 154,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-VARS"
     },
     {
@@ -63360,7 +63369,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.3 Version selectors and resolution",
-      "line": 158,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#selectors",
       "kind": "req",
       "revision": 2
@@ -63371,7 +63380,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 159,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-selectors"
     },
     {
@@ -63380,7 +63389,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A *selector* names what to install or use; resolution is deterministic: @status:spec/done",
-      "line": 160,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SELECTOR-DEF"
     },
     {
@@ -63389,7 +63398,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`latest` → tip of branch `main`. @status:spec/done",
-      "line": 162,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-LATEST"
     },
     {
@@ -63398,7 +63407,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`stable` → highest semantic-version git tag (the newest release). @status:spec/done",
-      "line": 163,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-STABLE"
     },
     {
@@ -63407,7 +63416,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`X.Y.Z` → a tag; tries `X.Y.Z` then `vX.Y.Z`, always peeling an\n  annotated tag to its exact commit before recording/building. @status:impl/done",
-      "line": 164,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-SEMVER"
     },
     {
@@ -63416,7 +63425,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "a hex commit-ish → a commit. @status:spec/done",
-      "line": 166,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-COMMIT"
     },
     {
@@ -63425,7 +63434,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the canonical `<kind>:<id>` form (as `self ls` prints) → that exact id. @status:spec/done",
-      "line": 167,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-CANONICAL"
     },
     {
@@ -63434,7 +63443,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`<kind>:<id>#N` → one exact immutable local generation; the terminal\n  `#N` disambiguates repeated content under the same mutable remote label. @status:impl/done",
-      "line": 168,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-INSTANCE"
     },
     {
@@ -63443,7 +63452,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "any other bare name → branch, then tag, then commit (hex commits and\n  `X.Y.Z` tags are classified before this point). @status:spec/done",
-      "line": 170,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-BARE"
     },
     {
@@ -63452,7 +63461,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`--tag` / `--branch` / `--commit` force interpretation, mapping to\n  fully-qualified git refs so a name that is both never resolves by accident. @status:spec/done",
-      "line": 174,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-FORCE-FLAGS"
     },
     {
@@ -63461,7 +63470,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "No selector: `install` → `latest`; `remove` opens an interactive picker (or\n  refuses without a TTY); `use` requires an explicit selector. @status:impl/done",
-      "line": 176,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEL-DEFAULTS"
     },
     {
@@ -63470,7 +63479,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.4 On-disk layout — instances, the `current` pointer, manifests",
-      "line": 180,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#layout",
       "kind": "req",
       "revision": 2
@@ -63481,7 +63490,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 181,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-layout"
     },
     {
@@ -63490,7 +63499,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The **unit of install and switch is a whole distribution directory**\n  (an *instance*: the binary plus future DLLs/assets), not a single file\n  (§9.3). @status:spec/done",
-      "line": 183,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#INSTANCE-UNIT"
     },
     {
@@ -63499,7 +63508,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A version has a **canonical id** `<kind>:<id>` (`kind ∈ {tag, branch,\n  commit}`); each id may have several instances (one per install). @status:spec/done",
-      "line": 186,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CANONICAL-ID"
     },
     {
@@ -63508,7 +63517,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`$VIBEVM_INSTALL_ROOT` (the install BASE) defaults to `~/.vibe` → root\n  `~/.vibe/opt` in normal use (owner ruling 2026-08-20, the release-1.0\n  install path; until then the default base was the bare home dir → `~/opt`).\n  An explicit override keeps its meaning — `<override>/opt` — and one env var\n  still relocates everything; tests pin it to a temp dir. A managed binary\n  keeps recognising its own root by shape (the trailing `opt` component),\n  so both generations of store keep working. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 208,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT"
     },
     {
@@ -63517,7 +63526,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`<instance>` is a monotonic counter (§9.4) — never a hash of the payload\n  (§9.2). @status:spec/done",
-      "line": 215,
+      "line": 223,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#INSTANCE-COUNTER"
     },
     {
@@ -63526,7 +63535,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The shim dir is stable; switching repoints `current`, never the shim. @status:spec/done",
-      "line": 217,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SHIM-STABLE"
     },
     {
@@ -63535,7 +63544,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Development/managed checkouts are held **by reference** and their untracked\n  caches are never copied. A binary instance instead owns a clean tracked-file\n  snapshot under its own `source/`, because shipped skills may require the\n  matching vibevm source even on a machine without a checkout (§2.16). @status:impl/done",
-      "line": 218,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SOURCES-BY-REF"
     },
     {
@@ -63544,7 +63553,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.5 Activation — live `current` file + `current_exe` truth",
-      "line": 224,
+      "line": 232,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#activation",
       "kind": "req",
       "revision": 2
@@ -63555,7 +63564,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 225,
+      "line": 233,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-activation"
     },
     {
@@ -63564,7 +63573,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Switching must not reload the console and must not overwrite a running\nfile.** (v1's \"env is truth\" violated the first; see §9.1.) The model has\nfour layers: <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 226,
+      "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACTIVATION-LAW"
     },
     {
@@ -63573,7 +63582,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**`current_exe()` → the running process's truth.** A modern managed `vibe` lives\n   at `…/opt/vibevm/versions/<kind>/<id>/<instance>/bin/vibe[.exe]`\n   (legacy root-level binaries remain readable), so it\n   derives its own version id, `VIBEVM_HOME` (= its instance dir), and\n   `VIBEVM_INSTALL_ROOT` (walk up to `opt`) from its own path — no env var\n   needed. Outside a managed location (dev `cargo run`, a bare copy), it\n   falls back to env, then defaults. @status:impl/done",
-      "line": 230,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-CURRENT-EXE"
     },
     {
@@ -63582,7 +63591,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**`VIBEVM_SHELL_HOME` → explicit shell-local selection.** `self use --eval`\n   and `self env` emit it together with advisory HOME; stable shims prioritize\n   this non-durable override so evaluation really switches both `vibe` and\n   `vibe-index` even while durable `current` names another instance. @status:impl/done",
-      "line": 237,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-SHELL-OVERRIDE"
     },
     {
@@ -63591,7 +63600,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**`current` file → the live active instance.** The shim reads\n   `$shimdir/../vibevm/current` on **every** launch and execs that instance.\n   `self use` rewrites `current` → the **next** `vibe` in the **same shell**\n   uses it. No reload (the shim reads a file, not the shell's frozen env). @status:spec/done",
-      "line": 241,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-CURRENT-FILE"
     },
     {
@@ -63600,7 +63609,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set\n   durably for external `JAVA_HOME`-style tools, but no longer the source of\n   truth. They may lag (new shells only); `vibe vars` (§2.14) reconciles,\n   and a managed `vibe` whose `current_exe`-derived home disagrees with the\n   env prints a one-line stderr warning at startup (suppressed outside a\n   managed run). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 245,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LAYER-ENV-ADVISORY"
     },
     {
@@ -63609,7 +63618,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The four shims (`bin/{vibe,vibe.cmd,vibe-index,vibe-index.cmd}`) are minimal:\n  use explicit shell override, else resolve `current`, then fall back to\n  `$VIBEVM_HOME`; exec the corresponding member or print \"no active vibevm — run\n  `vibe self use <selector>`\". @status:impl/done",
-      "line": 253,
+      "line": 261,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SHIMS-MINIMAL"
     },
     {
@@ -63618,7 +63627,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Both POSIX and `.cmd` forms exist for both commands (Git Bash\n  won't resolve `.cmd`; cmd/PowerShell won't run an extensionless script). @status:impl/done",
-      "line": 257,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SHIMS-BOTH-FORMS"
     },
     {
@@ -63627,7 +63636,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.6 PATH and durable environment management",
-      "line": 261,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#path",
       "kind": "req",
       "revision": 2
@@ -63638,7 +63647,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 262,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-path"
     },
     {
@@ -63647,7 +63656,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "VVM detects OS and shell and manages durable settings under strict rules: @status:spec/done",
-      "line": 263,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ENV-MGMT-LEAD"
     },
     {
@@ -63656,7 +63665,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**The shim dir on `PATH`** (stable; set once). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 265,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PATH-SHIM-DIR"
     },
     {
@@ -63665,7 +63674,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**`VIBEVM_HOME` / `VIBEVM_INSTALL_ROOT`** as *advisory* env (§2.5) —\n  repointed on `self use` for external tools; truth lives in `current` +\n  `current_exe`. @status:spec/done",
-      "line": 266,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ENV-ADVISORY"
     },
     {
@@ -63674,7 +63683,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Rules: @status:spec/done",
-      "line": 270,
+      "line": 278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#env-rules-lead"
     },
     {
@@ -63683,7 +63692,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**idempotent** (a marker guards the edit; no duplicate lines/entries), @status:spec/done",
-      "line": 272,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-IDEMPOTENT"
     },
     {
@@ -63692,7 +63701,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**never clobber** (only our entry is added; the rest of `PATH` is\n  preserved), @status:spec/done",
-      "line": 273,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-NEVER-CLOBBER"
     },
     {
@@ -63701,7 +63710,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**OS/shell-aware** (Windows: raw `HKCU\\Environment` — read WITHOUT\n  variable expansion, the value's registry kind preserved (`REG_SZ` stays\n  `REG_SZ`, `REG_EXPAND_SZ` stays `REG_EXPAND_SZ`, so a PATH carrying\n  `%USERPROFILE%\\…` survives untouched), entries compared normalised\n  (expand+full-path+case-insensitive) for dedup while unrelated raw entries\n  are preserved byte-for-byte, and a `WM_SETTINGCHANGE` broadcast after the\n  write; the earlier `[Environment]` API form silently expanded references\n  and lost the kind. POSIX: a marked block in the detected shell's rc —\n  bash/zsh/fish/`.profile`), @status:impl/done",
-      "line": 275,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-OS-AWARE"
     },
     {
@@ -63710,7 +63719,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "and **consent + honesty** (interactive maintenance uses confirm / `-y` /\n  `self doctor --fix`; executing the native bootstrap one-liner is itself the\n  explicit install consent). Output says whether PATH was already live or only\n  durable for new shells. Activation writes stable PATH first, flips `current`\n  second, and updates advisory `VIBEVM_HOME` last, so a failure cannot point the\n  durable version variable ahead of the live selector. @status:impl/done",
-      "line": 284,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-CONSENT"
     },
     {
@@ -63719,7 +63728,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The durable writer is an injectable seam so tests exercise the POSIX rc\n  path in a temp file and never mutate the real machine. @status:spec/done",
-      "line": 290,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RULE-INJECTABLE-SEAM"
     },
     {
@@ -63728,7 +63737,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.7 Install pipelines — source builds and verified native bundles",
-      "line": 294,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#build",
       "kind": "req",
       "revision": 2
@@ -63739,7 +63748,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 295,
+      "line": 303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-build-pipeline"
     },
     {
@@ -63748,7 +63757,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Both lanes end identically: stage a complete `vibe` + `vibe-index`\ndistribution, record a fresh immutable local instance, then flip `current`.\nThe source lane builds from a referenced checkout; the binary lane verifies a\nbounded published bundle and installs its owned clean source snapshot. @status:impl/done",
-      "line": 296,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PIPELINE-OVERVIEW"
     },
     {
@@ -63757,7 +63766,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Locate source (§2.16).** Source builds have two referenced origins: @status:impl/done",
-      "line": 301,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-LOCATE"
     },
     {
@@ -63766,7 +63775,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "*external* — `self install` run inside a committer's own checkout\n    (outside the install root): build it **in place**, never touch its git\n    state, and record its canonical absolute path as provenance so a later\n    `self install <id>` can rebuild from the remembered location (a *linked\n    source*). @status:spec/done",
-      "line": 302,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LOC-EXTERNAL"
     },
     {
@@ -63775,7 +63784,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "*managed* — a shared clone vibevm owns under `src/.mirror`: created once,\n    then updated **incrementally** with `git fetch`/`checkout` (or\n    `pull`; stash first if dirty), never re-cloned, so a full rebuild\n    (hours, in a large future) is avoided. @status:impl/done",
-      "line": 307,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LOC-MANAGED"
     },
     {
@@ -63784,7 +63793,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Resolve.** The selector (§2.3) → a concrete commit, recorded. @status:spec/done",
-      "line": 311,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-RESOLVE"
     },
     {
@@ -63793,7 +63802,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Build.** `cargo build [--release] -p vibe-cli -p vibe-index` into the **shared**\n  `build/` target dir (§9.3 — never the source tree's `target/`; load-\n  bearing on Windows and keeps the dev tree clean), honouring\n  `rust-toolchain.toml`. @status:impl/done",
-      "line": 312,
+      "line": 320,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-BUILD"
     },
     {
@@ -63802,7 +63811,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Build the two essential binaries only.** `vibe-index` is part of VibeVM's\n  own distribution because on-premises registry owners require it. The\n  terminal products (vibeterm,\n  vibeframe) and the GUI launchers (vibe-launcher) used to be packaged\n  into the instance alongside `vibe`; they have moved to a separate\n  products repo (`vibevm-term`) and now publish themselves to `PATH`\n  through their own version-manager (`<product> self install`). The\n  install pipeline here builds `vibe` + `vibe-index` — `vibe term` / `vibe frame`\n  resolve the terminal apps through `$VIBEVM_<APP>` → the active\n  instance's packaged `<app>/` (back-compat) → `PATH`, with an in-place\n  fallback for `vibe tree` when no terminal app is available\n  (`spec://term-common/PROP-vvm#root` is the products-repo twin). @status:impl/done",
-      "line": 316,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-VIBE-ONLY"
     },
     {
@@ -63811,7 +63820,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Place a source build by diff-copy (§2.15).** Both binaries are placed under\n  `instance/bin/`; unchanged files may be hardlinked from the prior source\n  instance. The distribution is placed into a\n  fresh instance dir, copying only files that changed versus the previous\n  instance and hardlinking the rest — so a 2 GB distribution where only\n  `vibe.exe` changed costs one file copy, never a full re-copy or a payload\n  hash (§9.2). If nothing changed, no new instance is made. @status:impl/done",
-      "line": 328,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-PLACE"
     },
     {
@@ -63820,7 +63829,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Install a binary bundle.** Select one of the four fixed targets from\n  `DISTRIBUTIONS.json`; enforce independent size limits; verify outer bundle,\n  embedded manifest, both binaries, and `vibevm-source.zip` by SHA-256; reject\n  traversal, collisions, symlinks, special files, extras, and decompression\n  overflow; cap source files/materialized nodes/depth/path at\n  200,000/400,000/256/4096; retain the source ZIP and extract it under\n  `source/`. The inventory retains the authenticated manifest digest that\n  anchors later `doctor`/reuse checks. @status:impl/done",
-      "line": 335,
+      "line": 343,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-BINARY-BUNDLE"
     },
     {
@@ -63829,7 +63838,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Remote labels are mutable; local instances are not.** A republished\n  `v1.0.0` may have new bytes, but it becomes `tag:1.0.0#N+1`. A non-forced\n  identical bundle reuses an instance only after re-verifying its manifest,\n  binaries, retained source ZIP, and extracted source file set/content. @status:impl/done",
-      "line": 343,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-MUTABLE-IMMUTABLE"
     },
     {
@@ -63838,7 +63847,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Record + activate.** `state.toml` gets the instance (id, instance,\n  commit, toolchain, profile, time, origin, source_path). Every activating\n  lane then uses one failure-ordered transaction: publish the stable shims,\n  persist their generic PATH, journal/flip `current` + `previous`, and update\n  advisory `VIBEVM_HOME` last. @status:impl/done",
-      "line": 347,
+      "line": 355,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-RECORD-FLIP"
     },
     {
@@ -63847,7 +63856,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Because every install writes a **new** instance dir and switching is a\npointer flip, **no in-use file is ever overwritten** — the running process\nkeeps its instance dir intact; no lock, no reload, for the `.exe` or any\nDLL, on any OS (§9.3). @status:spec/done",
-      "line": 353,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#NO-OVERWRITE-EVER"
     },
     {
@@ -63856,7 +63865,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.8 Required toolchain — a single source of truth",
-      "line": 358,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#tools",
       "kind": "req",
       "revision": 2
@@ -63867,7 +63876,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 359,
+      "line": 367,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-tools"
     },
     {
@@ -63876,7 +63885,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,\n  stable ≥ 1.93, edition 2024 — via rustup so the pin resolves), and a\n  **system linker / C toolchain** (Windows: VS Build Tools; macOS: Xcode CLT;\n  Linux: `build-essential`). A native binary install needs none of those;\n  its bootstrap uses only the platform download/TLS facilities. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 361,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-LIST"
     },
     {
@@ -63885,7 +63894,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "OpenSSL is deliberately not required (rustls). @status:spec/done",
-      "line": 366,
+      "line": 374,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#NO-OPENSSL"
     },
     {
@@ -63894,7 +63903,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,\n  check_command, help_url)` — read by `self doctor` (§2.11) and asserted by a\n  test; it is the runnable form of \"how to update the stack\" (§7). @status:spec/done",
-      "line": 367,
+      "line": 375,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-TABLE-SSOT"
     },
     {
@@ -63903,7 +63912,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The publish token is **never** in this set (§2.13). @status:spec/done",
-      "line": 370,
+      "line": 378,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#TOKEN-NOT-TOOL"
     },
     {
@@ -63912,7 +63921,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.9 Removal — safe by default",
-      "line": 373,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#remove",
       "kind": "req",
       "revision": 2
@@ -63923,7 +63932,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 374,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-remove"
     },
     {
@@ -63932,7 +63941,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove` never silently wipes everything: @status:spec/done",
-      "line": 375,
+      "line": 383,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REMOVE-SAFE"
     },
     {
@@ -63941,7 +63950,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove <selector>` — remove that version or exact `#N`.\n  For binary bundles, `--bin` removes only `bin/`, `--src` only the owned\n  `source/` + retained source ZIP, and the default removes the whole instance.\n  A scoped removal reports the deliberately partial, non-activatable result;\n  external worktrees are never deleted and shared managed-source effects are\n  reported separately. @status:impl/done",
-      "line": 377,
+      "line": 385,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RM-SELECTOR"
     },
     {
@@ -63950,7 +63959,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove` with no selector — an **interactive picker**; a non-\n  interactive context errors with a hint, never a wipe. @status:spec/done",
-      "line": 383,
+      "line": 391,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RM-PICKER"
     },
     {
@@ -63959,7 +63968,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove --all` — every version, behind the flag **and** a re-confirm. @status:spec/done",
-      "line": 385,
+      "line": 393,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RM-ALL"
     },
     {
@@ -63968,7 +63977,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The **active** version and the **running** instance are protected:\n  removing an active but non-running instance needs `--force`; the actually\n  running instance is never removable, even with that flag. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 386,
+      "line": 394,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RM-PROTECTED"
     },
     {
@@ -63977,7 +63986,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "External sources (committer trees) are **never** removed — VVM only forgets\ntheir provenance record; the managed `src/.mirror` clone is VVM's to drop. @status:spec/done",
-      "line": 390,
+      "line": 398,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#EXTERNAL-NEVER-REMOVED"
     },
     {
@@ -63986,7 +63995,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.10 Garbage collection — `self gc`",
-      "line": 393,
+      "line": 401,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#gc",
       "kind": "req",
       "revision": 2
@@ -63997,7 +64006,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 394,
+      "line": 402,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-gc"
     },
     {
@@ -64006,7 +64015,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self gc` reclaims disk: @status:spec/done",
-      "line": 395,
+      "line": 403,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-LEAD"
     },
     {
@@ -64015,7 +64024,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`--build` — clean the shared Rust build cache (`build/`); forces a rebuild\n  next install but touches no installed instance. @status:spec/done",
-      "line": 397,
+      "line": 405,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-BUILD"
     },
     {
@@ -64024,7 +64033,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`--prune-others` — remove every instance except the active and its immediate\n  rollback target (plus referenced source), behind a re-confirm. @status:impl/done",
-      "line": 399,
+      "line": 407,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-PRUNE-OTHERS"
     },
     {
@@ -64033,7 +64042,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Instances are pruned **best-effort**: a dir still locked by a running\n  process is skipped and collected on a later run (on POSIX the unlink\n  succeeds and the inode lives until the process exits). @status:spec/done",
-      "line": 403,
+      "line": 411,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-BEST-EFFORT"
     },
     {
@@ -64042,7 +64051,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Hardlinked files are refcount-safe — removing one instance never corrupts\n  another that shares inodes (§2.15). @status:spec/done",
-      "line": 406,
+      "line": 414,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-REFCOUNT-SAFE"
     },
     {
@@ -64051,7 +64060,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**No install silently erases rollback history.** Binary and source\n  generations remain until explicit `remove` or `gc --prune-others`; the\n  immediate `previous` target survives pruning. @status:impl/done",
-      "line": 408,
+      "line": 416,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-AUTO-PRUNE-BINARY"
     },
     {
@@ -64060,7 +64069,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self gc` operates **only** inside the install root and **never** touches\n  the shared `~/.cargo` caches. @status:spec/done",
-      "line": 411,
+      "line": 419,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-SCOPE"
     },
     {
@@ -64069,7 +64078,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env`",
-      "line": 415,
+      "line": 423,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#introspection",
       "kind": "req",
       "revision": 2
@@ -64080,7 +64089,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 416,
+      "line": 424,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-introspection"
     },
     {
@@ -64089,7 +64098,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self doctor` verifies end to end: both generated stable shims have their\n  expected content/mode and their directory is on `PATH`; every source-built\n  active/running instance still matches its placement manifest; source origins\n  have their required build tools; and a modern binary origin does **not**\n  require Rust/git but must pass the authenticated manifest-rooted full\n  bundle/source integrity check. Source paths must still resolve to an actual\n  vibevm root. A legacy\n  single-binary import is labeled partial with an update recipe but its payload\n  is still verified. It exits non-zero while problems remain; `--fix` repairs\n  shims/PATH with consent and recomputes the result. @status:impl/done",
-      "line": 418,
+      "line": 426,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#DOCTOR-VERIFIES"
     },
     {
@@ -64098,7 +64107,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self ls` / `current` / `which` read the **`current` file** for the active\n  selection and `current_exe()` for the independently running selection. A\n  direct worktree executable wins over cwd and over an unrelated active binary. @status:impl/done",
-      "line": 428,
+      "line": 436,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LS-READS-CURRENT"
     },
     {
@@ -64107,7 +64116,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self env` prints shell-specific activation lines. @status:spec/done",
-      "line": 431,
+      "line": 439,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ENV-PRINTS"
     },
     {
@@ -64116,7 +64125,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.12 Cold-start (bootstrap)",
-      "line": 434,
+      "line": 442,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#bootstrap",
       "kind": "req",
       "revision": 2
@@ -64127,7 +64136,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 435,
+      "line": 443,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-bootstrap"
     },
     {
@@ -64136,7 +64145,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Stable endpoints provide one-line native cold start: Bash for Linux/macOS/WSL\n  and PowerShell for Windows. Each bounded script downloads\n  `DISTRIBUTIONS.json`, verifies a small raw `vibe` bootstrap by size/SHA-256,\n  then that Rust binary verifies and atomically installs the full bundle. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 437,
+      "line": 445,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#COLD-START-PATH"
     },
     {
@@ -64145,7 +64154,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The scripts are shipped release assets `install.sh` and `install.ps1` and\n  are exposed by stable `https://vibevm.org/install.*` redirects. Homebrew,\n  WinGet, and CMD installers remain outside this slice. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 441,
+      "line": 449,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#BOOTSTRAP-SCRIPT-LATER"
     },
     {
@@ -64154,7 +64163,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.13 Security and trust",
-      "line": 446,
+      "line": 454,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#security",
       "kind": "req",
       "revision": 2
@@ -64165,7 +64174,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 447,
+      "line": 455,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-security"
     },
     {
@@ -64174,7 +64183,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Building an arbitrary ref is arbitrary code execution — inherent to a build\ntool the user invokes deliberately, and accepted. @status:spec/done",
-      "line": 448,
+      "line": 456,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACE-ACCEPTED"
     },
     {
@@ -64183,7 +64192,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Constraints: @status:spec/done",
-      "line": 450,
+      "line": 458,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#sec-constraints-lead"
     },
     {
@@ -64192,7 +64201,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "host-key (SSH) / TLS verification never disabled on clone; @status:spec/done",
-      "line": 452,
+      "line": 460,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEC-TLS"
     },
     {
@@ -64201,7 +64210,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "binary install/update reads public releases anonymously; the publish token is\n  **never** read by VVM nor shown by `vibe vars`; @status:impl/done",
-      "line": 453,
+      "line": 461,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEC-TOKEN"
     },
     {
@@ -64210,7 +64219,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "VVM operates only inside the install root and the declared, consented\n  environment edits; @status:spec/done",
-      "line": 455,
+      "line": 463,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEC-SCOPE"
     },
     {
@@ -64219,7 +64228,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "every store mutation is lexically contained and rejects symlink/reparse or\n  special-file ancestors; `current`, `previous`, and recovery-journal paths\n  must name exact inventoried instances before they can be applied; @status:impl/done",
-      "line": 457,
+      "line": 465,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEC-STORE-PATHS"
     },
     {
@@ -64228,7 +64237,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the committer's own source tree is **never** mutated (§2.7, §2.16). @status:spec/done",
-      "line": 460,
+      "line": 468,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEC-TREE-UNTOUCHED"
     },
     {
@@ -64237,7 +64246,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.14 `vibe vars` — reconciling actual vs environment",
-      "line": 463,
+      "line": 471,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#vars",
       "kind": "req",
       "revision": 1
@@ -64248,7 +64257,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 464,
+      "line": 472,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-vars"
     },
     {
@@ -64257,7 +64266,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Scripts must know the **real** runtime context even when `$VIBEVM_HOME` is\n  stale (§9.1). @status:spec/done",
-      "line": 466,
+      "line": 474,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-PURPOSE"
     },
     {
@@ -64266,7 +64275,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars` prints the project's env-configurable variables —\n  `VIBEVM_INSTALL_ROOT`, `VIBEVM_HOME` (whose *actual* values are derived from\n  `current_exe`, §2.5), plus `VIBE_INVOKED_BY`, `VIBE_UNATTENDED`, `VIBE_LOG`\n  — in `NAME=VALUE` form. The publish token is deliberately excluded. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 468,
+      "line": 476,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-CONTENT"
     },
     {
@@ -64275,7 +64284,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars` — **actual** values, one `NAME=VALUE` per line. @status:spec/done",
-      "line": 474,
+      "line": 482,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-PLAIN"
     },
     {
@@ -64284,7 +64293,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars diff` — `NAME=VALUE [ENV_VALUE]`; the bracket appears only when\n  the environment differs from the actual. @status:spec/done",
-      "line": 475,
+      "line": 483,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-DIFF"
     },
     {
@@ -64293,7 +64302,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars full` — two tables, `# ACTUAL` then `# ENVIRONMENT`. @status:spec/done",
-      "line": 477,
+      "line": 485,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-FULL"
     },
     {
@@ -64302,7 +64311,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars full diff` — both tables, differing names marked\n  `NAME=VALUE [*]`. @status:spec/done",
-      "line": 478,
+      "line": 486,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-FULL-DIFF"
     },
     {
@@ -64311,7 +64320,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "\"actual\" for the VVM vars is the `current_exe`-derived value (falling back\nto env/default outside a managed run); \"environment\" is the raw env. A\nscript reads `vibe vars` and knows exactly the context it runs in. @status:spec/done",
-      "line": 481,
+      "line": 489,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VARS-SEMANTICS"
     },
     {
@@ -64320,7 +64329,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.15 Distribution instances and diff-copy",
-      "line": 485,
+      "line": 493,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#instances",
       "kind": "req",
       "revision": 2
@@ -64331,7 +64340,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 486,
+      "line": 494,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-instances"
     },
     {
@@ -64340,7 +64349,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Source-built instances use the existing diff-copy optimization. Binary\nbundles take the verification-first lane: their publisher digests are checked\non download and again before an identical local instance is reused. @status:impl/done",
-      "line": 487,
+      "line": 495,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#DIFF-COPY-LAW"
     },
     {
@@ -64349,7 +64358,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Each instance carries `.vvm-manifest.toml`: per dist file `(rel, size,\n  mtime, hash?)`. The build dir is **persistent** (shared `--target-dir`),\n  so cargo preserves the mtime of unchanged outputs across builds. @status:spec/done",
-      "line": 491,
+      "line": 499,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MANIFEST-PER-INSTANCE"
     },
     {
@@ -64358,7 +64367,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "On install, for each dist file: compare to the previous instance's\n  manifest entry — by **cheap content hash for small files** (≤ a\n  threshold) and by **`(size, mtime)` for large files** (stat only, never\n  read). Unchanged → **hardlink** the previous instance's file into the new\n  one (zero copy). Changed/new → **copy** from the build output. Hardlink\n  failure (cross-volume / unsupported) → copy. @status:spec/done",
-      "line": 494,
+      "line": 502,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#COMPARE-RULES"
     },
     {
@@ -64367,7 +64376,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "If **every** file is unchanged, no new instance is made — `current` stays\n  (\"already up to date\"). `--force` always makes a fresh instance. @status:spec/done",
-      "line": 500,
+      "line": 508,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#DEDUP-SKIP"
     },
     {
@@ -64376,7 +64385,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The complete new instance is staged then atomically renamed; stable PATH is\n  ensured, `current` flips, and only then advisory `VIBEVM_HOME` updates. @status:impl/done",
-      "line": 502,
+      "line": 510,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#STAGE-ATOMIC"
     },
     {
@@ -64385,7 +64394,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "gc is refcount-safe (§2.10); instances are immutable after publish. @status:spec/done",
-      "line": 504,
+      "line": 512,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#GC-SAFE-IMMUTABLE"
     },
     {
@@ -64394,7 +64403,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "This scales to a multi-GB distribution: an 80 GB asset that did not change\n  is shared by hardlink; only the changed `vibe.exe` is copied (§9.2, §9.6). @status:spec/done",
-      "line": 507,
+      "line": 515,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SCALES-MULTI-GB"
     },
     {
@@ -64403,7 +64412,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The `vibeterm/` subtree (~220 MB, ~3-4 k files) participates in the same\n  diff-copy: small files hashed by the ≤16 MiB rule, the Electron binary by\n  `(size, mtime)`; an unchanged vibeterm is hardlinked file-by-file free, and a\n  rebuild that changed nothing dedup-skips the whole instance. @status:spec/done",
-      "line": 509,
+      "line": 517,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#VIBETERM-PARTICIPATES"
     },
     {
@@ -64412,7 +64421,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.16 Source provenance and linked sources",
-      "line": 515,
+      "line": 523,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#provenance",
       "kind": "req",
       "revision": 2
@@ -64423,7 +64432,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 516,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-provenance"
     },
     {
@@ -64432,7 +64441,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A developer checkout's caches are never copied. Source builds reference a\ncheckout; binary bundles carry a clean tracked snapshot. Each instance records\nits **origin**, source path, commit, and payload identity: @status:impl/done",
-      "line": 517,
+      "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PROVENANCE-LEAD"
     },
     {
@@ -64441,7 +64450,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`managed` — the VVM-owned clone at `src/.mirror` (VVM updates it via git\n  and may drop it on `remove`/`gc`). @status:impl/done",
-      "line": 521,
+      "line": 529,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PROV-MANAGED"
     },
     {
@@ -64450,7 +64459,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`external` — a committer's own checkout, identified by its **canonical\n  absolute path** (`source_path`); VVM never modifies or removes it, only\n  remembers where it is. @status:spec/done",
-      "line": 523,
+      "line": 531,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PROV-EXTERNAL"
     },
     {
@@ -64459,7 +64468,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`binary` — a prebuilt artifact. Two roads enter this origin: the legacy LOCAL\n  import (`self import`, shipped 2026-08-20) hashes the supplied file itself —\n  SHA-256 computed on this machine, stored as `payload_sha256`, driving\n  reuse/refusal. The fetched native release path is keyed by the publisher's bundle/component/source\n  digests and owns its extracted clean source under the immutable instance.\n  The two must not be conflated: local import verifies\n  nothing about authorship, only integrity-identity of the bytes it was\n  handed. @status:impl/done",
-      "line": 526,
+      "line": 534,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#PROV-BINARY"
     },
     {
@@ -64468,7 +64477,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The remembered `source_path` makes an external source a **linked source**:\n  `self install <id>` can rebuild from the recorded location from anywhere,\n  without being in the checkout and without copying it. @status:spec/done",
-      "line": 536,
+      "line": 544,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LINKED-SOURCE"
     },
     {
@@ -64477,7 +64486,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Every installed binary bundle is self-contained **with** its matching source\n  because packaged skills may need it. `self source` returns\n  `instance/source`; for source/worktree executions it returns the canonical\n  external/managed git root. A missing owned source is a diagnosed broken\n  bundle, not a cwd fallback. @status:impl/done",
-      "line": 539,
+      "line": 547,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#INSTANCE-SELF-CONTAINED"
     },
     {
@@ -64486,7 +64495,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.17 Relocate — repointing provenance after a checkout move",
-      "line": 546,
+      "line": 554,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#relocate",
       "kind": "req",
       "revision": 2
@@ -64497,7 +64506,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 547,
+      "line": 555,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-relocate"
     },
     {
@@ -64506,7 +64515,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A committer's checkout is not pinned in place: it is cloned, moved, renamed,\n  re-organised on disk. When it moves, every *external* instance's remembered\n  `source_path` (§2.16) goes stale — a later linked-source rebuild would miss —\n  and the pile of instances built from the abandoned tree clutters `self ls`. @status:spec/done",
-      "line": 549,
+      "line": 557,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#relocate-motivation"
     },
     {
@@ -64515,7 +64524,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self relocate <new-path>` is the maintenance verb for that move. @status:spec/done",
-      "line": 553,
+      "line": 561,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELOCATE-VERB"
     },
     {
@@ -64524,7 +64533,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Validate the new location.** `<new-path>` must resolve to a real vibevm\n  source tree (the `find_source_root` shape — workspace `Cargo.toml` +\n  `crates/vibe-cli`); a path that is not a checkout is refused before anything\n  mutates. The new path is canonicalised and `\\\\?\\`-stripped exactly as install\n  records it (§2.16), so the rewritten `source_path` matches the form every\n  other record carries. @status:spec/done",
-      "line": 556,
+      "line": 564,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REL-VALIDATE"
     },
     {
@@ -64533,7 +64542,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Infer the old location.** With no `--from`, the old path is the source\n  provenance already recorded on the installed external instances (the common\n  value when one checkout moved). `--from <old-path>` states it explicitly for\n  an ambiguous inventory. There is nothing to relocate when no external\n  instance records a source tree — the command says so and exits, never invents\n  a move. @status:spec/done",
-      "line": 562,
+      "line": 570,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REL-INFER-OLD"
     },
     {
@@ -64542,7 +64551,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Repoint, then prune.** Two effects, in one atomic `state.toml` rewrite:\n  *(a)* every external instance whose `source_path` is the old location is\n  **repointed** to the new one — so linked-source rebuilds (§2.16) resolve to\n  the live tree; *(b)* the **built instance directories** sourced from the old\n  tree are **removed** — they are provenance-stale artifacts of the abandoned\n  checkout, and their records are forgotten. @status:spec/done",
-      "line": 568,
+      "line": 576,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REL-REPOINT-PRUNE"
     },
     {
@@ -64551,7 +64560,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Active, actually running, and immediate rollback instances are never\n  deleted.** Their directories remain, their matching provenance is repointed,\n  and `current`/`previous` are repaired as one journaled transaction before\n  any stale instance removal. Removing a protected version is `self remove`'s\n  job (§2.9). @status:impl/done",
-      "line": 574,
+      "line": 582,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REL-ACTIVE-KEPT"
     },
     {
@@ -64560,7 +64569,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Consent and scriptability.** Removing instances is irreversible, so the\n  default is an **interactive warning** that lists what is repointed and what\n  is removed, behind a confirm. `-y`/`--yes` (or `--unattended`) skips it for\n  scripts and CI; a non-TTY run without `--yes` errors rather than silently\n  applying (the same contract as `self remove`/`gc`, §2.9, §2.10). `--dry-run`\n  prints the plan and changes nothing. `--json` emits the plan and the applied\n  result. A no-op (old already equals new) is reported, not an error. @status:spec/done",
-      "line": 579,
+      "line": 587,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#REL-CONSENT"
     },
     {
@@ -64569,7 +64578,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Relocate touches only `state.toml` and the install root's own `versions/`\ninstance dirs. It never touches a committer's source tree (external sources are\nheld by reference, §2.16), never the shared `build/` cache (that is `self gc`,\n§2.10), and never `~/.cargo`. @status:spec/done",
-      "line": 587,
+      "line": 595,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELOCATE-SCOPE"
     },
     {
@@ -64578,7 +64587,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "2.18 Native release production — four hosts, one verified release",
-      "line": 592,
+      "line": 600,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#release-production",
       "kind": "req",
       "revision": 1
@@ -64589,7 +64598,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 593,
+      "line": 601,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-release-production"
     },
     {
@@ -64598,7 +64607,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The closed native matrix is\n  `x86_64-pc-windows-msvc`, `x86_64-unknown-linux-musl`,\n  `x86_64-apple-darwin`, and `aarch64-apple-darwin`. Each host builds only its\n  own native target; no successful cross-compile is passed off as host proof. @status:impl/done",
-      "line": 595,
+      "line": 603,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-TARGETS"
     },
     {
@@ -64607,7 +64616,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Four dependency-light wrappers under `distribution/release/` drive\n  `cargo xtask dist build`. Construction runs without tests by default;\n  `--checks`, `--tests`, and `--self-check` are explicit opt-ins, and\n  `--upload` remains the manual build-plus-upload convenience. The Linux\n  wrapper installs the Rust musl target through rustup and fails early with an\n  actionable message when the required `musl-gcc` is absent; it never invokes\n  a package manager or sudo. @status:impl/done",
-      "line": 599,
+      "line": 607,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-HOST-SCRIPTS"
     },
     {
@@ -64616,7 +64625,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The producer resolves one immutable commit OID, reads every identity/file\n  from that OID, and materializes it offline from the local Git object store.\n  Raw `git archive` supplies committed bytes only; a deterministic ZIP encoder\n  normalizes ordering, timestamp and modes. The nested source ZIP uses STORED\n  entries so its bytes have no architecture-dependent compressor input; the\n  outer platform ZIP still applies DEFLATE for transport. A fail-closed\n  portability gate rejects tracked paths that cannot have one identity on all\n  four targets (including non-ASCII/case/reserved-name collisions), and the\n  same 200,000-file / 400,000-node / 256-component / 4096-byte path limits are\n  enforced before emission and extraction. Optional gates run\n  in a disposable source tree and separate Cargo target cache; release\n  compilation starts from a fresh expansion. The user's checkout, untracked\n  files, and caches are never cleaned, reset, or copied. @status:impl/done",
-      "line": 606,
+      "line": 614,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-CLEAN-SNAPSHOT"
     },
     {
@@ -64625,7 +64634,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Every platform ZIP embeds the same byte-identical\n  `vibevm-source.zip`, its source tree OID and SHA-256, plus `vibe`,\n  `vibe-index`, `DISTRIBUTION.json`, `LICENSE.md`, and `README.md`. The raw\n  bootstrap asset is byte-identical to the bundle's `vibe` component. @status:impl/done",
-      "line": 619,
+      "line": 627,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-SOURCE-ARCHIVE"
     },
     {
@@ -64634,7 +64643,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Every version label is mutable by default.** `dist prepare --version V`\n  deletes any existing draft or published release for `V`, moves or creates\n  `vV` at the exact source commit, and creates one fresh draft. Four hosts may\n  independently replace their ZIP/bootstrap/fragment triplets. The exact\n  direct `refs/tags/vV` → commit binding is verified after prepare and again\n  immediately before publication. `dist finalize`\n  requires and remotely verifies all twelve platform assets, publishes\n  `DISTRIBUTIONS.json` + both installers, then publishes with GitHub\n  `make_latest=legacy` so rebuilding an older SemVer cannot demote a newer one. @status:impl/done",
-      "line": 623,
+      "line": 631,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE"
     },
     {
@@ -64643,7 +64652,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Compilation, build scripts, tests, self-check, Git, and built-binary probes\n  receive no publish credential. Host wrappers disable command tracing before\n  retaining an upload credential. CI builds `xtask` without credentials and\n  runs that already-built trusted binary only in narrow prepare/upload/finalize\n  steps carrying `GITHUB_TOKEN`. @status:impl/done",
-      "line": 632,
+      "line": 640,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-SECRETS"
     },
     {
@@ -64652,7 +64661,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "3. Architecture — seams and cells",
-      "line": 640,
+      "line": 648,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#architecture",
       "kind": "req",
       "revision": 2
@@ -64663,7 +64672,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 641,
+      "line": 649,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-architecture"
     },
     {
@@ -64672,7 +64681,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "VVM is built from testable seams so the slow, machine-mutating parts are\nmockable and unit tests never clone, build, or edit the real environment: @status:spec/done",
-      "line": 642,
+      "line": 650,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAMS-LEAD"
     },
     {
@@ -64681,7 +64690,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`VersionStore` — the install-root layout (§2.4), instances, `current`,\n  `state.toml`, manifests. @status:spec/done",
-      "line": 645,
+      "line": 653,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-VERSION-STORE"
     },
     {
@@ -64690,7 +64699,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`SourceProvider` — git: resolve a selector to a commit; clone/update a\n  managed source; record external provenance. @status:spec/done",
-      "line": 647,
+      "line": 655,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-SOURCE-PROVIDER"
     },
     {
@@ -64699,7 +64708,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`Builder` — runs `cargo` for a profile/toolchain; mocked in tests. @status:spec/done",
-      "line": 649,
+      "line": 657,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUILDER"
     },
     {
@@ -64708,7 +64717,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`Placer` — the diff-copy of a distribution into a new instance (§2.15). @status:spec/done",
-      "line": 650,
+      "line": 658,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-PLACER"
     },
     {
@@ -64717,7 +64726,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`EnvPersister` — the durable `PATH`/env edits (§2.6), injectable. @status:spec/done",
-      "line": 651,
+      "line": 659,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-ENV-PERSISTER"
     },
     {
@@ -64726,7 +64735,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`release_manifest` + the VVM bundle reader — strict aggregate/fragment/bundle\n  wire contracts, bounded anonymous download, safe ZIP extraction, and\n  byte-level reusable-instance verification. @status:impl/done",
-      "line": 652,
+      "line": 660,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE"
     },
     {
@@ -64735,7 +64744,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`ToolDoctor` — the `REQUIRED_TOOLS` table and checks (§2.8). @status:spec/done",
-      "line": 655,
+      "line": 663,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-TOOL-DOCTOR"
     },
     {
@@ -64744,7 +64753,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vars` — the actual-vs-environment resolver (§2.14), `current_exe`-aware. @status:spec/done",
-      "line": 656,
+      "line": 664,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-VARS"
     },
     {
@@ -64753,7 +64762,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A managed `vibe` resolves its root/active from `current_exe` + the `current`\n  file; env is the fallback. @status:spec/done",
-      "line": 659,
+      "line": 667,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RESOLVE-ORDER"
     },
     {
@@ -64762,7 +64771,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The command lives as `cli/vvm.rs` + `cli` for\n  `vibe vars`, with logic under `commands/vvm/` (split across module-grain\n  files to hold the file-length budget). conform and specmap stay green. @status:spec/done",
-      "line": 661,
+      "line": 669,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MODULE-PLACEMENT"
     },
     {
@@ -64771,7 +64780,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "4. MVP scope",
-      "line": 666,
+      "line": 674,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#mvp"
     },
     {
@@ -64780,7 +64789,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The full verb set on all three platforms: `self install` (external in-place +\n  managed clone paths, debug + release, diff-copy into instances), `self use`\n  (live `current`, no reload), `self ls`/`current`/`which`, `self remove`\n  (safe + `--all`), `self gc` (build cache + prune), `self doctor` (+ `--fix`),\n  `self env`, `self relocate` (§2.17), `self import` (legacy local ready-built\n  payload), `self bootstrap` (native bundle), `self rollback`, `self source`,\n  component-aware `self which`, and `vibe vars`. @status:impl/done",
-      "line": 668,
+      "line": 676,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MVP-VERBS"
     },
     {
@@ -64789,7 +64798,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Selector resolution per §2.3; durable\n  PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS\n  (zsh/bash), Linux (bash/zsh/fish). @status:spec/done",
-      "line": 675,
+      "line": 683,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MVP-RESOLUTION-ENV"
     },
     {
@@ -64798,7 +64807,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "diff-copy with hardlink sharing is in scope (§2.15). @status:spec/done",
-      "line": 678,
+      "line": 686,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MVP-DIFF-COPY"
     },
     {
@@ -64807,7 +64816,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Linked sources (§2.16) are in scope (the `source_path`\n  record + rebuild-from-remembered). @status:spec/done",
-      "line": 679,
+      "line": 687,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MVP-LINKED-SOURCES"
     },
     {
@@ -64816,7 +64825,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "5. Out of scope (now)",
-      "line": 683,
+      "line": 691,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#out-of-scope"
     },
     {
@@ -64825,7 +64834,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Retired from out-of-scope:** fetched, publisher-digest-bound native bundles\n  ship through `self bootstrap`, binary `self update`, and explicit SemVer\n  `self install` (§2.7, §2.12). @status:impl/done",
-      "line": 685,
+      "line": 693,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#OOS-BINARY"
     },
     {
@@ -64834,7 +64843,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "offline / vendored builds; @status:spec/done",
-      "line": 688,
+      "line": 696,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#OOS-OFFLINE"
     },
     {
@@ -64843,7 +64852,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "cryptographic signature verification; @status:spec/done",
-      "line": 689,
+      "line": 697,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#OOS-SIGNATURES"
     },
     {
@@ -64852,7 +64861,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "reflink/CoW placement (hardlink is the portable choice). @status:spec/done",
-      "line": 690,
+      "line": 698,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#OOS-REFLINK"
     },
     {
@@ -64861,7 +64870,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "These are §6. @status:spec/done",
-      "line": 691,
+      "line": 699,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#oos-pointer"
     },
     {
@@ -64870,7 +64879,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "6. Far backlog",
-      "line": 694,
+      "line": 702,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#far-backlog"
     },
     {
@@ -64879,7 +64888,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Shipped, no longer backlog:** binary refresh/install is origin-directed\n  rather than a separate `--binary` switch; remote labels stay mutable and\n  local counter instances immutable. @status:impl/done",
-      "line": 696,
+      "line": 704,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FB-BINARY-INSTALL"
     },
     {
@@ -64888,7 +64897,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "**Shipped, no longer backlog:** bounded Bash and PowerShell one-line\n  bootstrap assets (§2.12). @status:impl/done",
-      "line": 699,
+      "line": 707,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FB-BOOTSTRAP-SCRIPT"
     },
     {
@@ -64897,7 +64906,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Offline builds via vendoring or a registry mirror. @status:spec/done",
-      "line": 701,
+      "line": 709,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FB-OFFLINE"
     },
     {
@@ -64906,7 +64915,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Reflink/CoW placement where the filesystem supports it (§2.15). @status:spec/done",
-      "line": 702,
+      "line": 710,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FB-REFLINK"
     },
     {
@@ -64915,7 +64924,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Signature/provenance verification of the resolved ref. @status:spec/done",
-      "line": 703,
+      "line": 711,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FB-SIGNATURES"
     },
     {
@@ -64924,7 +64933,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "7. Maintenance & evolution — updating the stack",
-      "line": 706,
+      "line": 714,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#maintenance",
       "kind": "req",
       "revision": 1
@@ -64935,7 +64944,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 707,
+      "line": 715,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-maintenance"
     },
     {
@@ -64944,7 +64953,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Knowledge is runnable, so updates are mechanical: @status:spec/done",
-      "line": 708,
+      "line": 716,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#runnable-lead"
     },
     {
@@ -64953,7 +64962,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the **required tools** are the `REQUIRED_TOOLS` table (§2.8, asserted by a\n  test); @status:spec/done",
-      "line": 710,
+      "line": 718,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MAINT-TOOLS-TABLE"
     },
     {
@@ -64962,7 +64971,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the **default profile** is one constant (§2.2); @status:spec/done",
-      "line": 712,
+      "line": 720,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MAINT-PROFILE-CONST"
     },
     {
@@ -64971,7 +64980,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the **Rust pin** is `rust-toolchain.toml` (read, not hard-coded); @status:spec/done",
-      "line": 713,
+      "line": 721,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MAINT-RUST-PIN"
     },
     {
@@ -64980,7 +64989,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "the **clone mirrors** are PROP-016's `mirrors.toml`. @status:spec/done",
-      "line": 714,
+      "line": 722,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MAINT-MIRRORS"
     },
     {
@@ -64989,7 +64998,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "8. Acceptance",
-      "line": 717,
+      "line": 725,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#acceptance",
       "kind": "req",
       "revision": 2
@@ -65000,7 +65009,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`req r2` @status:spec/done",
-      "line": 718,
+      "line": 726,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#req-acceptance"
     },
     {
@@ -65009,7 +65018,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "From a fresh clone, the source lane builds both essential binaries. From a\n  clean machine, the Bash/PowerShell bootstrap installs the verified native\n  pair plus source and durably exposes stable shims; output states whether the\n  current shell already sees PATH. @status:impl/done",
-      "line": 720,
+      "line": 728,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-FRESH-CLONE"
     },
     {
@@ -65018,7 +65027,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self use` switches the active version and the **next** `vibe` in the\n  **same shell** is the new one — no reload (`current` file). @status:spec/done",
-      "line": 724,
+      "line": 732,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-USE-NO-RELOAD"
     },
     {
@@ -65027,7 +65036,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Reinstalling the running version replaces no in-use file (new instance +\n  pointer flip); the running process is unharmed. @status:spec/done",
-      "line": 726,
+      "line": 734,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-NO-INUSE-REPLACE"
     },
     {
@@ -65036,7 +65045,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A source-built distribution where only one essential binary changed copies\n  that file; unchanged source-build members may be hardlinked. The binary\n  lane instead verifies every bounded payload member and source before reuse. @status:impl/done",
-      "line": 728,
+      "line": 736,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-DIFF-COPY"
     },
     {
@@ -65045,7 +65054,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`vibe vars` reports actual vs environment; `vibe vars diff`/`full`/`full\n  diff` per §2.14; the publish token never appears. @status:spec/done",
-      "line": 731,
+      "line": 739,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-VARS"
     },
     {
@@ -65054,7 +65063,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self remove` never wipes without `--all` + reconfirm; `self gc` never\n  touches `~/.cargo`; external sources are never modified or removed. @status:spec/done",
-      "line": 733,
+      "line": 741,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-REMOVE-GC-SAFE"
     },
     {
@@ -65063,7 +65072,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self relocate <new>` repoints external `source_path` records and removes the\n  stale instance dirs built from the old tree, keeping the active instance; the\n  active's source is repointed, not deleted. `--dry-run` changes nothing; a\n  non-TTY run without `--yes` errors. @status:spec/done",
-      "line": 735,
+      "line": 743,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-RELOCATE"
     },
     {
@@ -65072,7 +65081,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`self import` is inactive by default (`--use` alone activates);\n  importing the same tag with the same payload SHA-256 reuses the instance and\n  allocates nothing; a different payload under the same mutable tag creates a\n  new `#N` and preserves the previous instance; `--replace-candidate` remains\n  compatibility spelling. @status:impl/done",
-      "line": 739,
+      "line": 747,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-IMPORT"
     },
     {
@@ -65081,7 +65090,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A native bootstrap installs both essential binaries and the matching exact\n  source tree under one immutable instance; `self source` returns its absolute\n  path, normal same-digest refresh is a verified no-op, `--force` allocates the\n  next `#N`, and rollback restores the previous generation. @status:impl/done",
-      "line": 744,
+      "line": 752,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-BINARY-BUNDLE"
     },
     {
@@ -65090,7 +65099,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "With two source worktrees and one binary install, `self ls/current/which`\n  distinguish active `*` from running `>`; a directly executed worktree\n  reports its own executable/root/commit and never borrows cwd or active\n  binary provenance. @status:impl/done",
-      "line": 748,
+      "line": 756,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-RUNNING-PROVENANCE"
     },
     {
@@ -65099,7 +65108,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Each fixed host wrapper defaults to build-only/no tests; explicit gates are\n  opt-in. All four fragments must bind the same commit/tree/source archive\n  before mutable release finalization; build subprocesses receive no publish\n  credentials. @status:impl/done",
-      "line": 752,
+      "line": 760,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-RELEASE-CONTOUR"
     },
     {
@@ -65108,7 +65117,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:spec/done",
-      "line": 756,
+      "line": 764,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ACC-FLOOR-GREEN"
     },
     {
@@ -65117,7 +65126,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9. Design rationale & questions explored",
-      "line": 759,
+      "line": 767,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale"
     },
     {
@@ -65126,7 +65135,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The decisions above were reached by working through several sharp questions;\nrecording them so a cold reader sees *why*, not just *what*. @status:spec/done",
-      "line": 760,
+      "line": 768,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-lead"
     },
     {
@@ -65135,7 +65144,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.1 Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1)",
-      "line": 762,
+      "line": 770,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-truth"
     },
     {
@@ -65144,7 +65153,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "v1 made `$VIBEVM_HOME` the single source of truth for the active version.\n  Environment variables are inherited at process start, so a shell's\n  `$VIBEVM_HOME` is frozen until the shell is reloaded — every `self use`/\n  reinstall forced \"open a new terminal\". @status:spec/done",
-      "line": 764,
+      "line": 772,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#V1-ENV-TRUTH"
     },
     {
@@ -65153,7 +65162,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The fix: the **shim reads a live `current` file** each launch (filesystem\n  is live → instant switch in the same shell). @status:spec/done",
-      "line": 768,
+      "line": 776,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FIX-LIVE-FILE"
     },
     {
@@ -65162,7 +65171,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A running `vibe` derives its own identity from **`current_exe()`** (it *is*\n  the binary, so it knows its path). @status:spec/done",
-      "line": 770,
+      "line": 778,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#FIX-CURRENT-EXE"
     },
     {
@@ -65171,7 +65180,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "`$VIBEVM_HOME` stays only as an advisory/compat env for external tools,\n  reconciled by `vibe vars` (§2.14) and a startup divergence warning. @status:spec/done",
-      "line": 772,
+      "line": 780,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ENV-DEMOTED"
     },
     {
@@ -65180,7 +65189,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "This reverses v1's decision deliberately; env-as-truth was the cause of the\n  reload friction. @status:spec/done",
-      "line": 774,
+      "line": 782,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#V1-REVERSED"
     },
     {
@@ -65189,7 +65198,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.2 Why not content-hash the distribution",
-      "line": 778,
+      "line": 786,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-no-hash"
     },
     {
@@ -65198,7 +65207,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A natural instance key is a content hash of the built distribution\n  (dedup + self-describing). @status:spec/done",
-      "line": 780,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#HASH-NATURAL"
     },
     {
@@ -65207,7 +65216,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "It does not scale: a distribution may grow to gigabytes and ship as\n  binaries (merged projects), and hashing 2 GB+ on every install would be\n  prohibitive. @status:spec/done",
-      "line": 782,
+      "line": 790,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#HASH-DOESNT-SCALE"
     },
     {
@@ -65216,7 +65225,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "So the instance key never reads the payload (§9.4), and change detection\n  for diff-copy hashes only **small** files, trusting `(size, mtime)` for\n  large ones (§2.15). @status:spec/done",
-      "line": 785,
+      "line": 793,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#KEY-NEVER-READS"
     },
     {
@@ -65225,7 +65234,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Fetched binary artifacts are keyed by the **publisher's** digest\n  (computed once at publish), verified during download/extraction, and their\n  installed manifest, binaries, retained source ZIP and extracted source are\n  rechecked before reuse. The local `self\n  import` path is deliberately outside this rule: it has no publisher, so it\n  hashes the handed file once on entry — that digest is its identity, not a\n  verification of anyone's claim. @status:impl/done",
-      "line": 788,
+      "line": 796,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#BINARY-PUBLISHER-DIGEST"
     },
     {
@@ -65234,7 +65243,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.3 Why whole-directory instances, not in-place file replace",
-      "line": 797,
+      "line": 805,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-instances"
     },
     {
@@ -65243,7 +65252,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The first idea for \"reinstall over the running binary\" was the Windows\n  *rename-aside* trick (rename the running `.exe`, write the new one;\n  empirically verified to work). @status:spec/done",
-      "line": 799,
+      "line": 807,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RENAME-ASIDE-IDEA"
     },
     {
@@ -65252,7 +65261,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "It handles one file; a distribution is many (exe + DLLs + assets), all\n  locked while running. @status:spec/done",
-      "line": 802,
+      "line": 810,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#ONE-FILE-LIMIT"
     },
     {
@@ -65261,7 +65270,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "So the unit of install and switch became the **whole immutable instance\n  directory**: each install writes a *new* dir and switching is a pointer\n  flip, so **nothing in use is ever overwritten** — no lock for any file on\n  any OS, and no reload. @status:spec/done",
-      "line": 804,
+      "line": 812,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#WHOLE-DIR-UNIT"
     },
     {
@@ -65270,7 +65279,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "rename-aside was dropped as unnecessary. @status:spec/done",
-      "line": 808,
+      "line": 816,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RENAME-ASIDE-DROPPED"
     },
     {
@@ -65279,7 +65288,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.4 Why a monotonic counter for the instance key",
-      "line": 811,
+      "line": 819,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-counter"
     },
     {
@@ -65288,7 +65297,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "With content-hash rejected (§9.2), the instance key is a monotonic counter:\n  always unique, O(1), independent of distribution size. @status:spec/done",
-      "line": 813,
+      "line": 821,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#COUNTER-KEY"
     },
     {
@@ -65297,7 +65306,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "\"Did anything change\" is answered cheaply by the diff-copy manifest\n  (§2.15), which also yields the *dedup-skip* (no new instance when every\n  file is unchanged) without hashing the payload. `--force` bypasses the\n  skip. @status:spec/done",
-      "line": 815,
+      "line": 823,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#CHANGE-VIA-MANIFEST"
     },
     {
@@ -65306,7 +65315,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.5 Why explicit prune preserves rollback",
-      "line": 821,
+      "line": 829,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-prune"
     },
     {
@@ -65315,7 +65324,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Install never silently prunes either origin: a same-label previous payload\n  is the rollback evidence for mutable releases. Disk reclamation is an\n  explicit `remove` / `gc --prune-others` decision. @status:impl/done",
-      "line": 823,
+      "line": 831,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#AUTO-PRUNE-BINARY-ONLY"
     },
     {
@@ -65324,7 +65333,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Pruning preserves the active and immediate previous instances. Source builds\n  retain referenced checkout context; binary instances retain their exact\n  source snapshot until explicitly pruned. @status:impl/done",
-      "line": 826,
+      "line": 834,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#SOURCE-KEEPS"
     },
     {
@@ -65333,7 +65342,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.6 Why developer sources are referenced but release source is copied",
-      "line": 831,
+      "line": 839,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-sources"
     },
     {
@@ -65342,7 +65351,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "Copying a checkout into the install root is untenable — a working tree's\n  cargo `target/` is already tens of GB. @status:spec/done",
-      "line": 833,
+      "line": 841,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#COPY-UNTENABLE"
     },
     {
@@ -65351,7 +65360,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "So managed sources are git clones VVM updates incrementally, and external\n  (committer) sources are referenced by their absolute path and built **in\n  place**, never touched. @status:spec/done",
-      "line": 835,
+      "line": 843,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#MANAGED-INCREMENTAL"
     },
     {
@@ -65360,7 +65369,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "This also gives *linked sources* (§2.16): rebuild from a remembered\n  location without being in it. @status:spec/done",
-      "line": 838,
+      "line": 846,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#LINKED-BONUS"
     },
     {
@@ -65369,7 +65378,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "A developer working tree is never copied because its ignored build/cache\n  surface may be enormous. A binary release deliberately embeds only the\n  committed clean tree—normalized offline from one Git OID—because skills may\n  need source and no external checkout exists. Its installed `source/` is part\n  of the immutable distribution, not a development clone. @status:impl/done",
-      "line": 840,
+      "line": 848,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#DIST-COPIED-NOT-SOURCE"
     },
     {
@@ -65378,7 +65387,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "9.7 Why the binary, not the shim, emits the divergence warning",
-      "line": 847,
+      "line": 855,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#rationale-warning"
     },
     {
@@ -65387,7 +65396,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "When `current` and `$VIBEVM_HOME` disagree, the warning is emitted by the\n  `vibe` **binary** at startup, not by the sh/cmd shim: the binary has\n  `current_exe` ground truth and the `vibe vars` formatter, and keeps the\n  shims trivial. @status:spec/done",
-      "line": 849,
+      "line": 857,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#BINARY-EMITS-WARNING"
     },
     {
@@ -65396,7 +65405,7 @@
       "doc_path": "common/PROP-019",
       "file": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "heading": "The warning is suppressed outside a managed run (a dev `cargo run` has no\n  managed location and should not be nagged). @status:spec/done",
-      "line": 853,
+      "line": 861,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#WARNING-SUPPRESSED"
     },
     {
