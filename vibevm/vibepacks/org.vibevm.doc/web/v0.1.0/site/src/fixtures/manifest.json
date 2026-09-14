@@ -34,6 +34,17 @@
     "published_at": "2026-09-01T12:00:00Z",
     "rendered_at": "2026-09-12T09:00:00Z"
   },
+  "navigation": {
+    "pinned": [
+      "guide/every-block"
+    ],
+    "sections": [
+      {
+        "id": "reference",
+        "title": "Reference pages"
+      }
+    ]
+  },
   "pages": [
     {
       "path": "reference/addresses.xml",

@@ -187,6 +187,49 @@ describe("the manual's pages as the column lists them", () => {
     assert.equal(titleAt("ru"), "С чего начать");
   });
 
+  /**
+   * The middle rung of the same ladder. An adaptation that has not named
+   * a folder yet shows the SOURCE's words for it, not the directory's:
+   * the source said something true about that group, and falling all the
+   * way to the folder name would throw it away to show a bare word.
+   */
+  it("falls to the source's words before it falls to the folder's name", () => {
+    const source = manifest(
+      {
+        navigation: {
+          pinned: [],
+          sections: [
+            { id: "start", title: "Getting started" },
+            { id: "model", title: "The model" },
+          ],
+        },
+      },
+      ...PAGES,
+    );
+    const adapted = manifest(
+      {
+        name: "manual-ru",
+        lang: "ru",
+        translates: "com.example.docs/manual",
+        navigation: {
+          pinned: [],
+          sections: [{ id: "start", title: "С чего начать" }],
+        },
+      },
+      ...PAGES,
+    );
+    const sections = contentsOf(libraryOf(source, adapted), "ru", null);
+
+    assert.deepEqual(
+      sections.sections.map((section) => [section.id, section.title]),
+      [
+        ["start", "С чего начать"],
+        ["model", "The model"],
+        ["", ""],
+      ],
+    );
+  });
+
   it("marks the page the reader is on, and only that one", () => {
     const contents = contentsOf(
       libraryOf(manifest({}, ...PAGES)),
