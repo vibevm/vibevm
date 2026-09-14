@@ -237,3 +237,40 @@ test("an adaptation serves the page it has in its own language", async ({
   );
   await expect(page.locator("[data-island]")).toBeVisible();
 });
+
+/**
+ * The version is on every page of the manual and beside the language,
+ * which is the pair the owner's review asked to see together: which text
+ * am I reading, and which publication of it.
+ *
+ * `latest` stands first because it is the address to keep — a number
+ * shows whatever that number currently holds and is a permanent link to
+ * nothing — and choosing it lands on the SAME document rather than at
+ * the top of the manual.
+ */
+test("a page offers the version it is read at, latest first", async ({
+  page,
+}) => {
+  await page.goto(PAGE);
+  const entries = page.locator(".version-switch a");
+  await expect(entries).toHaveText(["latest", "0.1.0"]);
+  await expect(entries.nth(1)).toHaveAttribute("aria-current", "true");
+
+  await entries.nth(0).click();
+  await expect(page).toHaveURL(new RegExp("/latest/guide/every-block/$"));
+  await expect(page.locator("[data-island] h1")).toHaveText("Every block once");
+  await expect(page.locator(".version-switch a").nth(0)).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
+});
+
+test("a documentation's own page offers it as well", async ({ page }) => {
+  await page.goto("/doc/com.example.docs/fixture-manual/0.1.0/");
+  const entries = page.locator(".version-switch a");
+  await expect(entries).toHaveText(["latest", "0.1.0"]);
+  await entries.nth(0).click();
+  await expect(page).toHaveURL(
+    new RegExp("/doc/com\\.example\\.docs/fixture-manual/latest/$"),
+  );
+});

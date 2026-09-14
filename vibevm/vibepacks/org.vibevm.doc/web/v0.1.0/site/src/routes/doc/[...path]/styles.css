@@ -1,7 +1,8 @@
-/* The documentation address's own layout: the strip of switches above a
-   page, and the small things a package page needs that no component
-   owns. Everything with a colour in it reads a token; the audit gates
-   the tokens, not this file. */
+/* The documentation address's own layout, and the small things a package
+   page needs that no component owns. The strip of controls above a page
+   is the site's `doc-bar`, which the catalogue and the local reader
+   wear too. Everything with a colour in it reads a token; the audit
+   gates the tokens, not this file. */
 
 .doc-view {
   display: block;
@@ -35,15 +36,6 @@
   padding-left: 0;
   padding-right: 0;
   margin: 0;
-}
-
-.doc-view__switches {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  margin: 0 0 1rem;
 }
 
 .doc-view__unaddressed {

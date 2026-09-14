@@ -135,21 +135,20 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
             dismissLabel="ok"
           />
         ) : null}
-        {/* The documentation's own controls: which language of this
-            page to read, and — from the commit that follows — which
-            version. The language of the SITE is the switch in the
-            corner of the header above, and the two are never the same
-            question. */}
+        {/* The documentation's own two controls, side by side: which
+            language of this page to read, and which version of it. The
+            language of the SITE is the switch in the corner of the
+            header above, and the three are never the same question.
+            The platform below is not one of them — it hides blocks of
+            THIS text and belongs with the text. */}
         <DocBar>
           <LanguageSelector
             label="Documentation language"
             items={[...view.languages]}
           />
-        </DocBar>
-        <div class="doc-view__switches">
           <VersionSwitch label="Version" items={view.versions} />
-          <TabPills label="Platform" items={PLATFORMS} />
-        </div>
+        </DocBar>
+        <TabPills label="Platform" items={PLATFORMS} />
         <PageMeta
           publisher={view.publisher}
           version={view.version}
@@ -231,6 +230,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
             label="Documentation language"
             items={[...view.languages]}
           />
+          <VersionSwitch label="Version" items={[...view.versions]} />
         </DocBar>
         <Shelf
           title="Documentation"

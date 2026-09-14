@@ -158,35 +158,82 @@ function reviewedAt(one: Edition, document: string): string | undefined {
   return page?.reviewed_at;
 }
 
+/** The address that always names the newest publication (D-06). */
+const LATEST = "latest";
+
 /**
- * The version switch for one address.
+ * Every spelling of the version, for whatever address the caller is on.
  *
- * Two entries and not a list of releases: the build carries the versions
- * it was given, and this one was given one. The number and the word
- * `latest` are two ADDRESSES of the same content, which is exactly what
- * the norm says they are — an address with a number shows the current
- * content of that number — so the switch offers both and says what each
- * of them means.
+ * `latest` stands first because it is the one to keep: an address with a
+ * number shows whatever that number currently holds, so it is not a
+ * permanent link to anything, and `##SITE-CANONICAL-LATEST` makes the
+ * word the address every numbered page points its `rel=canonical` at,
+ * the sitemap lists and a citation without a version resolves to. The
+ * numbers follow, newest first, and each says what choosing it means.
+ *
+ * The numbers are the versions this BUILD carries, which today is one
+ * per documentation: a deployment renders a package at a version and the
+ * site is given that tree. One version is therefore one numbered entry
+ * and the switch is shown all the same — a control that vanished when
+ * there was a single answer would leave a reader unable to see which
+ * version they are reading, which is the question it exists to answer.
+ *
+ * The destination is composed by the caller, because the same two
+ * spellings name a page and a package's own front page, and those are
+ * two shapes of address rather than two switches.
+ */
+function versionsOf(
+  library: Library,
+  lang: string | null,
+  at: string,
+  address: (version: string) => string,
+): VersionChoice[] {
+  const newest = coordinate(library, lang).version;
+  return [
+    {
+      label: LATEST,
+      href: address(LATEST),
+      current: at === LATEST,
+      note: "whichever version is newest when the page is read",
+    },
+    {
+      label: newest,
+      href: address(newest),
+      current: at === newest,
+      note: "this exact version; an address with a number always shows that version's current content",
+    },
+  ];
+}
+
+/**
+ * The version switch on one page of a documentation.
+ *
+ * Every entry is the SAME document at another spelling of the version,
+ * which is possible without a lookup because every version of a
+ * documentation materialises every page of its source — the address map
+ * is the coordinate with one segment changed, exactly as it is for
+ * language. A page that a version did not carry would have to land on
+ * that version's first page and say so; no build carries two numbered
+ * versions of one documentation yet, so that case has no data to be
+ * written against and would be a branch nothing could ever take.
  */
 export function versionChoices(
   library: Library,
   address: DocAddress,
 ): VersionChoice[] {
-  const newest = coordinate(library, address.lang).version;
-  return [
-    {
-      label: newest,
-      href: docHref({ ...address, version: newest }),
-      current: address.version === newest,
-      note: "this exact version; an address with a number always shows that version's current content",
-    },
-    {
-      label: "latest",
-      href: docHref({ ...address, version: "latest" }),
-      current: address.version === "latest",
-      note: "whichever version is newest when the page is read",
-    },
-  ];
+  return versionsOf(library, address.lang, address.version, (version) =>
+    docHref({ ...address, version }),
+  );
+}
+
+/** The same switch on a documentation's own front page. */
+export function packageVersionChoices(
+  library: Library,
+  address: PackageAddress,
+): VersionChoice[] {
+  return versionsOf(library, address.lang, address.version, (version) =>
+    packageHref({ ...address, version }),
+  );
 }
 
 /**
@@ -317,6 +364,13 @@ export type PackageView = {
    * addresses, because every edition is already on the shelves below.
    */
   readonly languages: readonly LanguageChoice[];
+  /**
+   * The version this front page is at, and the other spelling of it.
+   * A documentation's own page carries the switch for the same reason
+   * every page of it does: a reader must be able to see which version
+   * they are being shown without reading the address bar.
+   */
+  readonly versions: readonly VersionChoice[];
   readonly nav: readonly DocsNavItem[];
   /** The same pages as `nav`, with what each one is about on it. */
   readonly pages: readonly PageCard[];
@@ -411,6 +465,7 @@ function packageView(
       })),
       everyLanguage(address.lang === null),
     ],
+    versions: packageVersionChoices(library, address),
     nav: navItems(library, address.lang, null),
     pages: pageCards(library, address.lang),
     llms: llmsHref(address),

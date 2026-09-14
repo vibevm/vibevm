@@ -34,6 +34,7 @@ import {
   readServedPage,
   type ServedPage,
 } from "../../reader/served.ts";
+import { DocBar } from "../doc-bar/index.tsx";
 import { Island } from "../island/index.tsx";
 
 /**
@@ -173,6 +174,9 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
               llms.txt
             </a>
           </PackageHeader>
+          <DocBar>
+            <VersionSwitch label="Version" items={[...view.versions]} />
+          </DocBar>
           <Shelf
             title="Pages"
             caption="In the order the layer law gives them: text that stands still before text that moves with the product."
@@ -200,10 +204,13 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
     }
     return (
       <>
-        <div class="doc-view__switches">
+        {/* The version, where every page of the manual carries it — the
+            language selector is absent beside it for the reason given
+            above: a reader is pointed at one package, in one language. */}
+        <DocBar>
           <VersionSwitch label="Version" items={[...view.versions]} />
-          <TabPills label="Platform" items={PLATFORMS} />
-        </div>
+        </DocBar>
+        <TabPills label="Platform" items={PLATFORMS} />
         <PageMeta
           publisher={view.publisher}
           version={view.version}
