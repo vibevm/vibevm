@@ -31,6 +31,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES");
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::NamingConvention;
@@ -198,6 +199,11 @@ pub struct Site {
     /// Scheme and host, no trailing slash.
     pub origin: String,
     pub default_theme: Theme,
+    /// The documentations the front of the site shows first, as
+    /// `<group>/<name>` coordinates, in the order the configuration
+    /// wrote them. Empty means «feature nothing», which is what a
+    /// deployment that has made no editorial choice wants.
+    pub featured: Vec<String>,
     pub analytics: Analytics,
 }
 
@@ -289,6 +295,7 @@ impl Site {
                 analytics: None,
                 base_path: None,
                 default_theme: None,
+                featured: Vec::new(),
                 origin: None,
             });
         let base = mount(table.base_path.as_deref());
@@ -338,6 +345,17 @@ impl Site {
                 .unwrap_or_else(|| origin.clone()),
         };
 
+        // The coordinates are kept in the order they were written — a
+        // featured list is an editorial ranking and not a set — and a
+        // blank entry is dropped rather than carried into a comparison
+        // nothing can ever match.
+        let featured: Vec<String> = table
+            .featured
+            .iter()
+            .map(|coordinate| coordinate.trim().to_string())
+            .filter(|coordinate| !coordinate.is_empty())
+            .collect();
+
         Ok(Site {
             path: path.to_path_buf(),
             registries,
@@ -345,8 +363,24 @@ impl Site {
             base,
             origin,
             default_theme,
+            featured,
             analytics,
         })
+    }
+
+    /// The featured coordinates no source publishes.
+    ///
+    /// A warning and never a refusal: this file is authored beside a
+    /// deploy and the registry moves without it, so a package that was
+    /// renamed yesterday must not stop today's render. Saying it out
+    /// loud in the run is what keeps the list from quietly featuring
+    /// nothing.
+    pub fn featured_absent<'a>(&'a self, published: &BTreeSet<String>) -> Vec<&'a str> {
+        self.featured
+            .iter()
+            .filter(|coordinate| !published.contains(*coordinate))
+            .map(String::as_str)
+            .collect()
     }
 
     /// The configuration as an operator reads it back — every value,
@@ -388,6 +422,14 @@ impl Site {
             self.base,
             self.origin,
             self.default_theme.as_str()
+        ));
+        out.push_str(&format!(
+            "  featured {}\n",
+            if self.featured.is_empty() {
+                "none".to_string()
+            } else {
+                self.featured.join(", ")
+            }
         ));
         out.push_str(&format!(
             "  analytics {}\n",

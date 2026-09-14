@@ -44,7 +44,7 @@ const DIST: &str = "site/dist";
 
 /// The environment names the site package reads. They are its contract
 /// and not this module's invention — `site/src/config.ts` and
-/// `tools/doc-surfaces.mjs` name the same five.
+/// `tools/doc-surfaces.mjs` name the same ones.
 ///
 /// Every value of `[site]` that the shell can act on travels this way,
 /// and all of them travel together: a configuration where one key
@@ -55,6 +55,14 @@ pub(super) const ORIGIN: &str = "VITE_SITE_ORIGIN";
 pub(super) const WEBSITE_ID: &str = "VITE_UMAMI_WEBSITE_ID";
 pub(super) const HOST_URL: &str = "VITE_UMAMI_HOST_URL";
 pub(super) const DEFAULT_THEME: &str = "VITE_SITE_DEFAULT_THEME";
+pub(super) const FEATURED: &str = "VITE_SITE_FEATURED";
+
+/// How the featured coordinates travel: one variable, comma-separated,
+/// no spaces. An environment carries strings and not lists, and a
+/// separator that never appears inside a coordinate is what lets the
+/// shell split the value without parsing anything
+/// (`##PIPE-SHELL-PARSES-NOTHING`).
+const FEATURED_SEPARATOR: &str = ",";
 
 /// Run the static build over `trees` and move its output into `out`.
 pub(crate) fn build(web: &Path, trees: &[PathBuf], site: &Site, out: &Path) -> Result<String> {
@@ -78,6 +86,7 @@ pub(crate) fn build(web: &Path, trees: &[PathBuf], site: &Site, out: &Path) -> R
         .env(WEBSITE_ID, &site.analytics.website_id)
         .env(HOST_URL, &site.analytics.host_url)
         .env(DEFAULT_THEME, site.default_theme.as_str())
+        .env(FEATURED, site.featured.join(FEATURED_SEPARATOR))
         .output()
         .map_err(|e| {
             anyhow::anyhow!(
