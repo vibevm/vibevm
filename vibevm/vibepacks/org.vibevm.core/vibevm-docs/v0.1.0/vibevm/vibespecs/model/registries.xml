@@ -93,5 +93,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
+    <p>On GitHub and GitVerse a single file is read over HTTPS before git is asked, and a read the host refuses for the moment, with a rate limit or a server error, is retried a few times with a short pause before the reader falls back to git; a plain «not found» is never retried.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-BACKOFF"/>
   </edge-cases>
 </spec>
