@@ -1850,3 +1850,13 @@ structure, and it goes when the file does.
 | @fact:B163-SEVERITY **severity** | P3 — сверить с кодом публикатора и оставить одну формулировку на обеих страницах и в адаптации |
 | @fact:B163-DISPOSITION **disposition** | `open` |
 | @fact:B163-FILED **filed by** | кампания docs-2026-09, волна C, зеркалирование таблицы ошибок (2026-09-14) |
+
+## B-164 — web: лендинг держится на условии в корневом layout вместо route groups
+
+| поле | значение |
+|---|---|
+| @fact:B164-WHAT **what** | `routes/layout.tsx` рендерит шапку и подвал документации только когда `docSegments(pathname) !== null`, потому что `layout-landing!.tsx` («top» layout, deprecated) в закреплённой бете Qwik не останавливает цепочку layout'ов; форма, на которую указывает предупреждение сборки, — route groups |
+| @fact:B164-EFFECT **effect** | условие держится, но каждая сборка печатает deprecated-предупреждение десятками строк в логе рендера, а следующий маршрут вне `/doc/**` повторит ту же ловушку двух шапок |
+| @fact:B164-SEVERITY **severity** | P3 — перестроить дерево маршрутов вокруг route groups вместе с пересмотром пина Qwik (X-020, X-034, B-159) и снять условие |
+| @fact:B164-DISPOSITION **disposition** | `open` |
+| @fact:B164-FILED **filed by** | кампания docs-2026-09, ревью W1-O1 (2026-09-14) |
