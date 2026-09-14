@@ -34,6 +34,13 @@ export type CardProps = {
   readonly glyph: string;
   /** What the abstract's disclosure is called. */
   readonly abstractLabel: string;
+  /**
+   * The BCP-47 tag of the edition this card names, for the shelf's
+   * language filter to act on. Absent on a card that is not an edition
+   * of anything — a page of the one documentation already being read —
+   * which is the same as saying the filter has no business hiding it.
+   */
+  readonly editionLang?: string;
 };
 
 /**
@@ -60,7 +67,12 @@ export type CardProps = {
 export const Card = component$<CardProps>((props) => {
   useStyles$(styles);
   return (
-    <article class="card">
+    <article
+      class="card"
+      {...(props.editionLang === undefined
+        ? {}
+        : { "data-edition-lang": props.editionLang })}
+    >
       <div class="card__row">
         {props.icon === undefined ? (
           <span class="card__placeholder" aria-hidden="true">

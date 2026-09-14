@@ -159,3 +159,75 @@ test("each language has a catalogue of its own", async ({ page }) => {
     "ru",
   );
 });
+
+/**
+ * The two languages a documentation page has, which used to be one
+ * control.
+ *
+ * The one measured here is the SITE's: the words on the furniture. What
+ * has to stay true while it changes is everything about the DOCUMENT —
+ * the language on `<html>`, which is what a crawler and a screen reader
+ * read the page as, and the text of the island itself, which belongs to
+ * the package and not to whoever is looking at it.
+ */
+test("the site's language changes the furniture and not the document", async ({
+  page,
+}) => {
+  await page.goto(SOURCE);
+  // The stamp on the root element is the behaviour saying it has read
+  // the reader's choice; clicking before that is clicking at markup.
+  await expect(page.locator("html")).toHaveAttribute("data-site-lang", "en");
+
+  await page.locator('[data-site-lang-choice="ru"]').click();
+
+  await expect(page.locator("footer")).toContainText("Олег Чирухин");
+  await expect(page.locator("[data-toc] .toc__summary")).toHaveText(
+    "Оглавление",
+  );
+  // The document did not move: its language, its title and its text are
+  // the package's and are still English.
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator("[data-island] h1")).toHaveText("Addresses");
+  await expect(page.locator("[data-language-selector] summary")).toContainText(
+    "en",
+  );
+});
+
+test("the site's language is remembered across pages", async ({ page }) => {
+  await page.goto(SOURCE);
+  await expect(page.locator("html")).toHaveAttribute("data-site-lang", "en");
+  await page.locator('[data-site-lang-choice="ru"]').click();
+  await expect(page.locator("footer")).toContainText("Олег Чирухин");
+
+  await page.goto("/doc/");
+  await expect(page.locator(".shelf__title")).toContainText("Издания");
+  // …and says nothing about which edition the shelf offers.
+  await expect(page.locator(".shelf__items .card")).toHaveCount(2);
+});
+
+/**
+ * The other half of the split: the documentation's language, which on a
+ * shelf narrows what stands there rather than leading anywhere. The
+ * address does not move, because every edition is already on the page.
+ */
+test("the documentation's language narrows the shelf it stands on", async ({
+  page,
+}) => {
+  await page.goto("/doc/");
+  const cards = page.locator(".shelf__items .card");
+  await expect(cards).toHaveCount(2);
+
+  await page.locator("[data-language-selector] summary").click();
+  await page.locator('[data-doc-lang="ru"]').click();
+
+  await expect(page).toHaveURL(new RegExp("/doc/$"));
+  await expect(cards.filter({ visible: true })).toHaveCount(1);
+  await expect(page.locator("[data-language-selector] summary")).toContainText(
+    "ru",
+  );
+
+  // And «Everything» is the way back to all of them.
+  await page.locator("[data-language-selector] summary").click();
+  await page.locator('[data-doc-lang="*"]').click();
+  await expect(cards.filter({ visible: true })).toHaveCount(2);
+});

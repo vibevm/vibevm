@@ -30,7 +30,6 @@ import type { DocumentationStatus } from "../generated/doc-manifest.ts";
 import {
   catalogueHref,
   docHref,
-  docSegments,
   llmsHref,
   packageHref,
   parseDocTarget,
@@ -109,66 +108,97 @@ export function languageChoices(
   });
 }
 
+/** The label «Everything» wears wherever the filter is offered. */
+const EVERY_LANGUAGE_LABEL = "Everything";
+
 /**
- * The selector the site header shows, from nothing but the path the
- * browser is on.
+ * The entry that hides nothing.
  *
- * The header stands over the landing and over every documentation page,
- * and a selector that led to the catalogue from a page would lose the
- * reader's place on every switch. So it reads the address back: on a
- * page it offers the same page in each language OF THAT DOCUMENTATION,
- * and anywhere else the catalogue of each language the site carries. The
- * fragment is added by the behaviour on the way out — markup cannot know
- * where a reader is standing.
+ * It is the last of the three the owner asked for — English, Русский,
+ * Everything — and it is not a language: it carries the tag `*`, which
+ * is not a BCP-47 tag and cannot be mistaken for one, and it names no
+ * publisher because a shelf of every edition has no single one.
  */
-export function headerLanguageChoices(
-  libraries: readonly Library[],
-  pathname: string,
-): LanguageChoice[] {
-  const segments = docSegments(pathname);
-  if (segments === null) return catalogueChoices(libraries, null);
-  const target = parseDocTarget(segments);
-  if (target === null) return catalogueChoices(libraries, null);
-  if (target.kind === "catalogue") {
-    return catalogueChoices(libraries, target.lang);
-  }
-  const library = libraryAt(
-    libraries,
-    target.address.group,
-    target.address.name,
-  );
-  if (library === null) return catalogueChoices(libraries, null);
-  if (target.kind === "package") {
-    return catalogueChoices(libraries, target.address.lang);
-  }
-  return languageChoices(library, target.address.document, target.address.lang);
+function everyLanguage(current: boolean): LanguageChoice {
+  return {
+    tag: "*",
+    label: EVERY_LANGUAGE_LABEL,
+    publisher: "",
+    official: false,
+    source: false,
+    current,
+    note: "every language this build carries",
+    pill: "all",
+  };
 }
 
 /**
- * The catalogue in every language the site has, for the site header.
+ * The documentation-language filter a SHELF offers: every language the
+ * site carries, then «Everything».
  *
  * One entry per language and never one per edition: the address
  * `vibevm.org/doc/ru/` is the site's Russian shelf, and three
  * documentations adapted into Russian are three cards on it rather than
- * three entries here. Where a language
- * carries exactly one documentation the entry is that edition's, star
- * and publisher and all; where it carries several, «published by» is
- * answered with how many there are, because the publisher of a shelf is
- * not a fact and the catalogue behind the entry names every one of them.
+ * three entries here. Where a language carries exactly one documentation
+ * the entry is that edition's, star and publisher and all; where it
+ * carries several, «published by» is answered with how many there are,
+ * because the publisher of a shelf is not a fact and the shelf behind
+ * the entry names every one of them.
+ *
+ * No entry carries an address, and that is the change the owner asked
+ * for: every edition is already on the page, so choosing a language
+ * narrows what stands there rather than moving the reader to a second
+ * shelf showing the same cards.
  */
-export function catalogueChoices(
+export function shelfLanguageChoices(
   libraries: readonly Library[],
   at: string | null,
 ): LanguageChoice[] {
+  return [
+    ...siteLanguages(libraries).map((one) => ({
+      tag: one.tag,
+      label: endonym(one.tag),
+      publisher:
+        one.count === 1 ? one.edition.publisher : `${one.count} documentations`,
+      official: one.count === 1 && one.edition.official,
+      source: one.segment === null,
+      current: one.segment === at && at !== null,
+    })),
+    everyLanguage(at === null),
+  ];
+}
+
+/**
+ * The documentation-language control one PAGE offers: the languages that
+ * page exists in, then «Everything».
+ *
+ * Here the entries are addresses, because the other language of a page
+ * is another page — and the reader keeps their place across the move,
+ * which is the whole of `##READER-LANGUAGE-SWITCH-KEEPS-PLACE`. A
+ * language the adaptation has not reached still answers: the address is
+ * materialised with the source's text under it and says so on the page.
+ *
+ * «Everything» filters nothing here — there is one text on this page and
+ * no shelf to narrow — and is offered all the same, because it is the
+ * same control as on the shelves and a control that grew an entry on
+ * one page and lost it on the next would be two controls.
+ */
+export function pageLanguageChoices(
+  library: Library,
+  document: string,
+  at: string | null,
+): LanguageChoice[] {
+  return [...languageChoices(library, document, at), everyLanguage(false)];
+}
+
+/** The addresses of the site's shelves, one per language it carries. */
+export function catalogueDoors(
+  libraries: readonly Library[],
+): { tag: string; href: string; source: boolean }[] {
   return siteLanguages(libraries).map((one) => ({
     tag: one.tag,
-    label: endonym(one.tag),
-    publisher:
-      one.count === 1 ? one.edition.publisher : `${one.count} documentations`,
-    official: one.count === 1 && one.edition.official,
-    source: one.segment === null,
     href: catalogueHref(one.segment),
-    current: one.segment === at,
+    source: one.segment === null,
   }));
 }
 
@@ -380,7 +410,12 @@ export type PackageView = {
   readonly abstract: string;
   readonly textLanguage: string;
   readonly status: "primary" | "official" | "community";
-  readonly editions: readonly LanguageChoice[];
+  /**
+   * The documentation-language filter this page offers: the languages
+   * this documentation has, then «Everything». A filter and not a set of
+   * addresses, because every edition is already on the shelves below.
+   */
+  readonly languages: readonly LanguageChoice[];
   readonly nav: readonly DocsNavItem[];
   /** The same pages as `nav`, with what each one is about on it. */
   readonly pages: readonly PageCard[];
@@ -394,6 +429,8 @@ export type PackageView = {
     description?: string;
     abstract: string;
     official: boolean;
+    /** The BCP-47 tag of this adaptation, for the language filter. */
+    tag: string;
   }[];
 };
 
@@ -435,7 +472,7 @@ function pageView(library: Library, address: DocAddress): PageView | null {
     packageAt: packageHref(address),
     mount: catalogueHref(null),
     links: projectionLinks(address),
-    languages: languageChoices(library, address.document, address.lang),
+    languages: pageLanguageChoices(library, address.document, address.lang),
     versions: versionChoices(library, address),
     nav: navItems(library, address.lang, address.document),
   };
@@ -462,15 +499,17 @@ function packageView(
     abstract: card.abstract,
     textLanguage: card.lang,
     status: card.status,
-    editions: all.map((one) => ({
-      tag: one.tag,
-      label: endonym(one.tag),
-      publisher: one.publisher,
-      official: one.official,
-      source: one.segment === null,
-      href: packageHref(coordinate(library, one.segment)),
-      current: one.segment === address.lang,
-    })),
+    languages: [
+      ...all.map((one) => ({
+        tag: one.tag,
+        label: endonym(one.tag),
+        publisher: one.publisher,
+        official: one.official,
+        source: one.segment === null,
+        current: one.segment === address.lang && address.lang !== null,
+      })),
+      everyLanguage(address.lang === null),
+    ],
     nav: navItems(library, address.lang, null),
     pages: pageCards(library, address.lang),
     llms: llmsHref(address),
@@ -490,6 +529,7 @@ function packageView(
           : { description: one.card.description }),
         abstract: one.card.abstract,
         official: one.official,
+        tag: one.tag,
       })),
   };
 }

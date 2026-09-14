@@ -63,21 +63,12 @@
   color: var(--text);
 }
 
+/* The two letters are the design system's control now, not this page's
+   own pair of links: the manual carries the same switch in the same
+   corner, and a reader who changed the site's language in one half
+   should not meet a different-looking control in the other. */
 .landing-nav__lang {
   display: inline-flex;
-  gap: 10px;
-}
-
-.landing-nav__lang-link {
-  transition: color var(--speed) ease;
-}
-
-.landing-nav__lang-link--current {
-  color: var(--text);
-}
-
-.landing-nav__lang-link:hover {
-  color: var(--text);
 }
 
 .landing-footer__brand,
