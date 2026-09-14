@@ -1860,3 +1860,13 @@ structure, and it goes when the file does.
 | @fact:B164-SEVERITY **severity** | P3 — перестроить дерево маршрутов вокруг route groups вместе с пересмотром пина Qwik (X-020, X-034, B-159) и снять условие |
 | @fact:B164-DISPOSITION **disposition** | `open` |
 | @fact:B164-FILED **filed by** | кампания docs-2026-09, ревью W1-O1 (2026-09-14) |
+
+## B-165 — spec: PROP-002 не описывает быстрый путь чтения по HTTPS
+
+| поле | значение |
+|---|---|
+| @fact:B165-WHAT **what** | POST-O1 (`b058098f`, `818247cd`) научил бэкенд читать один файл по HTTPS с GitHub и GitVerse до `git archive`, но PROP-002 §2.12 (`PERF-FETCH-FILE`) по-прежнему описывает чтение одного файла как `git archive`; POST-O4 положил рядом факт о повторах (`RAW-READ-BACKOFF`), и норма о повторе стоит раньше нормы о самом пути |
+| @fact:B165-EFFECT **effect** | руководство цитирует правило о повторах, а правила о быстром пути, его хостах, авторитетности промаха (тег/SHA против ветки) и токене-в-заголовке нет; `raw_http.rs` на 605 строках против бюджета 600 — адаптеры хостов просятся в `raw_http/hosts.rs` |
+| @fact:B165-SEVERITY **severity** | P2 — один факт `RAW-READ-FAST-PATH` в §2.12 по тексту докстрингов `raw_http.rs` (таблица хостов, промах авторитетен только для тега или SHA, токен только заголовком), правка `PERF-FETCH-FILE`, ребро `implements` из `raw_http.rs`; вместе с ним — вынос адаптеров в `hosts.rs` |
+| @fact:B165-DISPOSITION **disposition** | `open` |
+| @fact:B165-FILED **filed by** | кампания docs-2026-09, ревью POST-O4 (2026-09-14) |
