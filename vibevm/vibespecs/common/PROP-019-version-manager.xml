@@ -81,7 +81,7 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       </facts>
     </standalone>
     <surface title="2.2 Command surface — `vibe self` (+ `vibe vars`)">
-      <p><req-surface fact="true" status="spec/done">`req r3`</req-surface></p>
+      <p><req-surface fact="true" status="spec/done">`req r4`</req-surface></p>
       <p><SELF-NAMING fact="true" status="spec/done">`vibe self` — named after rustup's `self` (a tool that manages its own
 versions), and unambiguous where `man` collided with the Unix manual page:</SELF-NAMING></p>
       <facts ordered="false">
