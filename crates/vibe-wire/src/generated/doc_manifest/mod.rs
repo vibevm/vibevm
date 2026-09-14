@@ -94,6 +94,34 @@ pub enum Authorship {
     Mixed,
 }
 
+/// Who wrote the bridge and who wrote what it bridges to (PROP-023
+/// `##AUTHORSHIP-SEPARATION`). A bridge is a wrapper one maintainer publishes
+/// around somebody else's repository, so the page has two names to show and
+/// must never merge them into one line.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct BridgeAuthorship {
+    /// Who wrote the bridge — the package's own `[package].authors`, which
+    /// name the authors of the wrapper, its metadata and its adapters, and
+    /// of nothing upstream. Written even when empty, because an empty list of
+    /// maintainers is a fact about a published bridge and not a hole to fill
+    /// with the upstream names.
+    pub maintainers: Vec<String>,
+
+    /// Who wrote the bytes the bridge points at — the `upstream_authors`
+    /// of every `[[embedded_source]]`, in declaration order and without
+    /// repetition. One name appears once however many sources carry it, because
+    /// a reader is being told who wrote the work and not how many times the
+    /// manifest says so.
+    pub upstream_authors: Vec<String>,
+
+    /// The licence of the upstream bytes, present only when every source
+    /// carries the same one. Absent when the sources disagree: one line cannot
+    /// state two licences, and a page that picked the first would be stating a
+    /// legal fact that is not true.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub upstream_license: Option<String>,
+}
+
 /// The addresses of the card's three images, exactly as `vibe doc build`
 /// writes them (PROP-057 `##CARD-MEDIA-ROLES`, `##CARD-SITE-COPIES`, design
 /// decision D-20). Each is relative to the base the documentation is served
@@ -168,6 +196,24 @@ pub struct DocPackage {
     /// guessing it into one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub authorship: Option<Authorship>,
+
+    /// True when this rendering is the site's own projection of a package's
+    /// bytes — the level-zero view every package gets for free (`##LEVEL-ZERO-
+    /// MARKED`), whose manifest page, README and boot snippet nobody wrote as
+    /// pages. False, and therefore absent, for a documentation package, whose
+    /// pages an author wrote. A shelf reads it to mark the first as generated
+    /// and to leave the second alone.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub projection: bool,
+
+    /// The two authorships a bridge keeps apart (PROP-023 `##AUTHORSHIP-
+    /// SEPARATION`), present only for a package that declares `[package].bridge
+    /// = true`. Carried rather than recomputed by the shell: both lists are
+    /// already in the package's own manifest, and the one thing a reader must
+    /// never see is the maintainer of a wrapper printed as the author of the
+    /// work it wraps.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bridge: Option<BridgeAuthorship>,
 
     /// The strongest standing this documentation holds over any of its subjects
     /// — the one value a shelf, a star and a catalogue row need when a package

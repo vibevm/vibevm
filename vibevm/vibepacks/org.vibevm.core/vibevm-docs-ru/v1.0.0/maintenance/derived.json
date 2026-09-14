@@ -226,8 +226,8 @@
       "bytes": 4193
     },
     "reference/machine-formats.xml#jtd-schema:schemas/doc_manifest.jtd.json": {
-      "sha256": "edf83e906e26f9fc3515813f9249eb01d5a19f7b5dbbd90b3e0751af1291a10a",
-      "bytes": 9742
+      "sha256": "4a863dd355f9350eb5ccd29a68e7bc2a2b30875944a1549b8377fb1edca2a60a",
+      "bytes": 11611
     },
     "reference/machine-formats.xml#jtd-schema:schemas/doc_surface.jtd.json": {
       "sha256": "4070a2e8d810f2a7d7d5792f18e69795e12614498dbb75d153be3a76459ccb14",
