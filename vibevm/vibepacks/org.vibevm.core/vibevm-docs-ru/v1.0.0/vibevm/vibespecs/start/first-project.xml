@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Создать первый проект</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Проект — это папка, в которой работает ваш агент. Эта страница создаёт такую папку, добавляет в неё первый общий набор правил и показывает, что появилось на диске и почему агент теперь будет это читать. Десять минут, никаких предварительных знаний.</p>
+  <prompt id="first-project">Создай проект VibeVM с именем hello-vibe в текущей папке, установи в него пакет org.vibevm.world/wal из реестра по умолчанию и покажи мне список чтения, который агент получает в начале сессии.
+    <needs>навык vibevm, установленный у вашего агента; доступ по сети к github.com/vibespecs или пакет, уже лежащий в машинном хранилище</needs>
+    <outcome>папка `hello-vibe` с `vibe.toml`, `vibe.lock`, каталогом `vibevm/` и файлами `CLAUDE.md`, `AGENTS.md` и `GEMINI.md`, которые заканчиваются блоком `&lt;vibevm&gt;`; `vibe check` не находит ошибок</outcome>
+    <assert>test -f hello-vibe/vibe.toml</assert>
+    <assert>test -f hello-vibe/vibe.lock</assert>
+    <assert>grep -q "org.vibevm.world/wal" hello-vibe/vibe.lock</assert>
+    <assert>vibe check --path hello-vibe --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe init hello-vibe`: команда создаёт папку с [манифестом](../glossary/index.xml#manifest), пустым [лок-файлом](../glossary/index.xml#lock-file), двумя стартовыми файлами, которые вы будете править сами, и тремя файлами инструкций для агентов. Затем он выполняет `vibe install org.vibevm.world/wal --path hello-vibe`. vibe читает [реестры](../glossary/index.xml#registry) из манифеста, находит пакет, подбирает версию, скачивает его в машинное [хранилище](../glossary/index.xml#store) и показывает план. После подтверждения он копирует пакет в `hello-vibe/vibevm/vibedeps/`, записывает лок-файл и генерирует стартовые файлы, которые агент будет читать. Наконец агент запускает `vibe tree`, чтобы показать этот список чтения, и `vibe check`, чтобы убедиться, что проект согласован.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Создайте проект. Имя становится папкой:</p>
+    <example ref="init"/>
+    <p>2. Установите пакет. Установка показывает план и просит подтверждения; в скрипте вопрос снимает `--assume-yes`:</p>
+    <example ref="install"/>
+    <p>3. Посмотрите, что записано:</p>
+    <example ref="list"/>
+    <p>4. Посмотрите список чтения, который получает агент:</p>
+    <example ref="tree"/>
+    <p>5. Проверьте проект:</p>
+    <example ref="check"/>
+  </by-hand>
+  <what-appeared title="Что появилось на диске">
+    <p>Откройте `hello-vibe/vibe.toml`: он называет проект и после установки перечисляет `org.vibevm.world/wal` среди требований с диапазоном версий. Откройте `hello-vibe/vibe.lock`: он закрепляет точную версию и [отпечаток](../glossary/index.xml#fingerprint) содержимого. Под `hello-vibe/vibevm/vibedeps/` лежит опубликованное дерево пакета, без изменений. Под `hello-vibe/vibevm/vibespecs/boot/` лежат два ваших стартовых файла и сгенерированный `INDEX.md`; сгенерированный `STATIC.md` появится рядом, как только какой-нибудь пакет попросит читать себя первым и целиком, а `wal` этого не просит. А в конце `CLAUDE.md`, `AGENTS.md` и `GEMINI.md` стоит блок, который указывает на них агенту.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW"/>
+    <p>Откройте новую [сессию агента](../glossary/index.xml#agent-session) в `hello-vibe` и спросите, каким правилам он следует: он назовёт пакет, который вы только что поставили, потому что прочитал полосу, прежде чем отвечать.</p>
+  </what-appeared>
+  <edge-cases title="Особые случаи и правила">
+    <p>Повторный `vibe install` без имён пакетов ставит всё, что требует манифест; это команда после клонирования существующего проекта.</p>
+    <p>Если в папке уже есть `CLAUDE.md`, vibe дописывает свой блок в конец и не трогает ваш текст. Если он находит два блока или сломанный, он останавливается с ошибкой и ничего не меняет, пока вы не почините файл.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#CLASS-MALFORMED"/>
+    <p>Отказаться от плана установки — не ошибка: ничего не записывается, а хранилище сохраняет скачанное на следующий раз.</p>
+  </edge-cases>
+</spec>
