@@ -150,6 +150,29 @@ pub(super) fn install_bundle(
     })
 }
 
+/// The immutable instance a published bundle would reuse, recognised from the
+/// release manifest ALONE — the declared outer digest is the same value
+/// [`install_bundle`] would compute after downloading, so an unchanged release
+/// is identified without fetching it. `None` means the bytes are new to this
+/// machine, or the local copy no longer verifies, and the download is real.
+pub(super) fn installed_from_published_bundle(
+    store: &VersionStore,
+    expected_manifest: &BundleDistributionManifest,
+    expected_asset: &DistributionAsset,
+) -> Result<Option<InstallOutcome>> {
+    let id = VersionId::new(Kind::Tag, expected_manifest.version.clone());
+    let digest = expected_asset.digest.trim_start_matches("sha256:");
+    let Some(record) = reusable_record(store, &id, digest, expected_manifest)? else {
+        return Ok(None);
+    };
+    let home = store.instance_dir(&id, record.instance);
+    Ok(Some(InstallOutcome {
+        record,
+        home,
+        reused: true,
+    }))
+}
+
 fn reusable_record(
     store: &VersionStore,
     id: &VersionId,

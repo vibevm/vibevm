@@ -127,6 +127,7 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Import(a) => run_import_cmd(ctx, &env, a),
         VvmSubcommand::Bootstrap(a) => bundle::run_bootstrap_cmd(ctx, &env, a),
         VvmSubcommand::Update(a) => bundle::run_update_cmd(ctx, &env, a),
+        VvmSubcommand::Reinstall(a) => bundle::run_reinstall_cmd(ctx, &env, a),
         VvmSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
         VvmSubcommand::Rollback => run_rollback_cmd(ctx, &env),
         VvmSubcommand::Ls => provenance::run_ls_cmd(ctx, &env),
@@ -182,28 +183,33 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
 
     // Source comes from running provenance, a bare dev cwd, or the managed mirror.
     let running = running_record(&store)?;
-    if args.mirror.is_none()
-        && running
-            .as_ref()
-            .is_some_and(|record| record.origin == model::Origin::Binary)
-        && let model::Selector::Explicit(id) = &selector
-        && id.kind == model::Kind::Tag
-    {
-        return bundle::install_binary_version(
-            ctx,
-            env,
-            &store,
-            id.id.strip_prefix('v').unwrap_or(&id.id),
-            args.force,
-        );
-    }
-    if args.mirror.is_none()
-        && matches!(&selector, model::Selector::Latest)
-        && running
-            .as_ref()
-            .is_some_and(|record| record.origin == model::Origin::Binary)
-    {
-        return Err(VvmError::BinaryFetchUnavailable.into());
+    let binary_execution = args
+        .mirror
+        .is_none()
+        .then(|| {
+            running
+                .as_ref()
+                .filter(|record| record.origin == model::Origin::Binary)
+        })
+        .flatten();
+    if let Some(record) = binary_execution {
+        match binary_lane(&selector) {
+            Some(BinaryLane::Version(version)) => {
+                return bundle::install_binary_version(ctx, env, &store, &version, args.force);
+            }
+            Some(BinaryLane::Newest) => {
+                return bundle::install_newest_release(
+                    ctx,
+                    env,
+                    &store,
+                    record,
+                    args.force,
+                    "self:install",
+                );
+            }
+            Some(BinaryLane::NoRelease) => return Err(VvmError::BinaryFetchUnavailable.into()),
+            None => {}
+        }
     }
     let _lock = install::InstallLock::acquire(&store)?;
     let running_tree = running
@@ -264,6 +270,36 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
     );
     let _ = outcome.reused;
     activate_record(ctx, env, &store, &outcome.record, "self:install")
+}
+
+/// The release lane a selector takes on a managed binary execution, decided
+/// before any source build is considered (PROP-019 §2.2).
+#[derive(Debug, PartialEq, Eq)]
+enum BinaryLane {
+    /// One named release, installed from its own release directory.
+    Version(String),
+    /// Whatever release is newest right now.
+    Newest,
+    /// A source-branch selector that no release publishes.
+    NoRelease,
+}
+
+/// Classify a selector for a binary execution; `None` falls through to the
+/// source lane, exactly as an explicit `--mirror` does.
+///
+/// `stable` IS the newest release (PROP-019 `##SEL-STABLE`), which is what
+/// `self update` resolves on this same execution — so both enter one
+/// function, rather than `stable` quietly turning into a source build for a
+/// selector the release lane can satisfy exactly.
+fn binary_lane(selector: &model::Selector) -> Option<BinaryLane> {
+    match selector {
+        model::Selector::Explicit(id) if id.kind == model::Kind::Tag => Some(BinaryLane::Version(
+            id.id.strip_prefix('v').unwrap_or(&id.id).to_string(),
+        )),
+        model::Selector::Stable => Some(BinaryLane::Newest),
+        model::Selector::Latest => Some(BinaryLane::NoRelease),
+        _ => None,
+    }
 }
 
 fn resolve_profile(args: &VvmInstallArgs) -> Result<model::Profile, model::ModelError> {

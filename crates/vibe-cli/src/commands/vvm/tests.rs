@@ -77,6 +77,47 @@ fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
     }
 }
 
+/// On a binary execution the release lane answers three selectors and hands
+/// everything else to the source lane (PROP-019 `##CMD-INSTALL`,
+/// `##CMD-UPDATE`, `##SEL-STABLE`).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#surface", r = 3)]
+fn a_binary_execution_routes_stable_to_the_newest_release_and_latest_nowhere() {
+    let parse = |raw: &str| model::Selector::parse(raw, None).unwrap();
+    assert_eq!(
+        binary_lane(&parse("1.2.3")),
+        Some(BinaryLane::Version("1.2.3".to_string()))
+    );
+    assert_eq!(
+        binary_lane(&parse("v1.2.3")),
+        Some(BinaryLane::Version("1.2.3".to_string())),
+        "a `v`-prefixed tag names the same release"
+    );
+    // `stable` is the newest release, so it takes `self update`'s path
+    // rather than falling through to a source build.
+    assert_eq!(binary_lane(&parse("stable")), Some(BinaryLane::Newest));
+    assert_eq!(binary_lane(&parse("latest")), Some(BinaryLane::NoRelease));
+    // A branch or commit has no release to fetch: the source lane keeps it.
+    assert_eq!(binary_lane(&parse("main")), None);
+    assert_eq!(binary_lane(&parse("branch:main")), None);
+}
+
+/// The refusal a binary execution meets on `latest` has to leave the user
+/// holding all three release verbs, not just the one that existed before
+/// `update` learned to move forward.
+#[test]
+fn the_latest_refusal_names_every_release_verb() {
+    let text = VvmError::BinaryFetchUnavailable.to_string();
+    for verb in [
+        "vibe self update",
+        "vibe self install X.Y.Z",
+        "vibe self reinstall",
+        "--mirror",
+    ] {
+        assert!(text.contains(verb), "`{verb}` missing from: {text}");
+    }
+}
+
 #[test]
 fn use_revalidation_rejects_an_inventoried_instance_deleted_before_activation() {
     let temp = tempfile::tempdir().unwrap();

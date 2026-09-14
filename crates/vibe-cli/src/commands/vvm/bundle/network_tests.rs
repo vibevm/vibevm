@@ -144,7 +144,7 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
 }
 
 #[test]
-fn binary_update_uses_mutable_release_assets_and_force_allocates_a_fresh_instance() {
+fn a_named_release_uses_mutable_assets_and_force_allocates_a_fresh_instance() {
     let temp = tempfile::tempdir().unwrap();
     let source = source_zip(None);
     let fixture = write_bundle(temp.path(), b"vibe-binary", b"vibe-binary", &source, false);
@@ -175,10 +175,12 @@ fn binary_update_uses_mutable_release_assets_and_force_allocates_a_fresh_instanc
         command: "self:update",
     };
 
-    update_binary(&remote, "1.0.0", false).unwrap();
-    update_binary(&remote, "1.0.0", false).unwrap();
+    install_release_version(&remote, "1.0.0", false).unwrap();
+    // The second call recognises the unchanged release from the manifest and
+    // reuses the instance it already holds.
+    assert!(install_release_version(&remote, "1.0.0", false).unwrap());
     assert_eq!(store.load_state().unwrap().installs.len(), 1);
-    update_binary(&remote, "1.0.0", true).unwrap();
+    assert!(!install_release_version(&remote, "1.0.0", true).unwrap());
     assert_eq!(store.load_state().unwrap().installs.len(), 2);
     assert_eq!(active_selector(&store), "tag:1.0.0#2");
     let urls = downloader.urls.borrow();
