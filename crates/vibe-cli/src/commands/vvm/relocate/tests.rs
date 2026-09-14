@@ -336,6 +336,7 @@ fn run_rejects_a_non_source_tree_target() {
         home: None,
         shell: None,
         path_var: None,
+        offline: false,
     };
     let args = VvmRelocateArgs {
         target: tmp.path().display().to_string(),

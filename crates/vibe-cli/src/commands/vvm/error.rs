@@ -90,6 +90,23 @@ pub(crate) enum VvmError {
     )]
     NoTty { detail: String },
 
+    /// A verb needed the network and the invocation had forbidden it
+    /// (PROP-019 `##CMD-OFFLINE`, PROP-010 `##OFFLINE-HARD-ERROR`).
+    /// Raised BEFORE the request, so nothing was connected to, nothing
+    /// was downloaded and no instance was allocated — and it names both
+    /// halves of what the operator is owed: which verb wanted the
+    /// network, and the exact address it wanted.
+    #[error(
+        "`vibe {verb}` needs the network and this run is offline — it would have \
+         fetched `{address}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#surface; \
+          fix: re-run it without `--offline`, with no truthy `VIBE_OFFLINE`, and \
+          without `[net] offline = true` in the user config — or stay on a version \
+          this machine already holds: `vibe self ls` lists them and \
+          `vibe self use <selector>` activates one)"
+    )]
+    Offline { verb: String, address: String },
+
     #[error("vibe self doctor found {problems} unresolved problem(s)")]
     DoctorProblems { problems: usize },
 

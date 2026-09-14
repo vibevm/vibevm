@@ -1,9 +1,11 @@
-//! The composition root's own reds — the `[env]` promotion allowlist.
+//! The composition root's own reds — the `[env]` promotion allowlist,
+//! and the offline posture the version manager is handed.
 //!
 //! Their own cell because `main.rs` is the dispatch AND the one
 //! sanctioned ambient-env root, and a policy's proofs are a second
 //! responsibility from the policy itself.
 use super::*;
+use rust_ai_native_env_audit::EnvGuard;
 
 fn env_table(pairs: &[(&str, &str)]) -> BTreeMap<String, String> {
     pairs
@@ -76,4 +78,42 @@ fn an_empty_table_admits_and_refuses_nothing() {
     let (admitted, rejected) = partition_env_promotions(&empty);
     assert!(admitted.is_empty());
     assert!(rejected.is_empty());
+}
+
+/// The version manager is handed a RESOLVED posture, not a raw flag.
+///
+/// Both lower rungs are ambient reads the vvm domain is forbidden, so if
+/// this function did not do them nobody would: the flag alone reached the
+/// domain and `vibe --offline self update` went to the network anyway. All
+/// three rungs are pinned here, against a user config the test owns, so the
+/// answer cannot come from the operator's real machine.
+#[test]
+fn the_version_manager_is_handed_the_resolved_offline_posture() {
+    let temp = tempfile::tempdir().unwrap();
+    let config = temp.path().join("config.toml");
+    let mut env = EnvGuard::lock();
+    env.set("VIBEVM_USER_CONFIG", &config.display().to_string());
+
+    // No rung says offline: online, which stays the default.
+    env.unset("VIBE_OFFLINE");
+    std::fs::write(&config, "").unwrap();
+    assert!(!vvm_offline(false));
+
+    // The flag rung — the one B-160 was about.
+    assert!(vvm_offline(true));
+
+    // The environment rung, with no flag.
+    env.set("VIBE_OFFLINE", "1");
+    assert!(vvm_offline(false));
+
+    // The config rung, with neither flag nor environment.
+    env.unset("VIBE_OFFLINE");
+    std::fs::write(&config, "[net]\noffline = true\n").unwrap();
+    assert!(vvm_offline(false));
+
+    // A config that cannot be parsed does not fail the command here; it
+    // loses its rung and the two above it still decide.
+    std::fs::write(&config, "[net\n").unwrap();
+    assert!(!vvm_offline(false));
+    assert!(vvm_offline(true));
 }
