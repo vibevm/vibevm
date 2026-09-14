@@ -7,12 +7,14 @@ import {
   Footer,
   SearchBox,
   SiteLanguageSwitch,
+  ThemeSwitch,
 } from "@vibe-docs/design";
 
-import { docSegments, href } from "../lib/href.ts";
+import { docSegments, href, parseDocTarget } from "../lib/href.ts";
 import { SITE_LANGUAGES, SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
 import { findInDocumentation } from "../reader/search.ts";
 import { startSiteLanguage } from "../reader/site-language.ts";
+import { startThemeSwitch } from "../reader/theme.ts";
 
 /**
  * The chrome of the public site — the header and the footer the
@@ -64,13 +66,29 @@ import { startSiteLanguage } from "../reader/site-language.ts";
  */
 export default component$(() => {
   const location = useLocation();
-  const doc = docSegments(location.url.pathname) !== null;
+  const segments = docSegments(location.url.pathname);
+  const doc = segments !== null;
+  /* A document page starts the whole reader, and the reading settings
+     are one of the two callers of `reader/theme.ts`; every other address
+     under the documentation — the catalogue, a package's own page —
+     starts nothing at all and would carry a switch that did nothing. So
+     the layout asks which of the two this address is, with the same
+     parser every link on the site is built with, and starts the switch
+     only where nothing else will. Two listeners for one control would
+     both work and would be two answers to one question. */
+  const read = segments !== null && parseDocTarget(segments)?.kind === "page";
 
   /* The reader's own language for the furniture, applied on arrival.
      The landing does the other half: its two addresses ARE the two
      languages, so it records which door was used rather than
      translating a page that is already written out twice. */
-  useVisibleTask$(() => (doc ? startSiteLanguage() : undefined));
+  useVisibleTask$(() => {
+    if (!doc) return undefined;
+    const stops = [startSiteLanguage(), ...(read ? [] : [startThemeSwitch()])];
+    return () => {
+      for (const stop of stops) stop();
+    };
+  });
 
   if (!doc) return <Slot />;
   return (
@@ -95,6 +113,18 @@ export default component$(() => {
                which is the only thing that knows what was stored. */
             current: false,
           }))}
+        />
+        {/* The site's one theme switch, in the same corner and the same
+            order as the landing's. It used to be the landing's alone,
+            and the reading panel's on a document page — two controls for
+            one choice, and none at all on the catalogue and on a
+            package's own page. */}
+        <ThemeSwitch
+          label="Theme"
+          lightLabel="Light"
+          darkLabel="Dark"
+          systemLabel="System"
+          compact={true}
         />
       </DocsHeader>
       <main>

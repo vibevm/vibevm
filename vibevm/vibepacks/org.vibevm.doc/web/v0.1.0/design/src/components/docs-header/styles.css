@@ -73,3 +73,29 @@
   gap: 0.5rem;
   margin-left: auto;
 }
+
+/* On a phone the bar carries a name, a search field, two languages and
+   three themes, and they do not fit across one line — the row simply ran
+   off the right of the screen and took the page's width with it. It
+   wraps instead of dropping one of them: every widget in this bar is
+   something only this bar offers, and a control a reader cannot see is a
+   control they do not have. The two rows cost about forty pixels of
+   height, once, at the top of the page.
+
+   `--site-header-h` stays what it was on purpose. It is read by the
+   reading controls to stand clear of the bar, and at this width they no
+   longer stand under it at all — they are at the bottom of the screen. */
+@media (max-width: 640px) {
+  .docs-header__inner {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 0.6rem;
+    padding-block: 0.7rem;
+  }
+
+  .docs-header__actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+}

@@ -136,6 +136,50 @@ test("the chosen theme is already on the page at the first frame", async ({
     .toBe("dark");
 });
 
+/**
+ * One theme switch, in the header, on every address of the site.
+ *
+ * It used to be the landing's alone and the reading panel's on a
+ * document page — two controls for one choice, and none at all on the
+ * catalogue or on a documentation's own page, which have a header but no
+ * reading panel. The two questions this pins are «is it offered here»
+ * and «is it offered twice».
+ */
+test("the theme is offered in the header of every documentation page", async ({
+  page,
+}) => {
+  const addresses = [
+    "/doc/",
+    "/doc/com.example.docs/fixture-manual/0.1.0/",
+    PAGE,
+  ];
+  for (const at of addresses) {
+    await page.goto(at);
+    await expect(page.locator("html")).toHaveAttribute("data-site-lang", /./);
+    await expect(page.locator(".docs-header [data-theme-switch]")).toHaveCount(
+      1,
+    );
+    await expect(page.locator("[data-theme-choice]")).toHaveCount(3);
+
+    await page.locator('.docs-header [data-theme-choice="dark"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.locator('.docs-header [data-theme-choice="light"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  }
+});
+
+test("the reading panel offers the reading and no longer the theme", async ({
+  page,
+}) => {
+  await read(page);
+  await page.locator("[data-settings-toggle]").click();
+  const panel = page.locator("[data-settings-panel]");
+  await expect(panel).toBeVisible();
+  await expect(panel.locator("[data-theme-choice]")).toHaveCount(0);
+  await expect(panel.locator("[data-step='font']")).toHaveCount(2);
+  await expect(panel.locator("[data-toggle='anchors']")).toHaveCount(1);
+});
+
 test("the settings panel changes the reading and remembers it", async ({
   page,
 }) => {
