@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Опубликовать пакет</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>Вы написали пакет и хотите, чтобы его ставили другие. Эта страница публикует его туда, откуда ставят ваши проекты, отдельным репозиторием, помечает версию тегом и проверяет, что свежий проект может его установить.</p>
+  <prompt id="publish-a-package">Опубликуй пакет org.acme/notes из дерева этого проекта, слот vibevm/vibepacks/org.acme/notes/v0.1.0, в первый реестр этого проекта токеном публикации, который уже есть у меня в окружении, затем создай черновой проект в другом месте и установи в него опубликованный пакет, чтобы доказать, что он работает. Перед настоящим пушем спроси меня.
+    <needs>навык vibevm, установленный у вашего агента; токен публикации для хоста реестра в окружении или под `~/.vibe/`; заполненный `vibe.toml` пакета с версией, которая ещё не публиковалась</needs>
+    <outcome>в организации реестра существует репозиторий, названный по координате пакета, с тегом версии; черновой проект ставит его, и `vibe list` показывает версию</outcome>
+    <assert>vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Сначала агент выполняет `vibe registry publish vibevm/vibepacks/org.acme/notes/v0.1.0 --dry-run` и показывает вам, что произойдёт: [реестр](../glossary/index.xml#registry), имя репозитория, выведенное из [координаты](../glossary/index.xml#coordinate), тег версии. После вашего «да» он выполняет настоящую команду: vibe создаёт репозиторий в организации реестра через API хоста, если его ещё нет, отправляет поставляемое дерево пакета и помечает версию тегом. С этого момента пакет — ещё один репозиторий, который подхватит [индекс](../glossary/index.xml#index-registry) реестра. Чтобы доказать это, агент создаёт черновой проект и ставит пакет по координате.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-OWN-REPO"/>
+    <p>Публикатор — механический инструмент: он создаёт репозиторий, отправляет содержимое и помечает версию тегом, и больше ничего. Хост из адреса реестра выбирает адаптер, который создаёт репозитории; GitHub и GitVerse известны, а неизвестный хост — понятная ошибка, а не догадка. В репозитории содержимое пакета лежит плоско в корне, а версия — это тег из `v` и номера версии.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-UTILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#FLAT-LAYOUT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-TAG-VERSION"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Положите токен публикации туда, где vibe его читает. Это переменная окружения `VIBEVM_PUBLISH_TOKEN` или файл `~/.vibe/&lt;host&gt;.publish.token`, например `~/.vibe/github.publish.token`, доступный для чтения только вам. Токену нужно право создавать репозитории в организации.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"/>
+    <p>vibe ищет токен в фиксированном порядке и берёт первый найденный. Сначала `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` для хоста реестра, например `VIBEVM_PUBLISH_TOKEN_GITHUB`. Потом `VIBEVM_PUBLISH_TOKEN`, потом файл для хоста, потом старый `~/.vibe/git.publish.token`. Токен — поверхностный секрет: он никогда не печатается, не пишется в журнал и не попадает в файлы, которые пишет vibe. Он покидает процесс только в запросе к хосту, по шифрованному соединению.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-HOST-ENV-VAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOK-PER-HOST-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-SECRECY-INVARIANT"/>
+    <p>2. Отрепетируйте:</p>
+    <example ref="publish-dry-run"/>
+    <p>3. Опубликуйте. `--registry` выбирает реестр по имени; без него берётся первый в [манифесте](../glossary/index.xml#manifest):</p>
+    <example ref="publish"/>
+    <p>4. Для верности установите пакет из свежего проекта: `vibe init scratch` и `vibe install &lt;group&gt;/notes --path scratch`.</p>
+  </by-hand>
+  <versions title="Публикация версии заново">
+    <p>Публикация версии, которая уже существует, заменяет её: vibe добавляет коммит с новым содержимым и переносит на него тег версии. Номер версии меняется, только когда вы меняете его в манифесте. Потребитель, который эту версию уже разрешил, хранит точные байты, записанные в [лок-файле](../glossary/index.xml#lock-file), и при каждой установке сверяет [отпечаток](../glossary/index.xml#fingerprint) содержимого, так что перенесённый тег будет замечен, а не принят молча; свежая установка получает новое содержимое. Когда изменение важно потребителям, поднимите версию.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-MUTABLE-VERSIONS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#THE-FREEZE-MODEL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-FORCE-PUSH-CAUGHT"/>
+    <p>Публикатор никогда не переписывает историю реестра: каждый коммит публикации — потомок головы, которую он видел, тег переносится только внутри одного атомарного пуша, защищённого ожидаемым состоянием обоих рефов, старые теги не трогаются, а прогон не выходит за пределы организации, названной в манифесте.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-NEVER-RULES"/>
+  </versions>
+  <workspaces title="Несколько пакетов сразу">
+    <p>Репозиторий, в котором разрабатывают несколько пакетов, публикует их командой `vibe workspace publish`. Она упорядочивает участников по их зависимостям друг от друга и публикует каждого отдельным репозиторием. На первой неудаче она останавливается с отчётом, что опубликовано и что осталось. Каждая опубликованная копия несёт таблицу `[origin]` с именем репозитория и коммита, из которых она вышла, так что копию всегда можно проследить до источника. `--member` ограничивает прогон одним узлом; `--dry-run` показывает выбор и порядок без пуша.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN"/>
+  </workspaces>
+  <edge-cases title="Особые случаи и правила">
+    <p>`--repo-url` отправляет прямо в существующий git-репозиторий вашими локальными учётными данными git и не загружает токен публикации; используйте его для хостов без API-адаптера.</p>
+    <p>Токен никогда не передаётся установочному скрипту пакета и никогда не печатается, даже в машинном выводе; если команда его напечатала, это ошибка, о которой стоит сообщить.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#TOKEN-NEVER-IN-ENV"/>
+    <p>Пакет документации публикуется так же; отличается лишь то, как его потребляют: через `vibe cache add` и сайт, а не через `vibe install`.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Дайте агенту навык vibevm</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Ваш агент работает лучше, когда знает, что такое vibe и как его вызывать. Эта страница кладёт короткий файл с инструкцией туда, где агент его читает, а для агентов, которые это поддерживают, запускает сервер, к которому агент обращается напрямую.</p>
+  <prompt id="give-your-agent-the-skill">Подключи vibe ко всем агентам для кода, установленным на этой машине, для проекта VibeVM в текущей папке: установи навык vibevm и запись MCP-сервера, затем покажи мне, что записано и для каких агентов.
+    <needs>vibe в `PATH`; проект с `vibe.toml` в текущей папке; хотя бы один поддерживаемый агент: Claude Code, Claude Desktop, Cursor, OpenCode или Codex</needs>
+    <outcome>`vibe mcp status` показывает актуальную запись сервера и навык для каждого обнаруженного агента; следующая сессия агента в этом проекте знает команды vibe и может спрашивать о пакетах проекта</outcome>
+    <assert>vibe mcp status</assert>
+    <assert>vibe skill list --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент выполняет `vibe mcp install --auto --yes`. vibe обнаруживает агентов на машине и записывает для каждого две вещи. Первая — запись в конфигурации агента, которая запускает `vibe mcp serve` как сервер, к которому агент может обращаться. Вторая — файл [навыка](../glossary/index.xml#skill), `SKILL.md`, который учит агента командам vibe и тому, когда ими пользоваться. Обе записи трогают только запись vibevm в каждой конфигурации; всё остальное в этих файлах остаётся как было. Команда идемпотентна: второй запуск сообщает о каждой неизменившейся записи как о неизменившейся.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-WRITE-SCOPE"/>
+    <p>Это работает благодаря двум поверхностям. `vibe mcp serve` — сервер Model Context Protocol, который отдаёт любому агенту состояние проекта, выведенное из лока, в виде инструментов, а команды `vibe mcp` подключают его к собственной конфигурации каждого агента и пишут его `SKILL.md`. Набор агентов фиксирован: Claude Code, Claude Code Desktop, Cursor, OpenCode и Codex. Каждый глагол идемпотентен на матрице «агент и область», предлагает `--dry-run` и спрашивает перед записью.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SURFACE-SERVER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SURFACE-INSTALL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-SET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-MATRIX"/>
+    <p>vibe пишет в тот файл, который каждый агент действительно читает при обнаружении: для Claude Code это `.mcp.json` в проекте или таблица серверов верхнего уровня в `~/.claude.json`, и никогда файл настроек, который их только ограничивает. Он вставляет или обновляет свою единственную запись и сохраняет каждый чужой ключ в его порядке, так что большая конфигурация дополняется, а не переписывается; удаление вычищает только запись vibe. Для агентов с папкой навыков, Claude Code, OpenCode и Codex, он также пишет `SKILL.md` о том, как пользоваться vibe через инструменты.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-PATH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-MERGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-MANIFEST"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Сначала посмотрите план; ничего не записывается:</p>
+    <example ref="mcp-status"/>
+    <p>2. Установите для всех обнаруженных агентов или для одного: `--agent claude`, `--agent codex`, `--agent opencode`, `--agent cursor`, `--agent claude-desktop`:</p>
+    <example ref="mcp-install"/>
+    <p>3. Выберите область: `--scope project` пишет в папки агентов внутри проекта, `--scope user` — в вашу домашнюю конфигурацию, `--scope both` — в обе. Без проекта в текущей папке пользовательская область выбирается за вас.</p>
+  </by-hand>
+  <skills-from-packages title="Навыки, которые приносят пакеты">
+    <p>Пакеты могут объявлять собственные навыки, и пакет может быть любого вида: flow приносит навык-чеклист, языковое руководство — навык обхода, руководство — навык чтения. `vibe skill list` показывает, что объявляют установленные пакеты, а `vibe skill install` проецирует их в папки навыков агентов. Установка навыка — это проекция файла, который пакет уже несёт, а не второй механизм доставки.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-LIST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-INSTALL"/>
+    <example ref="skill-list"/>
+    <p>Навык этого руководства, `vibevm-docs`, приходит тем же путём, как только руководство оказывается в машинном [хранилище](../glossary/index.xml#store).</p>
+  </skills-from-packages>
+  <servers-from-packages title="Серверы, которые приносят пакеты">
+    <p>Пакет вида `mcp` доставляет сервер, собранный из его собственного кода, например инструменты дисциплины языкового [семейства](../glossary/index.xml#family). `vibe mcp install` регистрирует такие серверы в конфигурациях агентов рядом с сервером самого vibe, с путём к собранному бинарнику; `vibe mcp status` сообщает, собран ли каждый и актуален ли он. Зарегистрировать сервер — значит, что агент будет запускать код этого пакета в начале сессии, поэтому регистрация спрашивает согласия, как установка.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-TRUST-ACT"/>
+    <p>Каждый установленный пакет вида `mcp` вносит свои серверы в одну и ту же регистрацию, и она относится к проекту, потому что серверы проекта принадлежат его закоммиченной конфигурации. В JSON-файле vibe держит маленький список `vibevm.managed` с именами записей, которыми владеет, так что переустановка переписывает только их и никогда не трогает сервер, который вы добавили сами. Ворота согласия те же, что у бинарников: пакеты группы `org.vibevm` в белом списке, любому другому происхождению нужен `--assume-yes`. `vibe mcp status` говорит, собран ли бинарник каждого сервера.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-PACKAGE-DISCOVERY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-PROJECT-SCOPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-MANAGED-SIDECAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#CONSENT-GATE-INHERITED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-STATUS"/>
+  </servers-from-packages>
+  <edge-cases title="Особые случаи и правила">
+    <p>`vibe mcp upgrade` после обновления vibe приводит существующие интеграции к форме, которую несёт текущий бинарник; ничего нового он не создаёт.</p>
+    <p>`vibe mcp uninstall` удаляет запись и навык vibe и оставляет каждую чужую запись на месте; `vibe skill uninstall` вычищает только навыки, которые спроецировал vibe.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-UNINSTALL"/>
+    <p>Cursor и Claude Desktop принимают запись сервера, но папок навыков у них нет; vibe сообщает, что навык для них пропущен, а не выдумывает место.</p>
+  </edge-cases>
+</spec>

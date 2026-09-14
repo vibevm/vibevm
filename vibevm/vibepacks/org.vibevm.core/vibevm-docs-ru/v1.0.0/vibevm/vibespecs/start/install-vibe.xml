@@ -12,7 +12,7 @@
   <what-happens title="Что происходит">
     <p>На Windows агент скачивает релизный архив, распаковывает его и запускает скрипт-установщик. Скрипт импортирует бинарник в управляемую папку vibe под `~/.vibe/opt`, помечает его активным и добавляет в пользовательский `PATH` одну папку с маленькими скриптами-лаунчерами. На остальных платформах агент клонирует репозиторий с исходниками и запускает его скрипт первого запуска, который собирает программу и устанавливает её через тот же менеджер. В обоих случаях получается одна и та же раскладка: версии под `~/.vibe/opt/vibevm/`, лаунчеры в `~/.vibe/opt/bin/` и указатель на текущую версию.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#ROOT-DEFAULT"/>
-    <p>vibe работает на Windows, macOS и Linux. Холодный старт одной строкой — это скрипт по устойчивому адресу: `https://vibevm.org/install.sh` для Bash и `install.ps1` для PowerShell. Он скачивает манифест релиза, проверяет по размеру и дайджесту небольшой бутстрап-бинарник, а тот проверяет и устанавливает полный бандл. Менеджеры пакетов вроде Homebrew и WinGet — позже.</p>
+    <p>vibe работает на Windows, macOS и Linux. Холодный старт одной строкой — это скрипт по устойчивому адресу: `https://vibevm.org/install.sh` для Bash и `install.ps1` для PowerShell. Он скачивает манифест — список файлов выпуска с их размерами и дайджестами — и проверяет по нему небольшой бутстрап-бинарник, а тот проверяет и устанавливает полный бандл. Менеджеры пакетов вроде Homebrew и WinGet — позже.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#PLATFORMS-TRIO"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#COLD-START-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#BOOTSTRAP-SCRIPT-LATER"/>
@@ -34,7 +34,7 @@
       <p>2. Клонируйте репозиторий: `git clone https://github.com/vibevm/vibevm.git` — и войдите в папку.</p>
       <p>3. Запустите скрипт первого запуска: `bash tools/first-run.sh` на Linux и macOS, `.\tools\first-run.ps1` на Windows. Он собирает программу, устанавливает её в управляемое [хранилище](../glossary/index.xml#store) и настраивает лаунчеры.</p>
       <p>4. Откройте новый терминал и выполните `vibe --version`, затем `vibe self doctor`.</p>
-      <p>Позже `vibe self install latest` пересобирает вершину ветки main. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
+      <p>Позже `vibe self update` переводит установку на новейший выпуск, а `vibe self reinstall` скачивает текущую заново. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
     </from-source>
   </by-hand>

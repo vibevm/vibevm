@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">От сообщения об ошибке к правилу</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Сообщения об ошибках vibe называют правило, которое они применяют. Эта страница перечисляет сообщения, которые вы, скорее всего, встретите, что каждое значит и самый короткий выход, в том порядке, в котором они обычно появляются.</p>
+  <how-to-read title="Как читать ошибку">
+    <p>У ошибки три части: что vibe отказался делать, почему и где живёт правило, адресом вроде `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE`. `vibe explain "&lt;address&gt;"` печатает правило и код, который за ним стоит; страницы этого руководства объясняют стоящий за ним механизм. Коды выхода стабильны для скриптов: 1 — общий сбой, 3 — отказ в форме конфликта, например испорченный [управляемый блок](../glossary/index.xml#managed-block), 5 — вы отклонили план.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#SURF-EXIT-CODE"/>
+  </how-to-read>
+  <install-errors title="Установка">
+    <table>
+      <tr><td>Сообщение</td><td>Что значит</td><td>Выход</td><td>Правило</td></tr>
+      <tr><td>`package … is already installed at version … — use vibe update instead`</td><td>координата уже есть в лок-файле с тем же содержимым</td><td>`vibe update &lt;coordinate&gt;`, чтобы сдвинуть её, `vibe list`, чтобы посмотреть</td><td>`PROP-011#UPDATE-MOVES-LOCK`</td></tr>
+      <tr><td>`content drift on …: lockfile pins sha256:… but the source served sha256:…`</td><td>отданные байты отличаются от тех, что помнил лок-файл: перетегированная версия, сломанное зеркало или переопределение</td><td>выясните, что именно; перепиньте через uninstall и install, уберите зеркало или запишите переопределение; лок-файл не правьте никогда</td><td>`PROP-002#EFF-FORCE-PUSH-CAUGHT`</td></tr>
+      <tr><td>`malformed &lt;vibevm&gt; block in …`</td><td>в файле инструкций два маркера одного вида, открывающий без закрывающего или закрывающий первым</td><td>почините файл, чтобы осталась ровно одна упорядоченная пара; `vibe check` находит это до следующей установки</td><td>`PROP-012#CLASS-MALFORMED`</td></tr>
+      <tr><td>`the materialised vibedeps/ tree is incomplete — … slot(s) missing`</td><td>у пакета, который закрепил лок-файл, нет папки на диске, и режим регенерации не может её наколдовать</td><td>`vibe reinstall --force`, чтобы скачать заново</td><td>`PROP-009#REINSTALL-FORCE`</td></tr>
+      <tr><td>`package declares a [boot_snippet].source … that does not exist in the package`</td><td>манифест пакета указывает на файл фрагмента, которого пакет не поставляет</td><td>сообщите автору пакета; пока закрепите более раннюю версию</td><td>`PROP-009#SCHEMA-BOOT-SNIPPET`</td></tr>
+      <tr><td>`user declined the install plan`</td><td>вы ответили «нет»; ничего не записано</td><td>чинить нечего</td><td>`PROP-009#PLAN-UNIT`</td></tr>
+      <tr><td>`package … is not installed`</td><td>`vibe uninstall` назвал координату, которой нет в лок-файле</td><td>`vibe list`; проверьте написание</td><td>—</td></tr>
+    </table>
+  </install-errors>
+  <resolution-errors title="Разрешение">
+    <table>
+      <tr><td>Сообщение</td><td>Что значит</td><td>Выход</td><td>Правило</td></tr>
+      <tr><td>`package … is not in the registry`</td><td>каждый настроенный реестр ответил, что такого пакета у него нет</td><td>проверьте координату и реестры; `vibe search`, чтобы найти</td><td>`PROP-002#REGISTRY-WALK-ORDER`</td></tr>
+      <tr><td>`no version of … matches …`</td><td>пакет существует, но ни одна опубликованная версия не удовлетворяет ограничению</td><td>расширьте ограничение или попросите версию, которая существует</td><td>`PROP-000#CF-RANGE`</td></tr>
+      <tr><td>`package A needs C ^1 but B needs C ^2 …`</td><td>два ограничения на один пакет не могут выполняться одновременно</td><td>лестница починки на странице вопросов: расширить, обновить, переопределить, форкнуть</td><td>`PROP-002#OVERRIDE-SHORT-CIRCUIT`</td></tr>
+      <tr><td>`no registry configured …`</td><td>в манифесте нет `[[registry]]`, и `--registry` не передан</td><td>`vibe registry add` или засев из `~/.vibe/registry.toml`</td><td>`PROP-010#INIT-SEEDS`</td></tr>
+      <tr><td>офлайн-ошибка с именем недостающей координаты</td><td>включён `--offline`, а в хранилище пакета нет</td><td>выйдите в сеть один раз или сделайте `vibe cache add` с машины, у которой сеть есть</td><td>`PROP-010#OFFLINE-HARD-ERROR`</td></tr>
+    </table>
+  </resolution-errors>
+  <git-errors title="Скачивание">
+    <table>
+      <tr><td>Сообщение</td><td>Что значит</td><td>Выход</td><td>Правило</td></tr>
+      <tr><td>`the git executable is not available on PATH`</td><td>vibe вызывает системный git для каждого скачивания и не нашёл его</td><td>установите git и откройте новый терминал</td><td>`PROP-001#root`</td></tr>
+      <tr><td>`remote repository … not found (does it exist? is access granted?)`</td><td>адрес репозитория неверен или у ваших учётных данных нет права чтения</td><td>проверьте адрес реестра и его режим аутентификации</td><td>`PROP-002#AUTH-REGIMES`</td></tr>
+      <tr><td>`ssh authentication failed for …`</td><td>хост ответил, но отверг ваш ключ</td><td>загрузите ключ в агент; проверьте `auth` реестра</td><td>`PROP-002#ROW-AUTH-SSH`</td></tr>
+      <tr><td>`unable to reach … (network or DNS error)`</td><td>до хоста нет маршрута</td><td>проверьте сеть или работайте из хранилища с `--offline`</td><td>`PROP-010#OFFLINE-FLAG`</td></tr>
+      <tr><td>`branch / ref … not found on …`</td><td>git-источник называет тег, ветку или коммит, которых в репозитории нет</td><td>исправьте ссылку в манифесте</td><td>`PROP-002#ROW-GS-TAG-MEANING`</td></tr>
+      <tr><td>зеркало отдало другие байты</td><td>зеркало устарело или подменено</td><td>уберите зеркало; следующим пробуется канонический реестр</td><td>`PROP-002#MIRROR-INTEGRITY-MANDATORY`</td></tr>
+    </table>
+  </git-errors>
+  <publish-errors title="Публикация">
+    <table>
+      <tr><td>Сообщение</td><td>Что значит</td><td>Выход</td><td>Правило</td></tr>
+      <tr><td>`publish refused: no token available for host …`</td><td>нет токена публикации ни в окружении, ни под `~/.vibe/`</td><td>положите токен туда, куда говорит страница настроек; никогда в репозиторий</td><td>`PROP-000#token-secrecy`</td></tr>
+      <tr><td>`publish refused: token lacks repo:create permission …`</td><td>токен не может создавать репозитории в организации</td><td>токен с нужной областью или `--repo-url` на существующий репозиторий</td><td>`PROP-002#SHAPE-OWN-REPO`</td></tr>
+      <tr><td>`publish refused: tag … already exists on …`</td><td>версия уже публиковалась</td><td>поднимите версию; опубликованные версии не двигаются</td><td>`PROP-002#IDENTITY-CONSEQUENCE`</td></tr>
+      <tr><td>`publish refused: source directory … does not look like a vibevm package`</td><td>в папке нет манифеста с таблицей `[package]`</td><td>публикуйте корень пакета или добавьте таблицу</td><td>`PROP-007#PACKAGE-XOR-PROJECT`</td></tr>
+      <tr><td>`publish refused: organization … does not exist on …` или `no push access`</td><td>организация реестра или ваши права на неё</td><td>проверьте адрес реестра и владельца токена</td><td>`PROP-002#REG-FIELD-URL`</td></tr>
+    </table>
+  </publish-errors>
+  <lifecycle-errors title="Прогон жизненного цикла">
+    <table>
+      <tr><td>Сообщение</td><td>Что значит</td><td>Выход</td><td>Правило</td></tr>
+      <tr><td>вклад сообщил `fail`, и цепочка остановилась</td><td>один шаг фазы упал; фазы до него сохранили результаты</td><td>прочитайте идентификатор вклада и его вывод в повествовании прогона; `vibe extensions` показывает, откуда он взялся</td><td>`PROP-054#FAILURE-BY-PHASE`</td></tr>
+      <tr><td>отложенная задача агента</td><td>шагу нужен агент, и vibe работает под ним; задача ждёт в исходящих</td><td>агент-хозяин выполняет её и запускает ту же команду снова</td><td>`PROP-054#AGENT-HANDSHAKE`</td></tr>
+      <tr><td>`undeploy` отказался трогать путь</td><td>файл, которым владеет квитанция, изменился после выкладки</td><td>решите руками; vibe не удалит отредактированную работу</td><td>`PROP-054#R8-DEPLOY-RUNTIME`</td></tr>
+      <tr><td>`clean` отказался работать</td><td>нет проекта в текущей папке и выше</td><td>запустите внутри проекта</td><td>`PROP-053#CLEAN-NEEDS-A-PROJECT`</td></tr>
+    </table>
+  </lifecycle-errors>
+  <edge-cases title="Когда сообщение не от vibe">
+    <p>Сообщение, которого здесь нет, скорее всего, пришло со слоя ниже: обычно от git. Запустите команду снова с `VIBE_LOG=vibe_registry=debug,vibe_publish=debug`, чтобы увидеть нижележащую командную строку и её вывод. А когда сообщение цитирует адрес, правило в одном `vibe explain` от вас.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#root"/>
+  </edge-cases>
+</spec>

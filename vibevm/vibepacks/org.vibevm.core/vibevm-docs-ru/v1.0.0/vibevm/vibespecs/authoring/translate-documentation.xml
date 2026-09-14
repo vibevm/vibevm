@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Перевести документацию</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Перевод — отдельный пакет той же формы, что оригинал: те же страницы, те же имена разделов, те же примеры по ссылке, на другом языке. Эта страница создаёт такой пакет и объясняет, что делает его официальным.</p>
+  <prompt id="translate-documentation">Создай пакет org.acme/notes-flow-docs-ru в текущем проекте VibeVM, как пакет в дереве под vibevm/vibepacks/, как русский перевод org.acme/notes-flow-docs. Отзеркаль его дерево страниц файл в файл, сохрани каждый якорь и блок и замени каждый пример ссылкой на пример источника. Напиши манифест с [translates] и тем же предметом в [[documents]]. Запусти vibe doc check --translations.
+    <needs>навык vibevm, установленный у вашего агента; исходный пакет документации в том же проекте</needs>
+    <outcome>у перевода те же файлы и якоря, что у источника, `[i18n] canonical = "ru"`, `[translates]` указывает на источник, и `vibe doc check --translations` не находит структурных отличий</outcome>
+    <assert>grep -q "canonical = \"ru\"" vibevm/vibepacks/org.acme/notes-flow-docs-ru/v0.1.0/vibe.toml</assert>
+    <assert>vibe doc check --translations --path vibevm/vibepacks/org.acme/notes-flow-docs-ru/v0.1.0</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент копирует дерево страниц источника и переводит прозу каждого блока на месте, не добавляя и не удаляя блоков. Каждый `example` он заменяет на `example ref="&lt;id&gt;"`, указывающий на пример источника. Он задаёт язык пакета, называет источник в `[translates]` и тот же [предмет](../glossary/index.xml#subject) в `[[documents]]`. `vibe doc check --translations` затем сравнивает два дерева: те же пути, те же [якоря](../glossary/index.xml#anchor), то же число и виды блоков; отличие — ошибка. Сайт, видя ребро `translates` от пакета в группе источника с именем `&lt;source&gt;-ru`, показывает перевод как официальный и предлагает его в переключателе языков.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR"/>
+  </what-happens>
+  <the-manifest title="Манифест">
+    <p>Язык пакета — существующее поле `[i18n] canonical`, тег BCP-47 в нижнем регистре; отдельного поля языка нет. `[translates]` называет источник и диапазон версий; `[[documents]]` повторяет предмет источника, и vibe проверяет, что они согласуются.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-DOCUMENTS-MATCH"/>
+    <p>Имя `&lt;source&gt;-&lt;lang&gt;` в группе источника — то, что делает перевод официальным по умолчанию. Перевод из другой группы находится и показывается как перевод сообщества, с его издателем.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-OFFICIAL-TRANSLATION"/>
+    <p>Имя перевода по умолчанию — имя документации с тегом языка в нижнем регистре, `vibevm-docs-ru` или `vibevm-docs-pt-br`, в той же группе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-TRANSLATION-NAME"/>
+  </the-manifest>
+  <the-rules title="Правила перевода">
+    <p>Перевод следует источнику блок за блоком, а не предложение за предложением: внутри блока переводчик пишет то, что написал бы редактор-носитель, заменяет шутку той, что работает на его языке, или убирает её и следует глоссарию перевода. Он никогда не сочиняет примеры: вывод примера проверяется один раз, на источнике, а перевод на него указывает. Он никогда не добавляет якорь, потому что ссылка в источник должна попадать на тот же блок на каждом языке; благодаря этому же читатель переключает язык, не теряя места.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"/>
+    <p>Правила, процитированные из [спецификации](../glossary/index.xml#specification), остаются на языке спецификации и помечены как таковые; перевод нормативного текста не входит в перевод документации.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NORMATIVE-STAYS"/>
+  </the-rules>
+  <staleness title="Когда источник двигается">
+    <p>Перевод не записывает ни ревизию, ни хеш источника. Когда источник меняется, структурная проверка проходит, пока совпадает форма, а отстал ли смысл перевода, решает человек: на это отвечают при периодической сверке, и ответ показывается на странице как дата, когда её читали в последний раз. Страницу, у которой перевода ещё нет, сайт показывает на языке источника по адресу перевода, с пометкой, и никогда как отсутствующую.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-NO-REVISION"/>
+  </staleness>
+  <edge-cases title="Особые случаи и правила">
+    <p>Файлы-спутники внутри исходного пакета, `README.ru.md` рядом с `README.md`, — так переводы носят спецификации; документация ими не пользуется, потому что у перевода руководства свой автор и свой ритм.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DOC-PACKAGES"/>
+    <p>Перевод наследует изображения источника, если не объявляет собственных.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-TRANSLATION-INHERITS"/>
+  </edge-cases>
+</spec>

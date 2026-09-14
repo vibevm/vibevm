@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Лок-файл: vibe.lock</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>`vibe.lock` — файл, который vibe пишет, а вы коммитите: точные версии, которые получил проект. Эта страница объясняет каждое поле, чтобы вы могли прочитать его диф в пул-реквесте и понять, что изменилось.</p>
+  <where title="Где живёт и кто пишет">
+    <p>На рабочее пространство один `vibe.lock`, в самом верхнем корне, рядом с корневым [манифестом](../glossary/index.xml#manifest); у участников своих нет никогда. `vibe install` и `vibe update` его пишут; `vibe clean` его сохраняет; руками его никто не правит. Это записанное решение; дерево зависимостей на диске лишь его следствие, и его всегда можно пересобрать из лока.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"/>
+  </where>
+  <meta title="[meta]">
+    <table>
+      <tr><td>Поле</td><td>Смысл</td></tr>
+      <tr><td>`generated_by`, `generated_at`</td><td>версия vibe и время последней записи; справочно</td></tr>
+      <tr><td>`schema_version`</td><td>схема лока; более старый vibe отказывается от более новой схемы, а не читает её неверно</td></tr>
+      <tr><td>`solver`</td><td>резолвер, который произвёл граф</td></tr>
+      <tr><td>`root_dependencies`</td><td>координаты, которые манифесты запросили напрямую; база для проверки свежести</td></tr>
+      <tr><td>`language_chain`</td><td>разрешённое предпочтение языка и его запасные варианты, чтобы переустановка на другой машине материализовала те же файлы</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE"/>
+    <p>`root_dependencies` копирует `[requires.packages]` манифеста, так что [лок-файл](../glossary/index.xml#lock-file) — самодостаточный снимок, для чтения которого манифест не нужен. Удаление корня через `vibe uninstall` убирает его из обоих файлов; удаление пакета, который только транзитивная зависимость, отвергается с объяснением.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCKFILE-V2"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-ROOT-DEPENDENCIES"/>
+  </meta>
+  <package-entries title="[[package]]">
+    <table>
+      <tr><td>Поле</td><td>Смысл</td></tr>
+      <tr><td>`group`, `name`, `version`</td><td>координата, которая была разрешена</td></tr>
+      <tr><td>`kind`</td><td>вид пакета, для размещения и фильтров</td></tr>
+      <tr><td>`content_hash`</td><td>отпечаток поставляемого дерева пакета; идентичность; проверяется при каждом скачивании</td></tr>
+      <tr><td>`registry`</td><td>имя реестра, который ответил, из списка манифеста</td></tr>
+      <tr><td>`source_url`, `source_ref`, `resolved_commit`</td><td>откуда и на каком git-рефе байты были скачаны в этот раз; справочно, всегда канонический адрес, даже когда отдало зеркало</td></tr>
+      <tr><td>`source_kind`</td><td>`registry`, `git`, `override` или `path`: какой путь разрешения произвёл запись; для `path` поле URL держит папку участника относительно корня</td></tr>
+      <tr><td>`dependencies`</td><td>разрешённые зависимости этого пакета, точными координатами</td></tr>
+      <tr><td>`overridden`</td><td>true, когда пакет поставил `[[override]]`</td></tr>
+      <tr><td>`features`, `subskills`</td><td>активные фичи и поднавыки, записанные для пакета</td></tr>
+      <tr><td>`files_written`</td><td>файлы проекта, которые установка этого пакета записала вне его собственной папки, чтобы удаление убрало ровно их</td></tr>
+      <tr><td>`via_redirect`</td><td>адрес заглушки реестра, которая делегировала пакет в другое место, когда по ней шли; иначе отсутствует</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SOURCE-KIND-VALUES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIR-CANONICAL-IN-LOCKFILE"/>
+  </package-entries>
+  <reading-a-diff title="Как читать диф">
+    <p>Изменившийся `version` с изменившимся `content_hash` — обновление. Изменившийся `content_hash` при той же версии в здоровом мире невозможен: vibe отказывает в нём при скачивании, так что если вы видите такое в дифе, кто-то правил файл. Изменившийся только `source_url` — [зеркало](../glossary/index.xml#mirror) или переезд хоста, и для проекта он ничего не значит. Новая запись с `source_kind = "override"` — патч, который кто-то применил намеренно, и в сообщении коммита должна быть причина.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#EFF-LOCKFILE-STABLE"/>
+  </reading-a-diff>
+  <edge-cases title="Особые случаи и правила">
+    <p>Неизменённый манифест против неизменённого [лок-файла](../glossary/index.xml#lock-file) заставляет `vibe install` вовсе пропустить резолвер: лок и есть ответ.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
+    <p>Лок-файл не записывает ни [индекс](../glossary/index.xml#index-registry) [реестра](../glossary/index.xml#registry), ни зеркало: чтобы воспроизвести его, нужны только [координаты](../glossary/index.xml#coordinate), [отпечатки](../glossary/index.xml#fingerprint) и источник, который может их отдать.</p>
+    <p>`vibe why &lt;coordinate&gt;` объясняет по лок-файлу и манифестам, почему пакет в проекте или что его заблокировало.</p>
+    <p>Файл читается строго: поле, которого vibe не знает, — ошибка, а не предупреждение, так что ручная правка или поле из более нового vibe ловится сразу.</p>
+  </edge-cases>
+</spec>

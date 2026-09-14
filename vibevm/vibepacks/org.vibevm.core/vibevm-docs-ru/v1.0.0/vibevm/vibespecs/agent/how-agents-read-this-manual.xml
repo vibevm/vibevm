@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Как агент читает это руководство</title>
+  <status stage="doc" state="work" audience="agent"/>
+  <p>Это руководство публикуется для машин так же, как для людей. Агент может получить любую страницу простым текстом, спросить, где живёт правило, и загрузить весь корпус одним файлом, подобранным под его бюджет.</p>
+  <the-files title="Машинные файлы">
+    <table>
+      <tr><td>Адрес</td><td>Что это</td><td>Когда читать</td></tr>
+      <tr><td>`https://vibevm.org/doc/llms.txt`</td><td>индекс: по строке на страницу, первый абзац страницы</td><td>сначала, чтобы выбрать страницу</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;package&gt;/&lt;version&gt;/&lt;page&gt;.md`</td><td>одна страница простым Markdown, с номерами блоков</td><td>чтобы ответить на один вопрос</td></tr>
+      <tr><td>`https://vibevm.org/doc/&lt;package&gt;/&lt;version&gt;/&lt;page&gt;.xml`</td><td>та же страница в исходной форме, со всеми адресами правил и примерами</td><td>чтобы процитировать правило или выполнить пример</td></tr>
+      <tr><td>`https://vibevm.org/doc/llms-small.txt`, `llms-medium.txt`, `llms-full.txt`</td><td>корпус в трёх размерах, стабильный текст первым</td><td>только когда задача охватывает много страниц</td></tr>
+      <tr><td>`https://vibevm.org/doc/manifest.json`</td><td>каждая страница с её языком, аудиториями, статусом и якорями</td><td>для программной навигации</td></tr>
+      <tr><td>`https://vibevm.org/doc/resolve/?uri=spec://…`</td><td>резолвер: адрес на входе, страница и блок на выходе</td><td>когда сообщение или страница цитирует адрес</td></tr>
+      <tr><td>`https://vibevm.org/doc/ru/…`</td><td>те же файлы для другого языка</td><td>когда пользователь читает на этом языке</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-RAW-PROJECTIONS"/>
+    <p>Сайт также отдаёт манифест: JSON-список всех страниц с их статусами, языками, аудиториями и якорями, по адресу `/doc/manifest.json` и разрешает адрес `spec://` по адресу `/doc/resolve/?uri=…`; `&lt;package&gt;` — это группа и имя руководства, `org.vibevm.core/vibevm-docs`, а `&lt;version&gt;` — номер или `latest`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"/>
+  </the-files>
+  <offline title="Без сети">
+    <p>Те же страницы живут в машинном [хранилище](../glossary/index.xml#store), как только выполнен `vibe cache add org.vibevm.core/vibevm-docs`. `vibe explain "spec://org.vibevm.core/vibevm-docs-ru/&lt;page&gt;#&lt;anchor&gt;"` печатает страницу или блок; `vibe doc manifest --llms small` печатает список страниц из хранилища. Ничто на этом пути не обращается к сети, и потому проприетарную документацию читают именно так.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP"/>
+  </offline>
+  <citing title="Как сослаться на место">
+    <p>Каждый блок на странице несёт номер, `p12` и так далее; он присваивается при сборке страницы и одинаков в веб-странице, в Markdown и в XML. Ссылка — это адрес страницы плюс этот номер: `spec://org.vibevm.core/vibevm-docs-ru/model/boot-lane#p7`. Заголовки сохраняют и именованные [якоря](../glossary/index.xml#anchor), и именованный якорь после публикации не меняется никогда; [номер блока](../glossary/index.xml#block-number) называет текущий текст и после правки может сдвинуться, как номер строки.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS"/>
+    <p>Правила на странице цитируются из [спецификации](../glossary/index.xml#specification) по адресу и показываются на языке самой спецификации. Когда вы говорите пользователю, что гласит правило, предпочитайте адрес спецификации адресу руководства; когда объясняете почему, предпочитайте страницу руководства.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
+  </citing>
+  <procedure title="Процедура, которой учит навык">
+    <p>1. На ошибке прочитайте адрес, который называет сообщение, затем страницу, на которую его отображает страница диагностики.</p>
+    <p>2. На вопросе отвечайте с одной страницы: первый абзац — простой ответ, блоки правил несут точную формулировку.</p>
+    <p>3. На задаче возьмите блок просьбы со страницы как свою задачу и подставьте имена и пути пользователя. Выполните её, затем выполните строки assert. Задача сделана, когда каждая из них завершилась нулём.</p>
+    <p>4. Выбирая среди документаций одного пакета, предпочитайте помеченную как официальная и называйте издателя документации сообщества.</p>
+    <p>5. Никогда не загружайте весь корпус, когда отвечает одна страница.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT"/>
+  </procedure>
+  <the-tools title="Инструменты сервера">
+    <p>`vibe mcp serve` предлагает те же операции как инструменты. `explain` смотрит на один узел карты по адресу; `query` находит узлы, и это два разных глагола намеренно. `select` принимает до семи предикатов, `uri:`, `symbol:`, `kind:`, `scope:`, `has:`, `lacks:` и `depth:`, через пробел, соединённых по И, без операторов. Неизвестный предикат, повторённый предикат или пустой запрос — ошибка, которая называет токен и перечисляет, что ожидалось.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-SEVEN-PREDICATES-JOINED-BY-AND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR"/>
+    <p>`query_package` возвращает полную запись установленного пакета из лока. `read_subskill` возвращает содержимое активного [поднавыка](../glossary/index.xml#subskill), где бы он ни жил: в дереве проекта или в машинном хранилище. `materialise_subskill` копирует лениво подтянутый поднавык в дерево проекта и отказывается перезаписывать без `force`; это единственный инструмент, который пишет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-QUERY-PACKAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-READ-SUBSKILL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-MATERIALISE-SUBSKILL"/>
+    <p>Языковые пакеты вида `mcp` приносят собственные серверы с четырьмя инструментами, `tcg_validate`, `tcg_scope`, `tcg_complete` и `tcg_type`: тонкими адаптерами над операциями с теми же именами. Каждый принимает обязательный `language`, `typescript` или `rust`, и собственные параметры операции без изменений. Каждый отвечает обогащённым результатом как структурированным содержимым плюс коротким текстом, в котором находки идут первыми.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#TOOLS-NEW-HOME"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#FOUR-TOOLS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#PARAM-LANGUAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#PARAMS-PASSTHROUGH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#ENRICHED-RESPONSES"/>
+  </the-tools>
+  <edge-cases title="Особые случаи и правила">
+    <p>Текст, написанный для агентов, никогда не входит в [стартовую полосу](../glossary/index.xml#boot-lane) проекта; это руководство берут, когда нужно, а не читают на каждом старте сессии.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"/>
+    <p>Сама стартовая полоса — чистое чтение файлов: ничто в ней не выполняется, и руководства в ней нет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING"/>
+    <p>Страница, которая есть на языке источника, но не на языке, который вы запросили, отдаётся на языке источника по запрошенному адресу, с пометкой; не считайте её отсутствующей.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-LANGUAGE-SWITCH-KEEPS-PLACE"/>
+  </edge-cases>
+</spec>

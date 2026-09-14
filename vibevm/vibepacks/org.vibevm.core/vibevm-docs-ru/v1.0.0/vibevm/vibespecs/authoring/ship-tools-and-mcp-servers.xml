@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Поставляйте инструменты и MCP-серверы</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Пакет может доставлять программы: инструменты командной строки, которые собираются при установке, или сервер, с которым говорит ваш агент. Эта страница объявляет и то и другое, собирает их в собственной папке пакета и объясняет, почему сервер закрепляет точную версию инструментов, которые обслуживает.</p>
+  <prompt id="ship-tools">В текущем проекте VibeVM создай пакет инструментов org.acme/notes-tools как пакет в дереве с маленьким Rust-крейтом crates/notes-check внутри, объяви крейт бинарником с именем notes-check, установи пакет в проект, собери инструмент через vibe и запусти его через vibe bin exec с --help, чтобы доказать, что диспетчеризация работает.
+    <needs>навык vibevm, установленный у вашего агента; пакет с Cargo-workspace в корне и бинарным крейтом; тулчейн Rust в `PATH`</needs>
+    <outcome>манифест несёт таблицу `[[binary]]`; `vibe bin list` показывает инструмент; `vibe bin build` произвёл его в собственной папке target пакета; `vibe bin exec notes-check -- --help` печатает справку инструмента</outcome>
+    <assert>vibe bin list</assert>
+    <assert>vibe bin exec notes-check -- --help</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент размечает слот пакета через `vibe init package`, кладёт внутрь крейт, добавляет таблицу `[[binary]]` с именем инструмента и папкой крейта и ставит пакет в проект из собственного [реестра](../glossary/index.xml#registry) проекта. Он выполняет `vibe bin build`: команда спрашивает согласия и делает release-сборку внутри собственного workspace пакета. Затем он выполняет `vibe bin exec`: команда разрешает инструмент через [лок-файл](../glossary/index.xml#lock-file) проекта до артефакта ровно той версии, что установлена, и запускает его. Потребители получают то же: установка пакета материализует его исходник, сборка при первом использовании производит инструмент рядом с ним, и артефакт никогда не попадает в [отпечаток](../glossary/index.xml#fingerprint) пакета.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-MUST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#HASHES-STABLE"/>
+  </what-happens>
+  <code-in-a-package title="Код в пакете">
+    <p>Пакет — это проект, который сделали устанавливаемым, поэтому он может нести произвольный код в корне рядом с `vibevm/vibespecs/`: Cargo-workspace, крейты, тесты. Поставляемое дерево — исходник минус результаты сборки; `target/`, `node_modules/` и всё из `.vibeignore` никуда не едут. Потребители получают исходник и собирают его сами, и потому идентичность остаётся свойством того, что закоммитил автор.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#ROOT-CODE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#WHY-SOURCE-IDENTITY"/>
+    <p>Пакет с кодом держит собственный [манифест](../glossary/index.xml#manifest) workspace, а потребитель, который сам Rust-проект, исключает дерево зависимостей из своего workspace, чтобы две сборки никогда не столкнулись.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#OWN-WORKSPACE"/>
+  </code-in-a-package>
+  <binaries title="Бинарники">
+    <p>Каждый инструмент — одна запись `[[binary]]`: `name`, уникальное в пакете, и `crate`, папка внутри поставляемого дерева с `Cargo.toml`. `vibe bin list` показывает, что объявляют установленные пакеты, `vibe bin build` собирает названные инструменты или все, `vibe bin path` печатает расположение артефакта, а `vibe bin exec &lt;name&gt; -- &lt;args&gt;` запускает его через лок-файл. Сборка выполняет скрипты сборки пакета, поэтому в первый раз она спрашивает согласия, как установка.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT"/>
+    <p>`name` уникально внутри пакета и должно быть защищено от столкновений между пакетами, что бесплатно даёт префикс [семейства](../glossary/index.xml#family). `crate` называет папку внутри поставляемого дерева с Cargo-пакетом, чей бинарник называется ровно `name`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#NAME-CONSTRAINTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#CRATE-CONSTRAINT"/>
+    <example ref="bin-list"/>
+  </binaries>
+  <servers title="MCP-серверы">
+    <p>Пакет вида `mcp` доставляет сервер, с которым говорит агент: одну или несколько таблиц `[[mcp_server]]`, каждая называет бинарник, который его обслуживает, и его аргументы. Сервер собирается как любой бинарник и регистрируется в конфигурациях агентов командой `vibe mcp install` рядом с собственным сервером vibe. Собранный, он работает без vibe: агент запускает артефакт напрямую.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#MCP-KIND-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#VIBE-FREE-SERVING"/>
+    <p>Сервер, который обслуживает тулчейн другого пакета, например ворота языковой дисциплины, обязан требовать этот пакет точным пином, `=X.Y.Z`. Движки за инструментами агента и ворота, которые запускает потребитель, должны разрешаться в один набор версий: один движок, одна истина, и обеспечивает это резолвер, а не протокол.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#EXACT-PIN-LAW"/>
+    <p>Вид обещает сервер: манифест `mcp` без таблицы `[[mcp_server]]` отвергается. Сервер — один из собственных бинарников пакета, поэтому `binary` обязан назвать `[[binary]]` того же манифеста, а его доставка, согласие и устаревание следуют механике бинарников. В `args` единственная подстановка — `{project_root}`, разрешаемая при регистрации; неизвестный токен отвергается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#KIND-PROMISES-SERVER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#SERVER-IS-BINARY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET"/>
+  </servers>
+  <hooks title="Установочные хуки">
+    <p>Пакет может выполнить скрипт при установке. `[hooks]` называет базовый путь без расширения, а пакет поставляет `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` или оба; раннер выбирает подходящий хосту. `pre-install` выполняется, как только папка пакета готова, и до того, как vibe ею воспользуется; `post-install` выполняется после того, как установка стала долговечной, с записанным локом и перегенерированными стартовыми файлами. Рабочая папка — собственная папка пакета в дереве зависимостей, а окружение называет группу, имя, версию, вид и папку пакета и который из двух моментов сейчас. Правки [хука](../glossary/index.xml#hook) в файлах, которыми владеет vibe, эфемерны: переустановка или обновление восстанавливает эти байты и выполняет хук снова.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#BASE-PATH-VALUE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#SCRIPT-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-PRE-INSTALL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-POST-INSTALL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#CWD-IS-SLOT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOK-ENV"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+  </hooks>
+  <edge-cases title="Особые случаи и правила">
+    <p>Артефакт инструмента принадлежит ровно той версии, что установлена; после обновления старому артефакту не доверяют, и следующий `vibe bin exec` сначала собирает новую версию.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#TRUST-CURRENT-SLOT"/>
+    <p>Для сборки нужны собственные источники пакетов языка, для Rust — crates.io, если они не вендорены; офлайн-сборка говорит об этом, а не притворяется.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#OFFLINE-HONESTY"/>
+    <p>Таблица `[[mcp_server]]` законна только в пакетах вида `mcp`; пакет `tool` поставляет бинарники, но не серверы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
+    <p>`.vibeignore` в корне пакета добавляет глобы к списку результатов сборки, которые никогда не попадают в поставляемое дерево.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SURF-VIBEIGNORE"/>
+  </edge-cases>
+</spec>

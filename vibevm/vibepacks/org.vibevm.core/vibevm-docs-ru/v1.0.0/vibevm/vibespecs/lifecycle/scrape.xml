@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Убрать VibeVM из проекта</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Когда проект закончен и должен уйти без следа инструмента, который помогал его строить, одна операция удаляет каждый файл и каждое упоминание vibe, сохраняя продукт и его сборку нетронутыми.</p>
+  <prompt id="scrape">Покажи мне план зачистки для проекта VibeVM в текущей папке, затем экспортируй зачищенную копию в новую папку product-clean рядом с проектом и докажи, что копия собирается без vibe.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` и контрактом зачистки, подогнанным под него: `vibe scrape contract init` пишет консервативный вариант по умолчанию, который отказывается удалять файлы, чью неизменность не может доказать, и проверяет здоровье через `cargo`; родной инструмент сборки проекта в `PATH`</needs>
+    <outcome>`../product-clean` существует, не содержит ни папки `vibevm/`, ни `vibe.toml`, ни `vibe.lock`, ни управляемого блока в файлах инструкций для агентов, а её родная сборка и тесты проходят</outcome>
+    <assert>test ! -e ../product-clean/vibe.toml</assert>
+    <assert>test ! -e ../product-clean/vibevm</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент создаёт контракт командой `vibe scrape contract init`, если у проекта его нет, и подгоняет: для собственных деревьев vibe, которые вы никогда не правили, он ставит `modified = "delete"` и оставляет проверку здоровья, подходящую проекту. Он выполняет `vibe scrape --plan`: команда читает контракт, классифицирует каждый файл, который инструмент когда-либо писал или помечал, и печатает полный план, ничего не записывая: что удаляется, что переписывается, что остаётся под нейтральным именем. Затем он выполняет `vibe scrape --output` с абсолютным путём новой папки: команда создаёт зачищенную копию и прогоняет на ней проверки здоровья проекта; оригинал не тронут. Копия — обычный проект своего языка: без [манифеста](../glossary/index.xml#manifest), без [лок-файла](../glossary/index.xml#lock-file), без дерева зависимостей, без стартовых файлов, без [управляемого блока](../glossary/index.xml#managed-block), без аннотаций в исходниках, которые указывали на [спецификации](../glossary/index.xml#specification).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPED-TREE"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. Создайте контракт. Вариант по умолчанию консервативен: он называет деревья vibe, отказывается от всего, чью неизменность не может доказать, и проверяет здоровье через `cargo`:</p>
+    <example ref="scrape-contract"/>
+    <p>2. Подгоните его. У свежего проекта нет базовой отметки изменений для файлов vibe, поэтому два правила `[[classify]]` отвергают их как неизвестные. Если вы никогда не правили эти деревья, поставьте `modified = "delete"` в обоих. Замените `[[healthcheck]]`, если проект не рабочее пространство Rust. Затем проверьте: `vibe scrape contract check --path hello-vibe`.</p>
+    <p>3. Посмотрите план:</p>
+    <example ref="scrape-plan"/>
+    <p>4. Экспортируйте в новую папку, которой ещё не должно существовать и в имени которой нет `..`:</p>
+    <example ref="scrape-output"/>
+    <p>5. Или [зачистите](../glossary/index.xml#scrape) на месте: это восстановимая транзакция, и ей нужно явное разрешение: `vibe scrape --in-place --assume-yes`. Если её прервали, `vibe scrape --recover --path &lt;root&gt;` доводит незавершённую транзакцию до конца.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-RECOVER-COMMAND"/>
+    <p>Команды в одном месте. `vibe scrape contract init` пишет консервативный вариант по умолчанию, только когда контракта ещё нет, а `contract check` разбирает его и планирует, ничего не записывая. `vibe scrape --plan` только читает и без указания режима планирует форму «на месте», больший риск. `--output` создаёт экспорт в папке, которой не должно существовать, и никогда не меняет исходное дерево. `--in-place` выполняет журналируемую транзакцию, в интерактивном режиме показывает перепись изменённых и удаляемых файлов, а без присмотра требует `--assume-yes` после зелёного плана. Планирование и проверка работают везде; в эту первую эпоху изменяющие режимы работают только на Windows, где механика безопасности доказана.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-CONTRACT-COMMANDS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-PLAN-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-EXPORT-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-INPLACE-COMMAND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-EXECUTION-PLATFORM-E1"/>
+  </by-hand>
+  <the-contract title="Контракт">
+    <p>Что считается принадлежащим vibe, а что вашим, не угадывается по именам файлов; это говорит контракт. Контракт живёт в проекте по пути `vibevm/scrape/contract.toml`: `vibe scrape contract init` пишет консервативный вариант по умолчанию, `vibe scrape contract check` проверяет существующий, а `--contract &lt;file&gt;` читает другой. Контракт внутри дерева удаляется последним, так что план можно перечитывать до самого конца.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#DEFAULT-CONTRACT"/>
+    <p>Зачистка никогда не удаляет путь вслепую: скрипт сборки, который вызывает инструмент vibe, сгенерированные исходники продукта, лежащие рядом с одноразовым сгенерированным состоянием, написанная автором спецификация, делящая дерево со сгенерированным выводом стартовой полосы, — всё это получает решение по контракту, а нетронутые файлы остаются побайтно теми же.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-PRESERVATION"/>
+    <p>Контракт строг: неизвестные таблицы и значения отвергаются, `schema` равна 1, каждый идентификатор уникален. Файлы, которые вы написали под `vibevm/vibespecs`, никогда не считаются сгенерированными из-за папки; контракт, который хочет нулевого остатка, сам называет их для удаления или переноса. Сгенерированный код, тесты и модели, которые проект принял, — продукт, и они остаются, пока строка не назовёт их. Глобы только выбирают; байты меняются только через типизированные адаптеры, никогда через регулярное выражение или переписывание в оболочке. Нулевой остаток означает ноль зарегистрированных идентичностей, путей и маркеров, а не слово «vibe» в вашей прозе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#CONTRACT-STRICTNESS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#AUTHORED-SPECS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#PRODUCT-CODE-SURVIVES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#TYPED-ONLY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#ZERO-RESIDUAL-SCOPE"/>
+    <p>Вы задаёте политику, движок даёт механику и вердикты. Всё, что запечатанный контракт и наблюдаемое дерево не могут решить, — блокер, а не догадка. Инструмент не переписывает историю git, не публикует и не удаляет то, что выложено на вашу машину; это остаётся отдельными явными операциями.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#ALGORITHMIC-BOUNDARY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#NON-GOALS"/>
+  </the-contract>
+  <edge-cases title="Особые случаи и правила">
+    <p>Зачистка — не очистка. `vibe clean` удаляет то, что vibe может сгенерировать заново, и сохраняет связь; зачистка удаляет саму связь, и потому ей нужны контракт, доказательство здоровья и восстановимая фиксация.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#RELATED-CLEAN"/>
+    <p>`--output` и `--in-place` взаимно исключают друг друга; план доступен всегда, до любого из них.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-MODE-EXCLUSIVITY"/>
+    <p>Слова «attach» и «detach» зарезервированы для будущей связи с живым инструментом, например подключения отладчика; зачистка никогда не синоним для них.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY"/>
+  </edge-cases>
+</spec>

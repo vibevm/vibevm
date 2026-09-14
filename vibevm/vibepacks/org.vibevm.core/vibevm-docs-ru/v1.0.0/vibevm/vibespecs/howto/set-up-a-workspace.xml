@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Настроить рабочее пространство</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>Несколько пакетов, которые разрабатывают вместе, могут жить в одном репозитории и делить одну запись о версиях, которыми пользуются. Эта страница превращает папку в такое рабочее пространство и показывает, как участники ссылаются друг на друга по пути.</p>
+  <prompt id="set-up-a-workspace">Преврати проект VibeVM в текущей папке в рабочее пространство с двумя пакетами-участниками под packages/: org.acme/notes-flow и org.acme/notes-docs, где notes-docs документирует notes-flow. Выполни установку и покажи мне, что один лок-файл в корне покрывает обоих участников.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в корне</needs>
+    <outcome>корневой `vibe.toml` несёт таблицу `[workspace]` с обоими участниками, в папке каждого участника лежит свой `vibe.toml` с таблицей `[package]`, а один `vibe.lock` в корне записывает разрешение</outcome>
+    <assert>test -f packages/notes-flow/vibe.toml</assert>
+    <assert>test -f packages/notes-docs/vibe.toml</assert>
+    <assert>test ! -e packages/notes-flow/vibe.lock</assert>
+    <assert>vibe check --quiet</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент добавляет в корневой [манифест](../glossary/index.xml#manifest) таблицу `[workspace]` с путями участников и пишет `vibe.toml` каждого участника руками, с таблицей `[package]`: участник — обычная папка пакета, а `vibe init package` размечает другую раскладку, слот в дереве, который описывают страницы для авторов. Членство явное: папка с манифестом, которой нет в списке, участником не считается. Затем он выполняет `vibe install` в корне: vibe обнаруживает рабочее пространство, разрешает требования всех участников одним общим разрешением и пишет один [лок-файл](../glossary/index.xml#lock-file) в корне.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#EXPLICIT-MEMBERSHIP"/>
+    <p>Одно дерево исходников и один лок-файл в его корне: участники — это папки, разбиение на пакеты логическое, а публикация копирует папку участника в его собственный репозиторий. Команда, запущенная внутри участника, поднимается до корня и работает с корневым локом, так что разработчик может работать внутри подпроекта, не замечая рабочего пространства вокруг.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-SOURCE-TREE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-LOCKFILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#COMMAND-BUBBLING"/>
+  </what-happens>
+  <by-hand title="Руками">
+    <p>1. В корневом `vibe.toml` объявите участников; глобы разрешены:</p>
+    <example ref="workspace-table"/>
+    <p>2. Дайте каждому участнику свой `vibe.toml` с таблицей `[package]`: те же поля, что пишет `vibe init package`, с тем видом, который вы имеете в виду:</p>
+    <example ref="member-manifest"/>
+    <p>3. Установите из корня или из любого места внутри рабочего пространства; команда находит корень и разрешает всё дерево:</p>
+    <example ref="install"/>
+  </by-hand>
+  <one-manifest title="Один манифест, три роли">
+    <p>У каждого узла есть файл с именем `vibe.toml`, и содержимое файла решает, что это за узел. Таблица `[package]` делает его публикуемым пакетом; таблица `[project]` — потребителем, который никогда не публикуется; таблица `[workspace]` — тем, кто [координирует](../glossary/index.xml#coordinate) участников. Узел не может быть одновременно пакетом и проектом, а корень рабочего пространства может быть любым из двух или ни тем, ни другим.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
+  </one-manifest>
+  <members-referring title="Участники ссылаются друг на друга">
+    <p>Участник требует соседа по пути, а не через [реестр](../glossary/index.xml#registry): источником `path` в своих требованиях. Лок-файл записывает такую зависимость с видом источника `path` и папкой участника относительно корня, так что лок остаётся переносимым между машинами. Когда рабочее пространство публикуется, путь становится обычной координатой в каждой опубликованной копии.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE"/>
+    <p>Путь — третий источник пакетов рядом с реестрами и git. Участник требует другого по пути во время разработки и по версии после публикации, одной строкой из двух половин: `{ path = "../flow-wal", version = "^0.1" }`. Опубликованная копия называет версию в реестре, которую сможет разрешить внешний потребитель, а путь никогда не покидает рабочего пространства. Плейсхолдер версии, объявленный один раз в корне, заменяет номер, который повторяется у участников.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PATH-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#DUAL-FORM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#VERSION-PLACEHOLDERS"/>
+    <p>Каждый публикуемый участник объявляет свою позицию полем `publish` в `[package]`. `vibe workspace publish` обходит участников от зависимостей к зависимым, пропускает `publish = false` и останавливается на первой неудаче с отчётом, что опубликовано и что осталось; отката нет, потому что честный частичный отчёт лучше притворной транзакции.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-POSTURE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-TOPOLOGICAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-NOT-ATOMIC"/>
+  </members-referring>
+  <edge-cases title="Особые случаи и правила">
+    <p>Рабочие пространства вкладываются: участник может сам нести таблицу `[workspace]`. Вложенность группирует участников; отдельных областей разрешения она не создаёт, и единственный лок-файл остаётся в самом верхнем корне.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#NESTING-PRINCIPLE"/>
+    <p>`vibe install -p &lt;member&gt;` сужает то, о чём сообщается, а не то, что разрешается: лок-файл и дерево зависимостей всегда общие для всего рабочего пространства.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCOPE-FLAG"/>
+    <p>Дерево зависимостей живёт один раз, в корне; участники не получают собственных копий общих пакетов.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-VIBEDEPS"/>
+  </edge-cases>
+</spec>

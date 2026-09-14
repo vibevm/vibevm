@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Написать документацию для пакета</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Руководство для пакета — само по себе пакет: оно называет, что документирует, несёт заголовок и краткое описание, и его читают, а не устанавливают. Эта страница пишет такое руководство, с примерами, которые выполняются, и правилами, процитированными из источника, откуда они взяты.</p>
+  <prompt id="write-documentation">Создай пакет документации org.acme/notes-flow-docs в текущем проекте VibeVM, как пакет в дереве под vibevm/vibepacks/, документирующий пакет org.acme/notes-flow. Дай ему манифест с видом doc, заголовком и аннотацией и запись [[documents]] для предмета. Напиши одну страницу, объясняющую, что делает этот flow, с правилом, процитированным из протокола предмета по адресу. Запусти на нём vibe doc check.
+    <needs>навык vibevm, установленный у вашего агента; проект с `vibe.toml` в корне и пакетом-предметом в нём</needs>
+    <outcome>`vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml` объявляет `kind = "doc"`, `title`, `abstract` и `[[documents]]`; у страницы под `vibevm/vibespecs/` первый абзац без терминов и блок `rule`, чей адрес разрешается; `vibe doc check --citations` не находит неразрешённых цитат</outcome>
+    <assert>grep -q "kind = \"doc\"" vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0/vibe.toml</assert>
+    <assert>vibe doc check --citations --path vibevm/vibepacks/org.acme/notes-flow-docs/v0.1.0</assert>
+  </prompt>
+  <what-happens title="Что происходит">
+    <p>Агент создаёт пакет вида `doc`, заполняет карточку, называет [предмет](../glossary/index.xml#subject) и пишет первую страницу на XML-диалекте со словарём документации. `vibe doc check --citations` разрешает каждый адрес `rule` по [спецификации](../glossary/index.xml#specification) предмета и падает на любом, которого нет. Руководство публикуется как любой пакет; сайт находит его по ребру `[[documents]]` и, поскольку группа предмета опубликовала его под именем с `-docs`, показывает как [официальную документацию](../glossary/index.xml#official) предмета.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DEFAULT-CONVENTION"/>
+  </what-happens>
+  <the-manifest title="Манифест">
+    <p>Пакет `doc` обязан назвать хотя бы один предмет и нести `title` и `abstract`; он может объявить [навык](../glossary/index.xml#skill), изображения и, для перевода, документацию, которую адаптирует. Он не может объявить [стартовый фрагмент](../glossary/index.xml#boot-snippet), бинарник или сервер: документацию читают, никогда не выполняют, и она никогда не попадает в список чтения сессии.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-DOCUMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MUST-NOT-EXECUTE"/>
+    <p>`abstract` отвечает на четыре вопроса в трёх–шести предложениях: что руководство охватывает, для кого, что считает известным, что оставляет за скобками. `title` — отображаемое имя на каждой полке; [координата](../glossary/index.xml#coordinate) остаётся идентичностью, а издатель показывается рядом. Изображения — необязательные исходные файлы в дереве пакета; когда их нет, сайт рисует заглушку из координаты.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-DESCRIPTION-AND-ABSTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"/>
+    <p>Пакет документации может также объявить навык, таблицу `[translates]` и `[media]`. Его страницы живут под `vibevm/vibespecs/`, как спецификации любого пакета, и только там открыт словарь документации. Имя документации предмета по умолчанию — имя предмета с `-docs`, в той же группе.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MAY-DECLARE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-PAGES-LOCATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-NAME"/>
+  </the-manifest>
+  <the-vocabulary title="Словарь страницы">
+    <p>Страницы пишутся на XML-диалекте проекта, расширенном для документации небольшим словарём, которого у обычных спецификаций нет. Каждый элемент проверяется инструментом, и в этом весь смысл его существования.</p>
+    <table>
+      <tr><td>Элемент</td><td>Что делает</td><td>Что проверяет</td></tr>
+      <tr><td>`example` с `run` и `expect`</td><td>команда и её ожидаемый вывод, выполняемые в фикстуре</td><td>раннер: точное совпадение после объявленной нормализации</td></tr>
+      <tr><td>`rule ref="spec://…#ANCHOR"`</td><td>цитирует правило из спецификации, вживую, на языке спецификации</td><td>[якорь](../glossary/index.xml#anchor) существует</td></tr>
+      <tr><td>`derived kind="cli-help | jtd-schema | manifest-field"`</td><td>вставляет сгенерированный справочный блок</td><td>перегенерируется при сборке; расхождение горит красным</td></tr>
+      <tr><td>`note kind="note | tip | warning"`</td><td>врезка</td><td>схема</td></tr>
+      <tr><td>`figure src alt` с `caption`</td><td>изображение из дерева пакета</td><td>файл существует и проходит правила для медиа</td></tr>
+      <tr><td>`prompt` с `needs`, `outcome`, `assert`</td><td>просьба, которую пользователь даёт агенту для задачи, и команды, доказывающие, что она сделана</td><td>агент выполняет её в чистой фикстуре, затем строки assert</td></tr>
+      <tr><td>`when="os:…"` на любом блоке</td><td>вариант для платформы</td><td>словарь условий</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND"/>
+    <p>Страница, которая цитирует нормативное значение, флаг, путь, имя поля, делает это через `rule`; она никогда не пересказывает значение прозой, потому что пересказанное значение — вторая копия, которая расходится.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-CITES-NEVER-COPIES"/>
+  </the-vocabulary>
+  <the-shape title="Форма страницы">
+    <p>У страницы-понятия заголовок — существительное, и открывается она абзацем, в котором нет ни одного термина глоссария. Она показывает пример прежде, чем объясняет, объясняет лестницей, где каждая ступень пользуется только предыдущими, и заканчивается особыми случаями и вопросами. У страницы-задачи заголовок в повелительном наклонении, открывается она так же, а затем прежде всего даёт просьбу для агента: что попросить, что агенту нужно, что вы увидите и какие команды докажут, что получилось. Ручные шаги следуют, только когда их стоит пройти. Ни одна страница не заканчивается заключением.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PAGE-SKELETON"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-PROMPT-FIRST"/>
+    <p>Полные правила письма, включая запрещённые слова и пределы длины предложений в технических местах, поставляются с этим руководством как `AUTHORING.md`; `vibe doc check --style` применяет их механическую часть.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-LINT"/>
+  </the-shape>
+  <checks title="Проверка и публикация">
+    <p>`vibe doc check --examples --citations --derived --media --style` запускает все проверки; примеры выполняются настоящим бинарником в песочнице, скопированной из фикстуры, которую называет страница, и страница коммитится, только когда проверки зелёные. Публикация — `vibe registry publish`, как у любого пакета; читатель получает руководство через `vibe cache add`, а сайт отрисовывает его, когда [индекс](../glossary/index.xml#index-registry) о нём объявит.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-EXAMPLE-RUNNER"/>
+    <p>Каждый `rule` — живая цитата без пина: страница показывает текущий текст [факта](../glossary/index.xml#fact) при каждой отрисовке, а проверка цитат спрашивает одно: существует ли ещё [якорь](../glossary/index.xml#anchor). Факты, которые спецификация помечает как обязательства перед аудиторией, должна цитировать страница для этой аудитории, и `vibe doc check --coverage` — эти ворота.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#OBS-COVERAGE-GATE"/>
+  </checks>
+  <edge-cases title="Особые случаи и правила">
+    <p>Любая группа может документировать любой пакет; сайт показывает такое руководство на полке сообщества с его издателем, а собственная группа предмета может повысить его до официального, назвав в `[documentation]`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-OFFICIAL-IS-CONVERGENCE"/>
+    <p>Примеры в README обычного пакета не выполняются: словарь открыт только в пакетах вида `doc`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT"/>
+    <p>Руководство описывает диапазон версий своего предмета через `[[documents]] version`, и сайт показывает для каждой версии предмета новейшее руководство, чей диапазон её допускает.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-VERSION-SELECTION"/>
+    <p>Пакет вообще без документации всё равно показывается: сайт отрисовывает любую опубликованную версию из её собственных байтов: [манифест](../glossary/index.xml#manifest) как справочную страницу, README, стартовый фрагмент, спецификации с их якорями и объявленные навыки, бинарники и серверы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO"/>
+  </edge-cases>
+</spec>
