@@ -48,6 +48,20 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
         println!("  {line}");
     }
 
+    // A featured coordinate nothing publishes is said out loud and does
+    // not stop the render: the registry moves without this file, so a
+    // package renamed yesterday must not cost the domain today's build.
+    // Silence would leave the front of the site quietly featuring one
+    // documentation fewer than the configuration names.
+    let catalogue: std::collections::BTreeSet<String> =
+        polled.pairs.iter().map(|pair| pair.coordinate()).collect();
+    for coordinate in site.featured_absent(&catalogue) {
+        println!(
+            "  warn   featured {coordinate} — no source publishes it, so the front of the \
+             site shows one documentation fewer"
+        );
+    }
+
     let mut rendered = state::read(&args.out)?;
     let debounce = site
         .host

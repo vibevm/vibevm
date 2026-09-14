@@ -146,6 +146,13 @@
             "description": "Which theme a first-time reader gets: `system`, `light` or `dark`. Absent means `system` — the reader's own setting, which is where campaign fork F-48 leaves it until the design review."
           }
         },
+        "featured": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The documentations the front of the site shows first, as `<group>/<name>` coordinates without a version — the version shown is whichever one the site serves as `latest`. It is an editorial choice about a domain and belongs to the deployment, which is why it is here and not in any package: no author may feature their own documentation by declaring something. A coordinate no source publishes is a WARNING in the build report and never a refusal, because the registry moves without this file and a deploy must not stop over a package that was renamed."
+          }
+        },
         "analytics": {
           "ref": "site_analytics",
           "metadata": {

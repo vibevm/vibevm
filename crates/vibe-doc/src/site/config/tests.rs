@@ -247,6 +247,68 @@ git = "https://example.invalid/host"
     assert!(report.contains("no website id"), "{report}");
 }
 
+/// The featured list is an editorial ranking, so it keeps the order it
+/// was written in; a deployment that names none features none.
+#[test]
+fn the_featured_documentations_are_read_in_the_order_they_were_written() {
+    let site = read(
+        r#"
+schema = 1
+[source.host]
+git = "https://example.invalid/host"
+[site]
+featured = ["org.vibevm.core/vibevm-docs", " org.vibevm.core/vibevm ", ""]
+"#,
+    )
+    .unwrap();
+    assert_eq!(
+        site.featured,
+        vec!["org.vibevm.core/vibevm-docs", "org.vibevm.core/vibevm"]
+    );
+    assert!(
+        site.render()
+            .contains("featured org.vibevm.core/vibevm-docs")
+    );
+
+    let silent = read(
+        r#"
+schema = 1
+[source.host]
+git = "https://example.invalid/host"
+"#,
+    )
+    .unwrap();
+    assert!(silent.featured.is_empty());
+    assert!(
+        silent.render().contains("featured none"),
+        "{}",
+        silent.render()
+    );
+}
+
+/// A coordinate nothing publishes is a warning and never a refusal: the
+/// registry moves without this file, and a renamed package must not cost
+/// the domain a render.
+#[test]
+fn a_featured_coordinate_no_source_publishes_is_reported_and_not_refused() {
+    let site = read(
+        r#"
+schema = 1
+[source.host]
+git = "https://example.invalid/host"
+[site]
+featured = ["org.vibevm.core/vibevm", "org.vibevm.core/gone"]
+"#,
+    )
+    .unwrap();
+    let published = BTreeSet::from(["org.vibevm.core/vibevm".to_string()]);
+    assert_eq!(
+        site.featured_absent(&published),
+        vec!["org.vibevm.core/gone"]
+    );
+    assert!(site.featured_absent(&BTreeSet::new()).len() == 2);
+}
+
 /// A misspelled table is a source that is not there, and the report is
 /// where that becomes visible in the first line of a run.
 #[test]

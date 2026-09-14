@@ -147,6 +147,17 @@ pub struct SiteTable {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default_theme: Option<String>,
 
+    /// The documentations the front of the site shows first, as
+    /// `<group>/<name>` coordinates without a version — the version shown is
+    /// whichever one the site serves as `latest`. It is an editorial choice
+    /// about a domain and belongs to the deployment, which is why it is here
+    /// and not in any package: no author may feature their own documentation
+    /// by declaring something. A coordinate no source publishes is a WARNING in
+    /// the build report and never a refusal, because the registry moves without
+    /// this file and a deploy must not stop over a package that was renamed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub featured: Vec<String>,
+
     /// Scheme and host with no trailing slash. Absent means
     /// `https://vibevm.org`. It is a default and never a constant: `canonical`,
     /// `hreflang` and the sitemap are absolute addresses, and a fork builds

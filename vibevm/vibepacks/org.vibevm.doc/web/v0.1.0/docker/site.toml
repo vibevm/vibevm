@@ -41,6 +41,13 @@ origin = "https://vibevm.org"
 # written out rather than left to the build, so a reader of the
 # deployment sees which palette the domain serves without going to look.
 default_theme = "dark"
+# The documentations the front of the site shows first, as coordinates
+# without a version: the version shown is whichever one the site serves
+# as `latest`. This is the domain's editorial choice and lives with the
+# deployment, so no author can feature their own documentation by
+# declaring something. A coordinate the sources do not publish is a
+# warning in the build report and never a failed render.
+featured = ["org.vibevm.core/vibevm", "org.vibevm.core/vibevm-docs"]
 
 # The first-party, self-hosted, cookie-less tag the landing already
 # carries (D-24, `##SITE-ANALYTICS`).

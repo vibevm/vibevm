@@ -71,6 +71,17 @@ origin = "https://vibevm.org"
 # domain keeps it: the choice is read before the first stylesheet is
 # parsed and is stronger than the default.
 default_theme = "dark"
+# The documentations the front of the site shows first, in the order
+# written, as `<group>/<name>` coordinates WITHOUT a version — the
+# version shown is whichever one the site serves as `latest`. Featuring
+# is an editorial choice about one domain, which is why it is here and
+# not in any package: a list a package could write would let every
+# author feature their own documentation. Omit it, or leave it empty, to
+# feature nothing. A coordinate no source publishes is a WARNING in the
+# build report and never a refusal — this file is authored beside the
+# deploy and the registry moves without it, so a package renamed
+# yesterday must not stop today's render.
+featured = ["org.vibevm.core/vibevm", "org.vibevm.core/vibevm-docs"]
 
 # The first-party, self-hosted, cookie-less analytics tag the landing
 # already carries (PROP-057 `##SITE-ANALYTICS`). Both values identify a
