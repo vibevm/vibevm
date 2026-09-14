@@ -68,7 +68,9 @@ test("the manual's pages stand in a column, grouped by their folders", async ({
 /**
  * A section's identity is the source's and its name is the reader's
  * edition's: the folder is the same in every language, and what stands
- * over it is what that edition's own manifest calls it.
+ * over it is what that edition's own manifest calls it. The links under
+ * it follow the same rule one level down, which is what the second half
+ * of this test is about.
  */
 test("a folder is named in the words of the edition being read", async ({
   page,
@@ -84,14 +86,19 @@ test("a folder is named in the words of the edition being read", async ({
   ]);
   /* The pins are the source's — a pin names a document, and a document
      is the same one in every language — and they lead to the
-     adaptation's own addresses. The words on the links are the source's
-     as well, which is this column's own rule about titles and not
-     something the navigation decides. */
+     adaptation's own addresses. */
   await expect(column.locator("a").first()).toHaveAttribute(
     "href",
     "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/",
   );
-  await expect(column.locator("a")).toHaveCount(2);
+  /* Both halves of the rule about the words, on one screen. The
+     adaptation carries the pinned page and named it, so the link is its
+     name; it has not reached the other page, so that link keeps the
+     source's — which is the text that address actually serves. */
+  await expect(column.locator("a")).toHaveText([
+    "Каждый блок по разу",
+    "Addresses",
+  ]);
 });
 
 test("a phone gets the same pages as a block it opens itself", async ({

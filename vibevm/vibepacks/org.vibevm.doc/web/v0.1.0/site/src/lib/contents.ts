@@ -10,7 +10,7 @@
  * documentation's own front page, which has no document in its address
  * at all.
  *
- * Three rules and nothing else shapes what comes out.
+ * Four rules and nothing else shapes what comes out.
  *
  * **The order is the manifest's.** The pages arrive in the order the
  * layer law gave them — text that stands still before text that moves
@@ -33,6 +33,17 @@
  * as its source while showing other words. A folder no manifest names is
  * shown under its own directory name, which is a fallback and never a
  * translation.
+ *
+ * **A page's name is the reader's edition's for the same reason.** The
+ * list answers which pages exist; the words on it answer what each one
+ * is called where the reader is standing, and those are two questions.
+ * A column built entirely from the source's titles read «Every block
+ * once» over a Russian page whose own card on the package page calls it
+ * «Каждый блок по разу» — the site disagreeing with itself about the
+ * name of one page, twice on the same screen. The source's words stand
+ * in only where the adaptation has not reached the page, which is
+ * exactly the text that address will serve: the link then says what
+ * opening it will show, which is the whole job of a label.
  */
 
 import { docHref } from "./href.ts";
@@ -40,6 +51,7 @@ import {
   addressOf,
   documentOf,
   editions,
+  resolvePage,
   sourceEdition,
   type Edition,
   type Library,
@@ -117,10 +129,17 @@ export function contentsOf(
     current: document === currentDocument,
   });
 
+  /* The list is the source's pages and the words are the edition's:
+     `resolvePage` is the one place that knows which edition will answer
+     for an address, so the label and the text behind the link cannot
+     disagree. A page this edition carries is named in its own words; one
+     it has not reached resolves to the source's page, which is both the
+     title shown and the text that address serves. */
   const titles = new Map<string, string>();
   for (const page of source.pages) {
     const document = documentOf(page.path);
-    titles.set(document, page.title);
+    const served = resolvePage(library, at, document);
+    titles.set(document, (served?.page ?? page).title);
   }
 
   /* A pin names a document, and a pin that names no page of this
@@ -139,7 +158,7 @@ export function contentsOf(
     const folder = folderOf(document);
     const items = grouped.get(folder) ?? [];
     if (items.length === 0) grouped.set(folder, items);
-    items.push(entry(document, page.title));
+    items.push(entry(document, titles.get(document) ?? page.title));
   }
 
   return {

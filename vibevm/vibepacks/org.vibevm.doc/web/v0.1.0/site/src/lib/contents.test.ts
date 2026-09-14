@@ -243,6 +243,75 @@ describe("the manual's pages as the column lists them", () => {
     assert.deepEqual(marked, ["Lock and store"]);
   });
 
+  /**
+   * The list is the source's and the words are the reader's edition's.
+   *
+   * The two are separate answers and were being given as one: the column
+   * printed the source's title over every link, so an adaptation that
+   * had the page and had named it in its own language was overruled by
+   * the manual it adapts. Where the adaptation has NOT reached a page,
+   * the source's words are the right ones — that is the text the address
+   * serves, and a label must say what opening it will show.
+   */
+  it("names a page in the words of the edition that will serve it", () => {
+    const library = libraryOf(
+      manifest({}, ...PAGES),
+      manifest(
+        {
+          name: "manual-ru",
+          lang: "ru",
+          translates: "com.example.docs/manual",
+        },
+        page("start/index.xml", "Путь новичка"),
+      ),
+    );
+    const labels = (at: string | null): string[] =>
+      contentsOf(library, at, null)
+        .sections.flatMap((section) => section.items)
+        .map((item) => item.label);
+
+    assert.deepEqual(labels(null), [
+      "Newcomer's Path",
+      "What VibeVM is",
+      "Lock and store",
+      "Read me",
+    ]);
+    assert.deepEqual(
+      labels("ru"),
+      ["Путь новичка", "What VibeVM is", "Lock and store", "Read me"],
+      "the one page the adaptation carries is named in its own words, and " +
+        "the three it has not reached keep the source's, which is the text " +
+        "those addresses serve",
+    );
+  });
+
+  it("names a pinned page the same way", () => {
+    const pinned = contentsOf(
+      libraryOf(
+        manifest(
+          { navigation: { pinned: ["start/index"], sections: [] } },
+          ...PAGES,
+        ),
+        manifest(
+          {
+            name: "manual-ru",
+            lang: "ru",
+            translates: "com.example.docs/manual",
+          },
+          page("start/index.xml", "Путь новичка"),
+        ),
+      ),
+      "ru",
+      null,
+    ).pinned;
+
+    assert.deepEqual(
+      pinned.map((item) => item.label),
+      ["Путь новичка"],
+      "standing first is about order and says nothing about the words",
+    );
+  });
+
   it("lists the source's pages under the adaptation's addresses", () => {
     const library = libraryOf(
       manifest({}, ...PAGES),
