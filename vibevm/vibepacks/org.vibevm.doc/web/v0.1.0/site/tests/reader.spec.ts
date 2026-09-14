@@ -10,11 +10,26 @@
  * pure function; all of them are what a reader actually experiences.
  */
 
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const PAGE = "/doc/com.example.docs/fixture-manual/0.1.0/guide/every-block/";
 const RU_PAGE =
   "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/";
+
+/**
+ * Open a page and wait until its behaviours are listening.
+ *
+ * A documentation page looks interactive from the first frame and is
+ * inert until the reader's chunk has loaded: the gear, the pills and the
+ * block numbers are markup with a listener added afterwards, and a click
+ * that arrives in between goes nowhere and is not retried. The page says
+ * which of the two states it is in, and every test that clicks a control
+ * asks first.
+ */
+async function read(page: Page, at: string = PAGE): Promise<void> {
+  await page.goto(at);
+  await expect(page.locator("html")).toHaveAttribute("data-reader", /./);
+}
 
 /** The reader's own memory, cleared so one test cannot seed another. */
 test.beforeEach(async ({ page }) => {
@@ -52,7 +67,7 @@ test("a block number copies the whole address and ticks", async ({
   context,
 }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto(PAGE);
+  await read(page);
   const anchor = page.locator("a.p-anchor#p03");
   await anchor.click();
 
@@ -65,12 +80,13 @@ test("a block number copies the whole address and ticks", async ({
 test("a reload offers the reading place and does not take it", async ({
   page,
 }) => {
-  await page.goto(PAGE);
+  await read(page);
   await page.evaluate(() => window.scrollTo(0, 2200));
   // The position is saved at most once a second, by design.
   await page.waitForTimeout(1400);
 
   await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-reader", /./);
   await expect(page.locator("[data-return]")).toBeVisible();
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
@@ -81,7 +97,7 @@ test("a reload offers the reading place and does not take it", async ({
 });
 
 test("changing the language keeps the fragment", async ({ page }) => {
-  await page.goto(`${PAGE}#p07`);
+  await read(page, `${PAGE}#p07`);
   await page.locator("[data-language-selector] summary").click();
   const russian = page.locator("[data-language-selector] a[hreflang='ru']");
   await expect(russian).toHaveAttribute("href", new RegExp("#p07$"));
@@ -123,7 +139,7 @@ test("the chosen theme is already on the page at the first frame", async ({
 test("the settings panel changes the reading and remembers it", async ({
   page,
 }) => {
-  await page.goto(PAGE);
+  await read(page);
   await page.locator("[data-settings-toggle]").click();
   // Scoped to the panel: the same handles sit in the quick row, which is
   // hidden until the reader is actually reading.
@@ -154,7 +170,7 @@ test("the settings panel changes the reading and remembers it", async ({
 test("turning the block numbers off leaves the ids in place", async ({
   page,
 }) => {
-  await page.goto(PAGE);
+  await read(page);
   await page.locator("[data-settings-toggle]").click();
   await page
     .locator("[data-settings-panel] [data-toggle='anchors']")
@@ -172,7 +188,7 @@ test("turning the block numbers off leaves the ids in place", async ({
 test("the platform switch hides the other platforms and is remembered", async ({
   page,
 }) => {
-  await page.goto(PAGE);
+  await read(page);
   await page.locator("[data-when-switch] button[value='linux']").click();
   await expect(page.locator("[data-when='os:linux']")).toBeVisible();
   await expect(page.locator("[data-when='os:windows']")).toBeHidden();
@@ -185,7 +201,7 @@ test("the platform switch hides the other platforms and is remembered", async ({
 test("a quoted rule opens beside itself with the text already in the page", async ({
   page,
 }) => {
-  await page.goto(PAGE);
+  await read(page);
   await page.locator("blockquote.rule a.rule").first().click();
   const panel = page.locator("[data-rule-panel]");
   await expect(panel).toBeVisible();

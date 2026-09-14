@@ -32,7 +32,35 @@ test("a build told nothing publishes no analytics tag and claims one domain", ()
   assert.equal(config.umamiHostUrl, "");
   assert.equal(config.indexNowKey, "");
   assert.equal(config.defaultTheme, "dark");
+  assert.deepEqual(
+    [...config.featured],
+    ["org.vibevm.core/vibevm", "org.vibevm.core/vibevm-docs"],
+  );
   assert.match(config.lastmod, /^\d{4}-\d{2}-\d{2}$/);
+});
+
+/**
+ * The featured shelf is a list in one string, which is all an
+ * environment variable can be — so the separator and the spaces around
+ * it are part of the contract rather than a caller's habit. An empty
+ * entry is somebody's trailing comma, and a version on a coordinate is
+ * a deployment that would stop featuring anything the day one was
+ * published; neither is a reason to refuse a deploy, so neither refuses.
+ */
+test("the featured coordinates arrive as a list, however they were spaced", () => {
+  assert.deepEqual(
+    [
+      ...siteConfig({
+        [ENV_NAMES.featured]: " a.b/one ,a.b/two,, a.b/three ",
+      }).featured,
+    ],
+    ["a.b/one", "a.b/two", "a.b/three"],
+  );
+  // Nothing said is the site's own list, as it is for every other value.
+  assert.deepEqual(
+    [...siteConfig({ [ENV_NAMES.featured]: "   " }).featured],
+    ["org.vibevm.core/vibevm", "org.vibevm.core/vibevm-docs"],
+  );
 });
 
 /**

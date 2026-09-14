@@ -26,6 +26,7 @@ import { startCodeChrome } from "./code.ts";
 import { startOverlay } from "./overlay.ts";
 import { startToc } from "./toc.ts";
 import { startCatalogue, type CatalogueEdition } from "./catalogue.ts";
+import { startCatalogueTabs } from "./catalogue-tabs.ts";
 import { startDocLanguage } from "./doc-language.ts";
 import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
 import { startFallback } from "./fallback.ts";
@@ -67,6 +68,18 @@ export type ReaderContext = {
   readonly mount: string;
 };
 
+/**
+ * The stamp a page carries while its behaviours are listening.
+ *
+ * A documentation page is interactive-looking from the first frame and
+ * inert until this module's chunk has loaded: the settings gear, the
+ * platform pills and the block numbers are all markup with a listener
+ * added later, and a click that arrives in between is a click that goes
+ * nowhere. The page says which of the two states it is in, in one place,
+ * so that a stylesheet and a test can both ask.
+ */
+const LIVE = "data-reader";
+
 /** Start every behaviour; the returned function stops all of them. */
 export function startReader(context: ReaderContext): () => void {
   const embedded = isEmbedded();
@@ -104,26 +117,31 @@ export function startReader(context: ReaderContext): () => void {
     }),
   ];
 
+  document.documentElement.setAttribute(LIVE, embedded ? "embedded" : "on");
+
   return () => {
+    document.documentElement.removeAttribute(LIVE);
     for (const stop of stops) stop();
   };
 }
 
 /**
- * The catalogue's much smaller reader: the language filter, and the one
- * decision the door has to take.
+ * The catalogue's much smaller reader: which shelf, which language, and
+ * the one decision the door has to take.
  *
  * It shares nothing with the page's reader because it has nothing to
  * share — there is no island, no block to cite and no place to return
- * to. What it does have is language: the filter that decides which
- * editions stand on the shelf, and the door's own decision about which
- * shelf a reader who asked for none is shown.
+ * to. What it does have is two narrowings of one list, which are
+ * deliberately two behaviours: a tab says what KIND of thing a reader
+ * wants and a filter says which language of it, and a reader changing
+ * one is not changing the other.
  */
 export function startCatalogueReader(
   editions: readonly CatalogueEdition[],
   addressLanguage: string | null,
 ): () => void {
   const stops = [
+    startCatalogueTabs(),
     startLanguageSwitch(),
     startDocLanguage(addressLanguage),
     startCatalogue(editions),

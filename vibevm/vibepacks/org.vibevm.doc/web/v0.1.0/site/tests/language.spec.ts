@@ -200,9 +200,10 @@ test("the site's language is remembered across pages", async ({ page }) => {
   await expect(page.locator("footer")).toContainText("Олег Чирухин");
 
   await page.goto("/doc/");
-  await expect(page.locator(".shelf__title")).toContainText("Издания");
+  const documents = page.locator('[data-tab-panel="documents"]');
+  await expect(documents.locator(".shelf__title")).toHaveText("Документы");
   // …and says nothing about which edition the shelf offers.
-  await expect(page.locator(".shelf__items .card")).toHaveCount(2);
+  await expect(documents.locator(".card")).toHaveCount(2);
 });
 
 /**

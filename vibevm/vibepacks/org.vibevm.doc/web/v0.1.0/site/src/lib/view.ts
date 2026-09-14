@@ -25,8 +25,6 @@ import type {
   VersionChoice,
 } from "@vibe-docs/design";
 
-import type { DocumentationStatus } from "../generated/doc-manifest.ts";
-
 import {
   catalogueHref,
   docHref,
@@ -65,7 +63,7 @@ const ENDONYM: Readonly<Record<string, string>> = {
   ru: "Русский",
 };
 
-function endonym(tag: string): string {
+export function endonym(tag: string): string {
   return ENDONYM[tag] ?? tag;
 }
 
@@ -119,7 +117,7 @@ const EVERY_LANGUAGE_LABEL = "Everything";
  * is not a BCP-47 tag and cannot be mistaken for one, and it names no
  * publisher because a shelf of every edition has no single one.
  */
-function everyLanguage(current: boolean): LanguageChoice {
+export function everyLanguage(current: boolean): LanguageChoice {
   return {
     tag: "*",
     label: EVERY_LANGUAGE_LABEL,
@@ -130,42 +128,6 @@ function everyLanguage(current: boolean): LanguageChoice {
     note: "every language this build carries",
     pill: "all",
   };
-}
-
-/**
- * The documentation-language filter a SHELF offers: every language the
- * site carries, then «Everything».
- *
- * One entry per language and never one per edition: the address
- * `vibevm.org/doc/ru/` is the site's Russian shelf, and three
- * documentations adapted into Russian are three cards on it rather than
- * three entries here. Where a language carries exactly one documentation
- * the entry is that edition's, star and publisher and all; where it
- * carries several, «published by» is answered with how many there are,
- * because the publisher of a shelf is not a fact and the shelf behind
- * the entry names every one of them.
- *
- * No entry carries an address, and that is the change the owner asked
- * for: every edition is already on the page, so choosing a language
- * narrows what stands there rather than moving the reader to a second
- * shelf showing the same cards.
- */
-export function shelfLanguageChoices(
-  libraries: readonly Library[],
-  at: string | null,
-): LanguageChoice[] {
-  return [
-    ...siteLanguages(libraries).map((one) => ({
-      tag: one.tag,
-      label: endonym(one.tag),
-      publisher:
-        one.count === 1 ? one.edition.publisher : `${one.count} documentations`,
-      official: one.count === 1 && one.edition.official,
-      source: one.segment === null,
-      current: one.segment === at && at !== null,
-    })),
-    everyLanguage(at === null),
-  ];
 }
 
 /**
@@ -189,17 +151,6 @@ export function pageLanguageChoices(
   at: string | null,
 ): LanguageChoice[] {
   return [...languageChoices(library, document, at), everyLanguage(false)];
-}
-
-/** The addresses of the site's shelves, one per language it carries. */
-export function catalogueDoors(
-  libraries: readonly Library[],
-): { tag: string; href: string; source: boolean }[] {
-  return siteLanguages(libraries).map((one) => ({
-    tag: one.tag,
-    href: catalogueHref(one.segment),
-    source: one.segment === null,
-  }));
 }
 
 function reviewedAt(one: Edition, document: string): string | undefined {
@@ -307,56 +258,6 @@ export function pageCards(library: Library, at: string | null): PageCard[] {
       ...(summary.length === 0 ? {} : { summary }),
     };
   });
-}
-
-/** One card of the catalogue: one edition of one library the site carries. */
-export type CatalogueEntry = {
-  readonly tag: string;
-  readonly segment: string | null;
-  readonly title: string;
-  readonly href: string;
-  readonly publisher: string;
-  readonly coordinate: string;
-  readonly description?: string;
-  readonly abstract: string;
-  readonly status: DocumentationStatus;
-};
-
-/**
- * The shelf behind the door: every edition of every library, in the
- * libraries' own order and, inside each, D-19's.
- *
- * One card per EDITION and not per documentation, because a reader
- * looking for a language is looking for a text they can read. The
- * standing on a card is the standing of the thing it names: a source
- * card carries the documentation's own — primary, official or community
- * for its subject — and an adaptation's carries whether the source's
- * author named it, which is a different question with the same three
- * words (`##REL-OFFICIAL-IS-CONVERGENCE`, `##LOC-OFFICIAL-TRANSLATION`).
- */
-export function catalogueEntries(
-  libraries: readonly Library[],
-): readonly CatalogueEntry[] {
-  return libraries.flatMap((library) =>
-    editions(library).map((one) => ({
-      tag: one.tag,
-      segment: one.segment,
-      title: one.title,
-      href: packageHref(coordinate(library, one.segment)),
-      publisher: one.publisher,
-      coordinate: `${one.card.group}/${one.card.name}@${one.card.version}`,
-      ...(one.card.description === undefined
-        ? {}
-        : { description: one.card.description }),
-      abstract: one.card.abstract,
-      status:
-        one.segment === null
-          ? one.card.status
-          : one.official
-            ? "official"
-            : "community",
-    })),
-  );
 }
 
 /** The machine surfaces that lie beside a page, as the meta row shows them. */

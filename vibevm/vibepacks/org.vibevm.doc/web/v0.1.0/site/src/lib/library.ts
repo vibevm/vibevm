@@ -94,6 +94,36 @@ export function documentOf(path: string): string {
   return path.replace(/\.(xml|md)$/, "");
 }
 
+/**
+ * Whether a card is a level-zero RENDERING of a package rather than a
+ * documentation package about one.
+ *
+ * The two are different things wearing the same shape. A `doc` package
+ * is prose somebody wrote about a subject; a level-zero rendering is the
+ * pipeline printing a package's own bytes as pages, so that every
+ * package on the registry has something to read even where nobody has
+ * written a word. A reader deciding which of the two they are looking at
+ * is the whole reason the catalogue has a shelf for each.
+ *
+ * **This is the one place that decides it, and it decides it twice.**
+ * `projection` is the field the manifest is gaining, and a card that
+ * carries it is believed: the builder is the only thing that knows
+ * which of its two modes produced a tree, so the answer belongs there
+ * and arrives named like every other value (`##PIPE-SHELL-PARSES-
+ * NOTHING`). Until every deployment's manifests carry it there is one
+ * signal a manifest already has, and it is not a guess: a rendering of a
+ * package documents THAT package, so its own coordinate stands among its
+ * subjects, while a `doc` package names something other than itself
+ * (`##REL-DOCUMENTS-REQUIRED`). The day the field is everywhere, the
+ * second half of this function goes and the first stays.
+ */
+export function isProjection(card: DocPackage): boolean {
+  const declared: unknown = Reflect.get(card, "projection");
+  if (typeof declared === "boolean") return declared;
+  const own = `${card.group}/${card.name}`;
+  return card.subjects.some((subject) => subject.package === own);
+}
+
 function edition(manifest: DocManifest, segment: string | null): Edition {
   const card = manifest.package;
   return {

@@ -331,6 +331,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/lib/catalogue.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/catalogue.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/lib/href.ts",
       "item_kind": "module",
       "line": 1,
@@ -454,6 +461,13 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/reader/anchors.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/reader/catalogue-tabs.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/catalogue-tabs.ts"
     },
     {
       "crate_name": "src",
@@ -1170,6 +1184,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/lib/catalogue.ts",
+      "from_symbol": "site/src/lib/catalogue.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/lib/href.ts",
       "from_symbol": "site/src/lib/href.ts",
       "line": 1,
@@ -1311,6 +1333,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/reader/catalogue-tabs.ts",
+      "from_symbol": "site/src/reader/catalogue-tabs.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
       "verb": "implements"
     },
     {
@@ -1986,6 +2016,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "site/src/lib/catalogue.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "site/src/lib/href.ts",
       "line": 1,
       "message": "edge `site/src/lib/href.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT`: no spec unit carries this anchor"
@@ -2091,6 +2127,12 @@
       "file": "site/src/reader/anchors.ts",
       "line": 1,
       "message": "edge `site/src/reader/anchors.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NUMBERED-BLOCKS`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/catalogue-tabs.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/catalogue-tabs.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
