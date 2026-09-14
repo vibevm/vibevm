@@ -9,12 +9,12 @@
 
 | hash | subject |
 | --- | --- |
-| `25443af6` | `feat(web): copy an install line from the landing with one click` |
-| `722d0c01` | `feat(web): put the theme switch on the landing and default to dark` |
-| `9f88a9a7` | `fix(web): make the header search find pages` |
-| `0ee2c5d5` | `fix(web): align the card glyph with its title on wide screens` |
-| `c6737a92` | `fix(web): show a page card the abstract of that page` |
-| `6b077771` | `fix(web): keep the reading controls clear of the header widgets` |
+| `562503c8` | `feat(web): copy an install line from the landing with one click` |
+| `4f3a05dd` | `feat(web): put the theme switch on the landing and default to dark` |
+| `2310d679` | `fix(web): make the header search find pages` |
+| `1db48925` | `fix(web): align the card glyph with its title on wide screens` |
+| `1948bfbe` | `fix(web): show a page card the abstract of that page` |
+| `bbe8e101` | `fix(web): keep the reading controls clear of the header widgets` |
 
 Периметр соблюдён: `git diff --name-only 818247cd..HEAD` не даёт ни одного файла
 вне `vibevm/vibepacks/org.vibevm.doc/web/v0.1.0/**` и
@@ -25,7 +25,7 @@
 
 ## A. Кнопка копирования у строк установки
 
-Коммит `25443af6`.
+Коммит `562503c8`.
 
 Рядом с каждой командой — кнопка-пиктограмма (инлайновый SVG в
 `design/src/components/hero/install-block.tsx`, никаких внешних ресурсов),
@@ -58,7 +58,7 @@
 
 ## B. Переключатель темы на главной; умолчание — тёмная
 
-Коммит `722d0c01`.
+Коммит `4f3a05dd`.
 
 Отдельного компонента-переключателя не было: на страницах документации тему
 меняли три кнопки, написанные прямо в `SettingsPanel`. По пакету («вынести в
@@ -108,7 +108,7 @@
 
 ## C. Поиск: причина и починка
 
-Коммит `9f88a9a7`.
+Коммит `2310d679`.
 
 ### Причина, как просил пакет
 
@@ -194,7 +194,7 @@ Manual» (слово только из аннотации); стрелки/Esc/E
 
 ## D. Иконка карточки на уровне названия
 
-Коммит `0ee2c5d5`. Только CSS, разметка и данные карточек не тронуты.
+Коммит `1db48925`. Только CSS, разметка и данные карточек не тронуты.
 
 От 768 px `.card__row` становится grid, `.card__body` — `display: contents`,
 так что его трое детей становятся элементами сетки; размещается только знак
@@ -209,7 +209,7 @@ Manual» (слово только из аннотации); стрелки/Esc/E
 
 ## E. Своя аннотация у карточки страницы
 
-Коммит `c6737a92`.
+Коммит `1948bfbe`.
 
 Поле в манифесте — `DocPage.summary` («The page's leading fact — its first
 paragraph… Taken, never composed»). Полка «Pages» передавала вместо него
@@ -241,7 +241,7 @@ which nothing in the product is allowed to invent» — свою. На русс�
 
 ## F. Элементы управления чтением поверх шапки
 
-Коммит `6b077771`.
+Коммит `bbe8e101`.
 
 **Воспроизведено** (`f-before-1440-dark.png`): при 1440 px долистать документ до
 конца — появляется быстрый ряд, и он перекрывает правую часть шапки: пилюля
