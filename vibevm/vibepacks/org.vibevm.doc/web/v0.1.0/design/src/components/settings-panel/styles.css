@@ -142,8 +142,43 @@
   margin: 0.2rem 0 0;
 }
 
-/* There is no second column width to choose on a phone. */
+/* The phone's shape: the controls at the bottom, the panel opening up.
+   ---------------------------------------------------------------------
+   Standing clear of the header is enough while the window is wide, where
+   the reading column is centred and the corner above it is margin. Below
+   about nine hundred pixels the column is the whole width, so the top
+   right corner is the FIRST LINE of the text, and that is where these
+   controls were sitting — the reading settings over the first thing a
+   reader reads.
+
+   The bottom of a phone's screen is where a thumb already is and where
+   nothing is written: the reading column ends six rems above the fold,
+   and the other two fixed things down there — the agent button on the
+   right, the return-to-place pill in the middle — leave the left corner
+   to this. The panel opens upward from the gear for the same reason it
+   opened downward before: away from the edge it is anchored to.
+
+   The gear leads the row here, so the corner holds the one control that
+   is always there and the quick row grows inward from it rather than
+   moving the gear whenever a reader starts reading.
+
+   There is also no second column width to choose on a phone. */
 @media (max-width: 900px) {
+  .settings {
+    top: auto;
+    right: auto;
+    bottom: 1.4rem;
+    left: 1rem;
+    flex-direction: row-reverse;
+  }
+
+  .settings__panel {
+    top: auto;
+    right: auto;
+    bottom: 2.6rem;
+    left: 0;
+  }
+
   .settings__group--width {
     display: none;
   }
