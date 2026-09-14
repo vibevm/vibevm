@@ -22,6 +22,7 @@ import type {
   BridgeAuthorship,
   LanguageChoice,
   MetaLink,
+  PackageKind,
   VersionChoice,
 } from "@vibe-docs/design";
 
@@ -45,6 +46,7 @@ import {
   coordinate,
   documentOf,
   editions,
+  kindOf,
   libraryAt,
   resolvePage,
   siteLanguages,
@@ -337,6 +339,19 @@ export type PackageView = {
   readonly textLanguage: string;
   readonly status: "primary" | "official" | "community";
   /**
+   * What kind of package this page is about, where the manifest lets it
+   * be known (VIBEVM-SPEC §4.1). It is spelled `packageKind` and not
+   * `kind` because this type already answers to that word: `kind` says
+   * which of the three views a route is rendering, and two meanings of
+   * one name on one object is how a page ends up drawing the mark of a
+   * documentation on a catalogue.
+   *
+   * The same value travels to the head of the page, to the card of this
+   * documentation and to every page card below it, so one package wears
+   * one mark wherever this route puts it.
+   */
+  readonly packageKind?: PackageKind;
+  /**
    * Who wrote this documentation's prose, when it says so
    * (`##CARD-AUTHORSHIP`). Absent is a card with no mark, here as on the
    * door: a documentation that declared nothing is not a documentation a
@@ -379,6 +394,8 @@ export type PackageView = {
     official: boolean;
     /** The BCP-47 tag of this adaptation, for the language filter. */
     tag: string;
+    /** Its own kind, which for an adaptation of a manual is the manual's. */
+    packageKind?: PackageKind;
     /** Who wrote this adaptation's prose, when it says so. */
     authorship?: Authorship;
     /** Its own two authorships, when the adaptation is itself a bridge. */
@@ -439,6 +456,7 @@ function packageView(
   if (here === undefined) return null;
   const card = here.card;
   const bridge = bridgeOf(card);
+  const kind = kindOf(card);
 
   return {
     kind: "package",
@@ -452,6 +470,7 @@ function packageView(
     abstract: card.abstract,
     textLanguage: card.lang,
     status: card.status,
+    ...(kind === undefined ? {} : { packageKind: kind }),
     ...(card.authorship === undefined ? {} : { authorship: card.authorship }),
     ...(bridge === undefined ? {} : { bridge }),
     languages: [
@@ -477,6 +496,7 @@ function packageView(
       .filter((one) => one.segment !== null)
       .map((one) => {
         const adapted = bridgeOf(one.card);
+        const adaptedKind = kindOf(one.card);
         return {
           title: one.title,
           href: packageHref(coordinate(library, one.segment)),
@@ -488,6 +508,7 @@ function packageView(
           abstract: one.card.abstract,
           official: one.official,
           tag: one.tag,
+          ...(adaptedKind === undefined ? {} : { packageKind: adaptedKind }),
           ...(one.card.authorship === undefined
             ? {}
             : { authorship: one.card.authorship }),

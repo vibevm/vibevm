@@ -17,7 +17,11 @@
  * lets the whole of it be measured without a browser or a build.
  */
 
-import type { BridgeAuthorship, LanguageChoice } from "@vibe-docs/design";
+import type {
+  BridgeAuthorship,
+  LanguageChoice,
+  PackageKind,
+} from "@vibe-docs/design";
 
 import type {
   Authorship,
@@ -30,6 +34,7 @@ import {
   coordinate,
   editions,
   isProjection,
+  kindOf,
   siteLanguages,
   type Library,
 } from "./library.ts";
@@ -48,6 +53,13 @@ export type CatalogueEntry = {
   readonly status: DocumentationStatus;
   /** True when the pipeline printed this out of a package's own bytes. */
   readonly projection: boolean;
+  /**
+   * What kind of package the card names, where the manifest lets it be
+   * known (VIBEVM-SPEC §4.1). Absent is «nobody said», which is every
+   * projection until the wire carries the word: the card then wears the
+   * placeholder rather than a mark that would be a guess.
+   */
+  readonly packageKind?: PackageKind;
   /** True when the deployment named this documentation on the first shelf. */
   readonly featured: boolean;
   /**
@@ -100,6 +112,7 @@ export function catalogueEntries(
     const named = featured.includes(`${source.group}/${source.name}`);
     return editions(library).map((one) => {
       const bridged = bridgeOf(one.card);
+      const kind = kindOf(one.card);
       return {
         tag: one.tag,
         segment: one.segment,
@@ -118,6 +131,7 @@ export function catalogueEntries(
               ? "official"
               : "community",
         projection: isProjection(one.card),
+        ...(kind === undefined ? {} : { packageKind: kind }),
         featured: named,
         /* The edition's own answer and never the source's: a translation
          is prose somebody wrote, and which hand wrote it is a fact about

@@ -12,6 +12,11 @@ import {
   BridgeSignatures,
   type BridgeAuthorship,
 } from "../bridge-signatures/index.tsx";
+import {
+  KindGlyph,
+  kindLabel,
+  type PackageKind,
+} from "../kind-glyph/index.tsx";
 import styles from "./styles.css?inline";
 
 export type CardProps = {
@@ -40,6 +45,14 @@ export type CardProps = {
   readonly status: DocStatus;
   /** The address of the package's icon, when it has one. */
   readonly icon?: string;
+  /**
+   * What kind of package the card names, when the caller knows it
+   * (VIBEVM-SPEC §4.1). With it the placeholder carries that kind's own
+   * mark, so a flow reads as a flow and a manual as a manual before the
+   * title is read; without it the card draws the glyph below instead,
+   * because a mark is a statement and a card may not guess one.
+   */
+  readonly kind?: PackageKind;
   /** One character for the generated placeholder when it has no icon. */
   readonly glyph: string;
   /** What the abstract's disclosure is called. */
@@ -93,9 +106,13 @@ export type CardProps = {
  * promise and a borrowed answer are both worse than nothing.
  *
  * When a package declares no icon, the placeholder is drawn from tokens
- * and a glyph rather than fetched: a shelf that reached out to someone
- * else's host for a picture would be a shelf that leaks who is reading
- * it (D-20, R-09).
+ * rather than fetched: a shelf that reached out to someone else's host
+ * for a picture would be a shelf that leaks who is reading it (D-20,
+ * R-09). What stands in it is the package's KIND where the caller knew
+ * it — the one mark that tells a flow from a manual before either is
+ * opened — and the plain glyph where it did not, because a shelf of
+ * eight kinds is only readable if a card that knows no kind says so by
+ * showing none.
  */
 export const Card = component$<CardProps>((props) => {
   useStyles$(styles);
@@ -111,9 +128,23 @@ export const Card = component$<CardProps>((props) => {
     >
       <div class="card__row">
         {props.icon === undefined ? (
-          <span class="card__placeholder" aria-hidden="true">
-            {props.glyph}
-          </span>
+          props.kind === undefined ? (
+            <span class="card__placeholder" aria-hidden="true">
+              {props.glyph}
+            </span>
+          ) : (
+            /* Named, because with a kind in it the tile carries a fact
+               that is nowhere else on the card. The mark inside stays
+               hidden: one announcement, not two. */
+            <span
+              class="card__placeholder"
+              role="img"
+              title={kindLabel(props.kind)}
+              aria-label={kindLabel(props.kind)}
+            >
+              <KindGlyph kind={props.kind} />
+            </span>
+          )
         ) : (
           <img
             class="card__icon"

@@ -52,6 +52,13 @@
   color: var(--accent);
 }
 
+/* The same share of the tile a card's mark takes, so one package wears
+   the same mark at two sizes and a reader arriving from a shelf reads
+   the head of the page as the card they clicked. */
+.package-header__placeholder .kind-glyph {
+  --kind-glyph-size: 58%;
+}
+
 .package-header__body {
   min-width: 0;
   padding-top: 2rem;

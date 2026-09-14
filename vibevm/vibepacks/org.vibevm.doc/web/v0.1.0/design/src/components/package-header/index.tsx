@@ -5,6 +5,11 @@ import {
   BridgeSignatures,
   type BridgeAuthorship,
 } from "../bridge-signatures/index.tsx";
+import {
+  KindGlyph,
+  kindLabel,
+  type PackageKind,
+} from "../kind-glyph/index.tsx";
 import styles from "./styles.css?inline";
 
 export type PackageHeaderProps = {
@@ -20,6 +25,14 @@ export type PackageHeaderProps = {
   readonly banner?: string;
   /** The icon's address when the package ships one. */
   readonly icon?: string;
+  /**
+   * What kind of package this page is about, when the caller knows it
+   * (VIBEVM-SPEC §4.1). The placeholder then carries that kind's mark —
+   * the same mark the package wears on every shelf it stands on — and
+   * the glyph below is what a page whose kind nobody named falls back
+   * to.
+   */
+  readonly kind?: PackageKind;
   /** One character for the generated placeholder, chosen by package kind. */
   readonly glyph: string;
   /**
@@ -75,9 +88,24 @@ export const PackageHeader = component$<PackageHeaderProps>((props) => {
       )}
       <div class="package-header__row">
         {props.icon === undefined ? (
-          <span class="package-header__placeholder" aria-hidden="true">
-            {props.glyph}
-          </span>
+          props.kind === undefined ? (
+            <span class="package-header__placeholder" aria-hidden="true">
+              {props.glyph}
+            </span>
+          ) : (
+            /* Named for the reason the card's tile is: with a kind in it
+               the tile states a fact the page does not state anywhere
+               else, and the mark inside stays hidden so it is announced
+               once. */
+            <span
+              class="package-header__placeholder"
+              role="img"
+              title={kindLabel(props.kind)}
+              aria-label={kindLabel(props.kind)}
+            >
+              <KindGlyph kind={props.kind} />
+            </span>
+          )
         ) : (
           <img
             class="package-header__icon"

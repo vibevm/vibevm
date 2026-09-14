@@ -25,6 +25,19 @@
   gap: 0.5rem;
 }
 
+/* The kind's mark on the title's line. It takes the accent the other
+   card's tile gives it, and its size is an `em` of the title rather than
+   a share of a tile, because there is no tile here to take a share of. */
+.doc-card__mark {
+  display: inline-flex;
+  align-self: center;
+  color: var(--accent);
+}
+
+.doc-card__mark .kind-glyph {
+  --kind-glyph-size: 1.15rem;
+}
+
 .doc-card__title {
   font-family: var(--font-display);
   font-size: 1.1rem;

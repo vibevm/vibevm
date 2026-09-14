@@ -128,6 +128,13 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/kind-glyph/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/kind-glyph/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/language-selector/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -1019,6 +1026,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
+      "file": "design/src/components/kind-glyph/index.tsx",
+      "from_symbol": "design/src/components/kind-glyph/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED",
       "verb": "implements"
     },
     {
@@ -1989,6 +2004,12 @@
       "file": "design/src/components/hero/install-block.tsx",
       "line": 1,
       "message": "edge `design/src/components/hero/install-block.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "design/src/components/kind-glyph/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/kind-glyph/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

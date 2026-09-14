@@ -100,6 +100,15 @@ export {
   type VersionSwitchProps,
 } from "./components/version-switch/index.tsx";
 export { Card, type CardProps } from "./components/card/index.tsx";
+/* The vocabulary crosses the seam with the mark: the application decides
+   which kind a card names and needs the eight words to say it, but the
+   name the mark is announced under is the design system's own and stays
+   inside it. */
+export {
+  KindGlyph,
+  type KindGlyphProps,
+  type PackageKind,
+} from "./components/kind-glyph/index.tsx";
 export {
   BridgeSignatures,
   type BridgeAuthorship,

@@ -229,3 +229,38 @@ test("the two filters narrow together, and a shelf they empty says so", async ({
     page.locator("[data-authorship-filter] .authorship-filter__tag"),
   ).toHaveText("human");
 });
+
+/**
+ * What KIND of thing a card names, drawn rather than spelled.
+ *
+ * A shelf is scanned and not read, so the mark has to be on the tile
+ * before the title is. Three things are measured: that the mark is the
+ * kind's own drawing and not a character; that it is named once for a
+ * reader who cannot see it, with the drawing inside it silent; and that
+ * the mark a package wears on a shelf is the mark it wears at the head
+ * of its own page, because a reader who clicks must arrive at the thing
+ * they clicked.
+ *
+ * This build carries documentation and nothing else, so `doc` is the one
+ * kind on these shelves. The other seven are drawn by the same component
+ * and are waiting on the wire: the page manifest carries no `kind`, so a
+ * projection is told nothing and keeps its placeholder.
+ */
+test("a card carries the mark of its kind, and the page it leads to wears the same one", async ({
+  page,
+}) => {
+  await door(page);
+  const marks = page.locator('[data-tab-panel="documents"] .card__placeholder');
+  await expect(marks).toHaveCount(2);
+  await expect(marks.first()).toHaveAttribute("aria-label", "doc package");
+  await expect(marks.first().locator("svg.kind-glyph")).toHaveCount(1);
+  await expect(marks.first().locator("svg.kind-glyph")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+
+  await page.goto("/doc/com.example.docs/fixture-manual/0.1.0/");
+  const head = page.locator(".package-header__placeholder");
+  await expect(head).toHaveAttribute("aria-label", "doc package");
+  await expect(head.locator("svg.kind-glyph")).toHaveCount(1);
+});

@@ -41,6 +41,7 @@ import type { DocManifest } from "../generated/doc-manifest.ts";
 import { librariesOf as machineLibrariesOf } from "../seo/editions.ts";
 import {
   isProjection,
+  kindOf,
   librariesOf,
   parseLibraries,
   siteAddressesOf,
@@ -487,6 +488,45 @@ describe("the door", () => {
 
     assert.equal(isProjection({ ...rendering, projection: false }), false);
     assert.equal(isProjection({ ...documentation, projection: true }), true);
+  });
+
+  /**
+   * The mark a card wears is the same decision read once more.
+   *
+   * A rendering that is not a projection came from a package of kind
+   * `doc` — the builder's own definition of the word — so the card of a
+   * documentation may say so. A projection may not: the kind of the
+   * package it renders is nowhere in the manifest, and «not told» has to
+   * reach the card as an absence, because the card's whole rule is that
+   * a mark it was not given is a mark it does not draw.
+   */
+  it("names the kind it may name and says nothing about the one it may not", () => {
+    const documentation = fixture("manifest.json").package;
+    assert.equal(kindOf(documentation), "doc");
+    assert.equal(kindOf({ ...documentation, projection: true }), undefined);
+
+    const entries = catalogueEntries(librariesOf(bothFixtures()), []);
+    assert.deepEqual(
+      entries.map((one) => [one.tag, one.packageKind]),
+      [
+        ["en", "doc"],
+        ["ru", "doc"],
+      ],
+      "an adaptation of a manual is a manual, and wears the same mark",
+    );
+
+    const printed = librariesOf([
+      {
+        ...fixture("manifest.json"),
+        package: { ...documentation, projection: true },
+      },
+    ]);
+    assert.deepEqual(
+      catalogueEntries(printed, []).map((one) => "packageKind" in one),
+      [false],
+      "and a projection's card carries no member at all, rather than one " +
+        "holding a kind the manifest never stated",
+    );
   });
 
   /**
