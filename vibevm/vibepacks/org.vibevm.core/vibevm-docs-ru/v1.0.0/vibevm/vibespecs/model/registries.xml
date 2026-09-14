@@ -90,7 +90,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
-    <p>На GitHub и GitVerse один файл читается по HTTPS прежде, чем спрашивать git, а чтение, которое хост отверг на минуту, из-за лимита частоты или ошибки сервера, повторяется несколько раз с короткой паузой, прежде чем читатель откатится к git; обычное «не найдено» не повторяется никогда.</p>
+    <p>Файл, который нужен резолверу, манифест или заглушка перенаправления, читается прямо с хоста по HTTPS, когда хост — GitHub или GitVerse, с учётными данными в заголовке и никогда в адресе; промах решает вопрос только для тега или коммита, чьё содержимое неизменно, а на ветке следующим спрашивают git. Хост, которого нет в таблице, на этот путь не попадает никогда.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-FAST-PATH"/>
+    <p>Чтение, которое хост отверг на минуту, из-за лимита частоты или ошибки сервера, повторяется несколько раз с короткой паузой, прежде чем читатель откатится к git; обычное «не найдено» не повторяется никогда.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-BACKOFF"/>
   </edge-cases>
 </spec>

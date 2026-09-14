@@ -93,7 +93,9 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#RISK-GIT-IN-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#OPEN-GIT-BINARY-PATH"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#FRESHNESS-TTL"/>
-    <p>On GitHub and GitVerse a single file is read over HTTPS before git is asked, and a read the host refuses for the moment, with a rate limit or a server error, is retried a few times with a short pause before the reader falls back to git; a plain «not found» is never retried.</p>
+    <p>A file the resolver needs, a manifest or a redirect stub, is read straight from the host over HTTPS when the host is GitHub or GitVerse, with a credential sent as a header and never in the address; a miss settles the question only for a tag or a commit, whose content is fixed, and on a branch git is asked next. A host the table does not name never enters this path.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-FAST-PATH"/>
+    <p>A read the host refuses for the moment, with a rate limit or a server error, is retried a few times with a short pause before the reader falls back to git; a plain «not found» is never retried.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-BACKOFF"/>
   </edge-cases>
 </spec>
