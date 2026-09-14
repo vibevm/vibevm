@@ -32,7 +32,17 @@
 5. `DEV-GUIDE.md` §8 (сайт), `tools/self-check.sh` (что из этого он гоняет), `campaigns/docs-2026-09/PLAN.md`
    §9 (строки с путями пакетов — обновить, это живой план, не история).
 
-## Сделать — три атомарных коммита
+## Сделать — четыре атомарных коммита
+
+**N2. Вид пакета — на провод (первым коммитом, до переезда).** Проекция манифеста документации не несёт
+`[package].kind`: `crates/vibe-doc/src/manifest.rs` тратит его на `projection`, и сайт видит только «doc или
+не doc» (отчёт `findings/WORKER-REPORT-W1-O5.md`). Добавь `doc_package.kind` в `schemas/doc_manifest.jtd.json`
+(enum восьми видов PROP-000 `KIND-SET`), перегенерируй типы (`cargo xtask check-codegen`), заполни в
+`manifest.rs` (и в `site/level0.rs`, если проекция уровня 0 строится там), прочитай в парсере оболочки
+`site/src/lib/manifest.ts` (четыре двери: схема, типы, проекция, парсер — J-126) и дай `kindOf(card)` в
+`site/src/lib/library.ts` читать поле вместо вывода из `projection`; `maintenance/derived.json` обоих
+doc-пакетов сдвинется (`--derived --accept`). Тест на разбор поля. Коммит: `feat(doc): carry a package's kind
+in the documentation manifest`.
 
 **K. Переименование.** `git mv vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0 …/v1.0.0`, в манифесте
 `version = "1.0.0"`; `git mv vibevm/vibepacks/org.vibevm.doc/web/v0.1.0 …/v1.0.0`, в манифесте и
