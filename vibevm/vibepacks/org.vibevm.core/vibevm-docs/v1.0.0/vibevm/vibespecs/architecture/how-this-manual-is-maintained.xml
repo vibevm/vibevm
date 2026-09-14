@@ -29,6 +29,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-RECONCILE"/>
     <p>The version change starts only when the owner bumps the product version. A snapshot of the product's surface is recorded for the new version, the difference between two snapshots names the pages to update with a reason each, and only those pages are touched. Readers see a version number and a changelog, never the diff.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-058#LOOP-VERSION"/>
+    <p>Until the owner says otherwise, every number this repository publishes stays `1.0.0`, and a change goes out under the same number in place: the site shows the current content of the number, the changelog records what changed by date, and a project that pinned the number keeps the bytes its lock file recorded.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#VERSION-OVERWRITE-POLICY"/>
   </the-loops>
   <what-is-kept title="What the package keeps for this">
     <p>`maintenance/reviews.toml` records when each page was last read aloud and by whom. It is written by hand, holds a date and a reader, and knows nothing about revisions or hashes: the fact it keeps is that somebody sat down with a page on a day. A page without a row has never been read aloud, and the queue says so. The order of the rows is the reading rota.</p>
