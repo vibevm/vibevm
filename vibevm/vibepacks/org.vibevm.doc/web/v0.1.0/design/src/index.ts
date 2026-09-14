@@ -80,6 +80,11 @@ export {
   type LanguageSelectorProps,
 } from "./components/language-selector/index.tsx";
 export {
+  SiteLanguageSwitch,
+  type SiteLanguageChoice,
+  type SiteLanguageSwitchProps,
+} from "./components/site-language/index.tsx";
+export {
   VersionSwitch,
   type VersionChoice,
   type VersionSwitchProps,

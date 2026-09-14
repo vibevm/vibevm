@@ -1,15 +1,24 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE */
 
 import { Slot, component$, useStyles$, useVisibleTask$ } from "@qwik.dev/core";
-import { DocsHeader, Footer, SearchBox, ThemeSwitch } from "@vibe-docs/design";
+import {
+  DocsHeader,
+  Footer,
+  SearchBox,
+  SiteLanguageSwitch,
+  ThemeSwitch,
+} from "@vibe-docs/design";
 
 import { href } from "../lib/href.ts";
+import { SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
 import { findInDocumentation } from "../reader/search.ts";
+import { rememberSiteLanguage } from "../reader/site-language.ts";
 import { startThemeSwitch } from "../reader/theme.ts";
 import styles from "./chrome.css?inline";
 import {
   GITHUB_URL,
   GITVERSE_URL,
+  LOCALES,
   type Locale,
   STRINGS,
   localePath,
@@ -49,13 +58,22 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
   useStyles$(styles);
   const t = STRINGS[props.locale];
   const other = otherLocale(props.locale);
-  const isEnglish = props.locale === "en";
+  const locale = props.locale;
 
-  /* The one behaviour the landing has. A documentation page starts the
+  /* The two behaviours the landing has. A documentation page starts the
      whole reader and the theme is one of its settings; here there is no
      column to widen and no block numbers to hide, so the switch is
-     started on its own, from the same three functions. */
-  useVisibleTask$(() => startThemeSwitch());
+     started on its own, from the same three functions.
+
+     The second is the site's language, and here it is a recording
+     rather than a translation: `/` and `/ru/` are the same page written
+     out in two languages, so arriving at one of them IS the choice, and
+     what it is worth remembering for is the manual — whose furniture is
+     one prerendered set of English words until a reader says otherwise.  */
+  useVisibleTask$(() => {
+    rememberSiteLanguage(locale);
+    return startThemeSwitch();
+  });
 
   return (
     <div class="landing-page">
@@ -88,28 +106,18 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
             />
           </span>
           <span class="landing-nav__lang">
-            <a
-              class={
-                isEnglish
-                  ? "landing-nav__lang-link landing-nav__lang-link--current"
-                  : "landing-nav__lang-link"
-              }
-              href={href(localePath("en"))}
-              {...(isEnglish ? { "aria-current": "page" as const } : {})}
-            >
-              EN
-            </a>
-            <a
-              class={
-                isEnglish
-                  ? "landing-nav__lang-link"
-                  : "landing-nav__lang-link landing-nav__lang-link--current"
-              }
-              href={href(localePath("ru"))}
-              {...(isEnglish ? {} : { "aria-current": "page" as const })}
-            >
-              RU
-            </a>
+            <SiteLanguageSwitch
+              label={t.siteLanguage}
+              items={LOCALES.map((one) => ({
+                language: one,
+                label: SITE_LANGUAGE_LABEL[one],
+                /* Here the language IS a place: the landing is written
+                   out in full at `/` and `/ru/`, so the entry is a link
+                   and the address is the answer. */
+                href: href(localePath(one)),
+                current: one === locale,
+              }))}
+            />
           </span>
           <ThemeSwitch
             label={t.theme}

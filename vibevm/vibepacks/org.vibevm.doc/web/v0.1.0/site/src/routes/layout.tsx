@@ -1,18 +1,18 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#SITE-ONE-SITE */
 
-import { Slot, component$ } from "@qwik.dev/core";
+import { Slot, component$, useVisibleTask$ } from "@qwik.dev/core";
 import { useLocation } from "@qwik.dev/router";
 import {
   DocsHeader,
   Footer,
-  LanguageSelector,
   SearchBox,
+  SiteLanguageSwitch,
 } from "@vibe-docs/design";
 
 import { docSegments, href } from "../lib/href.ts";
-import { BUILT } from "../lib/library-source.ts";
+import { SITE_LANGUAGES, SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
 import { findInDocumentation } from "../reader/search.ts";
-import { headerLanguageChoices } from "../lib/view.ts";
+import { startSiteLanguage } from "../reader/site-language.ts";
 
 /**
  * The chrome of the public site — the header and the footer the
@@ -51,10 +51,28 @@ import { headerLanguageChoices } from "../lib/view.ts";
  * inside itself. The beta does exactly that, forever, in a synchronous
  * loop that produces no error and no output — the page simply never
  * finishes rendering.
+ *
+ * **The corner of the header is the SITE's language and no longer the
+ * documentation's.** They were one control, so a reader who wanted the
+ * buttons in Russian had to move the manual into Russian as well, and a
+ * reader of the Russian manual could not have the buttons in English at
+ * all. Which edition of a text you are reading is a fact about the text
+ * and lives in the address; what the furniture says is a preference and
+ * lives with the theme. The documentation's language is offered where it
+ * is about something — on the shelf it narrows and on the page it moves
+ * you to.
  */
 export default component$(() => {
   const location = useLocation();
-  if (docSegments(location.url.pathname) === null) return <Slot />;
+  const doc = docSegments(location.url.pathname) !== null;
+
+  /* The reader's own language for the furniture, applied on arrival.
+     The landing does the other half: its two addresses ARE the two
+     languages, so it records which door was used rather than
+     translating a page that is already written out twice. */
+  useVisibleTask$(() => (doc ? startSiteLanguage() : undefined));
+
+  if (!doc) return <Slot />;
   return (
     <>
       <DocsHeader brand="VibeVM" homeHref={href("")}>
@@ -65,9 +83,18 @@ export default component$(() => {
           emptyLabel="Nothing here carries that word."
           find$={findInDocumentation}
         />
-        <LanguageSelector
-          label="Language"
-          items={headerLanguageChoices(BUILT, location.url.pathname)}
+        <SiteLanguageSwitch
+          label="Site language"
+          items={SITE_LANGUAGES.map((language) => ({
+            language,
+            label: SITE_LANGUAGE_LABEL[language],
+            /* No address: inside the manual the interface language
+               changes the words and never the page, so a reader who
+               copies this address hands over a document and not their
+               own preferences. The mark is put on by the behaviour,
+               which is the only thing that knows what was stored. */
+            current: false,
+          }))}
         />
       </DocsHeader>
       <main>

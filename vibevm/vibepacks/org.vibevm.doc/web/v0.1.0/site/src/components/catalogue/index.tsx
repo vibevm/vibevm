@@ -1,14 +1,24 @@
 /** @scope spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE */
 
 import { component$, useVisibleTask$ } from "@qwik.dev/core";
-import { Card, Prose, SectionHead, Shelf } from "@vibe-docs/design";
+import {
+  Card,
+  LanguageSelector,
+  Prose,
+  SectionHead,
+  Shelf,
+} from "@vibe-docs/design";
 
-import { catalogueHref } from "../../lib/href.ts";
-import { siteLanguages } from "../../lib/library.ts";
 import { BUILT } from "../../lib/library-source.ts";
+import { DocBar } from "../doc-bar/index.tsx";
 import { startCatalogueReader } from "../../reader/mount.ts";
 import { docFileHref } from "../../seo/editions.ts";
-import { catalogueEntries, DOC_GLYPH } from "../../lib/view.ts";
+import {
+  catalogueDoors,
+  catalogueEntries,
+  DOC_GLYPH,
+  shelfLanguageChoices,
+} from "../../lib/view.ts";
 
 /** The measure a catalogue reads at: cards, not sentences. */
 const MEASURE = 960;
@@ -42,14 +52,11 @@ export type CatalogueProps = {
  */
 export const Catalogue = component$<CatalogueProps>((props) => {
   const all = catalogueEntries(BUILT);
-  const doors = siteLanguages(BUILT).map((one) => ({
-    tag: one.tag,
-    href: catalogueHref(one.segment),
-    source: one.segment === null,
-  }));
+  const doors = catalogueDoors(BUILT);
   const atDoor = props.lang === null;
+  const lang = props.lang;
 
-  useVisibleTask$(() => startCatalogueReader(atDoor ? doors : []));
+  useVisibleTask$(() => startCatalogueReader(atDoor ? doors : [], lang));
 
   return (
     <Prose measure={MEASURE}>
@@ -58,6 +65,16 @@ export const Catalogue = component$<CatalogueProps>((props) => {
         moreHref={docFileHref("llms.txt")}
         moreLabel="the catalogue for an agent"
       />
+      {/* Which language of the DOCUMENTATION to be offered — not which
+          language the buttons are in, which is the switch in the corner
+          of the header. Here it narrows the shelf rather than leading
+          anywhere: every edition is already on this page. */}
+      <DocBar>
+        <LanguageSelector
+          label="Documentation language"
+          items={shelfLanguageChoices(BUILT, props.lang)}
+        />
+      </DocBar>
       <Shelf
         title="Editions"
         caption="A star marks an adaptation the author of the documentation named. Each documentation's source is listed first; it is what officiality is measured against."
@@ -78,6 +95,7 @@ export const Catalogue = component$<CatalogueProps>((props) => {
             status={one.status}
             glyph={DOC_GLYPH}
             abstractLabel="what it covers"
+            editionLang={one.tag}
           />
         ))}
       </Shelf>

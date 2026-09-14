@@ -28,10 +28,11 @@
  * A few entries are the PORT's own and say so where they stand:
  * `documentation` for the way in to the manual the shared header gained
  * (D-28), the two words the copy button beside an install line needs,
- * the four the theme switch names its three states with, and the three
- * the search box needs. They are marked rather than mixed in, so that
- * «every other value is the owner's, byte for byte» stays a claim a
- * reader can check.
+ * the four the theme switch names its three states with, the three the
+ * search box needs, and the name of the two letters in the corner —
+ * which the Astro site drew without one. They are marked rather than
+ * mixed in, so that «every other value is the owner's, byte for byte»
+ * stays a claim a reader can check.
  */
 
 export const LOCALES = ["en", "ru"] as const;
@@ -75,6 +76,8 @@ export type Strings = {
   readonly copyright: string;
   /** The entry the port adds to the shared header (D-28). */
   readonly documentation: string;
+  /** What the two letters in the corner are, for a reader who cannot see them. */
+  readonly siteLanguage: string;
   /** The theme switch in the header, and its three states. */
   readonly theme: string;
   readonly themeLight: string;
@@ -128,6 +131,7 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     footerTagline: "Spec-Driven Development, packaged.",
     copyright: "© 2026 Oleg Chirukhin",
     documentation: "Documentation",
+    siteLanguage: "Site language",
     theme: "Theme",
     themeLight: "Light",
     themeDark: "Dark",
@@ -177,6 +181,7 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     footerTagline: "Spec-Driven Development, в пакетах.",
     copyright: "© 2026 Олег Чирухин",
     documentation: "Документация",
+    siteLanguage: "Язык сайта",
     theme: "Тема",
     themeLight: "Светлая",
     themeDark: "Тёмная",

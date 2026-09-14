@@ -29,20 +29,26 @@ export type ShelfProps = {
  * An empty shelf renders as an empty shelf, with a line saying so. The
  * alternative — hiding it — answers the reader's question («is there a
  * translation?») by making the question disappear.
+ *
+ * The line is therefore always in the document and merely hidden, rather
+ * than rendered only when the shelf is empty at build time: a reader's
+ * own filter can empty a shelf that was full, and a shelf that answered
+ * a filter with nothing at all would look broken rather than filtered.
+ * Which is why `data-shelf` and `data-shelf-empty` are here — the filter
+ * shows the line it did not have to invent.
  */
 export const Shelf = component$<ShelfProps>((props) => {
   useStyles$(styles);
   return (
-    <section class="shelf">
+    <section class="shelf" data-shelf>
       <h2 class="shelf__title">{props.title}</h2>
       <p class="shelf__caption">{props.caption}</p>
-      {props.empty ? (
-        <p class="shelf__empty">{props.emptyLabel}</p>
-      ) : (
-        <div class="shelf__items">
-          <Slot />
-        </div>
-      )}
+      <p class="shelf__empty" data-shelf-empty hidden={!props.empty}>
+        {props.emptyLabel}
+      </p>
+      <div class="shelf__items" hidden={props.empty}>
+        <Slot />
+      </div>
     </section>
   );
 });

@@ -26,6 +26,7 @@ import { startCodeChrome } from "./code.ts";
 import { startOverlay } from "./overlay.ts";
 import { startToc } from "./toc.ts";
 import { startCatalogue, type CatalogueEdition } from "./catalogue.ts";
+import { startDocLanguage } from "./doc-language.ts";
 import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
 import { startFallback } from "./fallback.ts";
 import { startLanguageSwitch } from "./language.ts";
@@ -88,6 +89,7 @@ export function startReader(context: ReaderContext): () => void {
     startRuleTransclusion(),
     startAnchors(),
     startLanguageSwitch(),
+    startDocLanguage(context.addressLanguage),
     startFallback({
       addressLanguage: context.addressLanguage,
       fallback: context.fallback,
@@ -108,18 +110,24 @@ export function startReader(context: ReaderContext): () => void {
 }
 
 /**
- * The catalogue's much smaller reader: the language pill, and the one
+ * The catalogue's much smaller reader: the language filter, and the one
  * decision the door has to take.
  *
  * It shares nothing with the page's reader because it has nothing to
  * share — there is no island, no block to cite and no place to return
- * to. What it does have is the choice of language, which is why the
- * selector's behaviour and the door's decision are both here.
+ * to. What it does have is language: the filter that decides which
+ * editions stand on the shelf, and the door's own decision about which
+ * shelf a reader who asked for none is shown.
  */
 export function startCatalogueReader(
   editions: readonly CatalogueEdition[],
+  addressLanguage: string | null,
 ): () => void {
-  const stops = [startLanguageSwitch(), startCatalogue(editions)];
+  const stops = [
+    startLanguageSwitch(),
+    startDocLanguage(addressLanguage),
+    startCatalogue(editions),
+  ];
   return () => {
     for (const stop of stops) stop();
   };

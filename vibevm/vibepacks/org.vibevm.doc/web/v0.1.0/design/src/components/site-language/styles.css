@@ -1,0 +1,31 @@
+/* The language of the site, two letters wide. It is deliberately
+   quieter than the documentation's language selector beside it: one
+   answers «which text am I reading», the other «what do the buttons
+   say», and the first is the larger question. */
+
+.site-language {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.site-language__choice {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--speed) ease;
+}
+
+.site-language__choice:hover {
+  color: var(--text);
+}
+
+.site-language__choice.is-current {
+  color: var(--text);
+}

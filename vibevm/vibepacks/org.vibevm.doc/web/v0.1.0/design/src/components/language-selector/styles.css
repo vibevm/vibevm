@@ -59,11 +59,22 @@
   box-shadow: var(--shadow-mega);
 }
 
+/* A link and a button wear one rule: on a page an entry is a place and
+   on a shelf it only narrows what stands there, and a reader should not
+   be able to tell the two apart by looking. The reset is what a button
+   needs to stop looking like one. */
 .language-selector__item {
   display: block;
+  width: 100%;
   padding: 0.45rem 0.6rem;
+  border: none;
   border-radius: var(--radius-sm);
+  background: none;
   color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: background var(--speed) ease;
 }
 
