@@ -73,12 +73,38 @@ pub struct VvmEnv {
     pub shell: Option<String>,
     /// `$PATH` — to check whether the shim dir is reachable (`doctor`).
     pub path_var: Option<String>,
+    /// The offline posture this invocation resolved: the root `--offline`
+    /// flag, then `VIBE_OFFLINE`, then the user-config `[net] offline` key,
+    /// layered exactly as PROP-010 `##OFFLINE-LAYERING` says and collapsed
+    /// to one answer at the composition root. The domain reads none of
+    /// those itself; it is handed the verdict (PROP-019 `##CMD-OFFLINE`).
+    pub offline: bool,
 }
 
 impl VvmEnv {
     fn store(&self) -> Result<VersionStore, VvmError> {
         let root = self.root.clone().ok_or(VvmError::NoRoot)?;
         Ok(VersionStore::new(root))
+    }
+
+    /// Refuse a request the resolved offline posture forbids (PROP-019
+    /// `##CMD-OFFLINE`).
+    ///
+    /// `command` is the verb's own report label (`self:update`), so the
+    /// refusal names the verb the operator typed rather than the seam that
+    /// noticed; `address` is where that verb was about to go. Every caller
+    /// asks BEFORE issuing the request, which is what makes an offline run
+    /// cost no connection, no partial download and no allocated instance —
+    /// and what makes an already-installed release no rescue when the only
+    /// thing that could recognise it is itself a fetch.
+    fn refuse_offline(&self, command: &str, address: &str) -> Result<(), VvmError> {
+        if !self.offline {
+            return Ok(());
+        }
+        Err(VvmError::Offline {
+            verb: command.replace(':', " "),
+            address: address.to_string(),
+        })
     }
 }
 
@@ -123,7 +149,7 @@ fn absolute_lexical(path: &Path, cwd: &Path) -> Option<PathBuf> {
 
 pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
-        VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a),
+        VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a, "self:install"),
         VvmSubcommand::Import(a) => run_import_cmd(ctx, &env, a),
         VvmSubcommand::Bootstrap(a) => bundle::run_bootstrap_cmd(ctx, &env, a),
         VvmSubcommand::Update(a) => bundle::run_update_cmd(ctx, &env, a),
@@ -172,7 +198,16 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
     Ok(())
 }
 
-fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) -> Result<()> {
+/// `self install` and — through [`bundle::rebuild_latest`] — the source lane
+/// of `self update` / `self reinstall`. `command` is the verb that actually
+/// ran, so the report it emits and the offline refusal it may raise both
+/// name that verb rather than the function they share.
+fn run_install_cmd(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    args: VvmInstallArgs,
+    command: &str,
+) -> Result<()> {
     let store = env.store()?;
     let profile = resolve_profile(&args)?;
     let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
@@ -244,6 +279,21 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
             let path = source::external_path(&root);
             (root, resolved, model::Origin::External, Some(path))
         } else {
+            // The managed mirror is the source lane's ONE network need — a
+            // clone, or a fetch of the clone it already keeps. Under the
+            // offline posture it is refused HERE: before git runs, and
+            // before the picker asks a question whose answer this run could
+            // not use. The two branches above never reach this point: an
+            // in-tree checkout, or one a previous install remembered, is
+            // already on disk and rebuilds without asking anyone anything.
+            if env.offline {
+                let mirror = args
+                    .mirror
+                    .as_deref()
+                    .and_then(|token| source::Mirror::parse(token).ok())
+                    .unwrap_or(source::Mirror::ALL[0]);
+                env.refuse_offline(command, mirror.url())?;
+            }
             let mirror = source::choose_mirror(ctx, args.mirror.as_deref())?;
             ctx.step(&format!("updating managed clone from {}", mirror.url()));
             let outcome = source::prepare_from_mirror(&store, mirror.url(), &selector)?;
@@ -263,13 +313,22 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
         origin,
         source_path,
     };
-    let outcome = install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)?;
+    let outcome = install::perform_install(
+        ctx,
+        &store,
+        &source_dir,
+        &req,
+        // The posture reaches cargo too: an offline build resolves crates
+        // from what the machine already has and never opens a connection of
+        // its own (PROP-019 `##CMD-OFFLINE`).
+        &builder::CargoBuilder::new(env.offline),
+    )?;
     debug_assert_eq!(
         outcome.home,
         store.instance_dir(&outcome.record.version_id(), outcome.record.instance)
     );
     let _ = outcome.reused;
-    activate_record(ctx, env, &store, &outcome.record, "self:install")
+    activate_record(ctx, env, &store, &outcome.record, command)
 }
 
 /// The release lane a selector takes on a managed binary execution, decided

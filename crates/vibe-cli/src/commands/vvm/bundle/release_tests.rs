@@ -216,6 +216,135 @@ fn an_unreadable_newest_release_manifest_fails_the_command_and_changes_nothing()
     assert_eq!(active_selector(&store), "tag:1.0.0#1");
 }
 
+/// A server that must never be asked anything: under the offline posture
+/// every release-lane verb is refused BEFORE its first request, so a call
+/// arriving here is the bug the refusal exists to prevent.
+struct UnaskedServer;
+
+impl Downloader for UnaskedServer {
+    fn download(&self, url: &str, _destination: &Path, _maximum_bytes: u64) -> anyhow::Result<()> {
+        panic!("the offline posture must refuse before requesting `{url}`")
+    }
+}
+
+/// The offline posture, with the store already holding the release: every
+/// release-lane verb refuses, names itself and the address it wanted, and
+/// cites the rule — without one request and without touching the inventory.
+///
+/// The seeded machine is the load-bearing part. `install_selected` can
+/// recognise an unchanged release from its manifest and reuse the instance
+/// it already holds, costing no download — so a weaker implementation could
+/// look like it honoured the posture here. It does not: the manifest that
+/// would recognise the instance is itself a fetch, so the verb stops before
+/// it, and the held instance rescues nothing.
+#[test]
+fn the_offline_posture_refuses_every_release_verb_before_its_first_request() {
+    let temp = tempfile::tempdir().unwrap();
+    let one = bundle_for(temp.path(), semver::Version::new(1, 0, 0), b"vibe-1.0.0");
+    let (store, _online, installed) = seed_machine(temp.path(), &one);
+    let env = VvmEnv {
+        root: Some(temp.path().join("opt")),
+        offline: true,
+        ..VvmEnv::default()
+    };
+
+    // `{:#}` — the rendering the CLI itself prints, so these read the whole
+    // chain a caller would see and not just its outermost link.
+    let refused = |command: &str, address: &str, error: anyhow::Error| {
+        let error = format!("{error:#}");
+        assert!(
+            error.contains(&format!("`vibe {}`", command.replace(':', " "))),
+            "the refusal names the verb: {error}"
+        );
+        assert!(
+            error.contains(address),
+            "the refusal names the address: {error}"
+        );
+        assert!(
+            error.contains("spec://org.vibevm.core/vibevm/common/PROP-019#surface"),
+            "the refusal cites the rule: {error}"
+        );
+    };
+
+    // `self update` and `self install stable` are one function — `stable` IS
+    // the newest release — so both stop at the newest-release manifest.
+    let newest = "https://github.com/vibevm/vibevm/releases/latest/download/DISTRIBUTIONS.json";
+    for command in ["self:update", "self:install"] {
+        refused(
+            command,
+            newest,
+            drive(&store, &env, &UnaskedServer, command, |remote| {
+                move_to_newest_release(remote, &installed, false)
+            })
+            .unwrap_err(),
+        );
+    }
+
+    // `self install X.Y.Z` and `self reinstall` ask a named release's own
+    // manifest rather than what is newest, and stop at the same seam.
+    let named = "https://github.com/vibevm/vibevm/releases/download/v1.0.0/DISTRIBUTIONS.json";
+    for (command, force) in [("self:install", false), ("self:reinstall", true)] {
+        refused(
+            command,
+            named,
+            drive(&store, &env, &UnaskedServer, command, |remote| {
+                install_release_version(remote, "1.0.0", force)
+            })
+            .unwrap_err(),
+        );
+    }
+
+    // Nothing moved: no generation allocated, no pointer repointed.
+    assert_eq!(store.load_state().unwrap().installs.len(), 1);
+    assert_eq!(active_selector(&store), "tag:1.0.0#1");
+}
+
+/// `--force` asks for a fresh generation, which is exactly the case that
+/// cannot be served from what is already on disk. It is refused the same
+/// way rather than falling through to a download the posture forbids.
+#[test]
+fn a_forced_offline_update_is_refused_rather_than_allocating_a_generation() {
+    let temp = tempfile::tempdir().unwrap();
+    let one = bundle_for(temp.path(), semver::Version::new(1, 0, 0), b"vibe-1.0.0");
+    let (store, _online, installed) = seed_machine(temp.path(), &one);
+    let env = VvmEnv {
+        root: Some(temp.path().join("opt")),
+        offline: true,
+        ..VvmEnv::default()
+    };
+
+    let error = format!(
+        "{:#}",
+        drive(&store, &env, &UnaskedServer, "self:update", |remote| {
+            move_to_newest_release(remote, &installed, true)
+        })
+        .unwrap_err()
+    );
+    assert!(error.contains("this run is offline"), "{error}");
+    assert_eq!(store.load_state().unwrap().installs.len(), 1);
+    assert_eq!(active_selector(&store), "tag:1.0.0#1");
+}
+
+/// The posture is a posture, not a mode the lane is compiled in: with it
+/// resolved false the same call against the same store does its ordinary
+/// work. Pinned so a guard placed too widely shows up as a red here rather
+/// than as a version manager nobody can update.
+#[test]
+fn an_online_run_is_untouched_by_the_offline_guard() {
+    let temp = tempfile::tempdir().unwrap();
+    let one = bundle_for(temp.path(), semver::Version::new(1, 0, 0), b"vibe-1.0.0");
+    let (store, env, installed) = seed_machine(temp.path(), &one);
+    assert!(!env.offline);
+
+    let server = release_server(temp.path(), "online", &one);
+    drive(&store, &env, &server, "self:update", |remote| {
+        move_to_newest_release(remote, &installed, false)
+    })
+    .unwrap();
+    assert_eq!(server.urls.borrow().len(), 1);
+    assert_eq!(active_selector(&store), "tag:1.0.0#1");
+}
+
 #[test]
 fn reinstall_refetches_the_running_version_without_asking_what_is_newest() {
     let temp = tempfile::tempdir().unwrap();

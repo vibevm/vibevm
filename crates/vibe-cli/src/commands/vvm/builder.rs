@@ -39,7 +39,20 @@ pub(crate) trait Builder {
 /// managed `--target-dir`, honouring the tree's `rust-toolchain.toml`
 /// (PROP-019 §2.7, §2.8).
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
-pub(crate) struct CargoBuilder;
+pub(crate) struct CargoBuilder {
+    /// The invocation's resolved offline posture, handed down from the
+    /// composition root. A source rebuild is the one place the version
+    /// manager pulls crates rather than bytes, so the posture has to reach
+    /// cargo itself or an "offline" rebuild would still go to the network
+    /// for a dependency (PROP-019 `##CMD-OFFLINE`).
+    offline: bool,
+}
+
+impl CargoBuilder {
+    pub(crate) fn new(offline: bool) -> Self {
+        Self { offline }
+    }
+}
 
 impl Builder for CargoBuilder {
     fn build(
@@ -53,7 +66,8 @@ impl Builder for CargoBuilder {
         // Windows, avoids relinking a `vibe.exe` that is running (PROP-019
         // §2.7, §9.3).
         let mut cmd = Command::new("cargo");
-        cmd.current_dir(source_root).args(cargo_build_args(profile));
+        cmd.current_dir(source_root)
+            .args(cargo_build_args(profile, self.offline));
         cmd.arg("--target-dir").arg(target_dir);
         let mut child = cmd
             .stdout(Stdio::piped())
@@ -96,7 +110,7 @@ impl Builder for CargoBuilder {
     }
 }
 
-fn cargo_build_args(profile: Profile) -> Vec<&'static str> {
+fn cargo_build_args(profile: Profile, offline: bool) -> Vec<&'static str> {
     let mut args = vec![
         "build",
         "--locked",
@@ -108,6 +122,12 @@ fn cargo_build_args(profile: Profile) -> Vec<&'static str> {
     ];
     if profile == Profile::Release {
         args.push("--release");
+    }
+    if offline {
+        // Cargo's own word for the same posture: resolve and build from the
+        // machine's existing registry cache and vendor directory, and fail
+        // — naming the crate — rather than reach for one it lacks.
+        args.push("--offline");
     }
     args
 }
@@ -257,9 +277,20 @@ mod tests {
     #[test]
     fn cargo_build_is_locked_for_every_profile() {
         for profile in [Profile::Debug, Profile::Release] {
-            let args = cargo_build_args(profile);
+            let args = cargo_build_args(profile, false);
             assert!(args.contains(&"--locked"));
             assert!(args.contains(&"--message-format=json-render-diagnostics"));
+        }
+    }
+
+    /// The offline posture has to reach cargo, or a source rebuild that
+    /// issued no request of vibevm's own would still fetch a crate. Online
+    /// stays exactly what it was: the flag is added, never assumed.
+    #[test]
+    fn an_offline_build_passes_the_posture_to_cargo() {
+        for profile in [Profile::Debug, Profile::Release] {
+            assert!(cargo_build_args(profile, true).contains(&"--offline"));
+            assert!(!cargo_build_args(profile, false).contains(&"--offline"));
         }
     }
 }

@@ -133,7 +133,14 @@ pub(super) fn run_update_cmd(
     if let Some(record) = running_binary_record(&store)? {
         return install_newest_release(ctx, env, &store, &record, args.force, "self:update");
     }
-    rebuild_latest(ctx, env, args.profile, args.release, args.force)
+    rebuild_latest(
+        ctx,
+        env,
+        args.profile,
+        args.release,
+        args.force,
+        "self:update",
+    )
 }
 
 /// `self reinstall` (PROP-019 `##CMD-REINSTALL`): refetch and reinstall the
@@ -156,7 +163,7 @@ pub(super) fn run_reinstall_cmd(
         )
         .map(|_| ());
     }
-    rebuild_latest(ctx, env, args.profile, args.release, true)
+    rebuild_latest(ctx, env, args.profile, args.release, true, "self:reinstall")
 }
 
 /// The running managed BINARY installation, when this execution is one. A
@@ -181,13 +188,16 @@ fn binary_release_version(record: &InstallRecord) -> Result<semver::Version> {
 }
 
 /// The source lane's refresh, shared by `update` and `reinstall`: rebuild the
-/// running checkout at `latest`.
+/// running checkout at `latest`. `command` is the verb that asked, carried
+/// through so the report and any refusal name it rather than the install it
+/// delegates to.
 fn rebuild_latest(
     ctx: &output::Context,
     env: &VvmEnv,
     profile: Option<String>,
     release: bool,
     force: bool,
+    command: &str,
 ) -> Result<()> {
     super::run_install_cmd(
         ctx,
@@ -204,6 +214,7 @@ fn rebuild_latest(
             mirror: None,
             force,
         },
+        command,
     )
 }
 
@@ -353,6 +364,12 @@ fn remote_context<'a>(
 /// Fetch and parse one aggregate manifest, cache-busted because every release
 /// URL a running installation reads is mutable.
 fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDistributionManifest> {
+    // The release lane's FIRST request, and so the offline posture's first
+    // and usually only refusal: nothing has been written, locked or
+    // allocated yet. It is also why an already-installed release is no
+    // rescue under the posture — the only thing that could recognise one is
+    // this manifest, and reading it is the very act being refused.
+    remote.env.refuse_offline(remote.command, url)?;
     let manifest_path = download_path(remote.store, DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
     remote.store.guard_mutation_path(&manifest_path)?;
     remote.downloader.download(
@@ -388,14 +405,20 @@ fn install_selected(
         let _lock = InstallLock::acquire(remote.store)?;
         return finish_install(remote, &outcome);
     }
+    let bundle_url = format!(
+        "{}/{}",
+        release_base.trim_end_matches('/'),
+        platform.asset.name
+    );
+    // The bundle is the lane's only other request. Getting here means the
+    // release is NOT already held from these exact bytes, so there is
+    // nothing local left to satisfy the verb with and an offline run says
+    // so — before the download path is even allocated.
+    remote.env.refuse_offline(remote.command, &bundle_url)?;
     let bundle_path = download_path(remote.store, &platform.asset.name);
     remote.store.guard_mutation_path(&bundle_path)?;
     remote.downloader.download(
-        &cache_busted(&format!(
-            "{}/{}",
-            release_base.trim_end_matches('/'),
-            platform.asset.name
-        )),
+        &cache_busted(&bundle_url),
         &bundle_path,
         platform.asset.size,
     )?;

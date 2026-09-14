@@ -143,6 +143,61 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
     );
 }
 
+/// `self bootstrap` reads its aggregate off the local disk, so the bundle
+/// is its first and only request — and under the offline posture that
+/// request is refused before the download path is even allocated, naming
+/// the verb, the bundle's own address and the rule.
+#[test]
+fn an_offline_bootstrap_is_refused_before_the_bundle_is_requested() {
+    let temp = tempfile::tempdir().unwrap();
+    let source = source_zip(None);
+    let fixture = write_bundle(temp.path(), b"vibe-binary", b"vibe-binary", &source, false);
+    let manifest = temp.path().join("DISTRIBUTIONS.json");
+    std::fs::write(&manifest, aggregate_for(&fixture).to_json_bytes().unwrap()).unwrap();
+    let downloader = LocalDownloader {
+        bundle: fixture.path.clone(),
+        urls: RefCell::new(Vec::new()),
+    };
+    let env = VvmEnv {
+        root: Some(temp.path().join("opt")),
+        offline: true,
+        ..VvmEnv::default()
+    };
+    let bootstrap = temp.path().join("vibe-bootstrap.exe");
+    write_test_executable(&bootstrap, b"vibe-binary");
+
+    let error = bootstrap_with_downloader(
+        &quiet(),
+        &env,
+        &VvmBootstrapArgs {
+            manifest,
+            version: "1.0.0".into(),
+            release_base: "https://github.com/vibevm/vibevm/releases/download/v1.0.0".into(),
+            force: false,
+        },
+        &downloader,
+        &bootstrap,
+        &FakePersister::new(false),
+    )
+    .unwrap_err()
+    .to_string();
+
+    assert!(error.contains("`vibe self bootstrap`"), "{error}");
+    assert!(
+        error.contains(&format!(
+            "https://github.com/vibevm/vibevm/releases/download/v1.0.0/{}",
+            fixture.asset.name
+        )),
+        "{error}"
+    );
+    assert!(
+        error.contains("spec://org.vibevm.core/vibevm/common/PROP-019#surface"),
+        "{error}"
+    );
+    assert!(downloader.urls.borrow().is_empty());
+    assert!(!temp.path().join("opt").join("vibevm").exists());
+}
+
 #[test]
 fn a_named_release_uses_mutable_assets_and_force_allocates_a_fresh_instance() {
     let temp = tempfile::tempdir().unwrap();
