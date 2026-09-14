@@ -29,6 +29,8 @@ import {
   type DocPackage,
   type DocPage,
   type DocumentedSubject,
+  type Navigation,
+  type NavigationSection,
 } from "../generated/doc-manifest.ts";
 
 /** Where the manifest stopped making sense, and why. */
@@ -343,6 +345,37 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
   };
 }
 
+/**
+ * What the documentation asked its own list of pages to look like
+ * (`##NAV-PINNED`).
+ *
+ * Optional for the reason `media` is: a manifest written before the
+ * field existed is still a manifest, and a reader that refused one would
+ * refuse every document already published. Absent means «this
+ * documentation said nothing», which is the pages in the manifest's own
+ * order under their folders' own names — never «it asked for nothing to
+ * be pinned», which is a package that declared the table and left the
+ * list empty, and which arrives here as the empty array it wrote.
+ */
+function navigation(value: unknown, at: string): Parsed<Navigation> {
+  if (!isRecord(value)) return fail(at, "expected an object");
+  const pinned = strings(value, "pinned", at);
+  if (!pinned.ok) return pinned;
+  const rows = list(value, "sections", at);
+  if (!rows.ok) return rows;
+  const sections: NavigationSection[] = [];
+  for (const [index, item] of rows.value.entries()) {
+    const where = `${at}.sections[${index}]`;
+    if (!isRecord(item)) return fail(where, "expected an object");
+    const id = str(item, "id", where);
+    if (!id.ok) return id;
+    const title = str(item, "title", where);
+    if (!title.ok) return title;
+    sections.push({ id: id.value, title: title.value });
+  }
+  return { ok: true, value: { pinned: pinned.value, sections } };
+}
+
 /** Turn a parsed JSON document into a manifest, or say where it failed. */
 export function parseDocManifest(input: unknown): Parsed<DocManifest> {
   if (!isRecord(input)) return fail("$", "expected an object");
@@ -358,12 +391,22 @@ export function parseDocManifest(input: unknown): Parsed<DocManifest> {
     if (!parsed.ok) return parsed;
     parsedPages.push(parsed.value);
   }
+  const declared = field(input, "navigation");
+  let parsedNavigation: Navigation | undefined = undefined;
+  if (declared !== undefined) {
+    const parsed = navigation(declared, "$.navigation");
+    if (!parsed.ok) return parsed;
+    parsedNavigation = parsed.value;
+  }
   return {
     ok: true,
     value: {
       schema_version: schemaVersion.value,
       package: pkg.value,
       pages: parsedPages,
+      ...(parsedNavigation === undefined
+        ? {}
+        : { navigation: parsedNavigation }),
     },
   };
 }

@@ -16,10 +16,11 @@ export {
   type DocsHeaderProps,
 } from "./components/docs-header/index.tsx";
 export {
-  DocsNav,
-  type DocsNavItem,
-  type DocsNavProps,
-} from "./components/docs-nav/index.tsx";
+  Contents,
+  type ContentsItem,
+  type ContentsProps,
+  type ContentsSection,
+} from "./components/contents/index.tsx";
 export { DocCard, type DocCardProps } from "./components/doc-card/index.tsx";
 export {
   SearchBox,

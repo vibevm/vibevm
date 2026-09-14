@@ -378,12 +378,12 @@ test("the navigation is the manual's own and not the shell's fixture", async ({
   const origin = `http://127.0.0.1:${port}`;
   await page.goto(`${origin}${pageHref(0)}`, { waitUntil: "networkidle" });
 
-  const links = page.locator(".docs-nav a");
+  const links = page.locator(".contents a");
   await expect
     .poll(async () => links.count(), { timeout: 10_000 })
     .toBe(manifest?.pages.length ?? 0);
   await expect(links.first()).toHaveText(pageTitle(0));
-  await expect(page.locator(".docs-nav")).not.toContainText("Every block once");
+  await expect(page.locator(".contents")).not.toContainText("Every block once");
 
   // The meta row is the manual's too: its publisher, not the fixture's.
   await expect(page.locator(".page-meta")).toContainText(
@@ -401,7 +401,7 @@ test("following a link in that navigation opens that page of the manual", async 
   const origin = `http://127.0.0.1:${port}`;
   await page.goto(`${origin}${pageHref(0)}`, { waitUntil: "networkidle" });
 
-  const second = page.locator(".docs-nav a").nth(1);
+  const second = page.locator(".contents a").nth(1);
   await expect(second).toHaveText(pageTitle(1));
   await second.click();
   await page.waitForURL(`${origin}${pageHref(1)}`);
@@ -410,5 +410,5 @@ test("following a link in that navigation opens that page of the manual", async 
   // for \u2014 an ordinary link and a whole page, never a redraw of the
   // island on the client.
   await expect(page.locator("[data-island] h1")).toHaveText(pageTitle(1));
-  await expect(page.locator(".docs-nav a").nth(1)).toHaveClass(/current/);
+  await expect(page.locator(".contents a").nth(1)).toHaveClass(/current/);
 });

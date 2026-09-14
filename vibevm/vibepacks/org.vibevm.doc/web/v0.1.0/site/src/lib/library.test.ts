@@ -49,8 +49,10 @@ import {
   type Library,
 } from "./library.ts";
 import { catalogueEntries, catalogueShelves } from "./catalogue.ts";
+import type { Contents } from "./contents.ts";
 import { parseDocManifest } from "./manifest.ts";
 import { viewOf } from "./view.ts";
+import type { ContentsItem } from "@vibe-docs/design";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = resolve(HERE, "..", "fixtures");
@@ -370,6 +372,14 @@ describe("the island behind each address", () => {
   });
 });
 
+/** Every page the contents column lists, pinned first, groups in order. */
+function listed(contents: Contents): ContentsItem[] {
+  return [
+    ...contents.pinned,
+    ...contents.sections.flatMap((section) => [...section.items]),
+  ];
+}
+
 /** The manifests of some fixture trees, as the build reads them. */
 function readManifests(...trees: string[]): DocManifest[] {
   return trees.map((tree) => {
@@ -389,7 +399,7 @@ describe("the package page of a library out of a tree", () => {
     assert.equal(view.title, "Fixture Manual");
     assert.equal(view.publisher, "com.example.docs");
     assert.equal(view.coordinate, "com.example.docs/fixture-manual@0.1.0");
-    assert.equal(view.nav.length, 2);
+    assert.equal(listed(view.contents).length, 2);
     assert.deepEqual(view.adaptations, []);
   });
 
@@ -400,7 +410,7 @@ describe("the package page of a library out of a tree", () => {
     if (view?.kind !== "page") return;
     assert.equal(view.title, "One");
     assert.deepEqual(
-      view.nav.map((one) => one.label),
+      listed(view.contents).map((one) => one.label),
       ["Two", "One"],
       "the navigation is the pair's pages and never the manual's",
     );

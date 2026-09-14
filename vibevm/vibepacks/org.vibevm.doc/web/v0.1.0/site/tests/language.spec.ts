@@ -83,7 +83,7 @@ test("links inside a fallback page keep the reader in their language", async ({
   page,
 }) => {
   await page.goto(MISSING);
-  const other = page.locator(".docs-nav a").first();
+  const other = page.locator(".contents a").first();
   await expect(other).toHaveAttribute("href", new RegExp("^/doc/ru/"));
 });
 
@@ -181,8 +181,13 @@ test("the site's language changes the furniture and not the document", async ({
   await page.locator('[data-site-lang-choice="ru"]').click();
 
   await expect(page.locator("footer")).toContainText("Олег Чирухин");
-  await expect(page.locator("[data-toc] .toc__summary")).toHaveText(
+  // Both lists on either side of the text, each under its own name: the
+  // manual's pages and this page's headings are two different questions.
+  await expect(page.locator("[data-contents] .contents__summary")).toHaveText(
     "Оглавление",
+  );
+  await expect(page.locator("[data-toc] .toc__summary")).toHaveText(
+    "На этой странице",
   );
   // The document did not move: its language, its title and its text are
   // the package's and are still English.

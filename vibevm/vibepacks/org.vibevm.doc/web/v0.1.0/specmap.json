@@ -30,6 +30,13 @@
     },
     {
       "crate_name": "src",
+      "file": "design/src/components/contents/index.tsx",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "design/src/components/contents/index.tsx"
+    },
+    {
+      "crate_name": "src",
       "file": "design/src/components/dep-graph/index.tsx",
       "item_kind": "module",
       "line": 1,
@@ -48,13 +55,6 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "design/src/components/docs-header/index.tsx"
-    },
-    {
-      "crate_name": "src",
-      "file": "design/src/components/docs-nav/index.tsx",
-      "item_kind": "module",
-      "line": 1,
-      "symbol": "design/src/components/docs-nav/index.tsx"
     },
     {
       "crate_name": "src",
@@ -335,6 +335,20 @@
       "item_kind": "module",
       "line": 1,
       "symbol": "site/src/lib/catalogue.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/lib/contents.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/contents.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "site/src/lib/contents.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/lib/contents.ts"
     },
     {
       "crate_name": "src",
@@ -840,6 +854,14 @@
       "verb": "implements"
     },
     {
+      "file": "design/src/components/contents/index.tsx",
+      "from_symbol": "design/src/components/contents/index.tsx",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
+      "verb": "implements"
+    },
+    {
       "file": "design/src/components/dep-graph/index.tsx",
       "from_symbol": "design/src/components/dep-graph/index.tsx",
       "line": 1,
@@ -858,14 +880,6 @@
     {
       "file": "design/src/components/docs-header/index.tsx",
       "from_symbol": "design/src/components/docs-header/index.tsx",
-      "line": 1,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
-      "verb": "implements"
-    },
-    {
-      "file": "design/src/components/docs-nav/index.tsx",
-      "from_symbol": "design/src/components/docs-nav/index.tsx",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR",
@@ -1189,6 +1203,22 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/lib/contents.test.ts",
+      "from_symbol": "site/src/lib/contents.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING",
+      "verb": "implements"
+    },
+    {
+      "file": "site/src/lib/contents.ts",
+      "from_symbol": "site/src/lib/contents.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING",
       "verb": "implements"
     },
     {
@@ -1758,6 +1788,12 @@
     },
     {
       "code": "dangling-edge",
+      "file": "design/src/components/contents/index.tsx",
+      "line": 1,
+      "message": "edge `design/src/components/contents/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "design/src/components/dep-graph/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/dep-graph/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
@@ -1773,12 +1809,6 @@
       "file": "design/src/components/docs-header/index.tsx",
       "line": 1,
       "message": "edge `design/src/components/docs-header/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "design/src/components/docs-nav/index.tsx",
-      "line": 1,
-      "message": "edge `design/src/components/docs-nav/index.tsx` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#STACK-DESIGN-FLOOR`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
@@ -2019,6 +2049,18 @@
       "file": "site/src/lib/catalogue.ts",
       "line": 1,
       "message": "edge `site/src/lib/catalogue.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#LOC-SITE`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/lib/contents.test.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/contents.test.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/lib/contents.ts",
+      "line": 1,
+      "message": "edge `site/src/lib/contents.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-SHELL-PARSES-NOTHING`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

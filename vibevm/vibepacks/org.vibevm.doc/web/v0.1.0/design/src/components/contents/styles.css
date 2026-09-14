@@ -1,0 +1,98 @@
+/* The manual's pages in both of their shapes. The column is the same
+   `<details>` with its summary taken away and its content forced open;
+   nothing switches elements, only how one is laid out. */
+
+.contents {
+  margin: 0 0 1.6rem;
+  font-size: 0.85rem;
+}
+
+.contents__summary {
+  padding: 0.35rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.contents__summary:hover {
+  color: var(--accent);
+}
+
+.contents__section + .contents__section,
+.contents__list + .contents__section {
+  margin-top: 1rem;
+}
+
+.contents__heading {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.contents__list {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.contents__link {
+  display: block;
+  padding: 0.16rem 0 0.16rem 0.7rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--text-2);
+  line-height: 1.35;
+  transition:
+    color var(--speed) ease,
+    border-color var(--speed) ease;
+}
+
+.contents__link:hover {
+  color: var(--text);
+}
+
+.contents__link--current {
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The column shape. The class is put on the page by the same behaviour
+   that decides it for the table of contents, from the window's width and
+   the reader's own column width together — the two lists stand on either
+   side of the text and appear and disappear as one thing.
+
+   Forcing a closed `<details>` open is the one rule here that is not
+   ordinary layout. `content-visibility` on the generated content box is
+   what a browser hides the body of a closed disclosure with, so putting
+   it back is how a stylesheet says «open» without a script and without
+   an `open` attribute that would leave the phone's block expanded. The
+   sibling rule beside it answers the older engines, which hid the body
+   with `display` instead. */
+.has-sidebar .contents::details-content {
+  content-visibility: visible;
+  block-size: auto;
+}
+
+.has-sidebar .contents > .contents__nav {
+  display: block;
+}
+
+.has-sidebar .contents {
+  position: sticky;
+  top: 5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  margin: 0;
+}
+
+.has-sidebar .contents__summary {
+  display: none;
+}
