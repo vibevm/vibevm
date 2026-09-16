@@ -28,7 +28,7 @@ abstract = """
 """
 
 [compatibility]
-min_vibe_version = "1.1.0"
+min_vibe_version = "1.0.0"
 requires_kinds = []
 
 [i18n]

@@ -1,4 +1,4 @@
-//! `cargo xtask mirror` — fan the local mainline out to every target in
+//! `cargo xtask mirror` — fan the configured local branches/tags out to every target in
 //! `mirrors.toml` (the benevolent-dictator / hub-and-spoke model, no primary).
 //!
 //! Mainline is the maintainer's integrated local `main` — single-writer, so
@@ -8,13 +8,13 @@
 //! host, are integrated into local mainline, then fanned out from here). This
 //! command:
 //!
-//! - `cargo xtask mirror` — push mainline to every `push` target,
+//! - `cargo xtask mirror` — push every manifest-configured branch/tag to every `push` target,
 //!   fast-forward-only, **never `--force`**; a non-fast-forward means a target
 //!   diverged (someone wrote it directly) → fail loud, reconcile by hand. A
 //!   `self-pull` target (one that mirrors itself from elsewhere) is not pushed,
 //!   only checked for keeping up.
-//! - `--check` — verify every target's `main` is at or behind local
-//!   mainline (an ancestor-or-equal, the fan-out's ancestry gate); push
+//! - `--check` — verify every configured target branch is at or behind its local
+//!   branch (an ancestor-or-equal, the fan-out's ancestry gate); push
 //!   nothing. Read-only, suitable for a health probe. A target legitimately
 //!   behind — the normal state between two fan-outs — is healthy for the
 //!   exit verdict (not drift, not red), but it is not *in sync*: the tail
@@ -37,6 +37,7 @@
 
 mod failure;
 mod probe;
+mod rewrite;
 
 use std::path::Path;
 use std::process::Command;
@@ -67,11 +68,27 @@ struct Target {
     refs: Vec<String>,
 }
 
-pub(crate) fn run_mirror(check: bool, from: Option<&str>) -> Result<()> {
+pub(crate) fn run_mirror(
+    check: bool,
+    from: Option<&str>,
+    rewrite_ref: Option<&str>,
+    source: Option<&str>,
+    leases: &[String],
+) -> Result<()> {
     let root = repo_root()?;
     let targets = load_targets(&root)?;
     if targets.is_empty() {
         bail!("{MANIFEST} lists no targets");
+    }
+    if let Some(full_ref) = rewrite_ref {
+        if check || from.is_some() {
+            bail!("mirror rewrite-ref cannot be combined with --check or --from");
+        }
+        let source = source.context("mirror rewrite-ref requires --source <revision>")?;
+        return rewrite::run(&root, &targets, full_ref, source, leases);
+    }
+    if source.is_some() || !leases.is_empty() {
+        bail!("--source/--lease require --rewrite-ref");
     }
     if let Some(name) = from {
         pull_from(&root, &targets, name)?;
@@ -151,14 +168,14 @@ fn rev_parse(root: &Path, rev: &str) -> Result<String> {
 }
 
 fn local_main(root: &Path) -> Result<String> {
-    rev_parse(root, MAINLINE)
+    rev_parse(root, &format!("refs/heads/{MAINLINE}"))
 }
 
-fn remote_main(root: &Path, url: &str) -> Result<Option<String>> {
-    let out = git(root, &["ls-remote", url, &format!("refs/heads/{MAINLINE}")])?;
+fn remote_ref(root: &Path, url: &str, full_ref: &str) -> Result<Option<String>> {
+    let out = git(root, &["ls-remote", url, full_ref])?;
     if !out.status.success() {
         bail!(
-            "git ls-remote {url}: {}",
+            "git ls-remote {url} {full_ref}: {}",
             String::from_utf8_lossy(&out.stderr).trim()
         );
     }
@@ -230,7 +247,7 @@ fn refresh_tracking(root: &Path, remotes: &[(String, String)], target_url: &str,
     }
     // The push was fast-forward-only and succeeded, so every matching host's
     // `branch` now equals the local `branch` — record exactly that.
-    let sha = match rev_parse(root, branch) {
+    let sha = match rev_parse(root, &format!("refs/heads/{branch}")) {
         Ok(s) => s,
         Err(e) => {
             eprintln!("  warn   cannot resolve {branch} to refresh tracking refs: {e}");
@@ -260,15 +277,20 @@ fn refresh_tracking(root: &Path, remotes: &[(String, String)], target_url: &str,
 /// `+`-prefixed (force) refspec — so a non-fast-forward fails loud rather
 /// than overwriting a diverged target. The `push_args_never_force` test
 /// turns that guarantee from prose into runnable capital.
-fn push_args<'a>(url: &'a str, git_ref: &'a str) -> Vec<&'a str> {
+fn push_args(url: &str, git_ref: &str) -> Vec<String> {
     if git_ref == "tags" {
-        vec!["push", url, "--tags"]
+        vec!["push".into(), url.into(), "--tags".into()]
     } else {
-        vec!["push", url, git_ref]
+        vec![
+            "push".into(),
+            url.into(),
+            format!("refs/heads/{git_ref}:refs/heads/{git_ref}"),
+        ]
     }
 }
 
 fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
+    preflight_local_refs(root, targets)?;
     let head = local_main(root)?;
     let remotes = named_remotes(root).unwrap_or_else(|e| {
         eprintln!("mirror: could not read git remotes ({e}); tracking refs left as-is");
@@ -285,7 +307,8 @@ fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
             Mode::Push => {
                 for r in &t.refs {
                     let args = push_args(&t.url, r);
-                    let out = git(root, &args)?;
+                    let borrowed = args.iter().map(String::as_str).collect::<Vec<_>>();
+                    let out = git(root, &borrowed)?;
                     if out.status.success() {
                         println!("  ok     {} {r}", t.name);
                         // Tags land in refs/tags/* directly and carry no
@@ -304,17 +327,42 @@ fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
                     }
                 }
             }
-            Mode::SelfPull => match remote_main(root, &t.url)? {
-                Some(sha) if sha == head => println!("  sync   {} (self-pull)", t.name),
-                Some(sha) => println!("  BEHIND {} (self-pull, at {})", t.name, short(&sha)),
-                None => println!("  EMPTY  {} (self-pull, no {MAINLINE})", t.name),
-            },
+            Mode::SelfPull => {
+                for branch in t.refs.iter().filter(|git_ref| git_ref.as_str() != "tags") {
+                    let local = rev_parse(root, &format!("refs/heads/{branch}"))?;
+                    let full_ref = format!("refs/heads/{branch}");
+                    match remote_ref(root, &t.url, &full_ref)? {
+                        Some(sha) if sha == local => {
+                            println!("  sync   {}:{branch} (self-pull)", t.name)
+                        }
+                        Some(sha) => println!(
+                            "  BEHIND {}:{branch} (self-pull, at {})",
+                            t.name,
+                            short(&sha)
+                        ),
+                        None => println!("  EMPTY  {}:{branch} (self-pull)", t.name),
+                    }
+                }
+            }
         }
     }
     if !failures.is_empty() {
         bail!("{}", failure_summary(&failures));
     }
     println!("mirror: all push targets synced.");
+    Ok(())
+}
+
+fn preflight_local_refs(root: &Path, targets: &[Target]) -> Result<()> {
+    let branches = targets
+        .iter()
+        .flat_map(|target| target.refs.iter())
+        .filter(|git_ref| git_ref.as_str() != "tags")
+        .collect::<std::collections::BTreeSet<_>>();
+    for branch in branches {
+        rev_parse(root, &format!("refs/heads/{branch}"))
+            .with_context(|| format!("configured mirror branch `{branch}` is absent locally"))?;
+    }
     Ok(())
 }
 
@@ -439,7 +487,7 @@ mod tests {
             assert!(
                 !args
                     .iter()
-                    .any(|a| *a == "--force" || *a == "-f" || a.starts_with('+')),
+                    .any(|a| a == "--force" || a == "-f" || a.starts_with('+')),
                 "fan-out push for `{git_ref}` must never force: {args:?}"
             );
             assert_eq!(args[0], "push", "first arg is always the push verb");
@@ -449,7 +497,10 @@ mod tests {
     #[test]
     fn push_args_shape_per_ref_kind() {
         // A branch ref pushes that branch by name; `tags` fans every tag.
-        assert_eq!(push_args("URL", "main"), vec!["push", "URL", "main"]);
+        assert_eq!(
+            push_args("URL", "main"),
+            vec!["push", "URL", "refs/heads/main:refs/heads/main"]
+        );
         assert_eq!(push_args("URL", "tags"), vec!["push", "URL", "--tags"]);
     }
 

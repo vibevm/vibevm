@@ -7,7 +7,7 @@ use std::path::Path;
 
 use anyhow::Result;
 
-use super::{Target, git, load_targets, local_main, remote_main};
+use super::{Target, git, load_targets, local_main, remote_ref, rev_parse};
 
 /// One target's sync state relative to local mainline — the result both
 /// `mirror --check` and `health --mirrors` read. The contract is ancestry,
@@ -81,28 +81,28 @@ fn classify(head: &str, remote: Option<&str>, ancestry: Ancestry) -> SyncState {
     }
 }
 
-/// Probe every target's `main` against local mainline by ancestry (the
-/// fan-out's gate): equal ⇒ sync, an ancestor ⇒ behind (healthy for the exit
-/// verdict — the check tail still names it), anything else ⇒ drift. Shared by
+/// Probe every target's configured branch refs against their local branches by
+/// ancestry. The `tags` sentinel is excluded: mutable tag replacement has its
+/// own exact leased route. Shared by
 /// `mirror --check` (which fails on drift) and `health --mirrors` (advisory).
 pub(super) fn probe(root: &Path, targets: &[Target]) -> Result<(String, Vec<TargetStatus>)> {
     let head = local_main(root)?;
     let mut statuses = Vec::with_capacity(targets.len());
     for t in targets {
-        let remote = remote_main(root, &t.url)?;
-        // The ancestry gate only changes the answer when the target has a
-        // main that is not equal to ours; equal ⇒ sync, absent ⇒ missing
-        // (`classify` settles both without consulting `ancestry`, so the
-        // placeholder below is never read in those cases).
-        let ancestry = match remote.as_deref() {
-            Some(sha) if sha != head => is_ancestor(root, sha, &head),
-            _ => Ancestry::IsAncestor,
-        };
-        let state = classify(&head, remote.as_deref(), ancestry);
-        statuses.push(TargetStatus {
-            name: t.name.clone(),
-            state,
-        });
+        for branch in t.refs.iter().filter(|git_ref| git_ref.as_str() != "tags") {
+            let local = rev_parse(root, &format!("refs/heads/{branch}"))?;
+            let full_ref = format!("refs/heads/{branch}");
+            let remote = remote_ref(root, &t.url, &full_ref)?;
+            let ancestry = match remote.as_deref() {
+                Some(sha) if sha != local => is_ancestor(root, sha, &local),
+                _ => Ancestry::IsAncestor,
+            };
+            let state = classify(&local, remote.as_deref(), ancestry);
+            statuses.push(TargetStatus {
+                name: format!("{}:{branch}", t.name),
+                state,
+            });
+        }
     }
     Ok((head, statuses))
 }

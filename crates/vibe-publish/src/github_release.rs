@@ -265,7 +265,7 @@ impl GithubReleaseClient {
         }
     }
 
-    fn create_tag_ref(
+    pub fn create_tag_ref(
         &self,
         tag: &str,
         source_commit: &str,

@@ -13,8 +13,9 @@ use vibe_publish::release_manifest::{
 };
 use vibe_publish::{
     AggregateDistributionManifest, CreateGithubRelease, GithubGitRef, GithubMakeLatest,
-    GithubRelease, GithubReleaseAsset, GithubReleaseClient, PlatformDistributionFragment,
-    SUPPORTED_DISTRIBUTION_TARGETS, UpdateGithubRelease, load_token_for_host, sha256_digest,
+    GithubRelease, GithubReleaseAsset, GithubReleaseClient, GithubReleaseError,
+    PlatformDistributionFragment, SUPPORTED_DISTRIBUTION_TARGETS, UpdateGithubRelease,
+    load_token_for_host, sha256_digest,
 };
 
 use super::build::{
@@ -34,10 +35,10 @@ use local::{read_local_platform, upload_with};
 
 trait ReleaseHost {
     fn find_release(&self, tag: &str) -> Result<Option<GithubRelease>>;
-    fn get_tag_ref(&self, tag: &str) -> Result<GithubGitRef>;
+    fn find_tag_ref(&self, tag: &str) -> Result<Option<GithubGitRef>>;
+    fn create_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef>;
     fn create_release(&self, request: &CreateGithubRelease) -> Result<GithubRelease>;
     fn delete_release(&self, release_id: u64) -> Result<()>;
-    fn force_move_or_create_tag(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef>;
     fn list_assets(&self, release_id: u64) -> Result<Vec<GithubReleaseAsset>>;
     fn download_asset(&self, asset_id: u64, expected_size: u64, max_size: u64) -> Result<Vec<u8>>;
     fn cleanup_temporary_assets(&self, release_id: u64, canonical_names: &[&str]) -> Result<()>;
@@ -55,8 +56,20 @@ impl ReleaseHost for GithubReleaseClient {
         Ok(self.find_release_authenticated(tag)?)
     }
 
-    fn get_tag_ref(&self, tag: &str) -> Result<GithubGitRef> {
-        Ok(self.get_tag_ref_authenticated(tag)?)
+    fn find_tag_ref(&self, tag: &str) -> Result<Option<GithubGitRef>> {
+        match self.get_tag_ref_authenticated(tag) {
+            Ok(reference) => Ok(Some(reference)),
+            Err(GithubReleaseError::NotFound { .. }) => Ok(None),
+            Err(error) => Err(error.into()),
+        }
+    }
+
+    fn create_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
+        Ok(GithubReleaseClient::create_tag_ref(
+            self,
+            tag,
+            source_commit,
+        )?)
     }
 
     fn create_release(&self, request: &CreateGithubRelease) -> Result<GithubRelease> {
@@ -65,10 +78,6 @@ impl ReleaseHost for GithubReleaseClient {
 
     fn delete_release(&self, release_id: u64) -> Result<()> {
         Ok(self.delete_release(release_id)?)
-    }
-
-    fn force_move_or_create_tag(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
-        Ok(self.force_move_or_create_tag(tag, source_commit)?)
     }
 
     fn list_assets(&self, release_id: u64) -> Result<Vec<GithubReleaseAsset>> {
@@ -292,11 +301,17 @@ fn prepare_with(
         "Mutable vibevm {version} distribution. Verify downloads through \
          `{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}`."
     );
+    let reference = match host.find_tag_ref(&request.tag_name)? {
+        Some(reference) => {
+            validate_tag_ref(&reference, &request.tag_name, &identity.commit)?;
+            reference
+        }
+        None => host.create_tag_ref(&request.tag_name, &identity.commit)?,
+    };
+    validate_tag_ref(&reference, &request.tag_name, &identity.commit)?;
     if let Some(existing) = host.find_release(&request.tag_name)? {
         host.delete_release(existing.id)?;
     }
-    let reference = host.force_move_or_create_tag(&request.tag_name, &identity.commit)?;
-    validate_tag_ref(&reference, &request.tag_name, &identity.commit)?;
     host.create_release(&request)
 }
 
@@ -312,7 +327,13 @@ fn finalize_with(
     if !release.draft {
         bail!("release `{tag}` is already published; run `dist prepare` before rebuilding it");
     }
-    validate_tag_ref(&host.get_tag_ref(&tag)?, &tag, &identity.commit)?;
+    validate_tag_ref(
+        &host
+            .find_tag_ref(&tag)?
+            .with_context(|| format!("prepared draft tag `{tag}` is absent"))?,
+        &tag,
+        &identity.commit,
+    )?;
     host.cleanup_temporary_assets(
         release.id,
         &[
@@ -411,7 +432,9 @@ fn ensure_release_ready_for_publish(
         bail!("verified draft identity changed before publication; refusing to publish");
     }
     validate_tag_ref(
-        &host.get_tag_ref(&verified.aggregate.tag)?,
+        &host
+            .find_tag_ref(&verified.aggregate.tag)?
+            .with_context(|| format!("verified tag `{}` is absent", verified.aggregate.tag))?,
         &verified.aggregate.tag,
         &verified.aggregate.source_commit,
     )?;

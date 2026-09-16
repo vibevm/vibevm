@@ -259,7 +259,7 @@ enum Cmd {
 
     /// Fan the local mainline out to every target in `mirrors.toml`
     /// (the benevolent-dictator / hub-and-spoke mirror model, no primary):
-    /// push `main` + tags to every `push` target, fast-forward-only and
+    /// push every configured branch + tags to every `push` target, fast-forward-only and
     /// never `--force`. `--check` verifies sync without pushing; `--from
     /// <name>` fast-forwards local mainline to a host's accepted-PR merge
     /// before fanning out. Auth is the maintainer's per-host SSH keys.
@@ -272,6 +272,18 @@ enum Cmd {
         /// `main` (a PR accepted/merged via that host's web UI).
         #[arg(long)]
         from: Option<String>,
+
+        /// Owner-authorized exact full ref to replace through per-target leases.
+        #[arg(long)]
+        rewrite_ref: Option<String>,
+
+        /// Local revision whose exact commit should replace --rewrite-ref.
+        #[arg(long, requires = "rewrite_ref")]
+        source: Option<String>,
+
+        /// Expected remote ref per target: TARGET=OID|absent (repeat once per push target).
+        #[arg(long = "lease", requires = "rewrite_ref")]
+        leases: Vec<String>,
     },
 
     /// Prove a vibe-index data directory's catalog is byte-identical to
@@ -499,7 +511,19 @@ fn main() -> Result<()> {
                 },
             )
         }
-        Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
+        Cmd::Mirror {
+            check,
+            from,
+            rewrite_ref,
+            source,
+            leases,
+        } => run_mirror(
+            check,
+            from.as_deref(),
+            rewrite_ref.as_deref(),
+            source.as_deref(),
+            &leases,
+        ),
         Cmd::Rebuild { check, data_dir } => run_rebuild(check, &data_dir),
         Cmd::WireDiff => run_wire_diff(),
     }

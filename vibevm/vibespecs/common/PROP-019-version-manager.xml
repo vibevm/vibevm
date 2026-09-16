@@ -628,9 +628,11 @@ held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
   `vibevm-source.zip`, its source tree OID and SHA-256, plus `vibe`,
   `vibe-index`, `DISTRIBUTION.json`, `LICENSE.md`, and `README.md`. The raw
   bootstrap asset is byte-identical to the bundle's `vibe` component.</RELEASE-SOURCE-ARCHIVE>
-        <RELEASE-MUTABLE fact="true" status="impl/done">**Every version label is mutable by default.** `dist prepare --version V`
-  deletes any existing draft or published release for `V`, moves or creates
-  `vV` at the exact source commit, and creates one fresh draft. Four hosts may
+        <RELEASE-MUTABLE fact="true" status="impl/done">**Every version label is mutable by default.** The owner first places
+  `vV` at the exact source commit through the source mirror's per-target exact
+  leased-ref operation. `dist prepare --version V` refuses an existing tag at
+  any other commit before deleting a release; it creates a genuinely absent tag,
+  deletes any existing draft or published release for `V`, and creates one fresh draft. Four hosts may
   independently replace their ZIP/bootstrap/fragment triplets. The exact
   direct `refs/tags/vV` → commit binding is verified after prepare and again
   immediately before publication. `dist finalize`

@@ -7,7 +7,7 @@
 # Contributions arrive as PRs / branches / email patches on ANY host, are
 # integrated into local mainline, then fanned out from here.
 #
-#   cargo xtask mirror              fan mainline out to every push-target
+#   cargo xtask mirror              fan configured branches/tags to every push-target
 #                                   (fast-forward-only, fail-loud, never --force)
 #   cargo xtask mirror --check      verify every target is in sync (push nothing)
 #   cargo xtask mirror --from NAME  fast-forward local mainline to a host's
@@ -25,12 +25,12 @@ schema = 1
 name = "gitverse"
 url = "git@gitverse.ru:vibevm/vibevm.git"
 mode = "push"
-refs = ["main", "tags"]
+refs = ["main", "next", "1.0.0", "tags"]
 region = "ru"
 
 [[target]]
 name = "github"
 url = "git@github.com:vibevm/vibevm.git"
 mode = "push"
-refs = ["main", "tags"]
+refs = ["main", "next", "1.0.0", "tags"]
 region = "us"

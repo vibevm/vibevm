@@ -16,6 +16,7 @@ struct MockHost {
     assets: RefCell<Vec<GithubReleaseAsset>>,
     bytes: RefCell<BTreeMap<u64, Vec<u8>>>,
     moved_to: RefCell<Option<String>>,
+    tag_present: Cell<bool>,
     tag_kind: RefCell<String>,
     operations: RefCell<Vec<String>>,
     next_id: Cell<u64>,
@@ -28,6 +29,7 @@ impl MockHost {
             assets: RefCell::new(Vec::new()),
             bytes: RefCell::new(BTreeMap::new()),
             moved_to: RefCell::new(None),
+            tag_present: Cell::new(true),
             tag_kind: RefCell::new("commit".to_string()),
             operations: RefCell::new(Vec::new()),
             next_id: Cell::new(10),
@@ -55,8 +57,12 @@ impl ReleaseHost for MockHost {
         Ok(self.release.borrow().clone())
     }
 
-    fn get_tag_ref(&self, tag: &str) -> Result<GithubGitRef> {
-        Ok(GithubGitRef {
+    fn find_tag_ref(&self, tag: &str) -> Result<Option<GithubGitRef>> {
+        self.operations.borrow_mut().push("tag-find".to_string());
+        if !self.tag_present.get() {
+            return Ok(None);
+        }
+        Ok(Some(GithubGitRef {
             reference: format!("refs/tags/{tag}"),
             object: GithubGitObject {
                 sha: self
@@ -64,6 +70,20 @@ impl ReleaseHost for MockHost {
                     .borrow()
                     .clone()
                     .unwrap_or_else(|| COMMIT.to_string()),
+                kind: self.tag_kind.borrow().clone(),
+                url: String::new(),
+            },
+        }))
+    }
+
+    fn create_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
+        self.operations.borrow_mut().push("tag-create".to_string());
+        self.tag_present.set(true);
+        *self.moved_to.borrow_mut() = Some(source_commit.to_string());
+        Ok(GithubGitRef {
+            reference: format!("refs/tags/{tag}"),
+            object: GithubGitObject {
+                sha: source_commit.to_string(),
                 kind: self.tag_kind.borrow().clone(),
                 url: String::new(),
             },
@@ -89,19 +109,6 @@ impl ReleaseHost for MockHost {
         self.assets.borrow_mut().clear();
         self.bytes.borrow_mut().clear();
         Ok(())
-    }
-
-    fn force_move_or_create_tag(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
-        self.operations.borrow_mut().push("tag".to_string());
-        *self.moved_to.borrow_mut() = Some(source_commit.to_string());
-        Ok(GithubGitRef {
-            reference: format!("refs/tags/{tag}"),
-            object: GithubGitObject {
-                sha: source_commit.to_string(),
-                kind: self.tag_kind.borrow().clone(),
-                url: String::new(),
-            },
-        })
     }
 
     fn list_assets(&self, _release_id: u64) -> Result<Vec<GithubReleaseAsset>> {
@@ -362,7 +369,7 @@ fn local_asset_reader_bounds_metadata_before_allocating() {
 }
 
 #[test]
-fn prepare_deletes_any_existing_release_moves_the_tag_and_creates_a_fresh_draft() {
+fn prepare_validates_the_prepositioned_tag_before_replacing_the_release() {
     let host = MockHost::draft();
     host.release.borrow_mut().as_mut().unwrap().draft = false;
     host.seed("old.zip".to_string(), b"old".to_vec());
@@ -374,18 +381,19 @@ fn prepare_deletes_any_existing_release_moves_the_tag_and_creates_a_fresh_draft(
     let result = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity).unwrap();
     assert!(result.draft);
     assert_eq!(result.id, 8);
-    assert_eq!(host.moved_to.borrow().as_deref(), Some(COMMIT));
+    assert_eq!(host.moved_to.borrow().as_deref(), None);
     assert!(host.assets.borrow().is_empty());
     assert_eq!(
         host.operations.borrow().as_slice(),
-        ["find", "delete:7", "tag", "create"]
+        ["tag-find", "find", "delete:7", "create"]
     );
 }
 
 #[test]
-fn prepare_without_a_release_sets_the_tag_before_creating_the_draft() {
+fn prepare_without_a_tag_creates_it_before_the_draft() {
     let host = MockHost::draft();
     *host.release.borrow_mut() = None;
+    host.tag_present.set(false);
     let identity = GitIdentity {
         commit: COMMIT.to_string(),
         tree: TREE.to_string(),
@@ -399,7 +407,7 @@ fn prepare_without_a_release_sets_the_tag_before_creating_the_draft() {
     assert_eq!(host.moved_to.borrow().as_deref(), Some(COMMIT));
     assert_eq!(
         host.operations.borrow().as_slice(),
-        ["find", "tag", "create"]
+        ["tag-find", "tag-create", "find", "create"]
     );
 }
 
@@ -418,6 +426,27 @@ fn prepare_refuses_a_tag_update_response_with_wrong_provenance() {
         .to_string();
     assert!(error.contains("tag provenance mismatch"));
     assert!(host.release.borrow().is_none());
+    assert_eq!(host.operations.borrow().as_slice(), ["tag-find"]);
+}
+
+#[test]
+fn prepare_refuses_a_moved_tag_before_deleting_the_existing_release() {
+    let host = MockHost::draft();
+    *host.moved_to.borrow_mut() = Some(TREE.to_string());
+    let identity = GitIdentity {
+        commit: COMMIT.to_string(),
+        tree: TREE.to_string(),
+        source_date_epoch: "1".to_string(),
+    };
+    let error = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity)
+        .expect_err("a mismatched pre-positioned tag must refuse")
+        .to_string();
+    assert!(error.contains("tag provenance mismatch"));
+    assert!(
+        host.release.borrow().is_some(),
+        "release must remain untouched"
+    );
+    assert_eq!(host.operations.borrow().as_slice(), ["tag-find"]);
 }
 
 #[test]

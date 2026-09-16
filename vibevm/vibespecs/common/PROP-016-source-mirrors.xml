@@ -24,14 +24,14 @@
 name = "gitverse"
 url = "git@gitverse.ru:vibevm/vibevm.git"
 mode = "push"            # the maintainer pushes mainline here
-refs = ["main", "tags"]
+refs = ["main", "next", "1.0.0", "tags"]
 region = "ru"
 
 [[target]]
 name = "github"
 url = "git@github.com:vibevm/vibevm.git"
 mode = "push"
-refs = ["main", "tags"]
+refs = ["main", "next", "1.0.0", "tags"]
 region = "us"</fence>
     <p><ADD-HOST fact="true" status="spec/done">Adding a host is one `[[target]]` block, committed — the set is living.</ADD-HOST></p>
   </manifest>
@@ -50,8 +50,8 @@ region = "us"</fence>
   <tooling title="4. Tooling">
     <p><TOOLING-ENGINE fact="true" status="spec/done">The fan-out engine is `xtask/src/mirror.rs`, driven by `cargo xtask mirror` (the model's mechanics — fast-forward-only push, tracking-ref refresh, fail-loud drift handling — are the flow's `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root`):</TOOLING-ENGINE></p>
     <facts ordered="false">
-      <CMD-MIRROR fact="true" status="spec/done">`cargo xtask mirror` — push mainline (`main` + tags) to every `push` target, **fast-forward-only, never `--force`**; verify `self-pull` targets; refresh the matching local remote-tracking refs so `git status` is clean after a green rollout. This — not `git push origin` — is the standard rollout.</CMD-MIRROR>
-      <CMD-CHECK fact="true" status="spec/done">`cargo xtask mirror --check` — verify every target equals mainline; push nothing (read-only, non-zero exit on drift).</CMD-CHECK>
+      <CMD-MIRROR fact="true" status="spec/done">`cargo xtask mirror` — push every configured branch (`main`, `next`, the mutable `1.0.0` release branch) plus tags to every `push` target, **fast-forward-only, never `--force`**; verify `self-pull` targets; refresh the matching local remote-tracking refs so `git status` is clean after a green rollout. This — not `git push origin` — is the standard rollout.</CMD-MIRROR>
+      <CMD-CHECK fact="true" status="spec/done">`cargo xtask mirror --check` — verify every configured branch on every target; push nothing (read-only, non-zero exit on drift).</CMD-CHECK>
       <CMD-FROM fact="true" status="spec/done">`cargo xtask mirror --from &lt;name&gt;` — fast-forward mainline to a host's accepted-PR merge before fanning out (the bridge for a PR merged via that host's web UI).</CMD-FROM>
       <CMD-HEALTH-MIRRORS fact="true" status="spec/done">`cargo xtask health --mirrors` — run the `--check` probe as an advisory `mirrors` block in the Discipline sweep; **off by default**, so the committed health snapshot stays deterministic and offline (mirror sync is network state, not a property of the source tree).</CMD-HEALTH-MIRRORS>
     </facts>
@@ -59,6 +59,7 @@ region = "us"</fence>
       <NEVER-FORCE-TESTED fact="true" status="spec/done">The never-`--force` invariant is **runnable capital**, not prose: `push_args` is a pure function and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape.</NEVER-FORCE-TESTED>
       <FROM-FF-ONLY fact="true" status="spec/done">`--from`'s `git merge --ff-only` enforces the same at runtime.</FROM-FF-ONLY>
       <RED-LINE-BY-CONSTRUCTION fact="true" status="spec/done">This honours the `CLAUDE.md` force-push red line by construction.</RED-LINE-BY-CONSTRUCTION>
+      <EXACT-LEASED-REWRITE fact="true" status="impl/done">An owner-authorized history replacement uses the separate `mirror --rewrite-ref` surface: one full `refs/heads/…` or `refs/tags/…` name, one exact local source revision, and exactly one expected old OID (or explicit `absent`) per push target. The tool preflights every lease before writing, emits only per-ref `--force-with-lease`, verifies every resulting remote OID, and never force-pushes a namespace or all tags. Routine mirror remains fast-forward-only.</EXACT-LEASED-REWRITE>
     </facts>
   </tooling>
   <open title="5. Open questions">
