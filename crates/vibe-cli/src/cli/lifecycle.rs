@@ -92,6 +92,7 @@ impl LifecycleArgs {
         InstallArgs {
             packages: Vec::new(),
             global: false,
+            from_source: false,
             path: self.path.clone(),
             registry: self.registry.clone(),
             assume_yes: self.assume_yes,

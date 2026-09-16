@@ -3,8 +3,12 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 
+mod binary;
+mod distribution;
 mod model;
 mod process;
+mod remote;
+mod selection;
 mod source;
 mod store;
 
@@ -17,11 +21,11 @@ use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
 use model::{
-    ApplicationContext, ApplicationOperation, ApplicationRecord, ApplicationStatus,
-    CONTEXT_PROTOCOL, ManagementEntry,
+    ApplicationContext, ApplicationOperation, ApplicationProvenance, ApplicationRecord,
+    ApplicationSelection, ApplicationStatus, CONTEXT_PROTOCOL, ManagementEntry,
 };
 use process::{dispatch, validate_management};
-use source::{qualified_ref, resolve_application};
+use source::{ResolvedApplication, qualified_ref, resolve_global_application};
 use store::ApplicationStore;
 
 pub fn install(
@@ -31,50 +35,65 @@ pub fn install(
     root_offline: bool,
 ) -> Result<()> {
     validate_install_args(&args)?;
-    let spelling = &args.packages[0];
-    let registry = select_registry(args.registry.as_deref(), embedded_root.as_deref())?;
-    let resolved = resolve_application(&registry, spelling)?;
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
+    let spelling = &args.packages[0];
+    let offline = root_offline || args.offline;
+    let resolved = resolve_global_application(
+        &settings,
+        args.registry.as_deref(),
+        embedded_root.as_deref(),
+        spelling,
+        offline,
+    )?;
     reject_identity_collision(&index, &resolved.application)?;
     let host = settings
         .join("opt")
         .join("apps")
         .join(&resolved.application.id);
-    let context = context(
-        ApplicationOperation::Install,
-        resolved.application.clone(),
+    let prior = index.applications.get(&resolved.application.id);
+    let mut applied = apply(
+        ctx,
+        &store,
         &settings,
         host,
-        Some(registry),
-        root_offline || args.offline,
+        resolved,
+        ApplicationOperation::Install,
+        offline,
+        args.from_source,
+        prior,
     )?;
-    let (context_path, reply_path) = store.request_paths()?;
-    let reply = dispatch(
-        &resolved.installer_entry,
-        &resolved.installer_root,
-        &context,
-        &context_path,
-        &reply_path,
-    )?;
-    let management = ready_management(&context.host_root, &reply)?;
     index.applications.insert(
-        context.application.id.clone(),
+        applied.application.id.clone(),
         ApplicationRecord {
-            application: context.application.clone(),
-            host_root: context.host_root.clone(),
-            management,
+            application: applied.application.clone(),
+            host_root: applied.host_root.clone(),
+            management: applied.management,
             status: ApplicationStatus::Ready,
+            provenance: Some(applied.provenance.clone()),
+            launchers: applied.launchers.clone(),
         },
     );
-    store.save(&index)?;
+    if let Err(error) = store.save(&index) {
+        if let Some(publication) = applied.publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(suspended) = applied.suspended.take() {
+            suspended.rollback_after_source(&applied.launchers)?;
+        }
+        return Err(error);
+    }
+    if let Some(publication) = applied.publication.take() {
+        publication.commit();
+    }
     render(
         ctx,
         "install",
-        &context.application.id,
-        &reply.message,
-        &context.host_root,
+        &applied.application.id,
+        &applied.message,
+        &applied.host_root,
+        Some(&applied.provenance),
     )
 }
 
@@ -91,45 +110,58 @@ pub fn update(
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
     let prior = record_for_package(&index, &requested)?.clone();
-    let registry = select_registry(args.registry.as_deref(), embedded_root.as_deref())?;
-    let resolved = resolve_application(&registry, spelling)?;
+    let resolved = resolve_global_application(
+        &settings,
+        args.registry.as_deref(),
+        embedded_root.as_deref(),
+        spelling,
+        root_offline,
+    )?;
     if resolved.application.id != prior.application.id {
         bail!("updated application declaration changes the installed application id");
     }
     reject_identity_collision(&index, &resolved.application)?;
-    let context = context(
-        ApplicationOperation::Update,
-        resolved.application.clone(),
+    let mut applied = apply(
+        ctx,
+        &store,
         &settings,
-        prior.host_root,
-        Some(registry),
+        prior.host_root.clone(),
+        resolved,
+        ApplicationOperation::Update,
         root_offline,
+        args.from_source,
+        Some(&prior),
     )?;
-    let (context_path, reply_path) = store.request_paths()?;
-    let reply = dispatch(
-        &resolved.installer_entry,
-        &resolved.installer_root,
-        &context,
-        &context_path,
-        &reply_path,
-    )?;
-    let management = ready_management(&context.host_root, &reply)?;
     index.applications.insert(
-        context.application.id.clone(),
+        applied.application.id.clone(),
         ApplicationRecord {
-            application: context.application.clone(),
-            host_root: context.host_root.clone(),
-            management,
+            application: applied.application.clone(),
+            host_root: applied.host_root.clone(),
+            management: applied.management,
             status: ApplicationStatus::Ready,
+            provenance: Some(applied.provenance.clone()),
+            launchers: applied.launchers.clone(),
         },
     );
-    store.save(&index)?;
+    if let Err(error) = store.save(&index) {
+        if let Some(publication) = applied.publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(suspended) = applied.suspended.take() {
+            suspended.rollback_after_source(&applied.launchers)?;
+        }
+        return Err(error);
+    }
+    if let Some(publication) = applied.publication.take() {
+        publication.commit();
+    }
     render(
         ctx,
         "update",
-        &context.application.id,
-        &reply.message,
-        &context.host_root,
+        &applied.application.id,
+        &applied.message,
+        &applied.host_root,
+        Some(&applied.provenance),
     )
 }
 
@@ -141,6 +173,25 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     let mut index = store.load()?;
     let prior = record_for_package(&index, &requested)?.clone();
     let management = validate_management(&prior.host_root, &prior.management)?;
+    if management.runtime == model::ManagementRuntime::Builtin {
+        let message = binary::uninstall(&management)?;
+        index.applications.insert(
+            prior.application.id.clone(),
+            ApplicationRecord {
+                status: ApplicationStatus::Undeployed,
+                ..prior.clone()
+            },
+        );
+        store.save(&index)?;
+        return render(
+            ctx,
+            "uninstall",
+            &prior.application.id,
+            &message,
+            &prior.host_root,
+            prior.provenance.as_ref(),
+        );
+    }
     let context = context(
         ApplicationOperation::Uninstall,
         prior.application.clone(),
@@ -168,7 +219,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         context.application.id.clone(),
         ApplicationRecord {
             status: ApplicationStatus::Undeployed,
-            ..prior
+            ..prior.clone()
         },
     );
     store.save(&index)?;
@@ -178,6 +229,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         &context.application.id,
         &reply.message,
         &context.host_root,
+        prior.provenance.as_ref(),
     )
 }
 
@@ -218,15 +270,130 @@ fn ready_management(host: &Path, reply: &model::ApplicationReply) -> Result<Mana
     validate_management(host, management)
 }
 
-fn select_registry(explicit: Option<&Path>, embedded: Option<&Path>) -> Result<PathBuf> {
-    explicit
-        .or(embedded)
-        .map(Path::to_path_buf)
-        .ok_or_else(|| {
-            anyhow::anyhow!(
-                "global source application needs --registry <local-path> or a source-installed Vibe embedded registry"
-            )
-        })
+struct AppliedApplication {
+    application: model::ApplicationIdentity,
+    host_root: PathBuf,
+    management: ManagementEntry,
+    provenance: ApplicationProvenance,
+    message: String,
+    publication: Option<binary::BinaryPublication>,
+    launchers: Vec<model::ApplicationLauncherOwnership>,
+    suspended: Option<binary::SuspendedBinary>,
+}
+
+#[allow(clippy::too_many_arguments)]
+fn apply(
+    ctx: &output::Context,
+    store: &ApplicationStore,
+    settings: &Path,
+    host: PathBuf,
+    resolved: ResolvedApplication,
+    operation: ApplicationOperation,
+    offline: bool,
+    from_source: bool,
+    prior: Option<&ApplicationRecord>,
+) -> Result<AppliedApplication> {
+    let active_prior = prior.filter(|record| record.status == ApplicationStatus::Ready);
+    if let Some(selected) = selection::select_binary(ctx, &resolved, from_source, offline)? {
+        let target = selected.target;
+        std::fs::create_dir_all(&host)?;
+        let staging = host.join(format!(".distribution-pending-{}", std::process::id()));
+        if let Some(verified) =
+            distribution::fetch_and_verify(&target, &selected.application, &staging)?
+        {
+            let application = verified.manifest.application.clone();
+            let provenance = ApplicationProvenance {
+                available_source: resolved.source.clone(),
+                selected: ApplicationSelection::Binary {
+                    commit: target.source_commit,
+                    source_tree: target.source_tree,
+                    os: target.os,
+                    arch: target.arch,
+                    asset_sha256: target.sha256,
+                },
+            };
+            let publication = binary::publish(
+                settings,
+                &host,
+                verified,
+                active_prior.map(|record| &record.management),
+                active_prior.map_or(&[], |record| record.launchers.as_slice()),
+            )?;
+            let management = publication.management();
+            let launchers = publication.launchers();
+            return Ok(AppliedApplication {
+                application,
+                host_root: host,
+                management,
+                provenance,
+                message: "installed verified platform distribution".into(),
+                publication: Some(publication),
+                launchers,
+                suspended: None,
+            });
+        }
+    }
+    let registry_root = Some(resolved.registry_root.clone());
+    let context = context(
+        operation,
+        resolved.application.clone(),
+        settings,
+        host,
+        registry_root,
+        offline,
+    )?;
+    let (context_path, reply_path) = store.request_paths()?;
+    let suspended = active_prior
+        .filter(|record| record.management.runtime == model::ManagementRuntime::Builtin)
+        .map(|record| binary::suspend(&record.management))
+        .transpose()?;
+    let reply = match dispatch(
+        &resolved.installer_entry,
+        &resolved.installer_root,
+        &context,
+        &context_path,
+        &reply_path,
+    ) {
+        Ok(reply) => reply,
+        Err(error) => {
+            if let Some(suspended) = suspended {
+                suspended.restore()?;
+            }
+            return Err(error);
+        }
+    };
+    let management = match ready_management(&context.host_root, &reply) {
+        Ok(management) => management,
+        Err(error) => {
+            if let Some(suspended) = suspended {
+                suspended.restore()?;
+            }
+            return Err(error);
+        }
+    };
+    let selected = ApplicationSelection::Source {
+        commit: resolved
+            .source
+            .as_ref()
+            .map(|value| value.resolved_commit.clone()),
+        source_tree: resolved
+            .source
+            .as_ref()
+            .map(|value| value.source_tree.clone()),
+    };
+    Ok(AppliedApplication {
+        application: context.application,
+        host_root: context.host_root,
+        management,
+        provenance: ApplicationProvenance {
+            available_source: resolved.source,
+            selected,
+        },
+        message: reply.message,
+        publication: None,
+        launchers: reply.launchers,
+        suspended,
+    })
 }
 
 fn settings_root() -> Result<PathBuf> {
@@ -348,6 +515,7 @@ fn render(
     application_id: &str,
     message: &str,
     host_root: &Path,
+    provenance: Option<&ApplicationProvenance>,
 ) -> Result<()> {
     if ctx.is_json() {
         let command = match command {
@@ -363,6 +531,24 @@ fn render(
             application_id: application_id.into(),
             host_root: vibe_core::machine_json_path(host_root),
             message: message.into(),
+            selected_mode: provenance.map(|value| match value.selected {
+                ApplicationSelection::Source { .. } => {
+                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Source
+                }
+                ApplicationSelection::Binary { .. } => {
+                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Binary
+                }
+            }),
+            selected_commit: provenance.and_then(|value| match &value.selected {
+                ApplicationSelection::Source { commit, .. } => commit.clone(),
+                ApplicationSelection::Binary { commit, .. } => Some(commit.clone()),
+            }),
+            available_source_commit: provenance.and_then(|value| {
+                value
+                    .available_source
+                    .as_ref()
+                    .map(|source| source.resolved_commit.clone())
+            }),
         });
     }
     ctx.summary(&format!(

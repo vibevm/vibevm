@@ -168,8 +168,39 @@ fn validate_index(index: &ApplicationIndex, settings_root: &Path) -> Result<()> 
         {
             bail!("application index carries a path outside its owned application host");
         }
+        let launcher_root = settings_root.join("opt").join("bin");
+        let mut launcher_destinations = std::collections::BTreeSet::new();
+        for launcher in &record.launchers {
+            let Some(name) = launcher
+                .destination
+                .file_name()
+                .and_then(|value| value.to_str())
+            else {
+                bail!("application index carries an invalid launcher destination");
+            };
+            if launcher.destination.parent() != Some(launcher_root.as_path())
+                || !launcher_belongs_to_command(name, &application.commands)
+                || !launcher_destinations.insert(launcher.destination.clone())
+                || launcher.sha256.len() != 64
+                || !launcher
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+            {
+                bail!("application index carries invalid launcher ownership");
+            }
+        }
     }
     Ok(())
+}
+
+fn launcher_belongs_to_command(name: &str, commands: &[String]) -> bool {
+    commands.iter().any(|command| {
+        name == command
+            || [".cmd", ".ps1", ".sh"]
+                .iter()
+                .any(|suffix| name == format!("{command}{suffix}"))
+    })
 }
 
 fn remove_file_if_present(path: &Path) -> Result<()> {

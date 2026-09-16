@@ -15,6 +15,11 @@ installer_package = "org.vibevm.zap/lens@=0.1.0"
 runtime = "node"
 entry = "tooling/source-install/application.mjs"
 commands = ["zap-quicklens", "zap-server"]
+
+[application.distribution]
+repository = "vibevm/zap"
+release_tag = "v1.0.0"
+index_asset = "DISTRIBUTIONS.json"
 "#;
 
 #[test]
@@ -31,8 +36,59 @@ fn strict_application_declaration_round_trips() {
         "tooling/source-install/application.mjs"
     );
     assert_eq!(application.commands, ["zap-quicklens", "zap-server"]);
+    assert_eq!(
+        application.distribution.as_ref().unwrap().repository,
+        "vibevm/zap"
+    );
     let rendered = toml::to_string(&manifest).expect("render");
     Manifest::parse_str(&rendered).expect("round trip");
+}
+
+#[test]
+fn application_source_proxy_is_strict_and_exclusive() {
+    let proxy = r#"
+[package]
+name = "zap"
+group = "org.vibevm.zap"
+kind = "flow"
+version = "1.0.0"
+bridge = true
+
+[application_source]
+kind = "git"
+url = "https://github.com/vibevm/zap.git"
+tracked_ref = "refs/heads/1.0.0"
+registry_path = "vibevm/vibepacks"
+"#;
+    let manifest = Manifest::parse_str(proxy).expect("valid application proxy");
+    let source = manifest.application_source.as_ref().unwrap();
+    assert_eq!(source.tracked_ref, "refs/heads/1.0.0");
+    Manifest::parse_str(&toml::to_string(&manifest).unwrap()).expect("round trip");
+
+    for (from, to, expected) in [
+        (
+            "https://github.com/vibevm/zap.git",
+            "https://token@github.com/vibevm/zap.git",
+            "credential-free",
+        ),
+        ("refs/heads/1.0.0", "main", "refs/heads"),
+        ("vibevm/vibepacks", "../outside", "portable"),
+    ] {
+        let error = Manifest::parse_str(&proxy.replacen(from, to, 1))
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains(expected), "{error}");
+    }
+    let both = format!(
+        "{proxy}\n[application]{}",
+        PACKAGE.split_once("[application]").unwrap().1
+    );
+    assert!(
+        Manifest::parse_str(&both)
+            .unwrap_err()
+            .to_string()
+            .contains("mutually exclusive")
+    );
 }
 
 #[test]

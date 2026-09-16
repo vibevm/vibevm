@@ -7,21 +7,106 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::PackageRef;
-use vibe_core::manifest::Manifest;
-use vibe_registry::LocalRegistry;
+use vibe_core::manifest::{ApplicationDistributionDecl, Manifest};
+use vibe_install::InstallSource;
 
-use super::model::{ApplicationIdentity, PackageIdentity};
+use super::model::{ApplicationIdentity, ApplicationSourceObservation, PackageIdentity};
+use super::remote::resolve_remote_source;
 
 pub struct ResolvedApplication {
     pub application: ApplicationIdentity,
     pub installer_entry: PathBuf,
     pub installer_root: PathBuf,
+    pub distribution: Option<ApplicationDistributionDecl>,
+    pub source: Option<ApplicationSourceObservation>,
+    pub registry_root: PathBuf,
+}
+
+pub fn resolve_global_application(
+    settings_root: &Path,
+    explicit_registry: Option<&Path>,
+    embedded_registry: Option<&Path>,
+    spelling: &str,
+    offline: bool,
+) -> Result<ResolvedApplication> {
+    let requested = qualified_ref(spelling)?;
+    if let Some(registry_root) = [explicit_registry, embedded_registry]
+        .into_iter()
+        .flatten()
+        .next()
+    {
+        let registry_root = canonical_directory(registry_root, "application registry")?;
+        let registry = crate::registry::application_local_registry(registry_root.clone())?;
+        let selected = registry.resolve(&requested)?;
+        let manifest = Manifest::read(selected.source_dir.join(Manifest::FILENAME))?;
+        if let Some(source) = manifest.application_source {
+            let observed = resolve_remote_source(settings_root, &source, offline)?;
+            return resolve_application_with_source(
+                &observed.registry_root,
+                spelling,
+                Some(ApplicationSourceObservation {
+                    url: observed.url,
+                    tracked_ref: observed.tracked_ref,
+                    resolved_commit: observed.resolved_commit,
+                    source_tree: observed.source_tree,
+                }),
+            );
+        }
+        return resolve_application(&registry_root, spelling);
+    }
+
+    vibe_core::ensure_default_global_registry()?;
+    let global = vibe_core::GlobalRegistryConfig::load()?;
+    let synthetic =
+        Manifest::parse_str("[project]\nname = \"global-application\"\nversion = \"1.0.0\"\n")?;
+    let options = vibe_package_source::PackageSourceOptions {
+        no_prefer_local: true,
+        no_default_registry: true,
+        ..Default::default()
+    };
+    let resolver = vibe_package_source::build_install_resolver(
+        &options,
+        &synthetic,
+        None,
+        settings_root,
+        &global,
+        offline,
+        &[],
+    )?;
+    let store_root = vibe_registry::store::store_root()?;
+    let cached = resolver
+        .resolve_and_fetch(&requested, &store_root, None)
+        .with_context(|| format!("resolving published application bridge `{spelling}`"))?;
+    let source = cached.manifest.application_source.ok_or_else(|| {
+        anyhow::anyhow!(
+            "published global application `{spelling}` must declare [application_source]"
+        )
+    })?;
+    let observed = resolve_remote_source(settings_root, &source, offline)?;
+    resolve_application_with_source(
+        &observed.registry_root,
+        spelling,
+        Some(ApplicationSourceObservation {
+            url: observed.url,
+            tracked_ref: observed.tracked_ref,
+            resolved_commit: observed.resolved_commit,
+            source_tree: observed.source_tree,
+        }),
+    )
 }
 
 pub fn resolve_application(registry_root: &Path, spelling: &str) -> Result<ResolvedApplication> {
+    resolve_application_with_source(registry_root, spelling, None)
+}
+
+pub fn resolve_application_with_source(
+    registry_root: &Path,
+    spelling: &str,
+    source: Option<ApplicationSourceObservation>,
+) -> Result<ResolvedApplication> {
     let registry_root = canonical_directory(registry_root, "application registry")?;
     let requested = qualified_ref(spelling)?;
-    let registry = LocalRegistry::new(registry_root.clone())
+    let registry = crate::registry::application_local_registry(registry_root.clone())
         .context("opening the local application registry")?;
     let selected = registry
         .resolve(&requested)
@@ -95,6 +180,9 @@ pub fn resolve_application(registry_root: &Path, spelling: &str) -> Result<Resol
         application,
         installer_entry: entry,
         installer_root: provider_root,
+        distribution: declaration.distribution,
+        source,
+        registry_root,
     })
 }
 

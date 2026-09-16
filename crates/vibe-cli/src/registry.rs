@@ -23,7 +23,9 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
 );
 
+use std::path::PathBuf;
 use vibe_publish::DirectRepoCreator;
+use vibe_registry::{LocalRegistry, RegistryError};
 
 /// Construct the `RepoCreator/direct` cell for `vibe registry publish
 /// --repo-url <url>` — the publish-seam construction site (R-001). The
@@ -33,4 +35,9 @@ use vibe_publish::DirectRepoCreator;
 /// cell-selection sites and the publish command threads the instance in.
 pub fn direct_git_creator(repo_url: String) -> DirectRepoCreator {
     DirectRepoCreator::new(repo_url)
+}
+
+/// Construct the local-registry cell used by the global application surface.
+pub fn application_local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryError> {
+    LocalRegistry::new(root)
 }

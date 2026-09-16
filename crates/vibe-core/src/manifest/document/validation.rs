@@ -50,6 +50,9 @@ impl Manifest {
             if self.application.is_some() {
                 offenders.push("[application]");
             }
+            if self.application_source.is_some() {
+                offenders.push("[application_source]");
+            }
             if self.boot_snippet.is_some() {
                 offenders.push("[boot_snippet]");
             }
@@ -109,6 +112,16 @@ impl Manifest {
             application
                 .validate()
                 .map_err(|reason| Error::InvalidManifest { reason })?;
+        }
+        if let Some(source) = &self.application_source {
+            source
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+        }
+        if self.application.is_some() && self.application_source.is_some() {
+            return Err(Error::InvalidManifest {
+                reason: "[application] and [application_source] are mutually exclusive".into(),
+            });
         }
 
         let mut embedded_source_names = std::collections::BTreeSet::new();

@@ -161,6 +161,11 @@ pub struct InstallArgs {
     #[arg(short = 'g', long = "global")]
     pub global: bool,
 
+    /// For a global application, build the resolved source revision even
+    /// when a verified platform distribution is available.
+    #[arg(long, requires = "global")]
+    pub from_source: bool,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -449,6 +454,11 @@ pub struct UpdateArgs {
     /// Update exactly one installed user application under the Vibe settings root.
     #[arg(short = 'g', long = "global")]
     pub global: bool,
+
+    /// For a global application, build the resolved source revision even
+    /// when a verified platform distribution is available.
+    #[arg(long, requires = "global")]
+    pub from_source: bool,
 
     /// Explicit local source registry for a global application update.
     #[arg(long)]

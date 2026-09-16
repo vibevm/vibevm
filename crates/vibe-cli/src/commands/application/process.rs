@@ -8,12 +8,18 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
 use anyhow::{Context, Result, bail};
+use sha2::{Digest, Sha256};
+use specmark::spec;
 
 use super::model::{
     ApplicationContext, ApplicationOperation, ApplicationReply, ApplicationStatus, ManagementEntry,
-    ManagementRuntime, RESULT_PROTOCOL,
+    RESULT_PROTOCOL,
 };
 
+#[spec(
+    deviates = "spec://org.vibevm.core/vibevm/common/PROP-059#context",
+    reason = "The trusted CLI process resolves native Node from its own inherited PATH immediately before launching the package-declared installer; the browser and application context cannot supply or override this environment value."
+)]
 pub fn resolve_node() -> Result<PathBuf> {
     let path = std::env::var_os("PATH").unwrap_or_default();
     let names: &[&str] = if cfg!(windows) {
@@ -106,9 +112,6 @@ pub fn validate_management(
     host_root: &Path,
     management: &ManagementEntry,
 ) -> Result<ManagementEntry> {
-    if management.runtime != ManagementRuntime::Node {
-        bail!("application management runtime differs from its declaration");
-    }
     let host = crate::commands::init::strip_unc_public(
         fs::canonicalize(host_root).context("resolving the owned application host")?,
     );
@@ -139,6 +142,7 @@ fn validate_reply(context: &ApplicationContext, reply: &ApplicationReply) -> Res
     {
         bail!("application installer reply does not match its dispatched context");
     }
+    validate_launchers(context, reply)?;
     match (context.operation, &reply.status) {
         (
             ApplicationOperation::Install | ApplicationOperation::Update,
@@ -148,6 +152,64 @@ fn validate_reply(context: &ApplicationContext, reply: &ApplicationReply) -> Res
         | (_, ApplicationStatus::Failed) => Ok(()),
         _ => bail!("application installer reply status is invalid for the requested operation"),
     }
+}
+
+fn validate_launchers(context: &ApplicationContext, reply: &ApplicationReply) -> Result<()> {
+    let root = context.settings_root.join("opt").join("bin");
+    let mut destinations = std::collections::BTreeSet::new();
+    for launcher in &reply.launchers {
+        let Some(name) = launcher
+            .destination
+            .file_name()
+            .and_then(|value| value.to_str())
+        else {
+            bail!("application reply launcher has no portable file name");
+        };
+        if launcher.destination.parent() != Some(root.as_path())
+            || !launcher_belongs_to_command(name, &context.application.commands)
+            || !destinations.insert(launcher.destination.clone())
+            || launcher.sha256.len() != 64
+            || !launcher
+                .sha256
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+        {
+            bail!("application reply launcher ownership is invalid");
+        }
+        let metadata = fs::symlink_metadata(&launcher.destination)
+            .context("reading application reply launcher")?;
+        if metadata.file_type().is_symlink()
+            || !metadata.is_file()
+            || hash_file(&launcher.destination)? != launcher.sha256
+        {
+            bail!("application reply launcher does not match deployed regular bytes");
+        }
+    }
+    Ok(())
+}
+
+fn launcher_belongs_to_command(name: &str, commands: &[String]) -> bool {
+    commands.iter().any(|command| {
+        name == command
+            || [".cmd", ".ps1", ".sh"]
+                .iter()
+                .any(|suffix| name == format!("{command}{suffix}"))
+    })
+}
+
+fn hash_file(path: &Path) -> Result<String> {
+    let mut file = File::open(path)?;
+    let mut hash = Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    loop {
+        use std::io::Read;
+        let read = file.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        hash.update(&buffer[..read]);
+    }
+    Ok(format!("{:x}", hash.finalize()))
 }
 
 fn read_reply(path: &Path) -> Result<ApplicationReply> {

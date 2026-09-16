@@ -56,6 +56,9 @@ pub use mechanism::{
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
+pub use package::application::{
+    ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,
+};
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, ApplicationRuntime,
     Authorship, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment, Compatibility,

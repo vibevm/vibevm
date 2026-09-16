@@ -14,6 +14,15 @@ pub enum ApplicationReportCommand {
     Update,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationReportSelectedMode {
+    #[serde(rename = "binary")]
+    Binary,
+
+    #[serde(rename = "source")]
+    Source,
+}
+
 /// Wire format for global user-application install/update/uninstall reports.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ApplicationReport {
@@ -30,4 +39,16 @@ pub struct ApplicationReport {
     pub ok: bool,
 
     pub protocol: String,
+
+    #[serde(rename = "availableSourceCommit")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub available_source_commit: Option<String>,
+
+    #[serde(rename = "selectedCommit")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_commit: Option<String>,
+
+    #[serde(rename = "selectedMode")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_mode: Option<ApplicationReportSelectedMode>,
 }

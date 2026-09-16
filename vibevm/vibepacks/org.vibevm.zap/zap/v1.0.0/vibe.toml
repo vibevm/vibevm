@@ -1,0 +1,23 @@
+[package]
+name = "zap"
+group = "org.vibevm.zap"
+kind = "flow"
+version = "1.0.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Published bridge to the Zap user application source and verified releases"
+keywords = ["zap", "agents", "application"]
+bridge = true
+describes = "pkg:github/vibevm/zap@1.0.0"
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+[application_source]
+kind = "git"
+url = "https://github.com/vibevm/zap.git"
+tracked_ref = "refs/heads/1.0.0"
+registry_path = "vibevm/vibepacks"

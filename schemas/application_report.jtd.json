@@ -30,5 +30,26 @@
     "message": {
       "type": "string"
     }
+  },
+  "optionalProperties": {
+    "selectedMode": {
+      "enum": ["source", "binary"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "x-default": null
+      }
+    },
+    "selectedCommit": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "availableSourceCommit": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
   }
 }

@@ -70,6 +70,7 @@ pub struct ManagementEntry {
 #[serde(rename_all = "lowercase")]
 pub enum ManagementRuntime {
     Node,
+    Builtin,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -83,6 +84,15 @@ pub struct ApplicationReply {
     pub management: Option<ManagementEntry>,
     pub commands: Vec<String>,
     pub message: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub launchers: Vec<ApplicationLauncherOwnership>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ApplicationLauncherOwnership {
+    pub destination: PathBuf,
+    pub sha256: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -92,6 +102,42 @@ pub struct ApplicationRecord {
     pub host_root: PathBuf,
     pub management: ManagementEntry,
     pub status: ApplicationStatus,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provenance: Option<ApplicationProvenance>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub launchers: Vec<ApplicationLauncherOwnership>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ApplicationSourceObservation {
+    pub url: String,
+    pub tracked_ref: String,
+    pub resolved_commit: String,
+    pub source_tree: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "mode", rename_all = "snake_case", deny_unknown_fields)]
+pub enum ApplicationSelection {
+    Source {
+        commit: Option<String>,
+        source_tree: Option<String>,
+    },
+    Binary {
+        commit: String,
+        source_tree: String,
+        os: String,
+        arch: String,
+        asset_sha256: String,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ApplicationProvenance {
+    pub available_source: Option<ApplicationSourceObservation>,
+    pub selected: ApplicationSelection,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

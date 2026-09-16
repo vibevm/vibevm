@@ -40,6 +40,7 @@ use specmark::spec;
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
+use super::ApplicationSourceDecl;
 use super::artifact::ArtifactsSection;
 use super::compile::CompileSection;
 use super::deploy::DeploySection;
@@ -89,6 +90,11 @@ pub struct Manifest {
     /// `[application]` — optional package-owned user-local application metadata.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDecl>,
+
+    /// `[application_source]` — a package-owned proxy to an application
+    /// declaration in an external registry-shaped Git source.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub application_source: Option<ApplicationSourceDecl>,
 
     /// `[workspace]` — declares member packages this node coordinates.
     #[serde(default, skip_serializing_if = "Option::is_none")]

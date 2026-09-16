@@ -1,6 +1,8 @@
 //! Registered global application CLI report wire.
 
-use vibe_wire::generated::application_report::{ApplicationReport, ApplicationReportCommand};
+use vibe_wire::generated::application_report::{
+    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
+};
 
 #[test]
 fn application_report_round_trips_exact_camel_case_members() {
@@ -11,6 +13,9 @@ fn application_report_round_trips_exact_camel_case_members() {
         message: "ready".into(),
         ok: true,
         protocol: "vibe-application-command-report/1".into(),
+        selected_mode: Some(ApplicationReportSelectedMode::Binary),
+        selected_commit: Some("a".repeat(40)),
+        available_source_commit: Some("b".repeat(40)),
     };
     let value = serde_json::to_value(&report).unwrap();
     assert_eq!(value["applicationId"], "demo");
