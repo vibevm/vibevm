@@ -18,7 +18,7 @@
         "crates/vibe-publish/src/lib.rs"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "crates/vibe-publish/src/",
         "xtask/src/dist/",
         "schemas/",
@@ -29,7 +29,7 @@
       ],
       "steps": [
         "Map current source/tree/lock/bundle fields and each remote write in prepare_with; retain their owners.",
-        "Create PROP-060 anchors for exact subjects, smoke policy and effect partitions; define framed hashes including target, replaced remote IDs and recovery prerequisites.",
+        "Create PROP-073 anchors for exact subjects, smoke policy and effect partitions; define framed hashes including target, replaced remote IDs and recovery prerequisites.",
         "Register owned schemas/corpora and implement pure plan construction/validation through the existing manifest types; expose model/error schema references using M-16."
       ],
       "positive_cases": [
@@ -61,7 +61,7 @@
       "safe_stop": "A inspectable local plan exists; no remote writer is called.",
       "commit_subject": "feat(publish): bind prepared plans to exact release subjects",
       "notes": [
-        "PROP-060 is a proposed canonical file created by this task, not a baseline existing source. Schema/module filenames are finalized within the listed subtrees before coding.",
+        "PROP-073 is a proposed canonical file created by this task, not a baseline existing source. Schema/module filenames are finalized within the listed subtrees before coding.",
         "Prerequisites: M-13, M-14-A and M-16-B; do not duplicate their operation or target identity models.",
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -88,7 +88,7 @@
         "schemas/",
         "formats/",
         "crates/vibe-wire/",
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "crates/vibe-publish/Cargo.toml",
         "crates/vibe-publish/src/lib.rs"
       ],

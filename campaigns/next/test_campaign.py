@@ -237,7 +237,7 @@ class CampaignChecks(unittest.TestCase):
 
     def test_retired_preview_protocol_resolves_only_to_permanent_targets(self):
         unit = next(unit for unit in MANIFEST["units"] if unit["id"] == "NEXT-A26")
-        target = {"path": "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml", "anchor": "root"}
+        target = {"path": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml", "anchor": "root"}
         clauses = {anchor: {"targets": [target]} for anchor in unit["anchors"]}
         states = {unit["id"]: {"state": "retired"}}
         with patch.dict(MODULE["resolved_contract_units"].__globals__,
@@ -281,10 +281,10 @@ class CampaignChecks(unittest.TestCase):
         MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
         self.assertNotIn("NEXT-PREVIEW-DOCS.1", {n["id"] for n in MODULE["ready_nodes"](self.plan)})
 
-    def test_original_frozen_inputs_keep_exact_revision_four_bytes(self):
+    def test_reviewed_sanitized_integration_snapshot_keeps_exact_bytes(self):
         expected = {
-            "campaigns/next/inputs/REFINED-IMPLEMENTATION-PLAN.md": "11cd76253638800fc90897220984912eb7d737ad12a423f9207299f2b70cb9e7",
-            "campaigns/next/inputs/PROJECT-REVIEW.md": "084cf62c72427b65dd8b41241a841ca7b5ac521c7936333d9662d78b70986486",
+            "campaigns/next/inputs/REFINED-IMPLEMENTATION-PLAN.md": "ae19a06c33dc4ce26691044b3644e3f857f749536a2eaa4abc5f1429d2b7b1be",
+            "campaigns/next/inputs/PROJECT-REVIEW.md": "b5acf753cea91af5978eaaab6e71d459cec8097cc38b1a704a55914ea361edf7",
         }
         self.assertEqual({row["path"]: row["sha256"] for row in MANIFEST["baseline_files"]}, expected)
         for path, sha256 in expected.items():

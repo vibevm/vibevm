@@ -29,7 +29,7 @@
         "crates/vibe-mcp/src/tools.rs",
         "schemas/",
         "crates/vibe-wire/",
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "crates/vibe-wire/Cargo.toml",
         "crates/vibe-wire/src/lib.rs",
         "crates/vibe-orchestrator/Cargo.toml",
@@ -38,7 +38,7 @@
         "crates/vibe-mcp/src/lib.rs"
       ],
       "steps": [
-        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
         "Extend owned JTD registry/codegen with namespaced operation/model/schema descriptors and typed prepared/input/admission/result/error/event unions.",
         "Validate requests before dispatch and results/errors/events before publication; wrong types, unknown fields and unsupported epochs are explicit refusals.",
         "Register domain handlers through shared application-service composition; discovery reads retained descriptors and never executes a provider or fetches a schema."
@@ -67,7 +67,7 @@
       "safe_stop": "Contracts and fixture dispatch are validated; real mutating handlers remain behind existing authority.",
       "commit_subject": "feat(api): generate strict operation and capability schemas",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Write perimeter is limited to the new shared facade and registered schemas; preserve unrelated wire epochs and legacy adapters.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
@@ -137,7 +137,7 @@
       "safe_stop": "Pure models and projections are tested; no watcher or disk mutation is added.",
       "commit_subject": "feat(api): model captured entities and source locations",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Proposed shared-model modules must remain in a dependency-safe existing crate; do not make parser crates depend on lifecycle.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -194,7 +194,7 @@
       "safe_stop": "Transport and fake service exchanges pass; long-running action ownership lands in M-16-C.",
       "commit_subject": "feat(api): negotiate framed sessions and trusted contexts",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

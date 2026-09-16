@@ -43,7 +43,7 @@
       "safe_stop": "Pinned resource audit and reusable fixtures exist; external products remain unchanged.",
       "commit_subject": "test(bridges): capture pinned Spec Kit resource requirements",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
         "fixtures/next/bridges is a proposed test subtree. This audit does not authorize script execution."
       ]
     },
@@ -90,7 +90,7 @@
       "safe_stop": "Audited expansion is ready; no scripts or external install effects run.",
       "commit_subject": "docs(bridges): map procedure resources and admitted effects",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
       ]
     }
   ]

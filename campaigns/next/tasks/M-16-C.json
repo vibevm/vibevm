@@ -56,7 +56,7 @@
       "safe_stop": "Reservation/replay tests pass with a fixture effect counter and no live domain mutation.",
       "commit_subject": "feat(api): reserve idempotent submissions before execution",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -125,7 +125,7 @@
       "safe_stop": "Fixture jobs are terminal or explicitly recovery-required; no orphaned process is hidden.",
       "commit_subject": "feat(api): retain operation ownership and recovery across reconnect",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -184,7 +184,7 @@
       "safe_stop": "All fixture streams are closed or replayable and jobs have durable final/partial state.",
       "commit_subject": "feat(api): multiplex operation events and cooperative controls",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -254,7 +254,7 @@
       "safe_stop": "Adapter conformance passes with fixture decisions; no public or real-user mutation is invoked.",
       "commit_subject": "feat(api): expose typed input and admission decisions",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

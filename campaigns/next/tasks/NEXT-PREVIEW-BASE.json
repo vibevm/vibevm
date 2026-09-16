@@ -7,7 +7,7 @@
       "goal": "Retain the exact source, package and interface baseline from which the authorized implementation starts.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibe.toml",
         "vibe.lock",
@@ -51,7 +51,7 @@
       "safe_stop": "Stop after retaining the baseline capture; do not start milestone work until BASE.3 is accepted.",
       "commit_subject": "docs(release): capture the Developer Preview 1 baseline",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
@@ -66,7 +66,7 @@
       "goal": "Create the permanent contract and generated machine-readable formats independently of future change and migration runtimes.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "formats/REGISTRY.toml",
         "formats/EPOCHS.toml",
@@ -75,7 +75,7 @@
         "docs/releases/developer-preview-1-to-2/"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "schemas/",
         "formats/",
         "crates/vibe-wire/",
@@ -85,7 +85,7 @@
         "docs/releases/developer-preview-1-to-2/"
       ],
       "steps": [
-        "Create PROP-068 as ordinary release/change-accounting law, including the DP1/DP2 identity model, evidence semantics, prototype policy, documentation intake, exact-scope reconciliation and post-retirement proof. Check the proposed filename against the actual tree before minting it.",
+        "Create PROP-081 as ordinary release/change-accounting law, including the DP1/DP2 identity model, evidence semantics, prototype policy, documentation intake, exact-scope reconciliation and post-retirement proof. Check the proposed filename against the actual tree before minting it.",
         "Place release-impact records at changes/<immutable-id>/release-impact.json under the configured spec root. Define these as ordinary versioned JSON data and non-normative change evidence. Define versioned transition.json, documentation-map.json and validator report/request formats in the existing format registry with canonical schemas, generated bindings/readers and round-trip fixtures.",
         "Define immutable change identity, before/after capture references, affected capability/topic and permanent contract anchors, user impact and documentation impact with separate explicit no-impact reasons, migration action class, evidence, introduced/reverted/superseded relationships and acceptance provenance. Distinguish individual contribution records from net transition conclusions.",
         "Define a permanent read-only checker and deterministic draft assembler under tools/preview-transition/. Establish and document the exact proposed checker grammar: check.py --transition <path> --mode capture|contribution|bindings|documentation|release|retired --format json. Bindings mode requires --stage roles|linked; documentation mode requires --stage intake|updated|verified; release mode requires --stage reviewed|verified. Other modes reject --stage. Each stage validates only its completed obligations and reports later required proof as pending, never passed. Establish assemble.py --transition <path> --output-dir <bound-path>; assembling never accepts work or overwrites reviewed prose without an explicit owned output path.",
@@ -119,7 +119,7 @@
       "safe_stop": "Stop with validated capture and independently usable accounting tools; contribution enforcement remains BASE.3.",
       "commit_subject": "feat(release): define permanent preview transition accounting",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
@@ -134,7 +134,7 @@
       "goal": "Make missing release and documentation accounting visible from the first implementation contribution.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "campaigns/next/manifest.json",
         "campaigns/next/plan.seed.toml",
@@ -177,7 +177,7 @@
       "safe_stop": "Stop after contribution enforcement is accepted; root may dispatch only authorized dependency-ready work.",
       "commit_subject": "test(release): require contribution impact before acceptance",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",

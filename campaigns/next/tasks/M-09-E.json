@@ -12,7 +12,7 @@
         "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
         "external:org.speckit.speckit/vibe.toml",
-        "external:com.external-skills.skills/vibe.toml"
+        "external:skills-bridge-to-select/vibe.toml"
       ],
       "write_paths": [
         "fixtures/next/bridges/",
@@ -48,7 +48,7 @@
       "safe_stop": "Bridge proofs are complete locally; publishing remains separate.",
       "commit_subject": "test(bridges): verify complete prepared offline journeys",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
       ]
     },
     {

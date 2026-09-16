@@ -54,7 +54,7 @@
       "safe_stop": "A usable prior generation and complete journal remain available for each failure prefix.",
       "commit_subject": "feat(environment): recover interrupted profile activation",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -115,7 +115,7 @@
       "safe_stop": "Deletion journal and remaining roots are consistent; failed cleanup is retryable within exact ownership.",
       "commit_subject": "feat(environment): guard runtime garbage collection with live references",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

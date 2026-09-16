@@ -65,7 +65,7 @@
       "safe_stop": "Overlay results are inspectable and disk remains byte-identical.",
       "commit_subject": "feat(api): analyze client-scoped document overlays",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -127,7 +127,7 @@
       "safe_stop": "Invalidated views remain historical captures; clients receive explicit resnapshot guidance.",
       "commit_subject": "feat(api): bind editor locations and invalidation to captures",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -191,7 +191,7 @@
       "safe_stop": "Barriers are released or recovery-owned; disk is unchanged or exact partial edits are journaled.",
       "commit_subject": "feat(api): fence saved-state edits with cooperative barriers",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

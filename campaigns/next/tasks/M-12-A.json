@@ -14,7 +14,7 @@
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
         "external:org.speckit.speckit/vibe.toml",
-        "external:com.external-skills.skills/vibe.toml"
+        "external:skills-bridge-to-select/vibe.toml"
       ],
       "write_paths": [
         "fixtures/next/integration/",
@@ -50,7 +50,7 @@
       "safe_stop": "Initial integration census is complete; remaining route evidence is explicitly open.",
       "commit_subject": "test(integration): reconcile initial package and capability closure",
       "notes": [
-        "External bridge roots require root-bound isolated checkouts for external:org.speckit.speckit / external:com.external-skills.skills. Never modify the currently existing sibling source trees. Root binds actual external validation/publication commands after inspecting those checkouts.",
+        "External bridge roots require root-bound isolated checkouts for external:org.speckit.speckit / external:skills-bridge-to-select. Never modify the currently existing sibling source trees. Root binds actual external validation/publication commands after inspecting those checkouts.",
         "fixtures/next/integration is a proposed controlled fixture subtree."
       ]
     },

@@ -395,7 +395,7 @@ Immutable inputs: [IMPLEMENTATION-PLAN.md](C:/Users/olegc/git/v/final-improvemen
 
 | ID | Принято владельцем | Implementation / responsible boundary |
 |---|---|---|
-| D-001 | Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0 | M-09-B |
+| D-001 | Spec Kit и будущий bridge внешних skills — flow версии 1.0.0; сохраняется допустимое upstream provenance. Источник внешних skills нужно выбрать заново до реализации; прежний компонент удалён по указанию владельца. | M-09-B |
 | D-002 | create создаёт/меняет код; build детерминированно собирает; verify проверяет; полный проход имеет отдельный явный вход | M-03-A; обычный/scoped verify не запускает новый producer |
 | D-003 | Реальные алгоритмические версионированные миграции: сохранить выбор/комментарии, проверить, показать diff, безопасно записать; неоднозначность требует ответа, не LLM | M-13-C/D, затем каждый изменяемый authored/wire format |
 | D-004 | Default Redbook — multi-user-planning, WAL — альтернатива. Unattended: explicit selection или explicit allow-defaults, иначе NeedsSelection. Выбор сохраняется и update не следует новому default | M-05-E/F |
@@ -470,7 +470,7 @@ V = C:/Users/olegc/git/v/vibevm. Paths ниже точные относител�
 | E16 | crates/vibe-agent-projection/src/agents.rs:140,224,233,245,317,398,507; crates/vibe-agent-projection/src/agents/home_paths.rs:58 |
 | E17 | crates/vibe-agent-projection/src/pkgskill.rs:115,479,578; crates/vibe-agent-projection/src/pkgskill/projection.rs:333,359,388,433,487; crates/vibe-agent-projection/src/pkgskill/projection/binding.rs:107,128; crates/vibe-agent-projection/src/pkgskill/receipt/reconcile.rs:48,126 |
 | E18 | crates/vibe-lifecycle/src/mechanism/deploy/model.rs:244; crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs:525; crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs:44; crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs:45,153,261; crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs:36,103; crates/vibe-lifecycle/src/mechanism/deploy/skill.rs:206 |
-| E19 | C:/Users/olegc/git/v/packages/org.speckit.speckit/vibe.toml:4,16,36; C:/Users/olegc/git/v/packages/org.speckit.speckit/skills/speckit-core/SKILL.md:11; C:/Users/olegc/git/v/packages/org.speckit.speckit/README.md:3; C:/Users/olegc/git/v/packages/com.external-skills.skills/vibe.toml:4,24,29; V/docs/authoring-feat.md:3 |
+| E19 | C:/Users/olegc/git/v/packages/org.speckit.speckit/vibe.toml:4,16,36; C:/Users/olegc/git/v/packages/org.speckit.speckit/skills/speckit-core/SKILL.md:11; C:/Users/olegc/git/v/packages/org.speckit.speckit/README.md:3; external skills source removed by owner; replacement evidence is unbound; V/docs/authoring-feat.md:3 |
 | E20 | .github/workflows/release-distributions.yml:43; xtask/src/dist/build.rs:36; xtask/src/dist/release.rs:283; xtask/src/dist/release/tests.rs:365 |
 | E21 | xtask/src/dist/release.rs:301; crates/vibe-publish/src/release_manifest.rs; rust-toolchain.toml:2; formats/EPOCHS.toml:4 |
 | E22 | vibevm/vibespecs/common/PROP-044-change-native-formats.xml#THE-FREEZE-MODEL, #TERMS-SNAPSHOT-FROZEN-CHANNEL; crates/vibe-core/src/manifest/package.rs:106; vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml:62; vibe.toml:31 |

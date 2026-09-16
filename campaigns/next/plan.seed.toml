@@ -15,7 +15,7 @@ nodes = ["NEXT","NEXT-PREPARE","NEXT-P0","NEXT-P0.1","NEXT-P0.2","NEXT-P0.3","NE
 [[mandate]]
 id = "D-001"
 source = "refined-plan:revision-4:decision:D-001"
-text = "Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0"
+text = "Spec Kit и будущий bridge внешних skills — flow версии 1.0.0; сохраняется допустимое upstream provenance. Источник внешних skills нужно выбрать заново до реализации; прежний компонент удалён по указанию владельца."
 disposition = "owned"
 nodes = ["M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2"]
 
@@ -582,7 +582,7 @@ state = "planned"
 zoom = "summary"
 depends_on = ["NEXT-P0-GATE"]
 mandates = []
-acceptance = ["Create or select isolated checkouts for org.speckit.speckit and com.external-skills.skills at exact approved source captures.","Record read/write roots, branch and upstream/source hashes in user-local resource bindings; existing live sibling checkouts stay untouched."]
+acceptance = ["Create or select isolated checkouts for org.speckit.speckit and a newly selected external skills bridge at exact approved source captures; bind the replacement upstream and lawful package identity before implementation.","Record read/write roots, branch and upstream/source hashes in user-local resource bindings; existing live sibling checkouts stay untouched."]
 evidence = []
 
 [[node]]
@@ -856,7 +856,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Whole-product capability/model coverage census, ETO source-law decisions and ownership map; reconcile PROP-032 proposal with real domain authorities and current public commands","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-A.json"
-contract_sha256 = "e47ea464e971278afcb68c27f82241d015c986615c82fbf0d5be29805d1a5774"
+contract_sha256 = "3064d1e30dc4021a5577de33b48010a0987a7b3be15fe9b36a715db1232b9ead"
 
 [[node]]
 id = "M-16-A.1"
@@ -871,7 +871,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-A.json#M-16-A.1","No identified command/action/model lacks a disposition and domain owner.","The register is interface coverage only, not a requirements engine or scheduler."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-A.json#M-16-A.1"
-contract_sha256 = "e47ea464e971278afcb68c27f82241d015c986615c82fbf0d5be29805d1a5774"
+contract_sha256 = "3064d1e30dc4021a5577de33b48010a0987a7b3be15fe9b36a715db1232b9ead"
 
 [[node]]
 id = "M-16-A.2"
@@ -886,7 +886,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-A.json#M-16-A.2","All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.","The design identifies exact source families for downstream M-16/M-17 work."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-A.json#M-16-A.2"
-contract_sha256 = "e47ea464e971278afcb68c27f82241d015c986615c82fbf0d5be29805d1a5774"
+contract_sha256 = "3064d1e30dc4021a5577de33b48010a0987a7b3be15fe9b36a715db1232b9ead"
 
 [[node]]
 id = "M-16-B"
@@ -901,7 +901,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Versioned registry/facade/context/entity/snapshot/location/error/event contracts and generated validation; strict schema/effect/applicability discovery, local framed API protocol negotiation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json"
-contract_sha256 = "3d2cd80ce6e0b93cd9c44df605135bc9b5df73bdb5d6275084980a0b001d7da9"
+contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
 
 [[node]]
 id = "M-16-B.1"
@@ -916,7 +916,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.1","Capability implementation status, contextual availability and authorization are separate fields.","No eval/shell endpoint or duplicate domain engine appears."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.1"
-contract_sha256 = "3d2cd80ce6e0b93cd9c44df605135bc9b5df73bdb5d6275084980a0b001d7da9"
+contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
 
 [[node]]
 id = "M-16-B.2"
@@ -931,7 +931,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.2","A client can navigate provenance without unrestricted host paths or false atomicity claims.","Every incomplete/inconsistent mapping has a typed reason."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.2"
-contract_sha256 = "3d2cd80ce6e0b93cd9c44df605135bc9b5df73bdb5d6275084980a0b001d7da9"
+contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
 
 [[node]]
 id = "M-16-B.3"
@@ -946,7 +946,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.3","Framing and handshake are documented from executable behavior.","No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.3"
-contract_sha256 = "3d2cd80ce6e0b93cd9c44df605135bc9b5df73bdb5d6275084980a0b001d7da9"
+contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
 
 [[node]]
 id = "M-16-C"
@@ -961,7 +961,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Responsive on-demand host/CLI/MCP service adapters; atomic scoped submission reservation, host-issued namespace epochs/expiry and compact dedup tombstones, pinned active/recovery identities; domain-journal linkage, progress/replay/control/attach, typed input/admission and partial outcomes; existing execution limits preserved","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json"
-contract_sha256 = "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e"
+contract_sha256 = "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c"
 
 [[node]]
 id = "M-16-C.1"
@@ -976,7 +976,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.1","No effect starts before durable admission identity exists.","Dedup bookkeeping references existing journals rather than becoming a competing execution store."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.1"
-contract_sha256 = "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e"
+contract_sha256 = "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c"
 
 [[node]]
 id = "M-16-C.2"
@@ -991,7 +991,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.2","Durable identity and recovery evidence survive transport lifetime.","No permanent autonomous service or multi-run scheduler is required."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.2"
-contract_sha256 = "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e"
+contract_sha256 = "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c"
 
 [[node]]
 id = "M-16-C.3"
@@ -1006,7 +1006,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.3","Stream ordering domains and cancellation capability limits are explicit.","Stopping trace observation never falsely cancels the underlying build."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.3"
-contract_sha256 = "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e"
+contract_sha256 = "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c"
 
 [[node]]
 id = "M-16-C.4"
@@ -1021,7 +1021,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.4","Machine mode has no hidden TTY prompt or omitted per-operation option.","Public A/future B and exact target/effect grants remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.4"
-contract_sha256 = "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e"
+contract_sha256 = "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c"
 
 [[node]]
 id = "M-16-D"
@@ -1036,7 +1036,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Client-scoped versioned overlays and same-capture pure analysis/navigation/preview, source-position conversion, watched invalidation/resnapshot, two edit modes, acknowledged cooperative edit barrier through commit and saved-state mutation boundary","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-D.json"
-contract_sha256 = "74f9451bc4be9468c2e2d76b286d092f1aadff9c4dd0d22f60fd6a1415a845d2"
+contract_sha256 = "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375"
 
 [[node]]
 id = "M-16-D.1"
@@ -1051,7 +1051,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-D.json#M-16-D.1","Queries for one analysis use exactly the same captured disk/overlay/world inputs.","No cross-client buffer leakage or implicit provider invocation occurs."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-D.json#M-16-D.1"
-contract_sha256 = "74f9451bc4be9468c2e2d76b286d092f1aadff9c4dd0d22f60fd6a1415a845d2"
+contract_sha256 = "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375"
 
 [[node]]
 id = "M-16-D.2"
@@ -1066,7 +1066,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-D.json#M-16-D.2","Every diagnostic location identifies its exact source/projection revision and basis.","No total object/boot cap is introduced by paging."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-D.json#M-16-D.2"
-contract_sha256 = "74f9451bc4be9468c2e2d76b286d092f1aadff9c4dd0d22f60fd6a1415a845d2"
+contract_sha256 = "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375"
 
 [[node]]
 id = "M-16-D.3"
@@ -1081,7 +1081,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-D.json#M-16-D.3","Cleanliness guarantee is limited to registered participating buffers; disk CAS still guards other writers.","A dirty-buffer plan never becomes admitted solely because its content was later saved."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-D.json#M-16-D.3"
-contract_sha256 = "74f9451bc4be9468c2e2d76b286d092f1aadff9c4dd0d22f60fd6a1415a845d2"
+contract_sha256 = "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375"
 
 [[node]]
 id = "NEXT-GATE-M-16"
@@ -1122,7 +1122,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: SourceDescriptor grammar/migration + CommonMark sections/XML-data/raw handling; classification shared before scan/resolve/convert/collision/boot","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json"
-contract_sha256 = "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152"
+contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
 
 [[node]]
 id = "M-06-A.1"
@@ -1137,7 +1137,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.1","Reader and executable migration land together with preserved comments/values.","One descriptor identity is available to downstream scanner/resolver/converter consumers."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.1"
-contract_sha256 = "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152"
+contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
 
 [[node]]
 id = "M-06-A.2"
@@ -1152,7 +1152,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.2","Structural view and raw content point to the same captured document.","No CommonMark node acquires normative Vibe fact authority."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.2"
-contract_sha256 = "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152"
+contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
 
 [[node]]
 id = "M-06-A.3"
@@ -1167,7 +1167,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.3","Install/derive/read round-trips preserve data bytes exactly.","Optional structure failure does not invalidate unrelated facts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.3"
-contract_sha256 = "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152"
+contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
 
 [[node]]
 id = "M-06-A.4"
@@ -1182,7 +1182,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.4","Consumer inventory has no unclassified semantic path.","Existing equivalent Vibe fixtures preserve canonical output and status/void meaning."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.4"
-contract_sha256 = "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152"
+contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
 
 [[node]]
 id = "M-06-B"
@@ -1197,7 +1197,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Actual captured boot graph/provenance/why-included + bytes/scalars/tokenizer metrics, occurrence/shared distinctions and no total cap","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json"
-contract_sha256 = "534e650e4a2b02e526ff097a1433ea98b9d92b3558b0ad79695ca14d7355b1a5"
+contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
 
 [[node]]
 id = "M-06-B.1"
@@ -1212,7 +1212,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-B.json#M-06-B.1","Full authorized child traversal reconstructs the captured graph.","Provenance previously available only as text is structured."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json#M-06-B.1"
-contract_sha256 = "534e650e4a2b02e526ff097a1433ea98b9d92b3558b0ad79695ca14d7355b1a5"
+contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
 
 [[node]]
 id = "M-06-B.2"
@@ -1227,7 +1227,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-B.json#M-06-B.2","Measurement report names basis, recipe and unknown portions.","Large corpus can be traversed without hidden total boot cap."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json#M-06-B.2"
-contract_sha256 = "534e650e4a2b02e526ff097a1433ea98b9d92b3558b0ad79695ca14d7355b1a5"
+contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
 
 [[node]]
 id = "M-06-C"
@@ -1242,7 +1242,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Versioned machine requests/results/errors/progress/snapshot pages + interactive tree/detail/compare UI on shared library","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-C.json"
-contract_sha256 = "0de45dda2f932eae2874e5f9416b2cf3ca4bb0c648ea4428e1f1c725872ffcbc"
+contract_sha256 = "fe7d3e09f853c87000b6aa7a04f994dc9df51ca30b4f9ae4e1e1cf9b7435b46f"
 
 [[node]]
 id = "M-06-C.1"
@@ -1257,7 +1257,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-C.json#M-06-C.1","Structured input exists, not only --json output.","Progress/error/state envelopes agree with the shared operation model."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-C.json#M-06-C.1"
-contract_sha256 = "0de45dda2f932eae2874e5f9416b2cf3ca4bb0c648ea4428e1f1c725872ffcbc"
+contract_sha256 = "fe7d3e09f853c87000b6aa7a04f994dc9df51ca30b4f9ae4e1e1cf9b7435b46f"
 
 [[node]]
 id = "M-06-C.2"
@@ -1272,7 +1272,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-C.json#M-06-C.2","Headless viewer and API report the same nodes, provenance and differences.","Standalone D-007 viewer exists; no IDE plugin/MVP is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-C.json#M-06-C.2"
-contract_sha256 = "0de45dda2f932eae2874e5f9416b2cf3ca4bb0c648ea4428e1f1c725872ffcbc"
+contract_sha256 = "fe7d3e09f853c87000b6aa7a04f994dc9df51ca30b4f9ae4e1e1cf9b7435b46f"
 
 [[node]]
 id = "M-06-D"
@@ -1287,7 +1287,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Frozen candidate-world preview protocol; explicit preparation vs pure builtin calculation, legal static/dynamic scenarios and incomplete states","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-D.json"
-contract_sha256 = "9a95e76a3918b348203da749ae945250758c5849dd6f43a8ac8fd658d66b5594"
+contract_sha256 = "a1cd588c03d2f0664cacf1b6544b4759064ded5e8cb0d6c69214b7005f565d4e"
 
 [[node]]
 id = "M-06-D.1"
@@ -1302,7 +1302,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-D.json#M-06-D.1","Candidate graph is derived by the same authority as real resolution/compiler.","Manifest/lock/slots/canonical boot remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-D.json#M-06-D.1"
-contract_sha256 = "9a95e76a3918b348203da749ae945250758c5849dd6f43a8ac8fd658d66b5594"
+contract_sha256 = "a1cd588c03d2f0664cacf1b6544b4759064ded5e8cb0d6c69214b7005f565d4e"
 
 [[node]]
 id = "M-06-D.2"
@@ -1317,7 +1317,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-D.json#M-06-D.2","Effect counters distinguish prepare from pure inspect/compare.","Partial preparation failures retain typed outcome and reusable captured evidence where valid."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-D.json#M-06-D.2"
-contract_sha256 = "9a95e76a3918b348203da749ae945250758c5849dd6f43a8ac8fd658d66b5594"
+contract_sha256 = "a1cd588c03d2f0664cacf1b6544b4759064ded5e8cb0d6c69214b7005f565d4e"
 
 [[node]]
 id = "M-06-E"
@@ -1332,7 +1332,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Preinstall marginal cost with transitive/shared dependencies/choices/conditions; toggle/install/remove/reconfigure comparisons","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-E.json"
-contract_sha256 = "2af8e138646178fd4aa080b0b21c5a330789f72f0713c3a5de158b196031d631"
+contract_sha256 = "d7f0fcbb44740d818c0531b231278023cb3f482c6c5c0c16a5b7e2064d8f1533"
 
 [[node]]
 id = "M-06-E.1"
@@ -1347,7 +1347,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-E.json#M-06-E.1","Every delta links to exact baseline/candidate graph and contribution identities.","Static and dynamic costs remain separately reported."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-E.json#M-06-E.1"
-contract_sha256 = "2af8e138646178fd4aa080b0b21c5a330789f72f0713c3a5de158b196031d631"
+contract_sha256 = "d7f0fcbb44740d818c0531b231278023cb3f482c6c5c0c16a5b7e2064d8f1533"
 
 [[node]]
 id = "M-06-E.2"
@@ -1362,7 +1362,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-E.json#M-06-E.2","Each scenario is inspectable before install and produces no project writes.","Machine clients can reproduce the viewer's comparison using captured inputs."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-E.json#M-06-E.2"
-contract_sha256 = "2af8e138646178fd4aa080b0b21c5a330789f72f0713c3a5de158b196031d631"
+contract_sha256 = "d7f0fcbb44740d818c0531b231278023cb3f482c6c5c0c16a5b7e2064d8f1533"
 
 [[node]]
 id = "M-06-F"
@@ -1377,7 +1377,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Full UI/API/CLI/MCP parity, derivative provenance, million-token-scale no-quota scenarios, stale snapshots and honest unknown attribution","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-F.json"
-contract_sha256 = "dc853ac4e85e1581f05c80bb0d39f7e6477154973c166f96307839412973909d"
+contract_sha256 = "1146782656481eb5706ba86c3ea645cb19b96c35906e1de77be7a45c6dc1a697"
 
 [[node]]
 id = "M-06-F.1"
@@ -1392,7 +1392,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-F.json#M-06-F.1","Equivalent requests agree on structured nodes/metrics/diagnostics across surfaces.","Whole authorized structure is reachable without human-only hidden fields."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-F.json#M-06-F.1"
-contract_sha256 = "dc853ac4e85e1581f05c80bb0d39f7e6477154973c166f96307839412973909d"
+contract_sha256 = "1146782656481eb5706ba86c3ea645cb19b96c35906e1de77be7a45c6dc1a697"
 
 [[node]]
 id = "M-06-F.2"
@@ -1407,7 +1407,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-F.json#M-06-F.2","Scale evidence separates result size from transport chunk limits and records memory/cancellation outcomes.","M-06 exit includes interactive UI, structured input/output and dependency-aware preview."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-F.json#M-06-F.2"
-contract_sha256 = "dc853ac4e85e1581f05c80bb0d39f7e6477154973c166f96307839412973909d"
+contract_sha256 = "1146782656481eb5706ba86c3ea645cb19b96c35906e1de77be7a45c6dc1a697"
 
 [[node]]
 id = "NEXT-GATE-M-06"
@@ -1448,7 +1448,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Shared validated URI/path и typed lookup errors; characterization всех existing compiler/prompt call sites","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-A.json"
-contract_sha256 = "813e062db64b010df48abc9b7aa14a3995f3906578509f2ada5fd9db86f968af"
+contract_sha256 = "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c"
 
 [[node]]
 id = "M-01-A.1"
@@ -1463,7 +1463,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-A.json#M-01-A.1","Corpus maps every supported/legacy spelling to a stable result or typed refusal.","No guessed first-match or unsafe compatibility fallback remains."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-A.json#M-01-A.1"
-contract_sha256 = "813e062db64b010df48abc9b7aa14a3995f3906578509f2ada5fd9db86f968af"
+contract_sha256 = "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c"
 
 [[node]]
 id = "M-01-A.2"
@@ -1478,7 +1478,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-A.json#M-01-A.2","Rejected components cause no out-of-root observation.","One shared component authority replaces local blacklists."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-A.json#M-01-A.2"
-contract_sha256 = "813e062db64b010df48abc9b7aa14a3995f3906578509f2ada5fd9db86f968af"
+contract_sha256 = "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c"
 
 [[node]]
 id = "M-01-A.3"
@@ -1493,7 +1493,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-A.json#M-01-A.3","Every inventoried caller has a result/refusal fixture.","No alternate lookup path bypasses containment."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-A.json#M-01-A.3"
-contract_sha256 = "813e062db64b010df48abc9b7aa14a3995f3906578509f2ada5fd9db86f968af"
+contract_sha256 = "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c"
 
 [[node]]
 id = "M-01-B"
@@ -1508,7 +1508,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Opaque selected-source authority, visible closure и same snapshot witnesses; no unrelated newest scan","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-B.json"
-contract_sha256 = "2beeefc7ef34298088585703ef70ae0f3349c01d15150b5e1fd8d110a5d5bb39"
+contract_sha256 = "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b"
 
 [[node]]
 id = "M-01-B.1"
@@ -1523,7 +1523,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-B.json#M-01-B.1","Authority contains the exact admitted roots and capture identities.","Empty-cache construction records zero provider effects."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-B.json#M-01-B.1"
-contract_sha256 = "2beeefc7ef34298088585703ef70ae0f3349c01d15150b5e1fd8d110a5d5bb39"
+contract_sha256 = "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b"
 
 [[node]]
 id = "M-01-B.2"
@@ -1538,7 +1538,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-B.json#M-01-B.2","Race fixtures never return a mixed observation.","Unavailable reasons identify the actual boundary without leaking sensitive paths."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-B.json#M-01-B.2"
-contract_sha256 = "2beeefc7ef34298088585703ef70ae0f3349c01d15150b5e1fd8d110a5d5bb39"
+contract_sha256 = "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b"
 
 [[node]]
 id = "M-01-C"
@@ -1553,7 +1553,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Retained reader + integrity ladder; original capture index/verified builtin derivation; refusal matrix","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json"
-contract_sha256 = "58e792f48fb561fd9790efef3d93802aaa639c35d74c721d65d97a016e8ec6c1"
+contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
 
 [[node]]
 id = "M-01-C.1"
@@ -1568,7 +1568,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.1","Result states its measured stability window without claiming hostile-ABA prevention.","No query creates locks, directories or COW copies."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.1"
-contract_sha256 = "58e792f48fb561fd9790efef3d93802aaa639c35d74c721d65d97a016e8ec6c1"
+contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
 
 [[node]]
 id = "M-01-C.2"
@@ -1583,7 +1583,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.2","Tamper matrix distinguishes record-only, payload-only and coordinated changes.","No additional local digest is mistaken for authentication."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.2"
-contract_sha256 = "58e792f48fb561fd9790efef3d93802aaa639c35d74c721d65d97a016e8ec6c1"
+contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
 
 [[node]]
 id = "M-01-C.3"
@@ -1598,7 +1598,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.3","Every transformation between source and returned representation is inspectable.","Source/raw/representation hashes remain distinct."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.3"
-contract_sha256 = "58e792f48fb561fd9790efef3d93802aaa639c35d74c721d65d97a016e8ec6c1"
+contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
 
 [[node]]
 id = "M-01-D"
@@ -1613,7 +1613,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Classified builtin unit/resource/section extraction + generated response/errors; raw encoding/span basis, CLI/MCP parity","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json"
-contract_sha256 = "a92dae1f5d2e8e44c553311f3351d77e6a367c0d04242f14bec12b0d7b6c3f3e"
+contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
 
 [[node]]
 id = "M-01-D.1"
@@ -1628,7 +1628,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-D.json#M-01-D.1","Every result identifies descriptor, capture, representation and location basis.","Ordinary data has no accidental fact facets."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json#M-01-D.1"
-contract_sha256 = "a92dae1f5d2e8e44c553311f3351d77e6a367c0d04242f14bec12b0d7b6c3f3e"
+contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
 
 [[node]]
 id = "M-01-D.2"
@@ -1643,7 +1643,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-D.json#M-01-D.2","Surface parity compares validated success/error payloads.","Generated contracts and corpus agree with their registry."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json#M-01-D.2"
-contract_sha256 = "a92dae1f5d2e8e44c553311f3351d77e6a367c0d04242f14bec12b0d7b6c3f3e"
+contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
 
 [[node]]
 id = "M-01-E"
@@ -1658,7 +1658,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Native/portable adversarial corpus, bounded parsing, empty-cache read-only proof, expectation checks","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-E.json"
-contract_sha256 = "544d59fe9272ec96e50c4101fc59a2372a44bb320302e2e3c999acd41843c6a9"
+contract_sha256 = "9e223e2e158d58b2568fe23656fe82a7da55f18fe8413cc425cc77ce0e217bf8"
 
 [[node]]
 id = "M-01-E.1"
@@ -1673,7 +1673,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-E.json#M-01-E.1","Case inventory distinguishes executed native cases from unavailable ones.","Refusals preserve all fixture state."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-E.json#M-01-E.1"
-contract_sha256 = "544d59fe9272ec96e50c4101fc59a2372a44bb320302e2e3c999acd41843c6a9"
+contract_sha256 = "9e223e2e158d58b2568fe23656fe82a7da55f18fe8413cc425cc77ce0e217bf8"
 
 [[node]]
 id = "M-01-E.2"
@@ -1688,7 +1688,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-E.json#M-01-E.2","Zero-effect counters accompany matching CLI/MCP/service results.","Integrity strength and unavailable proof remain explicit."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-E.json#M-01-E.2"
-contract_sha256 = "544d59fe9272ec96e50c4101fc59a2372a44bb320302e2e3c999acd41843c6a9"
+contract_sha256 = "9e223e2e158d58b2568fe23656fe82a7da55f18fe8413cc425cc77ce0e217bf8"
 
 [[node]]
 id = "NEXT-GATE-M-01"
@@ -1729,7 +1729,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Ratify EnvironmentDefinition/TargetBinding/ExecutionContext and platform roles; centralized layout/source-law amendment; freeze existing bare-install compatibility and future distro boundary","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json"
-contract_sha256 = "4cce56c04707efdf69477865e9d56c77e8b7a209d7cf8bb2b4a9e2af558a551f"
+contract_sha256 = "6445987dadc4d4c52759eeb52b3c6ce38a68d6a2b56bc99b624bac91b069675f"
 
 [[node]]
 id = "M-14-A.1"
@@ -1744,7 +1744,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-A.json#M-14-A.1","Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.","Pure construction needs neither Docker nor a host HOME lookup."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json#M-14-A.1"
-contract_sha256 = "4cce56c04707efdf69477865e9d56c77e8b7a209d7cf8bb2b4a9e2af558a551f"
+contract_sha256 = "6445987dadc4d4c52759eeb52b3c6ce38a68d6a2b56bc99b624bac91b069675f"
 
 [[node]]
 id = "M-14-A.2"
@@ -1759,7 +1759,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-A.json#M-14-A.2","Every environment root has one layout constructor and callers receive explicit bindings.","No root privilege broker, live system mutation or pacman policy is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json#M-14-A.2"
-contract_sha256 = "4cce56c04707efdf69477865e9d56c77e8b7a209d7cf8bb2b4a9e2af558a551f"
+contract_sha256 = "6445987dadc4d4c52759eeb52b3c6ce38a68d6a2b56bc99b624bac91b069675f"
 
 [[node]]
 id = "M-14-B"
@@ -1774,7 +1774,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Generated schemas/hash frames for exact lock/realization/payload inventory and backend-native closure; dependency roles and target filesystem semantics; legacy readers/migration fixtures, input/output/prefix identities and mirror/substitution policy","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json"
-contract_sha256 = "940317903b38f4f2d8f5136c4652391bd7793dcc8dccfb68c16d9a1ec09f5c71"
+contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
 
 [[node]]
 id = "M-14-B.1"
@@ -1789,7 +1789,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-B.json#M-14-B.1","Generated types and retained records use one schema source and explicit epochs.","Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json#M-14-B.1"
-contract_sha256 = "940317903b38f4f2d8f5136c4652391bd7793dcc8dccfb68c16d9a1ec09f5c71"
+contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
 
 [[node]]
 id = "M-14-B.2"
@@ -1804,7 +1804,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-B.json#M-14-B.2","Every migration has explicit unavailable/needs-input outcomes for absent proof.","No source/registry/cache transport requires GitHub by contract."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json#M-14-B.2"
-contract_sha256 = "940317903b38f4f2d8f5136c4652391bd7793dcc8dccfb68c16d9a1ec09f5c71"
+contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
 
 [[node]]
 id = "M-14-C"
@@ -1819,7 +1819,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Implement explicit local target binding through provider requests/plans/grants/receipts/locks, same-root alias fencing and cross-target refusal; executable environment/schema seams for M-03/M-05/M-08","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json"
-contract_sha256 = "b91dc5523c64cdfe286bf125c3a6162f20e44f80d7935547a904328d10df73b5"
+contract_sha256 = "49c460c5c3b4f27b9b7c08227353b6d8e30e50567d24866b8be68841ab6f00b9"
 
 [[node]]
 id = "M-14-C.1"
@@ -1834,7 +1834,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.1","Target identity survives every request-to-receipt carrier and appears in structured inspection.","Unsupported cross-target operations return before effects."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.1"
-contract_sha256 = "b91dc5523c64cdfe286bf125c3a6162f20e44f80d7935547a904328d10df73b5"
+contract_sha256 = "49c460c5c3b4f27b9b7c08227353b6d8e30e50567d24866b8be68841ab6f00b9"
 
 [[node]]
 id = "M-14-C.2"
@@ -1849,7 +1849,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.2","One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.","Tests use disposable roots and never the developer's real HOME."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.2"
-contract_sha256 = "b91dc5523c64cdfe286bf125c3a6162f20e44f80d7935547a904328d10df73b5"
+contract_sha256 = "49c460c5c3b4f27b9b7c08227353b6d8e30e50567d24866b8be68841ab6f00b9"
 
 [[node]]
 id = "NEXT-GATE-M-14"
@@ -1890,7 +1890,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Native feat fixture + local binding characterization; prove no copied package truth/personal cursor and complete source linkage","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-A.json"
-contract_sha256 = "46bfd23a291618b5636554a212ce9d152893e3094b1674ddf525ac85529039d7"
+contract_sha256 = "9f88ec87bbe87ec724d079add45fc7123c1e6c8609d658903aa70e6f84e44849"
 
 [[node]]
 id = "M-02-A.1"
@@ -1905,7 +1905,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-A.json#M-02-A.1","Fixture report lists package fact addresses and separate local fact addresses.","Package bytes remain identical across both consumers."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-A.json#M-02-A.1"
-contract_sha256 = "46bfd23a291618b5636554a212ce9d152893e3094b1674ddf525ac85529039d7"
+contract_sha256 = "9f88ec87bbe87ec724d079add45fc7123c1e6c8609d658903aa70e6f84e44849"
 
 [[node]]
 id = "M-02-A.2"
@@ -1920,7 +1920,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-A.json#M-02-A.2","Bindings contain no owner/current/done scheduler state.","Changing personal-plan fixture bytes leaves shared intent identity unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-A.json#M-02-A.2"
-contract_sha256 = "46bfd23a291618b5636554a212ce9d152893e3094b1674ddf525ac85529039d7"
+contract_sha256 = "9f88ec87bbe87ec724d079add45fc7123c1e6c8609d658903aa70e6f84e44849"
 
 [[node]]
 id = "M-02-B"
@@ -1935,7 +1935,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Ratified authored manifest/graph grammar, immutable paths, intent/work hash frames","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-B.json"
-contract_sha256 = "87e6592c5e3e55d25dff52ea5246104467dd1b7bd0712413c6d3791bd69dad19"
+contract_sha256 = "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7"
 
 [[node]]
 id = "M-02-B.1"
@@ -1950,7 +1950,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-B.json#M-02-B.1","Authored fixture round-trips preserve comments/user values through the migration path.","ID and role validation is shared, not duplicated per surface."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-B.json#M-02-B.1"
-contract_sha256 = "87e6592c5e3e55d25dff52ea5246104467dd1b7bd0712413c6d3791bd69dad19"
+contract_sha256 = "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7"
 
 [[node]]
 id = "M-02-B.2"
@@ -1965,7 +1965,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-B.json#M-02-B.2","Counterexamples show independent intent/work identities with stable framing.","Graph outputs predecessors and needs, never completion or scheduling verdicts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-B.json#M-02-B.2"
-contract_sha256 = "87e6592c5e3e55d25dff52ea5246104467dd1b7bd0712413c6d3791bd69dad19"
+contract_sha256 = "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7"
 
 [[node]]
 id = "M-02-B.3"
@@ -1980,7 +1980,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-B.json#M-02-B.3","Analysis results identify the exact overlay/disk snapshot and location basis.","No new editor coordination or writer authority duplicates M-16."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-B.json#M-02-B.3"
-contract_sha256 = "87e6592c5e3e55d25dff52ea5246104467dd1b7bd0712413c6d3791bd69dad19"
+contract_sha256 = "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7"
 
 [[node]]
 id = "M-02-C"
@@ -1995,7 +1995,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Origin exact capture/rebase and same-snapshot fact selection; complete observation seam без page truncation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-C.json"
-contract_sha256 = "c0179a7e34f59909383c9debf92f3f717c337c7c035fbc4d3838ceffb749cbe4"
+contract_sha256 = "c6790bb50b283d9474df9db56eae8062c96fceb7d78150ae80a7527b4c6f2253"
 
 [[node]]
 id = "M-02-C.1"
@@ -2010,7 +2010,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-C.json#M-02-C.1","Origin/rebase reports show exact old/new capture and affected fact addresses.","Package slots and historical accepted evidence remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-C.json#M-02-C.1"
-contract_sha256 = "c0179a7e34f59909383c9debf92f3f717c337c7c035fbc4d3838ceffb749cbe4"
+contract_sha256 = "c6790bb50b283d9474df9db56eae8062c96fceb7d78150ae80a7527b4c6f2253"
 
 [[node]]
 id = "M-02-C.2"
@@ -2025,7 +2025,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-C.json#M-02-C.2","Selected-address inventory equals observed complete universe or lists exact gaps.","Existing neutral query semantics and limits remain explicit compatibility behavior."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-C.json#M-02-C.2"
-contract_sha256 = "c0179a7e34f59909383c9debf92f3f717c337c7c035fbc4d3838ceffb749cbe4"
+contract_sha256 = "c6790bb50b283d9474df9db56eae8062c96fceb7d78150ae80a7527b4c6f2253"
 
 [[node]]
 id = "M-02-D"
@@ -2040,7 +2040,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: New --from no-overwrite scaffold; check/show/coverage through one library and MCP query","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-D.json"
-contract_sha256 = "2f518516f296816415a68658dac53c7bdedca3da29aaad6f1f1a2f38de944b86"
+contract_sha256 = "25e8d685e8372d3ff3aa85f5048824a9401d9da91459da27e299462af33bb520"
 
 [[node]]
 id = "M-02-D.1"
@@ -2055,7 +2055,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-D.json#M-02-D.1","Prepared diff matches authored created files and declared IDs.","Scaffolding does not adopt package facts or start lifecycle execution."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-D.json#M-02-D.1"
-contract_sha256 = "2f518516f296816415a68658dac53c7bdedca3da29aaad6f1f1a2f38de944b86"
+contract_sha256 = "25e8d685e8372d3ff3aa85f5048824a9401d9da91459da27e299462af33bb520"
 
 [[node]]
 id = "M-02-D.2"
@@ -2070,7 +2070,7 @@ mandates = ["D-016","F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-02-D.json#M-02-D.2","All surfaces return one semantic result and typed failures.","M-02 is usable without starting or migrating an execution."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-02-D.json#M-02-D.2"
-contract_sha256 = "2f518516f296816415a68658dac53c7bdedca3da29aaad6f1f1a2f38de944b86"
+contract_sha256 = "25e8d685e8372d3ff3aa85f5048824a9401d9da91459da27e299462af33bb520"
 
 [[node]]
 id = "NEXT-GATE-M-02"
@@ -2111,7 +2111,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Meet baseline work-package scope: Freeze create/build/ordinary-and-scoped-verify roles and explicit change apply full pass; historical invocation migration; exhaustive carrier/hash map","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-A.json"
-contract_sha256 = "98692814b3ad1e52e39ced9b1206c82cb3878b4c134b07fd702c125a6b8493b4"
+contract_sha256 = "0c3fd7e88f0ab664378f8556e399a83a0f808b73e9d731261971a578159fc6c2"
 
 [[node]]
 id = "M-03-A.1"
@@ -2126,7 +2126,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-A.json#M-03-A.1","Invocation matrix covers ordinary/scoped commands and their complete prerequisite prefix.","Historical evidence is not relabelled with new semantics."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-A.json#M-03-A.1"
-contract_sha256 = "98692814b3ad1e52e39ced9b1206c82cb3878b4c134b07fd702c125a6b8493b4"
+contract_sha256 = "0c3fd7e88f0ab664378f8556e399a83a0f808b73e9d731261971a578159fc6c2"
 
 [[node]]
 id = "M-03-A.2"
@@ -2141,7 +2141,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-A.json#M-03-A.2","Carrier map identifies every state/wire/outbox/artifact/evidence input and owning recipe.","Full-pass plan exposes both operations and stops without an automatic back-edge."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-A.json#M-03-A.2"
-contract_sha256 = "98692814b3ad1e52e39ced9b1206c82cb3878b4c134b07fd702c125a6b8493b4"
+contract_sha256 = "0c3fd7e88f0ab664378f8556e399a83a0f808b73e9d731261971a578159fc6c2"
 
 [[node]]
 id = "M-03-B"
@@ -2156,7 +2156,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Meet baseline work-package scope: Thread production request vs invocation/scope across all durable/machine surfaces; evidence retains pre/post meaning","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-B.json"
-contract_sha256 = "783b7e268a1e400c36173aaea7169d1d910f64e8a37625e3e9314f814b9020b9"
+contract_sha256 = "db1cd4f8c6272eba606a955506c5347effddffad25313ea5906164cd223f809e"
 
 [[node]]
 id = "M-03-B.1"
@@ -2171,7 +2171,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-B.json#M-03-B.1","State round-trip preserves target/request/invocation distinctions.","Changed recipe epochs are generated and old states explicitly classified."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-B.json#M-03-B.1"
-contract_sha256 = "783b7e268a1e400c36173aaea7169d1d910f64e8a37625e3e9314f814b9020b9"
+contract_sha256 = "db1cd4f8c6272eba606a955506c5347effddffad25313ea5906164cd223f809e"
 
 [[node]]
 id = "M-03-B.2"
@@ -2186,7 +2186,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-B.json#M-03-B.2","Round-trip fixtures cover every named hosted carrier, not just CLI arguments.","No provider executes in a hosted-only path."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-B.json#M-03-B.2"
-contract_sha256 = "783b7e268a1e400c36173aaea7169d1d910f64e8a37625e3e9314f814b9020b9"
+contract_sha256 = "db1cd4f8c6272eba606a955506c5347effddffad25313ea5906164cd223f809e"
 
 [[node]]
 id = "M-03-B.3"
@@ -2201,7 +2201,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-B.json#M-03-B.3","All report/state/artifact/evidence carrier checks agree on subject identities.","Structured partial outcomes remain inspectable after API exit."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-B.json#M-03-B.3"
-contract_sha256 = "783b7e268a1e400c36173aaea7169d1d910f64e8a37625e3e9314f814b9020b9"
+contract_sha256 = "db1cd4f8c6272eba606a955506c5347effddffad25313ea5906164cd223f809e"
 
 [[node]]
 id = "M-03-C"
@@ -2216,7 +2216,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Meet baseline work-package scope: Workspace continuation conflict/cancel/displace/recovery, exact hosted no-provider acceptance","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-C.json"
-contract_sha256 = "e62911a35d9b4a61f3265989ff1fa35cdabc34e722630b192d422e95c52bb6ef"
+contract_sha256 = "e64801d48a149d3b9c551a445716c2cddfbbaae778ac5f8a0400d4348513e7ac"
 
 [[node]]
 id = "M-03-C.1"
@@ -2231,7 +2231,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-C.json#M-03-C.1","Conflict report names both request identities and state boundary.","Cancelled/displaced state retains required evidence and foreign data."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-C.json#M-03-C.1"
-contract_sha256 = "e62911a35d9b4a61f3265989ff1fa35cdabc34e722630b192d422e95c52bb6ef"
+contract_sha256 = "e64801d48a149d3b9c551a445716c2cddfbbaae778ac5f8a0400d4348513e7ac"
 
 [[node]]
 id = "M-03-C.2"
@@ -2246,7 +2246,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-C.json#M-03-C.2","Injected failure prefixes recover to a documented exact state.","No state header replacement erases another continuation."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-C.json#M-03-C.2"
-contract_sha256 = "e62911a35d9b4a61f3265989ff1fa35cdabc34e722630b192d422e95c52bb6ef"
+contract_sha256 = "e64801d48a149d3b9c551a445716c2cddfbbaae778ac5f8a0400d4348513e7ac"
 
 [[node]]
 id = "M-03-D"
@@ -2261,7 +2261,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Meet baseline work-package scope: After M-11-D: disjoint characterization plus mandatory existing-file producer/adopt/resume/current-source verify","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-D.json"
-contract_sha256 = "0e57c68bb4e0bf97bf383a9c6030b932ea103abcd5a86674d7c99766e19e9c0e"
+contract_sha256 = "1cd31eab577677db0c757027a1951045abd86f6efef60312a365995bcaa677ce"
 
 [[node]]
 id = "M-03-D.1"
@@ -2276,7 +2276,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-D.json#M-03-D.1","Fixture explains its entire prefix and exact managed outputs.","Report explicitly marks this as an intermediate proof."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-D.json#M-03-D.1"
-contract_sha256 = "0e57c68bb4e0bf97bf383a9c6030b932ea103abcd5a86674d7c99766e19e9c0e"
+contract_sha256 = "1cd31eab577677db0c757027a1951045abd86f6efef60312a365995bcaa677ce"
 
 [[node]]
 id = "M-03-D.2"
@@ -2291,7 +2291,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-D.json#M-03-D.2","Real existing file changes and current-source build/test evidence names the new bytes.","Adopted evidence is never credited to an unexecuted producer."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-D.json#M-03-D.2"
-contract_sha256 = "0e57c68bb4e0bf97bf383a9c6030b932ea103abcd5a86674d7c99766e19e9c0e"
+contract_sha256 = "1cd31eab577677db0c757027a1951045abd86f6efef60312a365995bcaa677ce"
 
 [[node]]
 id = "M-03-E"
@@ -2306,7 +2306,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Meet baseline work-package scope: CLI/MCP/full-pass parity; no new producer on verify, fresh repeated verify, exact build/test evidence and failure recovery","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-E.json"
-contract_sha256 = "4a54be920a88961bb6f473afb3205937174eeadbcf44b034a46a785e0773cb09"
+contract_sha256 = "73a1fb14bd63ebb3bdc73f48b189977a7f9961c2bca5a9fbccfdc7c83f50e998"
 
 [[node]]
 id = "M-03-E.1"
@@ -2321,7 +2321,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-E.json#M-03-E.1","Parity evidence covers results, errors and operation/phase events.","Successful verify demonstrably contains new-source build/test evidence."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-E.json#M-03-E.1"
-contract_sha256 = "4a54be920a88961bb6f473afb3205937174eeadbcf44b034a46a785e0773cb09"
+contract_sha256 = "73a1fb14bd63ebb3bdc73f48b189977a7f9961c2bca5a9fbccfdc7c83f50e998"
 
 [[node]]
 id = "M-03-E.2"
@@ -2336,7 +2336,7 @@ mandates = ["D-002","D-018","F-002","F-003","F-020","F-022","F-031"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-03-E.json#M-03-E.2","Every failure prefix has an observable retained outcome and safe recovery disposition.","Full M-03 evidence includes the existing-file scenario, not only disjoint artifacts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-03-E.json#M-03-E.2"
-contract_sha256 = "4a54be920a88961bb6f473afb3205937174eeadbcf44b034a46a785e0773cb09"
+contract_sha256 = "73a1fb14bd63ebb3bdc73f48b189977a7f9961c2bca5a9fbccfdc7c83f50e998"
 
 [[node]]
 id = "NEXT-GATE-M-03"
@@ -2377,7 +2377,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Meet baseline work-package scope: Pulled-forward general pre/post transition and source applicability: after M-03-C, before M-03-D/E; exact consumed inputs, outside-write equality, explicit adopted authority","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-D.json"
-contract_sha256 = "a98c7485b26faec5f7d3bf25ca50c82f93945f78659f5185050f0343415512d0"
+contract_sha256 = "bea8778599c1af5c487e1d6dc652fd0101baa8dd823167bc82931b92aadbee9d"
 
 [[node]]
 id = "M-11-D.1"
@@ -2392,7 +2392,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-D.json#M-11-D.1","Corpus distinguishes legacy evidence, produced transition and explicit adopted authority.","Hash recipe includes membership and consumed inputs rather than only output bytes."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-D.json#M-11-D.1"
-contract_sha256 = "a98c7485b26faec5f7d3bf25ca50c82f93945f78659f5185050f0343415512d0"
+contract_sha256 = "bea8778599c1af5c487e1d6dc652fd0101baa8dd823167bc82931b92aadbee9d"
 
 [[node]]
 id = "M-11-D.2"
@@ -2407,7 +2407,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-D.json#M-11-D.2","Fixtures cover created/deleted/modified paths and exact artifact consumption.","Produced versus adopted history remains externally distinguishable after restart."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-D.json#M-11-D.2"
-contract_sha256 = "a98c7485b26faec5f7d3bf25ca50c82f93945f78659f5185050f0343415512d0"
+contract_sha256 = "bea8778599c1af5c487e1d6dc652fd0101baa8dd823167bc82931b92aadbee9d"
 
 [[node]]
 id = "M-11-D.3"
@@ -2422,7 +2422,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-D.json#M-11-D.3","Actual recorded execution counts prove no producer dispatch during ordinary/scoped verify.","Independent evidence joins prove both retained pre-state and checked post-state."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-D.json#M-11-D.3"
-contract_sha256 = "a98c7485b26faec5f7d3bf25ca50c82f93945f78659f5185050f0343415512d0"
+contract_sha256 = "bea8778599c1af5c487e1d6dc652fd0101baa8dd823167bc82931b92aadbee9d"
 
 [[node]]
 id = "M-11-A"
@@ -2437,7 +2437,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Meet baseline work-package scope: Pure inventory with witnesses/membership/capture and skipped/unstable scope, exclusions before reads","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-A.json"
-contract_sha256 = "66e5115322272675c8e88faeb7881cab026e89cdab02a01ddd3e819a7e38adb1"
+contract_sha256 = "7c82cf99904c0ba1bc45f0e8e53fff40090f4741952903331be0f4c9d5342f0c"
 
 [[node]]
 id = "M-11-A.1"
@@ -2452,7 +2452,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-A.json#M-11-A.1","Reader instrumentation proves exclusion-before-read and query purity.","Every omitted path category has a typed reason and completeness impact."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-A.json#M-11-A.1"
-contract_sha256 = "66e5115322272675c8e88faeb7881cab026e89cdab02a01ddd3e819a7e38adb1"
+contract_sha256 = "7c82cf99904c0ba1bc45f0e8e53fff40090f4741952903331be0f4c9d5342f0c"
 
 [[node]]
 id = "M-11-A.2"
@@ -2467,7 +2467,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-A.json#M-11-A.2","Mutation fixtures force unstable/incomplete rather than a guessed current inventory.","Metadata/provenance distinguishes capture from live applicability."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-A.json#M-11-A.2"
-contract_sha256 = "66e5115322272675c8e88faeb7881cab026e89cdab02a01ddd3e819a7e38adb1"
+contract_sha256 = "7c82cf99904c0ba1bc45f0e8e53fff40090f4741952903331be0f4c9d5342f0c"
 
 [[node]]
 id = "M-11-B"
@@ -2482,7 +2482,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Meet baseline work-package scope: Stack-owned algorithmic proposal and explicit optional assist, assumptions and source evidence","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-B.json"
-contract_sha256 = "a9bc20aa674dad9e1db0c01822a7756c0ccac035cee31417afd342ec9a655b34"
+contract_sha256 = "c2ad768953785cd056904aad83bb031d518c4d7a7a2e81451cd76d1d0ea83f97"
 
 [[node]]
 id = "M-11-B.1"
@@ -2497,7 +2497,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-B.json#M-11-B.1","Every proposed change has evidence and an explicit assumption/confidence genre.","Algorithmic mode completes without provider construction or tool execution."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-B.json#M-11-B.1"
-contract_sha256 = "a9bc20aa674dad9e1db0c01822a7756c0ccac035cee31417afd342ec9a655b34"
+contract_sha256 = "c2ad768953785cd056904aad83bb031d518c4d7a7a2e81451cd76d1d0ea83f97"
 
 [[node]]
 id = "M-11-B.2"
@@ -2512,7 +2512,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-B.json#M-11-B.2","Mode/call instrumentation proves the default path is complete and provider-free.","Advisory output remains distinguishable from observed facts and owner choices."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-B.json#M-11-B.2"
-contract_sha256 = "a9bc20aa674dad9e1db0c01822a7756c0ccac035cee31417afd342ec9a655b34"
+contract_sha256 = "c2ad768953785cd056904aad83bb031d518c4d7a7a2e81451cd76d1d0ea83f97"
 
 [[node]]
 id = "M-11-C"
@@ -2527,7 +2527,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Meet baseline work-package scope: Explicit promote with complete affected-set revalidation, preserve existing desired intent","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-C.json"
-contract_sha256 = "6d1602f19ebbe66d50995ff74c1b13d8785415cde2dcd24cc9e5c09505a173aa"
+contract_sha256 = "4634cbb0e2620db76a12a8b157072fc9128997ebbf63abaa65585891a3a8b576"
 
 [[node]]
 id = "M-11-C.1"
@@ -2542,7 +2542,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-C.json#M-11-C.1","Plan identifies every affected input/output and exact authoring diff.","Prepare is pure and leaves all source/lock/state bytes unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-C.json#M-11-C.1"
-contract_sha256 = "6d1602f19ebbe66d50995ff74c1b13d8785415cde2dcd24cc9e5c09505a173aa"
+contract_sha256 = "4634cbb0e2620db76a12a8b157072fc9128997ebbf63abaa65585891a3a8b576"
 
 [[node]]
 id = "M-11-C.2"
@@ -2557,7 +2557,7 @@ mandates = ["F-002","F-018","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-11-C.json#M-11-C.2","Injected races/failures preserve exact applicability and partial-state evidence.","Observation becomes authored intent only through this explicit transaction."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-11-C.json#M-11-C.2"
-contract_sha256 = "6d1602f19ebbe66d50995ff74c1b13d8785415cde2dcd24cc9e5c09505a173aa"
+contract_sha256 = "4634cbb0e2620db76a12a8b157072fc9128997ebbf63abaa65585891a3a8b576"
 
 [[node]]
 id = "M-11-E"
@@ -2643,7 +2643,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Exact-address questions, answer→local fact transaction, stale/secret-reference validation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-A.json"
-contract_sha256 = "68bbaf118bc6621adf9258d3d7e85dc5860b84f89d23e0b341ae5d71936c4fe8"
+contract_sha256 = "506db391c32b22d4af5b56d55268100881cadcb9ee03306871fc1ece2bf11da1"
 
 [[node]]
 id = "M-04-A.1"
@@ -2658,7 +2658,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-A.json#M-04-A.1","Persisted and queried question records identify the same fact capture.","Validation produces typed errors without heuristic semantic verdicts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-A.json#M-04-A.1"
-contract_sha256 = "68bbaf118bc6621adf9258d3d7e85dc5860b84f89d23e0b341ae5d71936c4fe8"
+contract_sha256 = "506db391c32b22d4af5b56d55268100881cadcb9ee03306871fc1ece2bf11da1"
 
 [[node]]
 id = "M-04-A.2"
@@ -2673,7 +2673,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-A.json#M-04-A.2","Question/answer/refinement identities agree after apply.","Failure injection cannot report complete promotion with missing local fact."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-A.json#M-04-A.2"
-contract_sha256 = "68bbaf118bc6621adf9258d3d7e85dc5860b84f89d23e0b341ae5d71936c4fe8"
+contract_sha256 = "506db391c32b22d4af5b56d55268100881cadcb9ee03306871fc1ece2bf11da1"
 
 [[node]]
 id = "M-04-B"
@@ -2688,7 +2688,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Complete same-snapshot join и evidence-strength model; reuse terminal evaluator","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-B.json"
-contract_sha256 = "bb1a0e2b3af95a820e9d82a1744b17ad47d0b36c20f3ef05cdc3909f2d0dc8e8"
+contract_sha256 = "bfdc629c88db2809cee68c595498cea63b9488aa77feb2b5487178fed5a01f22"
 
 [[node]]
 id = "M-04-B.1"
@@ -2703,7 +2703,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-B.json#M-04-B.1","Every row explains subject, work, evidence source/strength and completeness.","Neutral requirements output remains metadata-only."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-B.json#M-04-B.1"
-contract_sha256 = "bb1a0e2b3af95a820e9d82a1744b17ad47d0b36c20f3ef05cdc3909f2d0dc8e8"
+contract_sha256 = "bfdc629c88db2809cee68c595498cea63b9488aa77feb2b5487178fed5a01f22"
 
 [[node]]
 id = "M-04-B.2"
@@ -2718,7 +2718,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-B.json#M-04-B.2","A truth table covers each evidence-strength/availability distinction.","No terminality change silently alters existing fact laws."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-B.json#M-04-B.2"
-contract_sha256 = "bb1a0e2b3af95a820e9d82a1744b17ad47d0b36c20f3ef05cdc3909f2d0dc8e8"
+contract_sha256 = "bfdc629c88db2809cee68c595498cea63b9488aa77feb2b5487178fed5a01f22"
 
 [[node]]
 id = "M-04-C"
@@ -2733,7 +2733,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Policy fingerprint, explicit waivers/risks, structural vs semantic checks; optional advisory rubric","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-C.json"
-contract_sha256 = "980b500a8ffdfcc535a3db48f6ad0b26c9a5c8bf59f9d8ccf85b068d9a20632f"
+contract_sha256 = "3ae31c0e46676b6ca66ddc8488145f398b53fee97374d5a4cb11282bd99ccda5"
 
 [[node]]
 id = "M-04-C.1"
@@ -2748,7 +2748,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-C.json#M-04-C.1","Policy output cites exact inputs and every applied waiver/risk.","Changing policy meaning changes applicability, not historical facts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-C.json#M-04-C.1"
-contract_sha256 = "980b500a8ffdfcc535a3db48f6ad0b26c9a5c8bf59f9d8ccf85b068d9a20632f"
+contract_sha256 = "3ae31c0e46676b6ca66ddc8488145f398b53fee97374d5a4cb11282bd99ccda5"
 
 [[node]]
 id = "M-04-C.2"
@@ -2763,7 +2763,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-C.json#M-04-C.2","Reports label deterministic findings and optional advice distinctly.","Query counters show no hidden provider invocation."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-C.json#M-04-C.2"
-contract_sha256 = "980b500a8ffdfcc535a3db48f6ad0b26c9a5c8bf59f9d8ccf85b068d9a20632f"
+contract_sha256 = "3ae31c0e46676b6ca66ddc8488145f398b53fee97374d5a4cb11282bd99ccda5"
 
 [[node]]
 id = "M-04-D"
@@ -2778,7 +2778,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: Closure with retained witnesses/immutable references; revalidation after state deletion","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-D.json"
-contract_sha256 = "918b9e641eb7e1d1c1f154a3f50f8f661fa00f75166330d69a56b2e78fbc9f9a"
+contract_sha256 = "c4958882a1717d3e94eae339a85947a7c2eaeb77e3b4c93b0b3712ca3164ce5b"
 
 [[node]]
 id = "M-04-D.1"
@@ -2793,7 +2793,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-D.json#M-04-D.1","Retained closure resolves each required proof independently of run cache.","Closure write is an explicit action with exact authored changes."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-D.json#M-04-D.1"
-contract_sha256 = "918b9e641eb7e1d1c1f154a3f50f8f661fa00f75166330d69a56b2e78fbc9f9a"
+contract_sha256 = "c4958882a1717d3e94eae339a85947a7c2eaeb77e3b4c93b0b3712ca3164ce5b"
 
 [[node]]
 id = "M-04-D.2"
@@ -2808,7 +2808,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-D.json#M-04-D.2","Report separates historical decision, current applicability and missing proof.","No revalidation query mutates closure or reinstalls sources."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-D.json#M-04-D.2"
-contract_sha256 = "918b9e641eb7e1d1c1f154a3f50f8f661fa00f75166330d69a56b2e78fbc9f9a"
+contract_sha256 = "c4958882a1717d3e94eae339a85947a7c2eaeb77e3b4c93b0b3712ca3164ce5b"
 
 [[node]]
 id = "M-04-E"
@@ -2823,7 +2823,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Meet baseline work-package scope: CLI/MCP parity, manual/adopted evidence; optional one-way personal plan projection","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-E.json"
-contract_sha256 = "5c8805683482133f325f6c1870a7650321b0216ab5ae2ae0eab3646135ae3284"
+contract_sha256 = "789005fd3c6b97fc966b13a9c44360c96d94a61587008d8a7a355241953cf3d4"
 
 [[node]]
 id = "M-04-E.1"
@@ -2838,7 +2838,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-E.json#M-04-E.1","Manual/adopted/executed sources remain distinguishable in every row.","Accepted evidence records contain observable provenance, not tool-success assertions."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-E.json#M-04-E.1"
-contract_sha256 = "5c8805683482133f325f6c1870a7650321b0216ab5ae2ae0eab3646135ae3284"
+contract_sha256 = "789005fd3c6b97fc966b13a9c44360c96d94a61587008d8a7a355241953cf3d4"
 
 [[node]]
 id = "M-04-E.2"
@@ -2853,7 +2853,7 @@ mandates = ["F-006","F-001"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-04-E.json#M-04-E.2","Complete machine journey works without a personal plan or advisory provider.","Optional personal projection has an explicit disposition and does not gate required M-04 completion."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-04-E.json#M-04-E.2"
-contract_sha256 = "5c8805683482133f325f6c1870a7650321b0216ab5ae2ae0eab3646135ae3284"
+contract_sha256 = "789005fd3c6b97fc966b13a9c44360c96d94a61587008d8a7a355241953cf3d4"
 
 [[node]]
 id = "NEXT-GATE-M-04"
@@ -3295,7 +3295,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Meet baseline work-package scope: Classify required resource families/use cases and common derive lifecycle; integrate existing mechanisms without a demand-permission gate","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-A.json"
-contract_sha256 = "08ebdc7dc29575a0196b386bd2bb5641acf75493e691807c37dca9ba1711d4a2"
+contract_sha256 = "28e8d1f8d304412a598f0d6f8e0f25e6c3b3f078bf9c78227cdc709437b507c6"
 
 [[node]]
 id = "M-10-A.1"
@@ -3310,7 +3310,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-10-A.json#M-10-A.1","Canonical family matrix names actual source mechanisms and executable case requirements.","No original capture or upstream identity is edited."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-A.json#M-10-A.1"
-contract_sha256 = "08ebdc7dc29575a0196b386bd2bb5641acf75493e691807c37dca9ba1711d4a2"
+contract_sha256 = "28e8d1f8d304412a598f0d6f8e0f25e6c3b3f078bf9c78227cdc709437b507c6"
 
 [[node]]
 id = "M-10-A.2"
@@ -3325,7 +3325,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-10-A.json#M-10-A.2","One owning service has explicit input/output/effect boundaries for every operation.","Dependency direction remains acyclic; no second resolver/compiler is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-A.json#M-10-A.2"
-contract_sha256 = "08ebdc7dc29575a0196b386bd2bb5641acf75493e691807c37dca9ba1711d4a2"
+contract_sha256 = "28e8d1f8d304412a598f0d6f8e0f25e6c3b3f078bf9c78227cdc709437b507c6"
 
 [[node]]
 id = "M-10-B"
@@ -3340,7 +3340,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Meet baseline work-package scope: DerivationBinding/base/local/result/recipe/provenance contract; owner sovereignty and compatibility/activation distinction","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-B.json"
-contract_sha256 = "588d99870d66b5616babf1f3033d5fb32e0446b22a53f40aea817428f0ed76aa"
+contract_sha256 = "7868f3ad874054d4f029f48928f932d1aab4c22052c4883b5bfdf990526e1ec8"
 
 [[node]]
 id = "M-10-B.1"
@@ -3355,7 +3355,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-10-B.json#M-10-B.1","Strict schemas/corpus cover authored and generated carriers.","Stored result retains a complete navigable base→local→result chain."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-B.json#M-10-B.1"
-contract_sha256 = "588d99870d66b5616babf1f3033d5fb32e0446b22a53f40aea817428f0ed76aa"
+contract_sha256 = "7868f3ad874054d4f029f48928f932d1aab4c22052c4883b5bfdf990526e1ec8"
 
 [[node]]
 id = "M-10-B.2"
@@ -3370,7 +3370,7 @@ mandates = ["D-009","F-019","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-10-B.json#M-10-B.2","Creation, compatibility and activation have separate machine states and cases.","Refusal leaves local source intact and original slot unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-10-B.json#M-10-B.2"
-contract_sha256 = "588d99870d66b5616babf1f3033d5fb32e0446b22a53f40aea817428f0ed76aa"
+contract_sha256 = "7868f3ad874054d4f029f48928f932d1aab4c22052c4883b5bfdf990526e1ec8"
 
 [[node]]
 id = "M-10-C"
@@ -3767,7 +3767,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Shared prepared plan/evidence/authorization model; A approval and B bounded policy evaluator implemented with exact digest/scope/generation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json"
-contract_sha256 = "e0d219676537ba03439942fbe1bcfe497725c73231d20d1b3a18d88cfa654c60"
+contract_sha256 = "79b3cea4aaef262d2481fc0439ef1a4108d96dfefddd24348494282e0a3b4a10"
 
 [[node]]
 id = "M-07-A.1"
@@ -3782,7 +3782,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-A.json#M-07-A.1","Plan and corpus show exact binding from source to all bundles and destinations.","Filesystem/network spies show plan construction performs no publication."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json#M-07-A.1"
-contract_sha256 = "e0d219676537ba03439942fbe1bcfe497725c73231d20d1b3a18d88cfa654c60"
+contract_sha256 = "79b3cea4aaef262d2481fc0439ef1a4108d96dfefddd24348494282e0a3b4a10"
 
 [[node]]
 id = "M-07-A.2"
@@ -3797,7 +3797,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-A.json#M-07-A.2","A and B evaluator examples use one plan model and yield explicit reason codes.","Default construction leaves live B disabled; no secret values enter reports."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json#M-07-A.2"
-contract_sha256 = "e0d219676537ba03439942fbe1bcfe497725c73231d20d1b3a18d88cfa654c60"
+contract_sha256 = "79b3cea4aaef262d2481fc0439ef1a4108d96dfefddd24348494282e0a3b4a10"
 
 [[node]]
 id = "M-07-B"
@@ -3812,7 +3812,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Four native bundle smokes default-on; explicit skip parameter/scoped status, no full-tests side effect; standalone preparation reports","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json"
-contract_sha256 = "b356d65bc8f946bcba8a2417b5019fe229e6eab9eaa8dd0498013ed1ac51fd1a"
+contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
 
 [[node]]
 id = "M-07-B.1"
@@ -3827,7 +3827,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.1","All four native targets have distinct evidence rows; missing hosts remain outstanding obligations.","Harness proves actual installed artifact identity and leaves the real home unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.1"
-contract_sha256 = "b356d65bc8f946bcba8a2417b5019fe229e6eab9eaa8dd0498013ed1ac51fd1a"
+contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
 
 [[node]]
 id = "M-07-B.2"
@@ -3842,7 +3842,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.2","CLI and machine preparation return equivalent smoke policy/status.","Existing accepted skipped path is represented without a false execution claim."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.2"
-contract_sha256 = "b356d65bc8f946bcba8a2417b5019fe229e6eab9eaa8dd0498013ed1ac51fd1a"
+contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
 
 [[node]]
 id = "M-07-C"
@@ -3857,7 +3857,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Approved producer/channel validation, explicit source tests/PR pipeline, optional signature path; read-only source provenance","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-C.json"
-contract_sha256 = "b98ce2b2c2f8108634699d9a0ba673c4b208b3cbd433a998d935bfbb29d54cb4"
+contract_sha256 = "fafa485a974b021e9dee02dff7caad72e9ab305b56c833abe1c0e98dc4b64c64"
 
 [[node]]
 id = "M-07-C.1"
@@ -3872,7 +3872,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-C.json#M-07-C.1","Trust decision identifies both producer policy and subject.","Fixtures prove cryptographic signatures are optional rather than globally mandatory."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-C.json#M-07-C.1"
-contract_sha256 = "b98ce2b2c2f8108634699d9a0ba673c4b208b3cbd433a998d935bfbb29d54cb4"
+contract_sha256 = "fafa485a974b021e9dee02dff7caad72e9ab305b56c833abe1c0e98dc4b64c64"
 
 [[node]]
 id = "M-07-C.2"
@@ -3887,7 +3887,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-C.json#M-07-C.2","Local verification service and evidence are reproducible.","Prepared workflow diff is concrete; live CI installation has its own unaccepted/accepted status."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-C.json#M-07-C.2"
-contract_sha256 = "b98ce2b2c2f8108634699d9a0ba673c4b208b3cbd433a998d935bfbb29d54cb4"
+contract_sha256 = "fafa485a974b021e9dee02dff7caad72e9ab305b56c833abe1c0e98dc4b64c64"
 
 [[node]]
 id = "M-07-C.3"
@@ -3902,7 +3902,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-C.json#M-07-C.3","Exact approved CI diff and independently observed producer run are linked.","No live publication/B activation occurred; missing approval/run remains pending."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-C.json#M-07-C.3"
-contract_sha256 = "b98ce2b2c2f8108634699d9a0ba673c4b208b3cbd433a998d935bfbb29d54cb4"
+contract_sha256 = "fafa485a974b021e9dee02dff7caad72e9ab305b56c833abe1c0e98dc4b64c64"
 
 [[node]]
 id = "M-07-D"
@@ -3917,7 +3917,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Ready bundles + smoke effective policy before destructive prepare; A current approval gate, B dispatch path tested but disabled; pre-write revalidate and recovery","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-D.json"
-contract_sha256 = "85f86498348351d8cf85c8c2d0ab13041d190ede1f29475aee0b158ab926f425"
+contract_sha256 = "e12da242e213dd984716a109cc292aae4225bbc29412d1c1f382027308380be3"
 
 [[node]]
 id = "M-07-D.1"
@@ -3932,7 +3932,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-D.json#M-07-D.1","Fault-instrumented writer receives zero calls on every preflight refusal.","All prepare/apply entrypoints consume the same fence."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-D.json#M-07-D.1"
-contract_sha256 = "85f86498348351d8cf85c8c2d0ab13041d190ede1f29475aee0b158ab926f425"
+contract_sha256 = "e12da242e213dd984716a109cc292aae4225bbc29412d1c1f382027308380be3"
 
 [[node]]
 id = "M-07-D.2"
@@ -3947,7 +3947,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-D.json#M-07-D.2","Independent post-state inspection matches every claimed completed/restored effect.","Recovery fixtures retain evidence after process exit and replay refusal."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-D.json#M-07-D.2"
-contract_sha256 = "85f86498348351d8cf85c8c2d0ab13041d190ede1f29475aee0b158ab926f425"
+contract_sha256 = "e12da242e213dd984716a109cc292aae4225bbc29412d1c1f382027308380be3"
 
 [[node]]
 id = "M-07-E"
@@ -4033,7 +4033,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Meet baseline work-package scope: Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json"
-contract_sha256 = "2721186544c40d1066c36f8c17e0596aec05f8abdb570f18f49844c4009bdd8b"
+contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
 
 [[node]]
 id = "M-09-A.1"
@@ -4048,7 +4048,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.1","Inventory ties every selected file to its exact capture and required effect.","Unknown dynamic references remain visible acceptance debt."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json#M-09-A.1"
-contract_sha256 = "2721186544c40d1066c36f8c17e0596aec05f8abdb570f18f49844c4009bdd8b"
+contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
 
 [[node]]
 id = "M-09-A.2"
@@ -4063,7 +4063,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.2","The expanded matrix maps each required action to M-08 or existing lifecycle ownership.","All original five rows survive unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json#M-09-A.2"
-contract_sha256 = "2721186544c40d1066c36f8c17e0596aec05f8abdb570f18f49844c4009bdd8b"
+contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
 
 [[node]]
 id = "M-09-B"
@@ -4078,7 +4078,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Meet baseline work-package scope: Both bridges flow at 1.0.0; complete foreign non-Vibe resource closure, source classification/provenance/notices and consumer migration","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-B.json"
-contract_sha256 = "bcb89e3e4db64f87b8229dd1cbda04277445c5d882dab9a8038d9a758e582fe8"
+contract_sha256 = "9f5dcd6195f253587aeb98909d99605476436ec9fa4e7380daa1a7e78d176d78"
 
 [[node]]
 id = "M-09-B.1"
@@ -4093,7 +4093,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-B.json#M-09-B.1","Exact isolated external diffs show only intended wrapper/migration changes.","Consumer fixture preserves selected behavior and source identity."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-B.json#M-09-B.1"
-contract_sha256 = "bcb89e3e4db64f87b8229dd1cbda04277445c5d882dab9a8038d9a758e582fe8"
+contract_sha256 = "9f5dcd6195f253587aeb98909d99605476436ec9fa4e7380daa1a7e78d176d78"
 
 [[node]]
 id = "M-09-B.2"
@@ -4108,7 +4108,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-B.json#M-09-B.2","Both bridges have complete resource manifests and byte-verified offline projections.","Source classification is shared rather than a bridge-local suffix workaround."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-B.json#M-09-B.2"
-contract_sha256 = "bcb89e3e4db64f87b8229dd1cbda04277445c5d882dab9a8038d9a758e582fe8"
+contract_sha256 = "9f5dcd6195f253587aeb98909d99605476436ec9fa4e7380daa1a7e78d176d78"
 
 [[node]]
 id = "M-09-C"
@@ -4213,7 +4213,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Meet baseline work-package scope: Required bridge/native journeys with external adapter effects, local derivatives and complete resource closure; no unsupported stub as acceptance","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-E.json"
-contract_sha256 = "f3b1f02ac2b90a186ea349a0d4f1f21848343f8f141553aa831c94b8c5fd23a7"
+contract_sha256 = "905009895e4409fef4f8794ac00d839e6061e73225a015ff1fea5ab08b2a8bce"
 
 [[node]]
 id = "M-09-E.1"
@@ -4228,7 +4228,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-E.json#M-09-E.1","Both bridge result matrices have independent runtime evidence and full resource closure.","Offline replay and passive-content checks pass without foreign state corruption."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-E.json#M-09-E.1"
-contract_sha256 = "f3b1f02ac2b90a186ea349a0d4f1f21848343f8f141553aa831c94b8c5fd23a7"
+contract_sha256 = "905009895e4409fef4f8794ac00d839e6061e73225a015ff1fea5ab08b2a8bce"
 
 [[node]]
 id = "M-09-E.2"
@@ -4243,7 +4243,7 @@ mandates = ["D-001","F-015","F-020","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-09-E.json#M-09-E.2","The integrated graph links exact source, derivative, grant, effect and acceptance evidence.","No source slot or external upstream history was modified."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-E.json#M-09-E.2"
-contract_sha256 = "f3b1f02ac2b90a186ea349a0d4f1f21848343f8f141553aa831c94b8c5fd23a7"
+contract_sha256 = "905009895e4409fef4f8794ac00d839e6061e73225a015ff1fea5ab08b2a8bce"
 
 [[node]]
 id = "NEXT-GATE-M-09"
@@ -4284,7 +4284,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Complete initial-operation/model coverage: shared tree/reference/provenance and legacy/admin services, strict requests and partial-effect errors, externally readable stage snapshots, configurable capture/retention/export and captured extension schemas; real headless coverage for every supported initial row","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-A.json"
-contract_sha256 = "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48"
+contract_sha256 = "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a"
 
 [[node]]
 id = "M-17-A.1"
@@ -4299,7 +4299,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-A.json#M-17-A.1","No semantic tree operation requires TUI key scripts or text parsing.","Every view reports exact scope/capture/completeness."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-A.json#M-17-A.1"
-contract_sha256 = "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48"
+contract_sha256 = "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a"
 
 [[node]]
 id = "M-17-A.2"
@@ -4314,7 +4314,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-A.json#M-17-A.2","Coverage denominator has no unexplained missing supported initial operation.","Authority and domain behavior match existing implementations rather than a second engine."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-A.json#M-17-A.2"
-contract_sha256 = "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48"
+contract_sha256 = "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a"
 
 [[node]]
 id = "M-17-A.3"
@@ -4329,7 +4329,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-A.json#M-17-A.3","Each relevant domain model family has an externally addressable stage/provenance representation or exact missing-state reason.","Required proof cannot close when requested evidence was uncaptured."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-A.json#M-17-A.3"
-contract_sha256 = "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48"
+contract_sha256 = "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a"
 
 [[node]]
 id = "M-17-A.4"
@@ -4344,7 +4344,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-A.json#M-17-A.4","All supported initial models/actions are reachable through shared typed services.","Missing implemented-interface rows remain delivery blockers."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-A.json#M-17-A.4"
-contract_sha256 = "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48"
+contract_sha256 = "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a"
 
 [[node]]
 id = "M-17-B"
@@ -4359,7 +4359,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Owned package-coordinate rename prepare/apply/status/recover: exact affected references/edits/moves/identity transitions, dirty/save boundary, collisions/unknowns, authored→generated regeneration and re-resolution; include environment definitions, preserve history/foreign sources","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-B.json"
-contract_sha256 = "575289db4753d1dc55f6214e5681d1d5c581b110a168efdf6334e21aaa6d4e37"
+contract_sha256 = "a7f00564cd04f6a1ff65b97eb7f1e502eff58cdd01328f396f366a4168e57a93"
 
 [[node]]
 id = "M-17-B.1"
@@ -4374,7 +4374,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-B.json#M-17-B.1","The captured universe has explicit ownership, completeness and unknown zones.","No source, generated artifact or runtime binding is changed."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-B.json#M-17-B.1"
-contract_sha256 = "575289db4753d1dc55f6214e5681d1d5c581b110a168efdf6334e21aaa6d4e37"
+contract_sha256 = "a7f00564cd04f6a1ff65b97eb7f1e502eff58cdd01328f396f366a4168e57a93"
 
 [[node]]
 id = "M-17-B.2"
@@ -4389,7 +4389,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-B.json#M-17-B.2","Plan records exact affected set, preconditions, identity transitions and regeneration work.","Dirty-buffer edits remain proposals; actual domain admission requires saved recapture."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-B.json#M-17-B.2"
-contract_sha256 = "575289db4753d1dc55f6214e5681d1d5c581b110a168efdf6334e21aaa6d4e37"
+contract_sha256 = "a7f00564cd04f6a1ff65b97eb7f1e502eff58cdd01328f396f366a4168e57a93"
 
 [[node]]
 id = "M-17-B.3"
@@ -4404,7 +4404,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-B.json#M-17-B.3","Complete in-scope graph resolves after apply and legacy/history/foreign identities are preserved.","Partial changes are never falsely described as a physically atomic cross-root transaction."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-B.json#M-17-B.3"
-contract_sha256 = "575289db4753d1dc55f6214e5681d1d5c581b110a168efdf6334e21aaa6d4e37"
+contract_sha256 = "a7f00564cd04f6a1ff65b97eb7f1e502eff58cdd01328f396f366a4168e57a93"
 
 [[node]]
 id = "M-17-C"
@@ -4419,7 +4419,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Two-client full-path conformance across all initial + M-15 operations: inspect/unsaved edit/preview, rename/regenerate, long jobs/reconnect/cancel/partial failure, extension revoke/read, HOME update + Docker replacement + service grants","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-C.json"
-contract_sha256 = "e692b873c64f74c15c96eb211940783f8c44bdc4fd243c20d4b8789a538f426a"
+contract_sha256 = "724d992750eb574fcda2306107d4ba5e73d075b73c09b84e34ebba0fbc757515"
 
 [[node]]
 id = "M-17-C.1"
@@ -4434,7 +4434,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-C.json#M-17-C.1","Full external path uses exact schema/context/snapshot/authority identities.","No IDE/plugin/client MVP is built; clients are protocol test instruments."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-C.json#M-17-C.1"
-contract_sha256 = "e692b873c64f74c15c96eb211940783f8c44bdc4fd243c20d4b8789a538f426a"
+contract_sha256 = "724d992750eb574fcda2306107d4ba5e73d075b73c09b84e34ebba0fbc757515"
 
 [[node]]
 id = "M-17-C.2"
@@ -4449,7 +4449,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-C.json#M-17-C.2","Existing one-writer/one-parked limits are preserved and explicit.","Effect counters/journals provide independent evidence for every duplicate-prevention claim."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-C.json#M-17-C.2"
-contract_sha256 = "e692b873c64f74c15c96eb211940783f8c44bdc4fd243c20d4b8789a538f426a"
+contract_sha256 = "724d992750eb574fcda2306107d4ba5e73d075b73c09b84e34ebba0fbc757515"
 
 [[node]]
 id = "M-17-C.3"
@@ -4464,7 +4464,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-C.json#M-17-C.3","All required M-15 external action/model rows have actual conformance evidence.","No unavailable stub is accepted as proof of an implemented feature's external path."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-C.json#M-17-C.3"
-contract_sha256 = "e692b873c64f74c15c96eb211940783f8c44bdc4fd243c20d4b8789a538f426a"
+contract_sha256 = "724d992750eb574fcda2306107d4ba5e73d075b73c09b84e34ebba0fbc757515"
 
 [[node]]
 id = "M-17-D"
@@ -4479,7 +4479,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Close coverage census with exact request/result/error/event/model examples and generated schema checks; publish local developer contract documentation and capability compatibility matrix; no implemented supported feature lacks an external path","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-D.json"
-contract_sha256 = "df07fe06069e37c368aa209f8d8a3ea95f3f3652e213914274f6200a1e8538a2"
+contract_sha256 = "dac2e97ee0ab4aa8e3dbbf2ab376d65c2521c4ca62c81ae9edaf0d2ad67b611c"
 
 [[node]]
 id = "M-17-D.1"
@@ -4494,7 +4494,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-D.json#M-17-D.1","No supported feature/model exists only in CLI, TUI, prose log or private dump.","The exact coverage set includes all M-01 through M-15 results and semantic package rename."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-D.json#M-17-D.1"
-contract_sha256 = "df07fe06069e37c368aa209f8d8a3ea95f3f3652e213914274f6200a1e8538a2"
+contract_sha256 = "dac2e97ee0ab4aa8e3dbbf2ab376d65c2521c4ca62c81ae9edaf0d2ad67b611c"
 
 [[node]]
 id = "M-17-D.2"
@@ -4509,7 +4509,7 @@ mandates = ["F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-17-D.json#M-17-D.2","Permanent developer documentation matches executable examples and all 26 owner decisions, with D-022's actual status explicit.","Root-owned promotion/retirement checks can remove the entire temporary campaign without breaking these contracts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-17-D.json#M-17-D.2"
-contract_sha256 = "df07fe06069e37c368aa209f8d8a3ea95f3f3652e213914274f6200a1e8538a2"
+contract_sha256 = "dac2e97ee0ab4aa8e3dbbf2ab376d65c2521c4ca62c81ae9edaf0d2ad67b611c"
 
 [[node]]
 id = "NEXT-GATE-M-17"
@@ -4550,7 +4550,7 @@ mandates = ["F-009","F-015","F-020"]
 acceptance = ["Meet baseline work-package scope: Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.0.0 and offline exact reproduction","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json"
-contract_sha256 = "c154e4ee259749ecb5552349c4b2d8a8b663b87d80399e68037427a42db2e728"
+contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
 
 [[node]]
 id = "M-12-A.1"
@@ -4565,7 +4565,7 @@ mandates = ["F-009","F-015","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.1","A reviewable graph/capability/evidence matrix has no unexplained mandatory gap.","Declared selected state matches actual installed/projection subjects."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json#M-12-A.1"
-contract_sha256 = "c154e4ee259749ecb5552349c4b2d8a8b663b87d80399e68037427a42db2e728"
+contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
 
 [[node]]
 id = "M-12-A.2"
@@ -4580,7 +4580,7 @@ mandates = ["F-009","F-015","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.2","Offline replay evidence includes zero network attempts and exact output/ownership joins.","Bound check results include every executed step. If a justified full panel runs, record all executed and unrun steps; an unrun tail is never claimed green."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json#M-12-A.2"
-contract_sha256 = "c154e4ee259749ecb5552349c4b2d8a8b663b87d80399e68037427a42db2e728"
+contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
 
 [[node]]
 id = "M-12-B"
@@ -4756,7 +4756,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Early Docker/Linux executor commissioning: pure availability/capability preflight, explicit scoped worker preparation, captured base/toolchain/bootstrap Vibe binary or independent bootstrap recipe, target-bound process/mount/network/principal execution and egress test boundary. No dependence on Vibe payload realization or pacman; unavailable engine blocks actual Linux proof","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-K.json"
-contract_sha256 = "ab8d69d175a28f6ba3948bd5b32d72828ac04f20b9bdd63a7eb32024232bf391"
+contract_sha256 = "2679ebf4412159e8868de647c067b529a2b450aab8b076444cf8341b83d19ad0"
 
 [[node]]
 id = "M-15-K.1"
@@ -4771,7 +4771,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-K.json#M-15-K.1","M-15-A/E can depend on an explicit ready Linux executor or remain honestly blocked.","No payload realization or pacman is needed to reach preflight."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-K.json#M-15-K.1"
-contract_sha256 = "ab8d69d175a28f6ba3948bd5b32d72828ac04f20b9bdd63a7eb32024232bf391"
+contract_sha256 = "2679ebf4412159e8868de647c067b529a2b450aab8b076444cf8341b83d19ad0"
 
 [[node]]
 id = "M-15-K.2"
@@ -4786,7 +4786,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-K.json#M-15-K.2","The prepared worker can run a captured Linux verification command and preserve its exit status.","Unavailable Docker/base/toolchain is an explicit prerequisite failure, never skipped success."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-K.json#M-15-K.2"
-contract_sha256 = "ab8d69d175a28f6ba3948bd5b32d72828ac04f20b9bdd63a7eb32024232bf391"
+contract_sha256 = "2679ebf4412159e8868de647c067b529a2b450aab8b076444cf8341b83d19ad0"
 
 [[node]]
 id = "M-15-K.3"
@@ -4801,7 +4801,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-K.json#M-15-K.3","The result identifies enforced/observed process classes, exact policies and any missing boundary.","No host firewall or DNS configuration is edited."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-K.json#M-15-K.3"
-contract_sha256 = "ab8d69d175a28f6ba3948bd5b32d72828ac04f20b9bdd63a7eb32024232bf391"
+contract_sha256 = "2679ebf4412159e8868de647c067b529a2b450aab8b076444cf8341b83d19ad0"
 
 [[node]]
 id = "M-15-A"
@@ -4816,7 +4816,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Implement payload realization over captured source/prebuilt artifacts and existing build/package providers; files/directories/safe links/modes, complete runtime closure and independent digest/metadata verification; explicit isolated-build recipe, prefix-compatible trusted cache substitution; migrate legacy bin routing","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-A.json"
-contract_sha256 = "de5b750d318d317ffe367df7d459ba4e4c2fc81838a4c4d0ed475c408e63656c"
+contract_sha256 = "a0579bb223368f95058a1b4bb97552512aeccd59b4f601c5755098f60206658c"
 
 [[node]]
 id = "M-15-A.1"
@@ -4831,7 +4831,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-A.json#M-15-A.1","Input identity, output identity and reproducibility claim are separate fields backed by evidence.","All-input missing states refuse before activation."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-A.json#M-15-A.1"
-contract_sha256 = "de5b750d318d317ffe367df7d459ba4e4c2fc81838a4c4d0ed475c408e63656c"
+contract_sha256 = "a0579bb223368f95058a1b4bb97552512aeccd59b4f601c5755098f60206658c"
 
 [[node]]
 id = "M-15-A.2"
@@ -4846,7 +4846,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-A.json#M-15-A.2","All written paths match the admitted inventory and target root.","Extraction failures preserve a staged partial result that cannot be activated as complete."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-A.json#M-15-A.2"
-contract_sha256 = "de5b750d318d317ffe367df7d459ba4e4c2fc81838a4c4d0ed475c408e63656c"
+contract_sha256 = "a0579bb223368f95058a1b4bb97552512aeccd59b4f601c5755098f60206658c"
 
 [[node]]
 id = "M-15-A.3"
@@ -4861,7 +4861,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-A.json#M-15-A.3","All public binary paths share one validation authority.","Corrupt or unrecorded binaries return structured diagnostics rather than execute."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-A.json#M-15-A.3"
-contract_sha256 = "de5b750d318d317ffe367df7d459ba4e4c2fc81838a4c4d0ed475c408e63656c"
+contract_sha256 = "a0579bb223368f95058a1b4bb97552512aeccd59b4f601c5755098f60206658c"
 
 [[node]]
 id = "M-15-B"
@@ -4876,7 +4876,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Environment manifest/lock + per-target dependency roles/backend refs; install/explain/plan/fetch through shared solver; source/prebuilt selection and ABI/prefix compatibility, recursive source/mirror lock; no coding-project/Git/GitHub requirement","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-B.json"
-contract_sha256 = "40472faf06a6ab363473674e06a6e52f880b13cd23cc40c2314a9b29fbd56415"
+contract_sha256 = "c6c600a0b8a7e38f1ed719b25dc4fc5536bf8e8881a46c121bb20a3a951efb59"
 
 [[node]]
 id = "M-15-B.1"
@@ -4891,7 +4891,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-B.json#M-15-B.1","Environment locks reuse existing solver semantics and include exact recursive roles/captures.","No coding change or personal stewardship plan is created."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-B.json#M-15-B.1"
-contract_sha256 = "40472faf06a6ab363473674e06a6e52f880b13cd23cc40c2314a9b29fbd56415"
+contract_sha256 = "c6c600a0b8a7e38f1ed719b25dc4fc5536bf8e8881a46c121bb20a3a951efb59"
 
 [[node]]
 id = "M-15-B.2"
@@ -4906,7 +4906,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-B.json#M-15-B.2","Every delivered supply path has an explicit locator and verification contract.","Source and substitute outcomes identify exact inputs and any unavailable requirement."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-B.json#M-15-B.2"
-contract_sha256 = "40472faf06a6ab363473674e06a6e52f880b13cd23cc40c2314a9b29fbd56415"
+contract_sha256 = "c6c600a0b8a7e38f1ed719b25dc4fc5536bf8e8881a46c121bb20a3a951efb59"
 
 [[node]]
 id = "M-15-C"
@@ -4921,7 +4921,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: User-owned store/profile generations, explicit env exec/shell activation, install/update/remove/verify; reverse-dependency/command ownership checks; two independent HOME environments with shared immutable payloads","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-C.json"
-contract_sha256 = "cc7f464a6080a744a2ac5fd95653c9edc3c5352fbe17718055adcd4a9ff95caf"
+contract_sha256 = "91d705242ee1a92d734f02ccf8d6ce1ef047b3db7b03a9dd3455dc5c2d475cd2"
 
 [[node]]
 id = "M-15-C.1"
@@ -4936,7 +4936,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-C.json#M-15-C.1","Generation identity includes exact lock/recipe/inventory and complete references.","Store writes never mutate an accepted object in place."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-C.json#M-15-C.1"
-contract_sha256 = "cc7f464a6080a744a2ac5fd95653c9edc3c5352fbe17718055adcd4a9ff95caf"
+contract_sha256 = "91d705242ee1a92d734f02ccf8d6ce1ef047b3db7b03a9dd3455dc5c2d475cd2"
 
 [[node]]
 id = "M-15-C.2"
@@ -4951,7 +4951,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-C.json#M-15-C.2","Library/CLI/MCP report equivalent exact effects and observed generation.","No Git, root privilege or user model subscription is required."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-C.json#M-15-C.2"
-contract_sha256 = "cc7f464a6080a744a2ac5fd95653c9edc3c5352fbe17718055adcd4a9ff95caf"
+contract_sha256 = "91d705242ee1a92d734f02ccf8d6ce1ef047b3db7b03a9dd3455dc5c2d475cd2"
 
 [[node]]
 id = "M-15-C.3"
@@ -4966,7 +4966,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-C.json#M-15-C.3","Execution provenance resolves to profile generation, artifact and package capture.","Shell activation is explicit and does not permanently edit real user shell files."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-C.json#M-15-C.3"
-contract_sha256 = "cc7f464a6080a744a2ac5fd95653c9edc3c5352fbe17718055adcd4a9ff95caf"
+contract_sha256 = "91d705242ee1a92d734f02ccf8d6ce1ef047b3db7b03a9dd3455dc5c2d475cd2"
 
 [[node]]
 id = "M-15-D"
@@ -4981,7 +4981,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Crash/rollback/repair/GC protocol across retained generations, mutable config/state and live references; concurrent/alias-root fencing; full home lifecycle fixture","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-D.json"
-contract_sha256 = "df7789ecf0743604af398a67d75a84e0baef642fa7c95312f08285d1df376634"
+contract_sha256 = "302ca38dd1be264a3d86c6d4b116e5c249f430830ef27591a3ddc6cc6fe1cbce"
 
 [[node]]
 id = "M-15-D.1"
@@ -4996,7 +4996,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-D.json#M-15-D.1","Every injected failure exposes completed/pending/uncertain effects and an exact safe next action.","Rollback does not imply mutable database contents were reverted."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-D.json#M-15-D.1"
-contract_sha256 = "df7789ecf0743604af398a67d75a84e0baef642fa7c95312f08285d1df376634"
+contract_sha256 = "302ca38dd1be264a3d86c6d4b116e5c249f430830ef27591a3ddc6cc6fe1cbce"
 
 [[node]]
 id = "M-15-D.2"
@@ -5011,7 +5011,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-D.json#M-15-D.2","GC never deletes mutable user data or shared/live/pinned/recovery content.","Plan and result identify exactly what was and was not deleted."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-D.json#M-15-D.2"
-contract_sha256 = "df7789ecf0743604af398a67d75a84e0baef642fa7c95312f08285d1df376634"
+contract_sha256 = "302ca38dd1be264a3d86c6d4b116e5c249f430830ef27591a3ddc6cc6fe1cbce"
 
 [[node]]
 id = "M-15-E"
@@ -5026,7 +5026,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: External backend port; recommended A delivers Arch/pacman coexistence in disposable Linux, while B requires expanded replacement compatibility gates before closure: coherent repo snapshot, trusted packages, exact plan/DB generation, native dependency/version semantics, separate file authority and partial-failure records","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-E.json"
-contract_sha256 = "a0403153b80d3957d99233c3bda65556d0b376cf08152d11ffca7e83c0384113"
+contract_sha256 = "8916a95444bcde36e9deccc42cd1b27d7753e296ca5ee66572909a27a685cf36"
 
 [[node]]
 id = "M-15-E.1"
@@ -5041,7 +5041,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-E.json#M-15-E.1","The generic port supports both possible D-022 outcomes without hiding effects in shell text.","No backend-specific choice or host installation is committed."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-E.json#M-15-E.1"
-contract_sha256 = "a0403153b80d3957d99233c3bda65556d0b376cf08152d11ffca7e83c0384113"
+contract_sha256 = "8916a95444bcde36e9deccc42cd1b27d7753e296ca5ee66572909a27a685cf36"
 
 [[node]]
 id = "M-15-E.2"
@@ -5056,7 +5056,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-E.json#M-15-E.2","Backend-specific behavior matches the recorded ruling and stays inside a disposable target.","No live host pacman operation, trust-store mutation or public network publication occurs."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-E.json#M-15-E.2"
-contract_sha256 = "a0403153b80d3957d99233c3bda65556d0b376cf08152d11ffca7e83c0384113"
+contract_sha256 = "8916a95444bcde36e9deccc42cd1b27d7753e296ca5ee66572909a27a685cf36"
 
 [[node]]
 id = "M-15-E.3"
@@ -5071,7 +5071,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-E.json#M-15-E.3","Actual backend ownership and DB generation agree with retained transaction evidence.","Every partial failure has an explicit repair/rebuild path and no host effects."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-E.json#M-15-E.3"
-contract_sha256 = "a0403153b80d3957d99233c3bda65556d0b376cf08152d11ffca7e83c0384113"
+contract_sha256 = "8916a95444bcde36e9deccc42cd1b27d7753e296ca5ee66572909a27a685cf36"
 
 [[node]]
 id = "M-15-F"
@@ -5086,7 +5086,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Linux rootfs population through already commissioned M-15-K executor from Windows control plane; target principal/metadata, offline-vs-live effects, root-bound hooks and independent runtime verification","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-F.json"
-contract_sha256 = "d84dbcb713bc586001ff1037d1bf06382734ce43b5cf53ac2be109021078ea22"
+contract_sha256 = "75bd0155a2b79677764c35864baf32705aee6bc4ae1ad0816d1e00c5f2d458a2"
 
 [[node]]
 id = "M-15-F.1"
@@ -5101,7 +5101,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-F.json#M-15-F.1","The rootfs is target-correct with independently observed metadata.","No target binary runs on the wrong architecture or directly in the Windows controller."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-F.json#M-15-F.1"
-contract_sha256 = "d84dbcb713bc586001ff1037d1bf06382734ce43b5cf53ac2be109021078ea22"
+contract_sha256 = "75bd0155a2b79677764c35864baf32705aee6bc4ae1ad0816d1e00c5f2d458a2"
 
 [[node]]
 id = "M-15-F.2"
@@ -5116,7 +5116,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-F.json#M-15-F.2","All observed preparation effects belong to the target transaction domains.","Live activation remains a separate operation and authority."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-F.json#M-15-F.2"
-contract_sha256 = "d84dbcb713bc586001ff1037d1bf06382734ce43b5cf53ac2be109021078ea22"
+contract_sha256 = "75bd0155a2b79677764c35864baf32705aee6bc4ae1ad0816d1e00c5f2d458a2"
 
 [[node]]
 id = "M-15-G"
@@ -5131,7 +5131,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: BuildKit provider + deterministic image-plan lowering, pinned base/closure, separate build/runtime stages, OCI export + inspect + non-root smoke, credential-free image/runtime bindings and offline prepared rebuild","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-G.json"
-contract_sha256 = "fce4d0a3df98d5afdc53e2a0991f1ab700c1b2a989469e4eba6e26d7e9c9378e"
+contract_sha256 = "83a2141043360d9724f2be61306749f0fd2da5f0036bc7c4a779faeed1fbc9ab"
 
 [[node]]
 id = "M-15-G.1"
@@ -5146,7 +5146,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-G.json#M-15-G.1","Generated build representation is reviewable and derived from one environment/artifact model.","No second scheduler/build language or real image push is added."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-G.json#M-15-G.1"
-contract_sha256 = "fce4d0a3df98d5afdc53e2a0991f1ab700c1b2a989469e4eba6e26d7e9c9378e"
+contract_sha256 = "83a2141043360d9724f2be61306749f0fd2da5f0036bc7c4a779faeed1fbc9ab"
 
 [[node]]
 id = "M-15-G.2"
@@ -5161,7 +5161,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-G.json#M-15-G.2","Observed results identify builder/platform/driver and exact OCI subjects.","Runtime receives no Docker socket, broad host HOME mount or privileged agent capability."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-G.json#M-15-G.2"
-contract_sha256 = "fce4d0a3df98d5afdc53e2a0991f1ab700c1b2a989469e4eba6e26d7e9c9378e"
+contract_sha256 = "83a2141043360d9724f2be61306749f0fd2da5f0036bc7c4a779faeed1fbc9ab"
 
 [[node]]
 id = "M-15-G.3"
@@ -5176,7 +5176,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-G.json#M-15-G.3","Local export, fixture load and registry push are distinct typed effects.","The evidence names its reproducibility level and does not infer Linux bootability."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-G.json#M-15-G.3"
-contract_sha256 = "fce4d0a3df98d5afdc53e2a0991f1ab700c1b2a989469e4eba6e26d7e9c9378e"
+contract_sha256 = "83a2141043360d9724f2be61306749f0fd2da5f0036bc7c4a779faeed1fbc9ab"
 
 [[node]]
 id = "M-15-H"
@@ -5191,7 +5191,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Package tool/service descriptor registry with structured requests/results/errors/probes, endpoint/auth bindings and automatic catalog projection; two local services + agent on isolated Docker network, authorized read/write and denied effect","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-H.json"
-contract_sha256 = "686b9ad0be18960cc79fd22ecc7c4fd46ef822d8df3135df6a5c195aec7019c3"
+contract_sha256 = "3ae0c3d1b57f009308886ee690640e3f2bffbde115a8359da959f9e618cee600"
 
 [[node]]
 id = "M-15-H.1"
@@ -5206,7 +5206,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-H.json#M-15-H.1","Catalog read is pure and complete/partial states are machine-visible.","Existing OpenAPI/MCP descriptions are referenced rather than replaced by a new API language."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-H.json#M-15-H.1"
-contract_sha256 = "686b9ad0be18960cc79fd22ecc7c4fd46ef822d8df3135df6a5c195aec7019c3"
+contract_sha256 = "3ae0c3d1b57f009308886ee690640e3f2bffbde115a8359da959f9e618cee600"
 
 [[node]]
 id = "M-15-H.2"
@@ -5221,7 +5221,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-H.json#M-15-H.2","Discovery and probe/call use distinct purity and authority semantics.","No Internet-wide discovery, fleet scheduler or arbitrary shell endpoint is created."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-H.json#M-15-H.2"
-contract_sha256 = "686b9ad0be18960cc79fd22ecc7c4fd46ef822d8df3135df6a5c195aec7019c3"
+contract_sha256 = "3ae0c3d1b57f009308886ee690640e3f2bffbde115a8359da959f9e618cee600"
 
 [[node]]
 id = "M-15-H.3"
@@ -5236,7 +5236,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-H.json#M-15-H.3","Discovery, validation, authorized effects and refusal are independently observed.","Image/runtime/service IDs correlate through shared provenance."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-H.json#M-15-H.3"
-contract_sha256 = "686b9ad0be18960cc79fd22ecc7c4fd46ef822d8df3135df6a5c195aec7019c3"
+contract_sha256 = "3ae0c3d1b57f009308886ee690640e3f2bffbde115a8359da959f9e618cee600"
 
 [[node]]
 id = "M-15-I"
@@ -5251,7 +5251,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Integrate boot debugger with environment/package/runtime/service/image provenance and independent boot/disk/download/layer measurements; four selectable client image profiles; two clean builds, offline/missing-input cases and recovery/secret tests; Docker replacement/removal/failed-start rollback and runtime-reference GC; full supply-chain fixture with independently enforced/observed egress over control/children/builders, GitHub denied and separate all-network-off replay","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-I.json"
-contract_sha256 = "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059"
+contract_sha256 = "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22"
 
 [[node]]
 id = "M-15-I.1"
@@ -5266,7 +5266,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-I.json#M-15-I.1","Each claimed contribution and supported client profile has exact evidence.","Large boot remains streamable without a total token/size quota."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-I.json#M-15-I.1"
-contract_sha256 = "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059"
+contract_sha256 = "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22"
 
 [[node]]
 id = "M-15-I.2"
@@ -5281,7 +5281,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-I.json#M-15-I.2","The report states measured equality and inequality rather than a blanket reproducible label.","All-network-off replay has independent enforcement evidence."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-I.json#M-15-I.2"
-contract_sha256 = "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059"
+contract_sha256 = "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22"
 
 [[node]]
 id = "M-15-I.3"
@@ -5296,7 +5296,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-I.json#M-15-I.3","Runtime and data rollback are reported separately with exact partial effects.","Live-reference-safe GC deletes only recorded owned IDs."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-I.json#M-15-I.3"
-contract_sha256 = "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059"
+contract_sha256 = "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22"
 
 [[node]]
 id = "M-15-I.4"
@@ -5311,7 +5311,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-I.json#M-15-I.4","Every exercised process/transport class is covered by enforced and observed egress policy.","No host firewall/DNS edits, real publisher calls or public registry pushes occur."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-I.json#M-15-I.4"
-contract_sha256 = "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059"
+contract_sha256 = "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22"
 
 [[node]]
 id = "M-15-J"
@@ -5326,7 +5326,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Meet baseline work-package scope: Complete HOME + Docker user journeys, machine API parity and future Linux/VM acceptance outline; reconcile docs/capability matrix and retained recovery/bootstrap route and self-hosted registry/source/cache/image walkthrough; explicit local evidence report","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-J.json"
-contract_sha256 = "f20a806b305c1358e29b0b3db82612d6178c18aa15f982ccf3f1b22c363a4513"
+contract_sha256 = "f849e9a6e9bac43adc81a2df1d4bca1437e35d9f5495f4b90107c9dd2a2034de"
 
 [[node]]
 id = "M-15-J.1"
@@ -5341,7 +5341,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-J.json#M-15-J.1","Every required M-15 case has reproducible evidence and no unmatched required row.","Any unavailable executor remains a blocker only for affected proof, never waived completion."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-J.json#M-15-J.1"
-contract_sha256 = "f20a806b305c1358e29b0b3db82612d6178c18aa15f982ccf3f1b22c363a4513"
+contract_sha256 = "f849e9a6e9bac43adc81a2df1d4bca1437e35d9f5495f4b90107c9dd2a2034de"
 
 [[node]]
 id = "M-15-J.2"
@@ -5356,7 +5356,7 @@ mandates = ["D-021","D-022","D-023","D-024","F-020","F-022","F-023","F-024","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-15-J.json#M-15-J.2","Documentation and capability matrix describe observed support and exact remaining VM/system limits.","No mandatory GitHub, Nix runtime, permanent daemon or model subscription is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-15-J.json#M-15-J.2"
-contract_sha256 = "f20a806b305c1358e29b0b3db82612d6178c18aa15f982ccf3f1b22c363a4513"
+contract_sha256 = "f849e9a6e9bac43adc81a2df1d4bca1437e35d9f5495f4b90107c9dd2a2034de"
 
 [[node]]
 id = "NEXT-GATE-M-15"
@@ -6340,7 +6340,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Complete every child and its stage-specific checks; pending later-stage evidence is not passed."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BASE.json"
-contract_sha256 = "a163c5cb2a168d6d57da52de14f7a8129a661a4cd082848d940972265f085be4"
+contract_sha256 = "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f"
 
 [[node]]
 id = "NEXT-PREVIEW-BASE.1"
@@ -6355,7 +6355,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["DP1 refers to the actual pre-implementation boundary and each included source/package is exactly identifiable or explicitly unrecoverable with a blocker.","The initial capability/surface denominator and scope exclusions are retained in permanent evidence; no unavailable run is marked passed.","Provisional capture has not been presented as schema-validated before BASE.2."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BASE.json#NEXT-PREVIEW-BASE.1"
-contract_sha256 = "a163c5cb2a168d6d57da52de14f7a8129a661a4cd082848d940972265f085be4"
+contract_sha256 = "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f"
 
 [[node]]
 id = "NEXT-PREVIEW-BASE.2"
@@ -6370,7 +6370,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Permanent laws, registered schemas, generated readers, tested command grammar and meaningful nonzero semantic tests are available before BASE.3.","The bootstrap dependency direction is acyclic: later domain services adopt these records; these tools do not depend on their future implementation.","Schema/codegen work and application behavior are committed separately under PROP-044; generated files are never edited by hand."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BASE.json#NEXT-PREVIEW-BASE.2"
-contract_sha256 = "a163c5cb2a168d6d57da52de14f7a8129a661a4cd082848d940972265f085be4"
+contract_sha256 = "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f"
 
 [[node]]
 id = "NEXT-PREVIEW-BASE.3"
@@ -6385,7 +6385,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Every future milestone acceptance has an executable accounting check and a central semantic review obligation tied to actual contributions.","Temporary task references and permanent release facts are explicitly separated and removal of the bridge does not lose change identity.","All nonzero semantic cases pass; the preserved original implementation task contracts remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BASE.json#NEXT-PREVIEW-BASE.3"
-contract_sha256 = "a163c5cb2a168d6d57da52de14f7a8129a661a4cd082848d940972265f085be4"
+contract_sha256 = "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f"
 
 [[node]]
 id = "NEXT-PREVIEW-BIND"
@@ -6400,7 +6400,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Complete every child and its stage-specific checks; pending later-stage evidence is not passed."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BIND.json"
-contract_sha256 = "bc0c29d18b5153642e9755c6bef334f28a8265918e2c294706a29c7a5edaf17f"
+contract_sha256 = "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad"
 
 [[node]]
 id = "NEXT-PREVIEW-BIND.1"
@@ -6415,7 +6415,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["All retained bootstrap IDs and bytes survive adoption with exact before/after witnesses.","Native change analysis and permanent accounting tools read the same records; no second ledger acquires authority."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BIND.json#NEXT-PREVIEW-BIND.1"
-contract_sha256 = "bc0c29d18b5153642e9755c6bef334f28a8265918e2c294706a29c7a5edaf17f"
+contract_sha256 = "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad"
 
 [[node]]
 id = "NEXT-PREVIEW-BIND.2"
@@ -6430,7 +6430,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["All applicable migration and capability links resolve to their domain-owned permanent records and exact supported behavior.","Release accounting is mechanically readable without a new IDE client, universal operation protocol or duplicated runtime journal."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-BIND.json#NEXT-PREVIEW-BIND.2"
-contract_sha256 = "bc0c29d18b5153642e9755c6bef334f28a8265918e2c294706a29c7a5edaf17f"
+contract_sha256 = "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad"
 
 [[node]]
 id = "NEXT-PREVIEW-DOCS"
@@ -6446,7 +6446,7 @@ acceptance = ["Complete every child and its stage-specific checks; pending later
 evidence = []
 
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-DOCS.json"
-contract_sha256 = "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d"
+contract_sha256 = "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee"
 
 [[mandate]]
 id = "NEXT-VERIFICATION-ECONOMY"
@@ -6468,7 +6468,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Exact documentation source/current captures, topic/page/generated-source inventory and bounded future write authority are retained.","NEXT-PREVIEW-DOCS-INPUT is satisfied by actual supplied facts; absent facts remain a specific blocker, not an invented format choice."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-DOCS.json#NEXT-PREVIEW-DOCS.1"
-contract_sha256 = "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d"
+contract_sha256 = "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee"
 
 [[node]]
 id = "NEXT-PREVIEW-DOCS.2"
@@ -6483,7 +6483,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Every changed or new topic has a reviewed disposition backed by current product evidence, and all independent incoming documentation edits are preserved.","The update is a concrete reviewable documentation diff with exact source provenance; unresolved topics remain explicit."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-DOCS.json#NEXT-PREVIEW-DOCS.2"
-contract_sha256 = "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d"
+contract_sha256 = "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee"
 
 [[node]]
 id = "NEXT-PREVIEW-DOCS.3"
@@ -6498,7 +6498,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["All delivered documentation topics have current build/link/claim evidence or explicit truthful limitations consistent with supported product scope.","documentation-map is mechanically readable and bound to the exact candidate; unresolved required workflows block the release lane."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-DOCS.json#NEXT-PREVIEW-DOCS.3"
-contract_sha256 = "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d"
+contract_sha256 = "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee"
 
 [[node]]
 id = "NEXT-PREVIEW-RELEASE"
@@ -6513,7 +6513,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Complete every child and its stage-specific checks; pending later-stage evidence is not passed."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json"
-contract_sha256 = "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+contract_sha256 = "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
 
 [[node]]
 id = "NEXT-PREVIEW-RELEASE.1"
@@ -6528,7 +6528,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["The full exact-scope net delta is reconciled independently of the task denominator and each user-facing action points to permanent facts and applicable proof.","MIGRATION.md is a concrete draft for the real candidate with a complete action/limitation matrix; DP2 remains unfinalized."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json#NEXT-PREVIEW-RELEASE.1"
-contract_sha256 = "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+contract_sha256 = "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
 
 [[node]]
 id = "NEXT-PREVIEW-RELEASE.2"
@@ -6543,7 +6543,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Every required applicable migration scenario has meaningful retained positive/negative/repeat/recovery evidence for the exact candidate, or a specific blocker remains.","The guide's claims agree with observed preservation and failure behavior; no unperformed public/host action is implied."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json#NEXT-PREVIEW-RELEASE.2"
-contract_sha256 = "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+contract_sha256 = "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
 
 [[node]]
 id = "NEXT-PREVIEW-RELEASE.3"
@@ -6558,7 +6558,7 @@ mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Permanent tools, contracts, guide/map and exact-subject evidence survive complete campaign removal without a semantic dependency on the removed files.","A precise finalization recipe separates candidate validation, actual scaffold removal, exact post-removal proof and metadata-only attestation.","DP2 remains candidate until the root-owned final close gate executes the permanent proof on the real final tree."]
 evidence = []
 contract = "repo:campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json#NEXT-PREVIEW-RELEASE.3"
-contract_sha256 = "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+contract_sha256 = "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
 
 [[node]]
 id = "NEXT-PREVIEW-DOCS-INPUT"

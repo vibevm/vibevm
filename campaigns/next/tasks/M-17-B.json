@@ -61,7 +61,7 @@
       "safe_stop": "A complete or explicitly incomplete rename observation is retained before planning effects.",
       "commit_subject": "feat(refactor): capture owned package rename references",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -126,7 +126,7 @@
       "safe_stop": "Prepared rename diff is reviewable and all disk/installed states are unchanged.",
       "commit_subject": "feat(refactor): prepare exact package coordinate renames",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -200,7 +200,7 @@
       "safe_stop": "Rename is verified or retained as explicit recovery-required state with exact affected files.",
       "commit_subject": "feat(refactor): apply and recover semantic package renames",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Actual Redbook roster changes still follow D-019 future version-offer policy; source rename never grants publication authority.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

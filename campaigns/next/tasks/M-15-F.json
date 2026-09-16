@@ -54,7 +54,7 @@
       "safe_stop": "An offline rootfs candidate and manifest are retained; no host service or deployment starts.",
       "commit_subject": "feat(rootfs): populate Linux payloads with target metadata",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -113,7 +113,7 @@
       "safe_stop": "Offline target is complete or explicitly incomplete; all external service state is unchanged.",
       "commit_subject": "feat(rootfs): separate offline preparation from live service effects",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

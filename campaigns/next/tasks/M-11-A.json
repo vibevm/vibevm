@@ -20,14 +20,14 @@
         "crates/vibe-scrape/src/",
         "crates/vibe-safefs/src/",
         "fixtures/next/brownfield/",
-        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "vibevm/vibespecs/common/PROP-075-brownfield-intake.xml",
         "crates/vibe-scrape/Cargo.toml",
         "crates/vibe-scrape/src/lib.rs",
         "crates/vibe-safefs/Cargo.toml",
         "crates/vibe-safefs/src/lib.rs"
       ],
       "steps": [
-        "Define the inventory request using a trusted root, explicit include/exclude rules and supported source kinds; create the relevant PROP-062 inventory anchors.",
+        "Define the inventory request using a trusted root, explicit include/exclude rules and supported source kinds; create the relevant PROP-075 inventory anchors.",
         "Apply exclusions before opening/statting content; retain separate absent/unreadable/unsafe/skipped reasons and bounded file metadata.",
         "Return an in-memory deterministic inventory with no cache/state/lock creation, native analyzers or network."
       ],
@@ -56,7 +56,7 @@
       "safe_stop": "Pure inventory works; no proposal or promotion performed.",
       "commit_subject": "feat(brownfield): inventory declared scope without hidden effects",
       "notes": [
-        "PROP-062/fixtures/next/brownfield are proposed paths. M-11-D may independently establish its transition section; do not make inventory a dependency of that pulled-forward atom.",
+        "PROP-075/fixtures/next/brownfield are proposed paths. M-11-D may independently establish its transition section; do not make inventory a dependency of that pulled-forward atom.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     },
@@ -84,7 +84,7 @@
         "formats/",
         "crates/vibe-wire/",
         "fixtures/next/brownfield/",
-        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "vibevm/vibespecs/common/PROP-075-brownfield-intake.xml",
         "crates/vibe-scrape/Cargo.toml",
         "crates/vibe-scrape/src/lib.rs",
         "crates/vibe-safefs/Cargo.toml",

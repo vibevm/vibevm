@@ -45,7 +45,7 @@
       "safe_stop": "All completed results are retained and incomplete branches remain explicitly open.",
       "commit_subject": "test(environment): close HOME and Docker delivery parity",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
     },
@@ -90,7 +90,7 @@
       "safe_stop": "Permanent docs are reviewable and all supporting evidence is outside disposable campaign material.",
       "commit_subject": "docs(environment): document delivery and recovery contracts",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "Documentation paths are proposed owned destinations. Cross-domain promotion and campaign retirement are root-owned tasks, not duplicated here.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]

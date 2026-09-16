@@ -7,7 +7,7 @@
       "goal": "Preserve the separately authored documentation as an exact input before planning its product-driven update.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "docs/releases/developer-preview-1-to-2/",
         "tools/preview-transition/"
@@ -44,7 +44,7 @@
       "safe_stop": "Stop after intake and map creation; do not apply DP2 documentation edits before the root-bound final implementation frontier.",
       "commit_subject": "docs(release): bind the documentation migration baseline",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
@@ -60,7 +60,7 @@
       "goal": "Update existing and missing documentation topics from the net product changes while preserving concurrent authored work.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibevm/vibespecs/changes/",
         "docs/releases/developer-preview-1-to-2/",
@@ -100,7 +100,7 @@
       "safe_stop": "Stop with the documentation delta reviewable; DOCS.3 validates the resulting claims and workflows.",
       "commit_subject": "docs(release): update documentation for Developer Preview 2",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
@@ -116,7 +116,7 @@
       "goal": "Prove the revised documentation describes executable behavior and honest platform limits.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "docs/",
         "docs/releases/developer-preview-1-to-2/",
@@ -157,7 +157,7 @@
       "safe_stop": "Stop after documentation validation; migration guide assembly and rehearsal remain separate release tasks.",
       "commit_subject": "test(docs): verify preview documentation against the candidate",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",

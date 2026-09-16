@@ -65,7 +65,7 @@
       "safe_stop": "Neutral port and fixture backend are green; D-022-dependent work remains fenced.",
       "commit_subject": "feat(environment): define foreign package backend transactions",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "D-022 is OPEN. This child may proceed under generic foundations; subsequent Arch-specific children require the actual owner ruling.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
@@ -127,7 +127,7 @@
       "safe_stop": "If D-022 is unresolved, leave no backend-specific writes; otherwise retain captured target/DB transaction evidence.",
       "commit_subject": "feat(environment): implement the selected Arch backend policy",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "B materially expands the executable tree: root must refine dependencies and acceptance before continuing. Source/archive captures use the M-15-K egress boundary.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
@@ -179,7 +179,7 @@
       "safe_stop": "Disposable backend state is recovered or preserved as a named failed fixture; no uncertain state is accepted.",
       "commit_subject": "test(environment): prove Arch update and recovery boundaries",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

@@ -63,7 +63,7 @@
       "safe_stop": "A deterministic prepared plan exists; Docker execution has not started.",
       "commit_subject": "feat(image): lower environment definitions into build stages",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -131,7 +131,7 @@
       "safe_stop": "Image candidate or partial build evidence is retained; exact fixture resources are cleaned or recovery-pinned.",
       "commit_subject": "feat(image): execute admitted BuildKit artifact jobs",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -196,7 +196,7 @@
       "safe_stop": "Local artifact and smoke result retained; fixture containers removed by exact IDs without deleting persistent data.",
       "commit_subject": "feat(image): verify local OCI export and offline runtime",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Service-catalog projection is introduced by M-15-H.1; verify it in H.3/I.1/J, not here. No dependency on a later service catalog or empty placeholder.",

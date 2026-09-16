@@ -50,7 +50,7 @@
       "safe_stop": "Coverage is fully evidenced or explicit blockers remain; no hidden defer closes the campaign.",
       "commit_subject": "test(api): enforce complete operation and model coverage",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
     },
@@ -98,7 +98,7 @@
       "safe_stop": "Local developer contract is complete and reviewable; no public publication or IDE implementation occurs.",
       "commit_subject": "docs(api): document complete machine operation contracts",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Documentation is a local repository artifact; public release remains under existing explicit prepared-batch authority.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]

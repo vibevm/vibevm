@@ -22,7 +22,7 @@
         "schemas/",
         "formats/",
         "crates/vibe-wire/",
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "crates/vibe-publish/Cargo.toml",
         "crates/vibe-publish/src/lib.rs"
       ],

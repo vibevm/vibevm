@@ -2,17 +2,17 @@
   "schema": 1,
   "campaign_id": "NEXT",
   "title": "VibeVM next implementation and scaffold retirement",
-  "baseline_commit": "b1291b06d5704ee32f7486c86e1fae617fcbbddf",
+  "baseline_commit": "ce0fa4c51e370ce3141021e29a9539c40eed6892",
   "source_pair_revision": 4,
-  "baseline_fingerprint": "sha256:0b6524d4128c5ece0763b14f791cbdc3e9cc4c6fd30aefa14b4f93df12892084",
+  "baseline_fingerprint": "sha256:758c29f1ab886fde867c9678841c9673dee1547ba8add7966d156152c74db587",
   "baseline_files": [
     {
       "path": "campaigns/next/inputs/REFINED-IMPLEMENTATION-PLAN.md",
-      "sha256": "11cd76253638800fc90897220984912eb7d737ad12a423f9207299f2b70cb9e7"
+      "sha256": "ae19a06c33dc4ce26691044b3644e3f857f749536a2eaa4abc5f1429d2b7b1be"
     },
     {
       "path": "campaigns/next/inputs/PROJECT-REVIEW.md",
-      "sha256": "084cf62c72427b65dd8b41241a841ca7b5ac521c7936333d9662d78b70986486"
+      "sha256": "b5acf753cea91af5978eaaab6e71d459cec8097cc38b1a704a55914ea361edf7"
     }
   ],
   "temporary_zones": [
@@ -22,19 +22,19 @@
   ],
   "canonical_candidates": {
     "M-01": [
-      "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml",
       "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
     ],
     "M-02": [
-      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
     ],
     "M-03": [
       "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+      "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
     ],
     "M-04": [
-      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+      "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
     ],
     "M-05": [
@@ -42,12 +42,12 @@
       "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
     ],
     "M-06": [
-      "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+      "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
       "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
     ],
     "M-07": [
-      "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+      "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
       "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
       "vibevm/vibespecs/common/PROP-019-version-manager.xml"
     ],
@@ -59,15 +59,15 @@
       "vibevm/vibespecs/common/PROP-028-package-families.xml"
     ],
     "M-10": [
-      "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+      "vibevm/vibespecs/common/PROP-074-local-derivatives.xml"
     ],
     "M-11": [
-      "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+      "vibevm/vibespecs/common/PROP-075-brownfield-intake.xml",
       "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
     ],
     "M-12": [
       "DEV-GUIDE.md",
-      "vibevm/vibespecs/common/PROP-060-publication-authority.xml"
+      "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
     ],
     "M-13": [
       "vibevm/vibespecs/common/PROP-000.xml",
@@ -75,26 +75,26 @@
       "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
     ],
     "M-14": [
-      "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+      "vibevm/vibespecs/common/PROP-076-environment-model.xml"
     ],
     "M-15": [
-      "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-      "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-      "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+      "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+      "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+      "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
     ],
     "M-16": [
-      "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
       "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
     ],
     "M-17": [
-      "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
       "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
     ],
     "NEXT-PREVIEW": [
-      "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
-      "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+      "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
     ]
   },
@@ -142,7 +142,7 @@
         "NEXT-A02-U013"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-057-resource-resolution.xml",
+        "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
         "vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
       ],
@@ -198,7 +198,7 @@
         "NEXT-A04-U009"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
       ],
       "retire_after": [
         "M-02"
@@ -223,7 +223,7 @@
       ],
       "canonical_candidates": [
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
       ],
       "retire_after": [
         "M-03"
@@ -245,7 +245,7 @@
         "NEXT-A06-U006"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
         "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
       ],
       "retire_after": [
@@ -266,7 +266,7 @@
         "NEXT-A07-U004"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
         "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
       ],
@@ -291,7 +291,7 @@
         "NEXT-A08-U007"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
         "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
       ],
@@ -338,7 +338,7 @@
         "NEXT-A10-U006"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+        "vibevm/vibespecs/common/PROP-074-local-derivatives.xml"
       ],
       "retire_after": [
         "M-10"
@@ -385,7 +385,7 @@
         "NEXT-A12-U010"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
         "vibevm/vibespecs/common/PROP-019-version-manager.xml"
       ],
@@ -411,7 +411,7 @@
         "NEXT-A13-U008"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
       ],
       "retire_after": [
         "M-14"
@@ -435,9 +435,9 @@
         "NEXT-A14-U008"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -461,9 +461,9 @@
         "NEXT-A15-U008"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -488,9 +488,9 @@
         "NEXT-A16-U009"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -511,9 +511,9 @@
         "NEXT-A17-U005"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -532,9 +532,9 @@
         "NEXT-A18-U003"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -557,9 +557,9 @@
         "NEXT-A19-U007"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -581,7 +581,7 @@
         "NEXT-A20-U006"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -606,7 +606,7 @@
         "NEXT-A21-U007"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -632,7 +632,7 @@
         "NEXT-A22-U008"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -657,7 +657,7 @@
         "NEXT-A23-U007"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -682,7 +682,7 @@
         "NEXT-A24-U007"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -704,7 +704,7 @@
         "NEXT-A25-U004"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -788,7 +788,7 @@
         "NEXT-G07-U003"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -812,7 +812,7 @@
         "NEXT-G08-U006"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -834,7 +834,7 @@
         "NEXT-G09-U004"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -855,7 +855,7 @@
         "NEXT-G10-U003"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -875,7 +875,7 @@
         "NEXT-G11-U002"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -895,7 +895,7 @@
         "NEXT-G13-U002"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -933,7 +933,7 @@
       ],
       "canonical_candidates": [
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
       ],
       "retire_after": [
         "M-03"
@@ -1005,7 +1005,7 @@
         "NEXT-D-006-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
         "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
       ],
@@ -1024,7 +1024,7 @@
         "NEXT-D-007-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
         "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
       ],
@@ -1060,7 +1060,7 @@
         "NEXT-D-009-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml"
+        "vibevm/vibespecs/common/PROP-074-local-derivatives.xml"
       ],
       "retire_after": [
         "M-10"
@@ -1077,7 +1077,7 @@
         "NEXT-D-010-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
         "vibevm/vibespecs/common/PROP-019-version-manager.xml"
       ],
@@ -1096,7 +1096,7 @@
         "NEXT-D-011-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
         "vibevm/vibespecs/common/PROP-019-version-manager.xml"
       ],
@@ -1151,7 +1151,7 @@
         "NEXT-D-014-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
         "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
       ],
@@ -1170,7 +1170,7 @@
         "NEXT-D-015-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
         "vibevm/vibespecs/common/PROP-019-version-manager.xml"
       ],
@@ -1189,7 +1189,7 @@
         "NEXT-D-016-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
       ],
       "retire_after": [
         "M-02"
@@ -1225,7 +1225,7 @@
       ],
       "canonical_candidates": [
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml"
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
       ],
       "retire_after": [
         "M-03"
@@ -1261,7 +1261,7 @@
         "NEXT-D-020-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-063-environment-model.xml"
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
       ],
       "retire_after": [
         "M-14"
@@ -1278,9 +1278,9 @@
         "NEXT-D-021-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -1297,9 +1297,9 @@
         "NEXT-D-022-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -1316,9 +1316,9 @@
         "NEXT-D-023-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -1335,9 +1335,9 @@
         "NEXT-D-024-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-064-runtime-package-management.xml",
-        "vibevm/vibespecs/common/PROP-065-oci-agent-images.xml",
-        "vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml"
+        "vibevm/vibespecs/common/PROP-077-runtime-package-management.xml",
+        "vibevm/vibespecs/common/PROP-078-oci-agent-images.xml",
+        "vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml"
       ],
       "retire_after": [
         "M-15"
@@ -1354,7 +1354,7 @@
         "NEXT-D-025-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -1373,7 +1373,7 @@
         "NEXT-D-026-LAW"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
       ],
@@ -1403,8 +1403,8 @@
         "NEXT-A26-U012"
       ],
       "canonical_candidates": [
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
       ],
       "retire_after": [
@@ -2191,7 +2191,7 @@
   "decisions": [
     {
       "id": "D-001",
-      "text": "Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0",
+      "text": "Spec Kit и будущий bridge внешних skills — flow версии 1.0.0; сохраняется допустимое upstream provenance. Источник внешних skills нужно выбрать заново до реализации; прежний компонент удалён по указанию владельца.",
       "owner_state": "accepted",
       "owner": "M-09"
     },
@@ -3463,25 +3463,25 @@
   ],
   "task_count": 212,
   "task_files_sha256": {
-    "M-01-A": "813e062db64b010df48abc9b7aa14a3995f3906578509f2ada5fd9db86f968af",
-    "M-01-B": "2beeefc7ef34298088585703ef70ae0f3349c01d15150b5e1fd8d110a5d5bb39",
-    "M-01-C": "58e792f48fb561fd9790efef3d93802aaa639c35d74c721d65d97a016e8ec6c1",
-    "M-01-D": "a92dae1f5d2e8e44c553311f3351d77e6a367c0d04242f14bec12b0d7b6c3f3e",
-    "M-01-E": "544d59fe9272ec96e50c4101fc59a2372a44bb320302e2e3c999acd41843c6a9",
-    "M-02-A": "46bfd23a291618b5636554a212ce9d152893e3094b1674ddf525ac85529039d7",
-    "M-02-B": "87e6592c5e3e55d25dff52ea5246104467dd1b7bd0712413c6d3791bd69dad19",
-    "M-02-C": "c0179a7e34f59909383c9debf92f3f717c337c7c035fbc4d3838ceffb749cbe4",
-    "M-02-D": "2f518516f296816415a68658dac53c7bdedca3da29aaad6f1f1a2f38de944b86",
-    "M-03-A": "98692814b3ad1e52e39ced9b1206c82cb3878b4c134b07fd702c125a6b8493b4",
-    "M-03-B": "783b7e268a1e400c36173aaea7169d1d910f64e8a37625e3e9314f814b9020b9",
-    "M-03-C": "e62911a35d9b4a61f3265989ff1fa35cdabc34e722630b192d422e95c52bb6ef",
-    "M-03-D": "0e57c68bb4e0bf97bf383a9c6030b932ea103abcd5a86674d7c99766e19e9c0e",
-    "M-03-E": "4a54be920a88961bb6f473afb3205937174eeadbcf44b034a46a785e0773cb09",
-    "M-04-A": "68bbaf118bc6621adf9258d3d7e85dc5860b84f89d23e0b341ae5d71936c4fe8",
-    "M-04-B": "bb1a0e2b3af95a820e9d82a1744b17ad47d0b36c20f3ef05cdc3909f2d0dc8e8",
-    "M-04-C": "980b500a8ffdfcc535a3db48f6ad0b26c9a5c8bf59f9d8ccf85b068d9a20632f",
-    "M-04-D": "918b9e641eb7e1d1c1f154a3f50f8f661fa00f75166330d69a56b2e78fbc9f9a",
-    "M-04-E": "5c8805683482133f325f6c1870a7650321b0216ab5ae2ae0eab3646135ae3284",
+    "M-01-A": "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c",
+    "M-01-B": "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b",
+    "M-01-C": "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4",
+    "M-01-D": "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76",
+    "M-01-E": "9e223e2e158d58b2568fe23656fe82a7da55f18fe8413cc425cc77ce0e217bf8",
+    "M-02-A": "9f88ec87bbe87ec724d079add45fc7123c1e6c8609d658903aa70e6f84e44849",
+    "M-02-B": "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7",
+    "M-02-C": "c6790bb50b283d9474df9db56eae8062c96fceb7d78150ae80a7527b4c6f2253",
+    "M-02-D": "25e8d685e8372d3ff3aa85f5048824a9401d9da91459da27e299462af33bb520",
+    "M-03-A": "0c3fd7e88f0ab664378f8556e399a83a0f808b73e9d731261971a578159fc6c2",
+    "M-03-B": "db1cd4f8c6272eba606a955506c5347effddffad25313ea5906164cd223f809e",
+    "M-03-C": "e64801d48a149d3b9c551a445716c2cddfbbaae778ac5f8a0400d4348513e7ac",
+    "M-03-D": "1cd31eab577677db0c757027a1951045abd86f6efef60312a365995bcaa677ce",
+    "M-03-E": "73a1fb14bd63ebb3bdc73f48b189977a7f9961c2bca5a9fbccfdc7c83f50e998",
+    "M-04-A": "506db391c32b22d4af5b56d55268100881cadcb9ee03306871fc1ece2bf11da1",
+    "M-04-B": "bfdc629c88db2809cee68c595498cea63b9488aa77feb2b5487178fed5a01f22",
+    "M-04-C": "3ae31c0e46676b6ca66ddc8488145f398b53fee97374d5a4cb11282bd99ccda5",
+    "M-04-D": "c4958882a1717d3e94eae339a85947a7c2eaeb77e3b4c93b0b3712ca3164ce5b",
+    "M-04-E": "789005fd3c6b97fc966b13a9c44360c96d94a61587008d8a7a355241953cf3d4",
     "M-05-A": "d385c433e351597d81220c7a71952ee66b42263d72f6ba54342245244fff6ea8",
     "M-05-B": "4c60de9842e06902829919fcb03d32c36cbc093a3bb524c1076bc7c4afbcec46",
     "M-05-C": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
@@ -3489,37 +3489,37 @@
     "M-05-E": "32a40b39db6e672e62e851f67eaf4dcd43330cd72d9bdd71b5406886af2b94d2",
     "M-05-F": "fa17a9d29724a33069c6e87fbc6eddd2eac9d03d403bb928c202e69f5d557783",
     "M-05-G": "03370f83f77e668605bfe6ae807daf655402204946306fd83ab18b2e54981276",
-    "M-06-A": "749f30952d2f8565395ede5569c0ba18e70c7d7974ec883dd96fd90be1103152",
-    "M-06-B": "534e650e4a2b02e526ff097a1433ea98b9d92b3558b0ad79695ca14d7355b1a5",
-    "M-06-C": "0de45dda2f932eae2874e5f9416b2cf3ca4bb0c648ea4428e1f1c725872ffcbc",
-    "M-06-D": "9a95e76a3918b348203da749ae945250758c5849dd6f43a8ac8fd658d66b5594",
-    "M-06-E": "2af8e138646178fd4aa080b0b21c5a330789f72f0713c3a5de158b196031d631",
-    "M-06-F": "dc853ac4e85e1581f05c80bb0d39f7e6477154973c166f96307839412973909d",
-    "M-07-A": "e0d219676537ba03439942fbe1bcfe497725c73231d20d1b3a18d88cfa654c60",
-    "M-07-B": "b356d65bc8f946bcba8a2417b5019fe229e6eab9eaa8dd0498013ed1ac51fd1a",
-    "M-07-C": "b98ce2b2c2f8108634699d9a0ba673c4b208b3cbd433a998d935bfbb29d54cb4",
-    "M-07-D": "85f86498348351d8cf85c8c2d0ab13041d190ede1f29475aee0b158ab926f425",
+    "M-06-A": "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5",
+    "M-06-B": "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f",
+    "M-06-C": "fe7d3e09f853c87000b6aa7a04f994dc9df51ca30b4f9ae4e1e1cf9b7435b46f",
+    "M-06-D": "a1cd588c03d2f0664cacf1b6544b4759064ded5e8cb0d6c69214b7005f565d4e",
+    "M-06-E": "d7f0fcbb44740d818c0531b231278023cb3f482c6c5c0c16a5b7e2064d8f1533",
+    "M-06-F": "1146782656481eb5706ba86c3ea645cb19b96c35906e1de77be7a45c6dc1a697",
+    "M-07-A": "79b3cea4aaef262d2481fc0439ef1a4108d96dfefddd24348494282e0a3b4a10",
+    "M-07-B": "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b",
+    "M-07-C": "fafa485a974b021e9dee02dff7caad72e9ab305b56c833abe1c0e98dc4b64c64",
+    "M-07-D": "e12da242e213dd984716a109cc292aae4225bbc29412d1c1f382027308380be3",
     "M-07-E": "6085d9e7d3f20a3b9bbddc91aea348f66597bb56e9d7ffdb29041fe16812532b",
     "M-08-A": "96d8bb5989b076979731079f4136f3e10d0b3221b45e2c90d1c022fb3b5bce61",
     "M-08-B": "67c4744a44094931b753dee4b9634d0621b38a9327248c4f52d5e8e0666005b0",
     "M-08-C": "4e237f45ebfb74a6cf62f9abe9362fd8afe3004906e81057fb793c7016844cd3",
     "M-08-D": "cc7867ba677124ace4acdfcc95a02f1cc8c2a4f75561dd25d41fa36ee4bf7c6f",
     "M-08-E": "3e4d6af6276ed39c3b46b31790f9a0c3669113f7d23c90b42d0a03b3a4194946",
-    "M-09-A": "2721186544c40d1066c36f8c17e0596aec05f8abdb570f18f49844c4009bdd8b",
-    "M-09-B": "bcb89e3e4db64f87b8229dd1cbda04277445c5d882dab9a8038d9a758e582fe8",
+    "M-09-A": "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea",
+    "M-09-B": "9f5dcd6195f253587aeb98909d99605476436ec9fa4e7380daa1a7e78d176d78",
     "M-09-C": "78c0867e41c32dbaf68eeeaaa1eb1b126ba597c0e7c6626c5e908e49dd03b310",
     "M-09-D": "fc12cef56195d1a6b2195b6376ccc5584f3f63ea19ec630ee962b8f1b6d8c1d1",
-    "M-09-E": "f3b1f02ac2b90a186ea349a0d4f1f21848343f8f141553aa831c94b8c5fd23a7",
-    "M-10-A": "08ebdc7dc29575a0196b386bd2bb5641acf75493e691807c37dca9ba1711d4a2",
-    "M-10-B": "588d99870d66b5616babf1f3033d5fb32e0446b22a53f40aea817428f0ed76aa",
+    "M-09-E": "905009895e4409fef4f8794ac00d839e6061e73225a015ff1fea5ab08b2a8bce",
+    "M-10-A": "28e8d1f8d304412a598f0d6f8e0f25e6c3b3f078bf9c78227cdc709437b507c6",
+    "M-10-B": "7868f3ad874054d4f029f48928f932d1aab4c22052c4883b5bfdf990526e1ec8",
     "M-10-C": "78de041984476914bab0a801008c1979ca5a2570fea27b40d44a8782ec1c746a",
     "M-10-D": "173e0382e27d28523690a0ca06578f61003f17737d88d40a0feaf630eb533106",
-    "M-11-A": "66e5115322272675c8e88faeb7881cab026e89cdab02a01ddd3e819a7e38adb1",
-    "M-11-B": "a9bc20aa674dad9e1db0c01822a7756c0ccac035cee31417afd342ec9a655b34",
-    "M-11-C": "6d1602f19ebbe66d50995ff74c1b13d8785415cde2dcd24cc9e5c09505a173aa",
-    "M-11-D": "a98c7485b26faec5f7d3bf25ca50c82f93945f78659f5185050f0343415512d0",
+    "M-11-A": "7c82cf99904c0ba1bc45f0e8e53fff40090f4741952903331be0f4c9d5342f0c",
+    "M-11-B": "c2ad768953785cd056904aad83bb031d518c4d7a7a2e81451cd76d1d0ea83f97",
+    "M-11-C": "4634cbb0e2620db76a12a8b157072fc9128997ebbf63abaa65585891a3a8b576",
+    "M-11-D": "bea8778599c1af5c487e1d6dc652fd0101baa8dd823167bc82931b92aadbee9d",
     "M-11-E": "1e7b90e3ca7cc3d95d3009651e3863c15343dc50309b731022116da829935ab8",
-    "M-12-A": "c154e4ee259749ecb5552349c4b2d8a8b663b87d80399e68037427a42db2e728",
+    "M-12-A": "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc",
     "M-12-B": "389a01aaae6227b6f2af843aa5c3ddec627f404e0bda1976d21dc5f5591c4ab5",
     "M-12-C": "8a98d9a70a84d979bddafd5f9d52310fb6a4fedb786f5f1a101de5a1cf407b0a",
     "M-12-D": "c2c156c43f9ac990658b54e545f9ac0a57671c7a63c3cb03997a883afa261bcb",
@@ -3527,32 +3527,32 @@
     "M-13-B": "5fca73b585a72b2ac8baaf1a51f8bc6b43d46dc6761a36876c57a60c57e08a50",
     "M-13-C": "9f2fa095ae697c0ab7adea06050121e2b606757ef9b23c75d51da6c04d87b1db",
     "M-13-D": "e6719ef1e93778fceb0d75a0b231b2c16ab927cb39a8dca811e793a4e72a8c13",
-    "M-14-A": "4cce56c04707efdf69477865e9d56c77e8b7a209d7cf8bb2b4a9e2af558a551f",
-    "M-14-B": "940317903b38f4f2d8f5136c4652391bd7793dcc8dccfb68c16d9a1ec09f5c71",
-    "M-14-C": "b91dc5523c64cdfe286bf125c3a6162f20e44f80d7935547a904328d10df73b5",
-    "M-15-A": "de5b750d318d317ffe367df7d459ba4e4c2fc81838a4c4d0ed475c408e63656c",
-    "M-15-B": "40472faf06a6ab363473674e06a6e52f880b13cd23cc40c2314a9b29fbd56415",
-    "M-15-C": "cc7f464a6080a744a2ac5fd95653c9edc3c5352fbe17718055adcd4a9ff95caf",
-    "M-15-D": "df7789ecf0743604af398a67d75a84e0baef642fa7c95312f08285d1df376634",
-    "M-15-E": "a0403153b80d3957d99233c3bda65556d0b376cf08152d11ffca7e83c0384113",
-    "M-15-F": "d84dbcb713bc586001ff1037d1bf06382734ce43b5cf53ac2be109021078ea22",
-    "M-15-G": "fce4d0a3df98d5afdc53e2a0991f1ab700c1b2a989469e4eba6e26d7e9c9378e",
-    "M-15-H": "686b9ad0be18960cc79fd22ecc7c4fd46ef822d8df3135df6a5c195aec7019c3",
-    "M-15-I": "8023be6c8edeea2406e1ce853c21bc57fa565bfb2a624f70f2ab26ad73368059",
-    "M-15-J": "f20a806b305c1358e29b0b3db82612d6178c18aa15f982ccf3f1b22c363a4513",
-    "M-15-K": "ab8d69d175a28f6ba3948bd5b32d72828ac04f20b9bdd63a7eb32024232bf391",
-    "M-16-A": "e47ea464e971278afcb68c27f82241d015c986615c82fbf0d5be29805d1a5774",
-    "M-16-B": "3d2cd80ce6e0b93cd9c44df605135bc9b5df73bdb5d6275084980a0b001d7da9",
-    "M-16-C": "244ac047139718ed8df3bd552bda8576c8ab04199669b3c6607a8a11351fe78e",
-    "M-16-D": "74f9451bc4be9468c2e2d76b286d092f1aadff9c4dd0d22f60fd6a1415a845d2",
-    "M-17-A": "0c80a19192d41165065f05d312031fda0cdd9edf9088e2781bbd4194950bed48",
-    "M-17-B": "575289db4753d1dc55f6214e5681d1d5c581b110a168efdf6334e21aaa6d4e37",
-    "M-17-C": "e692b873c64f74c15c96eb211940783f8c44bdc4fd243c20d4b8789a538f426a",
-    "M-17-D": "df07fe06069e37c368aa209f8d8a3ea95f3f3652e213914274f6200a1e8538a2",
-    "NEXT-PREVIEW-BASE": "a163c5cb2a168d6d57da52de14f7a8129a661a4cd082848d940972265f085be4",
-    "NEXT-PREVIEW-BIND": "bc0c29d18b5153642e9755c6bef334f28a8265918e2c294706a29c7a5edaf17f",
-    "NEXT-PREVIEW-DOCS": "fcd9507930ccd52aaa3a2f953fc601c74f1a7304985b35efd08205450578549d",
-    "NEXT-PREVIEW-RELEASE": "19da459bb0226ff4b3f642191cff964c6ad9571b9e5cb8f2ed09a30d4b6b4f6c"
+    "M-14-A": "6445987dadc4d4c52759eeb52b3c6ce38a68d6a2b56bc99b624bac91b069675f",
+    "M-14-B": "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab",
+    "M-14-C": "49c460c5c3b4f27b9b7c08227353b6d8e30e50567d24866b8be68841ab6f00b9",
+    "M-15-A": "a0579bb223368f95058a1b4bb97552512aeccd59b4f601c5755098f60206658c",
+    "M-15-B": "c6c600a0b8a7e38f1ed719b25dc4fc5536bf8e8881a46c121bb20a3a951efb59",
+    "M-15-C": "91d705242ee1a92d734f02ccf8d6ce1ef047b3db7b03a9dd3455dc5c2d475cd2",
+    "M-15-D": "302ca38dd1be264a3d86c6d4b116e5c249f430830ef27591a3ddc6cc6fe1cbce",
+    "M-15-E": "8916a95444bcde36e9deccc42cd1b27d7753e296ca5ee66572909a27a685cf36",
+    "M-15-F": "75bd0155a2b79677764c35864baf32705aee6bc4ae1ad0816d1e00c5f2d458a2",
+    "M-15-G": "83a2141043360d9724f2be61306749f0fd2da5f0036bc7c4a779faeed1fbc9ab",
+    "M-15-H": "3ae0c3d1b57f009308886ee690640e3f2bffbde115a8359da959f9e618cee600",
+    "M-15-I": "db5da9d679a1dfa6bd70dd6900e164a63a9368b5af0cb9a4992d03a5e8d2bf22",
+    "M-15-J": "f849e9a6e9bac43adc81a2df1d4bca1437e35d9f5495f4b90107c9dd2a2034de",
+    "M-15-K": "2679ebf4412159e8868de647c067b529a2b450aab8b076444cf8341b83d19ad0",
+    "M-16-A": "3064d1e30dc4021a5577de33b48010a0987a7b3be15fe9b36a715db1232b9ead",
+    "M-16-B": "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a",
+    "M-16-C": "0d94dc0577b69f5d5d3f4e3359cd14ce10c0f11ae21664f70df8c0484c29562c",
+    "M-16-D": "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375",
+    "M-17-A": "64f38858cad18166abff41c7df692db34f7635309c9cfad1bb8251cee498fe7a",
+    "M-17-B": "a7f00564cd04f6a1ff65b97eb7f1e502eff58cdd01328f396f366a4168e57a93",
+    "M-17-C": "724d992750eb574fcda2306107d4ba5e73d075b73c09b84e34ebba0fbc757515",
+    "M-17-D": "dac2e97ee0ab4aa8e3dbbf2ab376d65c2521c4ca62c81ae9edaf0d2ad67b611c",
+    "NEXT-PREVIEW-BASE": "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f",
+    "NEXT-PREVIEW-BIND": "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad",
+    "NEXT-PREVIEW-DOCS": "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee",
+    "NEXT-PREVIEW-RELEASE": "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
   },
   "preview_control": "campaigns/next/preview-control.json",
   "supplemental_work_packages": [

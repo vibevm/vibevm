@@ -64,7 +64,7 @@
       "safe_stop": "Preflight and typed unavailable results work; no Docker resources have been created.",
       "commit_subject": "feat(executor): expose Docker Linux preflight capabilities",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "Proposed environment composition module remains below transport; no permanent daemon. Docker availability must be observed in the execution session, not inherited from this baseline.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
@@ -129,7 +129,7 @@
       "safe_stop": "Worker result and cleanup manifest retained; all disposable resources are stopped or named for recovery.",
       "commit_subject": "feat(executor): prepare isolated Linux bootstrap workers",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "M-15-K precedes M-15-A and M-15-E. Do not add a dependency on M-15-F rootfs population.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
@@ -186,7 +186,7 @@
       "safe_stop": "Boundary self-test evidence is retained and fixture network/resources are cleaned by exact IDs.",
       "commit_subject": "test(executor): verify isolated egress observation boundaries",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Chosen proof backend is the dedicated internal-network Linux fixture with a privileged trusted guard in its own disposable namespaces. This is a test design, not a production native-code sandbox claim. Runtime agent containers remain unprivileged.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

@@ -22,13 +22,13 @@
         "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
         "crates/vibe-core/src/environment/",
         "crates/vibe-core/src/lib.rs",
-        "vibevm/vibespecs/common/PROP-063-environment-model.xml",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
         "crates/vibe-core/Cargo.toml",
         "crates/vibe-core/src/manifest/mod.rs",
         "crates/vibe-core/src/manifest/artifact/mod.rs"
       ],
       "steps": [
-        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-063-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
         "Trace each existing host/OS/platform field to its current meaning; list old-reader behavior and exact callers requiring an explicit target later.",
         "Define EnvironmentDefinition, EnvironmentLock, ExecutionContext, TargetBinding and EnvironmentGeneration as separate identities; distinguish build machine, produced-tool runtime and compiler output target.",
         "Add pure type constructors and compatibility results for workspace, HOME, offline rootfs and future live targets; preserve existing bare-install behavior and reject unimplemented targets explicitly."
@@ -53,7 +53,7 @@
       "safe_stop": "Types and compatibility tests are coherent; downstream consumers remain on their explicit legacy interpretation.",
       "commit_subject": "feat(core): define environment and target identity roles",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
         "crates/vibe-core/src/environment/ is a proposed small domain module; confirm its parent export before adding files. D-022 remains OPEN and does not block these neutral roles.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -114,7 +114,7 @@
       "safe_stop": "Layout and compatibility values are tested as data; no deployment or rootfs operation runs.",
       "commit_subject": "feat(core): centralize environment root and prefix policy",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "crates/vibe-core/src/layout.rs is the existing layout authority named in the baseline architecture; inspect it when the execution packet admits the implementation.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

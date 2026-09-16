@@ -7,17 +7,17 @@
       "goal": "Reuse the already retained change identities and evidence when M-02 change documents become available.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
         "vibevm/vibespecs/changes/",
         "crates/vibe-core/src/manifest/change/",
         "crates/vibe-requirements/src/change/",
         "docs/releases/developer-preview-1-to-2/"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
         "vibevm/vibespecs/changes/",
         "crates/vibe-core/src/manifest/change/",
         "crates/vibe-requirements/src/change/",
@@ -30,7 +30,7 @@
       ],
       "steps": [
         "After the root-bound M-02 prerequisites, inspect their actual immutable ID grammar and document-role registration. Adopt each bootstrap record as the release-impact non-normative evidence role of the same change; do not mint replacement IDs or create a second change directory family.",
-        "Reconcile PROP-058 only where necessary to describe that evidence role and exclusion from normative intent/work subject hashing. Preserve release-impact file bytes and immutable IDs during adoption; make any separately justified format evolution an explicit registered transition.",
+        "Reconcile PROP-071 only where necessary to describe that evidence role and exclusion from normative intent/work subject hashing. Preserve release-impact file bytes and immutable IDs during adoption; make any separately justified format evolution an explicit registered transition.",
         "Bind paths using the configured spec root and accepted M-02 ownership rules. Register the role in the existing parser/manifest path, with only the required module exports; do not introduce runtime done/owner/current fields or a competing plan.",
         "Add regression fixtures proving that adding or updating release-impact evidence does not change intent/work identities or create a self-closing normative dependency. Verify all retained capture, contribution and capability references still resolve."
       ],
@@ -60,7 +60,7 @@
       "safe_stop": "Stop once native role adoption and identity preservation pass; migration/facade binding belongs to BIND.2.",
       "commit_subject": "feat(change): adopt preview impacts as change evidence",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
@@ -74,19 +74,19 @@
       "goal": "Link existing domain-owned change machinery to the permanent release record without duplicating journals or protocols.",
       "read_paths": [
         "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibevm/vibespecs/changes/",
         "formats/breaks/",
         "formats/capability-coverage/",
-        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
-        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "docs/machine-api/",
         "tools/preview-transition/",
         "docs/releases/developer-preview-1-to-2/"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
         "vibevm/vibespecs/changes/",
         "formats/capability-coverage/",
         "tools/preview-transition/",
@@ -121,7 +121,7 @@
       "safe_stop": "Stop after reference consistency and classifications are evidenced; complete guidance awaits the final candidate.",
       "commit_subject": "feat(release): bind migration and capability evidence",
       "notes": [
-        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-081 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
         "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",

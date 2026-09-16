@@ -4,7 +4,7 @@ The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs
 
 Pending research: [fractal planning, lowering and staged delivery](../../vibevm/vibespecs/design/fractal-planning-and-staged-delivery.xml) preserves the owner's concept and this discussion. It is a non-normative design idea, not an activated exception to existing rules or a change to this campaign's task graph.
 
-The baseline is refined plan revision 4 at commit b1291b06d5704ee32f7486c86e1fae617fcbbddf. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributes four supplemental groups and 11 tasks, for 212 tasks and 425 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
+The baseline is refined plan revision 4 at commit ce0fa4c51e370ce3141021e29a9539c40eed6892. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributes four supplemental groups and 11 tasks, for 212 tasks and 425 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
 
 ## Start in an exact local context
 
@@ -106,3 +106,7 @@ This returns only structural eligibility. Inspect tracked and nonignored new per
 At final close, promote all unique laws, rationale, predictions, findings, evidence and named horizons. Remove the entire campaigns/next/ zone and the corresponding terraforms/next/ contract directory plus master XML. Then run permanent source/reference/codegen/conform/full-product and decisive end-to-end checks with those paths absent. The final proof cannot require this checker, seed, baseline copies or README.
 
 The surviving result is ordinary VibeVM specifications, tests, code and user/operator documentation. Git may retain the historical execution record; it must not be the only home of a product law.
+
+## Repository integration amendment (2026-09-17)
+
+The owner-authorized repository cleanup removes the former external skills component. Its replacement upstream remains unbound; the existing external-resource gate requires explicit selection before implementation. Planned specification filenames move from PROP-057–068 to PROP-070–081 to avoid numbers already used by integrated documentation and global applications. Stable task and mandate IDs, dependency edges, node states and acceptance evidence are retained. Frozen-input, task, XML-unit and clause witnesses were recomputed for these reviewed changes. The baseline fingerprint is SHA-256 of the baseline_files array encoded as UTF-8 compact JSON with sorted object keys. This is plan preservation, not execution or acceptance of the NEXT campaign.

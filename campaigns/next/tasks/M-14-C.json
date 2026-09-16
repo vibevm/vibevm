@@ -62,7 +62,7 @@
       "safe_stop": "Local compatibility is green; Linux execution stays unimplemented until M-15-K.",
       "commit_subject": "feat(deploy): bind local effects to environment targets",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -124,7 +124,7 @@
       "safe_stop": "Fencing tests pass and retained receipts remain inspectable after conflict.",
       "commit_subject": "fix(deploy): fence alias roots and stale target replay",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

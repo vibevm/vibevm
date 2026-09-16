@@ -47,7 +47,7 @@
       "safe_stop": "Census and observed gaps are complete against the inspected baseline; no runtime behavior changes.",
       "commit_subject": "chore(api): inventory operation and model coverage",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "formats/capability-coverage/ and docs/machine-api/ are proposed permanent homes; locate integration in existing registry conventions before creating files.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
@@ -93,7 +93,7 @@
       "safe_stop": "Reviewed authority/coverage map is ready for permanent specification promotion; no transport is implemented yet.",
       "commit_subject": "docs(api): define domain authority and observability boundaries",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
       ]
     }

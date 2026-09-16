@@ -27,7 +27,7 @@
         "formats/",
         "crates/vibe-wire/",
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "vibevm/vibespecs/common/PROP-075-brownfield-intake.xml",
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/state/mod.rs",
@@ -65,7 +65,7 @@
       "safe_stop": "Transition contract is ready independently of the rest of M-11.",
       "commit_subject": "feat(lifecycle): record explicit pre and post source transitions",
       "notes": [
-        "PULLED FORWARD: prerequisites are M-02 and M-03-C only; this task does not depend on M-11-A/B/C or M-03-D/E. PROP-062 transition anchors may be created independently if its inventory section does not exist.",
+        "PULLED FORWARD: prerequisites are M-02 and M-03-C only; this task does not depend on M-11-A/B/C or M-03-D/E. PROP-075 transition anchors may be created independently if its inventory section does not exist.",
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -158,7 +158,7 @@
         "crates/vibe-orchestrator/src/dispatch/",
         "fixtures/next/transitions/",
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "vibevm/vibespecs/common/PROP-075-brownfield-intake.xml",
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/runner.rs",

@@ -23,7 +23,7 @@
         "crates/vibe-wire/src/lib.rs"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "crates/vibe-core/src/manifest/source_descriptor/",
         "crates/vibe-specdoc/src/",
         "crates/vibe-orchestrator/src/migration/",
@@ -75,7 +75,7 @@
       "commit_subject": "feat(specdoc): classify source interpretations explicitly",
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
-        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
         "TO CREATE: m_06_a_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "PROPOSED core manifest/source_descriptor/; use the root-supplied migration module, not a second engine.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
@@ -95,7 +95,7 @@
         "crates/vibe-specdoc/src/lib.rs"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "crates/vibe-specdoc/src/",
         "crates/vibe-specdoc/Cargo.toml",
         "Cargo.toml",
@@ -129,7 +129,7 @@
       "commit_subject": "feat(specdoc): add ordinary Markdown structure",
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
-        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
         "TO CREATE: m_06_a_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Any new parser dependency is an implementation decision within the listed manifests; do not claim a library is already installed.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
@@ -155,7 +155,7 @@
         "crates/vibe-spec/src/resolver.rs"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "crates/vibe-specdoc/src/",
         "crates/vibe-workspace/src/vibedeps/derived.rs",
         "crates/vibe-spec/src/resolver/",
@@ -199,7 +199,7 @@
       "commit_subject": "feat(specdoc): preserve plain XML and opaque resources",
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
-        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
         "TO CREATE: m_06_a_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -231,7 +231,7 @@
         "crates/vibe-agent-projection/src/pkgskill.rs"
       ],
       "write_paths": [
-        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "crates/vibe-facts/src/scan.rs",
         "crates/vibe-facts/src/sync.rs",
         "crates/vibe-spec/src/resolver/",
@@ -285,7 +285,7 @@
       "commit_subject": "fix(spec): apply source classification across consumers",
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
-        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
         "TO CREATE: m_06_a_4_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

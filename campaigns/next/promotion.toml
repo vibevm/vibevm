@@ -55,7 +55,7 @@ source_sha256 = "b245db8392361456915358ad63e56be237acb8aac0c3939e520d4b7551da3e6
 [[unit]]
 id = "NEXT-A11"
 state = "active"
-source_sha256 = "53bb5f8420ac658b48871c2b8073422f97bb5f75b217229fa25cda18fdd3f53e"
+source_sha256 = "55b00b3c7f24ac454e1b28bc030c7e35ad929fd3ff6129352ed719f2cbf5f854"
 
 [[unit]]
 id = "NEXT-A12"
@@ -175,7 +175,7 @@ source_sha256 = "ae3f75d0b3c4d4c72f9b88d968b93d623aba4c0f80fc75003811d0970370405
 [[unit]]
 id = "NEXT-D-001"
 state = "active"
-source_sha256 = "2eefc5301ae020e41272da075435c3f0ede0eb14c5914d22a4dc478297d60f57"
+source_sha256 = "199159d760d2de5e5a974ba86add622255338a6f7f6f35dd27224e480a5d57e2"
 
 [[unit]]
 id = "NEXT-D-002"
@@ -316,7 +316,7 @@ evidence = []
 [[unit]]
 id = "NEXT-A26"
 state = "active"
-source_sha256 = "f5d9c2580ed30f8b2c13947621c00fa30616b5ba1fc73e85f76f5f10a18de2c7"
+source_sha256 = "1b9854bf39ebc2cec26f12b8260e102d7fe2a0da78910c9d62b866fc6432d30b"
 
 [[clause]]
 id = "NEXT-A26-U001"
@@ -1257,7 +1257,7 @@ evidence = []
 [[clause]]
 id = "NEXT-A11-U001"
 unit = "NEXT-A11"
-source_sha256 = "b84e837658a29a52c2b35a8f6bff27d83e3eb9c1779d275738912ae740d0cbb4"
+source_sha256 = "3c847b7551e2e118c86e1b6dd69fb0b90ce13f1e79972c2cb7786a9c5cf14537"
 state = "pending"
 meaning_review = ""
 reviewer = ""
@@ -2676,7 +2676,7 @@ evidence = []
 [[clause]]
 id = "NEXT-D-001-LAW"
 unit = "NEXT-D-001"
-source_sha256 = "acbd3aafb105b25bf8500b7c2555d6f5f0a2dd5f1f845342dfd290ba3e66c1a8"
+source_sha256 = "e860aee74320a9474576004f4fe5bfbda2a739c1923a980167ab49132c1ea4a9"
 state = "pending"
 meaning_review = ""
 reviewer = ""

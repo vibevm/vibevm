@@ -60,7 +60,7 @@
       "safe_stop": "A captured catalog is queryable with no service probe or network action.",
       "commit_subject": "feat(services): project package exports into environment catalogs",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -124,7 +124,7 @@
       "safe_stop": "Only explicitly admitted fixture calls have effects; catalog and denial evidence remain readable.",
       "commit_subject": "feat(services): authorize typed endpoint operations",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -175,7 +175,7 @@
       "safe_stop": "Fixture services/network are removed with volumes retained unless separately admitted for deletion.",
       "commit_subject": "test(services): exercise local agent catalog and authorization",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-066-ai-aware-service-catalog.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-079-ai-aware-service-catalog.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

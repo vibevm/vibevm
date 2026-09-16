@@ -60,7 +60,7 @@
       "safe_stop": "Generations exist as verified candidates; no active pointer is switched.",
       "commit_subject": "feat(environment): create immutable profile generations",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -135,7 +135,7 @@
       "safe_stop": "The old or new generation is active with a truthful journal; unresolved configuration remains explicit.",
       "commit_subject": "feat(environment): apply dependency-safe HOME package changes",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "New product command names are prospective; create their grammar and service tests here before using them in later recipes.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
@@ -202,7 +202,7 @@
       "safe_stop": "Disposable command processes terminate with preserved exit codes and no leaked activation changes.",
       "commit_subject": "feat(environment): execute commands from explicit profile generations",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

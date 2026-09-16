@@ -17,7 +17,7 @@
     "gate": "NEXT-PREVIEW-DOCS-INPUT"
   },
   "permanent_homes": {
-    "contract": "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+    "contract": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
     "changes_root": "vibevm/vibespecs/changes/",
     "release_root": "docs/releases/developer-preview-1-to-2/",
     "transition_index": "docs/releases/developer-preview-1-to-2/transition.json",

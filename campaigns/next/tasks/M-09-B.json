@@ -10,11 +10,11 @@
         "vibevm/vibespecs/common/PROP-028-package-families.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "external:org.speckit.speckit/vibe.toml",
-        "external:com.external-skills.skills/vibe.toml"
+        "external:skills-bridge-to-select/vibe.toml"
       ],
       "write_paths": [
         "external:org.speckit.speckit",
-        "external:com.external-skills.skills",
+        "external:skills-bridge-to-select",
         "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
         "vibevm/vibespecs/common/PROP-028-package-families.xml",
         "fixtures/next/bridges/"
@@ -49,7 +49,7 @@
       "safe_stop": "Local external diffs and consumer migration evidence are ready; no publication.",
       "commit_subject": "feat(bridges): migrate wrapper kinds to flow at 1.0.0",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
       ]
     },
     {
@@ -64,13 +64,13 @@
         "crates/vibe-facts/src/scan.rs",
         "crates/vibe-specdoc/src/load.rs",
         "external:org.speckit.speckit/vibe.toml",
-        "external:com.external-skills.skills/vibe.toml",
+        "external:skills-bridge-to-select/vibe.toml",
         "crates/vibe-agent-projection/Cargo.toml",
         "crates/vibe-agent-projection/src/lib.rs"
       ],
       "write_paths": [
         "external:org.speckit.speckit",
-        "external:com.external-skills.skills",
+        "external:skills-bridge-to-select",
         "fixtures/next/bridges/",
         "crates/vibe-agent-projection/src/",
         "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
@@ -109,7 +109,7 @@
       "safe_stop": "Foreign resource projection works in isolated fixtures; no publisher invoked.",
       "commit_subject": "feat(bridges): preserve classified foreign resource closures",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
     }

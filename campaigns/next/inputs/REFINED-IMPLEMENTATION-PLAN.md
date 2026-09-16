@@ -299,7 +299,7 @@ M-01 proof carriers reused; M-06 debugger shows base→local→result and actual
 
 ### 3.11 Bridges and brownfield
 
-Both Spec Kit and external-skills bridges become flow in current 1.0.0, same package/upstream identities. Imported resources preserve exact closure and declared non-Vibe semantics; wrapper instructions are separate authored resources. Actual Spec Kit pin governs resource/script/template/platform audit; research snapshot is not substituted.
+Spec Kit and a future external skills bridge become flow in current 1.0.0, retaining lawful upstream provenance. The former external skills component has been removed; a replacement upstream and package identity must be explicitly selected and bound before implementation. Imported resources preserve exact closure and declared non-Vibe semantics; wrapper instructions are separate authored resources. Actual Spec Kit pin governs resource/script/template/platform audit; research snapshot is not substituted.
 
 Required bridge procedure steps using scripts go through explicit typed admitted action and external-adapter/grant machinery; no implicit script execution merely on read. Native bug/assess are flow-supplied change profiles, not runtime state machine. Native product feat reuse is tested on two stacks with actual controlled existing-file edits after M-03.
 
@@ -1209,7 +1209,7 @@ No unresolved design preference from the original 19-question walkthrough remain
 
 | ID | Принято владельцем | Implementation / responsible boundary |
 |---|---|---|
-| D-001 | Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0 | M-09-B |
+| D-001 | Spec Kit и будущий bridge внешних skills — flow версии 1.0.0; сохраняется допустимое upstream provenance. Источник внешних skills нужно выбрать заново до реализации; прежний компонент удалён по указанию владельца. | M-09-B |
 | D-002 | create создаёт/меняет код; build детерминированно собирает; verify проверяет; полный проход имеет отдельный явный вход | M-03-A; обычный/scoped verify не запускает новый producer |
 | D-003 | Реальные алгоритмические версионированные миграции: сохранить выбор/комментарии, проверить, показать diff, безопасно записать; неоднозначность требует ответа, не LLM | M-13-C/D, затем каждый изменяемый authored/wire format |
 | D-004 | Default Redbook — multi-user-planning, WAL — альтернатива. Unattended: explicit selection или explicit allow-defaults, иначе NeedsSelection. Выбор сохраняется и update не следует новому default | M-05-E/F |

@@ -3,5 +3,5 @@
   <title id="root">NEXT owner decision D-001</title>
   <status stage="impl" state="plan"/>
   <p><NEXT-D-001-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-001-STATE></p>
-  <p><NEXT-D-001-LAW fact="true" status="spec/done">Оба bridge-пакета Spec Kit и external-skills skills — flow; имена/upstream provenance сохраняются, текущая версия 1.0.0</NEXT-D-001-LAW></p>
+  <p><NEXT-D-001-LAW fact="true" status="spec/done">Spec Kit и будущий bridge внешних skills — flow версии 1.0.0; сохраняется допустимое upstream provenance. Источник внешних skills нужно выбрать заново до реализации; прежний компонент удалён по указанию владельца.</NEXT-D-001-LAW></p>
 </spec>

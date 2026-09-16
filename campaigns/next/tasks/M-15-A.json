@@ -56,7 +56,7 @@
       "safe_stop": "Verified realization artifacts exist in fixture storage; no profile is activated.",
       "commit_subject": "feat(runtime): record exact payload realizations",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -119,7 +119,7 @@
       "safe_stop": "Only verified staging content exists; rejected stages are retained or removed under exact ownership.",
       "commit_subject": "feat(runtime): safely realize target-aware payload inventories",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
@@ -186,7 +186,7 @@
       "safe_stop": "Binary routing passes fixtures and no real user's activation links are changed.",
       "commit_subject": "fix(bin): validate recorded runtime artifacts before dispatch",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-077-runtime-package-management.xml; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]

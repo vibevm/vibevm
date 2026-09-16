@@ -60,7 +60,7 @@
       "safe_stop": "Captured views and per-profile results are retained; no customer credentials or real model call is used.",
       "commit_subject": "feat(image): expose environment and boot contribution provenance",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -115,7 +115,7 @@
       "safe_stop": "Both artifacts and comparison evidence survive for review; clean only exact unused fixture resources.",
       "commit_subject": "test(image): measure declared reproducibility levels",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -170,7 +170,7 @@
       "safe_stop": "A known usable runtime or explicit recovery state remains; mutable data is retained.",
       "commit_subject": "test(image): verify replacement and recovery with live references",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
@@ -225,7 +225,7 @@
       "safe_stop": "Local publication artifacts/evidence retained; exact fixture endpoints and resources are cleaned.",
       "commit_subject": "test(supply): prove local-hosted and offline environment delivery",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-078-oci-agent-images.xml; forward metadata only.",
         "Publication is only to a disposable named local fixture under the shared admission policy. Current public A and future B remain unchanged.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."

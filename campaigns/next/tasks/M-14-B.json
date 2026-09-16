@@ -29,7 +29,7 @@
         "crates/vibe-lifecycle/src/mechanism/record.rs",
         "schemas/",
         "crates/vibe-wire/",
-        "vibevm/vibespecs/common/PROP-063-environment-model.xml",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
         "crates/vibe-core/Cargo.toml",
         "crates/vibe-core/src/lib.rs",
         "crates/vibe-core/src/manifest/mod.rs",
@@ -39,7 +39,7 @@
         "crates/vibe-lifecycle/src/mechanism.rs"
       ],
       "steps": [
-        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-063-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
         "Use the existing format registry/codegen conventions and M-16-B envelopes; inventory every request, result, durable receipt and hash carrier that needs the new fields.",
         "Define dependency roles, native-backend closure, file/link/mode/principal inventory and domain-separated ordered hash frames; distinguish recipe-input and produced-output identities.",
         "Generate owned wire types/corpora; add wrong-target, unsupported-metadata and reordered-input cases with explicit recipe/schema epochs."
@@ -67,7 +67,7 @@
       "safe_stop": "Schemas and fixtures pass while unimplemented target execution remains explicitly unsupported.",
       "commit_subject": "feat(formats): add environment realization and payload contracts",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
         "formats/ writes are limited to registered schemas/corpora/generated bindings for this atom; no unrelated epoch bump. Full root gate remains with the coordinator.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
@@ -139,7 +139,7 @@
       "safe_stop": "Legacy/new readers agree with fixtures; no real store or installed environment is migrated during tests.",
       "commit_subject": "feat(runtime): preserve legacy records across environment schemas",
       "notes": [
-        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
