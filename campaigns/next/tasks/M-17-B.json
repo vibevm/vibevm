@@ -1,0 +1,210 @@
+{
+  "id": "M-17-B",
+  "tasks": [
+    {
+      "id": "M-17-B.1",
+      "title": "Capture the owned package rename reference universe",
+      "goal": "Determine the complete authorized affected scope before editing any package coordinate.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-spec/src/address.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-spec/src/",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs"
+      ],
+      "steps": [
+        "Add explicit rename intent distinguishing display label, owned coordinate, path move, spec-anchor rename and local alias; this capability implements the owned-coordinate case.",
+        "Capture editable package and selected consumers through authoritative manifest/dependency/choice/provider/spec-marker/resource-export/config/environment parsers.",
+        "Classify each reference as resolvable editable, generated, excluded foreign/history/outside scope or unknown/dynamic; ordinary Markdown/XML-data/opaque payload stays inert."
+      ],
+      "positive_cases": [
+        "Affected environment definitions and declared code/spec references are included.",
+        "Outside consumers are reported as outside scope rather than assumed absent."
+      ],
+      "negative_cases": [
+        "Foreign installed slots or historical receipts are treated as editable owned source.",
+        "Incomplete tree marker inventory claims whole-reference coverage."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: rename reference-universe fixtures including ordinary-data decoys."
+      ],
+      "acceptance": [
+        "The captured universe has explicit ownership, completeness and unknown zones.",
+        "No source, generated artifact or runtime binding is changed."
+      ],
+      "safe_stop": "A complete or explicitly incomplete rename observation is retained before planning effects.",
+      "commit_subject": "feat(refactor): capture owned package rename references",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-B.2",
+      "title": "Prepare exact rename edits and identity transitions",
+      "goal": "Validate a reviewable semantic rename plan against captured saved-state inputs.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-spec/src/address.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-spec/src/",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs"
+      ],
+      "steps": [
+        "Validate new coordinates/paths and build exact syntax-preserving authored edits/moves with before-images, old/new identity transitions and generated outputs to regenerate.",
+        "Resolve collisions, case/path aliases and mandatory unknown references before claiming complete compatibility; require expanded capture or explicit bounded incomplete disposition.",
+        "Apply the plan in memory to the same source world, re-resolve dependency/address graphs and generated projections, and expose the diff through shared prepare services."
+      ],
+      "positive_cases": [
+        "An owned coordinate rename updates exact declared consumers while preserving comments and unrelated bytes.",
+        "A collision-free planned world re-resolves all mandatory in-scope references."
+      ],
+      "negative_cases": [
+        "Substring replacement changes foreign prose, immutable evidence or a similarly named package.",
+        "An alias/redirect is silently invented to conceal missing references."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: syntax-preserving rename-plan, case-collision and unknown-reference goldens."
+      ],
+      "acceptance": [
+        "Plan records exact affected set, preconditions, identity transitions and regeneration work.",
+        "Dirty-buffer edits remain proposals; actual domain admission requires saved recapture."
+      ],
+      "safe_stop": "Prepared rename diff is reviewable and all disk/installed states are unchanged.",
+      "commit_subject": "feat(refactor): prepare exact package coordinate renames",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-B.3",
+      "title": "Apply rename with editor fencing and regeneration recovery",
+      "goal": "Commit the prepared owned-source change through one writer and verify its regenerated post-state.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/state/io.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-install/src/plan.rs",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-cli/src/commands/refactor/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Require saved recaptured inputs, ownership/lock/target generations and acknowledged M-16-D edit barrier; reserve operation identity before the first write.",
+        "Journal authored edits/moves with retained before-images, regenerate lock/boot/index from authored intent through existing engines, then re-resolve exact postconditions.",
+        "Expose status/events/recovery for every partial prefix; keep published identities, historical captures/receipts/signatures and deployed environments unchanged unless separately admitted."
+      ],
+      "positive_cases": [
+        "A saved owned rename regenerates and navigates to the new coordinate consistently.",
+        "Interrupted multi-file rename recovers under exact before/after/third-state rules."
+      ],
+      "negative_cases": [
+        "Dirty participant, lease expiry or disk drift is ignored during commit.",
+        "Runtime deployment/public registry is silently retargeted as part of source rename."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: saved-state rename/regeneration/barrier/failure-recovery end-to-end tests."
+      ],
+      "acceptance": [
+        "Complete in-scope graph resolves after apply and legacy/history/foreign identities are preserved.",
+        "Partial changes are never falsely described as a physically atomic cross-root transaction."
+      ],
+      "safe_stop": "Rename is verified or retained as explicit recovery-required state with exact affected files.",
+      "commit_subject": "feat(refactor): apply and recover semantic package renames",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Actual Redbook roster changes still follow D-019 future version-offer policy; source rename never grants publication authority.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

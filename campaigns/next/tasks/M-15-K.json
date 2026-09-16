@@ -1,0 +1,196 @@
+{
+  "id": "M-15-K",
+  "tasks": [
+    {
+      "id": "M-15-K.1",
+      "title": "Expose Docker executor capability preflight",
+      "goal": "Report the actual local Linux builder capability before any environment realization depends on it.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/native/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/native/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/native/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Introduce a proposed Docker execution adapter in the existing provider composition, separating cached capability inspection from an explicit admitted daemon probe.",
+        "Capture executable/daemon/builder identity, Linux mode, target platforms, exporter/store/attestation support and availability; do not pull, bootstrap or change Docker configuration during pure inspect.",
+        "Expose typed unavailable and needs-preparation results through M-16 operation services and add local fixture responses for disconnected/wrong-mode builders."
+      ],
+      "positive_cases": [
+        "A prepared Linux builder observation reports exact supported features.",
+        "Pure inspection of a retained observation performs no network or daemon mutation."
+      ],
+      "negative_cases": [
+        "Installed Docker CLI alone is treated as a runnable Linux engine.",
+        "A capability query silently pulls a base or creates a builder."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: Docker preflight adapter tests; actual daemon probe is a separately admitted integration action."
+      ],
+      "acceptance": [
+        "M-15-A/E can depend on an explicit ready Linux executor or remain honestly blocked.",
+        "No payload realization or pacman is needed to reach preflight."
+      ],
+      "safe_stop": "Preflight and typed unavailable results work; no Docker resources have been created.",
+      "commit_subject": "feat(executor): expose Docker Linux preflight capabilities",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Proposed environment composition module remains below transport; no permanent daemon. Docker availability must be observed in the execution session, not inherited from this baseline.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-K.2",
+      "title": "Prepare an independent Linux bootstrap worker",
+      "goal": "Create the minimal isolated executor needed for later payload and backend work without a bootstrap cycle.",
+      "read_paths": [
+        "xtask/src/dist/build.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-test-support/src/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Prepare an exact base/toolchain capture and captured Linux Vibe distribution or independent bootstrap build recipe using existing distribution artifacts.",
+        "Bind worker process, target principal, mount destinations, permitted network and unique resource IDs before creation; mount only explicit fixture inputs.",
+        "Implement worker lifecycle and targeted cleanup by recorded owned IDs; keep no host HOME mount, runtime Docker socket, privileged agent flag or public registry push."
+      ],
+      "positive_cases": [
+        "A Windows control process starts a Linux worker from exact captured bootstrap inputs.",
+        "Cleanup removes only this fixture's worker/build resources."
+      ],
+      "negative_cases": [
+        "Bootstrap invokes Vibe payload realization that itself requires this worker.",
+        "Missing bootstrap bytes cause an implicit latest-tag fetch."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: isolated Linux bootstrap integration test with capability preflight and exact owned-resource cleanup."
+      ],
+      "acceptance": [
+        "The prepared worker can run a captured Linux verification command and preserve its exit status.",
+        "Unavailable Docker/base/toolchain is an explicit prerequisite failure, never skipped success."
+      ],
+      "safe_stop": "Worker result and cleanup manifest retained; all disposable resources are stopped or named for recovery.",
+      "commit_subject": "feat(executor): prepare isolated Linux bootstrap workers",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "M-15-K precedes M-15-A and M-15-E. Do not add a dependency on M-15-F rootfs population.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-K.3",
+      "title": "Establish the independently observed egress boundary",
+      "goal": "Make later no-GitHub and offline claims testable across control processes, native children and Docker builders.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "xtask/src/dist/build.rs",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-test-support/src/",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-test-support/Cargo.toml",
+        "crates/vibe-test-support/src/lib.rs"
+      ],
+      "steps": [
+        "Use a dedicated Linux Docker fixture: an internal bridge network, separate Linux Vibe-controller and BuildKit-service containers, local source/artifact/OCI fixture servers, and an observation/guard helper. Bootstrap every fixture image from pre-captured local archives/digests; the Windows harness performs only local Docker API orchestration and never uses the shared host daemon for a remote build/fetch.",
+        "Run the product control process and all native child tools inside the Linux controller namespace. Run the dedicated BuildKit daemon and its build workloads inside the guarded fixture boundary. Do not mount the host Docker socket or host HOME into any product/agent/service workload.",
+        "Configure allowlisted egress inside these disposable Linux namespaces using a separate trusted guard with narrowly declared network-administration/capture capabilities; product/native children cannot change the guard. The outer --internal network also has no external route. No Windows/host firewall or DNS setting is edited.",
+        "Allow only exact fixture service endpoints (including the fixture DNS resolver); record connection/DNS/redirect attempts independently from application transports. Block host-gateway proxies, external IPs, alternate DNS/DoH routes and additional network attachments. Admit any elevated BuildKit/observer capability explicitly as trusted test infrastructure, not agent runtime privilege.",
+        "Run negative self-tests separately: controller direct socket, native child alternate transport and BuildKit daemon/build-step fetch each attempts a forbidden destination. Every exercised class must produce an observed denial; unavailable instrumentation or an unobserved bypass fails this fixture.",
+        "Then run the positive complete supply-chain scenario from declared local sources and caches, require zero forbidden/GitHub attempts in that run, and repeat after preparation with every network route denied. Do not include intentional denial self-tests in the positive zero-attempt counter.",
+        "Report exact coverage: Linux product controller, native children, dedicated builder daemon and build workloads. The Windows orchestration shell/shared host-daemon background traffic is outside this proof; do not claim complete native-Windows no-GitHub execution from Linux fixture evidence. A future native-Windows proof needs its own admitted isolated runner.",
+        "Retain topology, image digests, process classes, guard policy, observer output and exact cleanup IDs. If this topology is unsupported on the available Docker engine, keep the task blocked and refine its explicit executor contract; never silently switch to application-only counters."
+      ],
+      "positive_cases": [
+        "The positive Linux-controller/native-child/dedicated-BuildKit run completes using only allowlisted local fixture endpoints and reports zero forbidden attempts.",
+        "After prepared inputs are retained, replay succeeds with all egress denied."
+      ],
+      "negative_cases": [
+        "Each exercised process class produces an independently observed denial in its separate deliberate escape self-test.",
+        "An unobserved daemon path, host-gateway proxy or alternate attachment prevents a complete proof; Linux evidence cannot be relabelled Windows coverage."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-test-support target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-test-support <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: egress boundary self-test exercised under the admitted Linux fixture; ordinary unit tests cannot establish isolation."
+      ],
+      "acceptance": [
+        "The result identifies enforced/observed process classes, exact policies and any missing boundary.",
+        "No host firewall or DNS configuration is edited."
+      ],
+      "safe_stop": "Boundary self-test evidence is retained and fixture network/resources are cleaned by exact IDs.",
+      "commit_subject": "test(executor): verify isolated egress observation boundaries",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-065-oci-agent-images.xml; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Chosen proof backend is the dedicated internal-network Linux fixture with a privileged trusted guard in its own disposable namespaces. This is a test design, not a production native-code sandbox claim. Runtime agent containers remain unprivileged.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

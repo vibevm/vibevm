@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-09-10T18:31:27Z"
+generated_at = "2026-09-12T16:45:37Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
@@ -28,8 +28,9 @@ kind = "flow"
 name = "multi-user-planning"
 group = "org.vibevm.world"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.0.0"
-content_hash = "sha256:e1a193828f417c3ddcf1581285dc0166ee9d900ab1ad859402624bc39ad2a051"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///C:/Users/olegc/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.0.0"
+content_hash = "sha256:99396aea6688cb39b509751cb1c12d379f28bcf986af6e4022ac52574d559a15"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "registry"

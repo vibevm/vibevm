@@ -1,0 +1,103 @@
+{
+  "id": "M-12-B",
+  "tasks": [
+    {
+      "id": "M-12-B.1",
+      "title": "Document only actual shared operations and policies",
+      "goal": "Update the user/developer journeys from implemented CLI/API behavior and accepted prototype policy.",
+      "read_paths": [
+        "DEV-GUIDE.md",
+        "docs/authoring-feat.md",
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml"
+      ],
+      "write_paths": [
+        "DEV-GUIDE.md",
+        "docs/",
+        "VIBEVM-SPEC.md"
+      ],
+      "steps": [
+        "Read actual completed operations/schema examples from the accepted capability register; verify command spelling against implemented help/registration before documenting it.",
+        "Document source/choice/change/debugger/adapter/derivative workflows, explicit preparation/effects, errors/recovery and algorithmic migration.",
+        "State own 1.0.0 prototype, owner-only graduation, current A/B-ready-disabled policy and default smoke/explicit skip; distinguish available initial scope from future HOME/Docker/full ETO closure."
+      ],
+      "positive_cases": [
+        "Each documented journey has a real source/API example and evidence pointer.",
+        "CLI and machine examples describe the same semantics and authority."
+      ],
+      "negative_cases": [
+        "No proposed/unimplemented command is advertised as shipped.",
+        "Publication or version number cannot imply stability, full tests or live B activation."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Documentation can be followed against the actual implemented interfaces.",
+        "Public claims match current accepted scope and explicit unavailable/partial states."
+      ],
+      "safe_stop": "Accurate local documentation is ready without any public release claim.",
+      "commit_subject": "docs: document implemented prototype operations and recovery",
+      "notes": [
+        "All source law references are permanent canonical specs; do not make campaign task files the only home of product behavior."
+      ]
+    },
+    {
+      "id": "M-12-B.2",
+      "title": "Validate documentation examples and machine contracts",
+      "goal": "Exercise documented examples through headless surfaces and retain a reproducible capability matrix.",
+      "read_paths": [
+        "DEV-GUIDE.md",
+        "docs/authoring-feat.md",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs"
+      ],
+      "write_paths": [
+        "docs/",
+        "fixtures/next/integration/",
+        "campaigns/next/evidence/M-12-B/"
+      ],
+      "steps": [
+        "Execute documented pure examples and isolated admitted action examples using exact prepared fixtures, not real user/project state.",
+        "Compare CLI/API/MCP results, model links and error examples; replace stale command examples only after implementation evidence.",
+        "Publish a local capability compatibility matrix identifying initial-route completion, M-15 pending status, M-17-D pending status and optional tracker scope."
+      ],
+      "positive_cases": [
+        "A documented operation reproduces its structured response and expected effect.",
+        "Failure examples identify exact typed reason and safe next action."
+      ],
+      "negative_cases": [
+        "No prose-only or shell-scraped response can count as universal machine coverage.",
+        "Missing full-test or smoke execution stays visibly missing/skipped."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every executed documentation example has exact input/output and target context.",
+        "The local docs never claim the whole expanded programme complete at M-12."
+      ],
+      "safe_stop": "Documentation conformance evidence is ready for root review.",
+      "commit_subject": "test(docs): verify prototype command and machine examples",
+      "notes": []
+    }
+  ]
+}

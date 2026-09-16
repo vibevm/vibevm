@@ -1890,3 +1890,43 @@ structure, and it goes when the file does.
 | @fact:B167-SEVERITY **severity** | P2 — переблагословить три золотых (решение, а не автоматика), поднять константу корпуса до текущего числа, поправить две координаты в докстринках |
 | @fact:B167-DISPOSITION **disposition** | `closed` под ратификацию 2026-09-14: константа корпуса поднята до 791 (`25775078`), обе координаты в докстринках — `1.0.0` (`90dbbc13`), три золотых переблагословлены с вывода продукта (`20855535`; при отказе владельца — revert одного коммита) |
 | @fact:B167-FILED **filed by** | кампания docs-2026-09, ревью W1-O2 (2026-09-14) |
+
+## B-168 — обновление изменяемого источника оставляет неполный кэш при Windows sharing violation {#b-168}
+
+| поле | значение |
+|---|---|
+| @fact:B168-WHAT **what** | `insert_current_at` в `crates/vibe-registry/src/store/refresh.rs` удаляет старую запись через `remove_dir_all` до подготовки новой. При OS32 удаление останавливается посередине: остаются несколько файлов и старый `v1.0.0.sha256`, но отсутствует manifest. |
+| @fact:B168-EVIDENCE **evidence** | 2026-09-12: scoped offline update `flow:org.vibevm.world/multi-user-planning` из `vibevm-next` отказал на общем store; уцелели только три `skills/steward-*/SKILL.md`. Установленный слот и lock не изменились. Владелец блокирующего handle не установлен; наличие MCP-процесса не доказывает его причастность. |
+| @fact:B168-SEVERITY **severity** | P2 — повреждается восстанавливаемая производная запись, последующие потребители могут получить missing-manifest вместо старого целого пакета. Исходник и установленный пакет сохранны. |
+| @fact:B168-DISPOSITION **disposition** | `open` — подготовить и проверить замену до удаления старой записи; при отказе переключения сохранить целую старую запись либо явно восстановить её. Проверить сценарий удерживаемого Windows handle и согласованность sidecar; не выдавать частичное удаление за отсутствие побочных эффектов. |
+| @fact:B168-WORKAROUND **workaround** | Для scoped update использовать процессный `VIBE_SETTINGS` во временном каталоге и `VIBEVM_USER_CONFIG`, указывающий на действующий config, затем удалить только этот временный каталог. Повреждённую старую запись восстанавливать добавлением отсутствующих файлов лишь после совпадения старого sidecar и всех уцелевших файлов с независимо подготовленным старым источником; уцелевшие файлы и sidecar не переписывать. |
+| @fact:B168-RECOVERY **incident recovery** | Старый sidecar `sha256:35abb3312ba052fc158070c9cf4cd133d6c0326b74c2ff7f9f03c316f712af1b` не совпал с независимо подготовленным main. Поэтому восстановление неизвестного старого снимка не заявляется. Кэш заново собран из 27 файлов действующего источника main, чей hash `sha256:e1a193828f417c3ddcf1581285dc0166ee9d900ab1ad859402624bc39ad2a051` совпал с main lock: 24 отсутствующих файла добавлены, 3 уцелевших проверены и сохранены, после полного побайтового сравнения обновлён sidecar. NEXT получил новую версию содержимого через изолированный scoped update. |
+| @fact:B168-FILED **filed by** | проверка публикации multi-user-planning 1.0.0, 2026-09-12; исправление продукта не включено в обновление пакета и не запускает NEXT |
+
+## B-169 — документация публикации отрицает поддержанное обновление той же версии {#b-169}
+
+| поле | значение |
+|---|---|
+| @fact:B169-WHAT **what** | `docs/commands/registry-publish.md` обещает отказ при существующем теге и отдельные push main/tag. Реализация `crates/vibe-publish/src/git_publish.rs` сохраняет parent main, атомарно обновляет main и выбранный изменяемый тег с точными leases; идентичный повтор не меняет refs. |
+| @fact:B169-SEVERITY **severity** | P3 |
+| @fact:B169-DISPOSITION **disposition** | `open` — синхронизировать pipeline, ошибки и описание повторной публикации с текущей реализацией и её тестами. Рабочий путь подтверждён публикацией multi-user-planning 1.0.0, remote commit `0a99e63b7898723057ef262c2ac90b0dcbb846c3`, с побайтовым сравнением всех 28 файлов. |
+| @fact:B169-FILED **filed by** | проверка публикации multi-user-planning, 2026-09-12 |
+
+## B-170 — registry publish dry-run всё ещё проверяет репозиторий через API {#b-170}
+
+| поле | значение |
+|---|---|
+| @fact:B170-WHAT **what** | CLI help для `registry publish --dry-run` обещает отсутствие API calls, но `crates/vibe-publish/src/orchestrator.rs` вызывает `repo_exists` до проверки `config.dry_run`. Путь с `--registry` требует действительный token даже для предварительного просмотра. |
+| @fact:B170-EVIDENCE **evidence** | 2026-09-13, проверка публикации исходного пакета: dry-run с процессным фиктивным token отказал с ошибкой scope; тот же dry-run с обычным механизмом credentials успешно сообщил план создания `example-source-package`, не создавая репозиторий. Это не свидетельство отсутствия прав у действующего пользователя. |
+| @fact:B170-SEVERITY **severity** | P3 — неверное обещание dry-run; опубликованные refs и пакет не меняются. |
+| @fact:B170-DISPOSITION **disposition** | `open` — либо убрать сетевую проверку из dry-run, либо явно документировать read-only API probe и требования к credentials. Исправление продукта выделено в отдельную задачу. |
+
+## B-171 — host traceability map has existing orphan and freshness debt {#b-171}
+
+| field | value |
+|---|---|
+| @fact:B171-WHAT **what** | A host specmap regeneration finds five untagged existing items: `EmbeddedSourceKind`, `EmbeddedSourceAuth`, `EmbeddedSourceDecl` in `crates/vibe-core/src/manifest/package/embedded_source.rs`, and `SubmoduleProvenance`, `inspect` in `crates/vibe-publish/src/git_publish/submodules.rs`. Neither source file changed in the native application installation work. |
+| @fact:B171-EVIDENCE **evidence** | 2026-09-16: regeneration reports 7,614 spec units, 3,422 tagged code items, 2,975 edges, zero suspects and zero unresolved host edges, but five gated orphans and 500 added units relative to the older committed map. It also reports unchanged-revision drift at `PROP-023#maintainer-model` and `PROP-020#trust-gate`. The generated map spans changes beyond the application task, so its prior committed bytes were retained. |
+| @fact:B171-SEVERITY **severity** | P2 — existing host traceability debt; no application runtime failure or new application orphan was observed. |
+| @fact:B171-DISPOSITION **disposition** | `open` — reconcile the existing source/spec revisions and missing tags, then regenerate and check the complete host map in a dedicated follow-up. Do not add exemptions or silently include unrelated unaccepted source facts in an application feature commit. |
+| @fact:B171-FILED **filed by** | Native user-application installation acceptance, 2026-09-16. |

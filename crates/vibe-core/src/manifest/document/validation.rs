@@ -47,6 +47,9 @@ impl Manifest {
 
         if !has_package {
             let mut offenders: Vec<&str> = Vec::new();
+            if self.application.is_some() {
+                offenders.push("[application]");
+            }
             if self.boot_snippet.is_some() {
                 offenders.push("[boot_snippet]");
             }
@@ -100,6 +103,12 @@ impl Manifest {
                     ),
                 });
             }
+        }
+
+        if let Some(application) = &self.application {
+            application
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
         }
 
         let mut embedded_source_names = std::collections::BTreeSet::new();

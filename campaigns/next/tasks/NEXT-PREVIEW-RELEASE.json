@@ -1,0 +1,182 @@
+{
+  "id": "NEXT-PREVIEW-RELEASE",
+  "tasks": [
+    {
+      "id": "NEXT-PREVIEW-RELEASE.1",
+      "title": "Reconcile the net transition and draft migration guidance",
+      "goal": "Derive a complete DP1-to-candidate migration document from actual delivered changes rather than completed task counts.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/changes/",
+        "docs/releases/developer-preview-1-to-2/",
+        "formats/breaks/",
+        "formats/capability-coverage/",
+        "docs/",
+        "tools/preview-transition/"
+      ],
+      "write_paths": [
+        "docs/releases/developer-preview-1-to-2/",
+        "vibevm/vibespecs/changes/",
+        "tools/preview-transition/"
+      ],
+      "steps": [
+        "After all required milestone outcomes, DOCS.3 and BIND.2, independently enumerate the actual DP1-to-candidate source/package/interface delta across every bound repository. Reconcile the full contribution set, including unplanned repairs, same-version package changes, merges, reverts and superseding changes.",
+        "Compare net capabilities, commands/defaults, authored/derived data, source/package identities, configuration/boot, installation/deployment and documentation topics with the exact DP1 census. Require every difference to have permanent impact evidence or separate supported user/documentation no-impact reasons; counts and task labels are not a coverage oracle.",
+        "Produce the deterministic draft from retained records with the accepted assembler grammar. Edit MIGRATION.md into usable user guidance while retaining links to canonical facts; store material reviewed editorial facts in permanent sources so a new draft cannot silently erase them.",
+        "Write a scenario/action matrix distinguishing automatic supported converters, manual authored edits, rebuild/re-fetch of derived artifacts, explicit no action and unsupported transitions. Include additions/removals/renames and the actual implications of mutable 1.0.0 captures without treating DP labels as semantic version bumps.",
+        "For each relevant scenario state prerequisites and exact capture/version detection, backup scope, preview/dry-run availability, ordered apply steps, verification, repeated-run behavior, partial failure inspection/recovery and real limits. A workflow with no dry-run or rollback support says so; never invent commands or promise lossless recovery.",
+        "Record discrepancies found by independent reconciliation and bring any product/documentation correction back through contribution accounting. Refresh only affected guide/map/evidence after the correction; retain DP2 as a candidate."
+      ],
+      "positive_cases": [
+        "A reverted implementation produces no net migration step while its contribution history remains accounted.",
+        "A new feature is documented even if no DP1 file must change.",
+        "Two 1.0.0 package captures yield an exact content-based detection and action distinction."
+      ],
+      "negative_cases": [
+        "A missing out-of-plan repair, deleted capability row or unexplained no-impact claim blocks net reconciliation.",
+        "A recipe assembled from desired design rather than real commands cannot be labelled automatic.",
+        "A migration guide cannot equate derivative-data rebuilding with authored-file conversion or promise unsupported rollback."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode release --stage reviewed --format json",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/assemble.py --transition docs/releases/developer-preview-1-to-2/transition.json --output-dir <bound-reviewed-draft-directory>",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The full exact-scope net delta is reconciled independently of the task denominator and each user-facing action points to permanent facts and applicable proof.",
+        "MIGRATION.md is a concrete draft for the real candidate with a complete action/limitation matrix; DP2 remains unfinalized."
+      ],
+      "safe_stop": "Stop with reconciled candidate guidance; do not publish or declare DP2 until rehearsal and post-retirement closure.",
+      "commit_subject": "docs(release): prepare the DP1 to DP2 migration guide",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "Read the full selected Git contribution range, but do not mutate Git history. Cross-repository reads/writes require the exact captures and isolated bindings retained by the existing resource gates.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The release/reviewed check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE.2",
+      "title": "Rehearse migration guidance on isolated captured states",
+      "goal": "Test the guide as an operator would follow it, including preservation and failed or interrupted attempts.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "docs/releases/developer-preview-1-to-2/",
+        "docs/",
+        "tools/preview-transition/",
+        "vibevm/vibespecs/changes/"
+      ],
+      "write_paths": [
+        "tools/preview-transition/tests/",
+        "docs/releases/developer-preview-1-to-2/"
+      ],
+      "steps": [
+        "Build a finite rehearsal matrix from MIGRATION.md: retained DP1 captures plus representative authored project/configuration/package states, current DP2 candidate artifacts and relevant target/client combinations. Bind isolated temporary roots and any required Docker engine before running a scenario.",
+        "Run the documented instructions verbatim where executable, preserving before-images of authored input and tracking exact command, toolchain, artifact and platform subjects. Include a clean installation comparison so migration-specific assumptions are not confused with general setup failures.",
+        "Exercise unknown or ambiguous versions, changed source preconditions, invalid inputs, partial writes/provider interruption and repeated execution for applicable scenarios. Inspect actual postconditions before retry; assert documented recovery or explicit refusal with the retained state, never assume an error means no side effect.",
+        "Verify comments/user values and selected intent survive supported authored conversions; verify derived state is regenerated from pinned inputs as documented. For manual steps inspect the resulting reader-visible behavior instead of calling prose presence a successful migration.",
+        "Retain compact machine-readable scenario evidence and human conclusions under permanent evidence/. Correct guidance or return product defects to root for accounted repair; rerun only proofs whose exact inputs or claims changed. Mark missing native resources and unsupported cases truthfully."
+      ],
+      "positive_cases": [
+        "A captured DP1 project reaches the same intended reader-visible configuration as a corresponding fresh DP2 setup.",
+        "Repeating an exact supported migration is idempotent or yields the documented explicit refusal.",
+        "An interruption fixture demonstrates the actual retained state and supported recovery path."
+      ],
+      "negative_cases": [
+        "A real host installation, external publication or another worker's checkout is not an allowed test fixture.",
+        "Unexercised paths, unavailable platforms and fake rollback success cannot satisfy a required scenario.",
+        "A rerun after uncertain effects must not duplicate writes or erase retained before-state."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode release --stage verified --format json",
+        "Run the exact isolated rehearsal commands selected from MIGRATION.md and bound resource fixtures; retain their actual results and product/doc captures.",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every required applicable migration scenario has meaningful retained positive/negative/repeat/recovery evidence for the exact candidate, or a specific blocker remains.",
+        "The guide's claims agree with observed preservation and failure behavior; no unperformed public/host action is implied."
+      ],
+      "safe_stop": "Stop with migration rehearsal evidence; DP2 remains a candidate until scaffold removal and final permanent checks.",
+      "commit_subject": "test(release): rehearse preview migration and recovery",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "Docker is an available possible harness, not a substitute for native platform claims. Use it only for scenarios needing it; unavailable required resources block their exact scenario.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The release/verified check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE.3",
+      "title": "Prepare permanent transition proof for campaign retirement",
+      "goal": "Leave a complete permanent proof that can finalize DP2 after temporary planning scaffolding is gone.",
+      "read_paths": [
+        "vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml",
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "docs/releases/developer-preview-1-to-2/",
+        "vibevm/vibespecs/changes/",
+        "tools/preview-transition/",
+        "formats/capability-coverage/",
+        "docs/"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+        "docs/releases/developer-preview-1-to-2/",
+        "tools/preview-transition/"
+      ],
+      "steps": [
+        "Reconcile all accepted impact records, current documentation-map, MIGRATION.md and rehearsal evidence into a candidate transition package. Remove semantic dependence on NEXT task IDs, temporary coverage bridge, seed, frozen campaign inputs or personal plan; permanent records retain their own identities and references.",
+        "Implement and test the permanent retired-mode validator using only permanent schemas, source/capture scope definitions, impact records, documentation and retained evidence. Test it in a fixture with campaign paths absent before allowing final campaign removal.",
+        "Define the final attestation procedure for NEXT-CLOSE.3 after scaffold removal: capture source/documentation commit C, prove exact product-scope identity and no unaccounted later delta, run permanent checks with temporary paths absent, then write the final metadata-only attestation referencing C.",
+        "Avoid a cyclic self-hash: the later attestation commit records C and the validated permanent-input digests; its own metadata is outside the product subject by an explicit narrow classification, not a blanket exclusion of docs or release files. Independently account for any later product or documentation edit and rerun affected evidence.",
+        "Keep transition state DP2=candidate at this task's completion. The final close gate alone may set finalized after checking actual scaffold absence, current product/documentation equality and all required permanent proof. Neither finalization nor a DP label publishes, freezes versions or activates public support obligations."
+      ],
+      "positive_cases": [
+        "The permanent validator succeeds against a fully evidenced fixture after the campaign directories are removed.",
+        "A final metadata-only attestation can identify source/documentation commit C without hashing itself.",
+        "A later meaningful documentation or product edit is detected and requires renewed accounting/evidence."
+      ],
+      "negative_cases": [
+        "Permanent validation that imports campaign.py, task IDs or a personal plan fails retirement readiness.",
+        "A broad release-directory exclusion, stale source capture or missing required rehearsal cannot be hidden by an attestation.",
+        "DP2 cannot be finalized before actual removal or inferred from the accepted RELEASE.3 task."
+      ],
+      "checks": [
+        "TO CREATE/USE AFTER BASE.2: python -B -m unittest discover -s tools/preview-transition/tests -p test_*.py",
+        "TO CREATE/USE AFTER BASE.2: python -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/transition.json --mode release --stage verified --format json",
+        "TO CREATE/USE AFTER BASE.2: retired-mode fixture proof with temporary campaign paths absent; the real --mode retired run belongs to final NEXT-CLOSE.3.",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Permanent tools, contracts, guide/map and exact-subject evidence survive complete campaign removal without a semantic dependency on the removed files.",
+        "A precise finalization recipe separates candidate validation, actual scaffold removal, exact post-removal proof and metadata-only attestation.",
+        "DP2 remains candidate until the root-owned final close gate executes the permanent proof on the real final tree."
+      ],
+      "safe_stop": "Stop after preparing the post-retirement proof; finalization is NEXT-CLOSE.3 and public release remains separately authorized.",
+      "commit_subject": "test(release): prepare permanent preview transition closure",
+      "notes": [
+        "NEXT-A26 is the temporary design unit supplied by the root packet. Read its accepted permanent replacement after promotion. PROP-068 is PROPOSED until BASE.2 creates it; BASE.1 reads the temporary capture rule and must not claim a missing permanent file exists. Create permanent law before production code or tests cite its anchors.",
+        "Only listed outer write roots may change. Proposed paths are not claims of existing files. Narrow configured spec-root change records and documentation paths to the actual accepted binding before dispatch; refine the packet if a necessary path is outside that perimeter.",
+        "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
+        "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
+        "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "The release/verified check is stage-specific. Success certifies only that stage; later required proof is reported pending. It cannot finalize DP2 or imply actual scaffold removal."
+      ]
+    }
+  ]
+}

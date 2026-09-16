@@ -1,0 +1,113 @@
+{
+  "id": "M-09-C",
+  "tasks": [
+    {
+      "id": "M-09-C.1",
+      "title": "Author native change, bug and assess profiles",
+      "goal": "Express reusable profiles over the existing change/fact/lifecycle primitives without adding a workflow engine.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-requirements/src/query.rs",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "docs/authoring-feat.md"
+      ],
+      "write_paths": [
+        "fixtures/next/native-reuse/",
+        "vibevm/vibespecs/examples/next/",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml"
+      ],
+      "steps": [
+        "Use accepted M-02/M-04 schemas to author fixture flow profiles for change, bug and assess with explicit source facts/questions/acceptance references.",
+        "Bind each to existing operations and neutral evidence queries; keep scheduling, next-task selection and closure decisions external.",
+        "Expose profile definitions and provenance through the shared service catalog and preserve one exact origin across consumers."
+      ],
+      "positive_cases": [
+        "Each profile creates a distinct local binding without copying upstream acceptance state.",
+        "A read-only assess result reports observations rather than an automatic verdict."
+      ],
+      "negative_cases": [
+        "No private workflow cursor, implicit loop or automatic production is introduced.",
+        "A truncated/unclassified fact set cannot be called complete acceptance."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Profile fixtures load under existing kind/choice/change semantics.",
+        "Machine inspection identifies exact origin and expected evidence for every profile."
+      ],
+      "safe_stop": "Native profile definitions and read-only binding cases are ready.",
+      "commit_subject": "feat(examples): define native change bug and assess profiles",
+      "notes": [
+        "Example directories are proposed fixture/canonical-example paths, not existing shipped products."
+      ]
+    },
+    {
+      "id": "M-09-C.2",
+      "title": "Connect procedure scripts to explicit admitted actions",
+      "goal": "Make required bridge/native script steps executable only through their declared typed effect route.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/bridges/",
+        "fixtures/next/native-reuse/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Consume the audited action matrix and M-08 command/grant contracts; prepare exact inputs, executable identity and effect scope.",
+        "Route a required script step through the existing operation/lifecycle service with target-bound authority and captured outputs.",
+        "Verify passive read/derive/profile selection cannot dispatch it, while explicit invocation returns truthful result/partial error and recovery references."
+      ],
+      "positive_cases": [
+        "One required script action runs with exact approved inputs in an isolated target.",
+        "Profile reads expose the action contract without running it."
+      ],
+      "negative_cases": [
+        "Changed script capture/argv/effect scope invalidates prior authority.",
+        "Failed/unsupported mandatory action prevents journey acceptance."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Observed process/effect trace matches the prepared operation.",
+        "No script path is smuggled through a generic document renderer."
+      ],
+      "safe_stop": "Required action route works in controlled fixtures; no live external effects.",
+      "commit_subject": "feat(bridges): route procedure scripts through admitted actions",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

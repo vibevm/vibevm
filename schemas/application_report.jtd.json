@@ -1,0 +1,34 @@
+{
+  "metadata": {
+    "description": "Wire format for global user-application install/update/uninstall reports.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#commands"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_report"
+    }
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "enum": ["install", "update", "uninstall"],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "applicationId": {
+      "type": "string"
+    },
+    "hostRoot": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    }
+  }
+}

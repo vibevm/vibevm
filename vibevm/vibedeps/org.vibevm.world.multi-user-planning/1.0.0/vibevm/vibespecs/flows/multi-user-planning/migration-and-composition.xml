@@ -6,12 +6,14 @@
     <facts ordered="false">
       <INCOMPAT-WAL fact="true" status="spec/done">`wal@1` requires one shared
   repository `WAL.xml` plus root `CONTINUE.md` to own personal session
-  continuity. It is an alternative storage/authority model and must not be
-  active with this flow.</INCOMPAT-WAL>
+  continuity. It is an alternative storage/authority model and must not own
+  the same personal context concurrently with this flow. This is not a global
+  prohibition on installing both packages for separately scoped use.</INCOMPAT-WAL>
       <INCOMPAT-WAL-SPECSPACES fact="true" status="spec/done">`wal-specspaces@1`
   multiplies that model by project root, not by contributor, branch or central
   session. It therefore remains single-writer within each specspace and must
-  not be active with this flow.</INCOMPAT-WAL-SPECSPACES>
+  not compete with this flow for the same context. Separate explicit scopes
+  may select different continuity owners.</INCOMPAT-WAL-SPECSPACES>
       <COMPAT-CAMPAIGN fact="true" status="spec/done">`campaign-plans@1` is
   compatible when a repository campaign plan is a deliberately shared,
   integrator-owned contract. Its plan/ledger must not replace contributors'
@@ -27,15 +29,17 @@
   coordination layer.</COMPAT-OTHER-REDBOOK>
     </facts>
   </compatibility>
-  <redbook title="2. Editions, not same-version variants">
-    <p><EDITION-LAW fact="true" status="spec/done">A redbook version is an
-immutable tested roster. Do not mutate `redbook@1.0.0` and do not introduce
-environment-dependent variants under the same package version: identical
-coordinates must resolve to identical content. The eventual tested replacement
-is a later `redbook` edition (normally the next major if the continuity model is
-breaking), not a parallel `redbook-multiuser` brand.</EDITION-LAW></p>
-    <p><TUNING-NOW fact="true" status="spec/done">Before that edition exists, the
-existing resolver's per-edge deep `exclude` is the lawful consumer-side tuning
+  <redbook title="2. Owner-controlled Redbook composition">
+    <p><EDITION-LAW fact="true" status="spec/done">The owner may change the
+tested roster of any Redbook version. Before an agent overwrites an existing
+version's composition, offer a new version as an alternative unless the owner
+has already explicitly chosen. The current prototype composition work stays
+1.0.0 by owner decision. Continuity alternatives are exclusive within the
+Redbook selection group, not globally incompatible package names. Effective
+selection and content must remain explicit and inspectable; this flow does not
+implement or pretend to ship the planned variant resolver.</EDITION-LAW></p>
+    <p><TUNING-NOW fact="true" status="spec/done">With the current resolver,
+per-edge deep `exclude` remains an available consumer-side tuning
 mechanism. Exclusion narrows only the named dependency subtree and remains
 visible in the root manifest and lock/effective set.</TUNING-NOW></p>
     <fence lang="toml">[requires.packages."org.vibevm.world/redbook"]
@@ -50,10 +54,11 @@ exclude = [
 version = "^1.0.0"
 link = "static-transitive"</fence>
     <p><DIRECT-EDGES fact="true" status="spec/done">Remove any direct root edges
-to `wal` and `wal-specspaces`; an exclusion on the redbook edge cannot cancel an
-independent root path. After `vibe install --offline`, inspect `vibe.lock`, the
-effective package tree and generated boot lane: neither legacy boot snippet may
-remain.</DIRECT-EDGES></p>
+to `wal` and `wal-specspaces` for the context being migrated; an exclusion on
+the redbook edge cannot cancel an independent root path. After
+`vibe install --offline`, inspect `vibe.lock`, the effective package tree and
+generated boot lane: neither competing legacy continuity instruction may govern
+that context. Separately scoped package use is not prohibited.</DIRECT-EDGES></p>
   </redbook>
   <migration title="3. Safe migration">
     <facts ordered="true">
@@ -104,10 +109,11 @@ specs; it does not load unrelated host/specspace plans. Continuity comes from
 the target-bound user-local context, not a specspace WAL.</BOOT-SCOPING></p>
   </specspaces>
   <refusal title="5. Mixed-mode refusal">
-    <p><MIXED-MODE-REFUSAL fact="true" status="spec/done">If generated boot still
-loads this flow together with `wal` or `wal-specspaces`, do not choose whichever
-text appears later. Stop central state mutation, report the two competing
-continuity owners, and repair dependency composition. This is a configuration
-error, not a precedence puzzle.</MIXED-MODE-REFUSAL></p>
+    <p><MIXED-MODE-REFUSAL fact="true" status="spec/done">If generated boot
+activates this flow and `wal` or `wal-specspaces` as competing continuity owners
+for the same context, do not choose whichever text appears later. Stop affected
+central state mutation, report the conflict and repair composition or explicit
+scope. Mere package presence, data/reference use or a separately scoped context
+does not establish competing authority.</MIXED-MODE-REFUSAL></p>
   </refusal>
 </spec>

@@ -1,0 +1,120 @@
+{
+  "id": "M-11-E",
+  "tasks": [
+    {
+      "id": "M-11-E.1",
+      "title": "Run the complete existing-project brownfield journey",
+      "goal": "Prove observe→propose→promote→create→verify on a real bounded existing-code fixture.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/brownfield/",
+        "crates/vibe-orchestrator/src/",
+        "campaigns/next/evidence/M-11-E/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "After M-11-C/D, M-03-E and M-04, bind a preexisting fixture project with intentional desired intent and executable checks.",
+        "Run pure intake and explicit promotion, then one admitted existing-file production and current-source verification using the same shared services.",
+        "Retain before/after source, intent preservation, production/verification IDs and independent closure evidence; exercise CLI and canonical API entrypoints."
+      ],
+      "positive_cases": [
+        "The existing file really changes and its new source is built/tested.",
+        "Original desired intent survives intake and explicit promotion."
+      ],
+      "negative_cases": [
+        "Disjoint-only candidate output, auto-promotion or old-source tests cannot satisfy the journey.",
+        "Incomplete analysis cannot close acceptance."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "End-to-end report links inventory/proposal/promotion/transition/test subjects.",
+        "Parent reviewer can inspect exact source and evidence independently of producer success."
+      ],
+      "safe_stop": "Positive existing-project journey is complete; adversarial replay remains next.",
+      "commit_subject": "test(brownfield): prove the complete existing-project transition",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-E.2",
+      "title": "Reject concurrent edits and preserve recovery truth",
+      "goal": "Close brownfield applicability and interruption cases across the full journey.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/brownfield/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/src/runner/",
+        "campaigns/next/evidence/M-11-E/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs"
+      ],
+      "steps": [
+        "Inject same-length edits, selected file addition/removal, outside-write changes and competing dirty buffers at inventory/promote/create/verify boundaries.",
+        "Disconnect/reconnect an operation owner and inject failure after one authored write; use retained journal/transition evidence to inspect exact partial state.",
+        "Verify no stale plan replays or automatic production/repair; finish only cases whose recovery is independently checked."
+      ],
+      "positive_cases": [
+        "Stable replay returns the existing exact outcome.",
+        "Supported interrupted promotion/verification recovery remains inspectable after process exit."
+      ],
+      "negative_cases": [
+        "Concurrent input/membership change and foreign parked state refuse.",
+        "Cancellation, lost response or unknown third state cannot be reported as rollback/success."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Each race identifies the violated witness/ownership condition and completed effects.",
+        "Full M-11 closure includes A/B/C/D/E evidence, not D alone."
+      ],
+      "safe_stop": "Brownfield adversarial matrix is ready for independent parent acceptance.",
+      "commit_subject": "test(brownfield): reject stale captures and recover partial changes",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

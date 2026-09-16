@@ -13,7 +13,8 @@ repository permission nor a security lock. Owner instruction and project
 authority govern every operation. A valid `offering` created by an explicit
 owner-requested formal handoff is the sole protocol write fence.</CUSTODY-NOT-PERMISSION></p>
     <p><CASUAL-CONTINUATION fact="true" status="spec/done">A timeout, crash,
-compaction, new chat or model change is ordinary continuation. Any owner-facing
+compaction, new chat, model/account change, quota exhaustion or provider overload
+is ordinary continuation. Any owner-facing
 central agent may resolve the exact binding, read settings and the complete
 plan, verify the repository tree and continue under the current owner
 instruction without creating session, handoff, receipt or takeover records.
@@ -31,8 +32,11 @@ incident escapes the coherent-input checks, or the owner requests a stricter
 default coordination mode.</CONTINUATION-DESIGN-DECISION></p>
     <p><CONCURRENT-WRITER-SAFETY fact="true" status="spec/done">Before mutation,
 compare the observed plan and repository inputs with the current bytes/tree.
-An empirically observed live conflicting central writer or input drift stops
-writes, preserves artifacts and asks the owner to select the writer. Freshness
+An empirically observed live conflicting central writer stops affected writes,
+preserves artifacts and asks the owner to select the writer. Input drift
+invalidates the affected snapshot: attribute expected own writes and recapture;
+reconcile independently understood changes within existing authority. Escalate
+an unresolved semantic conflict rather than guessing its intended outcome. Freshness
 metadata is an alarm to investigate, while staleness alone is not proof of
 absence, presence or authority. Never settle a conflict by newest timestamp.</CONCURRENT-WRITER-SAFETY></p>
   </custody>

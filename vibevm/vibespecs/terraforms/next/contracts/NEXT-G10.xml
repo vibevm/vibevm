@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT temporary cross-cutting contract — Rollback/safe-stop points</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-G10-SCOPE fact="true" status="spec/done">Frozen cross-cutting requirement source from refined plan revision 4 section 10. It complements domain contracts and must be promoted clause by clause; no product implementation or completion is asserted here.</NEXT-G10-SCOPE></p>
+  <p><NEXT-G10-U001 fact="true" status="spec/done">Requirement: - M-13: contract/migration plan before apply; exact before-state preserved. - M-06-A: classified source migration independently gated before resolver/bridge consumers. - M-01: safe query, no persistent effect on refusal. - M-02: authored binding/scaffold; no execution required for read-only value. - M-03/M-11-D: intermediate candidate/park retained; complete acceptance includes existing-file transition/current-source proof. - M-04: analysis before closure; retained accepted proof survives cache cleanup. - M-05: discovery/solve before apply; recover owned prefixes, not arbitrary hook side effects. - M-06-B/C: current debugger before marginal preview; complete M-06 waits machine/UI/what-if integration. Current canonical bytes unchanged. - M-07: prepared bundles/plan before authorization; default smoke or explicit skip visible. A is active; B tested without live activation. - M-08: parity/plan are intermediate; final scope includes external writes/four clients. Receipts permit inspection after missing/revoked descriptor. - M-09: local bridge/native fixtures before publication. - M-10: local derivative source/provenance retained; rejected rebase never destroys prior accepted version; no silent upstream mutation. - M-11: observe/propose before promote; complete brownfield gate after new-source verification. - M-12: initial integration including M-17-A external coverage and concrete external batch ready for current-A approval; M-15 and full M-17 remain required. - M-14: local target compatibility/schema gates before downstream consumers; future providers fail explicitly until implemented. - M-15: staged payload/profile/home/rootfs/image/catalog proofs; keep previous generation and journal on failure. Both HOME and Docker required before parent closes; public push and full OS/VM deployment separate.</NEXT-G10-U001></p>
+  <fence lang="text">- M-13: contract/migration plan before apply; exact before-state preserved.
+- M-06-A: classified source migration independently gated before resolver/bridge consumers.
+- M-01: safe query, no persistent effect on refusal.
+- M-02: authored binding/scaffold; no execution required for read-only value.
+- M-03/M-11-D: intermediate candidate/park retained; complete acceptance includes existing-file transition/current-source proof.
+- M-04: analysis before closure; retained accepted proof survives cache cleanup.
+- M-05: discovery/solve before apply; recover owned prefixes, not arbitrary hook side effects.
+- M-06-B/C: current debugger before marginal preview; complete M-06 waits machine/UI/what-if integration. Current canonical bytes unchanged.
+- M-07: prepared bundles/plan before authorization; default smoke or explicit skip visible. A is active; B tested without live activation.
+- M-08: parity/plan are intermediate; final scope includes external writes/four clients. Receipts permit inspection after missing/revoked descriptor.
+- M-09: local bridge/native fixtures before publication.
+- M-10: local derivative source/provenance retained; rejected rebase never destroys prior accepted version; no silent upstream mutation.
+- M-11: observe/propose before promote; complete brownfield gate after new-source verification.
+- M-12: initial integration including M-17-A external coverage and concrete external batch ready for current-A approval; M-15 and full M-17 remain required.
+- M-14: local target compatibility/schema gates before downstream consumers; future providers fail explicitly until implemented.
+- M-15: staged payload/profile/home/rootfs/image/catalog proofs; keep previous generation and journal on failure. Both HOME and Docker required before parent closes; public push and full OS/VM deployment separate.</fence>
+  <p><NEXT-G10-U002 fact="true" status="spec/done">Requirement: - M-16: inventory and schemas before consuming features; pure overlay working state can be discarded without saving; durable operation outcomes remain domain-bound across reconnect. - M-17: initial model/action exposure before M-12; rename before cross-domain conformance; complete ETO/IDE closure only after all M-15 integrations, with no plugin work.</NEXT-G10-U002></p>
+  <fence lang="text">- M-16: inventory and schemas before consuming features; pure overlay working state can be discarded without saving; durable operation outcomes remain domain-bound across reconnect.
+- M-17: initial model/action exposure before M-12; rename before cross-domain conformance; complete ETO/IDE closure only after all M-15 integrations, with no plugin work.</fence>
+  <p><NEXT-G10-U003 fact="true" status="spec/done">Multi-file/remote updates have journaled prefixes, not an unsupported atomicity promise. Unknown third state is refused. Recovery scope/authority are explicit; live B/graduate choices remain owner-only.</NEXT-G10-U003></p>
+</spec>

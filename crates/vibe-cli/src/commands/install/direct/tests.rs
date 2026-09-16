@@ -15,6 +15,7 @@ use crate::commands::install::{MeasuredFailure, Measurement};
 fn args(path: std::path::PathBuf) -> InstallArgs {
     InstallArgs {
         packages: Vec::new(),
+        global: false,
         path,
         registry: None,
         assume_yes: true,

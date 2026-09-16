@@ -1,0 +1,200 @@
+{
+  "id": "M-16-D",
+  "tasks": [
+    {
+      "id": "M-16-D.1",
+      "title": "Analyze immutable client-scoped document overlays",
+      "goal": "Run pure validation/navigation/configuration/boot preview over one disk-plus-buffer capture without saving it.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-spec/src/doctree.rs",
+        "crates/vibe-spec/src/address.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-spec/src/",
+        "crates/vibe-mcp/src/context.rs",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Implement versioned open/change/close buffers with resource ID, underlying disk capture, encoding, content digest and created/deleted/moved intent scoped to client/context.",
+        "Freeze overlay sets into immutable analysis captures and feed the existing classified parsers/resolver/solver/pure builtin compiler.",
+        "Expose invalid/partial syntax diagnostics and raw resources; native/effectful analysis remains an explicit preparation operation, not a read."
+      ],
+      "positive_cases": [
+        "One client's unsaved manifest alters its preview while another client sees saved state.",
+        "Ordinary Markdown/XML-data remain inert under overlay analysis."
+      ],
+      "negative_cases": [
+        "An overlay silently updates lockfiles, installed profiles or disk.",
+        "A failed partial parse makes raw buffer content disappear."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: two-client overlay, created/deleted/moved buffer and invalid-syntax fixtures."
+      ],
+      "acceptance": [
+        "Queries for one analysis use exactly the same captured disk/overlay/world inputs.",
+        "No cross-client buffer leakage or implicit provider invocation occurs."
+      ],
+      "safe_stop": "Overlay results are inspectable and disk remains byte-identical.",
+      "commit_subject": "feat(api): analyze client-scoped document overlays",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-D.2",
+      "title": "Convert positions and invalidate captured views honestly",
+      "goal": "Provide accurate editor locations and resnapshot behavior across Unicode, generated resources and missed watches.",
+      "read_paths": [
+        "crates/vibe-spec/src/doctree.rs",
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-cli/src/commands/tree/diagnostics.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-spec/src/",
+        "crates/vibe-mcp/src/context.rs",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Implement mechanical conversion between declared raw/projection offsets and negotiated editor encoding using exact document versions.",
+        "Tie child/page/chunk results and diagnostics to snapshot/filter IDs, preserving non-UTF8 bytes and unavailable mappings.",
+        "Translate disk/lock/policy/target/overlay changes into affected-ID invalidations; treat watchers as hints and missed windows as gap/expired requiring fresh capture."
+      ],
+      "positive_cases": [
+        "Emoji, combining text and CRLF positions round-trip under negotiated encoding.",
+        "An unchanged captured view remains internally coherent while live disk changes."
+      ],
+      "negative_cases": [
+        "Lost watcher events create a false current tree.",
+        "A watch notification automatically reruns install, native analysis or publication."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: Unicode/source-map, stale-page and watch-gap conformance cases."
+      ],
+      "acceptance": [
+        "Every diagnostic location identifies its exact source/projection revision and basis.",
+        "No total object/boot cap is introduced by paging."
+      ],
+      "safe_stop": "Invalidated views remain historical captures; clients receive explicit resnapshot guidance.",
+      "commit_subject": "feat(api): bind editor locations and invalidation to captures",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-D.3",
+      "title": "Enforce saved-state edits with a cooperative barrier",
+      "goal": "Separate buffer edit proposals from service-managed disk mutation and fence registered editors through commit.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-lifecycle/src/state/io.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-safefs/src/",
+        "crates/vibe-mcp/src/",
+        "formats/",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Implement buffer-only proposed edits with expected buffer versions; applying them changes no disk/domain state.",
+        "For service-managed apply require saved recaptured disk inputs and acquire an EditBarrier for all affected registered clients/resources/versions; require acknowledgement and hold it through CAS/commit.",
+        "Reject dirty/new-version/refused/expired/disconnected participants before further writes; preserve exact partial recovery after a landed write and disclose only authorized conflict metadata."
+      ],
+      "positive_cases": [
+        "All registered clients acknowledge a clean barrier and exact saved-state edit commits.",
+        "A client can accept a buffer proposal, save explicitly and request a fresh domain plan."
+      ],
+      "negative_cases": [
+        "A previously clean buffer changes after planning but disk hash still matches.",
+        "The editor and service both apply the same edit or another client's content leaks in conflict details."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: barrier acknowledgement/version/lease/disconnect and post-write failure tests."
+      ],
+      "acceptance": [
+        "Cleanliness guarantee is limited to registered participating buffers; disk CAS still guards other writers.",
+        "A dirty-buffer plan never becomes admitted solely because its content was later saved."
+      ],
+      "safe_stop": "Barriers are released or recovery-owned; disk is unchanged or exact partial edits are journaled.",
+      "commit_subject": "feat(api): fence saved-state edits with cooperative barriers",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "id": "M-17-A",
+  "tasks": [
+    {
+      "id": "M-17-A.1",
+      "title": "Move tree and reference semantics behind shared services",
+      "goal": "Replace CLI-local summary assumptions with exact externally queryable tree/provenance/reference views.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/tree/mod.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-cli/src/commands/tree/diagnostics.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-install/src/visibility_projection.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-cli/src/commands/tree/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/tree/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Extract tree assembly/navigation semantics into a dependency-safe existing shared domain/application module, leaving CLI/TUI rendering as consumers.",
+        "Expose currently skipped visibility provenance, separate inclusion occurrences, exact snapshot identities and typed absent/unreadable/unchecked/unresolved outcomes.",
+        "Resolve declared references against the same captured source world and report incomplete enumeration; preserve existing readable tree output compatibility."
+      ],
+      "positive_cases": [
+        "CLI/API/MCP navigate the same repeated package occurrences and provenance.",
+        "A real unresolved reference differs from one not yet checked."
+      ],
+      "negative_cases": [
+        "Read error collapses into absence or time becomes a content snapshot ID.",
+        "In-place marker inventory alone certifies complete rename scope."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: shared tree/provenance/reference parity fixtures."
+      ],
+      "acceptance": [
+        "No semantic tree operation requires TUI key scripts or text parsing.",
+        "Every view reports exact scope/capture/completeness."
+      ],
+      "safe_stop": "Shared tree tests pass and legacy renderers remain usable.",
+      "commit_subject": "refactor(tree): expose captured semantic views through shared services",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-A.2",
+      "title": "Expose legacy and administrative operations with partial-effect truth",
+      "goal": "Close initial-domain API gaps without hiding supported operations behind contextual unsupported results.",
+      "read_paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/query.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-cli/src/commands/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/tools/",
+        "formats/capability-coverage/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Before any code edit, consume the accepted M-16 capability census and produce an exact batch manifest naming at most one coherent handler family, its schemas, private model projections, files and failure-prefix cases. Register one stable .batch-N child per remaining family in the local plan, with parent exit requiring the full original denominator. The current task is a bounded refinement/batch protocol, not permission for one cross-product sweep.",
+        "Walk the exact M-16 census for settings, registry/cache/version/tool, source-conversion, install/reinstall/update/remove/clean and initial lifecycle/domain operations.",
+        "Extract remaining CLI-local domain preparation/actions into their owning shared services, using strict schemas and actual per-operation options.",
+        "Preserve written/partial/uncertain effect lists on every failure path, including multi-resource materialization that errors before its final report; add one executable external case for each supported row."
+      ],
+      "positive_cases": [
+        "Every supported initial administrative/refactor operation has a structured invoke/result path.",
+        "A failure after one successful file write reports that write and recovery applicability."
+      ],
+      "negative_cases": [
+        "Restrictive schema is advertised but unknown arguments are ignored.",
+        "An implemented CLI feature remains an API stub labelled unavailable."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: per-row initial-operation conformance and partial-materialization failure tests."
+      ],
+      "acceptance": [
+        "Coverage denominator has no unexplained missing supported initial operation.",
+        "Authority and domain behavior match existing implementations rather than a second engine."
+      ],
+      "safe_stop": "Initial operation rows are either proven or explicitly unimplemented blockers; no false completion.",
+      "commit_subject": "feat(api): expose legacy operations with structured effect results",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "If the census requires edits outside the listed owned command/orchestration/MCP subtrees, refine the child perimeter before execution; do not sweep unrelated crates.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "This task MUST expand the known census into exact independently reviewed batches before dispatch; keep every census row owned. No batch may broaden its file list while executing. Root checks full denominator before accepting the parent.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-A.3",
+      "title": "Read and capture complete retained debugging structures",
+      "goal": "Expose stage evidence without acquiring writer ownership, rerunning providers or silently truncating completeness.",
+      "read_paths": [
+        "crates/vibe-spec/src/compiler/trace.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-workspace/src/compile_trace/open.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/compiler/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-spec/src/compiler/trace.rs",
+        "crates/vibe-workspace/src/compile_trace/",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-orchestrator/src/",
+        "formats/",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/compiler/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Add read-only readers over existing trace/index/IR/domain snapshots; opening retained data must not obtain a writer role, prune retention or recreate missing captures.",
+        "Expose configurable stage/detail/filter/sink/retention and streamed export; report absent/evicted/not-captured/redacted/snapshot-failed portions precisely.",
+        "Provide solver rejection/selection, compiler transform, lifecycle/effect and artifact evidence views; separate observability completeness failures from unchanged domain execution semantics."
+      ],
+      "positive_cases": [
+        "A failed run's retained stages remain readable after process exit.",
+        "Full-detail capture streams large structures with explicit policy and progress."
+      ],
+      "negative_cases": [
+        "Reading a trace silently reruns an effectful provider or sweeps old records.",
+        "An observer failure changes compiler bytes/solver choice or a hardcoded limit is called complete detail."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: no-write retained-reader, failed-capture, streamed-retention and observer-neutrality tests."
+      ],
+      "acceptance": [
+        "Each relevant domain model family has an externally addressable stage/provenance representation or exact missing-state reason.",
+        "Required proof cannot close when requested evidence was uncaptured."
+      ],
+      "safe_stop": "Retained captures/export bundles are readable and domain outputs remain unchanged.",
+      "commit_subject": "feat(debug): expose retained stage capture and completeness",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-17-A.4",
+      "title": "Retain extension schemas and close initial model coverage",
+      "goal": "Make contributed models/actions inspectable after provider removal and prove every supported initial coverage row.",
+      "read_paths": [
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/",
+        "formats/capability-coverage/",
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Capture admitted namespaced extension operation/model/diagnostic schemas with retained results and host-owned readers.",
+        "Test discovery, inspection and action applicability before and after removal/revocation without executing the revoked provider or injecting renderer scripts.",
+        "Run the initial-domain external coverage denominator and actual per-row scenarios, retaining strict request/result/error/event/model examples and incomplete gaps."
+      ],
+      "positive_cases": [
+        "Retained provider data can be structurally inspected after uninstall/revocation.",
+        "A generic headless client discovers a new contributed schema with the same core binary."
+      ],
+      "negative_cases": [
+        "Inspection of revoked data invokes old native code.",
+        "Names-only coverage or generic unsupported responses close a supported row."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "TO CREATE: contributed-schema retention and exact initial-row coverage conformance."
+      ],
+      "acceptance": [
+        "All supported initial models/actions are reachable through shared typed services.",
+        "Missing implemented-interface rows remain delivery blockers."
+      ],
+      "safe_stop": "Initial coverage results and retained schemas are outside temporary campaign files.",
+      "commit_subject": "test(api): close initial coverage and extension retention",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "id": "M-16-A",
+  "tasks": [
+    {
+      "id": "M-16-A.1",
+      "title": "Census public operations and semantic model families",
+      "goal": "Create an exact whole-product denominator for external access before designing protocol wrappers.",
+      "read_paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/tree/mod.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "write_paths": [
+        "formats/capability-coverage/",
+        "xtask/src/",
+        "docs/machine-api/"
+      ],
+      "steps": [
+        "Enumerate every public CLI/subcommand/TUI semantic action and MCP registration, then trace its owning library, effects and existing structured carriers.",
+        "Enumerate resolver/compiler/trace/lifecycle/receipt/tree/cache/settings/registry/bin/refactor models and all planned M-01 through M-15 operation families; distinguish presentation-only state.",
+        "Create a proposed versioned CapabilityCoverage inventory with stable IDs, owner/schema/source/target/effect/authority/completeness/retention/test columns and explicit unimplemented rows."
+      ],
+      "positive_cases": [
+        "Every discovered registration/model family maps to a stable coverage row.",
+        "Legacy administrative and source-conversion operations remain visible."
+      ],
+      "negative_cases": [
+        "MCP's tool list is treated as the whole product census.",
+        "Matching name counts without an executable path is marked covered."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: registration-to-coverage denominator check in xtask; exact command grammar must be created and verified before use."
+      ],
+      "acceptance": [
+        "No identified command/action/model lacks a disposition and domain owner.",
+        "The register is interface coverage only, not a requirements engine or scheduler."
+      ],
+      "safe_stop": "Census and observed gaps are complete against the inspected baseline; no runtime behavior changes.",
+      "commit_subject": "chore(api): inventory operation and model coverage",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "formats/capability-coverage/ and docs/machine-api/ are proposed permanent homes; locate integration in existing registry conventions before creating files.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    },
+    {
+      "id": "M-16-A.2",
+      "title": "Map domain authority and ETO compatibility boundaries",
+      "goal": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-workspace/src/extension_world.rs"
+      ],
+      "write_paths": [
+        "docs/machine-api/",
+        "formats/capability-coverage/"
+      ],
+      "steps": [
+        "For each coverage family identify retained authoritative records, currently CLI-local logic, reusable library seams and missing inspection surfaces.",
+        "Reconcile PROP-032/031 proposals with actual commands and define semantic/debug schema epochs, redaction/unavailable reasons and applicability versus implementation-gap states.",
+        "Record transport-neutral discovery/capture/query/prepare/admit/submit/observe/recover flow and per-domain closure requirements; leave LSP/DAP/client adapters, plugins and MVP out."
+      ],
+      "positive_cases": [
+        "Every semantic view links to its owning domain and a proposed executable conformance case.",
+        "Debug schemas can evolve independently while retained data remains interpretable."
+      ],
+      "negative_cases": [
+        "Private debug memory is exposed as a stable ABI.",
+        "A supported feature's missing API is disguised as contextual unsupported."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "TO CREATE: coverage model/owner/reference consistency check, separate from semantic review."
+      ],
+      "acceptance": [
+        "All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.",
+        "The design identifies exact source families for downstream M-16/M-17 work."
+      ],
+      "safe_stop": "Reviewed authority/coverage map is ready for permanent specification promotion; no transport is implemented yet.",
+      "commit_subject": "docs(api): define domain authority and observability boundaries",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    }
+  ]
+}

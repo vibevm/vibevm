@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-002</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-002-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-002-STATE></p>
+  <p><NEXT-D-002-LAW fact="true" status="spec/done">create создаёт/меняет код; build детерминированно собирает; verify проверяет; полный проход имеет отдельный явный вход</NEXT-D-002-LAW></p>
+</spec>

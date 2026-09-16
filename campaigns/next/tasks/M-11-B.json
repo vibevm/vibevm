@@ -1,0 +1,140 @@
+{
+  "id": "M-11-B",
+  "tasks": [
+    {
+      "id": "M-11-B.1",
+      "title": "Produce evidence-linked algorithmic stack proposals",
+      "goal": "Turn an inventory into a reviewable proposal using a supported stack-owned analyzer.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "docs/authoring-feat.md",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-scrape/src/",
+        "crates/vibe-workspace/src/",
+        "fixtures/next/brownfield/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "steps": [
+        "Bind an explicit supported stack analyzer to the captured inventory; keep language/tool-specific recognition outside generic inventory.",
+        "Infer only rules justified by observed manifests/source evidence; return proposed facts/questions/options with assumptions and exact source locations.",
+        "Expose proposal inspection through shared services; retain unknown languages and ambiguous signals as partial information rather than invented intent."
+      ],
+      "positive_cases": [
+        "A supported existing project yields reproducible evidence-linked proposals.",
+        "Existing desired intent is shown beside proposals rather than overwritten."
+      ],
+      "negative_cases": [
+        "Unsupported language or contradictory markers cannot produce an authoritative complete configuration.",
+        "Proposal generation cannot install a stack or promote facts."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-scrape target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-scrape <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every proposed change has evidence and an explicit assumption/confidence genre.",
+        "Algorithmic mode completes without provider construction or tool execution."
+      ],
+      "safe_stop": "Inspectable algorithmic proposal exists; authored intent unchanged.",
+      "commit_subject": "feat(brownfield): produce stack-owned evidence-linked proposals",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-B.2",
+      "title": "Expose optional assist as a separate explicit operation",
+      "goal": "Add optional advisory enrichment while preserving a complete provider-free algorithmic path.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-scrape/src/",
+        "crates/vibe-orchestrator/src/",
+        "fixtures/next/brownfield/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-scrape/Cargo.toml",
+        "crates/vibe-scrape/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Use the existing explicit enhancement mode contract and M-16 operation authority; off is the default and does not read credentials.",
+        "Let an explicitly admitted assist consume the captured algorithmic proposal and return separately attributed suggestions, never rewrite observed evidence.",
+        "Implement unavailable/failure behavior and typed provenance through a deterministic fake provider; keep promotion a distinct operation."
+      ],
+      "positive_cases": [
+        "Off mode returns the full algorithmic answer with zero provider calls.",
+        "Explicit assist adds visibly advisory suggestions tied to the same snapshot."
+      ],
+      "negative_cases": [
+        "Configured credentials or endpoint alone cannot activate assistance.",
+        "Provider failure cannot silently replace evidence or auto-promote output."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-scrape target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-scrape <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Mode/call instrumentation proves the default path is complete and provider-free.",
+        "Advisory output remains distinguishable from observed facts and owner choices."
+      ],
+      "safe_stop": "Optional assist contract is proven with fake provider; no model/API spend.",
+      "commit_subject": "feat(brownfield): isolate optional proposal assistance",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

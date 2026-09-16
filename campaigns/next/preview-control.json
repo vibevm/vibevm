@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "state": "planned",
+  "from_release": "developer-preview-1",
+  "to_release": "developer-preview-2",
+  "contract_unit": "NEXT-A26",
+  "baseline": {
+    "state": "pending_capture",
+    "policy": "capture_before_first_implementation"
+  },
+  "target": {
+    "state": "pending_capture",
+    "policy": "seal_after_scaffold_removal"
+  },
+  "documentation": {
+    "state": "awaiting_owner_source",
+    "gate": "NEXT-PREVIEW-DOCS-INPUT"
+  },
+  "permanent_homes": {
+    "contract": "vibevm/vibespecs/common/PROP-068-preview-change-accounting.xml",
+    "changes_root": "vibevm/vibespecs/changes/",
+    "release_root": "docs/releases/developer-preview-1-to-2/",
+    "transition_index": "docs/releases/developer-preview-1-to-2/transition.json",
+    "migration_guide": "docs/releases/developer-preview-1-to-2/MIGRATION.md",
+    "documentation_map": "docs/releases/developer-preview-1-to-2/documentation-map.json",
+    "evidence_root": "docs/releases/developer-preview-1-to-2/evidence/",
+    "tooling": "tools/preview-transition/"
+  },
+  "bootstrap_gate": "NEXT-PREVIEW-BASE.3",
+  "final_gate": "NEXT-PREVIEW-RELEASE.3",
+  "retirement_node": "RETIRE-NEXT-A26",
+  "post_removal_gate": "NEXT-CLOSE.3",
+  "task_rules": [
+    "This is a planning contract, not live release state. DP1/DP2 captures and documentation intake are unmeasured at authoring; current evidence will live in the permanent transition index.",
+    "Capture and review DP1 before surviving implementation, including BASE.2. BASE.2 and BASE.3 establish the bounded accounting bootstrap and do not wait for their own completion; every original M-task waits for accepted BASE.3. Before closing BASE.3, account for the bootstrap's own contributions as well. A version string or historical planning ancestor does not identify DP1.",
+    "For every actual accepted contribution, including unplanned fixes and generated-surface changes, supply stable permanent release-impact record IDs or separately reviewed no-user-impact and no-documentation-impact reasons.",
+    "Describe observable before/after behavior, affected audiences/workflows/platforms and command/API/config/schema/capability surfaces; bind claims to permanent anchors, exact implementation subjects and retained evidence.",
+    "Select justified migration dispositions (automatic, manual, rebuild, no action, or unsupported); reuse format break notes and actual migration operations, with prerequisites, exact recipe, expected result, verification and honest recovery limits.",
+    "Track affected documentation topics immediately, even before the documentation worker's output arrives. Bind concrete pages/source anchors after intake; cover added topics, removals and generated documentation as well as edited existing pages.",
+    "Keep the temporary task-to-change bridge separate from permanent release/change authority. M-02 adopts the same bootstrap record IDs and non-normative payloads; it must not create a second history or feed observations into intent/work identity.",
+    "Central review checks release/documentation impact along with the diff before accepting a contribution. Candidate records, a passing renderer or a worker report do not grant acceptance.",
+    "Record corrections, supersession and reverts explicitly. Final drafts describe the net accepted DP1-to-DP2 behavior; retain historical evidence without instructing users to follow abandoned intermediate migrations.",
+    "At each workstream boundary reconcile actual accepted changes and interface/capability deltas with records; all gaps need repair or an explicit evidence-backed disposition. Task counts and Git titles alone are not coverage.",
+    "Use the supplied documentation baseline, current authored documentation and accepted product changes for a three-way update. A missing intake blocks exact documentation editing/final proof, not independent product work.",
+    "DP2 remains a candidate until the campaign scaffold is absent, permanent checks and migration/documentation rehearsals pass, and the exact final product/docs subject is sealed. Release metadata attestation cannot hide later product or documentation changes."
+  ],
+  "workstream_acceptance": "Reconcile actual accepted contributions and interface/capability deltas with permanent release-impact evidence and separate justified user/documentation dispositions; carry unresolved documentation updates explicitly to the final documentation gate.",
+  "closure_acceptance": "Retain a reviewed DP1-to-DP2 migration guide, updated documentation, complete change/documentation coverage and reproducible evidence outside campaign scaffolding; seal the final DP2 product/docs capture and rerun permanent proof after scaffold removal."
+}

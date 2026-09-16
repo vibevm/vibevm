@@ -1,0 +1,142 @@
+{
+  "id": "M-04-E",
+  "tasks": [
+    {
+      "id": "M-04-E.1",
+      "title": "Expose manual and adopted evidence through shared actions",
+      "goal": "Allow truthful external work evidence without inventing an execution.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/progress-core/src/evidence.rs",
+        "crates/vibe-lifecycle/src/agent/contract.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-mcp/src/tools/change.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Define explicit manual/adopted evidence ingress with subject, authority, observer strength and retained references.",
+        "Validate evidence with the same change join/policy machinery as executed evidence.",
+        "Expose recording/inspection as typed service operations with stale and partial failure results."
+      ],
+      "positive_cases": [
+        "Manually supplied exact evidence can be considered under the selected policy."
+      ],
+      "negative_cases": [
+        "Adopted output never claims a provider or test ran when it did not.",
+        "Wrong subject/producer authority and stale capture refuse."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Manual/adopted/executed sources remain distinguishable in every row.",
+        "Accepted evidence records contain observable provenance, not tool-success assertions."
+      ],
+      "safe_stop": "Leave rejected evidence as an explained candidate without altering acceptance.",
+      "commit_subject": "feat(change): expose explicit adopted evidence",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_e_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-04-E.2",
+      "title": "Close analysis and closure machine parity",
+      "goal": "Complete external change workflows while keeping personal planning independent.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-cli/src/commands/change/",
+        "crates/vibe-mcp/src/tools/change.rs",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-requirements/tests/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Exercise question/answer/analyze/manual-evidence/closure operations through CLI, MCP and the canonical API.",
+        "Compare strict inputs, exact semantic results, progress and partial errors.",
+        "Demonstrate personal-plan edits cannot change shared closure/intent; record optional one-way personal projection as deferred unless a concrete supported caller needs it."
+      ],
+      "positive_cases": [
+        "Same saved subject produces equal validated analysis and closure results across surfaces."
+      ],
+      "negative_cases": [
+        "Unknown fields, dirty inputs and stale closure refuse identically.",
+        "Personal plan data never becomes shared completion authority."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Complete machine journey works without a personal plan or advisory provider.",
+        "Optional personal projection has an explicit disposition and does not gate required M-04 completion."
+      ],
+      "safe_stop": "Keep retained closure and report parity failures; do not claim parent complete prematurely.",
+      "commit_subject": "test(api): close change analysis and closure parity",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_04_e_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Optional one-way personal projection is baseline optional scope; this child must not manufacture a mandatory implementation or a new owner gate.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "id": "M-06-D",
+  "tasks": [
+    {
+      "id": "M-06-D.1",
+      "title": "Define hypothetical world capture and pure builtin preview",
+      "goal": "Compute legal scenarios from frozen inputs using existing resolver/compiler semantics.",
+      "read_paths": [
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-workspace/src/boot_debugger/",
+        "crates/vibe-package-source/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-package-source/Cargo.toml",
+        "crates/vibe-package-source/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Bind baseline/candidate source captures, choices, target conditions and expected world identity.",
+        "Run supported pure builtin compilation in memory without installing/publishing candidate state.",
+        "Represent legal static/dynamic placements and explicit incompatible/incomplete stages through the shared request/result protocol."
+      ],
+      "positive_cases": [
+        "Prepared identical scenario yields identical hypothetical graph and metrics."
+      ],
+      "negative_cases": [
+        "Illegal loading override refuses instead of secretly changing the package.",
+        "Changed catalog/capture makes preview stale; native stage is not invoked implicitly."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-package-source target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-package-source <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+      ],
+      "acceptance": [
+        "Candidate graph is derived by the same authority as real resolution/compiler.",
+        "Manifest/lock/slots/canonical boot remain unchanged."
+      ],
+      "safe_stop": "Return an incomplete preview with exact missing stage/capture.",
+      "commit_subject": "feat(boot): preview captured candidate worlds",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_d_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-D.2",
+      "title": "Separate effectful preparation from snapshot inspection",
+      "goal": "Make missing sources and native stages explicit admitted preparation work.",
+      "read_paths": [
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-059-boot-observability.xml",
+        "crates/vibe-workspace/src/boot_debugger/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/tools/boot_debugger.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Create explicit prepare operations for required fetch/hydration/native preview stages using M-16/M-14 grants.",
+        "Present effects and exact inputs before execution; retain immutable preview evidence for later pure readers.",
+        "Expose needs-preparation/unavailable when admission or provider capability is absent, without hidden fallback."
+      ],
+      "positive_cases": [
+        "Admitted preparation creates a captured result subsequently inspected without effects."
+      ],
+      "negative_cases": [
+        "Empty-cache inspect never hydrates; revoked provider is not rerun to open retained evidence.",
+        "Preparation cannot mutate installed project manifest/lock/slots/boot."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Effect counters distinguish prepare from pure inspect/compare.",
+        "Partial preparation failures retain typed outcome and reusable captured evidence where valid."
+      ],
+      "safe_stop": "Keep needs-preparation explicit; do not fabricate exact zero contribution.",
+      "commit_subject": "feat(boot): isolate effectful preview preparation",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-059-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_d_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

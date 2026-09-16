@@ -47,10 +47,11 @@ use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
 use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
-    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
-    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, LinkType, ManifestWire,
-    McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable, PackageMeta, Provides,
-    Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl, VisibilityMeta,
+    ApplicationDecl, BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList,
+    DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, LinkType,
+    ManifestWire, McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable, PackageMeta,
+    Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl,
+    VisibilityMeta,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -84,6 +85,10 @@ pub struct Manifest {
     /// with `project`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package: Option<PackageMeta>,
+
+    /// `[application]` — optional package-owned user-local application metadata.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub application: Option<ApplicationDecl>,
 
     /// `[workspace]` — declares member packages this node coordinates.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -504,6 +509,9 @@ impl Manifest {
 #[cfg(test)]
 #[path = "document/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "document/tests_application.rs"]
+mod tests_application;
 #[cfg(test)]
 #[path = "document/tests_documentation.rs"]
 mod tests_documentation;

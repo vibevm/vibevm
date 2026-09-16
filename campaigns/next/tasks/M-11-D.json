@@ -1,0 +1,205 @@
+{
+  "id": "M-11-D",
+  "tasks": [
+    {
+      "id": "M-11-D.1",
+      "title": "Define the reusable pre/post transition witness",
+      "goal": "Supply the source-applicability contract needed by scoped existing-file production.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/agent/contract.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-lifecycle/src/agent/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-lifecycle/src/agent/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-lifecycle/src/agent/mod.rs"
+      ],
+      "steps": [
+        "Consume the M-03-C production request/invocation and continuation carriers; do not wait for brownfield proposal/promotion.",
+        "Define retained pre-input witnesses, declared write membership, exact consumed artifact identities, post-output witnesses and outside-write equality in a distinct transition recipe.",
+        "Register generated carriers/hash frames; keep legacy pre-input records recognizable and classify new/deleted paths explicitly."
+      ],
+      "positive_cases": [
+        "A transition names the exact pre-state consumed and post-state produced.",
+        "Disjoint and existing-file changes share the same explicit identity law."
+      ],
+      "negative_cases": [
+        "A renamed fingerprint cannot masquerade as causal evidence.",
+        "Missing pre-state, undeclared writes or consumed-artifact drift refuses transition acceptance."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Corpus distinguishes legacy evidence, produced transition and explicit adopted authority.",
+        "Hash recipe includes membership and consumed inputs rather than only output bytes."
+      ],
+      "safe_stop": "Transition contract is ready independently of the rest of M-11.",
+      "commit_subject": "feat(lifecycle): record explicit pre and post source transitions",
+      "notes": [
+        "PULLED FORWARD: prerequisites are M-02 and M-03-C only; this task does not depend on M-11-A/B/C or M-03-D/E. PROP-062 transition anchors may be created independently if its inventory section does not exist.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-D.2",
+      "title": "Enforce produced and adopted transition ownership",
+      "goal": "Validate the source transition at hosted/local completion without granting authority from matching files.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/runner/hosted.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/agent/contract.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/agent/mod.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-lifecycle/src/agent/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/",
+        "fixtures/next/transitions/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/agent/mod.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "At completion/resume, compare pre-witnesses, actual write membership, outside-write equality and exact consumed artifacts under the existing lease.",
+        "Persist a produced transition only for the matching production request; make adoption an explicit authority-bearing path with its own evidence kind.",
+        "Retain old/pre-state evidence and refuse stale/foreign outputs without rerunning a producer automatically."
+      ],
+      "positive_cases": [
+        "A matching hosted resume accepts a declared existing-file modification.",
+        "Explicitly authorized adoption records adopted authority without claiming producer execution."
+      ],
+      "negative_cases": [
+        "Foreign request, unchanged-but-unowned output, outside-write edit or missing prior witness refuses.",
+        "A failed validation cannot displace another parked continuation or rewrite old measurements."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Fixtures cover created/deleted/modified paths and exact artifact consumption.",
+        "Produced versus adopted history remains externally distinguishable after restart."
+      ],
+      "safe_stop": "Completion validation is proven; verify refresh integration remains the next task.",
+      "commit_subject": "feat(lifecycle): validate produced and adopted source transition ownership",
+      "notes": [
+        "Fixtures/next/transitions is a proposed isolated test subtree. Preserve M-03's single workspace continuation law.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-D.3",
+      "title": "Make post-create verification causal and convergent",
+      "goal": "Refresh current-source checks without recreating already accepted production or laundering predecessor evidence.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-orchestrator/src/dispatch/verify.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/chain.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/dispatch/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/dispatch/",
+        "fixtures/next/transitions/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/dispatch/mod.rs"
+      ],
+      "steps": [
+        "Integrate transition applicability into the pre-handler prefix gate, not only a verify handler that the gate may never reach.",
+        "On explicit next verification invocation, recompute needed deterministic build/test evidence for current source while preserving the accepted production request and its pre/post witness.",
+        "Demonstrate convergence: first production changes an existing input, verify checks new bytes, repeated fresh verify performs no new production; report unsupported overlaps honestly."
+      ],
+      "positive_cases": [
+        "Current-source build/test subjects match the produced post-state.",
+        "Repeated verification remains fresh without gratuitous create."
+      ],
+      "negative_cases": [
+        "Old pre-create tests cannot establish post-create correctness.",
+        "Outside-write/consumed-artifact drift, missing check or stale legacy evidence blocks acceptance rather than forcing an automatic loop."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Actual recorded execution counts prove no producer dispatch during ordinary/scoped verify.",
+        "Independent evidence joins prove both retained pre-state and checked post-state."
+      ],
+      "safe_stop": "M-11-D transition primitive is ready for independent acceptance and unblocks M-03-D/E.",
+      "commit_subject": "fix(lifecycle): verify transitioned source without repeating production",
+      "notes": [
+        "This completes only M-11-D. M-11 parent remains open for A/B/C/E; root must not serialize D after complete M-03.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

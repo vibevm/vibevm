@@ -357,27 +357,34 @@ cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.
 
 The dry-run output shows the synthetic clone URL, the action verb (`Would create` or `Would reuse existing`), and the tag that would be pushed. No token value appears anywhere in output — `vibe` reads the token in-process, redacts on `Display`/`Debug`, and never logs the value. The video-recording-safe defaults are baked in.
 
-## 6. Self-check (`vibe check` against the vibevm tree)
+## 6. Affected checks and the full integration panel
 
-vibevm is its own bootstrap project: the repo root carries a minimal `vibe.toml` plus an empty-`[[package]]` `vibe.lock` so the shipped `vibe check` linter can run against the same `spec/` corpus the tool itself produces. The manifest does not declare any installed packages — vibevm is the tool, not a consumer of itself today; full self-hosting under `packages/` lands post-M1.
+For an ordinary edit, identify changed behavior and its actual contract consumers. Select the Cargo build/test target first, then the relevant regression cases. A name filter without `--lib`, `--test <target>` or another explicit target can still compile unrelated test executables. Inspect source and Cargo metadata before invoking a target-specific test list; confirm that the intended nonzero set actually runs. Do not use a whole-crate test/list invocation as a discovery shortcut.
 
-The canonical entry point is the bundled script:
+For example, after replacing the placeholders with existing target and case names:
+
+```sh
+cargo test -p <package> --test <integration-target> <case-name> -- --exact
+cargo test -p <package> --lib <affected-module-prefix>
+```
+
+Include affected negative cases, invariants and consumer integration checks. Schema/codegen, wire-corpus, spec and exhaustive-facts oracles apply when their actual inputs/contracts changed; a broad allowed write perimeter does not trigger them. Keep compatible incremental build artifacts. Build-cache reuse does not reuse a test verdict automatically.
+
+The full integration/release entry point remains:
 
 ```sh
 bash tools/self-check.sh
 ```
 
-It runs three invariants in order, exiting non-zero on the first failure (pass `--keep-going` to run all three regardless):
+It runs the complete stage list declared in `tools/self-check.sh`: host workspace tests/lints, spec/conformance/codegen/wire checks and the independently shipped package workspaces. It exits on the first failure unless `--keep-going` is passed. This is an expensive panel, not a per-commit, per-worker or per-milestone requirement.
 
-1. `cargo test --workspace` — every test green.
-2. `cargo clippy --workspace --all-targets -- -D warnings` — zero warnings, treated as errors.
-3. `cargo run -p vibe-cli -- check --path . --quiet` — spec linter on the bootstrap manifest. Expected output: `vibe check: 0 errors, 0 warnings, 0 info`.
+Use affected checks during development and integration. Run the whole panel for the designated final campaign/release gate, an explicit full-check request, or demonstrated cross-cutting impact for which narrower proof is inadequate. Completing an atom, touching two crates, preparing a push or ending a milestone is not by itself that reason.
 
-If you only want the spec linter without the build/test prelude, run step 3 directly. Note: pre-built binaries under `target/release/` and `target/debug/` may be out of date relative to the source tree (e.g. built before a subcommand was added); the script always goes through `cargo run` so the binary is guaranteed to match `HEAD`.
+After a failure, rerun the failed and affected steps and execute the never-run tail. Reuse a successful step only with evidence for the same relevant inputs, dependencies, command, toolchain and environment. Account for the complete required stage set. A stitched coverage report must not be called a successful full-script invocation. The script itself has no resume option; direct constituent commands or a justified full invocation are the available mechanisms.
 
-CI wiring: a single `bash tools/self-check.sh` line is enough. Local development: run before opening a PR; for quick iteration during a feature, run the relevant slice directly (`cargo test -p vibe-foo`) and reserve `self-check.sh` for "is the tree shippable right now?".
+For the spec linter alone, invoke `vibe check --path <affected-project-or-package-root>` using a binary whose source provenance is appropriate for the check. A checked-in or prebuilt executable is not automatically current. The root project uses installed dependencies; keep its authored manifest/lock and regenerate derived slots/boot through supported scoped operations.
 
-If you `vibe install <pkgref>` against this manifest by accident, the install will succeed — there are no boot-prefix collisions today (`vibevm/vibespecs/boot/` carries only `00-core.xml` and `90-user.xml`). It will, however, materialise package files into `spec/flows/`, `spec/feats/`, or `spec/stacks/` and rewrite `vibe.lock` with `[[package]]` entries; revert with `vibe uninstall` (or `git restore vibe.lock spec/`) before committing.
+The installed multi-user-planning flow's `verification-selection` contract specifies target selection, escalation and evidence reuse. A campaign binds its task recipes and designated final gate to that permanent contract.
 
 ## 7. Troubleshooting
 

@@ -1,0 +1,137 @@
+{
+  "id": "M-03-E",
+  "tasks": [
+    {
+      "id": "M-03-E.1",
+      "title": "Prove full-pass and standalone surface equivalence",
+      "goal": "Make public entrypoints share production policy and exact results.",
+      "read_paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+        "crates/vibe-cli/src/commands/lifecycle/observer.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/lifecycle.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-cli/src/commands/change/",
+        "crates/vibe-cli/src/commands/lifecycle/",
+        "crates/vibe-mcp/src/tools/lifecycle_run/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/lifecycle.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_run.rs"
+      ],
+      "steps": [
+        "Run the same captured request through CLI, canonical service and MCP using isolated homes.",
+        "Compare explicit create then verify with fixed full-pass composition, including hosted park/resume.",
+        "Assert ordinary/scoped build/verify cannot dispatch any source producer from prerequisite slots."
+      ],
+      "positive_cases": [
+        "Equivalent explicit journeys produce matching subjects and semantic outcomes."
+      ],
+      "negative_cases": [
+        "Missing creation returns creation-required; unsupported operation fields do not silently default.",
+        "Verification failure never starts a repair loop."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Parity evidence covers results, errors and operation/phase events.",
+        "Successful verify demonstrably contains new-source build/test evidence."
+      ],
+      "safe_stop": "Keep surface mismatch open; no public success claim until parity.",
+      "commit_subject": "test(api): prove explicit lifecycle journey parity",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_03_e_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-03-E.2",
+      "title": "Close replay and failure-prefix acceptance",
+      "goal": "Exercise adversarial scope drift and recovery across the complete lifecycle path.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/state/store.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs",
+        "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-lifecycle/tests/",
+        "crates/vibe-lifecycle/src/runner/",
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-mcp/src/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Inject drift of intent, resolution, target, outputs and actually consumed predecessor artifacts at each continuation boundary.",
+        "Inject response loss and post-effect failures; compare durable state/evidence with emitted partial result.",
+        "Verify repeated request attaches to current operation and unrelated artifact refresh does not recreate source."
+      ],
+      "positive_cases": [
+        "Exact replay resumes/observes once and current repeated verify remains fresh."
+      ],
+      "negative_cases": [
+        "Cross-scope replay and changed consumed input refuse; response loss cannot duplicate work.",
+        "Observer failure does not rewrite the underlying domain outcome."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every failure prefix has an observable retained outcome and safe recovery disposition.",
+        "Full M-03 evidence includes the existing-file scenario, not only disjoint artifacts."
+      ],
+      "safe_stop": "Report recovery-required/unknown truth and preserve evidence.",
+      "commit_subject": "test(lifecycle): close scoped replay and recovery gates",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_03_e_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

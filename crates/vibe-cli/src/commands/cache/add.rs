@@ -312,6 +312,7 @@ fn projectless_resolver(global: &GlobalRegistryConfig, offline: bool) -> Result<
 fn stub_install_args(path: PathBuf) -> InstallArgs {
     InstallArgs {
         packages: Vec::new(),
+        global: false,
         path,
         registry: None,
         assume_yes: true,

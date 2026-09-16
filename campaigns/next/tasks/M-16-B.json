@@ -1,0 +1,203 @@
+{
+  "id": "M-16-B",
+  "tasks": [
+    {
+      "id": "M-16-B.1",
+      "title": "Generate strict operation and capability contracts",
+      "goal": "Provide one validated registry/facade request/result/error/event surface for every domain.",
+      "read_paths": [
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/query.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "formats/EPOCHS.toml",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-mcp/src/tools.rs",
+        "schemas/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "Extend owned JTD registry/codegen with namespaced operation/model/schema descriptors and typed prepared/input/admission/result/error/event unions.",
+        "Validate requests before dispatch and results/errors/events before publication; wrong types, unknown fields and unsupported epochs are explicit refusals.",
+        "Register domain handlers through shared application-service composition; discovery reads retained descriptors and never executes a provider or fetches a schema."
+      ],
+      "positive_cases": [
+        "One domain operation has identical validated shape through library and transport adapters.",
+        "An admitted extension schema is discoverable without native execution."
+      ],
+      "negative_cases": [
+        "Wrong optional argument types silently select defaults.",
+        "An advertised restrictive schema is not enforced at dispatch."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: strict request/result/error/event validation corpus."
+      ],
+      "acceptance": [
+        "Capability implementation status, contextual availability and authorization are separate fields.",
+        "No eval/shell endpoint or duplicate domain engine appears."
+      ],
+      "safe_stop": "Contracts and fixture dispatch are validated; real mutating handlers remain behind existing authority.",
+      "commit_subject": "feat(api): generate strict operation and capability schemas",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Write perimeter is limited to the new shared facade and registered schemas; preserve unrelated wire epochs and legacy adapters.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-B.2",
+      "title": "Define entity, composite snapshot and source-location views",
+      "goal": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-spec/src/doctree.rs",
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-wire/src/",
+        "formats/",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Define separate logical entity, capture/content, observation/snapshot and presentation occurrence references using existing domain IDs where valid.",
+        "Describe CompositeSnapshot as compatible source/world/target/operation observations with completeness; bind filters/pages/children/chunks to one projection and refuse mixed versions.",
+        "Define opaque resource IDs, trusted URI mapping and raw/projection position basis with encoding/revision, including non-UTF8 resources and unavailable source mappings."
+      ],
+      "positive_cases": [
+        "Repeated inclusion shares logical identity but has distinct occurrences.",
+        "All pages from one captured query reconstruct the full authorized structure."
+      ],
+      "negative_cases": [
+        "Wall-clock time or display line is used as exact snapshot identity.",
+        "Projected Markdown positions are presented as original XML locations."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "TO CREATE: snapshot compatibility, occurrence and location-conversion fixtures."
+      ],
+      "acceptance": [
+        "A client can navigate provenance without unrestricted host paths or false atomicity claims.",
+        "Every incomplete/inconsistent mapping has a typed reason."
+      ],
+      "safe_stop": "Pure models and projections are tested; no watcher or disk mutation is added.",
+      "commit_subject": "feat(api): model captured entities and source locations",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Proposed shared-model modules must remain in a dependency-safe existing crate; do not make parser crates depend on lifecycle.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-16-B.3",
+      "title": "Negotiate the local transport and trusted contexts",
+      "goal": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.",
+      "read_paths": [
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-orchestrator/src/",
+        "formats/",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Implement versioned local framed request/event transport with initialization for API/schema versions, position encoding and streaming/replay/control capabilities.",
+        "Register workspace/member/HOME/container contexts only from the trusted owning surface; requests refer to assigned context/target IDs.",
+        "Map actual negotiated MCP versions/capabilities into the same domain facade while preserving explicit legacy tools; reject malformed frames, unknown versions and unbound roots."
+      ],
+      "positive_cases": [
+        "Two clients negotiate supported versions and independently bind authorized contexts.",
+        "One-shot library/CLI usage remains available without starting a server."
+      ],
+      "negative_cases": [
+        "Caller body path or workspace manifest self-authorizes a new root.",
+        "Initialization reports a fixed unsupported protocol version."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: framing/initialization/context negotiation protocol corpus."
+      ],
+      "acceptance": [
+        "Framing and handshake are documented from executable behavior.",
+        "No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced."
+      ],
+      "safe_stop": "Transport and fake service exchanges pass; long-running action ownership lands in M-16-C.",
+      "commit_subject": "feat(api): negotiate framed sessions and trusted contexts",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

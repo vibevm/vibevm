@@ -1,0 +1,108 @@
+{
+  "id": "M-02-A",
+  "tasks": [
+    {
+      "id": "M-02-A.1",
+      "title": "Create a native origin and two local binding fixtures",
+      "goal": "Demonstrate reusable package intent with independent project-owned refinements.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "docs/authoring-feat.md",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/tests/fixtures/change/",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "steps": [
+        "Author one minimal stack-neutral feat fixture with addressable facts and explicit artifact requirements.",
+        "Create two project-local change fixtures selecting the same origin but different local acceptance/refinement.",
+        "Use the existing fact observation seam to show origin facts are referenced, not copied into local authority."
+      ],
+      "positive_cases": [
+        "Two changes reuse one exact origin and retain distinct local intent."
+      ],
+      "negative_cases": [
+        "Copied package status or implicit adoption cannot count as local acceptance."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Fixture report lists package fact addresses and separate local fact addresses.",
+        "Package bytes remain identical across both consumers."
+      ],
+      "safe_stop": "Fixture evidence may land before the durable change parser.",
+      "commit_subject": "test(change): characterize reusable origin bindings",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_a_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "PROPOSED fixture and implementation subtrees: crates/vibe-requirements/tests/fixtures/change/ and src/change/.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-02-A.2",
+      "title": "Prove binding independence from adoption and personal plans",
+      "goal": "Establish which existing observations may inform a change without owning it.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "crates/progress-core/src/terminal.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-requirements/tests/fixtures/change/",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "steps": [
+        "Join the fixture origin/local selection with existing adoption and requirement observations.",
+        "Demonstrate that work coverage, adoption and terminal evidence are distinct axes.",
+        "Add perturbations of fixture personal-plan data and adoption records; neither may rewrite shared change intent."
+      ],
+      "positive_cases": [
+        "Existing valid evidence can be observed without inventing a work item."
+      ],
+      "negative_cases": [
+        "A work edge or personal done flag cannot satisfy missing implementation evidence."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: progress-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p progress-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Bindings contain no owner/current/done scheduler state.",
+        "Changing personal-plan fixture bytes leaves shared intent identity unchanged."
+      ],
+      "safe_stop": "Keep the prototype read-only; do not create a second cursor.",
+      "commit_subject": "test(change): separate binding authority from planning",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_a_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

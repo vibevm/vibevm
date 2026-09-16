@@ -1,0 +1,161 @@
+{
+  "id": "M-02-D",
+  "tasks": [
+    {
+      "id": "M-02-D.1",
+      "title": "Implement no-overwrite change scaffolding",
+      "goal": "Create a local change from an exact origin through one prepared saved-state write.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-cli/src/commands/change/",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs"
+      ],
+      "steps": [
+        "Prepare new --from output from one selected origin/node and the accepted parser/hash contract.",
+        "Validate destination absence, role paths, captured origin and writer preconditions before creating anything.",
+        "Apply owned files with retained before-state/journal semantics; return exact created artifacts and partial failure truth."
+      ],
+      "positive_cases": [
+        "A new scaffold references origin facts and adds only local roles/refinement."
+      ],
+      "negative_cases": [
+        "Existing change directory, dirty affected buffer or stale origin refuses without overwrite."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Prepared diff matches authored created files and declared IDs.",
+        "Scaffolding does not adopt package facts or start lifecycle execution."
+      ],
+      "safe_stop": "A prepared scaffold is safe to inspect; reject rather than overwrite.",
+      "commit_subject": "feat(change): scaffold exact origin bindings safely",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_d_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "PROPOSED CLI commands/change/; endpoint spelling follows the root service contract.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-02-D.2",
+      "title": "Expose check, show and coverage through shared services",
+      "goal": "Finish useful read-only change access without a second verdict engine.",
+      "read_paths": [
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-requirements/src/rows.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml",
+        "crates/vibe-requirements/src/change/",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-cli/src/commands/change/",
+        "crates/vibe-mcp/src/tools/change.rs",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-requirements/src/lib.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Register generated change query request/results using the canonical M-16 service facade.",
+        "Implement check/show/coverage joins with exact origin/local provenance, completeness and separate work/evidence axes.",
+        "Add CLI/MCP/service parity including schema/unknown-field/refusal cases and empty-cache purity."
+      ],
+      "positive_cases": [
+        "Two changes sharing an origin expose different local intent with the same package capture."
+      ],
+      "negative_cases": [
+        "Work edge, adoption flag or incomplete result cannot become a satisfied verdict.",
+        "Read queries never install or mutate personal/adoption state."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+      ],
+      "acceptance": [
+        "All surfaces return one semantic result and typed failures.",
+        "M-02 is usable without starting or migrating an execution."
+      ],
+      "safe_stop": "Accept read-only value while lifecycle/closure remain separate milestones.",
+      "commit_subject": "feat(api): expose change inspection and coverage",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-058-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_02_d_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "PROPOSED MCP tools/change.rs and change schema files; regenerate owned wires rather than hand editing generated code.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

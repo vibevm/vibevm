@@ -1,0 +1,148 @@
+{
+  "id": "M-14-B",
+  "tasks": [
+    {
+      "id": "M-14-B.1",
+      "title": "Generate environment and realization wire contracts",
+      "goal": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.",
+      "read_paths": [
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-core/src/manifest/package/binary.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "formats/EPOCHS.toml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/artifact/mod.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "write_paths": [
+        "formats/",
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-core/src/manifest/artifact/",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "schemas/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-063-environment-model.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/artifact/mod.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs"
+      ],
+      "steps": [
+        "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-063-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+        "Use the existing format registry/codegen conventions and M-16-B envelopes; inventory every request, result, durable receipt and hash carrier that needs the new fields.",
+        "Define dependency roles, native-backend closure, file/link/mode/principal inventory and domain-separated ordered hash frames; distinguish recipe-input and produced-output identities.",
+        "Generate owned wire types/corpora; add wrong-target, unsupported-metadata and reordered-input cases with explicit recipe/schema epochs."
+      ],
+      "positive_cases": [
+        "Equivalent normalized definitions yield the same exact lock identity.",
+        "Changing target ABI or one payload byte changes the appropriate identity."
+      ],
+      "negative_cases": [
+        "A package URL or mutable version string substitutes for captured identity.",
+        "Windows IDs are serialized as Linux payload UID/GID."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory."
+      ],
+      "acceptance": [
+        "Generated types and retained records use one schema source and explicit epochs.",
+        "Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped."
+      ],
+      "safe_stop": "Schemas and fixtures pass while unimplemented target execution remains explicitly unsupported.",
+      "commit_subject": "feat(formats): add environment realization and payload contracts",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+        "formats/ writes are limited to registered schemas/corpora/generated bindings for this atom; no unrelated epoch bump. Full root gate remains with the coordinator.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-14-B.2",
+      "title": "Migrate legacy identity and supply-path readers",
+      "goal": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.",
+      "read_paths": [
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "formats/",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-install/Cargo.toml",
+        "crates/vibe-install/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+      ],
+      "steps": [
+        "Create representative old records from the characterized schema and state which fields cannot be inferred; mark them legacy rather than synthesizing target or hermetic proof.",
+        "Implement deterministic readers/migration through M-13 primitives, retaining input/output/prefix identities and exact source/mirror/substitution policy.",
+        "Require complete recursive source/build/runtime inputs for new realization claims and keep provider-native versions opaque to Vibe SemVer."
+      ],
+      "positive_cases": [
+        "Known old records remain readable with their original weaker guarantees.",
+        "A same-content mirror can satisfy an exact captured source with retained provenance."
+      ],
+      "negative_cases": [
+        "Legacy existence-only binary becomes verified merely through deserialization.",
+        "A changed prefix or untrusted cache producer is silently accepted."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "TO CREATE: old/new record, missing-input and substitute-prefix compatibility fixtures."
+      ],
+      "acceptance": [
+        "Every migration has explicit unavailable/needs-input outcomes for absent proof.",
+        "No source/registry/cache transport requires GitHub by contract."
+      ],
+      "safe_stop": "Legacy/new readers agree with fixtures; no real store or installed environment is migrated during tests.",
+      "commit_subject": "feat(runtime): preserve legacy records across environment schemas",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-063-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "M-10-D",
+  "tasks": [
+    {
+      "id": "M-10-D.1",
+      "title": "Expose derivatives in source and boot inspection",
+      "goal": "Connect exact derivative provenance to source queries and debugger views.",
+      "read_paths": [
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-spec/src/compiler/ir.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-spec/src/resolver/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-mcp/src/",
+        "crates/vibe-cli/src/commands/",
+        "fixtures/next/derivatives/",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "steps": [
+        "Consume the accepted M-06-C and M-01 contracts to resolve a derivative resource as its own identity with full provenance.",
+        "Add base/local/result relationships to actual boot occurrences and source/raw-projection navigation without inventing a second compiler.",
+        "Verify same-snapshot paging and exact contribution attribution after a derivative update; stale captures remain explicit."
+      ],
+      "positive_cases": [
+        "Source query and debugger navigate the same base→local→result records.",
+        "A repeated inclusion keeps distinct occurrences while sharing exact payload identity."
+      ],
+      "negative_cases": [
+        "A stale derivative cannot be labeled current source-proven.",
+        "Opening a view cannot recompute effectful derivatives or invoke providers."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "CLI/API/MCP inspection agrees on identity, bytes and completeness.",
+        "All required families appear in the debugger/source proof matrix."
+      ],
+      "safe_stop": "Read integration is complete; no derived active content executed.",
+      "commit_subject": "feat(derivatives): expose provenance in source and boot models",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-10-D.2",
+      "title": "Prove derivative activation, revocation and recovery",
+      "goal": "Deliver the full active-resource path under new authority and retained artifact/receipt ownership.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-workspace/src/",
+        "fixtures/next/derivatives/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "steps": [
+        "Produce a code-bearing derivative fixture and publish its exact artifact through the existing artifact/adapter machinery.",
+        "Prepare and issue a new exact activation grant; exercise apply/update/verify/remove and a base/local change between plan and effect.",
+        "Revoke the descriptor/grant and inspect/clean up using retained host-readable ownership; retain partial status on interruption."
+      ],
+      "positive_cases": [
+        "Explicitly admitted derivative activation works and preserves neighboring state.",
+        "Revoked or missing descriptor remains inspectable and safely removable under new cleanup authority."
+      ],
+      "negative_cases": [
+        "Derive/read alone never triggers execution.",
+        "Changed result, inherited grant or drifted receipt refuses without guessing rollback."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Evidence joins exact derivative result, grant, artifact, observed effect and receipt.",
+        "General families and downstream active/inert paths satisfy M-10 exit."
+      ],
+      "safe_stop": "Full derivative activation/recovery proof is ready for root review.",
+      "commit_subject": "test(derivatives): verify explicit activation and retained ownership",
+      "notes": [
+        "Prerequisites M-08-C/D and M-06-C are mandatory. Native fixture execution is confined to explicitly bound isolated test targets; no sandbox claim is inferred.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

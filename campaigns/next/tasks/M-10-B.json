@@ -1,0 +1,150 @@
+{
+  "id": "M-10-B",
+  "tasks": [
+    {
+      "id": "M-10-B.1",
+      "title": "Define authored bindings and exact derivative provenance",
+      "goal": "Implement the typed authored binding and distinct base/local/result identities.",
+      "read_paths": [
+        "crates/vibe-core/src/manifest/package.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/manifest/",
+        "crates/vibe-workspace/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "steps": [
+        "Add DerivationBinding grammar with owner/resource IDs, exact base capture/resource/interpretation, retained local source and explicit operation recipe.",
+        "Define framed provenance/result hashes and generated result schema; equal output bytes must not erase distinct ownership/provenance.",
+        "Use migration primitives for any changed authored format, preserve comments and reject ambiguous legacy input."
+      ],
+      "positive_cases": [
+        "Bindings round-trip while retaining authored local source and exact base.",
+        "Same result bytes from different bases/owners remain distinct provenance records."
+      ],
+      "negative_cases": [
+        "Duplicate identity, absent exact base or ambiguous source interpretation refuses.",
+        "A copied upstream logical ID cannot masquerade as a new derivative."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Strict schemas/corpus cover authored and generated carriers.",
+        "Stored result retains a complete navigable base→local→result chain."
+      ],
+      "safe_stop": "Binding/provenance schema and pure validation work before writes.",
+      "commit_subject": "feat(derivatives): record exact local binding and provenance",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-10-B.2",
+      "title": "Separate compatibility from activation authority",
+      "goal": "Implement independent compatibility and effect-admission decisions for local derivatives.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/",
+        "crates/vibe-agent-projection/src/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-061-local-derivatives.xml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "steps": [
+        "Validate an optional export target against the derived result's actual interface without prohibiting local creation.",
+        "Expose compatible/incompatible/unknown diagnostics and allow an explicitly selected alternative supported target.",
+        "Require new descriptor/artifact identity and exact M-08/M-14 grants before executing/deploying code-bearing results; no upstream trust inheritance."
+      ],
+      "positive_cases": [
+        "A sealed source can be forked locally and inspected even when one target rejects its interface.",
+        "Compatible derivative activation succeeds only with its own grant."
+      ],
+      "negative_cases": [
+        "Incompatible target cannot be mislabeled supported.",
+        "Base signatures, grants or package installation cannot authorize changed result effects."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Creation, compatibility and activation have separate machine states and cases.",
+        "Refusal leaves local source intact and original slot unchanged."
+      ],
+      "safe_stop": "Compatibility/admission decisions are implemented on fixtures.",
+      "commit_subject": "feat(derivatives): separate local ownership from activation grants",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

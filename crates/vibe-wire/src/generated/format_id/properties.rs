@@ -7,6 +7,7 @@ impl FormatId {
     pub const ALL: &[FormatId] = &[
         FormatId::ArtifactRecord,
         FormatId::BootArtifactTransaction,
+        FormatId::CliApplicationReport,
         FormatId::CliExtensionsReport,
         FormatId::CliInitReport,
         FormatId::CliInstallPlan,
@@ -105,6 +106,7 @@ impl FormatId {
         match self {
             FormatId::ArtifactRecord => "artifact-record",
             FormatId::BootArtifactTransaction => "boot-artifact-transaction",
+            FormatId::CliApplicationReport => "cli-application-report",
             FormatId::CliExtensionsReport => "cli-extensions-report",
             FormatId::CliInitReport => "cli-init-report",
             FormatId::CliInstallPlan => "cli-install-plan",
@@ -204,6 +206,7 @@ impl FormatId {
         match self {
             FormatId::ArtifactRecord => 1,
             FormatId::BootArtifactTransaction => 1,
+            FormatId::CliApplicationReport => 1,
             FormatId::CliExtensionsReport => 1,
             FormatId::CliInitReport => 1,
             FormatId::CliInstallPlan => 1,
@@ -303,6 +306,7 @@ impl FormatId {
         match self {
             FormatId::ArtifactRecord => false,
             FormatId::BootArtifactTransaction => false,
+            FormatId::CliApplicationReport => true,
             FormatId::CliExtensionsReport => true,
             FormatId::CliInitReport => true,
             FormatId::CliInstallPlan => true,
@@ -402,6 +406,7 @@ impl FormatId {
         match self {
             FormatId::ArtifactRecord => ForeignParsers::None,
             FormatId::BootArtifactTransaction => ForeignParsers::None,
+            FormatId::CliApplicationReport => ForeignParsers::Many,
             FormatId::CliExtensionsReport => ForeignParsers::Many,
             FormatId::CliInitReport => ForeignParsers::Many,
             FormatId::CliInstallPlan => ForeignParsers::Many,
@@ -501,6 +506,7 @@ impl FormatId {
         match self {
             FormatId::ArtifactRecord => UnknownFields::Deny,
             FormatId::BootArtifactTransaction => UnknownFields::Deny,
+            FormatId::CliApplicationReport => UnknownFields::Allow,
             FormatId::CliExtensionsReport => UnknownFields::Allow,
             FormatId::CliInitReport => UnknownFields::Allow,
             FormatId::CliInstallPlan => UnknownFields::Allow,

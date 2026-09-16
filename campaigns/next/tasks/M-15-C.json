@@ -1,0 +1,212 @@
+{
+  "id": "M-15-C",
+  "tasks": [
+    {
+      "id": "M-15-C.1",
+      "title": "Create immutable store objects and profile generations",
+      "goal": "Represent reusable payload storage and per-environment generations without confusing content identity with physical ownership.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-core/src/environment/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "steps": [
+        "Build generation manifests referencing verified immutable payloads, generated configuration/catalog and activation links; keep mutable data and secrets outside.",
+        "Permit shared verified content while retaining independent instance/principal/profile authority and prefix constraints.",
+        "Expose list/inspect/verify model views with corruption detection and explicit legacy observations."
+      ],
+      "positive_cases": [
+        "Two profiles share one immutable dependency yet have separate active generations.",
+        "A previous generation stays readable after creating a replacement."
+      ],
+      "negative_cases": [
+        "A mutable config file is hashed as immutable package payload.",
+        "Content equality is interpreted as permission to adopt another profile."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: generation sharing, corruption and separate-instance fixtures."
+      ],
+      "acceptance": [
+        "Generation identity includes exact lock/recipe/inventory and complete references.",
+        "Store writes never mutate an accepted object in place."
+      ],
+      "safe_stop": "Generations exist as verified candidates; no active pointer is switched.",
+      "commit_subject": "feat(environment): create immutable profile generations",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-C.2",
+      "title": "Apply HOME installs and dependency-safe removal",
+      "goal": "Deliver install/update/remove over exact owned effects with command and reverse-dependency checks.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/uninstall.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-cli/src/commands/",
+        "crates/vibe-mcp/src/tools/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Expose proposed environment operations through the shared application service; keep existing bare install semantics unchanged.",
+        "Prepare complete old/new footprint, command conflicts and reverse-dependency effects before writing; use exact grants and retained configuration before-state.",
+        "Activate only verified generations; preserve user-modified configuration and shared dependencies during removal, returning typed conflict/disposition needs."
+      ],
+      "positive_cases": [
+        "Install two tools sharing a dependency, update one and remove it without breaking the other.",
+        "A user-edited config survives an update/removal with a reviewable conflict."
+      ],
+      "negative_cases": [
+        "Removing a required dependency silently breaks another command.",
+        "HOME unwritability leaves a successful status or an unowned partial file."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: disposable-HOME full install/update/remove journey."
+      ],
+      "acceptance": [
+        "Library/CLI/MCP report equivalent exact effects and observed generation.",
+        "No Git, root privilege or user model subscription is required."
+      ],
+      "safe_stop": "The old or new generation is active with a truthful journal; unresolved configuration remains explicit.",
+      "commit_subject": "feat(environment): apply dependency-safe HOME package changes",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "New product command names are prospective; create their grammar and service tests here before using them in later recipes.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-15-C.3",
+      "title": "Execute commands through explicit environment activation",
+      "goal": "Run installed commands with the correct target closure and controlled shell activation.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-orchestrator/src/environment/",
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-cli/src/commands/",
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs"
+      ],
+      "steps": [
+        "Add explicit environment exec/shell entry points backed by selected generation and verified command ownership.",
+        "Construct PATH/library/runtime bindings from the declared closure; keep invocation working directory, principal and target ABI explicit.",
+        "Exercise independent profiles/versions and prefix-bound incompatibility; Linux target commands never run directly in the Windows controller."
+      ],
+      "positive_cases": [
+        "Each of two profiles invokes its own selected command version.",
+        "A relocatable tool runs under a non-default injected HOME prefix."
+      ],
+      "negative_cases": [
+        "Ambient PATH shadows the chosen installed executable.",
+        "Wrong-platform binary dispatch falls through to host execution."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: environment exec and shell-binding fixture tests."
+      ],
+      "acceptance": [
+        "Execution provenance resolves to profile generation, artifact and package capture.",
+        "Shell activation is explicit and does not permanently edit real user shell files."
+      ],
+      "safe_stop": "Disposable command processes terminate with preserved exit codes and no leaked activation changes.",
+      "commit_subject": "feat(environment): execute commands from explicit profile generations",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "The environment/ module is a proposed composition cell in the existing orchestrator; its owning export file is included for registration. Refine the perimeter before touching any additional crate.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

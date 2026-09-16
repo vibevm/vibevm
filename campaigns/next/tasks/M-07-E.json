@@ -1,0 +1,105 @@
+{
+  "id": "M-07-E",
+  "tasks": [
+    {
+      "id": "M-07-E.1",
+      "title": "Prove A and B effect equivalence without enabling B",
+      "goal": "Exercise exact-plan authorization across both execution branches and denial boundaries.",
+      "read_paths": [
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/tests.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "xtask/src/dist/",
+        "crates/vibe-publish/src/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Run the same prepared subject through an A approval and an explicitly enabled test-only B policy using the same fake writer.",
+        "Compare ordered effect calls and independently observed post-state; vary scope, principal, epoch, expiry and revocation one at a time.",
+        "Exercise skipped smoke as a distinct authorized plan; confirm production defaults remain A."
+      ],
+      "positive_cases": [
+        "Equivalent authorized A/B plans have identical external effects.",
+        "Explicitly skipped smoke is accepted without a pass claim."
+      ],
+      "negative_cases": [
+        "Out-of-scope or revoked B has zero effects.",
+        "An A approval for the pre-skip/pre-change plan cannot authorize the changed plan."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Evidence contains both authorization paths and equal effect traces.",
+        "No test edits real policy or enables live B."
+      ],
+      "safe_stop": "Parity and refusal suite passes in isolated adapters.",
+      "commit_subject": "test(publish): prove exact-plan authority parity and refusal",
+      "notes": [
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-07-E.2",
+      "title": "Exercise native and remote failure recovery",
+      "goal": "Close release failure modes with real native smoke evidence and isolated restoration rehearsals.",
+      "read_paths": [
+        "xtask/src/dist/build.rs",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/tests.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "tools/self-check.sh",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "xtask/src/dist/",
+        "crates/vibe-publish/src/",
+        "campaigns/next/evidence/M-07-E/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Consume the native smoke harness and root-provided native receipts; verify target/bundle/producer subjects before using them.",
+        "Inject failure at each publication effect boundary and during restoration; inspect resulting resources independently of the writer report.",
+        "Record evidence matrix for native failure, unavailable executor, retained rollback state and foreign interference; keep missing mandatory proof open."
+      ],
+      "positive_cases": [
+        "Each completed native target supplies exact artifact evidence.",
+        "Supported prior-release restoration is verified after an interrupted replacement."
+      ],
+      "negative_cases": [
+        "Cross-target or forged receipt cannot fill a native gap.",
+        "An incomplete restoration or unavailable executor is never marked successful."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Every promised failure boundary has an observed outcome and recovery disposition.",
+        "No pending native evidence is replaced with a skipped-success summary."
+      ],
+      "safe_stop": "Local failure matrix and available receipts are ready for parent review; outstanding hosts remain explicit.",
+      "commit_subject": "test(dist): verify native failures and release restoration",
+      "notes": [
+        "No public release/repository mutation. Receipt collection on another executor is an explicit root-managed task, not a claim inferred from source tests.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

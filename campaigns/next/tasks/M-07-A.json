@@ -1,0 +1,132 @@
+{
+  "id": "M-07-A",
+  "tasks": [
+    {
+      "id": "M-07-A.1",
+      "title": "Bind publication plans to exact subjects",
+      "goal": "Extend the existing distribution evidence chain with a canonical prepared-publication subject and effect plan.",
+      "read_paths": [
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/build.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "crates/vibe-publish/src/",
+        "xtask/src/dist/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Map current source/tree/lock/bundle fields and each remote write in prepare_with; retain their owners.",
+        "Create PROP-060 anchors for exact subjects, smoke policy and effect partitions; define framed hashes including target, replaced remote IDs and recovery prerequisites.",
+        "Register owned schemas/corpora and implement pure plan construction/validation through the existing manifest types; expose model/error schema references using M-16."
+      ],
+      "positive_cases": [
+        "Same captured inputs produce the same subject/plan digest.",
+        "A local plan lists every intended remote mutation without performing it."
+      ],
+      "negative_cases": [
+        "Different bundle, target, lock or replacement generation changes/refuses the subject.",
+        "An incomplete bundle set cannot produce an apply-ready plan."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Plan and corpus show exact binding from source to all bundles and destinations.",
+        "Filesystem/network spies show plan construction performs no publication."
+      ],
+      "safe_stop": "A inspectable local plan exists; no remote writer is called.",
+      "commit_subject": "feat(publish): bind prepared plans to exact release subjects",
+      "notes": [
+        "PROP-060 is a proposed canonical file created by this task, not a baseline existing source. Schema/module filenames are finalized within the listed subtrees before coding.",
+        "Prerequisites: M-13, M-14-A and M-16-B; do not duplicate their operation or target identity models.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-07-A.2",
+      "title": "Evaluate A approvals and disabled B policy",
+      "goal": "Implement the shared pure authorization decision for an exact prepared plan.",
+      "read_paths": [
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/release.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-publish/src/",
+        "xtask/src/dist/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Consume the subject from .1 and M-16/M-14 identity carriers; define approved/needs-approval/refused outcomes with reasons.",
+        "Implement A receipt matching and B scope/epoch/expiry/revocation evaluation over the same effect plan; default live mode stays A.",
+        "Bind policy generation, target, principal, operations, captures and effective smoke policy; return structured decisions without activating B or editing policy."
+      ],
+      "positive_cases": [
+        "An exact A approval admits one unchanged batch.",
+        "An explicitly enabled test B policy admits the identical bounded batch."
+      ],
+      "negative_cases": [
+        "Expired/revoked/out-of-scope policy and changed plan refuse before writes.",
+        "Prototype status, prior success and an installed descriptor do not enable B."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "A and B evaluator examples use one plan model and yield explicit reason codes.",
+        "Default construction leaves live B disabled; no secret values enter reports."
+      ],
+      "safe_stop": "Pure authorization evaluator and fixtures are reviewable; no policy activated.",
+      "commit_subject": "feat(publish): evaluate exact batch authority for modes A and B",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

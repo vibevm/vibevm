@@ -33,6 +33,7 @@ use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
 use super::purl::Purl;
 
+mod application;
 mod binary;
 mod deps;
 mod documentation;
@@ -45,6 +46,7 @@ mod weak_deps;
 mod when;
 mod wire;
 
+pub use application::{ApplicationDecl, ApplicationRuntime};
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
 pub use documentation::{

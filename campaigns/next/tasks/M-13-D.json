@@ -1,0 +1,146 @@
+{
+  "id": "M-13-D",
+  "tasks": [
+    {
+      "id": "M-13-D.1",
+      "title": "Implement guarded migration apply and recovery",
+      "goal": "Apply a validated migration with retained before-state, exact CAS and truthful interrupted-state recovery.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-core/src/manifest/",
+        "crates/vibe-workspace/src/",
+        "crates/vibe-safefs/src/",
+        "crates/vibe-cli/src/commands/refactor/",
+        "crates/vibe-mcp/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-cli/Cargo.toml",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-mcp/Cargo.toml",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "steps": [
+        "Implement explicit apply for .C plans: verify input/target epoch and exact source digest, retain before-images, then publish through existing safe filesystem/journal primitives.",
+        "Support a real recognized legacy authored-format transition without guessing new source classification/feature intent; validate the resulting reader-visible format.",
+        "Inject interruption before/after each write and provide inspect/recover/idempotent replay; record completed/pending/unknown effects instead of assuming Err means no write."
+      ],
+      "positive_cases": [
+        "A known legacy document migrates preserving comments, values and selected intent.",
+        "Repeated exact apply is idempotent; supported interrupted recovery restores/completes the owned prefix."
+      ],
+      "negative_cases": [
+        "Concurrent source change, unknown third state or ambiguous input refuses.",
+        "A failed migration cannot silently lose source, rewrite fixtures/upstreams or fabricate successful rollback."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Runnable fixtures cover real before→after reader behavior, preservation and recovery.",
+        "Generated report/errors retain exact source/target/effect state across process exit."
+      ],
+      "safe_stop": "Migration apply/recovery foundation passes; source/feature converters remain their own atoms.",
+      "commit_subject": "feat(migrate): apply exact format transitions with recovery",
+      "notes": [
+        "Do not make this early foundation depend on completed M-16 editing services. Preserve an explicit adapter seam; M-16 later adds participating-buffer barriers to these same domain operations.",
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-13-D.2",
+      "title": "Reconcile active own 1.0.0 metadata within the accepted census",
+      "goal": "Apply only the exact active-owned manifest/constraint changes identified by M-13-A.",
+      "read_paths": [
+        "Cargo.toml",
+        "vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "tools/self-check.sh"
+      ],
+      "write_paths": [
+        "Cargo.toml",
+        "vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "crates/",
+        "vibevm/vibepacks/"
+      ],
+      "steps": [
+        "Require the root-approved exact per-file M-13-A active-owned edit list before touching any nested manifest; narrow this subtree envelope to that list in the execution packet.",
+        "Update only active own product/package versions and own constraints/docs that the census proves must be 1.0.0; preserve foreign dependencies, upstream pins, historical slots/receipts, fixtures and machine epochs.",
+        "Run the preservation/version fixtures and current workspace metadata checks; report no-op items honestly and regenerate derived state only after the owning authored source is committed under root control."
+      ],
+      "positive_cases": [
+        "All in-scope active own products/packages are 1.0.0 and their owned constraints agree.",
+        "Already-correct files remain unchanged."
+      ],
+      "negative_cases": [
+        "A broad numeric replacement or editing a frozen historical slot is forbidden.",
+        "Unknown ownership or a file absent from the accepted edit list stops that edit without reopening the owner policy."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Per-file before/after census proves exactly which active-owned items changed.",
+        "Foreign/history/fixture/epoch exclusion checks show no collateral version edits."
+      ],
+      "safe_stop": "Active-own metadata reconciliation is complete within the accepted exact list.",
+      "commit_subject": "chore(version): reconcile active owned metadata at 1.0.0",
+      "notes": [
+        "The listed crates/ and vibepacks/ are outer closed envelopes only: execution MUST receive the exact accepted manifest/constraint file list from M-13-A; never use the subtree as permission for arbitrary edits.",
+        "This is the only intentionally inventory-derived file perimeter in this authoring slice; root must bind/narrow it before dispatch. No automatic Redbook bump, release or graduation.",
+        "Dispatch binding is mandatory: attach the accepted per-file active-owned census from M-13-A; neither broad subtree is an executable write grant. If no such binding exists, the task is not dispatch-ready.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

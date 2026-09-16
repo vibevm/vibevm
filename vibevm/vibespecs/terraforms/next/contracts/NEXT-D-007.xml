@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-007</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-007-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-007-STATE></p>
+  <p><NEXT-D-007-LAW fact="true" status="spec/done">Сначала интерактивный debugger существующего представления: состав, why-included, provenance, сравнение/what-if; versioned machine input/output/errors/progress/snapshot IDs для IDE</NEXT-D-007-LAW></p>
+</spec>

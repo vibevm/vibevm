@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-025</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-025-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-025-STATE></p>
+  <p><NEXT-D-025-LAW fact="true" status="spec/done">Все возможности VibeVM и внутренние структуры для анализа/отладки должны быть доступны внешним IDE-клиентам; сначала переделать общую архитектуру фичей, сам плагин/IDE/MVP пока не планировать</NEXT-D-025-LAW></p>
+</spec>

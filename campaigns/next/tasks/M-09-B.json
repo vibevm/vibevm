@@ -1,0 +1,117 @@
+{
+  "id": "M-09-B",
+  "tasks": [
+    {
+      "id": "M-09-B.1",
+      "title": "Migrate both bridge taxonomies and consumer bindings",
+      "goal": "Change the two bridge wrappers to flow at their accepted 1.0.0 while preserving package and upstream identities.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:com.external-skills.skills/vibe.toml"
+      ],
+      "write_paths": [
+        "external:org.speckit.speckit",
+        "external:com.external-skills.skills",
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-028-package-families.xml",
+        "fixtures/next/bridges/"
+      ],
+      "steps": [
+        "Bind isolated writable external checkouts; record before-captures, wrapper coordinates/version, kind and upstream pins.",
+        "Change only wrapper kind/capability declarations needed for flow and own wrapper contracts; retain accepted 1.0.0 and all upstream attribution/versions.",
+        "Create consumer old→new kind/capability fixtures using the accepted migration machinery; identify every changed lock/manifest field instead of silently reselecting."
+      ],
+      "positive_cases": [
+        "Both wrappers are flow at 1.0.0 with unchanged upstream provenance.",
+        "A consumer migrates its authored binding and lock deterministically."
+      ],
+      "negative_cases": [
+        "No upstream release number or capture bytes are relabeled as Vibe-owned.",
+        "No new version bump or public publication is inferred from the kind change."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Exact isolated external diffs show only intended wrapper/migration changes.",
+        "Consumer fixture preserves selected behavior and source identity."
+      ],
+      "safe_stop": "Local external diffs and consumer migration evidence are ready; no publication.",
+      "commit_subject": "feat(bridges): migrate wrapper kinds to flow at 1.0.0",
+      "notes": [
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+      ]
+    },
+    {
+      "id": "M-09-B.2",
+      "title": "Preserve complete foreign resources and source interpretation",
+      "goal": "Deliver each bridge's complete captured resources without treating imported content as Vibe specifications.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-specdoc/src/load.rs",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:com.external-skills.skills/vibe.toml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "write_paths": [
+        "external:org.speckit.speckit",
+        "external:com.external-skills.skills",
+        "fixtures/next/bridges/",
+        "crates/vibe-agent-projection/src/",
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/lib.rs"
+      ],
+      "steps": [
+        "Apply M-06-A classification to imported CommonMark/XML-data/opaque content; keep authored Vibe wrappers separately declared.",
+        "Project the audited closure, including nested templates/scripts/data/notices, with exact captured bytes and path layout.",
+        "Use prepared offline fixtures to validate file membership, duplicate-name interpretations and resource export compatibility; fix demonstrated projection loss in its owning engine."
+      ],
+      "positive_cases": [
+        "Nested resources and notices survive preparation/projection byte-for-byte.",
+        "Foreign Vibe-looking markers remain inert; ordinary same-stem files coexist by identity."
+      ],
+      "negative_cases": [
+        "Missing dependency/resource refuses full projection.",
+        "No XML-data reserialization or automatic script execution occurs."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-facts target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-facts <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Both bridges have complete resource manifests and byte-verified offline projections.",
+        "Source classification is shared rather than a bridge-local suffix workaround."
+      ],
+      "safe_stop": "Foreign resource projection works in isolated fixtures; no publisher invoked.",
+      "commit_subject": "feat(bridges): preserve classified foreign resource closures",
+      "notes": [
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

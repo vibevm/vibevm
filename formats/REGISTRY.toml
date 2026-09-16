@@ -30,6 +30,14 @@
 # the non-existent. It enters on the first line of wave 3.
 
 # ── CLI machine-JSON reports (10 JTD + 1 JSON Schema), PROP-044 §6.5 ─────────
+[format.cli-application-report]
+epoch = 1
+schema = "schemas/application_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-extensions-report]
 epoch = 1
 schema = "schemas/extensions_report.jtd.json"

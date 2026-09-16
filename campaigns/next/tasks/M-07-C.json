@@ -1,0 +1,166 @@
+{
+  "id": "M-07-C",
+  "tasks": [
+    {
+      "id": "M-07-C.1",
+      "title": "Validate evidence producer and channel identity",
+      "goal": "Separate evidence content integrity from authority of the producer that supplied it.",
+      "read_paths": [
+        "crates/vibe-publish/src/release_manifest.rs",
+        "xtask/src/dist/release.rs",
+        "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
+        "vibevm/vibespecs/common/PROP-019-version-manager.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-publish/src/",
+        "xtask/src/dist/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-060-publication-authority.xml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Define approved local execution, authenticated channel and optional signature producer bindings with explicit schema/version.",
+        "Validate producer policy together with exact subject, operation, target and recipe; retain provenance for observational evidence that cannot authorize publication.",
+        "Implement signature verification only as an optional configured branch, preserving equivalent channel/local-trust paths; sanitize diagnostics."
+      ],
+      "positive_cases": [
+        "Configured trusted local/channel evidence for the exact subject is eligible.",
+        "Optional valid signature from an approved issuer satisfies its configured policy."
+      ],
+      "negative_cases": [
+        "Matching hashes from arbitrary JSON do not authorize publication.",
+        "Wrong/replayed subject, unapproved issuer and missing required channel proof refuse without revealing credentials."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Trust decision identifies both producer policy and subject.",
+        "Fixtures prove cryptographic signatures are optional rather than globally mandatory."
+      ],
+      "safe_stop": "Pure evidence admission is implemented; no credentials or issuer policy changed.",
+      "commit_subject": "feat(publish): validate producer authority beside release subjects",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-07-C.2",
+      "title": "Prepare explicit source verification and PR pipeline",
+      "goal": "Connect requested source checks to their actual producer while keeping CI deployment a separate approved action.",
+      "read_paths": [
+        ".github/workflows/release-distributions.yml",
+        "xtask/src/dist/build.rs",
+        "xtask/src/dist/release.rs",
+        "tools/self-check.sh",
+        "Cargo.toml",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "write_paths": [
+        "xtask/src/dist/",
+        "crates/vibe-publish/src/",
+        "campaigns/next/evidence/M-07-C/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-publish/src/lib.rs"
+      ],
+      "steps": [
+        "Map existing self-check and distribution commands; implement a local verification request/receipt that records exactly which source checks were requested and executed.",
+        "Prepare a reviewable CI workflow patch in the task evidence directory, showing trusted versus untrusted job inputs, credential boundary, captured outputs and optional signing path.",
+        "Validate the receipt flow with local fixtures; deliver the exact proposed CI patch and external-effect inventory to the root for a separate scoped CI-change packet."
+      ],
+      "positive_cases": [
+        "An explicitly requested check run attaches real results to the exact source subject.",
+        "A build with no full-test request stays truthful and does not falsely claim tests ran."
+      ],
+      "negative_cases": [
+        "Untrusted PR work cannot receive publish credentials or a release-authoritative signer.",
+        "Pending CI approval cannot be reported as an installed/proven live pipeline."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Local verification service and evidence are reproducible.",
+        "Prepared workflow diff is concrete; live CI installation has its own unaccepted/accepted status."
+      ],
+      "safe_stop": "Local implementation and CI candidate are reviewable; no workflow or remote setting was changed.",
+      "commit_subject": "feat(dist): prepare explicit source verification receipts",
+      "notes": [
+        "The existing workflow is read-only here. Writing .github/workflows requires a separate root-issued exact authorization/perimeter; this leaf does not manufacture it.",
+        "A prepared CI patch is not completed live CI deployment; the parent tracks any required approved follow-on.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-07-C.3",
+      "title": "Install the explicitly approved CI producer configuration",
+      "goal": "Complete the real PR/source verification pipeline only after its concrete CI-change batch is authorized.",
+      "read_paths": [
+        ".github/workflows/release-distributions.yml",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/build.rs",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "tools/self-check.sh"
+      ],
+      "write_paths": [
+        ".github/workflows/release-distributions.yml",
+        "campaigns/next/evidence/M-07-C/"
+      ],
+      "steps": [
+        "Consume the prepared workflow diff from .2 and exact current-A authority for the named CI configuration changes; absent approval leaves this task pending.",
+        "Apply only the approved workflow/provider boundary changes, preserving action pins and excluding credentials from untrusted jobs.",
+        "Observe a real authorized verification run or explicitly record remaining external execution debt; validate produced subject/channel receipts using .1, with no publication as a side effect."
+      ],
+      "positive_cases": [
+        "Approved CI configuration emits evidence accepted for its exact protected subject/channel.",
+        "Explicit source checks run only when requested/configured in the approved flow."
+      ],
+      "negative_cases": [
+        "Unapproved workflow mutation or credential exposure is forbidden.",
+        "Prepared YAML or a local fake cannot be claimed as a completed live pipeline."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: xtask target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p xtask <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-publish <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Exact approved CI diff and independently observed producer run are linked.",
+        "No live publication/B activation occurred; missing approval/run remains pending."
+      ],
+      "safe_stop": "Without approval, retain the concrete patch and stop. With approval, retain actual CI evidence.",
+      "commit_subject": "ci: wire approved source verification evidence",
+      "notes": [
+        "This future conditional task represents required CI installation rather than hiding it behind local readiness. No CI file is modified during campaign authoring; root supplies the concrete approved batch and any required remote commands.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

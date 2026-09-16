@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">NEXT owner decision D-023</title>
+  <status stage="impl" state="plan"/>
+  <p><NEXT-D-023-STATE fact="true" status="spec/done">Owner state: accepted. This preference is settled; do not ask it again.</NEXT-D-023-STATE></p>
+  <p><NEXT-D-023-LAW fact="true" status="spec/done">Сначала локальная Docker-сеть сервисов и единый machine interface: автоматические descriptions/inventory, управление в пределах пользовательских разрешений</NEXT-D-023-LAW></p>
+</spec>

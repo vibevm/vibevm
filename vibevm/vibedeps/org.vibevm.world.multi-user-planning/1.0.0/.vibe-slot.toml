@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:e1a193828f417c3ddcf1581285dc0166ee9d900ab1ad859402624bc39ad2a051"
+source_hash = "sha256:99396aea6688cb39b509751cb1c12d379f28bcf986af6e4022ac52574d559a15"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:7875ad93c724d9778bd7683f2f29df97d65390ddf7d0a9d26ff5b8c46e96da04"
+derived_hash = "sha256:ce7863adf36a2361127b020728e3b9fd47b42268188235e0f80b3731762a4051"
 
 [[file]]
 path = "LICENSE.md"
@@ -12,31 +12,31 @@ source = "LICENSE.md"
 
 [[file]]
 path = "README.xml"
-sha256 = "23c92f4c7a119840ea077239f4a49da3aaf59348470ae4a5d9f71840b7a5dceb"
+sha256 = "941f841da3de20f4af5c62010d13553cf36ae12218ea9dc4b489062a3fc75b10"
 disposition = "converted"
 source = "README.md"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "430798b0eba8002118fbe542f2beb0a1a249ab4bca05f09ff666a94ee751df27"
+sha256 = "360c1ac6f8f59ed478e12670de64affeb8b7648d5bd145f69926c35f89fcece7"
 disposition = "copied"
 source = "vibe.toml"
 
 [[file]]
 path = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
-sha256 = "a6a80c09374ba6b1becb4bc2b6b20ac9c5bdb9a4329599e44ebbafa60933d474"
+sha256 = "8b835435dc0ea1272bff832385b7761580ed587807ec29b6e3ebe888a5b31be6"
 disposition = "copied"
 source = "vibevm/vibespecs/boot/12-flow-multi-user-planning.xml"
 
 [[file]]
 path = "vibevm/vibespecs/examples/steward-goal/expected/GOAL-CLAUDE.txt"
-sha256 = "bcad08d48208352d801bbb5650d8a7f9123c1e932802c2ccdb5bfbbded053872"
+sha256 = "d8aac165515e0ffb2b9b44a995f2aaea749a5373871ea47ad9fa266a5e32889d"
 disposition = "copied"
 source = "vibevm/vibespecs/examples/steward-goal/expected/GOAL-CLAUDE.txt"
 
 [[file]]
 path = "vibevm/vibespecs/examples/steward-goal/expected/GOAL.txt"
-sha256 = "b29c4e8ee15582a2c20d1c002e31f9f23831e033520f276ac9c98d9f695191d0"
+sha256 = "41efe3169d3f61243a3867953bee43e1c3c5e873e5cf92f98af428f50a65c4f2"
 disposition = "copied"
 source = "vibevm/vibespecs/examples/steward-goal/expected/GOAL.txt"
 
@@ -66,51 +66,69 @@ source = "vibevm/vibespecs/examples/steward-goal/home/contexts/00000000-0000-400
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
-sha256 = "46c96e0ad0e9af745dbd7a983e8d25255c18fc5d0e1b9f8b44d2ef8f0cc011f8"
+sha256 = "7f1a23847d6b26034b81142f604efcec6a22a674266b0323d21837e791cb3176"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml"
-sha256 = "1d4ceca7a902c7b1ead7150c40ff997ff9e8065122e45cfdcd295a0c46aac777"
+sha256 = "672b622e390419c2e2a20156ea8dc63f28d67ecc7b7f3ff5defcc5a8db0db1a2"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/campaign-execution.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
-sha256 = "9537295e52ed9cd9407732092143bb9bf46578909de77cc99c151a8332b5cd40"
+sha256 = "c4d0b2f72f12d15bd0863ba2092460aad2fa062247903c39161e41e6a20c6a7d"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/collaboration-and-acceptance.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
-sha256 = "6ddc5705946c1d7c04cbf1939fbd5c3bd0b2d41fc69f488aca20aec23839c1ae"
+sha256 = "d3d02bc44df9a8ce93eb01ba55053c64cb4e000f5b8aed96fc7224c97baef03f"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/custody-and-handoff.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/goal-projection.xml"
-sha256 = "2fe0ac141b1e1dfae8c30599feace2700b546c07a015febf8c4b5269ebe2f671"
+sha256 = "6164051b0faf6579421e985dd81032b9f021fd5173d2f5b2b02b34034c9a3bc1"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/goal-projection.xml"
 
 [[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/interruption-recovery.xml"
+sha256 = "2173ba160514012db7d3bc6b06ffdf3b04d2e64cbaf72fe3c8315cd7ff714502"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/interruption-recovery.xml"
+
+[[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/migration-and-composition.xml"
-sha256 = "603a0c12af8656a86227a8409975e5147aefb25280eeb1967b113d2ce4316d46"
+sha256 = "b6635b958749d70dad36af2bacde351e9f971742b36ecb159b0835903842fcce"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/migration-and-composition.xml"
 
 [[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/parallel-execution.xml"
+sha256 = "7d6b27b99f0d02f4d119add8804c5254963b3e8c6451ceb99d216c8ab971f9ed"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/parallel-execution.xml"
+
+[[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml"
-sha256 = "1ebaad0434d1d7f6cbdd785df70d8a0d8f28bfb20ea98e70d9fbbe9ac1ef5908"
+sha256 = "598e100abc63f20ba44f1ed0d07e9745f3dbb9baf857c95086dd917badb0b664"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/plan-hierarchy.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
-sha256 = "3710e82d1c8ed628c08cdd0a4fb45f60ce9d4aee9d3eeb3351e1e211cb55fca0"
+sha256 = "1b69ab59a47125351734c4c72289537cbfd743c3492038dcda090d0dcba066c8"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/multi-user-planning/user-local-state.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/multi-user-planning/verification-selection.xml"
+sha256 = "3892280961f4cfd41a2f74ac3faf0b4f05db72f86620073be55c3acc8730dd90"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/multi-user-planning/verification-selection.xml"
 
 [[file]]
 path = "vibevm/vibespecs/manual-tests/MT-01-same-machine-central-handoff.xml"
@@ -126,13 +144,13 @@ source = "vibevm/vibespecs/manual-tests/MT-02-deterministic-goal.xml"
 
 [[file]]
 path = "vibevm/vibespecs/manual-tests/MT-03-casual-continuation.xml"
-sha256 = "d7fcf3c465b842f20895af872ac0384035decbd9df89660a41d0aba6c929080f"
+sha256 = "4227a124030ab6d60521df07ca4e8b73e2e78495fc45b2c755d1a876cbf497bb"
 disposition = "copied"
 source = "vibevm/vibespecs/manual-tests/MT-03-casual-continuation.xml"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-goal/SKILL.xml"
-sha256 = "61cd17e81221d94f7bec164560e747dd630619e989e624fd3ff27555e07a947c"
+sha256 = "1c8c14828b37029995c4632fb364ffe9a856015fa0dad05d266b4e2aed7aa481"
 disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-goal/SKILL.md"
 
@@ -144,13 +162,13 @@ source = "vibevm/vibespecs/skills/steward-goal/scripts/.gitignore"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py"
-sha256 = "84c46ca09d9ee17c7becf510f60d57427d4799ac32835087885f94ba66ef197d"
+sha256 = "4abb5571524128d75c6dec989c2852ec20a18743121f21602caca74d30af0e6a"
 disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-goal/scripts/test_render_goal.py"
-sha256 = "79398033268a4aecbb59860bea6a5d367b7b62a1084dcb5c0464235dc2d60493"
+sha256 = "15e763ca2f083cb6923f120126a050345f8037b09c700404dbc64cfe86fb8078"
 disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-goal/scripts/test_render_goal.py"
 
@@ -161,7 +179,25 @@ disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-handoff/SKILL.md"
 
 [[file]]
+path = "vibevm/vibespecs/skills/steward-parallel/SKILL.xml"
+sha256 = "847851940d30fe488b40cf0efda30cdbadcb31f1565605a4aa6e728a8d828a5a"
+disposition = "converted"
+source = "vibevm/vibespecs/skills/steward-parallel/SKILL.md"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-parallel/scripts/parallel_frontier.py"
+sha256 = "85f4a03a6e8ff2d91a2c775fea8e67939de41ee628165c647052bf3d1d339d56"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-parallel/scripts/parallel_frontier.py"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-parallel/scripts/test_parallel_frontier.py"
+sha256 = "792e24c351ff7c20858764fa79eaa371eb499e4f8ed90d0ca44c9f84bb72a2da"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-parallel/scripts/test_parallel_frontier.py"
+
+[[file]]
 path = "vibevm/vibespecs/skills/steward-status/SKILL.xml"
-sha256 = "5800ba386a331c4443f74b33bef149e1bf465705baf025466093b6fcab1ede11"
+sha256 = "9c7207816408ff62b5b119d9d60da71d69b2494c681cff3711b7a83eebbec1b4"
 disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-status/SKILL.md"

@@ -29,6 +29,7 @@
   A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME → org-vibevm-world-%2Dsource-mirrors-%2DA-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME (org.vibevm.world/source-mirrors)
   ACCEPTANCE-NEVER-TRANSFERS → org-vibevm-world-%2Dmulti-user-planning-%2DACCEPTANCE-NEVER-TRANSFERS (org.vibevm.world/multi-user-planning)
   ADVISORY-CUSTODY → org-vibevm-world-%2Dmulti-user-planning-%2DADVISORY-CUSTODY (org.vibevm.world/multi-user-planning)
+  AFFECTED-TARGETS-FIRST → org-vibevm-world-%2Dmulti-user-planning-%2DAFFECTED-TARGETS-FIRST (org.vibevm.world/multi-user-planning)
   AGENT-CANNOT-ASK-VASYA → org-vibevm-world-%2Ddecision-records-%2DAGENT-CANNOT-ASK-VASYA (org.vibevm.world/decision-records)
   AGENT-READS-THE-TREE-COLD-EVERY-SESSION → org-vibevm-world-%2Dspec-genres-%2DAGENT-READS-THE-TREE-COLD-EVERY-SESSION (org.vibevm.world/spec-genres)
   AI-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DAI-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
@@ -86,6 +87,7 @@
   EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP → org-vibevm-world-%2Dcampaign-plans-%2DEVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP (org.vibevm.world/campaign-plans)
   EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE → org-vibevm-world-%2Daddressable-specs-%2DEVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE (org.vibevm.world/addressable-specs)
   EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT → org-vibevm-world-%2Ddev-runtime-docs-%2DEVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT (org.vibevm.world/dev-runtime-docs)
+  EXECUTION-WINDOW → org-vibevm-world-%2Dmulti-user-planning-%2DEXECUTION-WINDOW (org.vibevm.world/multi-user-planning)
   EXPLICIT-HANDOFF-ONLY → org-vibevm-world-%2Dmulti-user-planning-%2DEXPLICIT-HANDOFF-ONLY (org.vibevm.world/multi-user-planning)
   FACT-IS-RECOVERABLE-FROM-THE-CODE → org-vibevm-world-%2Ddecision-records-%2DFACT-IS-RECOVERABLE-FROM-THE-CODE (org.vibevm.world/decision-records)
   FORMAT-DOES-NOT-ENFORCE-ATOMICITY → org-vibevm-world-%2Dgit-conventional-commits-%2DFORMAT-DOES-NOT-ENFORCE-ATOMICITY (org.vibevm.world/git-conventional-commits)
@@ -254,6 +256,7 @@
   ONE-STATED-PRODUCT-LICENCE → org-vibevm-world-%2Dlicensing-%2DONE-STATED-PRODUCT-LICENCE (org.vibevm.world/licensing)
   OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES → org-vibevm-world-%2Dredbook-%2DOPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES (org.vibevm.world/redbook)
   OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED → org-vibevm-world-%2Dhealth-audit-%2DOWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED (org.vibevm.world/health-audit)
+  PARALLEL-PACKETS → org-vibevm-world-%2Dmulti-user-planning-%2DPARALLEL-PACKETS (org.vibevm.world/multi-user-planning)
   PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER → org-vibevm-world-%2Dcampaign-plans-%2DPHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER (org.vibevm.world/campaign-plans)
   PLAN-IS-HIERARCHICAL → org-vibevm-world-%2Dmulti-user-planning-%2DPLAN-IS-HIERARCHICAL (org.vibevm.world/multi-user-planning)
   POINTER-PACKAGING-LESSONS → org-vibevm-world-%2Dtool-design-lessons-%2DPOINTER-PACKAGING-LESSONS (org.vibevm.world/tool-design-lessons)
@@ -284,6 +287,7 @@
   RECEIVE-COMMAND → org-vibevm-world-%2Dmulti-user-planning-%2DRECEIVE-COMMAND (org.vibevm.world/multi-user-planning)
   RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING → org-vibevm-world-%2Doperating-modes-%2DRECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING (org.vibevm.world/operating-modes)
   RECORD-IS-IMMUNITY-FROM-RE-LITIGATION → org-vibevm-world-%2Ddecision-records-%2DRECORD-IS-IMMUNITY-FROM-RE-LITIGATION (org.vibevm.world/decision-records)
+  RECOVER-BEFORE-RETRY → org-vibevm-world-%2Dmulti-user-planning-%2DRECOVER-BEFORE-RETRY (org.vibevm.world/multi-user-planning)
   RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK → org-vibevm-world-%2Doperating-modes-%2DRED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK (org.vibevm.world/operating-modes)
   RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK → org-vibevm-world-%2Dgit-autonomy-%2DRED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK (org.vibevm.world/git-autonomy)
   RED-LINE-CI-SIGNING-OR-SECRETS → org-vibevm-world-%2Dgit-autonomy-%2DRED-LINE-CI-SIGNING-OR-SECRETS (org.vibevm.world/git-autonomy)
@@ -462,6 +466,7 @@
   models-attend-to-the-edges-of-context → org-vibevm-world-%2Daddressable-specs-%2Dmodels-attend-to-the-edges-of-context (org.vibevm.world/addressable-specs)
   neither-replaces-the-other → org-vibevm-world-%2Dhealth-audit-%2Dneither-replaces-the-other (org.vibevm.world/health-audit)
   never → org-vibevm-world-%2Daddressable-specs-%2Dnever (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Dnever (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Dnever (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Dnever (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Dnever (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Dnever (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Dnever (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dgit-atomic-commits-%2Dnever (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Dnever (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-conventional-commits-%2Dnever (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Dnever (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Dnever (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Dnever (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Dnever (org.vibevm.world/manual-tests), org-vibevm-world-%2Doperating-modes-%2Dnever (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Dnever (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dsecrets-hygiene-%2Dnever (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Dnever (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Dnever (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Dnever (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Dnever (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Dnever (org.vibevm.world/two-process-model)
+  parallel → org-vibevm-world-%2Dmulti-user-planning-%2Dparallel (org.vibevm.world/multi-user-planning)
   placement → org-vibevm-world-%2Daddressable-specs-%2Dplacement (org.vibevm.world/addressable-specs)
   planning → org-vibevm-world-%2Dmulti-user-planning-%2Dplanning (org.vibevm.world/multi-user-planning)
   pointers → org-vibevm-world-%2Daddressable-specs-%2Dpointers (org.vibevm.world/addressable-specs)
@@ -472,6 +477,7 @@
   propose-a-manual-test-lead → org-vibevm-world-%2Dmanual-tests-%2Dpropose-a-manual-test-lead (org.vibevm.world/manual-tests)
   re-derivation-ends-in-re-litigation → org-vibevm-world-%2Ddecision-records-%2Dre-derivation-ends-in-re-litigation (org.vibevm.world/decision-records)
   reach-for-the-skeleton-and-hold-the-laws-lead → org-vibevm-world-%2Dcomparative-research-%2Dreach-for-the-skeleton-and-hold-the-laws-lead (org.vibevm.world/comparative-research)
+  recovery → org-vibevm-world-%2Dmulti-user-planning-%2Drecovery (org.vibevm.world/multi-user-planning)
   recovery-drills-pointer → org-vibevm-world-%2Dconflict-protocol-%2Drecovery-drills-pointer (org.vibevm.world/conflict-protocol)
   red-lines → org-vibevm-world-%2Dgit-autonomy-%2Dred-lines (org.vibevm.world/git-autonomy), org-vibevm-world-%2Doperating-modes-%2Dred-lines (org.vibevm.world/operating-modes)
   red-lines-survive-every-mode-lead → org-vibevm-world-%2Doperating-modes-%2Dred-lines-survive-every-mode-lead (org.vibevm.world/operating-modes)
@@ -1389,7 +1395,8 @@ Never infer current state from a repository-level personal checkpoint.</org-vibe
   mandatory-holder law. Its current heirs are `CASUAL-CONTINUATION`,
   `ADVISORY-CUSTODY` and `LIVE-CONFLICT-STOPS`.</org-vibevm-world--multi-user-planning--ONE-CENTRAL-HOLDER>
       <org-vibevm-world--multi-user-planning--CASUAL-CONTINUATION fact="true" status="impl/done">A timeout, crash,
-  compaction, new chat or model change is ordinary continuation. Any
+  compaction, new chat, model/account change, quota exhaustion or provider
+  overload is ordinary continuation. Any
   owner-facing central agent may resume from the exact binding, settings,
   complete plan and repository evidence without creating session, handoff,
   receipt or takeover documents.</org-vibevm-world--multi-user-planning--CASUAL-CONTINUATION>
@@ -1398,9 +1405,11 @@ Never infer current state from a repository-level personal checkpoint.</org-vibe
   a default write gate. Only a valid `offering` created by an explicit
   owner-requested formal handoff fences writes.</org-vibevm-world--multi-user-planning--ADVISORY-CUSTODY>
       <org-vibevm-world--multi-user-planning--LIVE-CONFLICT-STOPS fact="true" status="impl/done">An empirically
-  observed live conflicting writer or input drift stops writes until the
-  owner resolves the conflict. Stale or mismatched custody metadata alone does
-  not.</org-vibevm-world--multi-user-planning--LIVE-CONFLICT-STOPS>
+  observed live conflicting writer stops affected writes until the owner
+  resolves the conflict. Input drift invalidates the affected snapshot:
+  recapture expected own changes; investigate other changes and escalate only
+  unresolved semantic or writer conflicts. Stale custody metadata alone does
+  not establish a conflict.</org-vibevm-world--multi-user-planning--LIVE-CONFLICT-STOPS>
       <org-vibevm-world--multi-user-planning--ACCEPTANCE-NEVER-TRANSFERS fact="true" status="impl/done">Custody may
   transfer. Acceptance does not: dirty changes and worker claims arrive as
   candidates until the incoming central agent independently reviews and gates
@@ -1435,21 +1444,67 @@ output is allowed after the fence; further repository/plan mutation is not.</org
   discovered obligation has a stable node or an explicit disposition. Never
   stop merely because the visible projection ended; close parents bottom-up
   only after their descendants and exit evidence close.</org-vibevm-world--multi-user-planning--NO-SILENT-LOSS>
+      <org-vibevm-world--multi-user-planning--EXECUTION-WINDOW fact="true" status="impl/done">Respect current owner
+  intent: planning/status requests and execution holds remain binding. During
+  authorized execution, judge viable candidates first, select a meaningful
+  outcome from existing nodes and dispatch only ready, bounded packets. A cold
+  or resumed session reads the complete plan; a warm session may reuse that
+  understanding after checking revision and relevant input changes. Parallelism
+  must fit integration and review capacity. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#root.</org-vibevm-world--multi-user-planning--EXECUTION-WINDOW>
       <org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
   owner input, gates, architecture or resources change. At each milestone and
   before handoff, backscan the original mandate, current tree, plan and accepted
   evidence for omissions and contradictions.</org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN>
     </facts>
   </org-vibevm-world--multi-user-planning--planning>
+  <org-vibevm-world--multi-user-planning--parallel title="Parallel work without a second plan">
+    <p><org-vibevm-world--multi-user-planning--PARALLEL-PACKETS fact="true" status="impl/done">Use parallelism among
+  already-ready tasks or bounded independent parts of one ready task. Keep
+  existing prerequisites and root acceptance. Bind accepted inputs, actual
+  read/write paths, one integration owner and shared resources before dispatch;
+  broad allowed directories do not establish independent ownership. Overlap
+  production, targeted checks and preparation for review only on stable subjects,
+  and keep the rate of new work within review and machine capacity. The optional
+  steward-parallel analyzer reports path/resource candidates and unknowns; it
+  grants no permission, reserves nothing and proves no live-job or semantic
+  independence. Incoming documentation needs a bound source and ownership before
+  its affected packets change. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#root.</org-vibevm-world--multi-user-planning--PARALLEL-PACKETS></p>
+  </org-vibevm-world--multi-user-planning--parallel>
   <org-vibevm-world--multi-user-planning--verification title="Verification economy">
+    <p><org-vibevm-world--multi-user-planning--AFFECTED-TARGETS-FIRST fact="true" status="impl/done">Select the
+  build/test target before exact affected cases or a small family, including
+  negative/invariant cases and named contract consumers. Do not default to
+  unfiltered package/workspace suites or global test listing. Zero selected
+  tests is not a pass. Widen for a demonstrated coverage gap; an atom, commit,
+  public surface or milestone alone is not a full-panel trigger. Preserve the
+  designated comprehensive final campaign gate. Reuse compatible artifacts
+  and valid per-step evidence; resume failed/invalidated steps and the unrun
+  tail with the complete required denominator. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#root.</org-vibevm-world--multi-user-planning--AFFECTED-TARGETS-FIRST></p>
     <p><org-vibevm-world--multi-user-planning--MUTATION-IS-SUSPICION-TRIGGERED fact="true" status="impl/done">Run
   essential affected checks and ordinary negative/invariant tests for every
   atom. Counterfactual mutation is not a routine gate: use one smallest
   reversible mutation only when a concrete observation makes the result
   suspicious and that probe is cheaper than the named alternative proof. Stop
-  after its exact rerun; never enter an open-ended mutation loop. Canon:
+  after its exact rerun; restart or account change does not reset the episode.
+  A compile/setup failure is not a behavioural kill, and an equivalent or
+  unreached survivor is inconclusive. Never enter an open-ended mutation loop. Canon:
   @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#MUTATION-DIAGNOSTIC-LAW.</org-vibevm-world--multi-user-planning--MUTATION-IS-SUSPICION-TRIGGERED></p>
   </org-vibevm-world--multi-user-planning--verification>
+  <org-vibevm-world--multi-user-planning--recovery title="Interruption recovery">
+    <p><org-vibevm-world--multi-user-planning--RECOVER-BEFORE-RETRY fact="true" status="impl/done">Recover surviving
+  artifacts, job status and effect receipts before regenerating or resubmitting.
+  Do not replay an operation whose effects are unknown. Accepted unchanged
+  evidence remains accepted; missing reasoning and unfinished decisions do not.
+  Keep concise decision/evidence and next-check notes at useful boundaries,
+  without a mandatory checkpoint ritual. Transient provider retries use bounded
+  backoff and server hints; exhausted quota/authentication needs an actual
+  availability change. Do not switch credentials automatically or reset retry
+  bounds after a session/account change. Read before recovery:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#root.</org-vibevm-world--multi-user-planning--RECOVER-BEFORE-RETRY></p>
+  </org-vibevm-world--multi-user-planning--recovery>
   <org-vibevm-world--multi-user-planning--profiles title="Persistent user profiles">
     <p><org-vibevm-world--multi-user-planning--PROFILE-QUALITY-FLOOR fact="true" status="impl/done">The owner selects
 `ultra` or `standard` independently of the model name and may switch it during a

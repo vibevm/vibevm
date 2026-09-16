@@ -1,0 +1,143 @@
+{
+  "id": "M-11-C",
+  "tasks": [
+    {
+      "id": "M-11-C.1",
+      "title": "Prepare promotion while preserving existing intent",
+      "goal": "Compute exact proposed authored changes from an accepted inventory/proposal scope.",
+      "read_paths": [
+        "crates/vibe-scrape/src/inventory.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-facts/src/sync.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/",
+        "crates/vibe-core/src/manifest/",
+        "fixtures/next/brownfield/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "steps": [
+        "Consume M-02 binding and M-11-B proposal; resolve exact selected facts/options and full affected reference/write sets.",
+        "Diff against existing authored desired intent; preserve owner values/comments and report conflicting intent as typed input requirements.",
+        "Validate generated outcomes in memory and expose a concrete saved-state promotion plan with required snapshot/ownership/edit-barrier preconditions."
+      ],
+      "positive_cases": [
+        "Nonconflicting observed proposals become exact additive authored edits.",
+        "Existing desired choices are retained and conflicts are reviewable."
+      ],
+      "negative_cases": [
+        "Incomplete/truncated proposal or stale source cannot be promoted as complete.",
+        "Promotion preparation cannot save dirty buffers or overwrite authored intent."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Plan identifies every affected input/output and exact authoring diff.",
+        "Prepare is pure and leaves all source/lock/state bytes unchanged."
+      ],
+      "safe_stop": "Concrete promotion plan awaits its explicit apply operation.",
+      "commit_subject": "feat(brownfield): prepare intent-preserving promotion plans",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-11-C.2",
+      "title": "Apply promotion with full affected-set revalidation",
+      "goal": "Commit an explicitly selected promotion under cooperative exclusion and journaled recovery.",
+      "read_paths": [
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-facts/src/sync.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/",
+        "crates/vibe-safefs/src/",
+        "fixtures/next/brownfield/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-062-brownfield-intake.xml",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs"
+      ],
+      "steps": [
+        "Acquire the M-16 edit barrier and domain writer ownership for all affected resources; revalidate content and directory membership, including outside the direct write set.",
+        "Publish authored changes using retained before-images/CAS and existing migration transaction mechanisms; regenerate only declared derived outputs.",
+        "Inspect post-state independently, record completed/pending effects and expose recovery for interruption without accepting unknown third state."
+      ],
+      "positive_cases": [
+        "An unchanged captured proposal applies exactly once and preserves unrelated intent.",
+        "Supported recovery restores or completes the exact owned prefix."
+      ],
+      "negative_cases": [
+        "Dirty/disconnected participant, outside-write change or membership drift prevents further writes.",
+        "Partial failure cannot be labeled complete promotion or trigger automatic repair."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Injected races/failures preserve exact applicability and partial-state evidence.",
+        "Observation becomes authored intent only through this explicit transaction."
+      ],
+      "safe_stop": "Promotion transaction is proven locally; no production dispatched.",
+      "commit_subject": "feat(brownfield): guard promotion with captured-set recovery",
+      "notes": [
+        "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

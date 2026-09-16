@@ -1,0 +1,103 @@
+{
+  "id": "M-09-E",
+  "tasks": [
+    {
+      "id": "M-09-E.1",
+      "title": "Run complete bridge journeys offline after preparation",
+      "goal": "Verify both bridge products through external adapters with every required resource/action present.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "external:org.speckit.speckit/vibe.toml",
+        "external:com.external-skills.skills/vibe.toml"
+      ],
+      "write_paths": [
+        "fixtures/next/bridges/",
+        "campaigns/next/evidence/M-09-E/"
+      ],
+      "steps": [
+        "Bind the accepted external captures and complete prepared resource/action closure from M-09-A/B/C.",
+        "Execute required bridge workflows through M-08 external adapters in isolated consumers; after preparation deny network and inspect actual output/state.",
+        "Record unsupported/missing steps and exact resource membership; compare original foreign payload bytes/notices after the journey."
+      ],
+      "positive_cases": [
+        "Prepared offline journey succeeds for each required bridge procedure.",
+        "Actual external adapter effects match the reviewed grant and receipt."
+      ],
+      "negative_cases": [
+        "Missing nested resource, hidden network fetch or an unimplemented action blocks acceptance.",
+        "Diagnostic-only output cannot replace a required executable journey."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Both bridge result matrices have independent runtime evidence and full resource closure.",
+        "Offline replay and passive-content checks pass without foreign state corruption."
+      ],
+      "safe_stop": "Bridge proofs are complete locally; publishing remains separate.",
+      "commit_subject": "test(bridges): verify complete prepared offline journeys",
+      "notes": [
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:com.external-skills.skills and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+      ]
+    },
+    {
+      "id": "M-09-E.2",
+      "title": "Integrate local derivatives with native reuse journeys",
+      "goal": "Prove the combined source→derivative→adapter→existing-code execution path without inherited authority.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-install/src/slot_verify.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-requirements/src/query.rs",
+        "crates/vibe-lifecycle/src/runner/verify.rs"
+      ],
+      "write_paths": [
+        "fixtures/next/bridges/",
+        "fixtures/next/native-reuse/",
+        "campaigns/next/evidence/M-09-E/"
+      ],
+      "steps": [
+        "Consume M-10-D and select a bridge resource and native profile resource for independently owned local derivatives.",
+        "Inspect base/local/result provenance, explicitly admit downstream effects, then execute the native reuse journey through M-03/M-04.",
+        "Revoke/alter the derivative binding and verify stale or unauthorized actions refuse while retained original evidence remains readable."
+      ],
+      "positive_cases": [
+        "A sealed-compatible or separately targeted local fork is usable under its own identity.",
+        "Current-source verification remains linked to exact derivative/origin captures."
+      ],
+      "negative_cases": [
+        "Upstream grants/signatures cannot authorize derivative execution.",
+        "Missing one mandatory derivative or current-source evidence case prevents completion."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "The integrated graph links exact source, derivative, grant, effect and acceptance evidence.",
+        "No source slot or external upstream history was modified."
+      ],
+      "safe_stop": "Combined bridge/native/derivative evidence is ready for parent acceptance.",
+      "commit_subject": "test(examples): verify derivative and adapter reuse journeys",
+      "notes": []
+    }
+  ]
+}

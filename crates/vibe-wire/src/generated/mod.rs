@@ -9,6 +9,7 @@
 // every other submodule re-exports its types (`pub use`) instead
 // of carrying its own copies — one type per name, emitted once.
 
+pub mod application_report;
 pub mod artifact_record;
 pub mod boot_artifact_transaction;
 pub mod compiler_ir;

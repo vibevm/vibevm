@@ -1,0 +1,99 @@
+{
+  "id": "M-15-J",
+  "tasks": [
+    {
+      "id": "M-15-J.1",
+      "title": "Close HOME and Docker journeys with machine parity",
+      "goal": "Reconcile actual runtime proof for both required delivery modes before declaring this phase complete.",
+      "read_paths": [
+        "crates/vibe-cli/src/commands/bin.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-publish/src/release_manifest.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-orchestrator/tests/",
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-lifecycle/tests/"
+      ],
+      "steps": [
+        "Execute the complete HOME two-tool/shared-dependency/version/config/recovery/GC journey and the Arch-based image/service/profile/replacement journey through supported services.",
+        "Compare library, CLI and MCP structured identities/effects/results under the same captured scenarios; record unsupported contexts separately from missing implemented interfaces.",
+        "Reconcile all M-15 positive/negative cases and retained artifact IDs; require actual Linux execution, four client launch profiles, local service grants and no-GitHub evidence."
+      ],
+      "positive_cases": [
+        "Both HOME and Docker end states satisfy their independent acceptance inventories.",
+        "Machine surfaces agree on generation, effect and evidence identities."
+      ],
+      "negative_cases": [
+        "A daemon outage becomes skipped-success.",
+        "HOME-only or image-only completion closes the whole phase."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: complete runtime delivery parity fixture with affected delivery cases. A coordinator runs the full panel only at the designated final campaign gate or for demonstrated nonlocal impact with no adequate narrower proof."
+      ],
+      "acceptance": [
+        "Every required M-15 case has reproducible evidence and no unmatched required row.",
+        "Any unavailable executor remains a blocker only for affected proof, never waived completion."
+      ],
+      "safe_stop": "All completed results are retained and incomplete branches remain explicitly open.",
+      "commit_subject": "test(environment): close HOME and Docker delivery parity",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    },
+    {
+      "id": "M-15-J.2",
+      "title": "Document portable operation and recovery contracts",
+      "goal": "Leave permanent developer/user documentation for self-hosted delivery, recovery and the precise future system boundary.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-publish/src/release_manifest.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+      ],
+      "write_paths": [
+        "docs/environment-management/",
+        "docs/image-management/",
+        "docs/machine-api/"
+      ],
+      "steps": [
+        "Write proposed permanent documentation directories with executable examples taken from now-tested product grammar and local fixture outcomes, not invented commands.",
+        "Document independent registry/source/cache/OCI setup, exact input preparation, HOME lifecycle, image evidence/secret handling and retained minimal recovery/self-update path.",
+        "Describe future kernel/initramfs/bootloader/accounts/mounts/services interfaces and VMware boot/reboot/interrupted-upgrade/rescue acceptance without claiming or implementing a full distro."
+      ],
+      "positive_cases": [
+        "A reader can reproduce the local/self-hosted delivery path from permanent docs.",
+        "Recovery reads manifest/lock/inventory when normal profile activation fails."
+      ],
+      "negative_cases": [
+        "Permanent documentation depends on campaign task files or personal context paths.",
+        "Container tests are cited as proof of kernel/boot correctness."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "TO CREATE: documentation example conformance cases using implemented operation grammar; coordinator supplies final reference/promotion checks."
+      ],
+      "acceptance": [
+        "Documentation and capability matrix describe observed support and exact remaining VM/system limits.",
+        "No mandatory GitHub, Nix runtime, permanent daemon or model subscription is introduced."
+      ],
+      "safe_stop": "Permanent docs are reviewable and all supporting evidence is outside disposable campaign material.",
+      "commit_subject": "docs(environment): document delivery and recovery contracts",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-064-runtime-package-management.xml; forward metadata only.",
+        "Documentation paths are proposed owned destinations. Cross-domain promotion and campaign retirement are root-owned tasks, not duplicated here.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    }
+  ]
+}

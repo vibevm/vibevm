@@ -1,0 +1,107 @@
+{
+  "id": "M-17-D",
+  "tasks": [
+    {
+      "id": "M-17-D.1",
+      "title": "Close every supported operation and model coverage row",
+      "goal": "Make ETO/interface completeness a mechanically checked property of the delivered product.",
+      "read_paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-workspace/src/compile_trace.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml"
+      ],
+      "write_paths": [
+        "formats/capability-coverage/",
+        "xtask/src/",
+        "crates/vibe-mcp/tests/",
+        "crates/vibe-orchestrator/tests/"
+      ],
+      "steps": [
+        "Re-enumerate actual public registrations and semantic model families after all initial and M-15 work, comparing sets rather than counts to the original coverage denominator.",
+        "Attach exact valid/invalid request, result, typed partial error, event and model examples plus executable external scenario evidence for every supported row.",
+        "Run generated schema checks and all coverage conformance; classify access-restricted/target-unsupported separately from unimplemented interfaces and keep the latter blocking."
+      ],
+      "positive_cases": [
+        "Every delivered semantic capability has a strict external path and retained conformance case.",
+        "New registrations automatically produce a missing-coverage failure."
+      ],
+      "negative_cases": [
+        "Deleting an inventory row makes an uncovered feature disappear.",
+        "A generic unsupported response or matching schema name counts as functional proof."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE/USE AFTER CREATION: coverage denominator and conformance check integrated in xtask; no invented pre-existing command."
+      ],
+      "acceptance": [
+        "No supported feature/model exists only in CLI, TUI, prose log or private dump.",
+        "The exact coverage set includes all M-01 through M-15 results and semantic package rename."
+      ],
+      "safe_stop": "Coverage is fully evidenced or explicit blockers remain; no hidden defer closes the campaign.",
+      "commit_subject": "test(api): enforce complete operation and model coverage",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    },
+    {
+      "id": "M-17-D.2",
+      "title": "Publish the local developer machine contract",
+      "goal": "Leave implementable client-neutral documentation and compatibility examples independent of temporary campaign files.",
+      "read_paths": [
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-mcp/src/transport.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "formats/EPOCHS.toml",
+        "xtask/src/main.rs",
+        ".cargo/config.toml"
+      ],
+      "write_paths": [
+        "docs/machine-api/",
+        "formats/capability-coverage/"
+      ],
+      "steps": [
+        "Document actual framing/negotiation, context registration, schema epochs, identities, overlays/edit barriers, authority, submissions/events/replay/cancel and recovery from generated examples.",
+        "Publish a local capability compatibility matrix covering contexts/targets/providers and retained/debug schemas, with typed missing/redacted/expired states and exact conformance references.",
+        "Document the five full headless journeys and how future adapters consume shared services; do not propose IDE screens, plugin packaging, LSP/DAP implementation or MVP milestones."
+      ],
+      "positive_cases": [
+        "A new external client can discover schemas and execute the proven admitted workflows from permanent documentation.",
+        "Retained evidence remains interpretable after provider/API exit."
+      ],
+      "negative_cases": [
+        "Documentation sends readers to campaign tasks or personal settings for domain semantics.",
+        "A future-client roadmap replaces missing backend contracts."
+      ],
+      "checks": [
+        "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "TO CREATE: documented-example conformance check against generated schemas and implemented protocol."
+      ],
+      "acceptance": [
+        "Permanent developer documentation matches executable examples and all 26 owner decisions, with D-022's actual status explicit.",
+        "Root-owned promotion/retirement checks can remove the entire temporary campaign without breaking these contracts."
+      ],
+      "safe_stop": "Local developer contract is complete and reviewable; no public publication or IDE implementation occurs.",
+      "commit_subject": "docs(api): document complete machine operation contracts",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-067-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Documentation is a local repository artifact; public release remains under existing explicit prepared-batch authority.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+      ]
+    }
+  ]
+}
