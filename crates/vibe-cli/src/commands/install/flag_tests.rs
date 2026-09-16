@@ -31,6 +31,7 @@ use super::*;
 fn base_args() -> InstallArgs {
     InstallArgs {
         packages: Vec::new(),
+        global: false,
         path: PathBuf::from("."),
         registry: None,
         assume_yes: false,

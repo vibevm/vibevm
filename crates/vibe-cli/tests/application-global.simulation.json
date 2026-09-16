@@ -1,0 +1,20 @@
+{
+  "protocol": "vibe-application-simulation/1",
+  "application": {
+    "group": "org.example",
+    "name": "demo-app",
+    "version": "1.0.0",
+    "id": "demo",
+    "installerGroup": "org.example",
+    "installerName": "demo-installer",
+    "installerVersion": "1.0.0",
+    "commands": ["demo-client", "demo-server"]
+  },
+  "operations": ["install", "update", "uninstall"],
+  "expected": {
+    "projectUnchanged": true,
+    "sourceIndependentUninstall": true,
+    "finalStatus": "undeployed",
+    "zeroInference": true
+  }
+}

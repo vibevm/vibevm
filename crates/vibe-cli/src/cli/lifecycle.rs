@@ -91,6 +91,7 @@ impl LifecycleArgs {
     pub(crate) fn install_args(&self) -> InstallArgs {
         InstallArgs {
             packages: Vec::new(),
+            global: false,
             path: self.path.clone(),
             registry: self.registry.clone(),
             assume_yes: self.assume_yes,

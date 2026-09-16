@@ -149,7 +149,11 @@ fn main() -> ExitCode {
         // manifest, workspace or clock is read here) and renders exactly one
         // `cli-install-report` — apply, fresh or parked alike.
         Command::Install(args) => {
-            commands::install::run_direct(&ctx, args, discover_embedded_root(), cli.offline)
+            if args.global {
+                commands::application::install(&ctx, args, discover_embedded_root(), cli.offline)
+            } else {
+                commands::install::run_direct(&ctx, args, discover_embedded_root(), cli.offline)
+            }
         }
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
@@ -199,9 +203,19 @@ fn main() -> ExitCode {
         Command::Skill(args) => commands::skill::run(&ctx, args, cli.offline),
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),
-        Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
+        Command::Uninstall(args) => {
+            if args.global {
+                commands::application::uninstall(&ctx, args, cli.offline)
+            } else {
+                commands::uninstall::run(&ctx, args)
+            }
+        }
         Command::Update(args) => {
-            commands::update::run(&ctx, args, discover_embedded_root(), cli.offline)
+            if args.global {
+                commands::application::update(&ctx, args, discover_embedded_root(), cli.offline)
+            } else {
+                commands::update::run(&ctx, args, discover_embedded_root(), cli.offline)
+            }
         }
         Command::Reinstall(args) => {
             commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)

@@ -302,6 +302,8 @@ pub(crate) struct ManifestWire {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     package: Option<PackageMeta>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    application: Option<crate::manifest::ApplicationDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<WorkspaceSection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     origin: Option<OriginSection>,
@@ -412,6 +414,7 @@ impl TryFrom<ManifestWire> for Manifest {
         Ok(Self {
             project: wire.project,
             package: wire.package,
+            application: wire.application,
             workspace: wire.workspace,
             origin: wire.origin,
             requires: wire.requires,
@@ -486,6 +489,7 @@ impl TryFrom<Manifest> for ManifestWire {
         Ok(Self {
             project: manifest.project,
             package: manifest.package,
+            application: manifest.application,
             workspace: manifest.workspace,
             origin: manifest.origin,
             requires: manifest.requires,

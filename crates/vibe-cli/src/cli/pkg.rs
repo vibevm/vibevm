@@ -150,6 +150,10 @@ pub struct InstallArgs {
     /// constraint on) `vibe.toml` `[requires].packages`.
     pub packages: Vec<String>,
 
+    /// Install exactly one declared user application under the Vibe settings root.
+    #[arg(short = 'g', long = "global")]
+    pub global: bool,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -435,6 +439,14 @@ pub struct UpdateArgs {
     /// currently installed. Mutually exclusive with `--all`.
     pub packages: Vec<String>,
 
+    /// Update exactly one installed user application under the Vibe settings root.
+    #[arg(short = 'g', long = "global")]
+    pub global: bool,
+
+    /// Explicit local source registry for a global application update.
+    #[arg(long)]
+    pub registry: Option<PathBuf>,
+
     /// Update every package in the lockfile. Mutually exclusive with
     /// `<packages>`.
     #[arg(long, conflicts_with = "packages")]
@@ -514,6 +526,10 @@ pub struct ReinstallArgs {
 pub struct UninstallArgs {
     /// Package reference `<kind>:<name>` (version is ignored on uninstall).
     pub package: String,
+
+    /// Uninstall one user application without mutating a project.
+    #[arg(short = 'g', long = "global")]
+    pub global: bool,
 
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]

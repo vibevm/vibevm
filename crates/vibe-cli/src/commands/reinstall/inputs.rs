@@ -68,6 +68,7 @@ pub(super) fn exact_pkgref(
 pub(super) fn resolver_args() -> InstallArgs {
     InstallArgs {
         packages: Vec::new(),
+        global: false,
         path: PathBuf::from("."),
         registry: None,
         assume_yes: false,
