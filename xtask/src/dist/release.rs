@@ -29,9 +29,11 @@ const GITHUB_OWNER: &str = "vibevm";
 const GITHUB_REPO: &str = "vibevm";
 
 mod local;
+mod status;
 #[cfg(test)]
 use local::{LocalPlatform, read_bounded_regular_file};
 use local::{read_local_platform, upload_with};
+pub(crate) use status::status;
 
 trait ReleaseHost {
     fn find_release(&self, tag: &str) -> Result<Option<GithubRelease>>;
@@ -143,49 +145,6 @@ pub(crate) fn upload_built(repo_root: &Path, target: &str, out_dir: &Path) -> Re
         &out_dir.join(bundle_asset_name(&version, target)),
         &out_dir.join(fragment_asset_name(&version, target)),
     )
-}
-
-pub(crate) fn status(repo_root: &Path, raw_version: &str) -> Result<()> {
-    let identity = committed_identity(repo_root, false)?;
-    let version = checked_version(repo_root, raw_version, &identity)?;
-    let client = write_client()?;
-    let tag = format!("v{version}");
-    let release = client
-        .find_release_authenticated(&tag)?
-        .with_context(|| format!("GitHub release `{tag}` does not exist; run `dist prepare`"))?;
-    let assets = unique_assets(client.list_assets_authenticated(release.id)?)?;
-    println!(
-        "dist status: {} ({})",
-        tag,
-        if release.draft { "draft" } else { "published" }
-    );
-    for target in SUPPORTED_DISTRIBUTION_TARGETS {
-        let expected = [
-            bundle_asset_name(&version, target),
-            bootstrap_asset_name(target),
-            fragment_asset_name(&version, target),
-        ];
-        let present = expected
-            .iter()
-            .filter(|name| assets.contains_key(*name))
-            .count();
-        println!("  {target}: {present}/3 assets");
-    }
-    for optional in [
-        DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME,
-        DISTRIBUTION_BASH_INSTALLER_FILENAME,
-        DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME,
-    ] {
-        println!(
-            "  {optional}: {}",
-            if assets.contains_key(optional) {
-                "present"
-            } else {
-                "absent"
-            }
-        );
-    }
-    Ok(())
 }
 
 pub(crate) fn finalize(repo_root: &Path, raw_version: &str, publish: bool) -> Result<()> {
