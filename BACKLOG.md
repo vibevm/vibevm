@@ -1930,3 +1930,12 @@ structure, and it goes when the file does.
 | @fact:B171-SEVERITY **severity** | P2 — existing host traceability debt; no application runtime failure or new application orphan was observed. |
 | @fact:B171-DISPOSITION **disposition** | `open` — reconcile the existing source/spec revisions and missing tags, then regenerate and check the complete host map in a dedicated follow-up. Do not add exemptions or silently include unrelated unaccepted source facts in an application feature commit. |
 | @fact:B171-FILED **filed by** | Native user-application installation acceptance, 2026-09-16. |
+
+## B-172 — conform accepts an unmatched scope as a green result {#b-172}
+
+| field | value |
+|---|---|
+| @fact:B172-WHAT **what** | `rust-ai-native conform check --scope` advertises a crate name, but `core-ai-native-conform::finding::Report::scoped` filters repository-relative file paths with `starts_with`. `--scope vibe-core` selects no files and exits successfully even when the full check reports findings in `crates/vibe-core/`. |
+| @fact:B172-EVIDENCE **evidence** | 2026-09-17 command-progress acceptance: named scopes `vibe-core` and `vibe-cli` reported zero; the full check exposed new progress-module findings, which were then handled directly. The canonical Rust stack and installed projection have identical scope-filter sources. |
+| @fact:B172-SEVERITY **severity** | P2 — a documented invocation can falsely certify a change. |
+| @fact:B172-DISPOSITION **disposition** | `open` — align the advertised grammar with crate resolution and refuse unknown or unmatched scopes. Until fixed, use a repository-relative prefix such as `--scope crates/vibe-core/` and verify the selected coverage. No discipline-engine changes are included in the command-progress feature. |
