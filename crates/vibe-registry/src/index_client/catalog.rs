@@ -35,12 +35,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
-use std::time::Duration;
-
 use vibe_wire::generated::index::e1::repomd::Repomd;
 use vibe_wire::generated::shared::VersionEntry;
 
-use super::{FETCH_TIMEOUT_SECS, IndexClient, IndexError};
+use super::{IndexClient, IndexError};
 
 /// The catalog manifest's file name, as PROP-005 §2.4 spells it.
 pub const REPOMD: &str = "repomd.json";
@@ -109,12 +107,7 @@ impl IndexClient {
     /// auth plan. `Ok(None)` on 404, which is «this index does not carry
     /// that file», never «the read failed».
     fn catalog_file(&self, url: &str) -> Result<Option<Vec<u8>>, IndexError> {
-        let client = IndexClient::build_client(
-            Duration::from_secs(FETCH_TIMEOUT_SECS),
-            self.auth(),
-            self.file_base(),
-        )
-        .map_err(|e| IndexError::Http {
+        let client = self.file_client().map_err(|e| IndexError::Http {
             url: url.to_string(),
             message: e.to_string(),
         })?;

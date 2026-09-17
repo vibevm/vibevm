@@ -290,10 +290,10 @@ fn names_fixed_content(refname: &str) -> bool {
 /// graph, 2026-09-14: every raw read of the walk now reuses a pooled
 /// connection, and the resolution phase fell from 116 s to 90 s.
 ///
-/// `index_client` still builds a client per call, and on a registry whose
-/// index is a static mirror it is querying the same host this path reads
-/// from — so it is now where nearly all the remaining handshakes come
-/// from. That is its own file's call to make, not this one's.
+/// `index_client` applies the same invocation-local connection-pool rule to
+/// its file and server bases. The pools stay separate because their auth and
+/// timeout decisions are separate, while repeated reads within each base do
+/// not repay TLS setup.
 ///
 /// `None` when the client cannot be built at all — a TLS backend that
 /// will not initialise, which is a property of the build and the machine

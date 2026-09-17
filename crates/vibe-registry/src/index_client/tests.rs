@@ -27,6 +27,21 @@ fn at_with_auth_carries_the_plan() {
 }
 
 #[test]
+fn fetch_clients_are_reused_within_one_index_client() {
+    let client = IndexClient::at("https://example.com/index");
+    let first = client.file_client().expect("first client");
+    let second = client.file_client().expect("second client");
+    assert!(
+        std::ptr::eq(first, second),
+        "repeated index reads must share one connection pool"
+    );
+
+    let first = client.server_client().expect("first server client");
+    let second = client.server_client().expect("second server client");
+    assert!(std::ptr::eq(first, second));
+}
+
+#[test]
 fn index_client_debug_redacts_bearer_token() {
     // The client derives Debug; its `auth` field's Debug must not
     // leak the secret, or the derived impl would print it.
@@ -34,6 +49,8 @@ fn index_client_debug_redacts_bearer_token() {
         "https://example.com",
         IndexAuth::Bearer(BearerToken::new("hunter2-supersecret".into())),
     );
+    let _ = c.file_client().expect("file client builds");
+    let _ = c.server_client().expect("server client builds");
     let rendered = format!("{c:?}");
     assert!(
         rendered.contains("<redacted>"),

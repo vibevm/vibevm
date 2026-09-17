@@ -26,6 +26,7 @@ mod auth;
 mod catalog;
 mod handshake;
 mod locate;
+mod pooled;
 mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
@@ -35,6 +36,7 @@ pub use wire::{
     BindingSite, IndexVersion, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,
 };
 
+use std::sync::OnceLock;
 use std::time::Duration;
 
 use semver::Version;
@@ -64,13 +66,14 @@ const FETCH_TIMEOUT_SECS: u64 = 10;
 ///
 /// `auth` is the index-access plan resolved from the registry's
 /// credentials (see [`IndexAuth`]). Its [`Debug`](std::fmt::Debug)
-/// representation redacts any bearer token, so this struct's derived
-/// `Debug` never leaks the secret.
-#[derive(Debug, Clone)]
+/// representation redacts bearer tokens and hides HTTP client internals.
+#[derive(Clone)]
 pub struct IndexClient {
     file_base: String,
     server_base: String,
     auth: IndexAuth,
+    file_client: OnceLock<Result<reqwest::blocking::Client, String>>,
+    server_client: OnceLock<Result<reqwest::blocking::Client, String>>,
 }
 
 #[derive(Debug, Error)]
@@ -190,6 +193,8 @@ impl IndexClient {
                         file_base,
                         server_base: trimmed.to_string(),
                         auth,
+                        file_client: OnceLock::new(),
+                        server_client: OnceLock::new(),
                     });
                 }
                 handshake::HandshakeProbe::Refused { reason } => {
@@ -210,6 +215,8 @@ impl IndexClient {
                         file_base: candidate,
                         server_base: trimmed.to_string(),
                         auth,
+                        file_client: OnceLock::new(),
+                        server_client: OnceLock::new(),
                     });
                 }
                 Ok(resp) => {
@@ -264,6 +271,8 @@ impl IndexClient {
             file_base: trimmed.clone(),
             server_base: trimmed,
             auth,
+            file_client: OnceLock::new(),
+            server_client: OnceLock::new(),
         }
     }
 
@@ -319,12 +328,7 @@ impl IndexClient {
         name: &str,
     ) -> Result<Option<Vec<IndexVersion>>, IndexError> {
         let url = format!("{}/by-name/{}.json", self.file_base, name);
-        let client = Self::build_client(
-            Duration::from_secs(FETCH_TIMEOUT_SECS),
-            &self.auth,
-            &self.file_base,
-        )
-        .map_err(|e| IndexError::Http {
+        let client = self.file_client().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
         })?;
@@ -370,12 +374,7 @@ impl IndexClient {
     /// and sorting are the caller's job (it unions across registries).
     pub fn name_candidates(&self, name: &str) -> Result<Vec<Group>, IndexError> {
         let url = format!("{}/by-name/{}.json", self.file_base, name);
-        let client = Self::build_client(
-            Duration::from_secs(FETCH_TIMEOUT_SECS),
-            &self.auth,
-            &self.file_base,
-        )
-        .map_err(|e| IndexError::Http {
+        let client = self.file_client().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
         })?;
@@ -431,12 +430,7 @@ impl IndexClient {
             .pop_if_empty()
             .push(purl);
         let url = parsed.to_string();
-        let client = Self::build_client(
-            Duration::from_secs(FETCH_TIMEOUT_SECS),
-            &self.auth,
-            &self.server_base,
-        )
-        .map_err(|e| IndexError::Http {
+        let client = self.server_client().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
         })?;
@@ -481,12 +475,7 @@ impl IndexClient {
         limit: Option<usize>,
     ) -> Result<SearchResults, IndexError> {
         let url = format!("{}/v1/packages", self.server_base);
-        let client = Self::build_client(
-            Duration::from_secs(FETCH_TIMEOUT_SECS),
-            &self.auth,
-            &self.server_base,
-        )
-        .map_err(|e| IndexError::Http {
+        let client = self.server_client().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
         })?;
@@ -540,9 +529,11 @@ impl IndexClient {
     /// every request funnels through, so the bearer token (when the
     /// plan is [`IndexAuth::Bearer`]) is attached once here via
     /// `default_headers` and rides every request — including the probe
-    /// — without touching the individual `.send()` call sites. A fresh
-    /// client per call preserves the per-call timeout (5s probe /
-    /// 10s fetch).
+    /// — without touching the individual `.send()` call sites.
+    /// The probe owns its short-lived 5s client. A resolved `IndexClient`
+    /// keeps one 10s client per base for the rest of the invocation so a
+    /// dependency walk reuses its connection pool instead of repeating a TLS
+    /// handshake for every package.
     ///
     /// **Р3 layer 2 — the attachment refuses plaintext.** The token is
     /// attached only when this client's `base_url` starts with
