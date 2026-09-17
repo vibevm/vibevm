@@ -171,8 +171,8 @@
     <p>Почтовый ящик под `.vibe/agentic/`, куда vibe кладёт инструкцию, которую не может выполнить сам (*relay*); агент разбирает его командой `vibe command`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#RELAY-PARKS"/>
   </relay>
-  <scrape title="scrape">
-    <p>Окончательное снятие слоя vibe с проекта, по контракту, с планом и доказательством здоровья; у слова нет устоявшегося русского эквивалента, команда так и называется — `vibe scrape`. Не путать с `clean`.</p>
+  <scrape title="зачистка">
+    <p>Окончательное снятие слоя vibe с проекта (*scrape*), по контракту, с планом и доказательством здоровья; команда называется `vibe scrape`. Не путать с `clean`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-056#SCRAPE-TERM-BOUNDARY"/>
   </scrape>
   <skill title="навык">
