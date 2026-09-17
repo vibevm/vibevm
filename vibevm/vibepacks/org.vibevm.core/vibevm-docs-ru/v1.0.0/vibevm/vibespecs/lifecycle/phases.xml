@@ -5,7 +5,7 @@
   <p>У сборки программ есть фиксированный порядок шагов, и vibe называет их: проверить дерево, произвести сгенерированные исходники, собрать, протестировать, дать агенту создать то, что может только агент, проверить результат, упаковать, выложить. Каждый шаг выполняется, только когда изменилось что-то, от чего он зависит.</p>
   <example ref="deploy-plan"/>
   <the-phases title="Девять фаз">
-    <p>У vibe два [жизненных цикла](../glossary/index.xml#lifecycle). У `clean` одна [фаза](../glossary/index.xml#phase), и он удаляет выведенное состояние. У `default` девять фаз в фиксированном порядке: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Назвать фазу — значит выполнить и все фазы до неё: `vibe test` проверяет, ставит, генерирует, собирает и тестирует.</p>
+    <p>У vibe два [жизненных цикла](../glossary/index.xml#lifecycle) (*lifecycle*). У `clean` одна [фаза](../glossary/index.xml#phase) (*phase*), и он удаляет выведенное состояние. У `default` девять фаз в фиксированном порядке: `validate`, `install`, `generate`, `build`, `test`, `create`, `verify`, `package`, `deploy`. Назвать фазу — значит выполнить и все фазы до неё: `vibe test` проверяет, ставит, генерирует, собирает и тестирует.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"/>
     <table>
       <tr><td>Фаза</td><td>Что делает</td></tr>
@@ -25,7 +25,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-DEPLOY"/>
   </the-phases>
   <fresh title="Ничто не выполняется дважды впустую">
-    <p>Каждый прогон фазы записывает [отпечаток](../glossary/index.xml#fingerprint) входов, которые она объявила; следующий прогон пропускает фазу, чьи входы не изменились. Свежесть судится по каждому [вкладу](../glossary/index.xml#contribution) отдельно, так что один устаревший шаг перезапускается сам по себе, а соседи остаются пропущенными. Именно поэтому `vibe deploy` дёшево набрать дважды: во второй раз он в основном сообщает, что всё свежее.</p>
+    <p>Каждый прогон фазы записывает [отпечаток](../glossary/index.xml#fingerprint) (*fingerprint*) входов, которые она объявила; следующий прогон пропускает фазу, чьи входы не изменились. Свежесть судится по каждому [вкладу](../glossary/index.xml#contribution) (*contribution*) отдельно, так что один устаревший шаг перезапускается сам по себе, а соседи остаются пропущенными. Именно поэтому `vibe deploy` дёшево набрать дважды: во второй раз он в основном сообщает, что всё свежее.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#FRESHNESS-IS-PER-CONTRIBUTION"/>
   </fresh>
