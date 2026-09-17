@@ -32,7 +32,7 @@
       <p>1. Установите git и тулчейн Rust. OpenSSL не нужен.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#TOOLS-LIST"/>
       <p>2. Клонируйте репозиторий: `git clone https://github.com/vibevm/vibevm.git` — и войдите в папку.</p>
-      <p>3. Запустите скрипт первого запуска: `bash tools/first-run.sh` на Linux и macOS, `.\tools\first-run.ps1` на Windows. Он собирает программу, устанавливает её в управляемое [хранилище](../glossary/index.xml#store) и настраивает лаунчеры.</p>
+      <p>3. Запустите скрипт первого запуска: `bash tools/first-run.sh` на Linux и macOS, `.\tools\first-run.ps1` на Windows. Он собирает программу, устанавливает её в управляемое [хранилище](../glossary/index.xml#store) (*store*) и настраивает лаунчеры.</p>
       <p>4. Откройте новый терминал и выполните `vibe --version`, затем `vibe self doctor`.</p>
       <p>Позже `vibe self update` переводит установку на новейший выпуск, а `vibe self reinstall` скачивает текущую заново. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
