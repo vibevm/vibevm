@@ -1939,3 +1939,13 @@ structure, and it goes when the file does.
 | @fact:B172-EVIDENCE **evidence** | 2026-09-17 command-progress acceptance: named scopes `vibe-core` and `vibe-cli` reported zero; the full check exposed new progress-module findings, which were then handled directly. The canonical Rust stack and installed projection have identical scope-filter sources. |
 | @fact:B172-SEVERITY **severity** | P2 — a documented invocation can falsely certify a change. |
 | @fact:B172-DISPOSITION **disposition** | `open` — align the advertised grammar with crate resolution and refuse unknown or unmatched scopes. Until fixed, use a repository-relative prefix such as `--scope crates/vibe-core/` and verify the selected coverage. No discipline-engine changes are included in the command-progress feature. |
+
+## B-173 — release floor is blocked by post-baseline handwritten wire {#b-173}
+
+| field | value |
+|---|---|
+| @fact:B173-WHAT **what** | The final `tools/self-check.sh` release panel stops at the wire-derive ratchet before product tests: 13 `Serialize`/`Deserialize` files landed after the current baseline across `progress-core`, `vibe-cli`, `vibe-core`, `vibe-doc-shell`, `vibe-doc`, `vibe-registry`, and `xtask`. Several are strict VibeVM-owned durable or exchanged formats, notably the user-application index/management/context/reply and distribution descriptors, so raising every count as “non-wire” would be false. |
+| @fact:B173-EVIDENCE **evidence** | 2026-09-17 CLI-progress release gate, `tools/self-check.sh` step 3/53: current/baseline counts are `progress-core` 12/11, `vibe-cli` 48/44, `vibe-core` 37/35, `vibe-doc-shell` 3/absent, `vibe-doc` 3/2, `vibe-registry` 9/8, `xtask` 15/14. The CLI-progress diff itself adds no serde derive. Exact post-baseline files were enumerated against commit `10f37bd21`; affected progress tests, strict clippy, and specmap are independently green. |
+| @fact:B173-SEVERITY **severity** | P1 — blocks the mandatory release panel and therefore tag/release publication; the current CLI-progress product change is not the source of the drift. |
+| @fact:B173-DISPOSITION **disposition** | `open` — classify all 13 files. Move VibeVM-owned formats to registered JTD/codegen; raise the baseline only for proven config, CLI-local, foreign-response, or test-only shapes, naming each decision. Then rerun the complete panel from step 1. |
+| @fact:B173-FILED **filed by** | CLI-PROGRESS-ALL final release gate, 2026-09-17. |
