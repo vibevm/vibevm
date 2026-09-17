@@ -49,7 +49,7 @@
   <edge-cases title="Особые случаи и правила">
     <p>Неизменённый манифест против неизменённого [лок-файла](../glossary/index.xml#lock-file) заставляет `vibe install` вовсе пропустить резолвер: лок и есть ответ.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILE-RESPECTING"/>
-    <p>Лок-файл не записывает ни [индекс](../glossary/index.xml#index-registry) [реестра](../glossary/index.xml#registry), ни зеркало: чтобы воспроизвести его, нужны только [координаты](../glossary/index.xml#coordinate), [отпечатки](../glossary/index.xml#fingerprint) и источник, который может их отдать.</p>
+    <p>Лок-файл не записывает ни [индекс](../glossary/index.xml#index-registry) [реестра](../glossary/index.xml#registry), ни зеркало: чтобы воспроизвести его, нужны только [координаты](../glossary/index.xml#coordinate), [отпечатки](../glossary/index.xml#fingerprint) (*fingerprint*) и источник, который может их отдать.</p>
     <p>`vibe why &lt;coordinate&gt;` объясняет по лок-файлу и манифестам, почему пакет в проекте или что его заблокировало.</p>
     <p>Файл читается строго: поле, которого vibe не знает, — ошибка, а не предупреждение, так что ручная правка или поле из более нового vibe ловится сразу.</p>
   </edge-cases>

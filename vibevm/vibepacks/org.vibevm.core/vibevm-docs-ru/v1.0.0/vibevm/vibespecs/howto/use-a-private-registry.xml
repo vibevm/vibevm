@@ -37,7 +37,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
   </redirects>
   <tokens title="Токены">
-    <p>Токен никогда не попадает в файл, который пишет vibe, и никогда не появляется в его выводе. С `--auth token-env` vibe читает его из `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` во время работы и отправляет только по шифрованному соединению. Держите переменную в профиле оболочки или в секретном [хранилище](../glossary/index.xml#store) вашего CI, а не в репозитории.</p>
+    <p>Токен никогда не попадает в файл, который пишет vibe, и никогда не появляется в его выводе. С `--auth token-env` vibe читает его из `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` во время работы и отправляет только по шифрованному соединению. Держите переменную в профиле оболочки или среди секретов вашего CI, а не в репозитории.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
   </tokens>
   <edge-cases title="Особые случаи и правила">
