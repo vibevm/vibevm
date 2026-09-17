@@ -109,7 +109,7 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
         input: PackageSourceBuild<'_>,
     ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
         let options = package_source_options(self.args);
-        let resolver = vibe_package_source::build_install_resolver(
+        let resolver = vibe_package_source::build_install_resolver_with_progress(
             &options,
             input.manifest,
             input.embedded_root,
@@ -117,6 +117,7 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
             input.global,
             input.offline,
             input.locked,
+            input.progress,
         )?;
         Ok(Box::new(RegistryPackageSource::new(
             resolver,

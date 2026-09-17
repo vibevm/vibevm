@@ -77,6 +77,11 @@ pub struct Cli {
     #[arg(long, global = true, conflicts_with = "json")]
     pub quiet: bool,
 
+    /// Show detailed progress diagnostics and child-operation output.
+    /// Human progress is still suppressed by `--quiet` and `--json`.
+    #[arg(short = 'v', long, global = true)]
+    pub verbose: bool,
+
     /// Identifier of the agent or harness invoking this command. Free-form
     /// string; conventional values are `claude-code`, `claude-desktop`,
     /// `cursor`, `opencode`, `codex`. When set, the value is stamped onto

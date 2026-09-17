@@ -5,6 +5,7 @@
 use specmark::spec;
 
 use super::*;
+use vibe_workspace::vibedeps;
 
 /// Resolve-and-fetch one solved node, expanding its features. Roots
 /// get the caller's feature request tailored to what the package
@@ -16,12 +17,18 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     store_root: &Path,
     root_features: &FeatureRequest,
     offline: bool,
+    progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
     let pkgref = exact_pinned_pkgref(node);
     let expected = lockfile
         .find(&node.group, &node.name)
         .map(|p| p.content_hash.clone());
-    let cached = source.resolve_and_fetch(&pkgref, store_root, expected.as_deref())?;
+    let cached = source.resolve_and_fetch_with_progress(
+        &pkgref,
+        store_root,
+        expected.as_deref(),
+        progress,
+    )?;
     let req = if node.is_root {
         tailor_feature_request(root_features, &cached.manifest.features)
     } else {
@@ -49,6 +56,8 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
 /// repo (Chromium-scale) from being re-cloned on every full-pipeline install;
 /// only a *fresh* in-place package (no slot yet) clones, and every
 /// copy/hardlink package fetches exactly as before.
+// Keep the existing planner inputs explicit; progress adds observation only.
+#[allow(clippy::too_many_arguments)]
 pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
@@ -57,10 +66,19 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     root_features: &FeatureRequest,
     workspace_root: &Path,
     offline: bool,
+    progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
         Some(fetched) => Ok(fetched),
-        None => fetch_node(source, node, lockfile, store_root, root_features, offline),
+        None => fetch_node(
+            source,
+            node,
+            lockfile,
+            store_root,
+            root_features,
+            offline,
+            progress,
+        ),
     }
 }
 
@@ -192,6 +210,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
     fetched: &mut Vec<Fetched>,
     visibility_analysis: &mut Analysis,
     observer: &dyn PlanObserver,
+    fetch_task: &vibe_core::progress::ProgressTask,
 ) -> Result<()> {
     const COND_DEP_MAX_ITER: usize = 5;
     let mut iteration: usize = 0;
@@ -246,6 +265,11 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             iteration,
             extras: extra.len(),
         });
+        fetch_task.detail(format!(
+            "conditional pass {iteration} discovered {} package{}",
+            extra.len(),
+            if extra.len() == 1 { "" } else { "s" }
+        ));
         let mut combined = roots.to_vec();
         combined.extend(fetched.iter().filter(|f| f.meta.is_root).map(|f| {
             exact_pinned_pkgref(&ResolvedNode {
@@ -279,8 +303,10 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
                 root_features,
                 workspace_root,
                 offline,
+                &fetch_task.progress(),
             )
         })?;
+        fetch_task.set_progress(fetched.len() as u64, None, "packages");
     }
 }
 

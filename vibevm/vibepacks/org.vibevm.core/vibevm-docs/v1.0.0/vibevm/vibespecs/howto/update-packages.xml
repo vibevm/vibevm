@@ -25,11 +25,8 @@ org.vibevm.world      wal                           1.0.0           -           
     </example>
     <p>2. Update one package, or all of them:</p>
     <example id="update" fixture="hello-vibe-registry">
-      <run>vibe update org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect>Re-resolving 1 package…
-  → closure unchanged (1 packages)
-
-Updated 1 package (0 version bumps).</expect>
+      <run>vibe update org.vibevm.world/wal --path hello-vibe --assume-yes --quiet</run>
+      <expect>vibe update: 1 package re-resolved, 0 bumps</expect>
     </example>
     <p>`vibe update --all` updates everything in the lock file; the two forms are mutually exclusive.</p>
     <p>3. Read the diff of `vibe.lock` before you commit it. Each changed entry names the old and the new version and [fingerprint](../glossary/index.xml#fingerprint).</p>

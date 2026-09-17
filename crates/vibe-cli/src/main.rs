@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::OnceLock;
@@ -65,13 +66,18 @@ fn main() -> ExitCode {
         );
     }
 
+    let progress_interactive = std::io::stderr().is_terminal()
+        && read_env_opt("TERM")
+            .map(|term| !term.eq_ignore_ascii_case("dumb"))
+            .unwrap_or(true);
     let ctx = output::Context::from_flags(
         cli.quiet,
         cli.json,
         cli.invoked_by.as_deref(),
         cli.unattended,
         cli.agent_mode,
-    );
+    )
+    .with_progress(cli.verbose, progress_interactive);
 
     // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
     // GitHub + GitVerse) on any registry-needing command. A fresh checkout on

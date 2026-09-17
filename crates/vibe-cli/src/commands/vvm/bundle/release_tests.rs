@@ -5,6 +5,7 @@
 
 use super::super::RemoteContext;
 use super::*;
+use vibe_core::progress::{Progress, ProgressTask};
 
 /// A mocked release server: one aggregate manifest and the bundle it names.
 fn release_server(root: &Path, label: &str, fixture: &Fixture) -> ReleaseDownloader {
@@ -28,6 +29,7 @@ fn drive<T>(
 ) -> anyhow::Result<T> {
     let ctx = quiet();
     let persister = FakePersister::new(false);
+    let progress = Progress::default();
     call(&RemoteContext {
         ctx: &ctx,
         env,
@@ -35,6 +37,7 @@ fn drive<T>(
         downloader,
         persister: &persister,
         command,
+        progress: &progress,
     })
 }
 
@@ -191,7 +194,14 @@ fn a_withdrawn_newest_release_never_walks_the_machine_backwards() {
 struct UnreachableServer;
 
 impl Downloader for UnreachableServer {
-    fn download(&self, url: &str, _destination: &Path, _maximum_bytes: u64) -> anyhow::Result<()> {
+    fn download(
+        &self,
+        url: &str,
+        _destination: &Path,
+        _maximum_bytes: u64,
+        _expected_bytes: Option<u64>,
+        _progress: &ProgressTask,
+    ) -> anyhow::Result<()> {
         anyhow::bail!("release server unreachable for `{url}`")
     }
 }
@@ -222,7 +232,14 @@ fn an_unreadable_newest_release_manifest_fails_the_command_and_changes_nothing()
 struct UnaskedServer;
 
 impl Downloader for UnaskedServer {
-    fn download(&self, url: &str, _destination: &Path, _maximum_bytes: u64) -> anyhow::Result<()> {
+    fn download(
+        &self,
+        url: &str,
+        _destination: &Path,
+        _maximum_bytes: u64,
+        _expected_bytes: Option<u64>,
+        _progress: &ProgressTask,
+    ) -> anyhow::Result<()> {
         panic!("the offline posture must refuse before requesting `{url}`")
     }
 }

@@ -43,6 +43,51 @@ impl MultiRegistryResolver {
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        self.fetch_with_expected_hash_progress(
+            resolution,
+            store_root,
+            expected_hash,
+            &self.progress,
+        )
+    }
+
+    /// Observed sibling used by install's per-package fetch loop.
+    pub fn fetch_with_expected_hash_progress(
+        &self,
+        resolution: &MultiResolution,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<CachedPackage, RegistryError> {
+        let label = format!(
+            "Fetching {}/{}@{}",
+            resolution.resolved.group, resolution.resolved.name, resolution.resolved.version
+        );
+        let task = progress.task(label);
+        if resolution.from_store {
+            task.detail("reusing machine package cache");
+        } else if resolution.is_path_source {
+            task.detail("reading local path source");
+        } else if resolution.is_git_source {
+            task.detail("Git fetch of declared source");
+        } else if let Some(registry) = resolution.registry_name.as_deref() {
+            task.detail(format!("Git fetch from registry {registry}"));
+        }
+        let result = self.fetch_with_expected_hash_inner(resolution, store_root, expected_hash);
+        match &result {
+            Ok(_) if resolution.from_store => task.skip("already cached"),
+            Ok(_) => task.finish(),
+            Err(_) => task.fail("package fetch failed"),
+        }
+        result
+    }
+
+    fn fetch_with_expected_hash_inner(
+        &self,
+        resolution: &MultiResolution,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+    ) -> Result<CachedPackage, RegistryError> {
         // Store-backed resolution (PROP-010 §2.6): the entry IS the
         // content source — serve its bytes off disk, with no source
         // walk and no network; a pin, when present, is verified with

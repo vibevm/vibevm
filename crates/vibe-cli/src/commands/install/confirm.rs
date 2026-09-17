@@ -29,13 +29,17 @@ impl ConfirmGate for CliConfirmGate<'_> {
                 "no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively"
             );
         }
-        let approved = Confirm::new()
-            .with_prompt(format!(
-                "Materialise {packages} package{} into vibedeps/ and regenerate boot artifacts?",
-                if packages == 1 { "" } else { "s" },
-            ))
-            .default(false)
-            .interact()
+        let approved = self
+            .ctx
+            .suspend_progress(|| {
+                Confirm::new()
+                    .with_prompt(format!(
+                        "Materialise {packages} package{} into vibedeps/ and regenerate boot artifacts?",
+                        if packages == 1 { "" } else { "s" },
+                    ))
+                    .default(false)
+                    .interact()
+            })
             .context("reading user confirmation")?;
         if approved {
             Ok(())

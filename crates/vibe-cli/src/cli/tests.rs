@@ -6,6 +6,20 @@ use specmark::verifies;
 use super::{CleanChain, Cli, Command};
 
 #[test]
+fn verbose_is_global_and_composes_with_silent_output_modes() {
+    for argv in [
+        vec!["vibe", "-v", "list"],
+        vec!["vibe", "list", "--verbose"],
+        vec!["vibe", "--json", "--verbose", "list"],
+        vec!["vibe", "--quiet", "-v", "list"],
+    ] {
+        let cli =
+            Cli::try_parse_from(&argv).unwrap_or_else(|error| panic!("parse {argv:?}: {error}"));
+        assert!(cli.verbose, "{argv:?}");
+    }
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
 fn every_non_install_lifecycle_verb_accepts_global_flags() {
     for verb in [

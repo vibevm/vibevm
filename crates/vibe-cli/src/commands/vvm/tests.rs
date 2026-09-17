@@ -194,9 +194,15 @@ fn the_offline_posture_refuses_the_source_lane_before_git_reaches_a_mirror() {
             mirror: requested.map(str::to_string),
             force: false,
         };
-        let error = run_install_cmd(&ctx, &env, args, "self:update")
-            .unwrap_err()
-            .to_string();
+        let error = run_install_cmd(
+            &ctx,
+            &env,
+            args,
+            "self:update",
+            &vibe_core::progress::Progress::default(),
+        )
+        .unwrap_err()
+        .to_string();
         assert!(error.contains("`vibe self update`"), "{error}");
         assert!(error.contains(expected), "{error}");
     }

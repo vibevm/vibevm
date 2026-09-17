@@ -143,6 +143,19 @@ pub trait InstallSource {
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError>;
 
+    /// Observed sibling of [`Self::resolve_and_fetch`]. Implementations with
+    /// internal registry/network stages override this; the compatibility
+    /// default preserves every existing source implementation.
+    fn resolve_and_fetch_with_progress(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        _progress: &vibe_core::progress::Progress,
+    ) -> Result<CachedPackage, RegistryError> {
+        self.resolve_and_fetch(pkgref, store_root, expected_hash)
+    }
+
     /// Run the depsolver against this source, returning the full
     /// transitive graph the pipeline will fetch and materialise.
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;

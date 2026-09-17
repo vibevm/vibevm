@@ -36,15 +36,20 @@ pub(crate) struct CliInstallObserver<'a> {
 }
 
 impl<'a> CliInstallObserver<'a> {
-    pub(crate) const fn new(
+    pub(crate) fn new(
         ctx: &'a output::Context,
         lifecycle_output: Option<&'a output::Context>,
     ) -> Self {
         Self {
             ctx,
             lifecycle_output,
-            plan_events: CtxObserver(ctx),
+            plan_events: CtxObserver::new(ctx),
         }
+    }
+
+    pub(crate) fn with_progress(mut self, progress: vibe_core::progress::Progress) -> Self {
+        self.plan_events = CtxObserver::new(self.ctx).with_progress(progress);
+        self
     }
 }
 
@@ -89,6 +94,10 @@ impl InstallObserver for CliInstallObserver<'_> {
 
     fn plan_events(&self) -> &dyn vibe_install::PlanObserver {
         &self.plan_events
+    }
+
+    fn progress(&self) -> vibe_core::progress::Progress {
+        self.plan_events.progress_handle()
     }
 
     fn slot_observer(
@@ -179,5 +188,28 @@ impl<F: FnOnce() -> Option<PathBuf>> RegistryEnvironment for CliRegistryEnvironm
             embedded_root,
             global,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn context(quiet: bool, json: bool) -> output::Context {
+        output::Context::from_flags(quiet, json, None, true, crate::cli::AgentModeArg::Cli)
+            .with_progress(true, false)
+    }
+
+    #[test]
+    fn ordinary_install_observer_enables_only_human_progress() {
+        let human = context(false, false);
+        let observer = CliInstallObserver::new(&human, None).with_progress(human.progress());
+        assert_ne!(observer.progress().task("human install").id().get(), 0);
+
+        for (quiet, json) in [(true, false), (false, true)] {
+            let silent = context(quiet, json);
+            let observer = CliInstallObserver::new(&silent, None).with_progress(silent.progress());
+            assert_eq!(observer.progress().task("silent install").id().get(), 0);
+        }
     }
 }

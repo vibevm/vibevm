@@ -4,6 +4,7 @@ use std::io::{Cursor, Write};
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
+use vibe_core::progress::ProgressTask;
 use vibe_publish::release_manifest::{
     AggregateDistributionManifest, BundleDistributionManifest, DISTRIBUTION_MANIFEST_FILENAME,
     DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DistributionAsset, DistributionComponent,
@@ -240,13 +241,21 @@ struct LocalDownloader {
 }
 
 impl Downloader for LocalDownloader {
-    fn download(&self, url: &str, destination: &Path, maximum_bytes: u64) -> anyhow::Result<()> {
+    fn download(
+        &self,
+        url: &str,
+        destination: &Path,
+        maximum_bytes: u64,
+        expected_bytes: Option<u64>,
+        progress: &ProgressTask,
+    ) -> anyhow::Result<()> {
         self.urls.borrow_mut().push(url.to_string());
         if let Some(parent) = destination.parent() {
             std::fs::create_dir_all(parent)?;
         }
         let copied = std::fs::copy(&self.bundle, destination)?;
         assert!(copied <= maximum_bytes);
+        progress.set_progress(copied, expected_bytes, "bytes");
         Ok(())
     }
 }
@@ -258,7 +267,14 @@ struct ReleaseDownloader {
 }
 
 impl Downloader for ReleaseDownloader {
-    fn download(&self, url: &str, destination: &Path, maximum_bytes: u64) -> anyhow::Result<()> {
+    fn download(
+        &self,
+        url: &str,
+        destination: &Path,
+        maximum_bytes: u64,
+        expected_bytes: Option<u64>,
+        progress: &ProgressTask,
+    ) -> anyhow::Result<()> {
         self.urls.borrow_mut().push(url.to_string());
         if let Some(parent) = destination.parent() {
             std::fs::create_dir_all(parent)?;
@@ -274,6 +290,7 @@ impl Downloader for ReleaseDownloader {
         };
         let copied = std::fs::copy(source, destination)?;
         assert!(copied <= maximum_bytes);
+        progress.set_progress(copied, expected_bytes, "bytes");
         Ok(())
     }
 }

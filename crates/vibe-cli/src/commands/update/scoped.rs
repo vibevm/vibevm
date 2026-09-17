@@ -374,14 +374,16 @@ fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -
              non-interactively"
         );
     }
-    Confirm::new()
-        .with_prompt(format!(
-            "Re-materialise {total} package{} into vibedeps/ and regenerate boot?",
-            if total == 1 { "" } else { "s" },
-        ))
-        .default(false)
-        .interact()
-        .context("reading user confirmation")
+    ctx.suspend_progress(|| {
+        Confirm::new()
+            .with_prompt(format!(
+                "Re-materialise {total} package{} into vibedeps/ and regenerate boot?",
+                if total == 1 { "" } else { "s" },
+            ))
+            .default(false)
+            .interact()
+    })
+    .context("reading user confirmation")
 }
 
 /// Remove any superseded *versioned* slot so a bump leaves no stale slot (an

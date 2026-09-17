@@ -24,6 +24,7 @@ pub mod layout;
 pub mod lifecycle;
 pub mod manifest;
 pub mod package_ref;
+pub mod progress;
 pub mod provenance;
 pub mod rel_path;
 pub mod settings;

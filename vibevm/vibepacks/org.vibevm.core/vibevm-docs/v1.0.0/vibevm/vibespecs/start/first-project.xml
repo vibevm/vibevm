@@ -39,17 +39,8 @@ Next:
     </example>
     <p>2. Install a package. The install shows a plan and asks for confirmation; `--assume-yes` skips the question in a script:</p>
     <example id="install" fixture="hello-vibe-empty">
-      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect>Resolving 1 root package…
-
-Materialising 1 package into vibedeps/:
-  org.vibevm.world/wal@1.0.0
-
-closure diff:
-  → + org.vibevm.world/wal@1.0.0 (root-edge)
-  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
-
-Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes --quiet</run>
+      <expect>vibe install: 1 package materialised</expect>
     </example>
     <p>3. Look at what is recorded:</p>
     <example id="list" fixture="hello-vibe">

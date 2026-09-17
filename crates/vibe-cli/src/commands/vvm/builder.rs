@@ -4,12 +4,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#build");
 
+use std::collections::VecDeque;
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+use std::sync::{Arc, Mutex};
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
+use vibe_core::progress::{Progress, ProgressDiagnosticLevel, ProgressTask};
 
 use super::model::{Profile, VersionId};
 
@@ -46,20 +49,42 @@ pub(crate) struct CargoBuilder {
     /// cargo itself or an "offline" rebuild would still go to the network
     /// for a dependency (PROP-019 `##CMD-OFFLINE`).
     offline: bool,
+    progress: Progress,
 }
 
 impl CargoBuilder {
-    pub(crate) fn new(offline: bool) -> Self {
-        Self { offline }
+    pub(crate) fn new(offline: bool, progress: Progress) -> Self {
+        Self { offline, progress }
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#SELF-STAGES")]
 impl Builder for CargoBuilder {
     fn build(
         &self,
         source_root: &Path,
         target_dir: &Path,
         profile: Profile,
+    ) -> Result<BuildOutput> {
+        let build = self.progress.task("Building essential binaries");
+        build.set_progress(0, Some(2), "components");
+        let result = self.build_observed(source_root, target_dir, profile, &build);
+        if result.is_ok() {
+            build.finish();
+        } else {
+            build.fail("cargo build failed");
+        }
+        result
+    }
+}
+
+impl CargoBuilder {
+    fn build_observed(
+        &self,
+        source_root: &Path,
+        target_dir: &Path,
+        profile: Profile,
+        build: &ProgressTask,
     ) -> Result<BuildOutput> {
         // Build into a VVM-managed `--target-dir`, never the source tree's
         // own `target/` — keeps the dev tree clean and, load-bearing on
@@ -68,7 +93,13 @@ impl Builder for CargoBuilder {
         let mut cmd = Command::new("cargo");
         cmd.current_dir(source_root)
             .args(cargo_build_args(profile, self.offline));
-        cmd.arg("--target-dir").arg(target_dir);
+        cmd.arg("--target-dir")
+            .arg(target_dir)
+            .stderr(Stdio::piped());
+        build.detail(format!(
+            "cargo build --locked -p vibe-cli -p vibe-index ({})",
+            profile.target_subdir()
+        ));
         let mut child = cmd
             .stdout(Stdio::piped())
             .spawn()
@@ -77,23 +108,65 @@ impl Builder for CargoBuilder {
             .stdout
             .take()
             .context("cargo build stdout was not piped")?;
-        let selected = select_artifacts(BufReader::new(stdout), &mut std::io::stderr());
+        let stderr = child
+            .stderr
+            .take()
+            .context("cargo build stderr was not piped")?;
+        let components = build.progress();
+        let vibe = components.task("Awaiting vibe artifact");
+        let index = components.task("Awaiting vibe-index artifact");
+        let tail = Arc::new(Mutex::new(VecDeque::new()));
+        let mut details = ProgressDetailWriter {
+            task: build,
+            tail: Arc::clone(&tail),
+        };
+        let selected = std::thread::scope(|scope| {
+            let stderr_tail = Arc::clone(&tail);
+            let stderr_reader = scope.spawn(move || -> Result<()> {
+                for line in BufReader::new(stderr).lines() {
+                    emit_child_line(build, &stderr_tail, &line.context("reading cargo stderr")?);
+                }
+                Ok(())
+            });
+            let selected = select_artifacts(BufReader::new(stdout), &mut details);
+            let stderr_result = stderr_reader
+                .join()
+                .map_err(|_| anyhow::anyhow!("cargo stderr reader panicked"))?;
+            stderr_result?;
+            selected
+        });
         let status = child.wait().context("waiting for cargo build")?;
         if !status.success() {
+            vibe.fail("component build did not complete");
+            index.fail("component build did not complete");
             bail!(
-                "cargo build ({}) failed (exit {:?})",
+                "cargo build ({}) failed (exit {:?}){}",
                 profile.target_subdir(),
-                status.code()
+                status.code(),
+                diagnostic_tail(&tail),
             );
         }
-        let (binary, index_binary) = selected?;
+        let (binary, index_binary) = match selected {
+            Ok(selected) => selected,
+            Err(error) => {
+                vibe.fail("vibe artifact selection failed");
+                index.fail("vibe-index artifact selection failed");
+                return Err(error);
+            }
+        };
         if !binary.is_file() || !index_binary.is_file() {
+            vibe.fail("vibe artifact is missing");
+            index.fail("vibe-index artifact is missing");
             bail!(
                 "build reported success but essential binaries are missing: `{}`, `{}`",
                 binary.display(),
                 index_binary.display()
             );
         }
+        vibe.finish();
+        build.set_progress(1, Some(2), "components");
+        index.finish();
+        build.set_progress(2, Some(2), "components");
         let toolchain = Command::new("rustc")
             .current_dir(source_root)
             .arg("--version")
@@ -107,6 +180,63 @@ impl Builder for CargoBuilder {
             index_binary,
             toolchain,
         })
+    }
+}
+
+struct ProgressDetailWriter<'a> {
+    task: &'a ProgressTask,
+    tail: Arc<Mutex<VecDeque<String>>>,
+}
+
+impl Write for ProgressDetailWriter<'_> {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        emit_child_line(self.task, &self.tail, &String::from_utf8_lossy(bytes));
+        Ok(bytes.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
+fn emit_child_line(task: &ProgressTask, tail: &Mutex<VecDeque<String>>, text: &str) {
+    for line in text
+        .lines()
+        .map(sanitize_child_line)
+        .filter(|line| !line.is_empty())
+    {
+        let trimmed = line.trim_start();
+        if trimmed.starts_with("error:") || trimmed.starts_with("error[") {
+            task.diagnostic(ProgressDiagnosticLevel::Error, line.clone());
+        } else if trimmed.starts_with("warning:") || trimmed.starts_with("warning[") {
+            task.diagnostic(ProgressDiagnosticLevel::Warning, line.clone());
+        } else {
+            task.detail(line.clone());
+        }
+        if let Ok(mut tail) = tail.lock() {
+            tail.push_back(line);
+            while tail.len() > 16 {
+                tail.pop_front();
+            }
+        }
+    }
+}
+
+fn sanitize_child_line(text: &str) -> String {
+    crate::output::sanitize_progress_text(text)
+}
+
+fn diagnostic_tail(tail: &Mutex<VecDeque<String>>) -> String {
+    let Ok(tail) = tail.lock() else {
+        return String::new();
+    };
+    if tail.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "\nCargo diagnostics:\n{}",
+            tail.iter().cloned().collect::<Vec<_>>().join("\n")
+        )
     }
 }
 
@@ -168,8 +298,12 @@ fn select_artifacts(
                     .as_str()
                     .with_context(|| format!("Cargo artifact `{name}` omitted executable"))?;
                 match name {
-                    "vibe" => vibe.push(PathBuf::from(executable)),
-                    "vibe-index" => index.push(PathBuf::from(executable)),
+                    "vibe" => {
+                        vibe.push(PathBuf::from(executable));
+                    }
+                    "vibe-index" => {
+                        index.push(PathBuf::from(executable));
+                    }
                     _ => unreachable!(),
                 }
             }
@@ -292,5 +426,23 @@ mod tests {
             assert!(cargo_build_args(profile, true).contains(&"--offline"));
             assert!(!cargo_build_args(profile, false).contains(&"--offline"));
         }
+    }
+
+    #[test]
+    fn failure_tail_keeps_cargo_error_but_redacts_external_secrets() {
+        let tail = Mutex::new(VecDeque::new());
+        let task = Progress::default().task("cargo");
+        emit_child_line(
+            &task,
+            &tail,
+            "error[E0425]: fetch https://alice:hunter2@example.test/pkg?token=secret \
+             authorization: Bearer also-secret",
+        );
+        let rendered = diagnostic_tail(&tail);
+        assert!(rendered.contains("error[E0425]"), "{rendered}");
+        for secret in ["alice", "hunter2", "token=secret", "also-secret"] {
+            assert!(!rendered.contains(secret), "leaked {secret}: {rendered}");
+        }
+        assert!(rendered.contains("[redacted]"), "{rendered}");
     }
 }

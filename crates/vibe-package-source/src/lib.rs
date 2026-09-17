@@ -34,7 +34,7 @@ mod project_local;
 mod qualified;
 mod source;
 
-pub use builder::build_install_resolver;
+pub use builder::{build_install_resolver, build_install_resolver_with_progress};
 pub use options::PackageSourceOptions;
 pub use qualified::{PackageQualifier, RefusesQualification, RegistryPackageSource};
 pub use source::InstallResolver;

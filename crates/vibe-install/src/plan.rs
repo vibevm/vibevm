@@ -19,7 +19,6 @@ use vibe_resolver::{
 use vibe_workspace::Workspace;
 use vibe_workspace::freshness::is_in_workspace_file_source;
 use vibe_workspace::install::ResolvedDep;
-use vibe_workspace::vibedeps;
 
 use crate::error::{Error, Result};
 use crate::events::{PlanEvent, PlanObserver};
@@ -94,6 +93,7 @@ pub struct PlannedInstall {
     /// until apply writes it. Rediscovering there would be a second byte
     /// snapshot of a tree the command is midway through changing.
     pub(crate) workspace: Workspace,
+    pub(crate) progress: vibe_core::progress::Progress,
 }
 
 /// Plan an install transaction over `source` for the project at
@@ -286,6 +286,14 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         return Ok(Plan::Fresh);
     }
 
+    let progress = observer.progress();
+    let resolution_task = progress.task("Resolving dependencies");
+    resolution_task.detail(format!(
+        "{} declared root package{}",
+        roots.len(),
+        if roots.len() == 1 { "" } else { "s" }
+    ));
+
     // The root set the depsolver actually runs against. For an
     // explicit-pkgref install it is the named refs plus the pin-held
     // remainder above; for a stale bare install PROP-011 §5.3 replaces it
@@ -308,6 +316,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             vibe_workspace::freshness::Freshness::Fresh
                 if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
             {
+                resolution_task.skip("vibe.lock is fresh");
                 return Ok(Plan::Fresh);
             }
             vibe_workspace::freshness::Freshness::Fresh => {
@@ -345,9 +354,18 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
                 error: e.to_string(),
             });
             strict_roots.clone_from(&roots);
-            source.solve(&roots)?
+            match source.solve(&roots) {
+                Ok(graph) => graph,
+                Err(error) => {
+                    resolution_task.fail("dependency resolution failed");
+                    return Err(error.into());
+                }
+            }
         }
-        Err(e) => return Err(e.into()),
+        Err(e) => {
+            resolution_task.fail("dependency resolution failed");
+            return Err(e.into());
+        }
     };
 
     let root_id = visibility_root_id(manifest);
@@ -362,6 +380,12 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             total: graph.packages.len(),
         });
     }
+    resolution_task.detail(format!(
+        "selected {} package{} before conditional expansion",
+        graph.packages.len(),
+        if graph.packages.len() == 1 { "" } else { "s" }
+    ));
+    resolution_task.finish();
 
     // 3. Phase one — fetch every node, pin features per node. We need
     //    the full graph + every fetched manifest before we can build
@@ -376,7 +400,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     //    `vibedeps/` materialises from.
     let store_root = store::store_root()?;
     let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
+    let fetch_task = progress.task("Fetching package content");
     for node in graph.iter() {
+        fetch_task.detail(format!("{}/{}@{}", node.group, node.name, node.version));
         fetched.push(fetch_or_defer(
             source,
             node,
@@ -385,7 +411,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             &request.features,
             &workspace.root,
             request.offline,
+            &fetch_task.progress(),
         )?);
+        fetch_task.set_progress(fetched.len() as u64, None, "packages");
     }
 
     // The read-only kind stops here, before anything is materialised.
@@ -434,7 +462,10 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         &mut fetched,
         &mut visibility_analysis,
         observer,
+        &fetch_task,
     )?;
+    fetch_task.set_progress(fetched.len() as u64, Some(fetched.len() as u64), "packages");
+    fetch_task.finish();
 
     // 5. Build the resolution — every fetched package as a
     //    `ResolvedDep` the workspace orchestrator materialises. The
@@ -488,100 +519,8 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         // A value, not a rediscovery: apply and the slot lifecycle work on the
         // exact tree that produced this plan.
         workspace: workspace.clone(),
+        progress,
     })))
-}
-
-/// Refuse the kinds that are read instead of installed.
-///
-/// Documentation is not a dependency: it carries no boot snippet, no
-/// binary and no MCP server, and a consumer that materialised it would
-/// commit a tutorial into `vibedeps/` and hand it to every `grep` an
-/// agent runs over its dependencies. The refusal therefore names the
-/// path that DOES work — `vibe cache add` warms the package into the
-/// machine store, where the local reader and `vibe explain` read it
-/// (PROP-057 `##KIND-DOC-NOT-INSTALLED`).
-///
-/// Checked over the whole solved graph, not the roots alone: a `doc`
-/// package reached through someone else's `[requires]` is the same
-/// mistake one level further away, and saying so at the root would
-/// name the wrong package.
-fn refuse_read_only_kinds(fetched: &[Fetched]) -> Result<()> {
-    for node in fetched {
-        let meta = node.cached.package_meta();
-        if meta.kind.is_read_only() {
-            return Err(Error::DocNotInstalled {
-                coordinate: format!("{}/{}", meta.group, meta.name),
-            });
-        }
-    }
-    Ok(())
-}
-
-/// Append the case-c migration's concrete entries to the selected node of the
-/// finalised tree.
-///
-/// A delta, never a wholesale replacement. The raw manifest may carry
-/// `[workspace.versions]` placeholders that discovery already resolved in this
-/// node; copying the raw table over would put them back. Entries the node
-/// already declares are left alone, so applying the migration twice is a no-op.
-fn migrate_selected_node(workspace: &mut Workspace, project_root: &Path, entries: &[PackageRef]) {
-    let Some(node) = selected_node_manifest_mut(workspace, project_root) else {
-        return;
-    };
-    for entry in entries {
-        let already = node
-            .requires
-            .packages
-            .iter()
-            .any(|p| p.group == entry.group && p.name == entry.name);
-        if !already {
-            node.requires.packages.push(entry.clone());
-        }
-    }
-}
-
-/// The node of `workspace` whose directory IS `project_root` — the one the
-/// selected manifest describes. `None` only if the tree does not contain the
-/// selected node at all, which discovery cannot produce.
-fn selected_node_manifest_mut<'a>(
-    workspace: &'a mut Workspace,
-    project_root: &Path,
-) -> Option<&'a mut Manifest> {
-    if workspace.root == project_root {
-        return Some(&mut workspace.root_manifest);
-    }
-    let selected = workspace
-        .members
-        .iter()
-        .position(|member| workspace.member_abs_path(member) == project_root)?;
-    Some(&mut workspace.members[selected].manifest)
-}
-
-fn visibility_root_id(manifest: &Manifest) -> String {
-    manifest
-        .consumer_node()
-        .map(|node| node.coordinate())
-        .unwrap_or_else(|| "__vibevm__/workspace-root".to_string())
-}
-
-fn slots_match_spec_format(
-    workspace_root: &Path,
-    lockfile: &Lockfile,
-    spec_format: SpecFormat,
-) -> bool {
-    lockfile.packages.iter().all(|package| {
-        if package.materialization.is_in_place() {
-            return spec_format == SpecFormat::Mixed
-                && vibedeps::is_in_place_slot(workspace_root, &package.group, &package.name);
-        }
-        let slot = vibedeps::slot_abs_path(
-            workspace_root,
-            &package.group,
-            &package.name,
-            &package.version,
-        );
-        slot.is_dir() && vibedeps::format_is_current(&slot, spec_format)
-    })
 }
 
 /// The acquisition half of planning — fetch/defer helpers and the
@@ -589,3 +528,8 @@ fn slots_match_spec_format(
 /// migration pushed the file past the 600-line budget.
 mod fetch;
 use fetch::{expand_conditional_deps, fetch_or_defer};
+
+mod selection;
+use selection::{
+    migrate_selected_node, refuse_read_only_kinds, slots_match_spec_format, visibility_root_id,
+};

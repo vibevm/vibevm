@@ -1080,6 +1080,8 @@ A `--json` flag produces fully machine-readable output. Skills consuming the CLI
 
 A `--quiet` flag reduces output to one line of summary. Useful in CI and in scripts.
 
+Installation and self-update display live overall and component progress on stderr, with elapsed time and real work counters when known. `-v` / `--verbose` adds diagnostic detail. Redirected output uses plain progress records; `--quiet` and `--json` suppress progress, including verbose progress. The full contract is [PROP-060](vibevm/vibespecs/common/PROP-060-command-progress.xml).
+
 ### 9.4 Exit codes {#exit-codes}
 
 - `0` — success.

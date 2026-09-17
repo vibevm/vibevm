@@ -10,6 +10,16 @@ use super::*;
 use rust_ai_native_env_audit::EnvGuard;
 
 #[test]
+fn quiet_and_json_suppress_progress_even_when_verbose() {
+    for (quiet, json) in [(true, false), (false, true)] {
+        let context = Context::from_flags(quiet, json, None, false, crate::cli::AgentModeArg::Auto)
+            .with_progress(true, false);
+        assert_eq!(context.progress().task("silent").id().get(), 0);
+        assert!(!context.is_verbose());
+    }
+}
+
+#[test]
 fn resolve_returns_default_when_neither_flag_nor_env() {
     let mut env = EnvGuard::lock();
     env.unset("VIBE_INVOKED_BY");

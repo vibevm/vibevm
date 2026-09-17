@@ -40,7 +40,7 @@ use vibe_lifecycle::{LifecycleLease, RunMetadata};
 
 use crate::cli::InstallArgs;
 use crate::commands::compile_trace::{
-    self, CommandExit, RegisteredReportDraft, TracePreparation, render_finalized,
+    self, CommandExit, PlanDisposition, RegisteredReportDraft, TracePreparation, render_finalized,
 };
 use crate::output;
 
@@ -133,6 +133,22 @@ pub(crate) fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    let overall = ctx.progress().task("Installing packages");
+    let scoped = ctx.with_progress_scope(overall.progress());
+    let result = run_observed(&scoped, args, embedded_root, root_offline, &overall);
+    if result.is_err() {
+        overall.fail("package installation failed");
+    }
+    result
+}
+
+fn run_observed(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    overall: &vibe_core::progress::ProgressTask,
+) -> Result<()> {
     let PreparedInstall {
         lease,
         user_config,
@@ -160,8 +176,15 @@ pub(crate) fn run(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
+    let parked = finalized.plan == PlanDisposition::Discard;
+    let command_failed = finalized.original_error.is_some();
     let rendered = render_finalized(ctx, finalized);
     drop(lease_owner);
+    match (&rendered, command_failed, parked) {
+        (Err(_), _, _) | (_, true, _) => overall.fail("package installation failed"),
+        (Ok(()), false, true) => overall.skip("waiting for the hosting agent"),
+        (Ok(()), false, false) => overall.finish(),
+    }
     rendered
 }
 
@@ -199,7 +222,7 @@ fn execute_after_open(
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
     let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes);
-    let install_observer = super::CliInstallObserver::new(ctx, None);
+    let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = super::CliPackageSourceFactory { args: &args };
     let manifest_mutation = super::CliGitSourceMutation { args: &args };
     let environment = super::CliRegistryEnvironment::new(move || embedded_root);

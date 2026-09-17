@@ -25,8 +25,9 @@ use std::path::Path;
 #[cfg(test)]
 use std::fs;
 
-use vibe_core::ContentHash;
-use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
+#[cfg(test)]
+use vibe_core::manifest::Manifest;
+use vibe_core::manifest::SpecFormat;
 use vibe_core::user_config::SlotIntegrity;
 
 use crate::hooks::{
@@ -39,6 +40,9 @@ use crate::{Workspace, WorkspaceError, vibedeps};
 /// resolution no longer names, out of line per the file-length budget.
 mod prune;
 use prune::prune_stale_slots;
+
+mod placement;
+use placement::{copy_mode_for, is_in_place, required_source_hash};
 
 mod hook_output;
 mod hooks_run;
@@ -59,6 +63,7 @@ pub use hook_output::{
     apply_resolution_with_spec_format_and_slot_lifecycle,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress,
 };
 use hooks_run::SubtreeOutcome;
 pub use hooks_run::{
@@ -190,6 +195,7 @@ struct MaterialiseOptions<'a> {
     spec_format: SpecFormat,
     slot_verifier: Option<&'a dyn SlotVerifier>,
     lifecycle: MaterialiseLifecycle<'a>,
+    progress: vibe_core::progress::Progress,
 }
 
 #[cfg(test)]
@@ -217,6 +223,7 @@ fn materialise_resolution(
                 },
                 None => MaterialiseLifecycle::None,
             },
+            progress: vibe_core::progress::Progress::default(),
         },
     )
 }
@@ -237,6 +244,7 @@ fn materialise_resolution_with_spec_format(
         spec_format,
         slot_verifier,
         lifecycle,
+        progress,
     } = options;
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
@@ -244,7 +252,13 @@ fn materialise_resolution_with_spec_format(
     let mut post_install_deps = Vec::new();
     let mut hook_reports = Vec::new();
     let mut pre_install = PreInstallPlan::new(&lifecycle, workspace_root);
+    let task = progress.task("Materialising dependency slots");
+    task.set_progress(0, Some(resolution.len() as u64), "packages");
     for dep in resolution {
+        let package_task = task.progress().task(format!(
+            "Materialising {}/{}@{}",
+            dep.group, dep.name, dep.version
+        ));
         // PROP-022 §2.4 — an in-place package is a project-local git working
         // tree in an unversioned slot. Move the fetched clone (with its
         // `.git`) into the slot instead of the per-file `copy`, and
@@ -270,6 +284,12 @@ fn materialise_resolution_with_spec_format(
                 && slot_integrity == SlotIntegrity::TrustPresence
             {
                 skipped.push(rel);
+                package_task.skip("slot already current");
+                task.set_progress(
+                    (materialised.len() + skipped.len()) as u64,
+                    Some(resolution.len() as u64),
+                    "packages",
+                );
                 continue;
             }
             if !already_placed {
@@ -289,12 +309,24 @@ fn materialise_resolution_with_spec_format(
             };
             if !changed {
                 skipped.push(rel);
+                package_task.skip("in-place source unchanged");
+                task.set_progress(
+                    (materialised.len() + skipped.len()) as u64,
+                    Some(resolution.len() as u64),
+                    "packages",
+                );
                 continue;
             }
             // In-place keeps its git-native reset/eligibility semantics.
             post_install_deps.push(dep.clone());
             pre_install.run_or_defer(dep, &mut hook_reports)?;
             materialised.push(rel);
+            package_task.finish();
+            task.set_progress(
+                (materialised.len() + skipped.len()) as u64,
+                Some(resolution.len() as u64),
+                "packages",
+            );
             continue;
         }
         let slot = vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version);
@@ -353,6 +385,12 @@ fn materialise_resolution_with_spec_format(
             };
         if trusted {
             skipped.push(slot);
+            package_task.skip("slot already current");
+            task.set_progress(
+                (materialised.len() + skipped.len()) as u64,
+                Some(resolution.len() as u64),
+                "packages",
+            );
             continue;
         }
         let source_hash = required_source_hash(dep)?;
@@ -371,8 +409,15 @@ fn materialise_resolution_with_spec_format(
             pre_install.run_or_defer(dep, &mut hook_reports)?;
         }
         materialised.push(slot);
+        package_task.finish();
+        task.set_progress(
+            (materialised.len() + skipped.len()) as u64,
+            Some(resolution.len() as u64),
+            "packages",
+        );
     }
     pre_install.dispatch(&materialised, &skipped)?;
+    task.finish();
     Ok(Materialised {
         materialised,
         skipped,
@@ -380,18 +425,6 @@ fn materialise_resolution_with_spec_format(
         post_install_deps,
         hook_reports,
     })
-}
-
-fn required_source_hash(dep: &ResolvedDep) -> Result<&ContentHash, WorkspaceError> {
-    dep.source_hash
-        .as_ref()
-        .ok_or_else(|| WorkspaceError::SpecMaterialization {
-            path: dep.content_dir.clone(),
-            reason: format!(
-                "materialisation of `{}/{}@{}` requires the fetched source_hash",
-                dep.group, dep.name, dep.version
-            ),
-        })
 }
 
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
@@ -451,6 +484,7 @@ pub fn materialise_subtree_with_spec_format(
                 },
                 None => MaterialiseLifecycle::None,
             },
+            progress: vibe_core::progress::Progress::default(),
         },
     )?;
     Ok(SubtreeOutcome {
@@ -487,6 +521,7 @@ pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
             spec_format,
             slot_verifier,
             lifecycle: MaterialiseLifecycle::Callback(lifecycle),
+            progress: vibe_core::progress::Progress::default(),
         },
     )?;
     Ok(SubtreeOutcome {
@@ -496,29 +531,6 @@ pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
         post_install_plan: PostInstallPlan::new(workspace_root, post_install_deps),
         hook_reports,
     })
-}
-
-/// The copy placement mode for a resolved **copy / hardlink** package
-/// (PROP-022 §2.1). `hardlink` shares bytes with the cache by link; `copy`
-/// (the default) is a full copy. An `in-place` package never reaches here — it
-/// is handled by [`materialise_resolution`]'s move-into-slot branch before any
-/// copy mode is chosen (PROP-022 §2.4).
-fn copy_mode_for(manifest: &Manifest) -> vibedeps::CopyMode {
-    match manifest.package.as_ref().map(|p| p.materialization) {
-        Some(Materialization::Hardlink) => vibedeps::CopyMode::Hardlink,
-        _ => vibedeps::CopyMode::Copy,
-    }
-}
-
-/// `true` iff `dep` declares `in-place` materialization (PROP-022 §2.4) — the
-/// git-native, unversioned, non-vendored slot. Read off the package manifest;
-/// a node with no `[package]` table (never a resolved dependency) is not
-/// in-place.
-fn is_in_place(dep: &ResolvedDep) -> bool {
-    dep.manifest
-        .package
-        .as_ref()
-        .is_some_and(|p| p.materialization.is_in_place())
 }
 
 /// Build a [`WorkspaceError::Io`] from a `std::io::Error` and its path.

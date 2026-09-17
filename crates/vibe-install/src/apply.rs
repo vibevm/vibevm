@@ -360,6 +360,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         // post-write epoch, so it is deliberately not read between here and
         // there — a value that is about to be stale must not be consulted.
         workspace: _pre_apply_workspace,
+        progress,
     } = planned;
 
     // 6. Update `vibe.toml` `[requires].packages` with the requested
@@ -439,6 +440,8 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
+    let apply_task = progress.task("Applying resolved packages");
+    apply_task.set_progress(0, Some(resolution.len() as u64), "packages");
     let (mut outcome, native) = match native {
         Some(native) => {
             let NativeApplyPreparation {
@@ -460,7 +463,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                 ))
             };
             let prepared =
-                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native(
+                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress(
                     &workspace,
                     &resolution,
                     slot_integrity,
@@ -471,6 +474,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                     &mut prepare,
                     run,
                     &mut make_provider,
+                    &progress,
                 )?;
             (prepared.outcome, Some(prepared.carriage))
         }
@@ -487,10 +491,18 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
             None,
         ),
     };
+    apply_task.set_progress(
+        resolution.len() as u64,
+        Some(resolution.len() as u64),
+        "packages",
+    );
+    apply_task.finish();
 
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
     }
+
+    let record_task = progress.task("Recording installation state");
 
     // 9. Rebuild the lockfile from the fresh resolution — an install
     //    re-resolves the whole graph, so the recorded package set is
@@ -551,6 +563,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     }
 
     lockfile.write(workspace.lockfile_path())?;
+    record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
     //     (lockfile written, boot regenerated). A non-zero exit is surfaced

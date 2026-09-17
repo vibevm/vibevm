@@ -159,10 +159,12 @@ pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDe
         resolution.len(),
         if resolution.len() == 1 { "" } else { "s" },
     ));
-    for d in resolution {
-        println!("  {}/{}@{}", d.group, d.name, d.version);
-    }
-    println!();
+    ctx.suspend_progress(|| {
+        for d in resolution {
+            println!("  {}/{}@{}", d.group, d.name, d.version);
+        }
+        println!();
+    });
 }
 
 pub(super) fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> InstallDelegation {

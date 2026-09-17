@@ -184,6 +184,41 @@ impl InstallSource for InstallResolver {
         }
     }
 
+    fn resolve_and_fetch_with_progress(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<CachedPackage, RegistryError> {
+        match self {
+            InstallResolver::Multi(m, _) => {
+                let resolution = m.resolve(pkgref)?;
+                m.fetch_with_expected_hash_progress(
+                    &resolution,
+                    store_root,
+                    expected_hash,
+                    progress,
+                )
+            }
+            // Local/embedded dispatch already has its own precedence and
+            // provenance rules. Keep that one algorithm and wrap it with an
+            // honest component task instead of duplicating the walk here.
+            _ => {
+                let task = progress.task(format!("Fetching {}", pkgref.qualified_name()));
+                let result = self.resolve_and_fetch(pkgref, store_root, expected_hash);
+                match &result {
+                    Ok(cached) if cached.is_local || cached.is_embedded => {
+                        task.skip("reused local package source")
+                    }
+                    Ok(_) => task.finish(),
+                    Err(_) => task.fail("package fetch failed"),
+                }
+                result
+            }
+        }
+    }
+
     fn solve(
         &self,
         roots: &[PackageRef],

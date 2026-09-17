@@ -53,6 +53,14 @@ pub enum PlanEvent {
 /// ```
 pub trait PlanObserver {
     fn on(&self, event: PlanEvent);
+
+    /// Invocation-owned progress tree for long-running plan work.
+    ///
+    /// The default is deliberately inert so library embeddings and existing
+    /// tests keep their exact behaviour until their composition root opts in.
+    fn progress(&self) -> vibe_core::progress::Progress {
+        vibe_core::progress::Progress::default()
+    }
 }
 
 /// Ignores every event — for headless callers and tests.

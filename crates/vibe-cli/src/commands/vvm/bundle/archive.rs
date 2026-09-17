@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
+use vibe_core::progress::Progress;
 use vibe_publish::release_manifest::{
     BundleDistributionManifest, DISTRIBUTION_BOOTSTRAP_MAX_BYTES, DISTRIBUTION_BUNDLE_MAX_BYTES,
     DISTRIBUTION_COMPONENT_MAX_BYTES, DISTRIBUTION_MANIFEST_FILENAME,
@@ -58,6 +59,7 @@ pub(super) fn verify_file_asset(path: &Path, asset: &DistributionAsset) -> Resul
     )
 }
 
+#[cfg(test)]
 pub(super) fn install_bundle(
     store: &VersionStore,
     bundle_path: &Path,
@@ -65,7 +67,28 @@ pub(super) fn install_bundle(
     expected_asset: &DistributionAsset,
     force: bool,
 ) -> Result<InstallOutcome> {
+    install_bundle_observed(
+        store,
+        bundle_path,
+        expected_manifest,
+        expected_asset,
+        force,
+        &Progress::default(),
+    )
+}
+
+pub(super) fn install_bundle_observed(
+    store: &VersionStore,
+    bundle_path: &Path,
+    expected_manifest: &BundleDistributionManifest,
+    expected_asset: &DistributionAsset,
+    force: bool,
+    progress: &Progress,
+) -> Result<InstallOutcome> {
+    let verify = progress.task("Verifying downloaded bundle");
+    verify.set_progress(0, Some(expected_asset.size), "bytes");
     if expected_asset.size > DISTRIBUTION_BUNDLE_MAX_BYTES {
+        verify.fail("bundle exceeds distribution policy");
         bail!("distribution bundle exceeds distribution policy");
     }
     let (file, outer_hash) = open_hashed_regular_exact(
@@ -81,6 +104,7 @@ pub(super) fn install_bundle(
         expected_asset.size,
         &expected_asset.digest,
     )?;
+    verify.set_progress(expected_asset.size, Some(expected_asset.size), "bytes");
 
     let mut archive = ZipArchive::new(file).context("opening distribution ZIP")?;
     let embedded_bytes = read_bounded_entry(
@@ -96,10 +120,11 @@ pub(super) fn install_bundle(
     }
     validate_platform_paths(&manifest)?;
     validate_outer_structure(&mut archive, &manifest)?;
+    verify.finish();
 
     let id = VersionId::new(Kind::Tag, manifest.version.clone());
     let digest = outer_hash.trim_start_matches("sha256:");
-    if !force && let Some(record) = reusable_record(store, &id, digest, &manifest)? {
+    if !force && let Some(record) = reusable_record(store, &id, digest, &manifest, progress)? {
         let home = store.instance_dir(&id, record.instance);
         return Ok(InstallOutcome {
             record,
@@ -119,7 +144,7 @@ pub(super) fn install_bundle(
     fs::create_dir(&staging)
         .with_context(|| format!("creating bundle staging `{}`", staging.display()))?;
     let mut cleanup = StagingCleanup(Some(staging.clone()));
-    extract_verified_bundle(&mut archive, &manifest, &embedded_bytes, &staging)?;
+    extract_verified_bundle(&mut archive, &manifest, &embedded_bytes, &staging, progress)?;
     let home = placer::publish_staged_instance(store, &id, instance, &staging)?;
     cleanup.0 = None;
 
@@ -155,14 +180,15 @@ pub(super) fn install_bundle(
 /// [`install_bundle`] would compute after downloading, so an unchanged release
 /// is identified without fetching it. `None` means the bytes are new to this
 /// machine, or the local copy no longer verifies, and the download is real.
-pub(super) fn installed_from_published_bundle(
+pub(super) fn installed_from_published_bundle_observed(
     store: &VersionStore,
     expected_manifest: &BundleDistributionManifest,
     expected_asset: &DistributionAsset,
+    progress: &Progress,
 ) -> Result<Option<InstallOutcome>> {
     let id = VersionId::new(Kind::Tag, expected_manifest.version.clone());
     let digest = expected_asset.digest.trim_start_matches("sha256:");
-    let Some(record) = reusable_record(store, &id, digest, expected_manifest)? else {
+    let Some(record) = reusable_record(store, &id, digest, expected_manifest, progress)? else {
         return Ok(None);
     };
     let home = store.instance_dir(&id, record.instance);
@@ -178,19 +204,21 @@ fn reusable_record(
     id: &VersionId,
     digest: &str,
     manifest: &BundleDistributionManifest,
+    progress: &Progress,
 ) -> Result<Option<InstallRecord>> {
     let record = store
         .instances_of(id)?
         .into_iter()
         .filter(|record| record.payload_sha256.as_deref() == Some(digest))
         .max_by_key(|record| record.instance);
-    Ok(record.filter(|record| verified_existing_instance(store, record, manifest)))
+    Ok(record.filter(|record| verified_existing_instance(store, record, manifest, progress)))
 }
 
 fn verified_existing_instance(
     store: &VersionStore,
     record: &InstallRecord,
     expected: &BundleDistributionManifest,
+    progress: &Progress,
 ) -> bool {
     if record.origin != Origin::Binary
         || record.kind != Kind::Tag
@@ -221,6 +249,8 @@ fn verified_existing_instance(
         return false;
     }
     for component in &expected.components {
+        let task = progress.task(format!("Verifying {}", component.name.as_str()));
+        task.set_progress(0, Some(component.size), "bytes");
         let path = match component.name {
             DistributionComponentName::Vibe => {
                 store.binary_path(&record.version_id(), record.instance)
@@ -235,12 +265,18 @@ fn verified_existing_instance(
             DISTRIBUTION_COMPONENT_MAX_BYTES,
             true,
         ) else {
+            task.fail("component verification failed");
             return false;
         };
         if digest != component.digest {
+            task.fail("component digest differs");
             return false;
         }
+        task.set_progress(component.size, Some(component.size), "bytes");
+        task.finish();
     }
+    let source_task = progress.task("Verifying packaged source");
+    source_task.set_progress(0, Some(expected.source_archive.size), "bytes");
     let source_archive = home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME);
     let Ok(digest) = hash_regular_exact(
         &source_archive,
@@ -248,16 +284,29 @@ fn verified_existing_instance(
         DISTRIBUTION_SOURCE_ARCHIVE_MAX_BYTES,
         false,
     ) else {
+        source_task.fail("source archive verification failed");
         return false;
     };
     if digest != expected.source_archive.digest {
+        source_task.fail("source archive digest differs");
         return false;
     }
-    source_matches_archive(
+    let matches = source_matches_archive(
         &source_archive,
         &store.instance_source_dir(&record.version_id(), record.instance),
     )
-    .unwrap_or(false)
+    .unwrap_or(false);
+    source_task.set_progress(
+        expected.source_archive.size,
+        Some(expected.source_archive.size),
+        "bytes",
+    );
+    if matches {
+        source_task.finish();
+    } else {
+        source_task.fail("installed source differs from its archive");
+    }
+    matches
 }
 
 fn manifest_root_matches(expected: Option<&str>, bytes: &[u8]) -> bool {
@@ -274,7 +323,7 @@ pub(super) fn installed_bundle_intact(store: &VersionStore, record: &InstallReco
     .and_then(|bytes| BundleDistributionManifest::from_json_slice(&bytes).ok()) else {
         return false;
     };
-    verified_existing_instance(store, record, &manifest)
+    verified_existing_instance(store, record, &manifest, &Progress::default())
 }
 
 fn validate_platform_paths(manifest: &BundleDistributionManifest) -> Result<()> {
@@ -342,28 +391,50 @@ fn extract_verified_bundle(
     manifest: &BundleDistributionManifest,
     embedded_manifest: &[u8],
     staging: &Path,
+    progress: &Progress,
 ) -> Result<()> {
     let bin_dir = staging.join("bin");
     fs::create_dir_all(&bin_dir)?;
     for component in &manifest.components {
+        let task = progress.task(format!("Extracting {}", component.name.as_str()));
+        task.set_progress(0, Some(component.size), "bytes");
         let destination = match component.name {
             DistributionComponentName::Vibe => bin_dir.join(BINARY_NAME),
             DistributionComponentName::VibeIndex => bin_dir.join(INDEX_BINARY_NAME),
         };
-        extract_hashed_entry(archive, component, &destination)?;
+        if let Err(error) = extract_hashed_entry(archive, component, &destination) {
+            task.fail("component extraction failed");
+            return Err(error);
+        }
         make_executable(&destination)?;
+        task.set_progress(component.size, Some(component.size), "bytes");
+        task.finish();
     }
 
+    let source_task = progress.task("Extracting packaged source");
+    source_task.set_progress(0, Some(manifest.source_archive.size), "bytes");
     let source_zip = staging.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME);
-    extract_hashed_named_entry(
+    if let Err(error) = extract_hashed_named_entry(
         archive,
         &manifest.source_archive.path,
         manifest.source_archive.size,
         &manifest.source_archive.digest,
         &source_zip,
-    )?;
+    ) {
+        source_task.fail("source archive extraction failed");
+        return Err(error);
+    }
     let source_dir = staging.join("source");
-    extract_source_archive(&source_zip, &source_dir)?;
+    if let Err(error) = extract_source_archive(&source_zip, &source_dir) {
+        source_task.fail("source tree extraction failed");
+        return Err(error);
+    }
+    source_task.set_progress(
+        manifest.source_archive.size,
+        Some(manifest.source_archive.size),
+        "bytes",
+    );
+    source_task.finish();
     if !source_dir.join("Cargo.toml").is_file()
         || !source_dir.join("crates").join("vibe-cli").is_dir()
     {

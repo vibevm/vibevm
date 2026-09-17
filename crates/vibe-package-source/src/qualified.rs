@@ -168,6 +168,17 @@ impl InstallSource for RegistryPackageSource {
             .resolve_and_fetch(pkgref, store_root, expected_hash)
     }
 
+    fn resolve_and_fetch_with_progress(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<CachedPackage, RegistryError> {
+        self.resolver
+            .resolve_and_fetch_with_progress(pkgref, store_root, expected_hash, progress)
+    }
+
     fn solve(
         &self,
         roots: &[PackageRef],

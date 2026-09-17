@@ -38,17 +38,8 @@ org.vibevm.world  wal   1.0.0
     </example>
     <p>3. Install without a network:</p>
     <example id="install-offline" fixture="hello-vibe-empty">
-      <run>vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes</run>
-      <expect>Resolving 1 root package…
-
-Materialising 1 package into vibedeps/:
-  org.vibevm.world/wal@1.0.0
-
-closure diff:
-  → + org.vibevm.world/wal@1.0.0 (root-edge)
-  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
-
-Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+      <run>vibe install org.vibevm.world/wal --path hello-vibe --offline --assume-yes --quiet</run>
+      <expect>vibe install: 1 package materialised</expect>
     </example>
   </by-hand>
   <switching-it-on title="Three ways to switch offline mode on">

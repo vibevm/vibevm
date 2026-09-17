@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use dialoguer::Select;
 use specmark::spec;
 use thiserror::Error;
+use vibe_core::progress::Progress;
 
 use super::builder::{ResolvedVersion, short_commit};
 use super::git::GitError;
@@ -144,11 +145,14 @@ pub(crate) fn choose_mirror(
     }
     if !ctx.is_unattended() && std::io::stdin().is_terminal() {
         let items = Mirror::ALL.map(|m| m.as_str());
-        let pick = Select::new()
-            .with_prompt("Source mirror")
-            .items(items)
-            .default(0)
-            .interact()
+        let pick = ctx
+            .suspend_progress(|| {
+                Select::new()
+                    .with_prompt("Source mirror")
+                    .items(items)
+                    .default(0)
+                    .interact()
+            })
             .unwrap_or(0);
         return Ok(Mirror::ALL[pick]);
     }
@@ -269,7 +273,10 @@ pub(crate) fn prepare_from_mirror(
     store: &VersionStore,
     mirror: &str,
     selector: &model::Selector,
+    progress: &Progress,
 ) -> Result<CloneOutcome, ResolveError> {
+    let preparation = progress.task("Preparing managed source");
+    preparation.detail(format!("source mirror: {}", mirror_name(mirror)));
     let dir = store.mirror_dir();
     store
         .guard_mutation_tree(&dir)
@@ -278,7 +285,14 @@ pub(crate) fn prepare_from_mirror(
             source: io::Error::other(error),
         })?;
     if dir.join(".git").is_dir() {
-        super::git::fetch(&dir)?;
+        let task = preparation.progress().task("Fetching source updates");
+        task.detail("git fetch --all --tags");
+        if let Err(error) = super::git::fetch(&dir) {
+            task.fail("git fetch failed");
+            preparation.fail("source preparation failed");
+            return Err(error.into());
+        }
+        task.finish();
     } else {
         if dir.exists() {
             fs::remove_dir_all(&dir).map_err(|source| ResolveError::Clone {
@@ -292,14 +306,55 @@ pub(crate) fn prepare_from_mirror(
                 source,
             })?;
         }
-        super::git::clone(mirror, &dir)?;
+        let task = preparation.progress().task("Cloning managed source");
+        task.detail(format!(
+            "git clone --recurse-submodules {}",
+            mirror_name(mirror)
+        ));
+        if let Err(error) = super::git::clone(mirror, &dir) {
+            task.fail("git clone failed");
+            preparation.fail("source preparation failed");
+            return Err(error.into());
+        }
+        task.finish();
     }
-    let resolved = resolve_in_clone(&dir, selector)?;
-    super::git::checkout(&dir, &resolved.commit)?;
+    let resolve = preparation.progress().task("Resolving source revision");
+    let resolved = match resolve_in_clone(&dir, selector) {
+        Ok(resolved) => resolved,
+        Err(error) => {
+            resolve.fail("revision resolution failed");
+            preparation.fail("source preparation failed");
+            return Err(error);
+        }
+    };
+    resolve.detail(format!(
+        "selected revision {}",
+        short_commit(&resolved.commit)
+    ));
+    resolve.finish();
+    let checkout = preparation.progress().task("Checking out source revision");
+    checkout.detail(format!("git checkout {}", short_commit(&resolved.commit)));
+    if let Err(error) = super::git::checkout(&dir, &resolved.commit) {
+        checkout.fail("git checkout failed");
+        preparation.fail("source preparation failed");
+        return Err(error.into());
+    }
+    checkout.finish();
+    preparation.finish();
     Ok(CloneOutcome {
         src_dir: dir,
         resolved,
     })
+}
+
+fn mirror_name(url: &str) -> &'static str {
+    if url.contains("github.com") {
+        "github"
+    } else if url.contains("gitverse.ru") {
+        "gitverse"
+    } else {
+        "configured source"
+    }
 }
 
 /// The friendly absolute path of an external source for provenance — strips
@@ -423,13 +478,15 @@ mod tests {
         let url = upstream.path().display().to_string();
 
         // First call clones into the shared mirror.
-        let out = prepare_from_mirror(&store, &url, &Selector::Stable).unwrap();
+        let out =
+            prepare_from_mirror(&store, &url, &Selector::Stable, &Progress::default()).unwrap();
         assert_eq!(out.resolved.id, VersionId::new(Kind::Tag, "1.10.0"));
         assert_eq!(out.src_dir, store.mirror_dir());
         assert!(store.mirror_dir().join(".git").is_dir());
 
         // Second call reuses + fetches (no re-clone) and still resolves.
-        let out2 = prepare_from_mirror(&store, &url, &Selector::Latest).unwrap();
+        let out2 =
+            prepare_from_mirror(&store, &url, &Selector::Latest, &Progress::default()).unwrap();
         assert_eq!(out2.resolved.id, VersionId::new(Kind::Branch, "main"));
     }
 
@@ -448,6 +505,7 @@ mod tests {
             &store,
             "https://invalid.example/repo",
             &model::Selector::Latest,
+            &Progress::default(),
         )
         .unwrap_err()
         .to_string();

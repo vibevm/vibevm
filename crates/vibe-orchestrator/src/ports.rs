@@ -115,6 +115,12 @@ pub enum InstallNarration<'a> {
 /// fn takes(_: &dyn InstallObserver) {}
 /// ```
 pub trait InstallObserver: Send + Sync {
+    /// Invocation-owned progress tree selected by the surface. The default is
+    /// inert so hosted/test observers retain their exact behaviour.
+    fn progress(&self) -> vibe_core::progress::Progress {
+        vibe_core::progress::Progress::default()
+    }
+
     /// How the slot lifecycle's child process streams are wired. This is the
     /// CHILD formula and is deliberately not [`RunObserver::stream_mode`].
     fn stream_mode(&self) -> StreamMode;
@@ -196,6 +202,8 @@ pub struct RegistryEnvironmentSnapshot {
 /// over whatever registry/solver flags it owns.
 #[spec(documents = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub struct PackageSourceBuild<'a> {
+    /// Invocation-owned observation tree for registry/cache work.
+    pub progress: &'a vibe_core::progress::Progress,
     /// The selected node's manifest snapshot.
     pub manifest: &'a Manifest,
     /// The embedded-registry root, already resolved for this run.

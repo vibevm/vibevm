@@ -2,13 +2,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#provenance");
 
-use std::fs;
-use std::io::{self, Read};
-use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::time::Duration;
+use std::path::Path;
 
 use anyhow::{Context, Result, bail};
+use vibe_core::progress::Progress;
 use vibe_publish::release_manifest::{
     AggregateDistributionManifest, DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME,
     DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES, DISTRIBUTION_BOOTSTRAP_MAX_BYTES,
@@ -18,14 +15,24 @@ use vibe_publish::release_manifest::{
 use super::env::{EnvPersister, Shell};
 use super::install::InstallLock;
 use super::model::{InstallRecord, Kind, Origin};
-use super::{
-    VvmEnv, output, provenance,
-    store::{VersionStore, open_regular_no_follow},
-};
+use super::{VvmEnv, output, provenance, store::VersionStore};
 use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmReinstallArgs, VvmUpdateArgs};
 
 #[path = "bundle/archive.rs"]
 mod archive;
+#[path = "bundle/download.rs"]
+mod download;
+#[path = "bundle/report.rs"]
+mod report;
+#[path = "bundle/selection.rs"]
+mod selection;
+#[cfg(test)]
+use download::{CONNECT_TIMEOUT, TOTAL_TIMEOUT, copy_download, write_download};
+use download::{
+    DownloadCleanup, Downloader, HttpDownloader, cache_busted, download_path, safe_url,
+};
+use report::{ActivationReport, emit_outcome};
+use selection::{current_target, read_aggregate, select_platform, validated_release_base};
 
 pub(super) fn installed_bundle_intact(store: &VersionStore, record: &InstallRecord) -> bool {
     archive::installed_bundle_intact(store, record)
@@ -38,16 +45,6 @@ const GITHUB_RELEASE_ROOT: &str = "https://github.com/vibevm/vibevm/releases/dow
 /// known (PROP-019 `##CMD-UPDATE`).
 const GITHUB_NEWEST_RELEASE_MANIFEST: &str =
     "https://github.com/vibevm/vibevm/releases/latest/download/DISTRIBUTIONS.json";
-static REQUEST_NONCE: AtomicU64 = AtomicU64::new(1);
-const CONNECT_TIMEOUT: Duration = Duration::from_secs(20);
-const TOTAL_TIMEOUT: Duration = Duration::from_secs(30 * 60);
-
-#[derive(Debug)]
-struct ActivationReport {
-    path_on_current_process: bool,
-    durable_path_changed: bool,
-    advisory_home_warning: Option<String>,
-}
 
 struct RemoteContext<'a> {
     ctx: &'a output::Context,
@@ -56,6 +53,7 @@ struct RemoteContext<'a> {
     downloader: &'a dyn Downloader,
     persister: &'a dyn EnvPersister,
     command: &'a str,
+    progress: &'a Progress,
 }
 
 fn activate_install(
@@ -76,6 +74,7 @@ pub(super) fn run_bootstrap_cmd(
     ctx: &output::Context,
     env: &VvmEnv,
     args: VvmBootstrapArgs,
+    progress: &Progress,
 ) -> Result<()> {
     let executable = std::env::current_exe().context("locating the bootstrap executable")?;
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
@@ -86,6 +85,7 @@ pub(super) fn run_bootstrap_cmd(
         &HttpDownloader,
         &executable,
         persister.as_ref(),
+        progress,
     )
 }
 
@@ -96,6 +96,7 @@ fn bootstrap_with_downloader(
     downloader: &dyn Downloader,
     bootstrap_executable: &Path,
     persister: &dyn EnvPersister,
+    progress: &Progress,
 ) -> Result<()> {
     let store = env.store()?;
     let aggregate = read_aggregate(&args.manifest)?;
@@ -113,6 +114,7 @@ fn bootstrap_with_downloader(
             downloader,
             persister,
             command: "self:bootstrap",
+            progress,
         },
         platform,
         &release_base,
@@ -128,10 +130,19 @@ pub(super) fn run_update_cmd(
     ctx: &output::Context,
     env: &VvmEnv,
     args: VvmUpdateArgs,
+    progress: &Progress,
 ) -> Result<()> {
     let store = env.store()?;
     if let Some(record) = running_binary_record(&store)? {
-        return install_newest_release(ctx, env, &store, &record, args.force, "self:update");
+        return install_newest_release(
+            ctx,
+            env,
+            &store,
+            &record,
+            args.force,
+            "self:update",
+            progress,
+        );
     }
     rebuild_latest(
         ctx,
@@ -140,6 +151,7 @@ pub(super) fn run_update_cmd(
         args.release,
         args.force,
         "self:update",
+        progress,
     )
 }
 
@@ -151,19 +163,35 @@ pub(super) fn run_reinstall_cmd(
     ctx: &output::Context,
     env: &VvmEnv,
     args: VvmReinstallArgs,
+    progress: &Progress,
 ) -> Result<()> {
     let store = env.store()?;
     if let Some(record) = running_binary_record(&store)? {
         binary_release_version(&record)?;
         let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
         return install_release_version(
-            &remote_context(ctx, env, &store, persister.as_ref(), "self:reinstall"),
+            &remote_context(
+                ctx,
+                env,
+                &store,
+                persister.as_ref(),
+                "self:reinstall",
+                progress,
+            ),
             &record.id,
             true,
         )
         .map(|_| ());
     }
-    rebuild_latest(ctx, env, args.profile, args.release, true, "self:reinstall")
+    rebuild_latest(
+        ctx,
+        env,
+        args.profile,
+        args.release,
+        true,
+        "self:reinstall",
+        progress,
+    )
 }
 
 /// The running managed BINARY installation, when this execution is one. A
@@ -198,6 +226,7 @@ fn rebuild_latest(
     release: bool,
     force: bool,
     command: &str,
+    progress: &Progress,
 ) -> Result<()> {
     super::run_install_cmd(
         ctx,
@@ -215,6 +244,7 @@ fn rebuild_latest(
             force,
         },
         command,
+        progress,
     )
 }
 
@@ -228,10 +258,11 @@ pub(super) fn install_newest_release(
     record: &InstallRecord,
     force: bool,
     command: &str,
+    progress: &Progress,
 ) -> Result<()> {
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
     move_to_newest_release(
-        &remote_context(ctx, env, store, persister.as_ref(), command),
+        &remote_context(ctx, env, store, persister.as_ref(), command, progress),
         record,
         force,
     )
@@ -253,6 +284,9 @@ fn move_to_newest_release(
         .context("learning the newest published release")?;
     let newest = semver::Version::parse(&aggregate.version)
         .with_context(|| format!("reading newest release version `{}`", aggregate.version))?;
+    let selection = remote.progress.task("Selecting release");
+    selection.detail(format!("installed {installed}; newest {newest}"));
+    selection.finish();
     if newest < installed {
         return report_withdrawn_release(remote, record, &installed, &newest);
     }
@@ -332,10 +366,18 @@ pub(super) fn install_binary_version(
     store: &VersionStore,
     version: &str,
     force: bool,
+    progress: &Progress,
 ) -> Result<()> {
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
     install_release_version(
-        &remote_context(ctx, env, store, persister.as_ref(), "self:install"),
+        &remote_context(
+            ctx,
+            env,
+            store,
+            persister.as_ref(),
+            "self:install",
+            progress,
+        ),
         version,
         force,
     )
@@ -350,6 +392,7 @@ fn remote_context<'a>(
     store: &'a VersionStore,
     persister: &'a dyn EnvPersister,
     command: &'a str,
+    progress: &'a Progress,
 ) -> RemoteContext<'a> {
     RemoteContext {
         ctx,
@@ -358,6 +401,7 @@ fn remote_context<'a>(
         downloader: &HttpDownloader,
         persister,
         command,
+        progress,
     }
 }
 
@@ -370,15 +414,32 @@ fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDis
     // rescue under the posture — the only thing that could recognise one is
     // this manifest, and reading it is the very act being refused.
     remote.env.refuse_offline(remote.command, url)?;
+    let task = remote.progress.task("Fetching release metadata");
+    task.detail(format!("GET {}", safe_url(url)));
+    task.set_progress(0, None, "bytes");
     let manifest_path = download_path(remote.store, DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
-    remote.store.guard_mutation_path(&manifest_path)?;
-    remote.downloader.download(
+    if let Err(error) = remote.store.guard_mutation_path(&manifest_path) {
+        task.fail("release metadata destination was rejected");
+        return Err(error.into());
+    }
+    if let Err(error) = remote.downloader.download(
         &cache_busted(url),
         &manifest_path,
         DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
-    )?;
+        None,
+        &task,
+    ) {
+        task.fail("release metadata download failed");
+        return Err(error);
+    }
     let _cleanup = DownloadCleanup(manifest_path.clone());
-    read_aggregate(&manifest_path)
+    let result = read_aggregate(&manifest_path);
+    if result.is_ok() {
+        task.finish();
+    } else {
+        task.fail("release metadata was invalid");
+    }
+    result
 }
 
 /// Install one selected platform bundle, returning whether an existing
@@ -395,15 +456,25 @@ fn install_selected(
     release_base: &str,
     force: bool,
 ) -> Result<bool> {
+    let existing = remote.progress.task("Checking installed generation");
     if !force
-        && let Some(outcome) = archive::installed_from_published_bundle(
+        && let Some(outcome) = archive::installed_from_published_bundle_observed(
             remote.store,
             &platform.bundle,
             &platform.asset,
+            &existing.progress(),
         )?
     {
+        existing.detail(format!("reusing intact {}", outcome.record.selector()));
+        existing.finish();
         let _lock = InstallLock::acquire(remote.store)?;
         return finish_install(remote, &outcome);
+    }
+    if force {
+        existing.skip("fresh generation requested");
+    } else {
+        existing.detail("no intact generation matches the published bundle");
+        existing.finish();
     }
     let bundle_url = format!(
         "{}/{}",
@@ -415,234 +486,70 @@ fn install_selected(
     // nothing local left to satisfy the verb with and an offline run says
     // so — before the download path is even allocated.
     remote.env.refuse_offline(remote.command, &bundle_url)?;
+    let download = remote.progress.task("Downloading release bundle");
+    download.detail(format!("GET {}", safe_url(&bundle_url)));
+    download.set_progress(0, Some(platform.asset.size), "bytes");
     let bundle_path = download_path(remote.store, &platform.asset.name);
-    remote.store.guard_mutation_path(&bundle_path)?;
-    remote.downloader.download(
+    if let Err(error) = remote.store.guard_mutation_path(&bundle_path) {
+        download.fail("release bundle destination was rejected");
+        return Err(error.into());
+    }
+    if let Err(error) = remote.downloader.download(
         &cache_busted(&bundle_url),
         &bundle_path,
         platform.asset.size,
-    )?;
+        Some(platform.asset.size),
+        &download,
+    ) {
+        download.fail("release bundle download failed");
+        return Err(error);
+    }
+    download.finish();
     let _cleanup = DownloadCleanup(bundle_path.clone());
     let _lock = InstallLock::acquire(remote.store)?;
-    let outcome = archive::install_bundle(
+    let install = remote
+        .progress
+        .task("Verifying and extracting release bundle");
+    let outcome = match archive::install_bundle_observed(
         remote.store,
         &bundle_path,
         &platform.bundle,
         &platform.asset,
         force,
-    )?;
+        &install.progress(),
+    ) {
+        Ok(outcome) => {
+            install.finish();
+            outcome
+        }
+        Err(error) => {
+            install.fail("release bundle verification or extraction failed");
+            return Err(error);
+        }
+    };
     finish_install(remote, &outcome)
 }
 
 /// Activate the installed-or-reused instance and report it.
 fn finish_install(remote: &RemoteContext<'_>, outcome: &archive::InstallOutcome) -> Result<bool> {
-    let activation = activate_install(
+    let task = remote.progress.task("Activating installed version");
+    let activation = match activate_install(
         remote.store,
         outcome,
         remote.persister,
         super::path_has_dir(remote.env.path_var.as_deref(), &remote.store.shim_dir()),
-    )?;
+    ) {
+        Ok(activation) => {
+            task.finish();
+            activation
+        }
+        Err(error) => {
+            task.fail("activation failed");
+            return Err(error);
+        }
+    };
     emit_outcome(remote.ctx, remote.command, outcome, &activation)?;
     Ok(outcome.reused)
-}
-
-fn emit_outcome(
-    ctx: &output::Context,
-    command: &str,
-    outcome: &archive::InstallOutcome,
-    activation: &ActivationReport,
-) -> Result<()> {
-    if ctx.is_json() {
-        return ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": command,
-            "selector": outcome.record.selector().to_string(),
-            "instance": outcome.record.instance,
-            "home": outcome.home.display().to_string(),
-            "source": outcome.record.source_path,
-            "payload_sha256": outcome.record.payload_sha256,
-            "reused": outcome.reused,
-            "vibe_index_restart_required": true,
-            "path_on_current_process": activation.path_on_current_process,
-            "durable_path_changed": activation.durable_path_changed,
-            "reopen_shell": !activation.path_on_current_process,
-            "advisory_home_warning": activation.advisory_home_warning,
-        }));
-    }
-    ctx.summary(
-        "note: a running `vibe-index serve` keeps its old process; restart it to use this instance.",
-    );
-    if activation.path_on_current_process {
-        ctx.summary("PATH is ready in this process.");
-    } else if activation.durable_path_changed {
-        ctx.summary("durable PATH updated; reopen the shell to resolve the stable shims.");
-    } else {
-        ctx.summary("durable PATH was already configured; reopen this shell to pick it up.");
-    }
-    if let Some(warning) = &activation.advisory_home_warning {
-        ctx.summary(&format!(
-            "warning: active pointer switched, but advisory VIBEVM_HOME was not updated: {warning}"
-        ));
-    }
-    ctx.summary(&format!(
-        "{} {} — active",
-        if outcome.reused {
-            "reused"
-        } else {
-            "installed"
-        },
-        outcome.record.selector()
-    ));
-    Ok(())
-}
-
-fn read_aggregate(path: &Path) -> Result<AggregateDistributionManifest> {
-    let (mut file, metadata) = open_regular_no_follow(path)
-        .with_context(|| format!("reading aggregate manifest `{}`", path.display()))?;
-    if metadata.len() > DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES {
-        bail!(
-            "aggregate manifest `{}` is not a bounded regular file",
-            path.display()
-        );
-    }
-    let mut bytes = Vec::with_capacity(metadata.len().min(64 * 1024) as usize);
-    let copied = copy_download(
-        &mut file,
-        &mut bytes,
-        DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
-    )?;
-    if copied != metadata.len() {
-        bail!("aggregate manifest changed size while reading");
-    }
-    AggregateDistributionManifest::from_json_slice(&bytes).map_err(Into::into)
-}
-
-fn select_platform<'a>(
-    aggregate: &'a AggregateDistributionManifest,
-    expected_version: &str,
-    target: &str,
-) -> Result<&'a PlatformDistributionFragment> {
-    aggregate.validate()?;
-    let expected = semver::Version::parse(expected_version)
-        .with_context(|| format!("invalid bootstrap version `{expected_version}`"))?
-        .to_string();
-    if aggregate.version != expected || aggregate.tag != format!("v{expected}") {
-        bail!(
-            "aggregate manifest version/tag `{}`/`{}` does not match requested `{expected}`",
-            aggregate.version,
-            aggregate.tag
-        );
-    }
-    aggregate
-        .platforms
-        .iter()
-        .find(|platform| platform.target == target)
-        .with_context(|| format!("aggregate manifest has no platform `{target}`"))
-}
-
-fn validated_release_base(raw: &str, expected_tag: &str) -> Result<String> {
-    let url = reqwest::Url::parse(raw).context("parsing --release-base URL")?;
-    if url.scheme() != "https"
-        || url.host_str() != Some("github.com")
-        || !url.username().is_empty()
-        || url.password().is_some()
-        || url.port().is_some()
-        || url.query().is_some()
-        || url.fragment().is_some()
-        || url.path() != format!("/vibevm/vibevm/releases/download/{expected_tag}")
-    {
-        bail!("release base must be the canonical HTTPS GitHub directory for `{expected_tag}`");
-    }
-    Ok(raw.trim_end_matches('/').to_string())
-}
-
-fn download_path(store: &VersionStore, name: &str) -> PathBuf {
-    store.data_dir().join(format!(
-        ".download-{}-{}-{name}",
-        std::process::id(),
-        chrono::Utc::now().timestamp_nanos_opt().unwrap_or_default()
-    ))
-}
-
-fn cache_busted(url: &str) -> String {
-    let nonce = REQUEST_NONCE.fetch_add(1, Ordering::Relaxed);
-    format!(
-        "{url}?vvm_nonce={}-{}-{nonce}",
-        std::process::id(),
-        chrono::Utc::now().timestamp_nanos_opt().unwrap_or_default()
-    )
-}
-
-struct DownloadCleanup(PathBuf);
-
-impl Drop for DownloadCleanup {
-    fn drop(&mut self) {
-        let _ = fs::remove_file(&self.0);
-    }
-}
-
-trait Downloader {
-    fn download(&self, url: &str, destination: &Path, maximum_bytes: u64) -> Result<()>;
-}
-
-struct HttpDownloader;
-
-impl Downloader for HttpDownloader {
-    fn download(&self, url: &str, destination: &Path, maximum_bytes: u64) -> Result<()> {
-        if let Some(parent) = destination.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("creating download directory `{}`", parent.display()))?;
-        }
-        let client = reqwest::blocking::Client::builder()
-            .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
-            .connect_timeout(CONNECT_TIMEOUT)
-            .timeout(TOTAL_TIMEOUT)
-            .build()
-            .context("building anonymous GitHub release client")?;
-        let mut response = client
-            .get(url)
-            .header(reqwest::header::ACCEPT, "application/octet-stream")
-            .header(reqwest::header::CACHE_CONTROL, "no-cache")
-            .header(reqwest::header::PRAGMA, "no-cache")
-            .send()
-            .and_then(reqwest::blocking::Response::error_for_status)
-            .with_context(|| format!("downloading `{url}`"))?;
-        write_download(destination, maximum_bytes, &mut response)
-            .with_context(|| format!("writing download `{}`", destination.display()))?;
-        Ok(())
-    }
-}
-
-fn write_download(destination: &Path, maximum_bytes: u64, reader: &mut impl Read) -> Result<()> {
-    let mut file = fs::OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(destination)
-        .with_context(|| format!("creating `{}`", destination.display()))?;
-    let result = copy_download(reader, &mut file, maximum_bytes);
-    drop(file);
-    if result.is_err() {
-        let _ = fs::remove_file(destination);
-    }
-    result.map(|_| ())
-}
-
-fn copy_download(reader: &mut impl Read, writer: &mut impl io::Write, maximum: u64) -> Result<u64> {
-    let copied = io::copy(&mut reader.take(maximum.saturating_add(1)), writer)?;
-    if copied > maximum {
-        bail!("download exceeds its {maximum}-byte limit");
-    }
-    Ok(copied)
-}
-
-fn current_target() -> Result<&'static str> {
-    match (std::env::consts::ARCH, std::env::consts::OS) {
-        ("x86_64", "windows") => Ok("x86_64-pc-windows-msvc"),
-        ("x86_64", "linux") => Ok("x86_64-unknown-linux-musl"),
-        ("x86_64", "macos") => Ok("x86_64-apple-darwin"),
-        ("aarch64", "macos") => Ok("aarch64-apple-darwin"),
-        (arch, os) => bail!("no vibevm binary distribution target for {arch}-{os}"),
-    }
 }
 
 #[cfg(test)]

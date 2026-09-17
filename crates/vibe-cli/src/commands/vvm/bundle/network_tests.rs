@@ -1,5 +1,6 @@
 use super::super::{CONNECT_TIMEOUT, RemoteContext, TOTAL_TIMEOUT, copy_download, write_download};
 use super::*;
+use vibe_core::progress::Progress;
 use vibe_publish::release_manifest::DISTRIBUTION_BUNDLE_MAX_BYTES;
 
 #[test]
@@ -62,6 +63,7 @@ fn oversized_bundle_declaration_is_rejected_before_downloader_runs() {
         &downloader,
         &bootstrap,
         &FakePersister::new(false),
+        &Progress::default(),
     )
     .unwrap_err()
     .to_string();
@@ -111,6 +113,7 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
         &downloader,
         &bootstrap,
         &persister,
+        &Progress::default(),
     )
     .unwrap_err()
     .to_string();
@@ -118,14 +121,30 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
     assert!(downloader.urls.borrow().is_empty());
 
     write_test_executable(&bootstrap, b"wrong-bootstrap");
-    let error =
-        bootstrap_with_downloader(&quiet(), &env, &args, &downloader, &bootstrap, &persister)
-            .unwrap_err()
-            .to_string();
+    let error = bootstrap_with_downloader(
+        &quiet(),
+        &env,
+        &args,
+        &downloader,
+        &bootstrap,
+        &persister,
+        &Progress::default(),
+    )
+    .unwrap_err()
+    .to_string();
     assert!(error.contains("expected bounded regular file"), "{error}");
     assert!(downloader.urls.borrow().is_empty());
     write_test_executable(&bootstrap, b"vibe-binary");
-    bootstrap_with_downloader(&quiet(), &env, &args, &downloader, &bootstrap, &persister).unwrap();
+    bootstrap_with_downloader(
+        &quiet(),
+        &env,
+        &args,
+        &downloader,
+        &bootstrap,
+        &persister,
+        &Progress::default(),
+    )
+    .unwrap();
     let urls = downloader.urls.borrow();
     assert_eq!(urls.len(), 1);
     assert!(
@@ -178,6 +197,7 @@ fn an_offline_bootstrap_is_refused_before_the_bundle_is_requested() {
         &downloader,
         &bootstrap,
         &FakePersister::new(false),
+        &Progress::default(),
     )
     .unwrap_err()
     .to_string();
@@ -221,6 +241,7 @@ fn a_named_release_uses_mutable_assets_and_force_allocates_a_fresh_instance() {
     };
     let persister = FakePersister::new(false);
     let ctx = quiet();
+    let progress = Progress::default();
     let remote = RemoteContext {
         ctx: &ctx,
         env: &env,
@@ -228,6 +249,7 @@ fn a_named_release_uses_mutable_assets_and_force_allocates_a_fresh_instance() {
         downloader: &downloader,
         persister: &persister,
         command: "self:update",
+        progress: &progress,
     };
 
     install_release_version(&remote, "1.0.0", false).unwrap();

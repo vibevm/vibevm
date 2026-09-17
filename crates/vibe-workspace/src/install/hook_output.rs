@@ -135,6 +135,7 @@ fn apply_with_materialise_lifecycle(
             spec_format,
             slot_verifier,
             lifecycle,
+            progress: vibe_core::progress::Progress::default(),
         },
     )?;
 
@@ -188,6 +189,55 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        trace,
+        prepare,
+        run,
+        make_provider,
+        &vibe_core::progress::Progress::default(),
+    )
+}
+
+/// Observed native-aware sibling used by the install command.
+#[allow(clippy::too_many_arguments)]
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress<F, G, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    prepare: &mut F,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut G,
+    progress: &vibe_core::progress::Progress,
+) -> Result<NativeInstallOutcome, WorkspaceError>
+where
+    F: FnMut(
+        &Workspace,
+        &[ResolvedDep],
+    ) -> Result<
+        (
+            crate::extension_world::ExtensionWorldEpoch,
+            crate::extension_world::OwnerRuntimeLowering,
+        ),
+        WorkspaceError,
+    >,
+    G: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
     validate_redirect_blocks(workspace)?;
     let materialise = |lifecycle| {
         materialise_resolution_with_spec_format(
@@ -198,6 +248,7 @@ where
                 spec_format,
                 slot_verifier,
                 lifecycle,
+                progress: progress.clone(),
             },
         )
     };
@@ -230,6 +281,8 @@ where
     // This callback is deliberately HERE: every slot and pre-install effect
     // is now visible, while boot publication and the lock write have not run.
     let (world, lowering) = prepare(workspace, resolution)?;
+    let boot_task = progress.task("Generating boot artifacts");
+    boot_task.set_progress(0, Some(workspace.iter_nodes().count() as u64), "nodes");
     let (nodes_regenerated, carriage) =
         super::bootgen::regenerate_boot_from_traced_native_prepared(
             workspace,
@@ -241,6 +294,12 @@ where
             run,
             make_provider,
         )?;
+    boot_task.set_progress(
+        nodes_regenerated.len() as u64,
+        Some(nodes_regenerated.len() as u64),
+        "nodes",
+    );
+    boot_task.finish();
     Ok(NativeInstallOutcome {
         outcome: InstallOutcome {
             materialised,

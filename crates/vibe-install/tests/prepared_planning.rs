@@ -14,11 +14,13 @@
 
 use std::collections::BTreeSet;
 use std::path::Path;
-use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
 use vibe_core::{PackageRef, VersionSpec};
-use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
+use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan, PlanEvent, PlanObserver};
 use vibe_registry::{CachedPackage, RegistryError};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, SolveError};
 use vibe_workspace::Workspace;
@@ -32,6 +34,78 @@ use vibe_workspace::Workspace;
 #[derive(Default)]
 struct RecordingSource {
     solves: Mutex<Vec<Vec<String>>>,
+}
+
+struct EventRecorder {
+    started: Arc<AtomicBool>,
+    events: Mutex<Vec<ProgressEventKind>>,
+}
+
+impl ProgressObserver for EventRecorder {
+    fn observe(&self, event: ProgressEvent) {
+        if matches!(event.kind, ProgressEventKind::Started { .. }) {
+            self.started.store(true, Ordering::SeqCst);
+        }
+        self.events.lock().unwrap().push(event.kind);
+    }
+}
+
+struct ObservedPlan {
+    progress: Progress,
+}
+
+impl PlanObserver for ObservedPlan {
+    fn on(&self, _event: PlanEvent) {}
+
+    fn progress(&self) -> Progress {
+        self.progress.clone()
+    }
+}
+
+struct StartCheckingSource {
+    started: Arc<AtomicBool>,
+}
+
+impl InstallSource for StartCheckingSource {
+    fn solve(&self, _roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        assert!(
+            self.started.load(Ordering::SeqCst),
+            "progress must start before the blocking resolver call"
+        );
+        Err(SolveError::CapabilityUnmet {
+            capability: "expected refusal".into(),
+            requirer: "progress fixture".into(),
+        })
+    }
+
+    fn resolve_and_fetch(
+        &self,
+        _pkgref: &PackageRef,
+        _store_root: &Path,
+        _expected_hash: Option<&str>,
+    ) -> Result<CachedPackage, RegistryError> {
+        unreachable!()
+    }
+
+    fn manifest_of(&self, _pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        unreachable!()
+    }
+
+    fn solve_masked(
+        &self,
+        roots: &[PackageRef],
+        _blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError> {
+        self.solve(roots)
+    }
+
+    fn materialise_in_place(
+        &self,
+        _pkgref: &PackageRef,
+        _slot: &Path,
+    ) -> Result<vibe_registry::InPlaceMaterialised, RegistryError> {
+        unreachable!()
+    }
 }
 
 impl RecordingSource {
@@ -129,6 +203,44 @@ fn request() -> InstallRequest {
 
 fn tools_ref() -> PackageRef {
     PackageRef::parse("flow:org.demo/tools@^1.0").expect("a well-formed pkgref")
+}
+
+#[test]
+fn progress_starts_before_the_resolver_blocks_and_fails_honestly() {
+    let project = bare_project();
+    let (mut manifest, mut workspace) = prepare(project.path());
+    workspace.root_manifest.requires.packages.push(tools_ref());
+
+    let started = Arc::new(AtomicBool::new(false));
+    let recorder = Arc::new(EventRecorder {
+        started: Arc::clone(&started),
+        events: Mutex::new(Vec::new()),
+    });
+    let observer = ObservedPlan {
+        progress: Progress::new(recorder.clone()),
+    };
+    let source = StartCheckingSource { started };
+
+    let error = vibe_install::plan_prepared_with_spec_format(
+        &source,
+        project.path(),
+        &mut manifest,
+        &mut workspace,
+        request(),
+        vibe_core::manifest::SpecFormat::Mixed,
+        &observer,
+    )
+    .expect_err("the fixture resolver refuses");
+    assert!(error.to_string().contains("expected refusal"));
+    let events = recorder.events.lock().unwrap();
+    assert!(matches!(
+        events.first(),
+        Some(ProgressEventKind::Started { label }) if label == "Resolving dependencies"
+    ));
+    assert!(matches!(
+        events.last(),
+        Some(ProgressEventKind::Failed { message }) if message == "dependency resolution failed"
+    ));
 }
 
 fn plan_prepared(

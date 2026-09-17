@@ -242,6 +242,7 @@ pub fn execute_prepared(
     )?;
 
     let spec_format = resolve_spec_format(&manifest, spec_format_default);
+    let progress = observer.progress();
 
     // The SURFACE's own source-mutation epoch, at exactly the position it has
     // always occupied: after the manifest and the tree are consumed, before the
@@ -293,6 +294,7 @@ pub fn execute_prepared(
         && lockfile_snapshot.meta.root_dependencies.is_empty()
     {
         observer.narrate(InstallNarration::EmptyWorld);
+        let boot_task = progress.task("Generating boot artifacts for the empty world");
         let (nodes, native) = regenerate_native_world(
             &project_root,
             &workspace,
@@ -303,6 +305,8 @@ pub fn execute_prepared(
             &lease,
         )
         .context("regenerating boot artifacts for the empty world")?;
+        boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
+        boot_task.finish();
         lifecycle_run.native = Some(native);
         let after = after_durable_world
             .take()
@@ -318,6 +322,7 @@ pub fn execute_prepared(
     // The source is built from the ONE environment snapshot, and only here: a
     // chain that never reaches this point never pays for the composition.
     let resolver = sources.build(PackageSourceBuild {
+        progress: &progress,
         manifest: &manifest,
         embedded_root: environment.embedded_root.as_deref(),
         project_root: &project_root,
@@ -370,6 +375,7 @@ pub fn execute_prepared(
             // PROP-011 §2.2 — application is just a whole-tree boot
             // regeneration (cheap, self-healing — §2.4).
             observer.narrate(InstallNarration::FreshLock);
+            let boot_task = progress.task("Regenerating boot artifacts from the fresh lock");
             // The one workspace snapshot this command owns. Nothing between
             // its read and here mutated the tree — the fresh fast path
             // resolves nothing and copies nothing — so a re-read could only
@@ -387,6 +393,8 @@ pub fn execute_prepared(
                 &lease,
             )
             .context("regenerating boot artifacts from the materialised state")?;
+            boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
+            boot_task.finish();
             lifecycle_run.native = Some(native);
             let after = after_durable_world
                 .take()

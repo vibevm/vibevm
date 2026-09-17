@@ -17,12 +17,15 @@
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
 
 use tempfile::TempDir;
 use vibe_core::manifest::{Manifest, SpecFormat};
+use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group, PackageRef};
-use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
+use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan, PlanEvent, PlanObserver};
 use vibe_registry::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
@@ -45,6 +48,26 @@ mod production_slot_verify;
 struct FixtureSource {
     fixtures: PathBuf,
     graph: ResolvedGraph,
+    solves: AtomicUsize,
+}
+
+#[derive(Default)]
+struct ProgressLog(Mutex<Vec<ProgressEventKind>>);
+
+impl ProgressObserver for ProgressLog {
+    fn observe(&self, event: ProgressEvent) {
+        self.0.lock().unwrap().push(event.kind);
+    }
+}
+
+struct ObservedPlan(Progress);
+
+impl PlanObserver for ObservedPlan {
+    fn on(&self, _event: PlanEvent) {}
+
+    fn progress(&self) -> Progress {
+        self.0.clone()
+    }
 }
 
 impl InstallSource for FixtureSource {
@@ -96,6 +119,7 @@ impl InstallSource for FixtureSource {
     }
 
     fn solve(&self, _roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        self.solves.fetch_add(1, Ordering::SeqCst);
         Ok(self.graph.clone())
     }
 
@@ -247,6 +271,7 @@ fn installed_project(integrity: SlotIntegrity) -> (FixtureSource, TempDir, PathB
     let source = FixtureSource {
         fixtures: outer.path().to_path_buf(),
         graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
     };
     let project = outer.path().join("project");
     let first = run_install(&source, &project, integrity);
@@ -260,6 +285,81 @@ fn installed_project(integrity: SlotIntegrity) -> (FixtureSource, TempDir, PathB
 
 const SLOT_A: &str = "vibevm/vibedeps/org.vibevm.pkg-a/1.0.0";
 const SLOT_B: &str = "vibevm/vibedeps/org.vibevm.pkg-b/1.0.0";
+
+#[test]
+fn observed_install_reports_fetch_apply_and_record_in_order() {
+    let outer = TempDir::new().unwrap();
+    fixture_pkg(outer.path(), "pkg-a", "# package A content\n");
+    fixture_pkg(outer.path(), "pkg-b", "# package B content\n");
+    write(
+        outer.path(),
+        "project/vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    );
+    let source = FixtureSource {
+        fixtures: outer.path().to_path_buf(),
+        graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
+    };
+    let log = Arc::new(ProgressLog::default());
+    let observer = ObservedPlan(Progress::new(log.clone()));
+    let project = outer.path().join("project");
+
+    let planned = match vibe_install::plan(&source, &project, request(), &observer).unwrap() {
+        Plan::Ready(planned) => planned,
+        Plan::Fresh => panic!("explicit install must resolve"),
+    };
+    vibe_install::apply(&source, *planned, SlotIntegrity::TrustPresence, &policy()).unwrap();
+
+    let events = log.0.lock().unwrap();
+    let started = events
+        .iter()
+        .filter_map(|event| match event {
+            ProgressEventKind::Started { label } => Some(label.as_str()),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    let fetch = started
+        .iter()
+        .position(|label| *label == "Fetching package content")
+        .expect("fetch phase");
+    let apply = started
+        .iter()
+        .position(|label| *label == "Applying resolved packages")
+        .expect("apply phase");
+    let record = started
+        .iter()
+        .position(|label| *label == "Recording installation state")
+        .expect("record phase");
+    assert!(
+        fetch < apply && apply < record,
+        "observed order: {started:?}"
+    );
+    assert!(events.iter().any(|event| {
+        matches!(event, ProgressEventKind::Detail { message } if message.contains("org.vibevm/pkg-a@1.0.0"))
+    }));
+}
+
+#[test]
+fn fresh_lock_skips_resolution_without_touching_the_source() {
+    let (source, _outer, project) = installed_project(SlotIntegrity::TrustPresence);
+    let solves_before = source.solves.load(Ordering::SeqCst);
+    let log = Arc::new(ProgressLog::default());
+    let observer = ObservedPlan(Progress::new(log.clone()));
+    let mut bare = request();
+    bare.roots.clear();
+
+    let plan = vibe_install::plan(&source, &project, bare, &observer).unwrap();
+    assert!(matches!(plan, Plan::Fresh));
+    assert_eq!(
+        source.solves.load(Ordering::SeqCst),
+        solves_before,
+        "the fresh-lock path must perform no remote/source resolution"
+    );
+    assert!(log.0.lock().unwrap().iter().any(|event| {
+        matches!(event, ProgressEventKind::Skipped { reason } if reason == "vibe.lock is fresh")
+    }));
+}
 
 #[test]
 fn verify_accepts_untouched_slots_without_copying() {
@@ -429,6 +529,7 @@ fn changing_format_rematerialises_even_under_trust_presence() {
     let source = FixtureSource {
         fixtures: outer.path().to_path_buf(),
         graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
     };
     let project = outer.path().join("project");
 
@@ -486,6 +587,7 @@ fn transformed_verify_accepts_intact_and_repairs_derived_hash_divergence() {
     let source = FixtureSource {
         fixtures: outer.path().to_path_buf(),
         graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
     };
     let project = outer.path().join("project");
     run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
@@ -528,6 +630,7 @@ fn transformed_verifier_accepts_a_legacy_derived_manifest_without_a_record() {
     let source = FixtureSource {
         fixtures: outer.path().to_path_buf(),
         graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
     };
     let project = outer.path().join("project");
     run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
@@ -562,6 +665,7 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
     let source = FixtureSource {
         fixtures: outer.path().to_path_buf(),
         graph: two_package_graph(),
+        solves: AtomicUsize::new(0),
     };
     let project = outer.path().join("project");
     run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);

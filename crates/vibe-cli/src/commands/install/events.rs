@@ -7,11 +7,32 @@ use vibe_install::{PlanEvent, PlanObserver};
 use crate::output;
 
 /// Renders the orchestrator's typed plan events in the CLI's voice.
-pub(super) struct CtxObserver<'a>(pub(super) &'a output::Context);
+pub(super) struct CtxObserver<'a> {
+    ctx: &'a output::Context,
+    progress: vibe_core::progress::Progress,
+}
+
+impl<'a> CtxObserver<'a> {
+    pub(super) fn new(ctx: &'a output::Context) -> Self {
+        Self {
+            ctx,
+            progress: vibe_core::progress::Progress::default(),
+        }
+    }
+
+    pub(super) fn with_progress(mut self, progress: vibe_core::progress::Progress) -> Self {
+        self.progress = progress;
+        self
+    }
+
+    pub(super) fn progress_handle(&self) -> vibe_core::progress::Progress {
+        self.progress.clone()
+    }
+}
 
 impl PlanObserver for CtxObserver<'_> {
     fn on(&self, event: PlanEvent) {
-        let ctx = self.0;
+        let ctx = self.ctx;
         match event {
             PlanEvent::MigratingRequires { entries } => ctx.step(&format!(
                 "Migrating [requires] from `vibe.lock` meta.root_dependencies ({} entr{})",
@@ -50,5 +71,9 @@ impl PlanObserver for CtxObserver<'_> {
                     .join(", ")
             )),
         }
+    }
+
+    fn progress(&self) -> vibe_core::progress::Progress {
+        self.progress_handle()
     }
 }

@@ -72,6 +72,7 @@ fn open_multi_from(
     options: &PackageSourceOptions,
     offline: bool,
     locked: &[vibe_core::manifest::LockedPackage],
+    progress: &vibe_core::progress::Progress,
 ) -> Result<MultiRegistryResolver> {
     // PROP-010 §2.6 — the store is threaded in as a builder parameter
     // (never resolved per call) so the resolver's store reads stay
@@ -85,7 +86,8 @@ fn open_multi_from(
             .with_git_packages(manifest.requires.git_packages.clone())
             .with_offline(offline)
             .with_store_root(store_root)
-            .with_locked_packages(locked.to_vec()),
+            .with_locked_packages(locked.to_vec())
+            .with_progress(progress.clone()),
     )
 }
 
@@ -141,6 +143,31 @@ pub fn build_install_resolver(
     global: &GlobalRegistryConfig,
     offline: bool,
     locked: &[vibe_core::manifest::LockedPackage],
+) -> Result<InstallResolver> {
+    build_install_resolver_with_progress(
+        options,
+        manifest,
+        embedded_root,
+        project_root,
+        global,
+        offline,
+        locked,
+        &vibe_core::progress::Progress::default(),
+    )
+}
+
+/// Observed sibling of [`build_install_resolver`]. The handle is retained by
+/// this invocation's resolver and used only for registry/cache work.
+#[allow(clippy::too_many_arguments)]
+pub fn build_install_resolver_with_progress(
+    options: &PackageSourceOptions,
+    manifest: &Manifest,
+    embedded_root: Option<&Path>,
+    project_root: &Path,
+    global: &GlobalRegistryConfig,
+    offline: bool,
+    locked: &[vibe_core::manifest::LockedPackage],
+    progress: &vibe_core::progress::Progress,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(options.solver.as_deref())?;
     if options.prefer_embedded && options.no_prefer_embedded {
@@ -221,7 +248,7 @@ pub fn build_install_resolver(
             None
         } else {
             Some(Box::new(open_multi_from(
-                &effective, manifest, options, offline, locked,
+                &effective, manifest, options, offline, locked, progress,
             )?))
         };
         let precedence = if options.no_prefer_embedded {
@@ -255,7 +282,7 @@ pub fn build_install_resolver(
         if offline && !vibe_registry::store::list_all().is_empty() {
             return Ok(InstallResolver::Multi(
                 Box::new(open_multi_from(
-                    &effective, manifest, options, offline, locked,
+                    &effective, manifest, options, offline, locked, progress,
                 )?),
                 solver,
             ));
@@ -284,7 +311,7 @@ pub fn build_install_resolver(
 
     Ok(InstallResolver::Multi(
         Box::new(open_multi_from(
-            &effective, manifest, options, offline, locked,
+            &effective, manifest, options, offline, locked, progress,
         )?),
         solver,
     ))

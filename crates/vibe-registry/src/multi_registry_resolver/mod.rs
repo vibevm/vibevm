@@ -136,6 +136,9 @@ pub struct MultiRegistryResolver {
     /// wire value would be an owner act). Toggled by
     /// [`MultiRegistryResolver::with_locked_packages`].
     locked: HashMap<String, vibe_core::manifest::LockedPackage>,
+    /// Invocation-owned observation tree. Default is inert; construction
+    /// roots opt in with [`Self::with_progress`].
+    progress: vibe_core::progress::Progress,
 }
 
 impl MultiRegistryResolver {
@@ -174,7 +177,14 @@ impl MultiRegistryResolver {
             offline: false,
             store_root: None,
             locked: HashMap::new(),
+            progress: vibe_core::progress::Progress::default(),
         }
+    }
+
+    /// Attach the invocation-owned progress tree used by registry operations.
+    pub fn with_progress(mut self, progress: vibe_core::progress::Progress) -> Self {
+        self.progress = progress;
+        self
     }
 
     /// Plumb in the git-source declarations from `vibe.toml`'s

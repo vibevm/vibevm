@@ -40,10 +40,14 @@
       <p>2. Clone the repository: `git clone https://github.com/vibevm/vibevm.git` and enter the folder.</p>
       <p>3. Run the first-run script: `bash tools/first-run.sh` on Linux and macOS, `.\tools\first-run.ps1` on Windows. It builds the program, installs it into the managed [store](../glossary/index.xml#store) and sets up the launchers.</p>
       <p>4. Open a new terminal and run `vibe --version`, then `vibe self doctor`.</p>
-      <p>Later, `vibe self update` moves the installation to the newest release, and `vibe self reinstall` downloads the current one again. `vibe self ls` lists the versions on the machine, and `vibe self rollback` returns to the previous one.</p>
+      <p>Later, `vibe self update` follows the running installation's origin: a binary installation checks the newest release, while a source installation rebuilds its source checkout. `vibe self reinstall` refreshes the current version. `vibe self ls` lists the versions on the machine, and `vibe self rollback` returns to the previous one.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
     </from-source>
   </by-hand>
+  <progress title="Watch an update">
+    <p>`vibe self update` shows whether it is downloading a binary or building from source, the current component and elapsed time. Downloads have a byte counter when their size is known. Source builds can take substantially longer; the build stage remains visible while Cargo runs. Add `--verbose` to see detailed operation diagnostics: `vibe self update --verbose`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-060#SELF-STAGES"/>
+  </progress>
   <where-things-go title="Where things go">
     <p>vibe keeps everything it owns under one folder in your home directory, `~/.vibe/`: the installed versions and their launchers under `opt/`, the machine store of fetched packages under `cache/`, [registry](../glossary/index.xml#registry) clones under `registries/`, and your settings files. Nothing is written anywhere else, and the whole folder can be moved by setting the environment variable `VIBE_SETTINGS`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>

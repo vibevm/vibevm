@@ -18,6 +18,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
+use vibe_core::progress::Progress;
 
 use super::builder::{Builder, ResolvedVersion};
 use super::model::{InstallRecord, Origin, Profile, VersionId};
@@ -89,6 +90,7 @@ pub(crate) fn perform_install(
     source_root: &std::path::Path,
     req: &InstallRequest,
     builder: &dyn Builder,
+    progress: &Progress,
 ) -> Result<InstallOutcome> {
     let id = &req.resolved.id;
 
@@ -103,7 +105,15 @@ pub(crate) fn perform_install(
         (out.binary.clone(), format!("bin/{BINARY_NAME}")),
         (out.index_binary.clone(), format!("bin/{INDEX_BINARY_NAME}")),
     ];
-    let manifest = placer::manifest_for(&dist)?;
+    let placement = progress.task("Placing essential binaries");
+    placement.set_progress(0, Some(dist.len() as u64), "files");
+    let manifest = match placer::manifest_for(&dist) {
+        Ok(manifest) => manifest,
+        Err(error) => {
+            placement.fail("distribution inspection failed");
+            return Err(error.into());
+        }
+    };
 
     let prev = latest_instance(store, id)?;
     if let Some((prev_dir, prev_man, prev_rec)) = &prev
@@ -115,6 +125,7 @@ pub(crate) fn perform_install(
             "{id}#{} already up to date — reused",
             prev_rec.instance,
         ));
+        placement.skip("installed files are unchanged");
         Ok(InstallOutcome {
             record: prev_rec.clone(),
             home: prev_dir.clone(),
@@ -123,7 +134,11 @@ pub(crate) fn perform_install(
     } else {
         let instance = store.alloc_instance()?;
         let prev_ref = prev.as_ref().map(|(dir, man, _)| (dir.as_path(), man));
-        placer::place(store, id, instance, &dist, &manifest, prev_ref)?;
+        if let Err(error) = placer::place(store, id, instance, &dist, &manifest, prev_ref) {
+            placement.fail("placement failed");
+            return Err(error.into());
+        }
+        placement.set_progress(dist.len() as u64, Some(dist.len() as u64), "files");
 
         let record = InstallRecord {
             kind: id.kind,
@@ -138,11 +153,15 @@ pub(crate) fn perform_install(
             payload_sha256: None,
             distribution_manifest_sha256: None,
         };
-        store.record_install(record.clone())?;
+        if let Err(error) = store.record_install(record.clone()) {
+            placement.fail("recording the installed version failed");
+            return Err(error.into());
+        }
 
         let inst_dir = store.instance_dir(id, instance);
         ctx.created(&inst_dir.display().to_string());
         ctx.summary(&format!("installed {id}#{instance}"));
+        placement.finish();
         Ok(InstallOutcome {
             record,
             home: inst_dir,
@@ -254,7 +273,7 @@ mod tests {
         req: &InstallRequest<'_>,
         builder: &dyn Builder,
     ) -> Result<InstallOutcome> {
-        let outcome = perform_install(ctx, store, source_root, req, builder)?;
+        let outcome = perform_install(ctx, store, source_root, req, builder, &Progress::default())?;
         env::activate_instance(store, &outcome.home, &FakePersister)?;
         Ok(outcome)
     }
@@ -413,6 +432,7 @@ mod tests {
                 temp.path(),
                 &req(&resolved, false, "now"),
                 &builder,
+                &Progress::default(),
             )
             .is_err()
         );

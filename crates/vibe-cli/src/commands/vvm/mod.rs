@@ -31,6 +31,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use dialoguer::Confirm;
+use vibe_core::progress::Progress;
 
 use crate::cli::{
     ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUseArgs,
@@ -149,11 +150,19 @@ fn absolute_lexical(path: &Path, cwd: &Path) -> Option<PathBuf> {
 
 pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
-        VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a, "self:install"),
+        VvmSubcommand::Install(a) => observed(ctx, "Installing vibevm", |progress| {
+            run_install_cmd(ctx, &env, a, "self:install", progress)
+        }),
         VvmSubcommand::Import(a) => run_import_cmd(ctx, &env, a),
-        VvmSubcommand::Bootstrap(a) => bundle::run_bootstrap_cmd(ctx, &env, a),
-        VvmSubcommand::Update(a) => bundle::run_update_cmd(ctx, &env, a),
-        VvmSubcommand::Reinstall(a) => bundle::run_reinstall_cmd(ctx, &env, a),
+        VvmSubcommand::Bootstrap(a) => observed(ctx, "Bootstrapping vibevm", |progress| {
+            bundle::run_bootstrap_cmd(ctx, &env, a, progress)
+        }),
+        VvmSubcommand::Update(a) => observed(ctx, "Updating vibevm", |progress| {
+            bundle::run_update_cmd(ctx, &env, a, progress)
+        }),
+        VvmSubcommand::Reinstall(a) => observed(ctx, "Reinstalling vibevm", |progress| {
+            bundle::run_reinstall_cmd(ctx, &env, a, progress)
+        }),
         VvmSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
         VvmSubcommand::Rollback => run_rollback_cmd(ctx, &env),
         VvmSubcommand::Ls => provenance::run_ls_cmd(ctx, &env),
@@ -170,6 +179,21 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
             relocate::run_relocate_cmd(ctx, &env, a)
         }
     }
+}
+
+fn observed(
+    ctx: &output::Context,
+    label: &str,
+    run: impl FnOnce(&Progress) -> Result<()>,
+) -> Result<()> {
+    let task = ctx.progress().task(label);
+    let result = run(&task.progress());
+    if result.is_ok() {
+        task.finish();
+    } else {
+        task.fail("operation failed");
+    }
+    result
 }
 
 fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> Result<()> {
@@ -207,6 +231,7 @@ fn run_install_cmd(
     env: &VvmEnv,
     args: VvmInstallArgs,
     command: &str,
+    progress: &Progress,
 ) -> Result<()> {
     let store = env.store()?;
     let profile = resolve_profile(&args)?;
@@ -217,6 +242,7 @@ fn run_install_cmd(
     let now = chrono::Utc::now().to_rfc3339();
 
     // Source comes from running provenance, a bare dev cwd, or the managed mirror.
+    let source_selection = progress.task("Selecting source");
     let running = running_record(&store)?;
     let binary_execution = args
         .mirror
@@ -230,7 +256,9 @@ fn run_install_cmd(
     if let Some(record) = binary_execution {
         match binary_lane(&selector) {
             Some(BinaryLane::Version(version)) => {
-                return bundle::install_binary_version(ctx, env, &store, &version, args.force);
+                return bundle::install_binary_version(
+                    ctx, env, &store, &version, args.force, progress,
+                );
             }
             Some(BinaryLane::Newest) => {
                 return bundle::install_newest_release(
@@ -240,6 +268,7 @@ fn run_install_cmd(
                     record,
                     args.force,
                     "self:install",
+                    progress,
                 );
             }
             Some(BinaryLane::NoRelease) => return Err(VvmError::BinaryFetchUnavailable.into()),
@@ -296,7 +325,7 @@ fn run_install_cmd(
             }
             let mirror = source::choose_mirror(ctx, args.mirror.as_deref())?;
             ctx.step(&format!("updating managed clone from {}", mirror.url()));
-            let outcome = source::prepare_from_mirror(&store, mirror.url(), &selector)?;
+            let outcome = source::prepare_from_mirror(&store, mirror.url(), &selector, progress)?;
             (
                 outcome.src_dir,
                 outcome.resolved,
@@ -313,6 +342,12 @@ fn run_install_cmd(
         origin,
         source_path,
     };
+    source_selection.detail(format!(
+        "source origin: {}; revision: {}",
+        req.origin.as_str(),
+        builder::short_commit(&resolved.commit)
+    ));
+    source_selection.finish();
     let outcome = install::perform_install(
         ctx,
         &store,
@@ -321,14 +356,22 @@ fn run_install_cmd(
         // The posture reaches cargo too: an offline build resolves crates
         // from what the machine already has and never opens a connection of
         // its own (PROP-019 `##CMD-OFFLINE`).
-        &builder::CargoBuilder::new(env.offline),
+        &builder::CargoBuilder::new(env.offline, progress.clone()),
+        progress,
     )?;
     debug_assert_eq!(
         outcome.home,
         store.instance_dir(&outcome.record.version_id(), outcome.record.instance)
     );
     let _ = outcome.reused;
-    activate_record(ctx, env, &store, &outcome.record, command)
+    let task = progress.task("Activating installed version");
+    let result = activate_record(ctx, env, &store, &outcome.record, command);
+    if result.is_ok() {
+        task.finish();
+    } else {
+        task.fail("activation failed");
+    }
+    result
 }
 
 /// The release lane a selector takes on a managed binary execution, decided

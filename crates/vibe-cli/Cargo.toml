@@ -79,6 +79,7 @@ arboard.workspace = true
 chrono.workspace = true
 clap.workspace = true
 console.workspace = true
+indicatif.workspace = true
 dialoguer.workspace = true
 dirs.workspace = true
 serde.workspace = true
@@ -113,6 +114,7 @@ futures.workspace = true
 wayland-backend.workspace = true
 
 [dev-dependencies]
+indicatif = { workspace = true, features = ["in_memory"] }
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
 vibe-native-loader-json-backend-fixture = { path = "../vibe-native-loader/tests/fixtures/native-json-backend" }
 assert_cmd.workspace = true

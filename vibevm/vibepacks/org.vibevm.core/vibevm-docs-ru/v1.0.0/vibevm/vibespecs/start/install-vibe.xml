@@ -34,10 +34,14 @@
       <p>2. Клонируйте репозиторий: `git clone https://github.com/vibevm/vibevm.git` — и войдите в папку.</p>
       <p>3. Запустите скрипт первого запуска: `bash tools/first-run.sh` на Linux и macOS, `.\tools\first-run.ps1` на Windows. Он собирает программу, устанавливает её в управляемое [хранилище](../glossary/index.xml#store) и настраивает лаунчеры.</p>
       <p>4. Откройте новый терминал и выполните `vibe --version`, затем `vibe self doctor`.</p>
-      <p>Позже `vibe self update` переводит установку на новейший выпуск, а `vibe self reinstall` скачивает текущую заново. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
+      <p>Позже `vibe self update` следует происхождению запущенной установки: бинарная установка проверяет новейший выпуск, а установка из исходников пересобирает свой checkout. `vibe self reinstall` обновляет текущую версию. `vibe self ls` перечисляет версии на машине, а `vibe self rollback` возвращает предыдущую.</p>
       <rule ref="spec://org.vibevm.core/vibevm/common/PROP-019#CMD-INSTALL"/>
     </from-source>
   </by-hand>
+  <progress title="Наблюдать за обновлением">
+    <p>`vibe self update` показывает, скачивается ли бинарная сборка или собираются исходники, текущий компонент и затраченное время. При известном размере загрузки виден счётчик байтов. Сборка из исходников может занимать заметно больше времени; её этап остаётся виден, пока работает Cargo. Для подробной диагностики используйте `vibe self update --verbose`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-060#SELF-STAGES"/>
+  </progress>
   <where-things-go title="Где что лежит">
     <p>Всё своё vibe держит в одной папке вашего домашнего каталога, `~/.vibe/`: установленные версии и их лаунчеры под `opt/`, машинное хранилище скачанных пакетов под `cache/`, клоны [реестров](../glossary/index.xml#registry) под `registries/` и ваши файлы настроек. Больше он никуда не пишет, а всю папку можно перенести, задав переменную окружения `VIBE_SETTINGS`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>

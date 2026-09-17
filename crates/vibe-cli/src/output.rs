@@ -7,9 +7,15 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 use console::Style;
 use serde::Serialize;
 use serde_json::Value;
+use std::sync::Arc;
+use vibe_core::progress::Progress;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::cli::AgentModeArg;
+
+mod progress;
+use progress::ProgressRenderer;
+pub(crate) use progress::sanitize_progress_text;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
@@ -169,6 +175,14 @@ pub struct Context {
     /// hard-coding a value, so the mode cannot drift between the phases of
     /// one command.
     agent_mode: RunAgentMode,
+    /// The observation handle threaded into libraries by command adapters.
+    progress: Progress,
+    /// The one renderer for this invocation. Kept beside `progress` so
+    /// ordinary output and prompts can suspend interactive bars safely.
+    progress_renderer: Option<Arc<ProgressRenderer>>,
+    /// Detailed rendering policy belongs only to the CLI composition root.
+    #[cfg(test)]
+    verbose: bool,
 }
 
 impl Context {
@@ -203,6 +217,58 @@ impl Context {
             suppress_output: false,
             pending_plans: std::sync::Arc::new(std::sync::Mutex::new(Vec::new())),
             agent_mode,
+            progress: Progress::default(),
+            progress_renderer: None,
+            #[cfg(test)]
+            verbose: false,
+        }
+    }
+
+    /// Selects the invocation's CLI progress renderer after all global flags
+    /// have been resolved. Quiet and JSON modes remain completely silent.
+    pub fn with_progress(mut self, verbose: bool, interactive: bool) -> Self {
+        #[cfg(test)]
+        {
+            self.verbose = verbose;
+        }
+        if matches!(self.mode, Mode::Human) && !self.suppress_output {
+            let renderer = ProgressRenderer::detect(verbose, interactive);
+            self.progress = Progress::new(renderer.clone());
+            self.progress_renderer = Some(renderer);
+        }
+        self
+    }
+
+    /// Returns the current progress scope for explicitly threaded library
+    /// work. Cloning it is an `Arc` clone.
+    pub fn progress(&self) -> Progress {
+        self.progress.clone()
+    }
+
+    /// Clones this output context beneath a task-created progress scope.
+    /// Rendering policy stays invocation-owned and is not reconstructed.
+    pub fn with_progress_scope(&self, progress: Progress) -> Self {
+        let mut scoped = self.clone();
+        scoped.progress = if scoped.progress_renderer.is_some() {
+            progress
+        } else {
+            Progress::default()
+        };
+        scoped
+    }
+
+    /// Whether detailed human progress is active for this context.
+    #[cfg(test)]
+    pub fn is_verbose(&self) -> bool {
+        self.verbose && self.progress_renderer.is_some()
+    }
+
+    /// Temporarily clears interactive bars while ordinary output or a prompt
+    /// uses the terminal. Plain and suppressed modes run the closure directly.
+    pub fn suspend_progress<R>(&self, render: impl FnOnce() -> R) -> R {
+        match &self.progress_renderer {
+            Some(renderer) => renderer.suspend(render),
+            None => render(),
         }
     }
 
@@ -211,6 +277,8 @@ impl Context {
     pub fn quiet_child(&self) -> Self {
         let mut child = self.clone();
         child.suppress_output = true;
+        child.progress = Progress::default();
+        child.progress_renderer = None;
         child
     }
 
@@ -298,7 +366,7 @@ impl Context {
         if self.is_json() || self.is_quiet() {
             return;
         }
-        println!("{}", self.bold.apply_to(text));
+        self.suspend_progress(|| println!("{}", self.bold.apply_to(text)));
     }
 
     #[allow(dead_code)] // used by install
@@ -306,26 +374,28 @@ impl Context {
         if self.is_json() || self.is_quiet() {
             return;
         }
-        println!("  {} {}", self.arrow.apply_to("→"), text);
+        self.suspend_progress(|| println!("  {} {}", self.arrow.apply_to("→"), text));
     }
 
     pub fn created(&self, path: &str) {
         if self.is_json() || self.is_quiet() {
             return;
         }
-        println!("  {} created  {}", self.tick.apply_to("✓"), path);
+        self.suspend_progress(|| println!("  {} created  {}", self.tick.apply_to("✓"), path));
     }
 
     pub fn skipped(&self, path: &str, reason: &str) {
         if self.is_json() || self.is_quiet() {
             return;
         }
-        println!(
-            "  {} kept     {} {}",
-            self.warn.apply_to("•"),
-            path,
-            self.dim.apply_to(&format!("({reason})"))
-        );
+        self.suspend_progress(|| {
+            println!(
+                "  {} kept     {} {}",
+                self.warn.apply_to("•"),
+                path,
+                self.dim.apply_to(&format!("({reason})"))
+            )
+        });
     }
 
     #[allow(dead_code)] // used by uninstall
@@ -333,7 +403,7 @@ impl Context {
         if self.is_json() || self.is_quiet() {
             return;
         }
-        println!("  {} removed  {}", self.cross.apply_to("-"), path);
+        self.suspend_progress(|| println!("  {} removed  {}", self.cross.apply_to("-"), path));
     }
 
     pub fn summary(&self, text: &str) {
@@ -341,7 +411,7 @@ impl Context {
             return;
         }
         match self.mode {
-            Mode::Human | Mode::HumanQuiet => println!("{text}"),
+            Mode::Human | Mode::HumanQuiet => self.suspend_progress(|| println!("{text}")),
             Mode::Json => {}
         }
     }
@@ -358,7 +428,7 @@ impl Context {
         if self.suppress_output {
             return;
         }
-        eprintln!("{} {text}", self.warn.apply_to("vibe: warning:"));
+        self.suspend_progress(|| eprintln!("{} {text}", self.warn.apply_to("vibe: warning:")));
     }
 
     /// The terminal error line, with an optional compact suffix.
@@ -377,14 +447,16 @@ impl Context {
         }
         match self.mode {
             Mode::HumanQuiet => {
-                eprintln!(
-                    "{} {err:#}{}",
-                    self.cross.apply_to("error:"),
-                    suffix.unwrap_or_default()
-                );
+                self.suspend_progress(|| {
+                    eprintln!(
+                        "{} {err:#}{}",
+                        self.cross.apply_to("error:"),
+                        suffix.unwrap_or_default()
+                    )
+                });
             }
             Mode::Human => {
-                eprintln!("{} {err:#}", self.cross.apply_to("error:"));
+                self.suspend_progress(|| eprintln!("{} {err:#}", self.cross.apply_to("error:")));
             }
             Mode::Json => {
                 let mut payload = serde_json::json!({
@@ -394,7 +466,7 @@ impl Context {
                 self.stamp_structured_error(&mut payload, err);
                 self.stamp_invoked_by(&mut payload);
                 self.stamp_unattended(&mut payload);
-                eprintln!("{payload}");
+                self.suspend_progress(|| eprintln!("{payload}"));
             }
         }
     }

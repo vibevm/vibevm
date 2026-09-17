@@ -13,20 +13,17 @@
     <p>The agent runs `vibe install org.vibevm.world/wal`. vibe walks the project's [registries](../glossary/index.xml#registry) in order and asks the first one that knows the package for its versions; with no constraint given, it picks the newest stable release. It resolves the package's own dependencies with the rest of the project's graph, fetches everything that is not yet in the machine [store](../glossary/index.xml#store), and verifies each [fingerprint](../glossary/index.xml#fingerprint). Then it prints a plan: which packages will be added at which versions, and which files will change. Nothing is written until you confirm. On confirmation vibe copies the packages into `vibevm/vibedeps/`, records the requirement in `vibe.toml` and the pins in `vibe.lock`, and regenerates the boot files. Then the agent runs `vibe tree` to show you the new reading list.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-RESOLUTION"/>
   </what-happens>
+  <progress title="See what is taking time">
+    <p>Normal installation shows the active stage and package, elapsed time, and completed components. A bar counts packages or bytes when the total is known; a spinner means the operation is still discovering its work or waiting for a response. The examples below use `--quiet` for a compact result; omit it to see progress.</p>
+    <p>Use `vibe install org.vibevm.world/redbook --verbose` (or `-v`) to see registry and cache decisions and details of the current operation. Progress goes to stderr, so redirecting stdout preserves the command's result. Redirected progress uses plain text. `--quiet` and `--json` suppress progress even with `--verbose`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-060#DISPLAY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-060#FLAGS"/>
+  </progress>
   <by-hand title="By hand">
     <p>1. Install by [coordinate](../glossary/index.xml#coordinate). Add `@` and a constraint to ask for a range or an exact version:</p>
     <example id="install" fixture="hello-vibe-empty">
-      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes</run>
-      <expect>Resolving 1 root package…
-
-Materialising 1 package into vibedeps/:
-  org.vibevm.world/wal@1.0.0
-
-closure diff:
-  → + org.vibevm.world/wal@1.0.0 (root-edge)
-  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 854 B
-
-Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes --quiet</run>
+      <expect>vibe install: 1 package materialised</expect>
     </example>
     <p>2. Confirm the plan when asked. `--assume-yes` answers yes for scripts and agents.</p>
     <p>3. Check what was recorded and what the agent will read:</p>

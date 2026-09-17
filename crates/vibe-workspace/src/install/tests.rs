@@ -2,8 +2,70 @@
 
 use super::test_helpers::*;
 use super::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
 use tempfile::TempDir;
+use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
+
+#[derive(Default)]
+struct ProgressLog(Mutex<Vec<ProgressEvent>>);
+
+impl ProgressObserver for ProgressLog {
+    fn observe(&self, event: ProgressEvent) {
+        self.0.lock().unwrap().push(event);
+    }
+}
+
+fn observed_materialise(
+    root: &Path,
+    dep: &ResolvedDep,
+    log: Arc<ProgressLog>,
+) -> Result<Materialised, WorkspaceError> {
+    materialise_resolution_with_spec_format(
+        root,
+        std::slice::from_ref(dep),
+        MaterialiseOptions {
+            slot_integrity: SlotIntegrity::TrustPresence,
+            spec_format: SpecFormat::Mixed,
+            slot_verifier: None,
+            lifecycle: MaterialiseLifecycle::None,
+            progress: Progress::new(log),
+        },
+    )
+}
+
+#[test]
+fn materialisation_names_package_children_and_marks_current_slots_skipped() {
+    let root = TempDir::new().unwrap();
+    let (dep, _package) = dep_with_boot("wal", "0.3.0", "", "boot/wal.md", "# wal");
+    let first_log = Arc::new(ProgressLog::default());
+    observed_materialise(root.path(), &dep, first_log.clone()).unwrap();
+    let events = first_log.0.lock().unwrap();
+    let parent = events
+        .iter()
+        .find(|event| {
+            matches!(&event.kind, ProgressEventKind::Started { label } if label == "Materialising dependency slots")
+        })
+        .expect("materialisation parent");
+    let child = events
+        .iter()
+        .find(|event| {
+            event.parent_id == Some(parent.task_id)
+                && matches!(&event.kind, ProgressEventKind::Started { label } if label == "Materialising org.vibevm/wal@0.3.0")
+        })
+        .expect("named package child");
+    assert!(events.iter().any(|event| {
+        event.task_id == child.task_id && matches!(&event.kind, ProgressEventKind::Finished)
+    }));
+    drop(events);
+
+    let second_log = Arc::new(ProgressLog::default());
+    let outcome = observed_materialise(root.path(), &dep, second_log.clone()).unwrap();
+    assert_eq!(outcome.skipped.len(), 1);
+    assert!(second_log.0.lock().unwrap().iter().any(|event| {
+        matches!(&event.kind, ProgressEventKind::Skipped { reason } if reason == "slot already current")
+    }));
+}
 
 #[test]
 fn apply_resolution_materialises_and_regenerates_a_standalone_project() {

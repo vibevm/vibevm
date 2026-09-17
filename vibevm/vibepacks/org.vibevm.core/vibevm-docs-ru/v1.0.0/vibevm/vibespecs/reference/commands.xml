@@ -4,6 +4,8 @@
   <status stage="doc" state="work" audience="user,author,agent"/>
   <p>Каждая команда, которую принимает vibe, с её опциями, словами самой программы. Ничто на этой странице не написано руками.</p>
   <global title="Глобальные опции">
+    <p>`-v` / `--verbose` добавляет диагностические подробности к прогрессу установки и самообновления. В обычном режиме прогресс уже виден; `--quiet` и `--json` отключают его. Прогресс выводится в stderr, а stdout остаётся для результатов.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-060#FLAGS"/>
     <p>Каждая команда принимает `--json` для машинного вывода, `--quiet` для однострочной сводки, `--invoked-by &lt;agent&gt;`, чтобы проставить вызывающего в отчёты, `--unattended`, чтобы ответить на все подтверждения, `--offline`, чтобы запретить доступ к сети, и `--agent-mode`, чтобы сказать, как выполняются агентные шаги. Полный текст:</p>
     <derived kind="cli-help" ref="vibe --help"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#OBS-OUTPUT-MODES"/>

@@ -47,9 +47,8 @@ format = "normal"</expect>
     </example>
     <p>3. Install from the root, or from anywhere inside the workspace; the command finds the root and resolves the whole tree:</p>
     <example id="install" fixture="workspace">
-      <run>vibe install --assume-yes</run>
-      <expect>nothing declared — regenerating boot artifacts for the empty world
-vibe install: vibe.lock unchanged — nothing to re-resolve (3 nodes up to date)</expect>
+      <run>vibe install --assume-yes --quiet</run>
+      <expect>vibe install: vibe.lock unchanged — nothing to re-resolve (3 nodes up to date)</expect>
     </example>
   </by-hand>
   <one-manifest title="One manifest, three roles">
