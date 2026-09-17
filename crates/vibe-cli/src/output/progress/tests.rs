@@ -179,3 +179,33 @@ fn terminal_rows_persist_in_plain_transcript_and_active_state_is_bounded() {
     assert!(text.contains("[done] second"));
     assert_eq!(renderer.active_task_count(), 0);
 }
+
+#[test]
+fn plain_suspend_blocks_due_heartbeats_and_resumes_after_nested_unwind() {
+    let writer = SharedWriter::default();
+    let renderer = ProgressRenderer::plain(Box::new(writer.clone()), false);
+    let progress = Progress::new(renderer.clone());
+    let task = progress.task("owned terminal");
+    let Renderer::Plain(plain) = &renderer.renderer else {
+        panic!("plain renderer expected");
+    };
+    if let Ok(mut tasks) = plain.tasks.lock() {
+        let state = tasks.get_mut(&task.id()).expect("active task");
+        state.started = Instant::now() - WAIT_INTERVAL;
+        state.last_update = Instant::now() - WAIT_INTERVAL;
+    }
+    let before = writer.text();
+    let unwind = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        renderer.suspend(|| {
+            renderer.suspend(|| plain.waiting());
+            assert_eq!(writer.text(), before);
+            panic!("exercise unwind-safe suspension");
+        });
+    }));
+    assert!(unwind.is_err());
+    assert_eq!(writer.text(), before);
+
+    plain.waiting();
+    assert!(writer.text().contains("[wait] owned terminal"));
+    task.finish();
+}

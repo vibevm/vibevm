@@ -200,50 +200,111 @@ fn apply_relocate(
     store: &VersionStore,
     plan: &RelocatePlan,
 ) -> Result<ApplyCounts> {
-    for (id, instance) in &plan.delete {
-        store.guard_mutation_tree(&store.instance_dir(id, *instance))?;
-    }
-    let active = store.active()?;
-    let previous = store.previous()?;
+    let progress = ctx.progress();
+    let preflight = progress.task("Preflighting relocation changes");
+    let preflight_result = (|| -> Result<_> {
+        for (id, instance) in &plan.delete {
+            let dir = store.instance_dir(id, *instance);
+            preflight.detail(format!("stale instance: {}", dir.display()));
+            store.guard_mutation_tree(&dir)?;
+        }
+        Ok((store.active()?, store.previous()?))
+    })();
+    let (active, previous) = match preflight_result {
+        Ok(value) => value,
+        Err(error) => {
+            preflight.fail(error.to_string());
+            return Err(error);
+        }
+    };
     let is_deleted = |record: &InstallRecord| {
         plan.delete
             .iter()
             .any(|(id, instance)| record.version_id() == *id && record.instance == *instance)
     };
-    anyhow::ensure!(
-        active.as_ref().is_none_or(|record| !is_deleted(record))
-            && previous.as_ref().is_none_or(|record| !is_deleted(record)),
-        "relocate plan attempted to delete an activation pointer target"
-    );
+    if active.as_ref().is_some_and(is_deleted) || previous.as_ref().is_some_and(is_deleted) {
+        let error =
+            anyhow::anyhow!("relocate plan attempted to delete an activation pointer target");
+        preflight.fail(error.to_string());
+        return Err(error);
+    }
+    preflight.finish();
     let current_path = active
         .as_ref()
         .map(|record| store.instance_dir(&record.version_id(), record.instance));
     let previous_path = previous
         .as_ref()
         .map(|record| store.instance_dir(&record.version_id(), record.instance));
-    store.reset_activation(current_path.as_deref(), previous_path.as_deref())?;
+    let repair = progress.task("Repairing relocation activation pointers");
+    match store.reset_activation(current_path.as_deref(), previous_path.as_deref()) {
+        Ok(()) => repair.finish(),
+        Err(error) => {
+            repair.fail(error.to_string());
+            return Err(error.into());
+        }
+    }
     // 1. Remove the stale instance directories (the filesystem half). A locked
     //    dir is reported and KEPT (not forgotten) so it is not orphaned.
     let mut kept: Vec<InstanceRef> = Vec::new();
-    for (id, instance) in &plan.delete {
+    let removals = progress.task("Removing stale relocated instances");
+    removals.set_progress(0, Some(plan.delete.len() as u64), "instances");
+    for (index, (id, instance)) in plan.delete.iter().enumerate() {
         let dir = store.instance_dir(id, *instance);
-        store.guard_mutation_tree(&dir)?;
-        if !dir.exists() {
-            continue; // already gone — nothing to remove, record will be dropped
+        let component = removals
+            .progress()
+            .task(format!("Removing {id}#{instance}"));
+        component.detail(format!("path: {}", dir.display()));
+        if let Err(error) = store.guard_mutation_tree(&dir) {
+            component.fail(error.to_string());
+            removals.fail("stale instance safety check failed");
+            return Err(error.into());
         }
-        match fs::remove_dir_all(&dir) {
-            Ok(()) => ctx.removed(&dir.display().to_string()),
-            Err(e) => {
-                ctx.summary(&format!("skipped {} (in use?): {e}", dir.display()));
-                kept.push((id.clone(), *instance));
+        if !dir.exists() {
+            component.skip("already absent; forgetting inventory record");
+        } else {
+            match fs::remove_dir_all(&dir) {
+                Ok(()) => {
+                    component.finish();
+                    ctx.removed(&dir.display().to_string());
+                }
+                Err(error) => {
+                    component.fail(format!("retained for later retry: {error}"));
+                    ctx.summary(&format!("skipped {} (in use?): {error}", dir.display()));
+                    kept.push((id.clone(), *instance));
+                }
             }
         }
+        removals.set_progress(
+            (index + 1) as u64,
+            Some(plan.delete.len() as u64),
+            "instances",
+        );
+    }
+    if plan.delete.is_empty() {
+        removals.skip("no stale instance directories selected");
+    } else if kept.is_empty() {
+        removals.finish();
+    } else {
+        removals.skip(format!("{} retained for later retry", kept.len()));
     }
     // 2. Rewrite the inventory once via the pure core, then persist.
-    let mut state = store.load_state()?;
-    let counts = rewrite_state(&mut state, plan, &kept);
-    store.save_state(&state)?;
-    Ok(counts)
+    let recording = progress.task("Recording relocated source provenance");
+    let result = (|| -> Result<_> {
+        let mut state = store.load_state()?;
+        let counts = rewrite_state(&mut state, plan, &kept);
+        store.save_state(&state)?;
+        Ok(counts)
+    })();
+    match result {
+        Ok(counts) => {
+            recording.finish();
+            Ok(counts)
+        }
+        Err(error) => {
+            recording.fail(error.to_string());
+            Err(error)
+        }
+    }
 }
 
 /// Print the plan for a human (heading + old→new + counts). No-op in JSON and
@@ -269,36 +330,75 @@ pub(super) fn run_relocate_cmd(
     env: &VvmEnv,
     args: VvmRelocateArgs,
 ) -> Result<()> {
-    let store = env.store()?;
+    let progress = ctx.progress();
+    let validation = progress.task("Validating relocation target");
+    validation.detail(format!("target: {}", args.target));
+    let validated = (|| -> Result<_> {
+        let store = env.store()?;
 
-    // Validate the new location is a real vibevm checkout (PROP-019 §2.17).
-    let new_path = Path::new(&args.target);
-    if find_source_root(new_path).is_none() {
-        return Err(RelocateError::NotASourceTree {
-            path: new_path.to_path_buf(),
+        // Validate the new location is a real vibevm checkout (PROP-019 §2.17).
+        let new_path = Path::new(&args.target);
+        if find_source_root(new_path).is_none() {
+            return Err(RelocateError::NotASourceTree {
+                path: new_path.to_path_buf(),
+            }
+            .into());
         }
-        .into());
-    }
-    let new = external_path(new_path);
-
-    // Determine the old location: explicit `--from`, else inferred from records.
-    let state = store.load_state()?;
-    let old = match args.from.as_deref() {
-        Some(p) => PathBuf::from(p),
-        None => infer_old_source(&state).ok_or(RelocateError::NoOldSource)?,
+        Ok((store, external_path(new_path)))
+    })();
+    let (store, new) = match validated {
+        Ok(value) => {
+            validation.finish();
+            value
+        }
+        Err(error) => {
+            validation.fail(error.to_string());
+            return Err(error);
+        }
     };
 
-    let active = store.active()?;
-    let running = provenance::running_record(&store)?;
-    let previous = store.previous()?;
-    let plan = plan_relocate(
-        &state,
-        &old,
-        &new,
-        active.as_ref(),
-        running.as_ref(),
-        previous.as_ref(),
-    );
+    // Determine the old location: explicit `--from`, else inferred from records.
+    let scanning = progress.task("Scanning installed source provenance");
+    let scanned = (|| -> Result<_> {
+        let state = store.load_state()?;
+        let old = match args.from.as_deref() {
+            Some(path) => PathBuf::from(path),
+            None => infer_old_source(&state).ok_or(RelocateError::NoOldSource)?,
+        };
+        let active = store.active()?;
+        let running = provenance::running_record(&store)?;
+        let previous = store.previous()?;
+        let plan = plan_relocate(
+            &state,
+            &old,
+            &new,
+            active.as_ref(),
+            running.as_ref(),
+            previous.as_ref(),
+        );
+        scanning.set_progress(
+            state.installs.len() as u64,
+            Some(state.installs.len() as u64),
+            "records",
+        );
+        scanning.detail(format!(
+            "repoint: {}; remove: {}; untouched: {}",
+            plan.repoint.len(),
+            plan.delete.len(),
+            plan.untouched
+        ));
+        Ok((old, plan))
+    })();
+    let (old, plan) = match scanned {
+        Ok(value) => {
+            scanning.finish();
+            value
+        }
+        Err(error) => {
+            scanning.fail(error.to_string());
+            return Err(error);
+        }
+    };
 
     // No-op: the recorded source already resolves to the target.
     if same_location(&old, &new) {
@@ -361,14 +461,16 @@ pub(super) fn run_relocate_cmd(
     // repoint-only plan (no deletions) needs no confirm: it is a reversible
     // state edit.
     if !plan.delete.is_empty()
-        && !confirm(
-            ctx,
-            args.yes,
-            &format!(
-                "Relocate source provenance and remove {} stale instance(s)? This cannot be undone.",
-                plan.delete.len()
-            ),
-        )?
+        && !ctx.suspend_progress(|| {
+            confirm(
+                ctx,
+                args.yes,
+                &format!(
+                    "Relocate source provenance and remove {} stale instance(s)? This cannot be undone.",
+                    plan.delete.len()
+                ),
+            )
+        })?
     {
         ctx.summary("aborted.");
         return Ok(());

@@ -5,6 +5,7 @@
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
+use vibe_core::progress::{Progress, ProgressTask};
 
 use super::model::{InstallRecord, Kind, Origin, Profile, VersionId};
 use super::placer;
@@ -31,48 +32,73 @@ pub(crate) fn perform_import(
     store: &VersionStore,
     req: &ImportRequest<'_>,
 ) -> Result<ImportOutcome> {
-    let tag = parse_tag(req.tag)?;
-    ensure_payload_file(req.executable)?;
-    let id = VersionId::new(Kind::Tag, tag);
-    let dist = vec![(req.executable.to_path_buf(), BINARY_NAME.to_string())];
-    let manifest = placer::manifest_for(&dist)?;
-    let digest = manifest
-        .content_hash_for(BINARY_NAME)
-        .context("import payload manifest omitted its required SHA-256")?
-        .to_string();
+    let progress = ctx.progress();
+    let (id, dist, manifest, digest, existing, reused) =
+        observed_stage(&progress, "Verifying local import payload", |task| {
+            task.detail(format!("payload: {}", req.executable.display()));
+            let tag = parse_tag(req.tag)?;
+            ensure_payload_file(req.executable)?;
+            let id = VersionId::new(Kind::Tag, tag);
+            let dist = vec![(req.executable.to_path_buf(), BINARY_NAME.to_string())];
+            let manifest = placer::manifest_for(&dist)?;
+            let digest = manifest
+                .content_hash_for(BINARY_NAME)
+                .context("import payload manifest omitted its required SHA-256")?
+                .to_string();
+            let mut existing = store.instances_of(&id)?;
+            existing.sort_by_key(|record| record.instance);
+            let reused = existing
+                .iter()
+                .rev()
+                .find(|record| {
+                    record.payload_sha256.as_deref() == Some(digest.as_str())
+                        && record.commit == req.commit.unwrap_or("unknown")
+                        && record.profile == req.profile
+                        && placer::installed_files_match(store, record)
+                })
+                .cloned();
+            task.detail(format!(
+                "version: {id}; existing instances: {}",
+                existing.len()
+            ));
+            Ok((id, dist, manifest, digest, existing, reused))
+        })?;
     // Kept as a CLI compatibility flag. Remote version labels are mutable;
     // every distinct payload is now admitted as a fresh immutable local #N.
     let _ = req.replace_candidate;
 
-    let mut existing = store.instances_of(&id)?;
-    existing.sort_by_key(|record| record.instance);
-    if let Some(record) = existing.iter().rev().find(|record| {
-        record.payload_sha256.as_deref() == Some(digest.as_str())
-            && record.commit == req.commit.unwrap_or("unknown")
-            && record.profile == req.profile
-            && placer::installed_files_match(store, record)
-    }) {
+    if let Some(record) = reused {
         let instance_dir = store.instance_dir(&id, record.instance);
+        let copying = progress.task("Copying import payload");
+        copying.detail(format!("reusing {}", record.selector()));
+        copying.skip("matching verified payload already installed");
+        let recording = progress.task("Recording imported instance");
+        recording.skip("inventory unchanged");
         ctx.summary(&format!(
             "{} payload already imported — reused",
             record.selector()
         ));
         return Ok(ImportOutcome {
-            record: record.clone(),
+            record,
             home: instance_dir,
             reused: true,
         });
     }
 
-    let instance = store.alloc_instance()?;
-    let previous = existing.last().and_then(|record| {
-        let dir = store.instance_dir(&id, record.instance);
-        placer::read_manifest(&dir).map(|manifest| (dir, manifest))
-    });
-    let previous_ref = previous
-        .as_ref()
-        .map(|(dir, manifest)| (dir.as_path(), manifest));
-    placer::place(store, &id, instance, &dist, &manifest, previous_ref)?;
+    let instance = observed_stage(&progress, "Copying import payload", |task| {
+        task.detail(format!("destination version: {id}"));
+        let instance = store.alloc_instance()?;
+        let previous = existing.last().and_then(|record| {
+            let dir = store.instance_dir(&id, record.instance);
+            placer::read_manifest(&dir).map(|manifest| (dir, manifest))
+        });
+        let previous_ref = previous
+            .as_ref()
+            .map(|(dir, manifest)| (dir.as_path(), manifest));
+        placer::place(store, &id, instance, &dist, &manifest, previous_ref)?;
+        task.detail(format!("instance: {id}#{instance}"));
+        Ok(instance)
+    })?;
 
     let record = InstallRecord {
         kind: Kind::Tag,
@@ -87,7 +113,11 @@ pub(crate) fn perform_import(
         payload_sha256: Some(digest),
         distribution_manifest_sha256: None,
     };
-    store.record_install(record.clone())?;
+    observed_stage(&progress, "Recording imported instance", |task| {
+        task.detail(format!("selector: {}", record.selector()));
+        store.record_install(record.clone())?;
+        Ok(())
+    })?;
 
     let instance_dir = store.instance_dir(&id, instance);
     ctx.created(&instance_dir.display().to_string());
@@ -97,6 +127,24 @@ pub(crate) fn perform_import(
         home: instance_dir,
         reused: false,
     })
+}
+
+fn observed_stage<T>(
+    progress: &Progress,
+    label: &str,
+    run: impl FnOnce(&ProgressTask) -> Result<T>,
+) -> Result<T> {
+    let task = progress.task(label);
+    match run(&task) {
+        Ok(value) => {
+            task.finish();
+            Ok(value)
+        }
+        Err(error) => {
+            task.fail(error.to_string());
+            Err(error)
+        }
+    }
 }
 
 fn parse_tag(raw: &str) -> Result<String> {

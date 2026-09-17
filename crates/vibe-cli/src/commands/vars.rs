@@ -18,6 +18,14 @@ pub struct VarRow {
 }
 
 impl VarRow {
+    pub fn new(name: &'static str, actual: impl Into<String>, env: Option<String>) -> Self {
+        Self {
+            name,
+            actual: actual.into(),
+            env,
+        }
+    }
+
     fn differs(&self) -> bool {
         matches!(&self.env, Some(e) if e != &self.actual)
     }

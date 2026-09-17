@@ -94,6 +94,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
             &workspace.root_manifest,
         ));
     // Service what a forced run parked, BEFORE ordinary boot regeneration.
+    let continuation = ctx.progress().task("Servicing parked package work");
     let serviced = continuation::service(
         ctx,
         continuation::Request {
@@ -104,7 +105,25 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
             lease,
             agent: agent.clone(),
         },
-    )?;
+    );
+    let serviced = match serviced {
+        Ok(Some(serviced)) => {
+            if serviced.parked.is_some() {
+                continuation.skip("waiting for the hosting agent");
+            } else {
+                continuation.finish();
+            }
+            Some(serviced)
+        }
+        Ok(None) => {
+            continuation.skip("no parked package work");
+            None
+        }
+        Err(error) => {
+            continuation.fail("parked package work failed");
+            return Err(error);
+        }
+    };
     let rows = match serviced {
         Some(serviced) if serviced.parked.is_some() => {
             let continuation::Serviced {
@@ -125,12 +144,18 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
         None => Vec::new(),
     };
 
+    let boot = ctx.progress().task("Regenerating workspace boot artifacts");
     let nodes = match regenerate_boot_traced(workspace, spec_format, trace) {
-        Ok(nodes) => nodes,
+        Ok(nodes) => {
+            boot.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
+            boot.finish();
+            nodes
+        }
         // A serviced continuation is already durable. Freezing its rows into
         // the failure keeps the report from claiming this run did nothing when
         // it had already finished somebody's parked slot work.
         Err(error) => {
+            boot.fail("boot regeneration failed");
             return Err(carry_measured(
                 anyhow::Error::new(error).context("regenerating boot artifacts"),
                 || {

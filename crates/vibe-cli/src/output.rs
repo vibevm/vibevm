@@ -15,7 +15,7 @@ use crate::cli::AgentModeArg;
 
 mod progress;
 use progress::ProgressRenderer;
-pub(crate) use progress::sanitize_progress_text;
+pub(crate) use progress::{ProgressMode, sanitize_progress_text};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
@@ -226,13 +226,17 @@ impl Context {
 
     /// Selects the invocation's CLI progress renderer after all global flags
     /// have been resolved. Quiet and JSON modes remain completely silent.
-    pub fn with_progress(mut self, verbose: bool, interactive: bool) -> Self {
+    pub fn with_progress(mut self, verbose: bool, mode: ProgressMode) -> Self {
         #[cfg(test)]
         {
             self.verbose = verbose;
         }
-        if matches!(self.mode, Mode::Human) && !self.suppress_output {
-            let renderer = ProgressRenderer::detect(verbose, interactive);
+        if matches!(self.mode, Mode::Human)
+            && !self.suppress_output
+            && !matches!(mode, ProgressMode::Disabled)
+        {
+            let renderer =
+                ProgressRenderer::detect(verbose, matches!(mode, ProgressMode::Interactive));
             self.progress = Progress::new(renderer.clone());
             self.progress_renderer = Some(renderer);
         }

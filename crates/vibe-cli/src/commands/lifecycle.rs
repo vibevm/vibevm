@@ -126,7 +126,7 @@ pub fn run(
     let preparation = prepared.prepare_trace(&now);
     let child = ctx.quiet_child();
     let observer = CliRunObserver::new(ctx);
-    let install_observer = CliInstallObserver::new(&child, Some(ctx));
+    let install_observer = CliInstallObserver::new(&child, Some(ctx)).with_progress(ctx.progress());
     let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
     let sources = CliPackageSourceFactory {
         args: &install_args,
@@ -374,7 +374,7 @@ fn execute(
         })
         .collect::<Vec<_>>();
     let observer = CliRunObserver::new(ctx);
-    let install_observer = CliInstallObserver::new(&child, Some(ctx));
+    let install_observer = CliInstallObserver::new(&child, Some(ctx)).with_progress(ctx.progress());
     let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
     let sources = CliPackageSourceFactory {
         args: &install_args,

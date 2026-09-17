@@ -9,6 +9,9 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 use anyhow::Result;
+use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Mutex;
+use vibe_core::progress::ProgressTask;
 use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
 use vibe_orchestrator::RitualPlan;
@@ -22,15 +25,122 @@ use crate::output;
 /// The existing CLI rendering and stream policy, behind [`RunObserver`].
 pub(crate) struct CliRunObserver<'a> {
     ctx: &'a output::Context,
+    progress: Mutex<ObservedProgress>,
+}
+
+#[derive(Default)]
+struct ObservedProgress {
+    phases: BTreeMap<String, ProgressTask>,
+    contributions: BTreeMap<String, ProgressTask>,
+    completed_phases: BTreeSet<String>,
 }
 
 impl<'a> CliRunObserver<'a> {
-    pub(crate) const fn new(ctx: &'a output::Context) -> Self {
-        Self { ctx }
+    pub(crate) fn new(ctx: &'a output::Context) -> Self {
+        Self {
+            ctx,
+            progress: Mutex::new(ObservedProgress::default()),
+        }
     }
 }
 
 impl RunObserver for CliRunObserver<'_> {
+    fn observe_phase_started(&self, phase: &str) {
+        let Ok(mut observed) = self.progress.lock() else {
+            return;
+        };
+        if !observed.phases.contains_key(phase) && !observed.completed_phases.contains(phase) {
+            observed.phases.insert(
+                phase.to_owned(),
+                self.ctx
+                    .progress()
+                    .task(format!("Running {phase} lifecycle phase")),
+            );
+        }
+    }
+
+    fn observe_phase_finished(&self, phase: &str, status: &str) {
+        let task = self.progress.lock().ok().and_then(|mut observed| {
+            if !observed.completed_phases.insert(phase.to_owned()) {
+                return None;
+            }
+            Some(observed.phases.remove(phase).unwrap_or_else(|| {
+                self.ctx
+                    .progress()
+                    .task(format!("Running {phase} lifecycle phase"))
+            }))
+        });
+        let Some(task) = task else {
+            return;
+        };
+        match status {
+            "ok" => task.finish(),
+            "fresh" => task.skip("phase inputs are fresh"),
+            "no-op" => task.skip("phase selected no work"),
+            "delegated" => task.skip("waiting for the hosting agent"),
+            "fail" => task.fail("lifecycle phase failed"),
+            other => task.skip(format!("phase ended with {other}")),
+        }
+    }
+
+    fn observe_contribution_started(&self, phase: &str, key: &str) {
+        // Human handlers own inherited stdout/stderr while they run. Starting
+        // an animated task here would let raw child output and cursor-control
+        // rendering write the terminal concurrently. Keep the inherited
+        // stream contract; its completed record is emitted only after the
+        // handler returns, in `observe_contribution_terminal`.
+        if self.stream_mode() == StreamMode::Inherit {
+            return;
+        }
+        self.observe_phase_started(phase);
+        let Ok(mut observed) = self.progress.lock() else {
+            return;
+        };
+        if observed.contributions.contains_key(key) {
+            return;
+        }
+        let child = observed
+            .phases
+            .get(phase)
+            .map(ProgressTask::progress)
+            .unwrap_or_else(|| self.ctx.progress());
+        observed.contributions.insert(
+            key.to_owned(),
+            child.task(format!("Running contribution {key}")),
+        );
+    }
+
+    fn observe_contribution_terminal(&self, report: &LifecycleContributionReport) {
+        let Some(task) = self.progress.lock().ok().and_then(|mut observed| {
+            observed.contributions.remove(&report.key).or_else(|| {
+                // In human mode the handler stream was inherited, so no task
+                // was allowed to animate during the wait. It is safe to add
+                // the retained terminal record now that the child is done.
+                (self.stream_mode() == StreamMode::Inherit).then(|| {
+                    self.ctx
+                        .progress()
+                        .task(format!("Running contribution {}", report.key))
+                })
+            })
+        }) else {
+            return;
+        };
+        match report.status.as_str() {
+            "ok" => task.finish(),
+            "fresh" => task.skip("contribution inputs are fresh"),
+            "skip" => task.skip("contribution skipped"),
+            "delegated" => task.skip("waiting for the hosting agent"),
+            "cancelled" => task.skip("parked contribution was cancelled"),
+            "fail" => task.fail(
+                report
+                    .message
+                    .as_deref()
+                    .unwrap_or("lifecycle contribution failed"),
+            ),
+            other => task.skip(format!("contribution ended with {other}")),
+        }
+    }
+
     fn stream_mode(&self) -> StreamMode {
         if self.ctx.is_json() {
             StreamMode::Capture
@@ -158,6 +268,20 @@ mod tests {
         assert_eq!(json.stream_mode(), StreamMode::Capture);
         assert!(json.binary_quiet());
         assert!(json.emit_machine_failure());
+    }
+
+    #[test]
+    fn inherited_human_streams_never_share_an_active_contribution_task() {
+        let human_ctx = context(false, false);
+        let human = CliRunObserver::new(&human_ctx);
+
+        human.observe_contribution_started("build", "org.demo/tools#compile");
+
+        let observed = human.progress.lock().expect("progress state is readable");
+        assert!(
+            observed.phases.is_empty() && observed.contributions.is_empty(),
+            "an inherited child stream owns the terminal until it returns",
+        );
     }
 
     /// The two policies are NOT the same function, and this is the pair that

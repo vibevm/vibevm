@@ -113,7 +113,8 @@ pub(super) fn service_if_owed(
     current: &impl CurrentRows,
     request: Request<'_>,
 ) -> Result<Option<Serviced>> {
-    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
+    let observer =
+        crate::commands::install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let agent = request.agent.clone();
     forced_continuation(current, request.identity, || {
         resume_slot_continuation(&observer, &agent, resume_request(request))
@@ -141,7 +142,8 @@ fn forced_continuation(
 /// else, so its prefix is EXPLICITLY empty rather than an absent option.
 pub(super) fn service(ctx: &output::Context, request: Request<'_>) -> Result<Option<Serviced>> {
     let identity = request.identity;
-    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
+    let observer =
+        crate::commands::install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let agent = request.agent.clone();
     owned_continuation(
         identity,

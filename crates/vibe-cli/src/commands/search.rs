@@ -106,8 +106,23 @@ struct HitRow {
 }
 
 pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest = load_project_manifest(&project_root)?;
+    let progress = ctx.progress();
+    let preparation = progress.task("Preparing registry search");
+    let prepared = (|| -> Result<_> {
+        let project_root = resolve_project_root(&args.path)?;
+        let manifest = load_project_manifest(&project_root)?;
+        Ok((project_root, manifest))
+    })();
+    let (project_root, manifest) = match prepared {
+        Ok(value) => {
+            preparation.finish();
+            value
+        }
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error);
+        }
+    };
 
     if manifest.registries.is_empty() {
         bail!(
@@ -139,7 +154,14 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                 "`--purl` value `{purl_norm}` does not start with `pkg:` — see https://github.com/package-url/purl-spec for the canonical PURL syntax"
             );
         }
-        return purl::run_purl_lookup(ctx, &project_root, &target_registries, purl_norm);
+        let lookup = progress.task("Looking up package URL");
+        let result = purl::run_purl_lookup(ctx, &project_root, &target_registries, purl_norm);
+        if result.is_ok() {
+            lookup.finish();
+        } else {
+            lookup.fail("package URL lookup failed");
+        }
+        return result;
     }
 
     let kind_filter: Option<PackageKind> = match args.kind.as_deref() {
@@ -179,7 +201,19 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     let mut full_scan_unsupported: Vec<UnreachableRegistry> = Vec::new();
     let mut by_pkg: HashMap<(PackageKind, String), HitRow> = HashMap::new();
 
-    for reg in &target_registries {
+    let registry_search = progress.task("Searching configured registries");
+    registry_search.set_progress(0, Some(target_registries.len() as u64), "registries");
+    let mut search_failed = false;
+    for (registry_index, reg) in target_registries.iter().enumerate() {
+        let mut component_failed = false;
+        let component = registry_search
+            .progress()
+            .task(format!("Searching registry {}", reg.name));
+        component.detail(if full_scan {
+            "index search with full-scan fallback"
+        } else {
+            "index search"
+        });
         // The B-083 ladder: env → `[[registry]].index_url` → the
         // `<registry-url>/index` default. `served_by_index` = the index
         // path answered for this registry (hits or a recorded failure);
@@ -217,6 +251,9 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                             name: reg.name.clone(),
                             reason,
                         });
+                        component.fail("registry index refused the probe");
+                        component_failed = true;
+                        search_failed = true;
                         break 'index true;
                     }
                     ProbeOutcome::Absent if source == IndexUrlSource::Default => {
@@ -229,6 +266,9 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                                 "probe of `{base}/repomd.json` failed (server down or wrong URL)"
                             ),
                         });
+                        component.fail("configured registry index is unavailable");
+                        component_failed = true;
+                        search_failed = true;
                         break 'index true;
                     }
                 };
@@ -253,6 +293,9 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                             name: reg.name.clone(),
                             reason: format!("{e}"),
                         });
+                        component.fail("registry index search failed");
+                        component_failed = true;
+                        search_failed = true;
                     }
                 }
                 true
@@ -269,18 +312,34 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                                 make_full_scan_hit_row(&h, &reg.name),
                             );
                         }
+                        component.finish();
                     }
                     Err(reason) => {
                         full_scan_unsupported.push(UnreachableRegistry {
                             name: reg.name.clone(),
                             reason,
                         });
+                        component.fail("registry full scan failed or is unsupported");
+                        search_failed = true;
                     }
                 }
             } else {
                 unconfigured.push(reg.name.clone());
+                component.skip("registry index is not configured");
             }
+        } else if !component_failed {
+            component.finish();
         }
+        registry_search.set_progress(
+            (registry_index + 1) as u64,
+            Some(target_registries.len() as u64),
+            "registries",
+        );
+    }
+    if search_failed {
+        registry_search.fail("one or more registry searches failed");
+    } else {
+        registry_search.finish();
     }
 
     let mut hits: Vec<HitRow> = by_pkg.into_values().collect();

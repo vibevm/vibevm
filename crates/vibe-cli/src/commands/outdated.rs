@@ -3,17 +3,10 @@
 //!
 //! Spec: [PROP-004 §2.20 (archived)](../../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#outdated)
 //! and [ROADMAP §M1.10](../../../../ROADMAP.md).
-//!
-//! Read-only: walks the lockfile, asks the resolver
-//! `list_versions` per package, picks the highest non-prerelease
-//! version, compares with the lockfile pin. Emits a status table
-//! sorted by `<kind>:<name>`. JSON envelope under `--json` for CI
-//! consumption.
-//!
-//! `--upstream` is deliberately narrower than a general ecosystem probe: it
-//! checks only bridge packages carrying a locked
-//! `pkg:github/<owner>/<repo>@<semver>` `describes` PURL
-//! by listing public Git tags with interactive credentials disabled.
+//! Read-only: walks the lockfile, asks `list_versions`, picks the highest stable
+//! version, compares it with the pin, and emits a sorted table or JSON envelope.
+//! `--upstream` checks only bridges with a locked GitHub `describes` PURL, using
+//! public Git tags with interactive credentials disabled.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
@@ -75,11 +68,24 @@ struct GithubUpstream {
 }
 
 pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest = load_project_manifest(&project_root)?;
-    let lockfile = load_lockfile(&project_root)?;
+    let progress = ctx.progress();
+    let preparation = progress.task("Preparing package version checks");
+    let prepared = (|| -> Result<_> {
+        let project_root = resolve_project_root(&args.path)?;
+        let manifest = load_project_manifest(&project_root)?;
+        let lockfile = load_lockfile(&project_root)?;
+        Ok((project_root, manifest, lockfile))
+    })();
+    let (project_root, manifest, lockfile) = match prepared {
+        Ok(value) => value,
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error);
+        }
+    };
 
     if lockfile.packages.is_empty() {
+        preparation.skip("no installed packages");
         if ctx.is_json() {
             ctx.emit_json(&OutdatedReport {
                 ok: true,
@@ -100,32 +106,57 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
     }
 
     if manifest.registries.is_empty() {
+        preparation.fail("no registry configured");
         bail!(
             "no registry configured. Add a `[[registry]]` entry to `vibe.toml` or run `vibe outdated` against a project that has one."
         );
     }
-    let mrr =
-        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
-            .context("opening multi-registry resolver")?
+    let mrr = match MultiRegistryResolver::open(
+        &manifest.registries,
+        &manifest.mirrors,
+        &manifest.overrides,
+    )
+    .context("opening multi-registry resolver")
+    {
+        Ok(resolver) => resolver
             .with_strict_auth(args.auth_required)
-            .with_git_packages(manifest.requires.git_packages.clone());
+            .with_git_packages(manifest.requires.git_packages.clone()),
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error);
+        }
+    };
     let upstream_git = if args.upstream {
-        Some(
-            ShellGit::new()
-                .anonymized_for_public()
-                .context("constructing anonymous GitHub upstream probe")?,
-        )
+        match ShellGit::new()
+            .anonymized_for_public()
+            .context("constructing anonymous GitHub upstream probe")
+        {
+            Ok(git) => Some(git),
+            Err(error) => {
+                preparation.fail(error.to_string());
+                return Err(error);
+            }
+        }
     } else {
         None
     };
+    preparation.detail(format!("packages: {}", lockfile.packages.len()));
+    preparation.finish();
 
     let mut entries: Vec<OutdatedEntry> = Vec::with_capacity(lockfile.packages.len());
     let mut update_available = 0usize;
     let mut upstream_candidates = 0usize;
     let mut upstream_update_available = 0usize;
     let mut upstream_unknown = 0usize;
-    for p in &lockfile.packages {
+    let checks = progress.task("Checking installed package versions");
+    checks.set_progress(0, Some(lockfile.packages.len() as u64), "packages");
+    let mut incomplete = false;
+    for (index, p) in lockfile.packages.iter().enumerate() {
+        let component = checks
+            .progress()
+            .task(format!("Checking {}/{}", p.group, p.name));
         let installed = p.version.clone();
+        let mut lookup_failed = false;
         let latest = match probe_latest(&mrr, &p.group, &p.name) {
             Ok(v) => v,
             Err(e) => {
@@ -135,6 +166,7 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
                     error = %e,
                     "could not probe latest version"
                 );
+                lookup_failed = true;
                 None
             }
         };
@@ -161,6 +193,9 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
                 _ => {}
             }
         }
+        let upstream_failed = upstream
+            .as_ref()
+            .is_some_and(|probe| probe.status == "unknown");
         entries.push(OutdatedEntry {
             group: p.group.to_string(),
             name: p.name.to_string(),
@@ -169,6 +204,23 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
             status,
             upstream,
         });
+        component.detail(format!("registry status: {status}"));
+        if lookup_failed || upstream_failed {
+            component.fail("one or more version lookups were inconclusive");
+            incomplete = true;
+        } else {
+            component.finish();
+        }
+        checks.set_progress(
+            (index + 1) as u64,
+            Some(lockfile.packages.len() as u64),
+            "packages",
+        );
+    }
+    if incomplete {
+        checks.fail("one or more package version checks were inconclusive");
+    } else {
+        checks.finish();
     }
     entries.sort_by(|a, b| {
         (a.group.as_str(), a.name.as_str()).cmp(&(b.group.as_str(), b.name.as_str()))

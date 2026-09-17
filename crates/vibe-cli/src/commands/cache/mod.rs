@@ -55,8 +55,21 @@ fn run_path(ctx: &output::Context) -> Result<()> {
 /// the `list_all` walk (sorting is the API's). An empty store is not
 /// an error: it is the honest answer.
 fn run_list(ctx: &output::Context) -> Result<()> {
-    let root = vibe_registry::store_root().context("resolving the machine store root")?;
+    let inventory = ctx.progress().task("Reading cached package inventory");
+    let root = match vibe_registry::store_root().context("resolving the machine store root") {
+        Ok(root) => root,
+        Err(error) => {
+            inventory.fail(error.to_string());
+            return Err(error);
+        }
+    };
     let entries = vibe_registry::list_all();
+    inventory.set_progress(entries.len() as u64, Some(entries.len() as u64), "packages");
+    if entries.is_empty() {
+        inventory.skip("cache is empty");
+    } else {
+        inventory.finish();
+    }
 
     if ctx.is_json() {
         let packages: Vec<serde_json::Value> = entries

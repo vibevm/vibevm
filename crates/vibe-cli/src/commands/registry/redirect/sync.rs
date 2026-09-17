@@ -8,38 +8,46 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use anyhow::{Context, Result, anyhow, bail};
+use std::sync::atomic::{AtomicU64, Ordering};
 use vibe_core::manifest::{Manifest, RegistrySection};
+use vibe_core::progress::ProgressTask;
 use vibe_publish::redirect_sync::{self, RedirectSyncEvent, RedirectSyncObserver};
 use vibe_publish::{
     creator_for_url, extract_host_segment, extract_org_segment, load_token_for_host,
 };
 
 use crate::cli::RegistryRedirectSyncArgs;
-use crate::commands::registry::resolve_project_root;
+use crate::commands::registry::{observed_stage, resolve_project_root};
 use crate::output;
 
 use super::{RedirectSyncReport, require_group, resolve_target_registry};
 
 /// Renders [`RedirectSyncEvent`]s as the progressive per-tag output the
 /// tag-sync loop used to print inline.
-struct CliRedirectSyncObserver<'a>(&'a output::Context);
+struct CliRedirectSyncObserver<'a> {
+    ctx: &'a output::Context,
+    task: &'a ProgressTask,
+    completed: AtomicU64,
+}
 
 impl RedirectSyncObserver for CliRedirectSyncObserver<'_> {
     fn on(&self, event: RedirectSyncEvent) {
         match event {
             RedirectSyncEvent::WouldPush { tag } => {
-                self.0.step(&format!(
+                self.ctx.step(&format!(
                     "Would push tag `{tag}` (target has it; stub does not)"
                 ));
             }
             RedirectSyncEvent::Pushed { tag } => {
-                self.0.step(&format!("Pushed tag `{tag}` into stub"));
+                self.ctx.step(&format!("Pushed tag `{tag}` into stub"));
             }
             RedirectSyncEvent::AlreadyPresent { tag } => {
-                self.0
+                self.ctx
                     .skipped(&format!("tag `{tag}`"), "already present on stub");
             }
         }
+        let completed = self.completed.fetch_add(1, Ordering::Relaxed) + 1;
+        self.task.set_progress(completed, None, "tags");
     }
 }
 
@@ -101,9 +109,15 @@ pub(in crate::commands::registry) fn run_redirect_sync(
     let push_url = creator.push_url(&validated_org, &stub_repo_name);
 
     // Probe stub existence so we fail fast with a clear message.
-    let exists = creator
-        .repo_exists(&validated_org, &stub_repo_name)
-        .map_err(|e| anyhow!("{e}"))?;
+    let exists = observed_stage(
+        ctx,
+        format!("Checking redirect stub {stub_repo_name}"),
+        || {
+            creator
+                .repo_exists(&validated_org, &stub_repo_name)
+                .map_err(|e| anyhow!("{e}"))
+        },
+    )?;
     if !exists {
         bail!(
             "stub repository `{stub_repo_name}` does not exist in `{org_segment}` on `{host}`. \
@@ -175,10 +189,32 @@ pub(super) fn do_redirect_sync(
     push_url: &str,
     dry_run: bool,
 ) -> Result<RedirectSyncReport> {
-    let observer = CliRedirectSyncObserver(ctx);
-    let outcome =
-        redirect_sync::sync_redirect_tags(&observer, stub_url, target_url_hint, push_url, dry_run)
-            .map_err(|e| anyhow!("{e}"))?;
+    let task = ctx.progress().task("Synchronizing redirect tags");
+    let observer = CliRedirectSyncObserver {
+        ctx,
+        task: &task,
+        completed: AtomicU64::new(0),
+    };
+    let outcome = match redirect_sync::sync_redirect_tags(
+        &observer,
+        stub_url,
+        target_url_hint,
+        push_url,
+        dry_run,
+    )
+    .map_err(|e| anyhow!("{e}"))
+    {
+        Ok(outcome) => outcome,
+        Err(error) => {
+            task.fail(error.to_string());
+            return Err(error);
+        }
+    };
+    if observer.completed.load(Ordering::Relaxed) == 0 {
+        task.skip("no redirect tags found");
+    } else {
+        task.finish();
+    }
     Ok(RedirectSyncReport {
         ok: true,
         command: "registry:redirect-sync",

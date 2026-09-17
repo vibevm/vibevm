@@ -34,6 +34,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 use std::collections::BTreeMap;
 use std::path::Path;
+use vibe_core::progress::Progress;
 
 use crate::citations::{self, SpecSources};
 use crate::content::Content;
@@ -184,8 +185,40 @@ pub fn page_path(prefix: &str, page_rel: &str, format: Format) -> String {
 
 /// Build the whole package.
 pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Result<Built> {
-    let (set, content) = content(package_dir, sources, &options.base, options.derived.clone())?;
-    let built_manifest = manifest::build(package_dir, sources, &options.manifest)?;
+    build_observed(package_dir, sources, options, &Progress::default())
+}
+
+/// Build the whole package while reporting its existing page/media walks.
+///
+/// ```no_run
+/// use std::{collections::BTreeMap, path::Path};
+/// use vibe_core::progress::Progress;
+/// use vibe_doc::{build, citations::SpecSources, manifest};
+/// let options = build::Options {
+///     format: build::Format::Html,
+///     base: "/doc/".into(),
+///     manifest: manifest::Options::at(chrono::Utc::now()),
+///     derived: BTreeMap::new(),
+/// };
+/// let _ = build::build_observed(
+///     Path::new("documentation"),
+///     &SpecSources::new(),
+///     &options,
+///     &Progress::default(),
+/// );
+/// ```
+pub fn build_observed(
+    package_dir: &Path,
+    sources: &SpecSources,
+    options: &Options,
+    progress: &Progress,
+) -> Result<Built> {
+    let (set, content) = observed(progress, "Reading documentation pages", || {
+        content(package_dir, sources, &options.base, options.derived.clone())
+    })?;
+    let built_manifest = observed(progress, "Building documentation manifest", || {
+        manifest::build(package_dir, sources, &options.manifest)
+    })?;
     let card = &built_manifest.manifest.package;
     // The package's own segment of the address map. Everything a build
     // writes for THIS package hangs off it; the machine files that
@@ -193,13 +226,17 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
     // the root beside it.
     let prefix = format!("{}/{}/{}/", card.group.as_str(), card.name, card.version);
 
+    let render = progress.task("Rendering documentation pages");
+    render.set_progress(0, Some(set.pages.len() as u64), "pages");
     let mut files = Vec::new();
     for page in &set.pages {
         files.push(BuiltFile {
             path: page_path(&prefix, &page.rel, options.format),
             bytes: render_page(page, &content, options.format).into_bytes(),
         });
+        render.set_progress(files.len() as u64, Some(set.pages.len() as u64), "pages");
     }
+    render.finish();
 
     files.push(BuiltFile {
         path: "manifest.json".to_string(),
@@ -227,7 +264,13 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
     // a book would be a picture that says the wrong thing.
     let kind = declared_kind(package_dir);
     let mut generated_roles = Vec::new();
-    for slot in media::slots(package_dir, &coordinate)? {
+    let slots = observed(progress, "Reading documentation media", || {
+        media::slots(package_dir, &coordinate)
+    })?;
+    let slot_count = slots.len() as u64;
+    let media = progress.task("Rendering documentation media");
+    media.set_progress(0, Some(slot_count), "assets");
+    for (index, slot) in slots.into_iter().enumerate() {
         if slot.generated() {
             generated_roles.push(slot.role.to_string());
         }
@@ -236,13 +279,29 @@ pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Re
             path: slot.address,
             bytes,
         });
+        media.set_progress((index + 1) as u64, Some(slot_count), "assets");
     }
+    media.finish();
 
     Ok(Built {
         files,
         unreadable: set.unreadable.iter().map(|u| u.rel.clone()).collect(),
         generated_roles,
     })
+}
+
+fn observed<T>(progress: &Progress, label: &str, work: impl FnOnce() -> Result<T>) -> Result<T> {
+    let task = progress.task(label);
+    match work() {
+        Ok(value) => {
+            task.finish();
+            Ok(value)
+        }
+        Err(error) => {
+            task.fail("documentation phase failed");
+            Err(error)
+        }
+    }
 }
 
 /// The kind a package declares, or `doc` when it declares none.

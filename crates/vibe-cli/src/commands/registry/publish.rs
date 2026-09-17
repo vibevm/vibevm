@@ -16,7 +16,7 @@ use vibe_publish::{
 use crate::cli::RegistryPublishArgs;
 use crate::output;
 
-use super::resolve_project_root;
+use super::{observed_stage, resolve_project_root};
 
 #[derive(Debug, Serialize)]
 struct PublishReport {
@@ -203,9 +203,11 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         dry_run: args.dry_run,
     };
 
-    let outcome = Publisher::new(creator.as_ref())
-        .publish(&config)
-        .map_err(|e| anyhow!("{e}"))?;
+    let outcome = observed_stage(ctx, "Staging and publishing registry package", || {
+        Publisher::new(creator.as_ref())
+            .publish(&config)
+            .map_err(|e| anyhow!("{e}"))
+    })?;
 
     // Optional post-publish hook — POST the freshly-built entry to a
     // configured vibevm-index server. Activation is per-registry via
@@ -216,7 +218,16 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         // Dry-runs do not push real bytes; suppress the hook.
         vibe_publish::HookReport::dormant()
     } else {
-        vibe_publish::fire_index_hook(&outcome, &source_dir, &registry_section.name)
+        let hook = ctx.progress().task("Updating registry search index");
+        let report = vibe_publish::fire_index_hook(&outcome, &source_dir, &registry_section.name);
+        if report.fired {
+            hook.finish();
+        } else if report.error.is_some() {
+            hook.fail("registry index hook failed");
+        } else {
+            hook.skip("registry index hook is not configured");
+        }
+        report
     };
 
     if ctx.is_json() {
@@ -319,9 +330,11 @@ fn run_publish_direct(
         dry_run: args.dry_run,
     };
 
-    let outcome = Publisher::new(&creator)
-        .publish(&config)
-        .map_err(|e| anyhow!("{e}"))?;
+    let outcome = observed_stage(ctx, "Staging and publishing package to git", || {
+        Publisher::new(&creator)
+            .publish(&config)
+            .map_err(|e| anyhow!("{e}"))
+    })?;
 
     if ctx.is_json() {
         ctx.emit_json(&DirectPublishReport {

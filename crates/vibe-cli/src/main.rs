@@ -16,7 +16,9 @@ use clap::Parser;
 use vibe_core::user_config::UserConfig;
 
 mod cli;
+mod command_progress;
 mod commands;
+mod composition;
 mod exit_code;
 mod output;
 mod registry;
@@ -70,14 +72,21 @@ fn main() -> ExitCode {
         && read_env_opt("TERM")
             .map(|term| !term.eq_ignore_ascii_case("dumb"))
             .unwrap_or(true);
-    let ctx = output::Context::from_flags(
-        cli.quiet,
-        cli.json,
-        cli.invoked_by.as_deref(),
-        cli.unattended,
-        cli.agent_mode,
-    )
-    .with_progress(cli.verbose, progress_interactive);
+    let (ctx, command_activity) = command_progress::configure_context(
+        output::Context::from_flags(
+            cli.quiet,
+            cli.json,
+            cli.invoked_by.as_deref(),
+            cli.unattended,
+            cli.agent_mode,
+        ),
+        &cli.command,
+        cli.verbose,
+        std::io::stdout().is_terminal(),
+        progress_interactive,
+        cli.no_progress,
+        read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+    );
 
     // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
     // GitHub + GitVerse) on any registry-needing command. A fresh checkout on
@@ -228,12 +237,14 @@ fn main() -> ExitCode {
         }
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Doc(args) => commands::doc::run(
+            &ctx,
             args,
             // The documentation library reads no ambient environment of
             // its own: the settings dir, the operator's home, the temp
             // root, the tree and the running binary are resolved HERE and
             // travel down as data (PROP-057 ##PIPE-EXAMPLE-RUNNER).
             commands::doc::DocEnv {
+                progress: ctx.progress(),
                 settings: std::env::var_os("VIBE_SETTINGS"),
                 home: std::env::var_os(if cfg!(windows) { "USERPROFILE" } else { "HOME" }),
                 temp: std::env::temp_dir(),
@@ -285,67 +296,30 @@ fn main() -> ExitCode {
             };
             commands::vvm::run(&ctx, args, vvm_env)
         }
-        Command::Vars(args) => {
-            let install_base = commands::vvm::resolve_root(
-                self_loc.as_ref().map(|l| l.root.clone()),
-                read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(PathBuf::from),
-                dirs::home_dir(),
-            )
-            .and_then(|root| root.parent().map(|p| p.display().to_string()))
-            .unwrap_or_default();
-            let home_actual = self_loc
-                .as_ref()
-                .map(|l| l.home.display().to_string())
-                .or_else(|| read_env_opt(commands::vvm::VIBEVM_HOME_ENV))
-                .unwrap_or_else(|| "(none)".to_string());
-            let (invoked, _) = output::resolve_invoked_by(cli.invoked_by.as_deref());
-            let rows = vec![
-                commands::vars::VarRow {
-                    name: "VIBEVM_INSTALL_ROOT",
-                    actual: install_base,
-                    env: read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV),
-                },
-                commands::vars::VarRow {
-                    name: "VIBEVM_HOME",
-                    actual: home_actual,
-                    env: read_env_opt(commands::vvm::VIBEVM_HOME_ENV),
-                },
-                commands::vars::VarRow {
-                    name: "VIBE_INVOKED_BY",
-                    actual: invoked.unwrap_or_default(),
-                    env: read_env_opt("VIBE_INVOKED_BY"),
-                },
-                commands::vars::VarRow {
-                    name: "VIBE_UNATTENDED",
-                    actual: output::resolve_unattended(cli.unattended).to_string(),
-                    env: read_env_opt("VIBE_UNATTENDED"),
-                },
-                commands::vars::VarRow {
-                    name: "VIBE_LOG",
-                    actual: read_env_opt("VIBE_LOG").unwrap_or_else(|| "warn".to_string()),
-                    env: read_env_opt("VIBE_LOG"),
-                },
-            ];
-            commands::vars::run(args, rows)
-        }
+        Command::Vars(args) => composition::run_vars(
+            args,
+            self_loc.as_ref(),
+            cli.unattended,
+            cli.invoked_by.as_deref(),
+        ),
         Command::Progress(args) => commands::progress::run(&ctx, args),
         Command::Tools { json } => {
             let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
-            commands::tools::run(&cwd, json)
+            commands::tools::run(&ctx, &cwd, json)
         }
         Command::Bin { cmd } => {
             let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
             match cmd {
-                cli::BinCmd::List => commands::bin::run_list(&cwd),
+                cli::BinCmd::List => commands::bin::run_list(&ctx, &cwd),
                 cli::BinCmd::Build { names, assume_yes } => {
-                    commands::bin::run_build(&cwd, &names, assume_yes)
+                    commands::bin::run_build(&ctx, &cwd, &names, assume_yes)
                 }
-                cli::BinCmd::Path { name } => commands::bin::run_path(&cwd, &name),
+                cli::BinCmd::Path { name } => commands::bin::run_path(&ctx, &cwd, &name),
                 cli::BinCmd::Exec {
                     name,
                     assume_yes,
                     args,
-                } => match commands::bin::run_exec(&cwd, &name, &args, assume_yes) {
+                } => match commands::bin::run_exec(&ctx, &cwd, &name, &args, assume_yes) {
                     Ok(code) => {
                         return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
                     }
@@ -365,6 +339,7 @@ fn main() -> ExitCode {
         }
     };
 
+    command_activity.complete(result.is_ok());
     match result {
         Ok(()) => {
             // A command that returned without emitting its own document (a

@@ -14,7 +14,7 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use super::validate_only_gate::{Silent, manifested};
 use crate::failure::Measurement;
 use crate::install::{InstallInputs, InstallPolicy, SelectedManifest, resolve_project_root};
-use crate::ports::NoManifestMutation;
+use crate::ports::{NoManifestMutation, RunObserver};
 use crate::{PhaseOutcome, PhaseRun, run_phases};
 
 /// One manifest that declares a static skill and nothing else.
@@ -25,13 +25,7 @@ const WITH_PACKAGE_TARGET: &str = concat!(
     "config = { source = \"skills/demo\" }\n",
 );
 
-/// Drive the executed region over one prepared project for exactly the
-/// build and package phases.
-///
-/// The phase slice is narrowed deliberately: the inclusive chain would
-/// enter the prerequisite install and its registry epoch, which this pin
-/// is not about, and `run_phases` executes the phases it is GIVEN. What
-/// is exercised is exactly the region the wiring lives in.
+/// Drive the executed region over build and package only.
 fn run(root: &std::path::Path) -> PhaseOutcome {
     run_phases_over(root, vec![Phase::Build, Phase::Package])
 }
@@ -53,6 +47,16 @@ pub(in crate::phase) fn run_deploying_on(
     phases: Vec<Phase>,
     deploy: Option<crate::DeployAuthority>,
     target_os: TargetOs,
+) -> PhaseOutcome {
+    run_deploying_on_observed(root, phases, deploy, target_os, &Silent)
+}
+
+pub(super) fn run_deploying_on_observed(
+    root: &std::path::Path,
+    phases: Vec<Phase>,
+    deploy: Option<crate::DeployAuthority>,
+    target_os: TargetOs,
+    observer: &dyn RunObserver,
 ) -> PhaseOutcome {
     let root = match resolve_project_root(root) {
         Ok(root) => root,
@@ -101,7 +105,7 @@ pub(in crate::phase) fn run_deploying_on(
         steps: Vec::new(),
         contributions: Vec::new(),
         notices: Vec::new(),
-        observer: &silent,
+        observer,
         install_observer: &silent,
         confirm_gate: &silent,
         sources: &silent,
@@ -414,18 +418,12 @@ targets = [\"local\"]
 ",
 );
 
-/// The resolved selection the command layer would hand down.
-fn local_profile() -> crate::DeployAuthority {
+pub(super) fn local_profile() -> crate::DeployAuthority {
     crate::DeployAuthority {
         selection: vibe_lifecycle::DeploySelection {
             profile: "local".to_string(),
             targets: vec!["local".to_string()],
         },
-        // A fake home and three clients the surface did not find. No
-        // fixture in this cell may name the operator's home or a real
-        // client — the carriage is what is under test, not a client — and
-        // the typed absence is exactly what an uninstalled client looks
-        // like, so the carriage is proven to travel one.
         user_home: std::path::PathBuf::from("/nonexistent/r8-wiring-home"),
         clients: vibe_lifecycle::ClientExecutables {
             claude: vibe_lifecycle::ClientExecutable::Missing {

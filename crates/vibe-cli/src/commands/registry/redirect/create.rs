@@ -9,7 +9,7 @@ use vibe_publish::{
 };
 
 use crate::cli::RegistryRedirectArgs;
-use crate::commands::registry::resolve_project_root;
+use crate::commands::registry::{observed_stage, resolve_project_root};
 use crate::output;
 
 use super::sync::do_redirect_sync;
@@ -211,9 +211,15 @@ pub(in crate::commands::registry) fn run_redirect(
 
     // Refuse to clobber an existing stub — operators who want to update
     // a stub's marker file should hand-edit it (the M1.16 v0 surface).
-    let exists = creator
-        .repo_exists(&validated_org, &stub_repo_name)
-        .map_err(|e| anyhow!("{e}"))?;
+    let exists = observed_stage(
+        ctx,
+        format!("Checking redirect stub {stub_repo_name}"),
+        || {
+            creator
+                .repo_exists(&validated_org, &stub_repo_name)
+                .map_err(|e| anyhow!("{e}"))
+        },
+    )?;
     if exists {
         bail!(
             "stub repository `{stub_repo_name}` already exists in `{org_segment}` on `{host}`. \
@@ -232,9 +238,15 @@ pub(in crate::commands::registry) fn run_redirect(
         default_branch: Some("main".to_string()),
         homepage: None,
     };
-    let _info = creator
-        .create_repo(&validated_org, &stub_repo_name, &opts)
-        .map_err(|e| anyhow!("{e}"))?;
+    let _info = observed_stage(
+        ctx,
+        format!("Creating redirect stub {stub_repo_name}"),
+        || {
+            creator
+                .create_repo(&validated_org, &stub_repo_name, &opts)
+                .map_err(|e| anyhow!("{e}"))
+        },
+    )?;
     ctx.step(&format!(
         "Created repository `{stub_repo_name}` on `{host}`"
     ));
@@ -243,8 +255,10 @@ pub(in crate::commands::registry) fn run_redirect(
     // moment of git invocation; never in stdout / stderr / logs.
     let push_url = creator.push_url(&validated_org, &stub_repo_name);
     let commit_msg = format!("stub: delegate {} to {}", pkgref.qualified_name(), args.to);
-    vibe_publish::git_publish::push_initial(staging.path(), &push_url, &commit_msg)
-        .map_err(|e| anyhow!("{e}"))?;
+    observed_stage(ctx, "Pushing redirect marker", || {
+        vibe_publish::git_publish::push_initial(staging.path(), &push_url, &commit_msg)
+            .map_err(|e| anyhow!("{e}"))
+    })?;
     ctx.step(&format!(
         "Pushed stub `{}` to `main`",
         RedirectFile::FILENAME

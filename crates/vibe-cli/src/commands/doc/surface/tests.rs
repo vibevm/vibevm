@@ -65,5 +65,9 @@ fn a_recorded_version_is_found_where_the_package_keeps_it() {
 /// obligations. The other five halves of a surface are still a surface.
 #[test]
 fn a_run_with_no_working_directory_records_no_obligations() {
-    assert!(obligations(&None).expect("no corpus").is_empty());
+    assert!(
+        obligations(&None, &vibe_core::progress::Progress::default())
+            .expect("no corpus")
+            .is_empty()
+    );
 }

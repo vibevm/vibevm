@@ -22,6 +22,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::progress::Progress;
 use vibe_core::user_config::UserConfig;
 use vibe_core::{EffectiveRegistryConfig, GlobalRegistryConfig, PackageRef};
 use vibe_install::InstallSource;
@@ -33,7 +34,15 @@ use crate::commands::short_name;
 use crate::output;
 
 pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool) -> Result<()> {
-    let (resolver, in_project) = cache_resolver(&args.path, root_offline)?;
+    let progress = ctx.progress();
+    let preparation = progress.task("Preparing cache warm-up");
+    let (resolver, in_project) = match cache_resolver(&args.path, root_offline) {
+        Ok(value) => value,
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error);
+        }
+    };
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — same seam `vibe install` uses, with
@@ -42,18 +51,37 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
         "vibe (cache add)",
         crate::commands::init::current_timestamp_utc(),
     );
-    let roots: Vec<PackageRef> = args
-        .packages
-        .iter()
-        .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
-        .collect::<Result<_>>()?;
-    let roots: Vec<PackageRef> = roots
-        .iter()
-        .map(|r| short_name::qualify(&resolver, r, &empty_lock))
-        .collect::<Result<_>>()?;
-
-    let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
-    let warmed = warm(&resolver, &store_root, roots)?;
+    let prepared = (|| -> Result<_> {
+        let roots: Vec<PackageRef> = args
+            .packages
+            .iter()
+            .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
+            .collect::<Result<_>>()?;
+        let roots = roots
+            .iter()
+            .map(|r| short_name::qualify(&resolver, r, &empty_lock))
+            .collect::<Result<Vec<_>>>()?;
+        let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
+        Ok((roots, store_root))
+    })();
+    let (roots, store_root) = match prepared {
+        Ok(value) => value,
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error);
+        }
+    };
+    preparation.detail(format!(
+        "source: {}; requested roots: {}",
+        if in_project {
+            "project"
+        } else {
+            "user registry config"
+        },
+        roots.len()
+    ));
+    preparation.finish();
+    let warmed = warm_with_progress(&resolver, &store_root, roots, &progress)?;
 
     emit(
         ctx,
@@ -90,6 +118,15 @@ pub(crate) fn warm(
     store_root: &Path,
     roots: Vec<PackageRef>,
 ) -> Result<Warmed> {
+    warm_with_progress(resolver, store_root, roots, &Progress::default())
+}
+
+fn warm_with_progress(
+    resolver: &InstallResolver,
+    store_root: &Path,
+    roots: Vec<PackageRef>,
+    progress: &Progress,
+) -> Result<Warmed> {
     let mut warmed = Warmed::default();
     let mut fetched: BTreeSet<String> = BTreeSet::new();
     let Warmed {
@@ -106,6 +143,8 @@ pub(crate) fn warm(
     // itself asks for; a round that adds no coordinate is the last.
     let mut pending = roots;
     let mut derived = false;
+    let warming = progress.task("Fetching package dependency closure");
+    let mut completed = 0_u64;
     while !pending.is_empty() {
         // The closure walk within one round is the existing solve — it
         // already follows each package's `[requires]`; no bespoke
@@ -128,12 +167,16 @@ pub(crate) fn warm(
             }
             nodes
         } else {
-            resolver
+            match resolver
                 .solve(&pending)
-                .map_err(|e| anyhow!("resolving the dependency closure: {e}"))?
-                .iter()
-                .cloned()
-                .collect()
+                .map_err(|e| anyhow!("resolving the dependency closure: {e}"))
+            {
+                Ok(graph) => graph.iter().cloned().collect(),
+                Err(error) => {
+                    warming.fail("dependency closure resolution failed");
+                    return Err(error);
+                }
+            }
         };
         derived = true;
         let mut warmed_now: Vec<(vibe_core::Group, String, semver::Version)> = Vec::new();
@@ -144,24 +187,40 @@ pub(crate) fn warm(
             if !fetched.insert(label.clone()) {
                 continue;
             }
+            let package = warming.progress().task(format!("Fetching {label}"));
             // Write-once makes the presence check the honest
             // discriminator: a node already in the store is fetched
             // (idempotently, returning the existing entry) and its
             // bytes stay untouched.
             let was_present =
                 vibe_registry::lookup(&node.group, &node.name, &node.version).is_some();
-            resolver
+            if let Err(error) = resolver
                 .resolve_and_fetch(&exact_pinned_pkgref(node), store_root, None)
-                .with_context(|| format!("fetching {label} into the machine store"))?;
+                .with_context(|| format!("fetching {label} into the machine store"))
+            {
+                package.fail("package fetch failed");
+                warming.fail("dependency closure fetch failed");
+                return Err(error);
+            }
             if was_present {
                 already.push(label);
             } else {
                 inserted.push(label);
             }
+            package.finish();
+            completed += 1;
+            warming.set_progress(completed, None, "packages");
             warmed_now.push((node.group.clone(), node.name.clone(), node.version.clone()));
         }
-        pending = documentation_closure(store_root, &warmed_now, unreachable)?;
+        pending = match documentation_closure(store_root, &warmed_now, unreachable) {
+            Ok(pending) => pending,
+            Err(error) => {
+                warming.fail("documentation closure inspection failed");
+                return Err(error);
+            }
+        };
     }
+    warming.finish();
     Ok(warmed)
 }
 

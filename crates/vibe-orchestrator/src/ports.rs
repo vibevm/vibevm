@@ -43,6 +43,23 @@ use crate::RitualPlan;
 /// fn takes(_: &dyn RunObserver) {}
 /// ```
 pub trait RunObserver: Send + Sync {
+    /// Observe a phase when it first reaches executable work. Default no-op
+    /// keeps hosted and test adapters source-compatible.
+    fn observe_phase_started(&self, _phase: &str) {}
+
+    /// Observe the phase's truthful terminal status (`ok`, `fresh`, `no-op`,
+    /// `delegated`, or `fail`).
+    fn observe_phase_finished(&self, _phase: &str, _status: &str) {}
+
+    /// Observe a contribution immediately before its handler can block.
+    fn observe_contribution_started(&self, phase: &str, _key: &str) {
+        self.observe_phase_started(phase);
+    }
+
+    /// Observe a contribution's terminal row without changing the existing
+    /// narration callback or report construction.
+    fn observe_contribution_terminal(&self, _report: &LifecycleContributionReport) {}
+
     /// How a handler's child process streams are wired.
     fn stream_mode(&self) -> StreamMode;
 

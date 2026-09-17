@@ -197,7 +197,7 @@ mod tests {
 
     fn context(quiet: bool, json: bool) -> output::Context {
         output::Context::from_flags(quiet, json, None, true, crate::cli::AgentModeArg::Cli)
-            .with_progress(true, false)
+            .with_progress(true, output::ProgressMode::Plain)
     }
 
     #[test]

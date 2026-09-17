@@ -9,15 +9,14 @@ use std::fmt;
 use std::fs;
 
 use anyhow::{Context, Result};
-use dialoguer::{MultiSelect, Select};
+use dialoguer::MultiSelect;
 use vibe_publish::release_manifest::DISTRIBUTION_SOURCE_ARCHIVE_FILENAME;
 
-use super::error::VvmError;
 use super::model::{self, InstallRecord, InstanceId, Selector, VersionId};
 use super::provenance;
 use super::store::VersionStore;
 use super::{VvmEnv, confirm, forced_kind, require_tty, resolve_installed};
-use crate::cli::{VvmGcArgs, VvmRemoveArgs};
+use crate::cli::VvmRemoveArgs;
 use crate::output;
 
 #[path = "remove_guard.rs"]
@@ -26,6 +25,12 @@ use guard::{
     RemovalEffects, guard_remove_targets, remove_mirror_after, removes_last_managed,
     scoped_removal_notes,
 };
+
+#[path = "gc.rs"]
+mod gc;
+#[cfg(test)]
+use gc::gc_protected;
+pub(super) use gc::{GcOutcome, run_gc_cmd};
 
 /// What `self remove` deletes for a version (PROP-019 §2.9).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -107,17 +112,6 @@ fn protection_blocks(reason: &str, force: bool) -> bool {
     reason == "running" || !force
 }
 
-fn gc_protected(
-    record: &InstallRecord,
-    active: &InstallRecord,
-    rollback: Option<&InstallRecord>,
-    running: Option<&InstallRecord>,
-) -> bool {
-    same_record(record, active)
-        || rollback.is_some_and(|saved| same_record(record, saved))
-        || running.is_some_and(|saved| same_record(record, saved))
-}
-
 /// Apply bin/source/both to each selected immutable instance. Binary bundles
 /// own their `bin/` and `source/` independently; external worktrees are never
 /// touched. Whole-instance removal remains best-effort around running locks.
@@ -150,6 +144,7 @@ fn remove_target(
                         }
                         Err(error) => {
                             ctx.summary(&format!("skipped {} (in use?): {error}", home.display()));
+                            effects.failed = true;
                             false
                         }
                     }
@@ -217,24 +212,47 @@ pub(super) fn run_remove_cmd(
     env: &VvmEnv,
     args: VvmRemoveArgs,
 ) -> Result<()> {
-    let store = env.store()?;
-    let _lock = super::install::InstallLock::acquire(&store)?;
-    let mut state = store.load_state()?;
+    let progress = ctx.progress();
+    let inspection = progress.task("Inspecting removal inventory");
+    let inspected = (|| -> Result<_> {
+        let store = env.store()?;
+        if let Some(root) = &env.root {
+            inspection.detail(format!("store: {}", root.display()));
+        }
+        let lock = super::install::InstallLock::acquire(&store)?;
+        let state = store.load_state()?;
+        let active = store.active()?;
+        let running = provenance::running_record(&store)?;
+        Ok((store, lock, state, active, running))
+    })();
+    let (store, _lock, mut state, active, running) = match inspected {
+        Ok(value) => {
+            inspection.finish();
+            value
+        }
+        Err(error) => {
+            inspection.fail(error.to_string());
+            return Err(error);
+        }
+    };
     let initial_records = state.installs.len();
-    let active = store.active()?;
-    let running = provenance::running_record(&store)?;
 
+    let selection = progress.task("Selecting removal targets");
     let targets: Vec<RemoveTarget> = if args.all {
         let ids = distinct_ids(&state);
         if ids.is_empty() {
+            selection.skip("no versions installed");
             ctx.summary("no versions installed.");
             return Ok(());
         }
-        if !confirm(
-            ctx,
-            args.yes,
-            &format!("Remove ALL {} version(s)?", ids.len()),
-        )? {
+        if !ctx.suspend_progress(|| {
+            confirm(
+                ctx,
+                args.yes,
+                &format!("Remove ALL {} version(s)?", ids.len()),
+            )
+        })? {
+            selection.skip("declined");
             ctx.summary("aborted.");
             return Ok(());
         }
@@ -247,16 +265,18 @@ pub(super) fn run_remove_cmd(
             _ => RemoveTarget::Version(record.version_id()),
         }]
     } else {
-        pick_ids(ctx, &state)?
+        ctx.suspend_progress(|| pick_ids(ctx, &state))?
             .into_iter()
             .map(RemoveTarget::Version)
             .collect()
     };
 
     if targets.is_empty() {
+        selection.skip("no targets selected");
         ctx.summary("nothing to remove.");
         return Ok(());
     }
+    let selected_count = targets.len();
     let scope = removal_scope(args.bin, args.src);
     let mut effective = Vec::new();
     for target in targets {
@@ -279,6 +299,12 @@ pub(super) fn run_remove_cmd(
         }
         effective.push(target);
     }
+    selection.detail(format!(
+        "selected: {}; removable: {}",
+        selected_count,
+        effective.len()
+    ));
+    selection.finish();
 
     let selected_origin = |origin| {
         state.installs.iter().any(|record| {
@@ -289,11 +315,24 @@ pub(super) fn run_remove_cmd(
     let selected_managed = selected_origin(model::Origin::Managed);
     let selected_binary = selected_origin(model::Origin::Binary);
 
-    guard_remove_targets(&store, &state, &effective, scope)?;
+    let preflight = progress.task("Preflighting removal targets");
+    for target in &effective {
+        preflight.detail(format!("target: {target}"));
+    }
+    if let Err(error) = guard_remove_targets(&store, &state, &effective, scope) {
+        preflight.fail(error.to_string());
+        return Err(error);
+    }
     let mirror_candidate = removes_last_managed(&state, &effective, scope);
     if mirror_candidate {
-        store.guard_mutation_tree(&store.mirror_dir())?;
+        let mirror = store.mirror_dir();
+        preflight.detail(format!("managed mirror: {}", mirror.display()));
+        if let Err(error) = store.guard_mutation_tree(&mirror) {
+            preflight.fail(error.to_string());
+            return Err(error.into());
+        }
     }
+    preflight.finish();
 
     let previous = store.previous()?;
     let pointer_targeted = active
@@ -302,26 +341,78 @@ pub(super) fn run_remove_cmd(
         .chain(previous.as_ref())
         .any(|record| effective.iter().any(|target| target.matches(record)));
     if matches!(scope, RemoveScope::Bin | RemoveScope::Both) && pointer_targeted {
-        repair_activation_before_removal(&store, &state, &effective)?;
+        let repair = progress.task("Repairing activation pointers");
+        match repair_activation_before_removal(&store, &state, &effective) {
+            Ok(()) => repair.finish(),
+            Err(error) => {
+                repair.fail(error.to_string());
+                return Err(error);
+            }
+        }
     }
     let mut effects = RemovalEffects::default();
-    for target in &effective {
-        effects.merge(remove_target(ctx, &store, &mut state, target, scope)?);
+    let removals = progress.task("Removing selected versions");
+    removals.set_progress(0, Some(effective.len() as u64), "targets");
+    for (index, target) in effective.iter().enumerate() {
+        let component = removals.progress().task(format!("Removing {target}"));
+        let target_effects = match remove_target(ctx, &store, &mut state, target, scope) {
+            Ok(target_effects) => target_effects,
+            Err(error) => {
+                component.fail(error.to_string());
+                removals.fail("target removal failed");
+                return Err(error);
+            }
+        };
+        if target_effects.failed {
+            component.fail("one or more instances retained for later retry");
+        } else if target_effects.any {
+            component.finish();
+        } else {
+            component.skip("nothing on disk to remove");
+        }
+        effects.merge(target_effects);
+        removals.set_progress((index + 1) as u64, Some(effective.len() as u64), "targets");
+    }
+    if effective.is_empty() {
+        removals.skip("all selected targets are protected");
+    } else if effects.failed {
+        removals.skip("one or more instances retained for later retry");
+    } else {
+        removals.finish();
     }
     let remove_mirror = remove_mirror_after(mirror_candidate, scope, &state);
     if remove_mirror {
         let mirror = store.mirror_dir();
+        let mirror_task = progress.task("Removing unused managed source mirror");
+        mirror_task.detail(format!("path: {}", mirror.display()));
         if mirror.exists() {
-            fs::remove_dir_all(&mirror).with_context(|| {
-                format!("removing shared managed mirror `{}`", mirror.display())
-            })?;
+            if let Err(error) = fs::remove_dir_all(&mirror)
+                .with_context(|| format!("removing shared managed mirror `{}`", mirror.display()))
+            {
+                mirror_task.fail(error.to_string());
+                return Err(error);
+            }
             ctx.removed(&mirror.display().to_string());
             effects.any = true;
             effects.managed_source = true;
+            mirror_task.finish();
+        } else {
+            mirror_task.skip("already absent");
         }
     }
     if state.installs.len() != initial_records {
-        store.save_state(&state)?;
+        let saving = progress.task("Saving version inventory");
+        saving.detail(format!("state: {}", store.state_path().display()));
+        match store.save_state(&state) {
+            Ok(()) => saving.finish(),
+            Err(error) => {
+                saving.fail(error.to_string());
+                return Err(error.into());
+            }
+        }
+    } else {
+        let saving = progress.task("Saving version inventory");
+        saving.skip("inventory unchanged");
     }
     if !effective.is_empty() {
         for note in scoped_removal_notes(
@@ -421,174 +512,6 @@ fn pick_ids(ctx: &output::Context, state: &model::State) -> Result<Vec<VersionId
         .interact()
         .unwrap_or_default();
     Ok(chosen.into_iter().map(|i| ids[i].clone()).collect())
-}
-
-enum GcAction {
-    Build,
-    Prune,
-    Cancel,
-}
-
-pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -> Result<()> {
-    let store = env.store()?;
-    let _lock = super::install::InstallLock::acquire(&store)?;
-    let action = if args.build {
-        GcAction::Build
-    } else if args.prune_others {
-        GcAction::Prune
-    } else {
-        gc_menu(ctx)?
-    };
-
-    match action {
-        GcAction::Cancel => ctx.summary("nothing to do."),
-        GcAction::Build => {
-            let dir = store.build_dir();
-            store.guard_mutation_tree(&dir)?;
-            if dir.exists() {
-                fs::remove_dir_all(&dir)
-                    .with_context(|| format!("removing `{}`", dir.display()))?;
-                ctx.summary("cleaned the Rust build cache.");
-            } else {
-                ctx.summary("build cache already empty.");
-            }
-        }
-        GcAction::Prune => {
-            let active = store.active()?.ok_or(VvmError::NoActiveVersion)?;
-            let running = provenance::running_record(&store)?;
-            let mut state = store.load_state()?;
-            let saved_previous = store.previous()?;
-            let rollback = saved_previous
-                .as_ref()
-                .filter(|record| {
-                    !same_record(record, &active)
-                        && super::ensure_activatable(&store, record).is_ok()
-                })
-                .cloned()
-                .or_else(|| {
-                    state
-                        .installs
-                        .iter()
-                        .filter(|record| !same_record(record, &active))
-                        .filter(|record| super::ensure_activatable(&store, record).is_ok())
-                        .max_by_key(|record| record.instance)
-                        .cloned()
-                });
-            let others: Vec<_> = state
-                .installs
-                .iter()
-                .filter(|record| {
-                    !gc_protected(record, &active, rollback.as_ref(), running.as_ref())
-                })
-                .cloned()
-                .collect();
-            let active_path = store.instance_dir(&active.version_id(), active.instance);
-            let rollback_path = rollback
-                .as_ref()
-                .map(|record| store.instance_dir(&record.version_id(), record.instance));
-            if others.is_empty() {
-                store.reset_activation(Some(&active_path), rollback_path.as_deref())?;
-                ctx.summary("no instances outside the active + rollback pair to prune.");
-                return Ok(());
-            }
-            for record in &others {
-                store.guard_mutation_tree(
-                    &store.instance_dir(&record.version_id(), record.instance),
-                )?;
-            }
-            let remove_mirror = !state.installs.iter().any(|record| {
-                record.origin == model::Origin::Managed
-                    && !others.iter().any(|removed| same_record(record, removed))
-            });
-            if remove_mirror {
-                store.guard_mutation_tree(&store.mirror_dir())?;
-            }
-            let build_dir = store.build_dir();
-            store.guard_mutation_tree(&build_dir)?;
-            if !confirm(
-                ctx,
-                args.yes,
-                &format!(
-                    "Remove {} instance(s) except active, immediate rollback, and running? This cannot be undone.",
-                    others.len()
-                ),
-            )? {
-                ctx.summary("aborted.");
-                return Ok(());
-            }
-            store.reset_activation(Some(&active_path), rollback_path.as_deref())?;
-            let mut pruned = 0usize;
-            for r in &others {
-                let dir = store.instance_dir(&r.version_id(), r.instance);
-                store.guard_mutation_tree(&dir)?;
-                let forget = if dir.exists() {
-                    match fs::remove_dir_all(&dir) {
-                        Ok(()) => true,
-                        Err(error) => {
-                            ctx.summary(&format!("skipped {} (in use?): {error}", dir.display()));
-                            false
-                        }
-                    }
-                } else {
-                    true
-                };
-                if forget {
-                    state.installs.retain(|candidate| {
-                        !(candidate.version_id() == r.version_id()
-                            && candidate.instance == r.instance)
-                    });
-                    pruned += 1;
-                }
-            }
-            if pruned > 0 {
-                store.save_state(&state)?;
-            }
-            if remove_mirror
-                && !state
-                    .installs
-                    .iter()
-                    .any(|record| record.origin == model::Origin::Managed)
-            {
-                let mirror = store.mirror_dir();
-                if mirror.exists() {
-                    fs::remove_dir_all(&mirror).with_context(|| {
-                        format!("removing shared managed mirror `{}`", mirror.display())
-                    })?;
-                }
-            }
-            store.guard_mutation_tree(&build_dir)?;
-            if build_dir.exists() {
-                let _ = fs::remove_dir_all(&build_dir);
-            }
-            ctx.summary(&format!(
-                "pruned {} instance(s); kept active, immediate rollback, and running.",
-                pruned
-            ));
-        }
-    }
-    Ok(())
-}
-
-fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
-    require_tty(
-        ctx,
-        "pass `--build` (clean the Rust build cache) or `--prune-others`",
-    )?;
-    let items = [
-        "Clean the Rust build cache (the shared --target-dir)",
-        "Prune all instances except the active",
-    ];
-    let sel = Select::new()
-        .with_prompt("vibe self gc")
-        .items(items)
-        .default(0)
-        .interact()
-        .ok();
-    Ok(match sel {
-        Some(0) => GcAction::Build,
-        Some(1) => GcAction::Prune,
-        _ => GcAction::Cancel,
-    })
 }
 
 #[cfg(test)]

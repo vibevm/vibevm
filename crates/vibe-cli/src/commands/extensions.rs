@@ -30,7 +30,17 @@ use crate::output;
 use vibe_orchestrator as world;
 
 pub fn run(ctx: &output::Context, args: ExtensionsArgs) -> Result<()> {
-    let loaded = world::inspect(&args.path)?;
+    let inspect = ctx.progress().task("Inspecting extension registry");
+    let loaded = match world::inspect(&args.path) {
+        Ok(loaded) => {
+            inspect.finish();
+            loaded
+        }
+        Err(error) => {
+            inspect.fail("extension inspection failed");
+            return Err(error);
+        }
+    };
     let views = loaded
         .registry
         .exhaustive(DomainSelectorSubject::unscoped());
@@ -103,8 +113,19 @@ pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> R
             "`vibe extensions compile` emits artifact bytes; omit --json/--quiet and use --out - for stdout"
         )
     }
-    let selected = vibe_workspace::Workspace::discover_selected(&args.path)
-        .context("discovering the selected workspace node")?;
+    let discover = ctx.progress().task("Discovering extension workspace node");
+    let selected = match vibe_workspace::Workspace::discover_selected(&args.path)
+        .context("discovering the selected workspace node")
+    {
+        Ok(selected) => {
+            discover.finish();
+            selected
+        }
+        Err(error) => {
+            discover.fail("workspace discovery failed");
+            return Err(error);
+        }
+    };
     let node_rel = selected.selected.as_str().to_owned();
     let backend = vibe_spec::BackendId::new(args.backend.clone())?;
     let platform = vibe_lifecycle::native::NativePlatform::current()?;
@@ -132,6 +153,7 @@ pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> R
         BTreeMap::from([(owner, vibe_spec::CompilerNativePolicy::fail())]),
         &selected.workspace.root,
     )?;
+    let compile = ctx.progress().task("Compiling extension backend");
     let artifact = vibe_workspace::install::compile_node_backend(
         &selected.workspace,
         &node_rel,
@@ -146,9 +168,19 @@ pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> R
         &mut provider,
     )
     .context("custom compilation requires installed/prebuilt native artifacts; run `vibe build` after changing native sources")?
-    .ok_or_else(|| anyhow::anyhow!("the selected node has no static-lane contributions"))?;
+    .ok_or_else(|| anyhow::anyhow!("the selected node has no static-lane contributions"));
+    let artifact = match artifact {
+        Ok(artifact) => {
+            compile.finish();
+            artifact
+        }
+        Err(error) => {
+            compile.fail("extension compilation failed");
+            return Err(error);
+        }
+    };
     if args.out.as_os_str() == "-" {
-        std::io::stdout().write_all(artifact.bytes())?;
+        ctx.suspend_progress(|| std::io::stdout().write_all(artifact.bytes()))?;
         return Ok(());
     }
     let parent = args

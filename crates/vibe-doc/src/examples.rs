@@ -41,6 +41,7 @@ pub mod tripwire;
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+use vibe_core::progress::Progress;
 
 use vibe_specdoc::doc::{Block, BlockNode, Cond, CondOs, Section, SpecDoc};
 
@@ -79,44 +80,98 @@ struct Collected {
 
 /// Run every example of a documentation package and report.
 pub fn check(package_dir: &Path, env: &RunnerEnv, opts: &Options) -> Result<Report> {
-    let set = pages::read_package(package_dir)?;
-    let deferred = fixture::read_deferred(package_dir)?;
+    check_observed(package_dir, env, opts, &Progress::default())
+}
+
+/// Run every example with explicit fixture/command observations.
+///
+/// ```
+/// let _seam = vibe_doc::examples::check_observed;
+/// ```
+pub fn check_observed(
+    package_dir: &Path,
+    env: &RunnerEnv,
+    opts: &Options,
+    progress: &Progress,
+) -> Result<Report> {
+    let set = observed(progress, "Reading documented examples", || {
+        pages::read_package(package_dir)
+    })?;
+    let deferred = observed(progress, "Reading example fixtures", || {
+        fixture::read_deferred(package_dir)
+    })?;
     let before = tripwire::snapshot(env);
 
+    // The pages are already in memory and collection is required for the
+    // run itself, so this denominator costs no second tree walk.
+    let examples = set
+        .pages
+        .iter()
+        .flat_map(collect)
+        .filter(|example| {
+            let address = format!("{}#{}", example.page, example.id);
+            opts.only
+                .as_ref()
+                .is_none_or(|filter| address.contains(filter))
+        })
+        .collect::<Vec<_>>();
+    let example_count = examples.len() as u64;
+    let run = progress.task("Running documented examples");
+    run.set_progress(0, Some(example_count), "examples");
     let mut outcomes: Vec<Outcome> = Vec::new();
     let mut built: BTreeMap<String, sandbox::Materialised> = BTreeMap::new();
-    for page in &set.pages {
-        for example in collect(page) {
-            let address = format!("{}#{}", example.page, example.id);
-            if opts.only.as_ref().is_some_and(|f| !address.contains(f)) {
-                continue;
-            }
-            let skip = deferred
-                .iter()
-                .find(|d| d.page == example.page && d.id == example.id)
-                .map(|d| format!("not captured yet ({}): {}", d.captured.as_str(), d.reason))
-                .or_else(|| off_platform(example.when.as_ref()));
-            let (verdict, json) = match skip {
-                Some(reason) => (Verdict::Skipped { reason }, Vec::new()),
-                None => one(package_dir, env, opts, &example, &mut built),
-            };
-            outcomes.push(Outcome {
-                page: example.page.clone(),
-                id: example.id.clone(),
-                fixture: example.fixture.clone(),
-                run: example.run.clone(),
-                verdict,
-                json,
-            });
+    for (index, example) in examples.into_iter().enumerate() {
+        let address = format!("{}#{}", example.page, example.id);
+        let item = run.progress().task(format!("Checking example {address}"));
+        let skip = deferred
+            .iter()
+            .find(|d| d.page == example.page && d.id == example.id)
+            .map(|d| format!("not captured yet ({}): {}", d.captured.as_str(), d.reason))
+            .or_else(|| off_platform(example.when.as_ref()));
+        let (verdict, json) = match skip {
+            Some(reason) => (Verdict::Skipped { reason }, Vec::new()),
+            None => one(package_dir, env, opts, &example, &mut built),
+        };
+        match &verdict {
+            Verdict::Match | Verdict::Accepted { .. } => item.finish(),
+            Verdict::Skipped { .. } => item.skip("example skipped"),
+            Verdict::Differ { .. } => item.fail("example output differs"),
+            Verdict::Failed { .. } => item.fail("example could not run"),
         }
+        outcomes.push(Outcome {
+            page: example.page.clone(),
+            id: example.id.clone(),
+            fixture: example.fixture.clone(),
+            run: example.run.clone(),
+            verdict,
+            json,
+        });
+        run.set_progress((index + 1) as u64, Some(example_count), "examples");
     }
+    run.finish();
 
-    tripwire::verify(&before, env)?;
+    observed(progress, "Verifying example isolation", || {
+        tripwire::verify(&before, env)
+    })?;
     Ok(Report {
         outcomes,
         unreadable: set.unreadable,
         sandbox_root: env.sandbox_root.clone(),
     })
+}
+
+fn observed<T>(progress: &Progress, label: &str, work: impl FnOnce() -> Result<T>) -> Result<T> {
+    let task = progress.task(label);
+    match work() {
+        Ok(value) => {
+            task.finish();
+            Ok(value)
+        }
+        Err(error) => {
+            task.fail("documentation phase failed");
+            Err(error)
+        }
+    }
 }
 
 /// Run one example and judge it. Every failure here is an OUTCOME, never

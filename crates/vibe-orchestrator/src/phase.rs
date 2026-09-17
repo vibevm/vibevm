@@ -22,7 +22,7 @@ use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
 };
-use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
+use vibe_wire::generated::shared::Timestamp;
 use vibe_workspace::compile_trace::TraceRun;
 
 use crate::dispatch::{DeployCarriage, MechanismTargets, lower_binaries};
@@ -45,6 +45,9 @@ use crate::{dispatch, world};
 mod applicability;
 /// The prerequisite install's collector, and the law over its captured tree.
 mod prerequisite;
+mod resume;
+
+use resume::{Measured, absorb_resume_failure};
 
 /// The prepared inputs one phase run owns, plus whatever the clean epoch
 /// already contributed.
@@ -134,50 +137,6 @@ pub enum PhaseOutcome {
         /// Whether the failing site emitted a machine document with tracing off.
         emit_machine_failure: bool,
     },
-}
-
-/// Rows measured so far, so a failure reports what really ran — and the
-/// verification member the verify boundary had already reconciled, so a
-/// failure AFTER it reports the comparison rather than none.
-#[derive(Default)]
-struct Measured {
-    contributions: Vec<LifecycleContributionReport>,
-    verification: Option<VerificationEvidence>,
-}
-
-/// Absorb a NEUTRAL resume failure from the prerequisite install into THIS
-/// command's accumulator, then let the error travel on uncarried.
-///
-/// The substrate transports the measurement without naming a family, because
-/// the same code is also `vibe install`'s body and `vibe update --all`'s
-/// delegate. Here the family is the lifecycle one, and this command already has
-/// a mechanism for choosing it — the fallback in `execute_after_open` — so the
-/// only thing missing is the rows. They are the resumed run's ONLY copy: the
-/// resume built its own lifecycle, and nothing in this function ever saw it.
-///
-/// Appended in chronology, after whatever the clean epoch and the install
-/// callback already recorded, and the ORIGINAL error is returned so the
-/// fallback keeps its historical silence and its exact downcast identity.
-fn absorb_resume_failure(error: anyhow::Error, measured: &mut Measured) -> anyhow::Error {
-    match take(error) {
-        // The NEUTRAL resume transport, and only it. An
-        // `InstallBarrier` measurement was frozen by the substrate as
-        // install-shaped, and a phase verb has always reported the prerequisite
-        // install's slot failure in that family — so it is re-carried, not
-        // absorbed.
-        Ok(MeasuredFailure {
-            original,
-            evidence: Measurement::Slot { reports, .. },
-            ..
-        }) => {
-            measured
-                .contributions
-                .extend(reports.into_iter().map(contribution_report));
-            original
-        }
-        Ok(other) => crate::failure::carry(other),
-        Err(error) => error,
-    }
 }
 
 /// The one boundary. No `?` escapes it.
@@ -344,16 +303,26 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     for phase in &phases {
         match phase {
             Phase::Validate => {
+                observer.observe_phase_started(phase.as_str());
                 // The manifest parsed and the tree LOADED — both consumed
                 // above, and a failure of either already returned. Validation
                 // is therefore proven by the reads this command made, not by
                 // repeating them, and only a `Loaded` state can reach here.
                 validate_status = Some(StepStatus::Ok);
+                observer.observe_phase_finished(phase.as_str(), StepStatus::Ok.as_str());
             }
             Phase::Install => {
-                let selection = install_inputs
+                observer.observe_phase_started(phase.as_str());
+                let selection = match install_inputs
                     .take()
-                    .context("internal: the prepared install inputs were consumed twice")?;
+                    .context("internal: the prepared install inputs were consumed twice")
+                {
+                    Ok(selection) => selection,
+                    Err(error) => {
+                        observer.observe_phase_finished(phase.as_str(), "fail");
+                        return Err(error);
+                    }
+                };
                 let install_run = crate::install::execute_prepared(
                     InstallExecution {
                         args: install_args.clone(),
@@ -376,14 +345,21 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
                         trace,
                     },
                     &mut collector,
-                )
-                .map_err(|error| absorb_resume_failure(error, measured))?;
+                );
+                let install_run = match install_run {
+                    Ok(run) => run,
+                    Err(error) => {
+                        observer.observe_phase_finished(phase.as_str(), "fail");
+                        return Err(absorb_resume_failure(error, measured));
+                    }
+                };
                 // A parked prerequisite install stops the whole chain — and
                 // THIS command renders the one document, because it is the
                 // outermost one. The step list is the prefix that really ran:
                 // whatever preceded install, then `install: delegated`, and
                 // nothing after it.
                 if let Some(delegation) = install_run.parked {
+                    observer.observe_phase_finished(phase.as_str(), StepStatus::Delegated.as_str());
                     let mut prefix = steps;
                     if validate_status.is_some() {
                         prefix.push(step_report(
@@ -418,6 +394,10 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
                     InstallDisposition::Applied => StepStatus::Ok,
                     InstallDisposition::Parked => unreachable!("returned above"),
                 });
+                observer.observe_phase_finished(
+                    phase.as_str(),
+                    install_status.unwrap_or(StepStatus::Ok).as_str(),
+                );
             }
             _ => {}
         }
@@ -530,6 +510,7 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
         Err(error) => return Err(prepend_rows(error, prefix)),
     };
     let parked = outcome.parked;
+    let phase_terminals = outcome.phase_terminals;
     // Frozen into the accumulator BEFORE the fallible handoff validation
     // below: that refusal travels uncarried, and the fallback in `run_phases`
     // is then the only carrier left for a comparison this run really made.
@@ -543,32 +524,38 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     contributions.extend(outcome.reports);
     measured.contributions.clone_from(&contributions);
     for phase in phases {
-        let status = match phase {
-            Phase::Validate => validate_status.unwrap_or(StepStatus::Ok),
-            Phase::Install => install_status.unwrap_or(StepStatus::Ok),
-            _ if ritual.count_for(phase) == 0 => StepStatus::NoOp,
-            _ if contributions
-                .iter()
-                .filter(|row| row.phase == phase.as_str())
-                .all(|row| row.status == "fresh") =>
-            {
-                StepStatus::Fresh
-            }
-            _ => StepStatus::Ok,
+        let status = match phase_terminals.get(phase.as_str()).map(String::as_str) {
+            Some("ok") => StepStatus::Ok,
+            Some("no-op") => StepStatus::NoOp,
+            Some("fresh") => StepStatus::Fresh,
+            _ => match phase {
+                Phase::Validate => validate_status.unwrap_or(StepStatus::Ok),
+                Phase::Install => install_status.unwrap_or(StepStatus::Ok),
+                _ if ritual.count_for(phase) == 0 => StepStatus::NoOp,
+                _ if contributions
+                    .iter()
+                    .filter(|row| row.phase == phase.as_str())
+                    .all(|row| row.status == "fresh") =>
+                {
+                    StepStatus::Fresh
+                }
+                _ => StepStatus::Ok,
+            },
         };
         // Steps end AT the parked phase: later phases did not run, so they
         // are not reported as if they had.
         let parked_here = parked
             .as_ref()
             .is_some_and(|(stopped, _)| stopped == phase.as_str());
-        steps.push(step_report(
-            phase.as_str(),
-            if parked_here {
-                StepStatus::Delegated
-            } else {
-                status
-            },
-        ));
+        let observed_status = if parked_here {
+            StepStatus::Delegated
+        } else {
+            status
+        };
+        if !phase_terminals.contains_key(phase.as_str()) {
+            observer.observe_phase_finished(phase.as_str(), observed_status.as_str());
+        }
+        steps.push(step_report(phase.as_str(), observed_status));
         if parked_here {
             break;
         }

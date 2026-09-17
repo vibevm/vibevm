@@ -17,9 +17,20 @@ use std::path::Path;
 use anyhow::Result;
 use vibe_workspace::tools::{ToolChannel, collect_tools};
 
+use crate::output;
+
 /// Render the registry as a table, or as JSON under `--json`.
-pub fn run(project_root: &Path, json: bool) -> Result<()> {
-    let tools = collect_tools(project_root)?;
+pub fn run(ctx: &output::Context, project_root: &Path, json: bool) -> Result<()> {
+    let inventory = ctx.progress().task("Reading installed tool inventory");
+    let tools = match collect_tools(project_root) {
+        Ok(tools) => tools,
+        Err(error) => {
+            inventory.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    inventory.set_progress(tools.len() as u64, Some(tools.len() as u64), "tools");
+    inventory.finish();
 
     if json {
         println!("{}", serde_json::to_string_pretty(&tools)?);

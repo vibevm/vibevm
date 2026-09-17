@@ -19,6 +19,15 @@ pre-publication regime (PROP-044 D13, `public = false`) stays on, and
 `docs/ALPHA-NOTES.md` carries the operator recipe for breaking updates.
 Highlights of the release arc, on top of everything chronicled below:
 
+- **2026-09-17 application republish — observable long operations.** Every
+  finite CLI family now selects an explicit progress policy and reports live
+  work on stderr before network, subprocess, inventory, hashing, compilation,
+  or filesystem waits. Package and self maintenance expose named component
+  stages and truthful terminal outcomes; lifecycle, registry/cache, workspace,
+  documentation, deploy, clean, scrape, and inspection paths share the same
+  invocation-owned observer without changing stdout or machine documents.
+  `--verbose` adds bounded diagnostics, while `--no-progress` and
+  `VIBE_NO_PROGRESS` disable activity without suppressing ordinary results.
 - **The machine-global package store** (`~/.vibe/cache/`, PROP-010):
   write-once entries validated against the lockfile's `content_hash`, the
   `vibe cache path|list|add|clean|check --repair` operator family, and the

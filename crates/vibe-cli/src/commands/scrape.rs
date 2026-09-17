@@ -76,7 +76,17 @@ pub fn run(ctx: &Context, args: ScrapeArgs, environment: ScrapeEnvironment) -> R
         mode,
     };
     if args.plan {
-        let prepared = vibe_scrape::prepare(request)?;
+        let planning = ctx.progress().task("Planning project scrape");
+        let prepared = match vibe_scrape::prepare(request) {
+            Ok(prepared) => {
+                planning.finish();
+                prepared
+            }
+            Err(error) => {
+                planning.fail("scrape planning failed");
+                return Err(error.into());
+            }
+        };
         return render_plan(ctx, prepared.plan.to_wire()?);
     }
     execute(ctx, request, args.assume_yes, &environment)
@@ -89,6 +99,7 @@ fn execute(
     environment: &ScrapeEnvironment,
 ) -> Result<()> {
     ensure_execution_platform()?;
+    let state_progress = ctx.progress().task("Opening scrape transaction state");
     let identity = project_identity_token(&request.root)?;
     let key = project_key(&identity);
     let root_display = request.root.display().to_string();
@@ -98,28 +109,57 @@ fn execute(
     if store.pending(&key)?.is_some() {
         bail!("a pending scrape transaction must be recovered before preparing a new contract");
     }
-    let prepared = vibe_scrape::prepare(request)?;
+    state_progress.finish();
+    let planning = ctx.progress().task("Planning project scrape");
+    let prepared = match vibe_scrape::prepare(request) {
+        Ok(prepared) => {
+            planning.finish();
+            prepared
+        }
+        Err(error) => {
+            planning.fail("scrape planning failed");
+            return Err(error.into());
+        }
+    };
     let plan = prepared.plan.to_wire()?;
     if !plan.blockers.is_empty() {
         return render_plan(ctx, plan);
     }
     if !assume_yes && !ctx.is_json() && matches!(prepared.mode, ScrapeMode::InPlace) {
-        print_full_plan(&plan)?;
-        confirm(&plan)?;
+        ctx.suspend_progress(|| print_full_plan(&plan))?;
+        confirm(ctx, &plan)?;
     }
     let transaction = prepared_transaction(prepared.clone())?;
     let mut filesystem = SafefsTransactionFilesystem::for_prepared(&transaction)?;
     let mut verifier = PreparedHealthVerifier::new(prepared.health.clone());
+    // The engine owns the mutation/health-check boundary and exposes one
+    // atomic call: name both actual stages without pretending the CLI can
+    // observe a transition that the transaction deliberately keeps private.
+    let transaction_progress = ctx
+        .progress()
+        .task("Applying scrape mutations and verifying project health");
     match Engine::new(&mut store, &mut filesystem, &mut verifier, &mut NoFaults)
         .execute_under_held_gate(key.clone(), &identity, &root_display, transaction)
     {
-        Ok(report) => render_report(ctx, report_to_wire_plan(&report, &plan)?),
-        Err(error) => render_durable_rollback_failure(ctx, &mut store, &key, &plan, error),
+        Ok(report) => {
+            let report = report_to_wire_plan(&report, &plan)?;
+            if successful_report(&report) {
+                transaction_progress.finish();
+            } else {
+                transaction_progress.fail("scrape transaction did not verify cleanly");
+            }
+            render_report(ctx, report)
+        }
+        Err(error) => {
+            transaction_progress.fail("scrape transaction failed or rolled back");
+            render_durable_rollback_failure(ctx, &mut store, &key, &plan, error)
+        }
     }
 }
 
 fn recover(ctx: &Context, root: &Path, environment: &ScrapeEnvironment) -> Result<()> {
     ensure_execution_platform()?;
+    let state_progress = ctx.progress().task("Loading scrape recovery journal");
     let identity = project_identity_token(root)?;
     let key = project_key(&identity);
     let root_display = root.display().to_string();
@@ -145,12 +185,33 @@ fn recover(ctx: &Context, root: &Path, environment: &ScrapeEnvironment) -> Resul
         )?)
     };
     let mut filesystem = SafefsTransactionFilesystem::open(root, &identity)?;
+    state_progress.finish();
+    let recovery = ctx
+        .progress()
+        .task("Rolling back scrape mutations and verifying project health");
     match Engine::new(&mut store, &mut filesystem, &mut verifier, &mut NoFaults)
         .recover_under_held_gate(key.clone(), &identity, &root_display, journal)
     {
-        Ok(report) => render_report(ctx, report_to_wire_plan(&report, &plan)?),
-        Err(error) => render_durable_rollback_failure(ctx, &mut store, &key, &plan, error),
+        Ok(report) => {
+            let report = report_to_wire_plan(&report, &plan)?;
+            if successful_report(&report) {
+                recovery.finish();
+            } else {
+                recovery.fail("scrape recovery did not verify cleanly");
+            }
+            render_report(ctx, report)
+        }
+        Err(error) => {
+            recovery.fail("scrape recovery failed");
+            render_durable_rollback_failure(ctx, &mut store, &key, &plan, error)
+        }
     }
+}
+
+fn successful_report(report: &vibe_wire::generated::scrape::e1::report::Report) -> bool {
+    use vibe_wire::generated::scrape::e1::report::{ReportCleanup, ReportOutcome};
+    matches!(&report.outcome, ReportOutcome::Verified)
+        && matches!(&report.cleanup, ReportCleanup::Complete)
 }
 
 fn render_durable_rollback_failure(
@@ -173,10 +234,9 @@ fn render_report(
     ctx: &Context,
     report: vibe_wire::generated::scrape::e1::report::Report,
 ) -> Result<()> {
-    use vibe_wire::generated::scrape::e1::report::{ReportCleanup, ReportOutcome};
+    use vibe_wire::generated::scrape::e1::report::ReportCleanup;
 
-    let successful = matches!(&report.outcome, ReportOutcome::Verified)
-        && matches!(&report.cleanup, ReportCleanup::Complete);
+    let successful = successful_report(&report);
     let recovery_command = matches!(&report.cleanup, ReportCleanup::Pending).then(|| {
         format!(
             "vibe scrape --recover --path {}",
@@ -188,7 +248,10 @@ fn render_report(
         // compact canonical field order. Scrape JSON deliberately bypasses
         // generic context stamping/pretty-printing so stdout and the stable
         // external report are byte-identical (apart from stdout's newline).
-        println!("{}", serde_json::to_string(&report)?);
+        ctx.suspend_progress(|| -> Result<()> {
+            println!("{}", serde_json::to_string(&report)?);
+            Ok(())
+        })?;
     } else {
         let headline = format!(
             "scrape {:?} / {:?} / {:?} ({})",
@@ -204,7 +267,7 @@ fn render_report(
             ctx.heading("Scrape report");
             ctx.summary(&headline);
             if let Some(command) = &recovery_command {
-                println!("  recover   {command}");
+                ctx.suspend_progress(|| println!("  recover   {command}"));
             }
         }
     }
@@ -219,18 +282,21 @@ fn render_report(
     }
 }
 
-fn confirm(plan: &vibe_wire::generated::scrape::e1::plan::Plan) -> Result<()> {
-    println!(
-        "Scrape will rewrite {}, relocate {}, delete-unmodified {}, delete-modified {}, delete-unknown {}, and delete-last {}. Continue? [y/N]",
-        plan.summary.rewrite,
-        plan.summary.relocate,
-        plan.summary.delete_unmodified,
-        plan.summary.delete_modified,
-        plan.summary.delete_unknown,
-        plan.summary.delete_last,
-    );
-    let mut answer = String::new();
-    std::io::stdin().read_line(&mut answer)?;
+fn confirm(ctx: &Context, plan: &vibe_wire::generated::scrape::e1::plan::Plan) -> Result<()> {
+    let answer = ctx.suspend_progress(|| {
+        println!(
+            "Scrape will rewrite {}, relocate {}, delete-unmodified {}, delete-modified {}, delete-unknown {}, and delete-last {}. Continue? [y/N]",
+            plan.summary.rewrite,
+            plan.summary.relocate,
+            plan.summary.delete_unmodified,
+            plan.summary.delete_modified,
+            plan.summary.delete_unknown,
+            plan.summary.delete_last,
+        );
+        let mut answer = String::new();
+        std::io::stdin().read_line(&mut answer)?;
+        Ok::<_, std::io::Error>(answer)
+    })?;
     if matches!(answer.trim(), "y" | "Y" | "yes" | "YES") {
         Ok(())
     } else {
@@ -267,8 +333,18 @@ fn ensure_execution_platform() -> Result<()> {
 }
 
 fn init(ctx: &Context, args: ScrapeContractInitArgs) -> Result<()> {
+    let creation = ctx.progress().task("Creating project scrape contract");
     let root = absolute_existing_root(&args.path)?;
-    let path = vibe_scrape::init_contract(&root)?;
+    let path = match vibe_scrape::init_contract(&root) {
+        Ok(path) => {
+            creation.finish();
+            path
+        }
+        Err(error) => {
+            creation.fail("scrape contract creation failed");
+            return Err(error.into());
+        }
+    };
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
             "command": "scrape-contract-init",
@@ -285,12 +361,23 @@ fn init(ctx: &Context, args: ScrapeContractInitArgs) -> Result<()> {
 }
 
 fn check(ctx: &Context, args: ScrapeContractCheckArgs) -> Result<()> {
+    let checking = ctx.progress().task("Checking project scrape contract");
     let root = absolute_existing_root(&args.path)?;
     let prepared = vibe_scrape::check_contract(ScrapeRequest {
         root,
         contract: args.contract,
         mode: ScrapeMode::InPlace,
-    })?;
+    });
+    let prepared = match prepared {
+        Ok(prepared) => {
+            checking.finish();
+            prepared
+        }
+        Err(error) => {
+            checking.fail("scrape contract check failed");
+            return Err(error.into());
+        }
+    };
     render_plan(ctx, prepared.plan.to_wire()?)
 }
 
@@ -334,7 +421,7 @@ fn render_plan(ctx: &Context, plan: vibe_wire::generated::scrape::e1::plan::Plan
     }
 
     ctx.heading("Scrape plan");
-    print_full_plan(&plan)?;
+    ctx.suspend_progress(|| print_full_plan(&plan))?;
     finish_render(blocker_count)
 }
 

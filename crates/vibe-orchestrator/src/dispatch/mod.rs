@@ -1,22 +1,19 @@
 //! One-contribution lifecycle execution with per-transition checkpoints.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
-
-use specmark::spec;
-
 use anyhow::Result;
 use std::sync::Arc;
 use vibe_lifecycle::handlers::{HandlerRuntime, NativeBackend, PackageBindingBackend};
 use vibe_lifecycle::process::SystemProcessRunner;
 
 use vibe_lifecycle::{
-    AgentBackend, Delegation, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun,
+    AgentBackend, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun,
     LifecycleRunHandle, RunMetadata,
 };
 use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordScope, ExecutionRecordStatus};
-use vibe_wire::generated::shared::{Timestamp, VerificationEvidence};
+use vibe_wire::generated::shared::Timestamp;
 
 use crate::failure::{MeasuredFailure, Measurement, carry, carry_once};
 use crate::ports::RunObserver;
@@ -26,131 +23,22 @@ use backends::{ProjectPackageBindingBackend, WorkspaceBinaryBackend, native_back
 
 pub use mechanism::DeployAuthority;
 pub(crate) use mechanism::{DeployCarriage, MechanismTargets, lower_binaries};
-
 mod backends;
 mod mechanism;
 mod native_mechanism;
+mod observation;
+mod outcome;
+mod untracked;
 mod verify;
+
+use observation::{empty_phase_boundary, observe_empty_fence};
+pub(crate) use outcome::DispatchOutcome;
+use outcome::MeasuredDispatch;
+pub use untracked::dispatch_plan_untracked;
 
 #[cfg(test)]
 #[path = "inject.rs"]
 pub(crate) mod inject;
-
-/// What one dispatch pass produced: the contribution rows it reported and,
-/// when a hosted agent row parked, the typed handoff plus the phase the chain
-/// stopped at. A park is NOT a failure — it travels as a value so the caller
-/// can truncate its step list and render one handoff.
-#[derive(Debug, Default)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub(crate) struct DispatchOutcome {
-    /// The contribution rows this pass reported, in order.
-    pub(crate) reports: Vec<LifecycleContributionReport>,
-    /// The phase the chain stopped at and its typed handoff, when a hosted
-    /// agent row parked.
-    pub(crate) parked: Option<(String, Delegation)>,
-    /// The ONE verification-evidence member, present exactly when this pass
-    /// reached the engine-owned verify boundary — a `matched` or `unavailable`
-    /// comparison it then continued past. A stop travels on the failure
-    /// carrier instead, never here.
-    pub(crate) verification: Option<VerificationEvidence>,
-}
-
-/// What the dispatch had measured when it stopped: the rows, and the member
-/// the verify boundary had already reconciled.
-///
-/// One value rather than two out-parameters, because the two are refreshed at
-/// the same instants and a generic post-row failure must pick up BOTH. An
-/// accumulator that carried only rows is exactly how a stale comparison
-/// reaches the surface as a run that reconciled nothing.
-#[derive(Debug, Default)]
-struct MeasuredDispatch {
-    rows: Vec<LifecycleContributionReport>,
-    verification: Option<VerificationEvidence>,
-}
-
-/// Dispatch the UNTRACKED clean epoch.
-///
-/// The clean lifecycle keeps no state record and its wipe destroys the tree a
-/// trace would live in, so it never opens a session and has no outer funnel to
-/// hand a measurement to. A failed transition therefore reports its rows to the
-/// observer and the ordinary error travels on.
-///
-/// It also owes no verify boundary: a clean epoch is state-blind, so there is
-/// no durable half to compare against and no member to publish.
-///
-/// ```no_run
-/// use vibe_orchestrator::dispatch_plan_untracked;
-/// # fn call(
-/// #     observer: &dyn vibe_orchestrator::ports::RunObserver,
-/// #     plan: &vibe_orchestrator::RitualPlan,
-/// #     lease: &std::sync::Arc<vibe_lifecycle::LifecycleLease>,
-/// #     agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
-/// #     metadata: vibe_lifecycle::RunMetadata,
-/// # ) -> anyhow::Result<()> {
-/// let rows = dispatch_plan_untracked(observer, plan, lease, &agent, metadata)?;
-/// assert!(rows.is_empty() || !rows.is_empty());
-/// # Ok(())
-/// # }
-/// ```
-pub fn dispatch_plan_untracked(
-    observer: &dyn RunObserver,
-    plan: &RitualPlan,
-    lease: &Arc<LifecycleLease>,
-    agent: &Arc<dyn AgentBackend>,
-    metadata: RunMetadata,
-) -> Result<Vec<LifecycleContributionReport>> {
-    // The untracked clean epoch retains the same lease proof a tracked run
-    // does: it mutates the tree, so it owns the workspace for its life — and
-    // it owes the same root gate its tracked twin owes. A plan whose workspace
-    // root disagrees with the lease would run contributions against a tree this
-    // command never leased, and the clean point runs handlers over the very
-    // tree it is about to wipe. Checked FIRST, before the run is constructed
-    // and before any row is observed or executed, so a refusal costs nothing.
-    lease.ensure_root(&plan.workspace_root, "at untracked phase dispatch")?;
-    let mut run = LifecycleRun::untracked(
-        lease.clone(),
-        plan.project.clone(),
-        plan.world.clone(),
-        metadata.clone(),
-    );
-    let mut reports = Vec::with_capacity(plan.executions.len());
-    let package_binding = ProjectPackageBindingBackend::new(plan);
-    let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
-    let native = native_backend(plan, &metadata, &native_candidates)?;
-    let runtime = runtime(observer, &package_binding, &native, agent.as_ref());
-    for execution in plan.executions.iter() {
-        let handler = HandlerExecution::from_row(&execution.row);
-        let outcome =
-            match run.execute_one(&handler, &execution.phase, ExecutionReuse::Always, &runtime) {
-                Ok(outcome) => outcome,
-                Err(error) => {
-                    if let Some(failed) = error.failed_transition() {
-                        reports.push(contribution_status_report(
-                            execution,
-                            "fail",
-                            Some(failed.message.clone()),
-                            Some(&failed.streams),
-                        ));
-                        observer.observe_untracked_failure(
-                            &metadata,
-                            &execution.phase,
-                            &reports,
-                        )?;
-                    }
-                    return Err(error.into());
-                }
-            };
-        let report = contribution_status_report(
-            execution,
-            state_status(&outcome.status),
-            outcome.message,
-            Some(&outcome.streams),
-        );
-        observer.observe_contribution(&report);
-        reports.push(report);
-    }
-    Ok(reports)
-}
 
 /// Begin a tracked run at the leased root and dispatch its plan.
 ///
@@ -273,6 +161,7 @@ fn dispatch_measured(
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
         verification: None,
+        phase_terminals: Default::default(),
     };
     // The permission and the instant, resolved ONCE before the first row: a
     // partial epoch (`None`) owes no boundary whatever its chain says, and a
@@ -283,7 +172,21 @@ fn dispatch_measured(
     // chain the verify boundary reads. They straddle that boundary exactly
     // as §2's phase line does — build, then verify, then package, then
     // deploy.
+    let build_work = targets
+        .as_ref()
+        .is_some_and(|targets| !targets.build.is_empty());
+    let package_work = targets
+        .as_ref()
+        .is_some_and(|targets| !targets.package.is_empty());
+    let deploy_work = targets
+        .as_ref()
+        .is_some_and(|targets| targets.deploy.is_some() && !targets.deploy_targets.is_empty());
     let mut fences = mechanism::Fences::arm(targets, plan, &metadata.chain);
+    let empty_build_at = empty_phase_boundary(plan, &metadata.chain, vibe_lifecycle::Phase::Build);
+    let empty_package_at =
+        empty_phase_boundary(plan, &metadata.chain, vibe_lifecycle::Phase::Package);
+    let empty_deploy_at =
+        empty_phase_boundary(plan, &metadata.chain, vibe_lifecycle::Phase::Deploy);
     let gate = verify::Gate {
         plan,
         agent,
@@ -304,7 +207,20 @@ fn dispatch_measured(
         // BEFORE the first build-or-later row, and therefore before any
         // build contribution is dispatched.
         if let Some(fences) = fences.as_mut() {
-            fences.fire_build(index)?;
+            if empty_build_at == Some(index) {
+                observe_empty_fence(
+                    observer,
+                    "build",
+                    if build_work { "ok" } else { "no-op" },
+                    || fences.fire_build(index),
+                )?;
+                outcome.phase_terminals.insert(
+                    "build".into(),
+                    if build_work { "ok" } else { "no-op" }.into(),
+                );
+            } else {
+                fences.fire_build(index)?;
+            }
         }
         // BEFORE the first verify-or-later row, and therefore before any
         // verify contribution is dispatched.
@@ -312,18 +228,52 @@ fn dispatch_measured(
             && end == index
         {
             boundary = None;
-            gate.fire(&mut run, end, at, &mut outcome, measured)?;
+            if plan.count_for(vibe_lifecycle::Phase::Verify) == 0 {
+                observe_empty_fence(observer, "verify", "ok", || {
+                    gate.fire(&mut run, end, at, &mut outcome, measured)
+                })?;
+                outcome.phase_terminals.insert("verify".into(), "ok".into());
+            } else {
+                gate.fire(&mut run, end, at, &mut outcome, measured)?;
+            }
         }
         // BEFORE the first package-or-later row, and after the boundary the
         // phase line puts between them.
         if let Some(fences) = fences.as_mut() {
-            fences.fire_package(index)?;
+            if empty_package_at == Some(index) {
+                observe_empty_fence(
+                    observer,
+                    "package",
+                    if package_work { "ok" } else { "no-op" },
+                    || fences.fire_package(index),
+                )?;
+                outcome.phase_terminals.insert(
+                    "package".into(),
+                    if package_work { "ok" } else { "no-op" }.into(),
+                );
+            } else {
+                fences.fire_package(index)?;
+            }
         }
         // And BEFORE the first deploy row — the last member of the phase
         // line, so the last fence.
         if let Some(fences) = fences.as_mut() {
-            fences.fire_deploy(index)?;
+            if empty_deploy_at == Some(index) {
+                observe_empty_fence(
+                    observer,
+                    "deploy",
+                    if deploy_work { "ok" } else { "no-op" },
+                    || fences.fire_deploy(index),
+                )?;
+                outcome.phase_terminals.insert(
+                    "deploy".into(),
+                    if deploy_work { "ok" } else { "no-op" }.into(),
+                );
+            } else {
+                fences.fire_deploy(index)?;
+            }
         }
+        observer.observe_contribution_started(&execution.phase, &execution.row.key().to_string());
         let handler = HandlerExecution::from_row(&execution.row);
         let transition = match run.execute_one(
             &handler,
@@ -341,12 +291,15 @@ fn dispatch_measured(
                     .failed_transition()
                     .map(|failed| (failed.message.clone(), failed.streams.clone()));
                 if let Some((message, streams)) = failed_row {
-                    outcome.reports.push(contribution_status_report(
+                    let report = contribution_status_report(
                         execution,
                         "fail",
                         Some(message),
                         Some(&streams),
-                    ));
+                    );
+                    observer.observe_contribution_terminal(&report);
+                    observer.observe_phase_finished(&execution.phase, "fail");
+                    outcome.reports.push(report);
                     // Constructed exactly once, exactly where it always was —
                     // `HandlerError` plus the `phase … stopped …` context —
                     // and then MOVED into the carrier. Nothing strips or
@@ -391,6 +344,7 @@ fn dispatch_measured(
             transition.message,
             (!fresh).then_some(&transition.streams),
         );
+        observer.observe_contribution_terminal(&report);
         observer.observe_contribution(&report);
         outcome.reports.push(report);
         measured.rows.clone_from(&outcome.reports);
@@ -418,16 +372,62 @@ fn dispatch_measured(
     // engine-owned work.
     let end_of_plan = plan.executions.len();
     if let Some(fences) = fences.as_mut() {
-        fences.fire_build(end_of_plan)?;
+        if empty_build_at == Some(end_of_plan) {
+            observe_empty_fence(
+                observer,
+                "build",
+                if build_work { "ok" } else { "no-op" },
+                || fences.fire_build(end_of_plan),
+            )?;
+            outcome.phase_terminals.insert(
+                "build".into(),
+                if build_work { "ok" } else { "no-op" }.into(),
+            );
+        } else {
+            fences.fire_build(end_of_plan)?;
+        }
     }
     if let Some((end, at)) = boundary {
-        gate.fire(&mut run, end, at, &mut outcome, measured)?;
+        if plan.count_for(vibe_lifecycle::Phase::Verify) == 0 {
+            observe_empty_fence(observer, "verify", "ok", || {
+                gate.fire(&mut run, end, at, &mut outcome, measured)
+            })?;
+            outcome.phase_terminals.insert("verify".into(), "ok".into());
+        } else {
+            gate.fire(&mut run, end, at, &mut outcome, measured)?;
+        }
     }
     if let Some(fences) = fences.as_mut() {
-        fences.fire_package(end_of_plan)?;
+        if empty_package_at == Some(end_of_plan) {
+            observe_empty_fence(
+                observer,
+                "package",
+                if package_work { "ok" } else { "no-op" },
+                || fences.fire_package(end_of_plan),
+            )?;
+            outcome.phase_terminals.insert(
+                "package".into(),
+                if package_work { "ok" } else { "no-op" }.into(),
+            );
+        } else {
+            fences.fire_package(end_of_plan)?;
+        }
     }
     if let Some(fences) = fences.as_mut() {
-        fences.fire_deploy(end_of_plan)?;
+        if empty_deploy_at == Some(end_of_plan) {
+            observe_empty_fence(
+                observer,
+                "deploy",
+                if deploy_work { "ok" } else { "no-op" },
+                || fences.fire_deploy(end_of_plan),
+            )?;
+            outcome.phase_terminals.insert(
+                "deploy".into(),
+                if deploy_work { "ok" } else { "no-op" }.into(),
+            );
+        } else {
+            fences.fire_deploy(end_of_plan)?;
+        }
     }
     if plan.package_phase_planned {
         let reconciled = outcome.reports.iter().any(|report| {

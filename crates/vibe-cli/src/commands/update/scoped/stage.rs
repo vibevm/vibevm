@@ -97,11 +97,25 @@ pub(super) fn stage(
     // treats it uniformly. The built `CachedPackage`'s `cache_dir` IS the slot,
     // which signals "already placed" to the materialise pass (it runs the hook
     // but skips any move).
-    for p in pending_in_place {
+    let in_place_total = pending_in_place.len();
+    let in_place = ctx.progress().task("Refreshing in-place packages");
+    in_place.set_progress(0, Some(in_place_total as u64), "packages");
+    for (index, p) in pending_in_place.into_iter().enumerate() {
+        let package = in_place
+            .progress()
+            .task(format!("Refreshing {}/{}", p.group, p.name));
         let slot = vibedeps::in_place_slot_abs_path(&workspace.root, &p.group, &p.name);
-        let placed = resolver
+        let placed = match resolver
             .materialise_in_place(&p.pkgref, &slot)
-            .with_context(|| format!("updating in-place `{}/{}`", p.group, p.name))?;
+            .with_context(|| format!("updating in-place `{}/{}`", p.group, p.name))
+        {
+            Ok(placed) => placed,
+            Err(error) => {
+                package.fail("in-place refresh failed");
+                in_place.fail("in-place package refresh failed");
+                return Err(error);
+            }
+        };
         // The slot's working tree has now really moved. Recorded before the
         // gitignore write below, because it is already true regardless of it.
         measured.record_in_place(
@@ -135,6 +149,13 @@ pub(super) fn stage(
             via_redirect: None,
         };
         updated.push((cached, p.dependencies, Some(placed.changed), Vec::new()));
+        package.finish();
+        in_place.set_progress((index + 1) as u64, Some(in_place_total as u64), "packages");
+    }
+    if in_place_total == 0 {
+        in_place.skip("no in-place packages selected");
+    } else {
+        in_place.finish();
     }
 
     // Build the partial resolution for the subtree — the form the shared

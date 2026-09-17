@@ -378,3 +378,6 @@ pub(super) mod validate_only_gate {
 /// only the `log` builtin and a target whose own refusal is deterministic.
 #[path = "mechanism_wiring_tests.rs"]
 pub(super) mod mechanism_wiring;
+
+#[path = "progress_observation_tests.rs"]
+mod progress_observation;

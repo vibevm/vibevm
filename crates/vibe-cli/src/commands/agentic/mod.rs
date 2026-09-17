@@ -105,7 +105,7 @@ pub fn run_command(ctx: &output::Context, args: CommandArgs) -> Result<()> {
                 }))?;
             } else {
                 // Emit the instruction verbatim for the agent to execute.
-                print!("{content}");
+                ctx.suspend_progress(|| print!("{content}"));
             }
         }
         None => {

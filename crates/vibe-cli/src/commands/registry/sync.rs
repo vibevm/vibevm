@@ -107,9 +107,24 @@ pub(super) fn run_sync(ctx: &output::Context, args: RegistrySyncArgs) -> Result<
         }
     ));
 
-    let report = mrr
+    let refresh = ctx.progress().task("Refreshing lockfile package clones");
+    refresh.set_progress(0, Some(lockfile.packages.len() as u64), "packages");
+    let report = match mrr
         .refresh_lockfile_clones(&lockfile)
-        .context("refreshing per-package clones")?;
+        .context("refreshing per-package clones")
+    {
+        Ok(report) => report,
+        Err(error) => {
+            refresh.fail(error.to_string());
+            return Err(error);
+        }
+    };
+    refresh.set_progress(
+        lockfile.packages.len() as u64,
+        Some(lockfile.packages.len() as u64),
+        "packages",
+    );
+    refresh.finish();
 
     let json_refreshed: Vec<RefreshedReportEntry> = report
         .refreshed

@@ -109,13 +109,19 @@ pub(in crate::commands::registry) fn run_test(
     // Probe each registry independently — open a single-registry
     // resolver per probe so the walk does not chain across
     // registries (we want per-registry diagnostic, not aggregate).
-    for reg in &manifest.registries {
+    let probes = ctx.progress().task("Probing configured registries");
+    probes.set_progress(0, Some(manifest.registries.len() as u64), "registries");
+    for (index, reg) in manifest.registries.iter().enumerate() {
+        let probe = probes
+            .progress()
+            .task(format!("Probing registry {}", reg.name));
         let row_url = reg.url.clone();
         let row_auth_label = reg.auth.as_str();
         let single = std::slice::from_ref(reg);
         let resolver = match MultiRegistryResolver::open(single, &[], &[]) {
             Ok(r) => r,
             Err(_) => {
+                probe.fail("registry configuration is invalid");
                 rows.push(TestReportRegistry {
                     name: reg.name.clone(),
                     url: row_url,
@@ -126,6 +132,11 @@ pub(in crate::commands::registry) fn run_test(
                     // affected registry without exposing resolver internals.
                     note: Some("registry configuration could not initialize a resolver".into()),
                 });
+                probes.set_progress(
+                    (index + 1) as u64,
+                    Some(manifest.registries.len() as u64),
+                    "registries",
+                );
                 continue;
             }
         };
@@ -186,9 +197,24 @@ pub(in crate::commands::registry) fn run_test(
             status,
             note,
         });
+        if status == "reachable" {
+            probe.finish();
+        } else {
+            probe.fail(format!("registry probe returned {status}"));
+        }
+        probes.set_progress(
+            (index + 1) as u64,
+            Some(manifest.registries.len() as u64),
+            "registries",
+        );
     }
 
     let ok = report_ok(rows.iter().map(|row| row.status));
+    if ok {
+        probes.finish();
+    } else {
+        probes.fail("one or more registry probes failed");
+    }
     if ctx.is_json() {
         ctx.emit_json(&TestReport {
             ok,

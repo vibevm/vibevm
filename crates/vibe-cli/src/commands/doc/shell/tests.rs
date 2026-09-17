@@ -117,6 +117,7 @@ fn a_release_that_matches_the_pin_is_unpacked_into_the_store() {
         "ignored",
         "9.9.9",
         &pin_for(&sha256),
+        &vibe_core::progress::Progress::default(),
     )
     .unwrap();
 
@@ -143,6 +144,7 @@ fn a_release_for_another_version_is_refused_before_anything_is_downloaded() {
         "ignored",
         "8.8.8",
         &pin_for(&sha256),
+        &vibe_core::progress::Progress::default(),
     );
     let message = outcome.unwrap_err().to_string();
     assert!(
@@ -165,6 +167,7 @@ fn a_shell_that_does_not_hash_to_the_pin_is_refused_after_it_arrives() {
         "ignored",
         "9.9.9",
         &pin_for(&wrong),
+        &vibe_core::progress::Progress::default(),
     );
     let message = outcome.unwrap_err().to_string();
     assert!(message.contains("is pinned to"), "{message}");
@@ -191,6 +194,7 @@ fn a_corrupted_asset_is_refused_on_the_digest() {
         "ignored",
         "9.9.9",
         &pin_for(&sha256),
+        &vibe_core::progress::Progress::default(),
     );
     let message = outcome.unwrap_err().to_string();
     assert!(message.contains("integrity mismatch"), "{message}");

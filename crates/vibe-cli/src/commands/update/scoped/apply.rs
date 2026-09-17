@@ -102,13 +102,26 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // prune that fails half-way has still deleted whatever it deleted, and the
     // run — which every later `progress()` is read from — must already own that
     // list when the error propagates.
+    let pruning = ctx.progress().task("Pruning superseded package slots");
+    pruning.set_progress(0, Some(updated.len() as u64), "packages");
     let pruned = prune_superseded(workspace, lockfile, updated, measured);
     lifecycle.record_pruned(measured.pruned().to_vec());
-    pruned?;
+    match pruned {
+        Ok(()) => {
+            pruning.set_progress(updated.len() as u64, Some(updated.len() as u64), "packages");
+            pruning.finish();
+        }
+        Err(error) => {
+            pruning.fail("slot pruning failed");
+            return Err(error);
+        }
+    }
 
     // Materialise the subtree (copy / hardlink / in-place move) and run each
     // freshly-placed slot's pre-install hook (PROP-020 §2.1) — no prune, no
     // boot here; boot is regenerated below from the whole tree.
+    let materialising = ctx.progress().task("Materialising updated package subtree");
+    materialising.set_progress(0, Some(resolution.len() as u64), "packages");
     let materialised = materialise_subtree_with_spec_format_and_slot_lifecycle(
         &workspace.root,
         resolution,
@@ -121,6 +134,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // belongs to THIS command: `vibe update` reports `update`, its own run,
     // and `resume: vibe update`. It never impersonates install.
     if let Some(delegation) = lifecycle.parked() {
+        materialising.skip("waiting for the hosting agent");
         crate::commands::lifecycle::check_delegation(&delegation)?;
         return Ok(parked_draft(
             identity,
@@ -130,7 +144,21 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
             &delegation,
         ));
     }
-    let mut subtree = materialised.context("re-materialising the updated subtree")?;
+    let mut subtree = match materialised.context("re-materialising the updated subtree") {
+        Ok(subtree) => {
+            materialising.set_progress(
+                resolution.len() as u64,
+                Some(resolution.len() as u64),
+                "packages",
+            );
+            materialising.finish();
+            subtree
+        }
+        Err(error) => {
+            materialising.fail("package materialisation failed");
+            return Err(error);
+        }
+    };
 
     // Regenerate every node's boot from the complete provisional world and the
     // new `vibedeps/` state. The partial `resolution` above is only the set
@@ -139,8 +167,21 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // so neither can be the boot authority here. The command's ONE borrowed
     // recorder keeps these compiles in the same run as everything else this
     // invocation did.
-    let nodes_regenerated = regenerate_boot_from_traced(workspace, full_world, spec_format, trace)
-        .context("regenerating boot artifacts")?;
+    let boot = ctx.progress().task("Regenerating workspace boot artifacts");
+    let nodes_regenerated =
+        match regenerate_boot_from_traced(workspace, full_world, spec_format, trace)
+            .context("regenerating boot artifacts")
+        {
+            Ok(nodes) => {
+                boot.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
+                boot.finish();
+                nodes
+            }
+            Err(error) => {
+                boot.fail("boot regeneration failed");
+                return Err(error);
+            }
+        };
 
     // The scoped update's own complete record, assembled from what each step
     // really returned: the subtree pass's slot lists, the removals measured
@@ -173,7 +214,12 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         }
     }
     lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
-    lockfile.write(workspace.lockfile_path())?;
+    let recording = ctx.progress().task("Recording updated dependency lock");
+    if let Err(error) = lockfile.write(workspace.lockfile_path()) {
+        recording.fail("lockfile recording failed");
+        return Err(error.into());
+    }
+    recording.finish();
 
     // PROP-050 ##VERIFY-LOCK-DIFF — the closure diff after the apply is
     // durable (lock written, boot regenerated): entering/leaving members,
@@ -190,8 +236,10 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     );
 
     if let Some(plan) = subtree.take_post_install_plan() {
+        let callbacks = ctx.progress().task("Running package callbacks");
         let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(lifecycle));
         if let Some(delegation) = lifecycle.parked() {
+            callbacks.skip("waiting for the hosting agent");
             crate::commands::lifecycle::check_delegation(&delegation)?;
             return Ok(parked_draft(
                 identity,
@@ -201,7 +249,13 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
                 &delegation,
             ));
         }
-        ran.context("running post-install lifecycle")?;
+        match ran.context("running post-install lifecycle") {
+            Ok(_) => callbacks.finish(),
+            Err(error) => {
+                callbacks.fail("package callbacks failed");
+                return Err(error);
+            }
+        }
     }
     // A scoped update whose slot is already materialised raises no payload
     // event, so its post-install pass never revisits a live park. The
@@ -302,7 +356,8 @@ fn service_continuation(
         return Ok(None);
     }
     let lifecycle = inputs.lifecycle;
-    let observer = crate::commands::install::CliInstallObserver::new(ctx, None);
+    let observer =
+        crate::commands::install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let request = ResumeRequest {
         project_root: inputs.project_root,
         workspace: inputs.workspace,

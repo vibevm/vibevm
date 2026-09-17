@@ -27,7 +27,7 @@ use vibe_doc::citations::SpecSources;
 use vibe_doc::site::{Site, feed, level0, queue, render, state};
 use vibe_wire::generated::doc_site_state::RenderedVersion;
 
-use super::DocEnv;
+use super::{DocEnv, observe};
 use crate::cli::DocBuildSiteArgs;
 
 /// Where the rendered trees are kept inside the output.
@@ -35,7 +35,11 @@ const TREES_DIR: &str = "trees";
 
 /// Run `vibe doc build-site`.
 pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
-    let site = Site::read(&args.config)?;
+    let site = observe::phase(
+        &env.progress,
+        "Reading documentation site configuration",
+        || Site::read(&args.config),
+    )?;
     print!("{}", site.render());
 
     // The clock is called HERE and nowhere below, like every other `vibe
@@ -43,7 +47,9 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
     // supplies, and a manifest carries one, so a build can be replayed
     // and reviewed.
     let now = Utc::now();
-    let polled = feed::poll(&site)?;
+    let polled = observe::phase(&env.progress, "Polling documentation sources", || {
+        feed::poll(&site)
+    })?;
     for line in &polled.sources {
         println!("  {line}");
     }
@@ -62,7 +68,9 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
         );
     }
 
-    let mut rendered = state::read(&args.out)?;
+    let mut rendered = observe::phase(&env.progress, "Reading documentation site state", || {
+        state::read(&args.out)
+    })?;
     let debounce = site
         .host
         .as_ref()
@@ -78,10 +86,16 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
 
     let work = args.out.join(state::STATE_DIR).join(TREES_DIR);
     let sources = spec_sources(&site, &env);
-    let builder = composition_root(
-        &site,
-        &env,
-        plan.rebuild.iter().any(|queued| !host(&queued.pair)),
+    let builder = observe::phase(
+        &env.progress,
+        "Preparing documentation site builder",
+        || {
+            composition_root(
+                &site,
+                &env,
+                plan.rebuild.iter().any(|queued| !host(&queued.pair)),
+            )
+        },
     )?;
 
     // The reverse edges, folded ONCE over the whole catalog and then
@@ -91,8 +105,14 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
     // rebuild.
     let shelves = vibe_doc::site::shelves::fold(&facts(&polled.pairs));
 
+    let render_versions = env.progress.task("Rendering documentation versions");
+    render_versions.set_progress(0, Some(plan.rebuild.len() as u64), "versions");
     let mut failures = 0;
-    for queued in &plan.rebuild {
+    let mut render_output = Vec::new();
+    for (index, queued) in plan.rebuild.iter().enumerate() {
+        let item = render_versions
+            .progress()
+            .task(format!("Rendering {}", queued.pair.spelled()));
         let related = level0::Related::of(&shelves, &queued.pair.coordinate());
         let options = render::Options {
             base: &site.base,
@@ -101,23 +121,74 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
             rendered_at: now,
             related: &related,
         };
-        let out = render::render(&queued.pair, &builder, &options)?;
+        let out = match render::render(&queued.pair, &builder, &options) {
+            Ok(out) => out,
+            Err(error) => {
+                item.fail("version render failed");
+                render_versions.fail("documentation site render failed");
+                for line in render_output {
+                    println!("{line}");
+                }
+                return Err(error.into());
+            }
+        };
         for note in &out.notes {
-            println!("  note   {} — {note}", queued.pair.spelled());
+            render_output.push(format!("  note   {} — {note}", queued.pair.spelled()));
         }
         if let Some(reason) = &out.failed {
             failures += 1;
-            println!("  failed {} — {reason}", queued.pair.spelled());
+            render_output.push(format!("  failed {} — {reason}", queued.pair.spelled()));
         }
-        record(&mut rendered, &queued.pair, &out, now)?;
+        if let Err(error) = record(&mut rendered, &queued.pair, &out, now) {
+            item.fail("version state recording failed");
+            render_versions.fail("documentation site state recording failed");
+            for line in render_output {
+                println!("{line}");
+            }
+            return Err(error);
+        }
+        if out.failed.is_some() {
+            item.fail("version render refused");
+        } else {
+            item.finish();
+        }
+        render_versions.set_progress(
+            (index + 1) as u64,
+            Some(plan.rebuild.len() as u64),
+            "versions",
+        );
+    }
+    render_versions.finish();
+    for line in render_output {
+        println!("{line}");
     }
 
     // An address no source publishes any more stops being served. The
     // registry keeps no history, so a version that left the catalog left
     // it, and a page that outlived its package would be the only place
     // it still existed.
-    for address in &plan.gone {
-        forget(&mut rendered, address, &work)?;
+    let remove_versions = env
+        .progress
+        .task("Removing unpublished documentation versions");
+    remove_versions.set_progress(0, Some(plan.gone.len() as u64), "versions");
+    let mut removed_output = Vec::new();
+    for (index, address) in plan.gone.iter().enumerate() {
+        match forget(&mut rendered, address, &work) {
+            Ok(Some(line)) => removed_output.push(line),
+            Ok(None) => {}
+            Err(error) => {
+                remove_versions.fail("documentation version removal failed");
+                for line in removed_output {
+                    println!("{line}");
+                }
+                return Err(error);
+            }
+        }
+        remove_versions.set_progress((index + 1) as u64, Some(plan.gone.len() as u64), "versions");
+    }
+    remove_versions.finish();
+    for line in removed_output {
+        println!("{line}");
     }
     // The debounce runs from the moment the host's half completed, not
     // from the moment anybody last asked: a run that rendered no host
@@ -126,7 +197,9 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
     if plan.rebuild.iter().any(|queued| host(&queued.pair)) {
         rendered.host_rendered_at = Some(now);
     }
-    state::write(&args.out, &rendered)?;
+    observe::phase(&env.progress, "Writing documentation site state", || {
+        state::write(&args.out, &rendered)
+    })?;
     println!(
         "render: {} version(s) written, {failures} refused, {} standing",
         plan.rebuild.len(),
@@ -150,7 +223,9 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
                 trees.len(),
                 web.display()
             );
-            let report = web::build(&web, &trees, &site, &args.out)?;
+            let report = observe::phase(&env.progress, "Building documentation web shell", || {
+                web::build(&web, &trees, &site, &args.out)
+            })?;
             print!("{report}");
         }
         None if args.no_web => println!("  site   not built — `--no-web`"),
@@ -230,12 +305,12 @@ fn forget(
     state: &mut vibe_wire::generated::doc_site_state::DocSiteState,
     address: &str,
     work: &Path,
-) -> Result<()> {
+) -> Result<Option<String>> {
     let Some((coordinate, version)) = address.rsplit_once('@') else {
-        return Ok(());
+        return Ok(None);
     };
     let Some((group, name)) = coordinate.rsplit_once('/') else {
-        return Ok(());
+        return Ok(None);
     };
     let slot = work.join(format!("{group}.{name}@{version}"));
     if slot.is_dir() {
@@ -244,8 +319,9 @@ fn forget(
     state.rendered.retain(|row| {
         !(row.group.to_string() == group && row.name == name && row.version.to_string() == version)
     });
-    println!("  gone   {address} — its pages are no longer published");
-    Ok(())
+    Ok(Some(format!(
+        "  gone   {address} — its pages are no longer published"
+    )))
 }
 
 /// Every version the output stands on, as the address map sees it.

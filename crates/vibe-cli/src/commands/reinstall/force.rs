@@ -151,18 +151,30 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
     let store_root =
         vibe_registry::store::store_root().context("resolving the machine package store root")?;
 
+    let fetching = ctx.progress().task("Refetching locked packages");
+    fetching.set_progress(0, Some(lockfile.packages.len() as u64), "packages");
     let mut resolution: Vec<ResolvedDep> = Vec::with_capacity(lockfile.packages.len());
     let mut source_hashes = HashMap::new();
-    for locked in &lockfile.packages {
+    for (index, locked) in lockfile.packages.iter().enumerate() {
+        let package = fetching
+            .progress()
+            .task(format!("Refetching {}/{}", locked.group, locked.name));
         let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
-        let cached = resolver
+        let cached = match resolver
             .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
             .with_context(|| {
                 format!(
                     "re-fetching `{}/{}@{}` from source",
                     locked.group, locked.name, locked.version
                 )
-            })?;
+            }) {
+            Ok(cached) => cached,
+            Err(error) => {
+                package.fail("locked package refetch failed");
+                fetching.fail("locked package refetch failed");
+                return Err(error);
+            }
+        };
         source_hashes.insert(
             (cached.resolved.group.clone(), cached.resolved.name.clone()),
             cached.content_hash.clone(),
@@ -195,7 +207,14 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             ),
             in_place_changed: None,
         });
+        package.finish();
+        fetching.set_progress(
+            (index + 1) as u64,
+            Some(lockfile.packages.len() as u64),
+            "packages",
+        );
     }
+    fetching.finish();
 
     // The PREPARED constructor over the tree this command already owns: the
     // wrapper's own `Workspace::discover` would be a second read of the very
@@ -283,6 +302,10 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
         lease,
         agent,
     } = inputs;
+    let materialising = ctx
+        .progress()
+        .task("Materialising locked packages and regenerating boot");
+    materialising.set_progress(0, Some(resolution.len() as u64), "packages");
     let applied = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
         workspace,
         resolution,
@@ -296,10 +319,25 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
     // `reinstall` with `resume: vibe reinstall`, exit 0, nothing paid for and
     // every post-barrier row skipped.
     if let Some(delegation) = lifecycle.parked() {
+        materialising.skip("waiting for the hosting agent");
         crate::commands::lifecycle::check_delegation(&delegation)?;
         return Ok(parked_draft(identity, lifecycle, &delegation));
     }
-    let mut outcome = applied.context("re-materialising the workspace")?;
+    let mut outcome = match applied.context("re-materialising the workspace") {
+        Ok(outcome) => {
+            materialising.set_progress(
+                resolution.len() as u64,
+                Some(resolution.len() as u64),
+                "packages",
+            );
+            materialising.finish();
+            outcome
+        }
+        Err(error) => {
+            materialising.fail("workspace materialisation failed");
+            return Err(error);
+        }
+    };
     // The apply is DONE: slots are materialised, stale ones pruned, boot
     // regenerated. Promote the run's progress from the materialisation
     // boundary to that completed record immediately, before anything can park,
@@ -309,12 +347,20 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
     // tree that has already been rewritten.
     lifecycle.record_complete(InstallProgress::complete(&outcome));
     if let Some(plan) = outcome.take_post_install_plan() {
+        let callbacks = ctx.progress().task("Running package callbacks");
         let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(lifecycle));
         if let Some(delegation) = lifecycle.parked() {
+            callbacks.skip("waiting for the hosting agent");
             crate::commands::lifecycle::check_delegation(&delegation)?;
             return Ok(parked_draft(identity, lifecycle, &delegation));
         }
-        ran.context("running post-install lifecycle")?;
+        match ran.context("running post-install lifecycle") {
+            Ok(_) => callbacks.finish(),
+            Err(error) => {
+                callbacks.fail("package callbacks failed");
+                return Err(error);
+            }
+        }
     }
     // An apply can finish without revisiting a live slot-scoped park: an
     // unchanged slot raises no payload event, so the post-install plan is empty
@@ -372,6 +418,7 @@ fn regenerate_only(ctx: &output::Context, inputs: &Forced<'_>) -> Result<Reinsta
     )? {
         return Err(InstallError::UserDeclined.into());
     }
+    let boot = ctx.progress().task("Regenerating workspace boot artifacts");
     let outcome = apply_resolution_with_spec_format_and_slot_lifecycle_traced(
         inputs.workspace,
         &[],
@@ -381,7 +428,22 @@ fn regenerate_only(ctx: &output::Context, inputs: &Forced<'_>) -> Result<Reinsta
         SlotLifecycleMode::None,
         inputs.trace,
     )
-    .context("regenerating the workspace")?;
+    .context("regenerating the workspace");
+    let outcome = match outcome {
+        Ok(outcome) => {
+            boot.set_progress(
+                outcome.nodes_regenerated.len() as u64,
+                Some(outcome.nodes_regenerated.len() as u64),
+                "nodes",
+            );
+            boot.finish();
+            outcome
+        }
+        Err(error) => {
+            boot.fail("boot regeneration failed");
+            return Err(error);
+        }
+    };
     // No resolution means no materialised or skipped slots, so the completed
     // record and the regenerated shape are the same value here; the explicit
     // one says which fields this branch can ever populate.

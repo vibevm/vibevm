@@ -82,6 +82,11 @@ pub struct Cli {
     #[arg(short = 'v', long, global = true)]
     pub verbose: bool,
 
+    /// Disable progress activity and verbose progress detail without changing
+    /// ordinary command output. `VIBE_NO_PROGRESS` provides the same opt-out.
+    #[arg(long, global = true)]
+    pub no_progress: bool,
+
     /// Identifier of the agent or harness invoking this command. Free-form
     /// string; conventional values are `claude-code`, `claude-desktop`,
     /// `cursor`, `opencode`, `codex`. When set, the value is stamped onto

@@ -83,6 +83,8 @@ struct RemainingEntry {
 // ---------------------------------------------------------------------------
 
 pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> Result<()> {
+    let progress = ctx.progress();
+    let planning = progress.task("Planning workspace publication");
     // Discover the workspace enclosing the requested path. A standalone
     // node (no `[workspace]`) discovers as its own root with no members —
     // publishing it is just the root, if the root is a `[package]`.
@@ -122,6 +124,12 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
              (PROP-007 §2.7); break the inter-member `path` dependency cycle first"
         )
     })?;
+    planning.set_progress(ordered.len() as u64, Some(ordered.len() as u64), "packages");
+    planning.detail(format!(
+        "publishable: {}; skipped: {}",
+        ordered.len(),
+        selection.skipped.len()
+    ));
 
     let skipped: Vec<SkippedEntry> = selection
         .skipped
@@ -141,6 +149,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
     ));
 
     if ordered.is_empty() {
+        planning.skip("no self-publishing workspace nodes");
         // Nothing to publish. Still a success — an entirely-local
         // workspace (every member `publish = false`) is a first-class
         // PROP-007 §2.7 extreme, not an error.
@@ -165,6 +174,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
         ));
         return Ok(());
     }
+    planning.finish();
 
     // Build the `[origin]` provenance once — every staged node references
     // the same monorepo. `upstream` is the root repo's `origin` remote
@@ -242,26 +252,56 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
         origin: origin_base,
     };
 
-    match publish_loop(creator.as_deref(), &inputs, &plan, &mut |entry, dry_run| {
-        if dry_run {
-            ctx.step(&format!(
-                "Would publish {} → repo `{}` (tag `{}`)",
-                entry.pkgref, entry.repo_name, entry.tag
-            ));
-        } else {
-            ctx.step(&format!(
-                "Published {} → `{}` (tag `{}`)",
-                entry.pkgref, entry.repo_url, entry.tag
-            ));
-        }
-        for submodule in &entry.submodules {
-            ctx.step(&format!(
-                "submodule `{}` vendored at `{}`",
-                submodule.path, submodule.commit
-            ));
-        }
-    }) {
+    let publishing = progress.task(if args.dry_run {
+        "Staging workspace publication plan"
+    } else {
+        "Publishing workspace packages"
+    });
+    publishing.set_progress(0, Some(inputs.len() as u64), "packages");
+    let mut completed = 0_u64;
+    let mut current = None;
+    let outcome = publish_loop(
+        creator.as_deref(),
+        &inputs,
+        &plan,
+        &mut |pkgref, entry, dry_run| {
+            let Some(entry) = entry else {
+                let task = publishing.progress().task(if dry_run {
+                    format!("Staging {pkgref}")
+                } else {
+                    format!("Publishing {pkgref}")
+                });
+                current = Some(task);
+                return;
+            };
+            if let Some(task) = current.take() {
+                task.finish();
+            }
+            if dry_run {
+                ctx.step(&format!(
+                    "Would publish {} → repo `{}` (tag `{}`)",
+                    entry.pkgref, entry.repo_name, entry.tag
+                ));
+            } else {
+                ctx.step(&format!(
+                    "Published {} → `{}` (tag `{}`)",
+                    entry.pkgref, entry.repo_url, entry.tag
+                ));
+            }
+            for submodule in &entry.submodules {
+                ctx.step(&format!(
+                    "submodule `{}` vendored at `{}`",
+                    submodule.path, submodule.commit
+                ));
+            }
+            completed += 1;
+            publishing.set_progress(completed, Some(inputs.len() as u64), "packages");
+            publishing.detail(format!("completed: {}", entry.pkgref));
+        },
+    );
+    match outcome {
         Ok(published) => {
+            publishing.finish();
             // Every node published. `remaining` is empty.
             for s in &skipped {
                 ctx.skipped(&s.rel_path, &s.reason);
@@ -293,28 +333,31 @@ pub(super) fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> 
             }
             Ok(())
         }
-        Err(failure) => finish_failure(
-            ctx,
-            args.dry_run,
-            failure.published,
-            skipped,
-            &ordered,
-            failure.failed_idx,
-            failure.error,
-        ),
+        Err(failure) => {
+            if let Some(task) = current.take() {
+                task.fail("package publication failed");
+            }
+            publishing.fail("workspace publication stopped after a package failure");
+            finish_failure(
+                ctx,
+                args.dry_run,
+                failure.published,
+                skipped,
+                &ordered,
+                failure.failed_idx,
+                failure.error,
+            )
+        }
     }
 }
 
-/// One node fed into [`publish_loop`] — the node identity plus its
-/// on-disk source directory.
+/// One node fed into [`publish_loop`].
 struct PublishInput {
     node: PublishNode,
     source_dir: std::path::PathBuf,
 }
 
-/// Shared inputs for [`publish_loop`] — the registry URL, naming
-/// convention, dry-run flag, and the `[origin]` provenance every staged
-/// node shares.
+/// Shared inputs for [`publish_loop`].
 struct PublishPlan {
     org_url: String,
     naming: vibe_core::manifest::NamingConvention,
@@ -355,11 +398,13 @@ fn publish_loop(
     creator: Option<&dyn vibe_publish::RepoCreator>,
     inputs: &[PublishInput],
     plan: &PublishPlan,
-    on_progress: &mut dyn FnMut(&PublishedEntry, bool),
+    on_progress: &mut dyn FnMut(&str, Option<&PublishedEntry>, bool),
 ) -> std::result::Result<Vec<PublishedEntry>, PublishFailure> {
     let mut published: Vec<PublishedEntry> = Vec::new();
     for (idx, input) in inputs.iter().enumerate() {
         let node = &input.node;
+        let pkgref = node.pkgref();
+        on_progress(&pkgref, None, plan.dry_run);
 
         // Stage the node — copy its directory excluding `.git/` / `.vibe/`,
         // inject the `[origin]` marker, prepend the README banner, write
@@ -420,7 +465,7 @@ fn publish_loop(
             created_repo: outcome.created_repo,
             submodules: staged.submodules,
         };
-        on_progress(&entry, plan.dry_run);
+        on_progress(&entry.pkgref, Some(&entry), plan.dry_run);
         published.push(entry);
     }
     Ok(published)

@@ -185,9 +185,22 @@ fn run(
         roots.len(),
         if roots.len() == 1 { "" } else { "s" },
     ));
-    let graph = resolver
+    let solving = ctx.progress().task("Resolving selected package closure");
+    solving.set_progress(0, Some(roots.len() as u64), "roots");
+    let graph = match resolver
         .solve(&roots)
-        .context("dependency resolution failed")?;
+        .context("dependency resolution failed")
+    {
+        Ok(graph) => {
+            solving.set_progress(roots.len() as u64, Some(roots.len() as u64), "roots");
+            solving.finish();
+            graph
+        }
+        Err(error) => {
+            solving.fail("dependency resolution failed");
+            return Err(error);
+        }
+    };
 
     // Fetched payload lands in the machine-global store (PROP-010
     // §2.7) — no project cache directory exists to create.
@@ -199,10 +212,16 @@ fn run(
     // incrementally on its own `.git` (PROP-022 §2.4) — a version bump on a
     // giant transfers only changed objects rather than re-cloning the tree. We
     // resolve those nodes here but defer the slot mutation past the confirm.
+    let graph_len = graph.iter().count();
+    let fetching = ctx.progress().task("Fetching selected package closure");
+    fetching.set_progress(0, Some(graph_len as u64), "packages");
     let mut updated: Vec<Resolved> = Vec::new();
     let mut pending_in_place: Vec<PendingInPlace> = Vec::new();
-    for node in graph.iter() {
+    for (index, node) in graph.iter().enumerate() {
         let pkgref = exact_pinned_pkgref(node);
+        let package = fetching
+            .progress()
+            .task(format!("Selecting {}/{}", node.group, node.name));
         if let Some(old) = lockfile.find(&node.group, &node.name)
             && old.materialization.is_in_place()
             && vibedeps::is_in_place_slot(&workspace.root, &old.group, &node.name)
@@ -215,13 +234,25 @@ fn run(
                 registry: old.registry.clone(),
                 dependencies: node.dependencies.clone(),
             });
+            package.skip("deferred to in-place refresh");
+            fetching.set_progress((index + 1) as u64, Some(graph_len as u64), "packages");
             continue;
         }
-        let cached = resolver.resolve_and_fetch(&pkgref, &store_root, None)?;
+        let cached = match resolver.resolve_and_fetch(&pkgref, &store_root, None) {
+            Ok(cached) => cached,
+            Err(error) => {
+                package.fail("package fetch failed");
+                fetching.fail("package closure fetch failed");
+                return Err(error.into());
+            }
+        };
         let embedded_sources =
             vibe_registry::lock_embedded_sources(&cached.manifest.embedded_sources)?;
         updated.push((cached, node.dependencies.clone(), None, embedded_sources));
+        package.finish();
+        fetching.set_progress((index + 1) as u64, Some(graph_len as u64), "packages");
     }
+    fetching.finish();
     // Every package this run re-resolved, counted before anything is consumed:
     // a failure draft must be able to say how big the run was even when the
     // set itself was moved into the staging below.

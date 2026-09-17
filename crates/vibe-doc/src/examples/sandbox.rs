@@ -284,6 +284,7 @@ pub fn run(env: &RunnerEnv, cmd: &CommandLine, cwd: &Path, sandbox: &Path) -> Re
     }
     child
         .env("VIBE_SETTINGS", display_path(&sandbox.join(HOME_DIR)))
+        .env("VIBE_NO_PROGRESS", "1")
         .env("NO_COLOR", "1");
     let fail = |message: String| DocError::Command {
         command: cmd.source.clone(),

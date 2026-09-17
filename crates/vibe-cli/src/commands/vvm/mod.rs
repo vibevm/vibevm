@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
+mod activation;
 mod builder;
 mod bundle;
 mod doctor;
@@ -33,18 +34,22 @@ use anyhow::Result;
 use dialoguer::Confirm;
 use vibe_core::progress::Progress;
 
-use crate::cli::{
-    ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUseArgs,
+use crate::{
+    cli::{
+        ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUseArgs,
+    },
+    output,
 };
-use crate::output;
-
+use activation::{
+    activate_record, ensure_activatable, run_env_cmd, run_rollback_cmd, run_use_cmd, staged,
+};
 use error::VvmError;
 use model::{InstallRecord, State, VersionId};
 use provenance::running_record;
 use store::VersionStore;
 
 pub(crate) use embedded::embedded_root_at;
-pub use selfloc::{derive_self, same_location};
+pub use selfloc::{SelfLocation, derive_self, same_location};
 
 /// Env var naming the install base (defaults to `~/.vibe`); the
 /// VVM root is `$VIBEVM_INSTALL_ROOT/opt`. Read at the composition root and
@@ -171,8 +176,18 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Source => provenance::run_source_cmd(ctx, &env),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
-        VvmSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
-        VvmSubcommand::Env(a) => run_env_cmd(&env, a),
+        VvmSubcommand::Gc(a) => {
+            let task = ctx.progress().task("Garbage collecting vibevm");
+            let scoped = ctx.with_progress_scope(task.progress());
+            let result = remove::run_gc_cmd(&scoped, &env, a);
+            match &result {
+                Ok(remove::GcOutcome::Finished) => task.finish(),
+                Ok(remove::GcOutcome::Skipped(reason)) => task.skip(*reason),
+                Err(_) => task.fail("garbage collection failed"),
+            }
+            result.map(|_| ())
+        }
+        VvmSubcommand::Env(a) => run_env_cmd(ctx, &env, a),
         VvmSubcommand::Relocate(a) => {
             let store = env.store()?;
             let _lock = install::InstallLock::acquire(&store)?;
@@ -216,8 +231,11 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
     );
     let _ = outcome.reused;
     if args.activate {
-        ensure_activatable(&store, &outcome.record)?;
-        activate_record(ctx, env, &store, &outcome.record, "self:import")?;
+        staged(ctx, "Activating imported version", |task| {
+            task.detail(format!("selector: {}", outcome.record.selector()));
+            ensure_activatable(&store, &outcome.record)?;
+            activate_record(ctx, env, &store, &outcome.record, "self:import")
+        })?;
     }
     Ok(())
 }
@@ -424,120 +442,6 @@ fn forced_kind(k: &ForcedKind) -> Option<model::Kind> {
     } else {
         None
     }
-}
-
-fn run_use_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUseArgs) -> Result<()> {
-    let store = env.store()?;
-    let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
-
-    if args.eval {
-        let state = store.load_state()?;
-        let rec = resolve_installed(&state, &selector, &args.selector)?;
-        ensure_activatable(&store, &rec)?;
-        let home = store.instance_dir(&rec.version_id(), rec.instance);
-        let shell = env::Shell::detect(env.shell.as_deref());
-        // Print only the line to eval in the current shell; persist nothing.
-        println!("{}", shell.export_line(&home));
-        return Ok(());
-    }
-
-    let _lock = install::InstallLock::acquire(&store)?;
-    let state = store.load_state()?;
-    let rec = resolve_installed(&state, &selector, &args.selector)?;
-    ensure_activatable(&store, &rec)?;
-    activate_record(ctx, env, &store, &rec, "self:use")
-}
-
-fn run_rollback_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let _lock = install::InstallLock::acquire(&store)?;
-    let record = store.previous()?.ok_or(VvmError::NoRollback)?;
-    ensure_activatable(&store, &record).map_err(|_| VvmError::NoRollback)?;
-    activate_record(ctx, env, &store, &record, "self:rollback")
-}
-
-fn ensure_activatable(store: &VersionStore, record: &InstallRecord) -> Result<(), VvmError> {
-    let intact = if record.origin == model::Origin::Binary && record.source_path.is_some() {
-        bundle::installed_bundle_intact(store, record)
-    } else {
-        placer::installed_files_match(store, record)
-    };
-    if intact {
-        Ok(())
-    } else {
-        Err(VvmError::CorruptInstance {
-            selector: record.selector().to_string(),
-        })
-    }
-}
-
-fn activate_record(
-    ctx: &output::Context,
-    env: &VvmEnv,
-    store: &VersionStore,
-    record: &InstallRecord,
-    command: &str,
-) -> Result<()> {
-    let id = record.version_id();
-    let home = store.instance_dir(&id, record.instance);
-    let shell = env::Shell::detect(env.shell.as_deref());
-    let persister = make_persister(env, shell)?;
-    let path_ready = path_has_dir(env.path_var.as_deref(), &store.shim_dir());
-    let activated = env::activate_instance(store, &home, persister.as_ref())?;
-
-    if ctx.is_json() {
-        return ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": command,
-            "active": id.to_string(),
-            "selector": record.selector().to_string(),
-            "instance": record.instance,
-            "home": home.display().to_string(),
-            "path_on_current_process": path_ready,
-            "durable_path_changed": activated.path == env::Persisted::Changed,
-            "advisory_home_warning": activated.advisory_home_warning,
-        }));
-    }
-    ctx.summary(&format!("active → {}", record.selector()));
-    ctx.summary("  switched live; the next `vibe` in this shell uses it");
-    if path_ready {
-        ctx.summary("  PATH is ready in this process");
-    } else {
-        ctx.summary(&format!(
-            "  external tools: {}",
-            persister.activation_hint()
-        ));
-    }
-    if let Some(warning) = activated.advisory_home_warning {
-        ctx.summary(&format!(
-            "  warning: live pointer switched; advisory VIBEVM_HOME update failed: {warning}"
-        ));
-    }
-    Ok(())
-}
-
-fn run_env_cmd(env: &VvmEnv, args: VvmEnvArgs) -> Result<()> {
-    let shell = match args.shell.as_deref() {
-        Some(s) => env::Shell::parse(s)?,
-        None => env::Shell::detect(env.shell.as_deref()),
-    };
-    let store = env.store()?;
-    let home = match args.selector.as_deref() {
-        Some(raw) => {
-            let state = store.load_state()?;
-            let selector = model::Selector::parse(raw, forced_kind(&args.kind))?;
-            let rec = resolve_installed(&state, &selector, raw)?;
-            ensure_activatable(&store, &rec)?;
-            store.instance_dir(&rec.version_id(), rec.instance)
-        }
-        None => {
-            let rec = store.active()?.ok_or(VvmError::NoActiveVersion)?;
-            ensure_activatable(&store, &rec)?;
-            store.instance_dir(&rec.version_id(), rec.instance)
-        }
-    };
-    println!("{}", shell.export_line(&home));
-    Ok(())
 }
 
 /// Map a selector onto the newest *installed* instance of its id (PROP-019

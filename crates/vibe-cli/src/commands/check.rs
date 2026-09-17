@@ -18,17 +18,31 @@ use crate::cli::CheckArgs;
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
+    let locate = ctx.progress().task("Locating project checks");
+    let project_root = match resolve_project_root(&args.path) {
+        Ok(root) => {
+            locate.finish();
+            root
+        }
+        Err(error) => {
+            locate.fail("project location failed");
+            return Err(error);
+        }
+    };
     let opts = CheckOptions {
         wal_max_age_hours: args.wal_max_age_hours,
         review_max_age_days: args.review_max_age_days,
         now_unix_utc: None,
     };
+    let scan = ctx.progress().task("Scanning project consistency");
     let mut report = vibe_check::check_project(&project_root, &opts);
+    scan.finish();
     // PROP-038 §3 — the boot-graph integrity check runs on the installed
     // workspace, which vibe-check (project-file only) does not load; append
     // its findings here where the vibe-workspace stack is available.
+    let boot = ctx.progress().task("Checking installed boot graph");
     append_boot_graph_findings(&project_root, &mut report);
+    boot.finish();
     let errors = report.count(Severity::Error);
     let warnings = report.count(Severity::Warning);
     let infos = report.count(Severity::Info);
@@ -131,9 +145,11 @@ fn emit_report(
         if report.findings.len() == 1 { "" } else { "s" },
         project_root.display()
     ));
-    for finding in &report.findings {
-        render_finding(finding);
-    }
+    ctx.suspend_progress(|| {
+        for finding in &report.findings {
+            render_finding(finding);
+        }
+    });
     ctx.summary(&format!(
         "\n{errors} error{}, {warnings} warning{}, {infos} info",
         if errors == 1 { "" } else { "s" },

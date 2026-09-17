@@ -44,6 +44,21 @@ pub fn run(ctx: &output::Context, args: RegistryArgs) -> Result<()> {
     }
 }
 
+pub(super) fn observed_stage<T>(
+    ctx: &output::Context,
+    label: impl Into<String>,
+    run: impl FnOnce() -> Result<T>,
+) -> Result<T> {
+    let task = ctx.progress().task(label);
+    let result = run();
+    if result.is_ok() {
+        task.finish();
+    } else {
+        task.fail("operation failed");
+    }
+    result
+}
+
 #[derive(Debug, Serialize)]
 struct SkippedReportEntry {
     group: String,

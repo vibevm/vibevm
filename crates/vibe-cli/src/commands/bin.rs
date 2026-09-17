@@ -11,9 +11,20 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use vibe_workspace::bins::{build_binary, collect_binaries, find_binary};
 
+use crate::output;
+
 /// `vibe bin list`.
-pub fn run_list(project_root: &Path) -> Result<()> {
-    let bins = collect_binaries(project_root)?;
+pub fn run_list(ctx: &output::Context, project_root: &Path) -> Result<()> {
+    let inventory = ctx.progress().task("Reading declared package binaries");
+    let bins = match collect_binaries(project_root) {
+        Ok(bins) => bins,
+        Err(error) => {
+            inventory.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    inventory.set_progress(bins.len() as u64, Some(bins.len() as u64), "binaries");
+    inventory.finish();
     if bins.is_empty() {
         eprintln!("bin list: no installed package declares a [[binary]].");
         return Ok(());
@@ -41,8 +52,22 @@ pub fn run_list(project_root: &Path) -> Result<()> {
 }
 
 /// `vibe bin build [<names>…]`.
-pub fn run_build(project_root: &Path, names: &[String], assume_yes: bool) -> Result<()> {
-    let bins = collect_binaries(project_root)?;
+pub fn run_build(
+    ctx: &output::Context,
+    project_root: &Path,
+    names: &[String],
+    assume_yes: bool,
+) -> Result<()> {
+    let discovery = ctx.progress().task("Discovering package binaries");
+    let bins = match collect_binaries(project_root) {
+        Ok(bins) => bins,
+        Err(error) => {
+            discovery.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    discovery.set_progress(bins.len() as u64, Some(bins.len() as u64), "binaries");
+    discovery.finish();
     if bins.is_empty() {
         bail!("bin build: no installed package declares a [[binary]]");
     }
@@ -55,23 +80,57 @@ pub fn run_build(project_root: &Path, names: &[String], assume_yes: bool) -> Res
         }
         chosen
     };
-    for bin in selected {
-        build_binary(bin, assume_yes)?;
+    let builds = ctx.progress().task("Building package binaries");
+    builds.set_progress(0, Some(selected.len() as u64), "binaries");
+    for (index, bin) in selected.iter().enumerate() {
+        let component = builds
+            .progress()
+            .task(format!("Building {}", bin.decl.name));
+        component.detail(format!("package: {}", bin.package));
+        // `bin build` is always rendered as plain line progress, so Cargo's
+        // inherited diagnostics and the liveness heartbeat can coexist
+        // without cursor control corrupting either stream.
+        let result = build_binary(bin, assume_yes);
+        match result {
+            Ok(()) => component.finish(),
+            Err(error) => {
+                component.fail(error.to_string());
+                builds.fail("binary build failed");
+                return Err(error.into());
+            }
+        }
+        builds.set_progress((index + 1) as u64, Some(selected.len() as u64), "binaries");
     }
+    builds.finish();
     Ok(())
 }
 
 /// `vibe bin path <name>` — the artifact path; non-zero when unbuilt.
-pub fn run_path(project_root: &Path, name: &str) -> Result<()> {
-    let bins = collect_binaries(project_root)?;
-    let bin = find_binary(&bins, name)?;
+pub fn run_path(ctx: &output::Context, project_root: &Path, name: &str) -> Result<()> {
+    let lookup = ctx.progress().task(format!("Resolving binary {name}"));
+    let bins = match collect_binaries(project_root) {
+        Ok(bins) => bins,
+        Err(error) => {
+            lookup.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    let bin = match find_binary(&bins, name) {
+        Ok(bin) => bin,
+        Err(error) => {
+            lookup.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
     let artifact = bin.artifact();
     if !artifact.exists() {
+        lookup.fail("binary is not built");
         bail!(
             "`{name}` is declared by {} but not built — run `vibe bin build {name}`",
             bin.package
         );
     }
+    lookup.finish();
     println!("{}", artifact.display());
     Ok(())
 }
@@ -113,17 +172,46 @@ fn refuse_app_dispatch(bin: &vibe_workspace::bins::DeclaredBinary, name: &str) -
 
 /// `vibe bin exec <name> -- <args…>` — build-if-missing, then exec with
 /// the exit code passed through.
-pub fn run_exec(project_root: &Path, name: &str, args: &[String], assume_yes: bool) -> Result<i32> {
-    let bins = collect_binaries(project_root)?;
-    let bin = find_binary(&bins, name)?;
-    refuse_app_dispatch(bin, name)?;
-    if !bin.artifact().exists() {
-        build_binary(bin, assume_yes)?;
+pub fn run_exec(
+    ctx: &output::Context,
+    project_root: &Path,
+    name: &str,
+    args: &[String],
+    assume_yes: bool,
+) -> Result<i32> {
+    let preparation = ctx.progress().task(format!("Preparing binary {name}"));
+    let bins = match collect_binaries(project_root) {
+        Ok(bins) => bins,
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    let bin = match find_binary(&bins, name) {
+        Ok(bin) => bin,
+        Err(error) => {
+            preparation.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    if let Err(error) = refuse_app_dispatch(bin, name) {
+        preparation.fail(error.to_string());
+        return Err(error);
     }
-    let status = std::process::Command::new(bin.artifact())
-        .args(args)
-        .status()
-        .with_context(|| format!("spawning {}", bin.artifact().display()))?;
+    if !bin.artifact().exists() {
+        preparation.detail(format!("building package: {}", bin.package));
+        if let Err(error) = build_binary(bin, assume_yes) {
+            preparation.fail(error.to_string());
+            return Err(error.into());
+        }
+    }
+    preparation.finish();
+    let status = ctx.suspend_progress(|| {
+        std::process::Command::new(bin.artifact())
+            .args(args)
+            .status()
+            .with_context(|| format!("spawning {}", bin.artifact().display()))
+    })?;
     Ok(status.code().unwrap_or(1))
 }
 

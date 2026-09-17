@@ -12,7 +12,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
+use std::sync::atomic::{AtomicU64, Ordering};
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::progress::ProgressTask;
 use vibe_registry::MultiRegistryResolver;
 use vibe_registry::vendor::{self, VendorEvent, VendorObserver, VendorSummary};
 
@@ -50,7 +52,12 @@ struct VendoredReportEntry {
 
 /// Renders [`VendorEvent`]s as progressive `ctx.step` lines — the live
 /// per-package output the domain used to print inline.
-struct CliVendorObserver<'a>(&'a output::Context);
+struct CliVendorObserver<'a> {
+    ctx: &'a output::Context,
+    task: &'a ProgressTask,
+    completed: AtomicU64,
+    total: u64,
+}
 
 impl VendorObserver for CliVendorObserver<'_> {
     fn on(&self, event: VendorEvent) {
@@ -61,8 +68,11 @@ impl VendorObserver for CliVendorObserver<'_> {
                 refname,
                 repo_dir,
             } => {
-                self.0
+                self.ctx
                     .step(&format!("{group}/{name} @ {refname} → {repo_dir}"));
+                let completed = self.completed.fetch_add(1, Ordering::Relaxed) + 1;
+                self.task
+                    .set_progress(completed.min(self.total), Some(self.total), "packages");
             }
         }
     }
@@ -140,8 +150,27 @@ pub(super) fn run_vendor(ctx: &output::Context, args: RegistryVendorArgs) -> Res
         out_dir.display()
     ));
 
-    let observer = CliVendorObserver(ctx);
-    let summary = vendor::vendor_packages(&mrr, &lockfile, &out_dir, &observer)?;
+    let vendoring = ctx.progress().task("Copying packages into vendor mirror");
+    vendoring.set_progress(0, Some(lockfile.packages.len() as u64), "packages");
+    let observer = CliVendorObserver {
+        ctx,
+        task: &vendoring,
+        completed: AtomicU64::new(0),
+        total: lockfile.packages.len() as u64,
+    };
+    let summary = match vendor::vendor_packages(&mrr, &lockfile, &out_dir, &observer) {
+        Ok(summary) => summary,
+        Err(error) => {
+            vendoring.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    vendoring.set_progress(
+        lockfile.packages.len() as u64,
+        Some(lockfile.packages.len() as u64),
+        "packages",
+    );
+    vendoring.finish();
 
     // Skipped entries are reported after the vendoring pass, matching the
     // pre-extraction ordering (vendored lines stream live via the

@@ -1,6 +1,17 @@
 use super::*;
+use std::sync::{Arc, Mutex};
 use tempfile::tempdir;
+use vibe_core::progress::{ProgressEvent, ProgressEventKind, ProgressObserver};
 use zip::write::SimpleFileOptions;
+
+#[derive(Default)]
+struct Recorded(Mutex<Vec<ProgressEvent>>);
+
+impl ProgressObserver for Recorded {
+    fn observe(&self, event: ProgressEvent) {
+        self.0.lock().unwrap().push(event);
+    }
+}
 
 fn identity() -> ApplicationIdentity {
     ApplicationIdentity {
@@ -92,6 +103,39 @@ fn strict_bundle_extracts_only_declared_hashed_files() {
     let verified = verify_archive(&archive, &target, &identity(), &staging).unwrap();
     assert_eq!(verified.manifest.application.commands, ["demo"]);
     assert!(staging.join("management/launch.cmd").is_file());
+}
+
+#[test]
+fn observed_extraction_reports_real_archive_entries_and_completion() {
+    let (temp, archive, target) = fixture(false);
+    let observer = Arc::new(Recorded::default());
+    let progress = Progress::new(observer.clone());
+    verify_archive_observed(
+        &archive,
+        &target,
+        &identity(),
+        &temp.path().join("payload"),
+        &progress,
+    )
+    .unwrap();
+    let events = observer.0.lock().unwrap();
+    assert!(matches!(
+        &events[0].kind,
+        ProgressEventKind::Started { label }
+            if label == "Verifying and extracting application distribution"
+    ));
+    assert!(events.iter().any(|event| matches!(
+        event.kind,
+        ProgressEventKind::Progress {
+            total: Some(3),
+            ref unit,
+            ..
+        } if unit == "entries"
+    )));
+    assert!(matches!(
+        events.last().unwrap().kind,
+        ProgressEventKind::Finished
+    ));
 }
 
 #[test]

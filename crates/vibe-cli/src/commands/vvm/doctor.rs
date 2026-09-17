@@ -131,12 +131,42 @@ pub(super) fn run_doctor_cmd(
     env: &VvmEnv,
     args: VvmDoctorArgs,
 ) -> anyhow::Result<()> {
-    let store = env.store()?;
+    let progress = ctx.progress();
+    let checks = progress.task("Checking self installation");
+    let store = match env.store() {
+        Ok(store) => store,
+        Err(error) => {
+            checks.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    checks.detail(format!(
+        "store: {}",
+        env.root.as_deref().map_or_else(
+            || "unavailable".to_string(),
+            |path| path.display().to_string()
+        )
+    ));
+    let tool_checks = checks.progress().task("Checking build tools");
     let tools = tools::check_all();
+    tool_checks.set_progress(tools.len() as u64, Some(tools.len() as u64), "tools");
+    tool_checks.finish();
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
-    let active = store.active()?;
-    let running_identity = provenance::running_identity(&store)?;
+    let active = match store.active() {
+        Ok(active) => active,
+        Err(error) => {
+            checks.fail(error.to_string());
+            return Err(error.into());
+        }
+    };
+    let running_identity = match provenance::running_identity(&store) {
+        Ok(running) => running,
+        Err(error) => {
+            checks.fail(error.to_string());
+            return Err(error);
+        }
+    };
     let running = match &running_identity {
         Some(RunningIdentity::Installed(record)) => Some(record),
         _ => None,
@@ -153,10 +183,32 @@ pub(super) fn run_doctor_cmd(
         .as_ref()
         .map(|r| !store.binary_path(&r.version_id(), r.instance).is_file())
         .unwrap_or(false);
+    let instance_checks = checks
+        .progress()
+        .task("Checking installed instance integrity");
+    instance_checks.set_progress(0, Some(diagnosed.len() as u64), "instances");
     let instances = diagnosed
         .iter()
-        .map(|(role, record)| (*role, record.clone(), instance_layout(&store, record)))
+        .enumerate()
+        .map(|(index, (role, record))| {
+            let component = instance_checks
+                .progress()
+                .task(format!("Checking {role} {}", record.selector()));
+            let layout = instance_layout(&store, record);
+            component.finish();
+            instance_checks.set_progress(
+                (index + 1) as u64,
+                Some(diagnosed.len() as u64),
+                "instances",
+            );
+            (*role, record.clone(), layout)
+        })
         .collect::<Vec<_>>();
+    if diagnosed.is_empty() {
+        instance_checks.skip("no active or installed running instance");
+    } else {
+        instance_checks.finish();
+    }
     let instance_problems = instances
         .iter()
         .map(|(_, record, layout)| {
@@ -185,15 +237,37 @@ pub(super) fn run_doctor_cmd(
         + shim_problems;
     let mut remaining_problems = problems;
     let mut fixed = false;
+    checks.detail(format!("problems found: {problems}"));
+    checks.finish();
 
-    if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {
-        let _lock = super::install::InstallLock::acquire(&store)?;
-        env::write_shims(&store)?;
-        let shell = env::Shell::detect(env.shell.as_deref());
-        make_persister(env, shell)?.ensure_on_path(&shim_dir)?;
-        remaining_problems =
-            remaining_problems.saturating_sub(usize::from(!on_path) + shim_problems);
-        fixed = true;
+    if args.fix {
+        let confirmed = ctx.suspend_progress(|| {
+            confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")
+        })?;
+        let repair = progress.task("Repairing self installation");
+        if confirmed {
+            let result = (|| -> anyhow::Result<()> {
+                let _lock = super::install::InstallLock::acquire(&store)?;
+                env::write_shims(&store)?;
+                let shell = env::Shell::detect(env.shell.as_deref());
+                make_persister(env, shell)?.ensure_on_path(&shim_dir)?;
+                Ok(())
+            })();
+            match result {
+                Ok(()) => {
+                    remaining_problems =
+                        remaining_problems.saturating_sub(usize::from(!on_path) + shim_problems);
+                    fixed = true;
+                    repair.finish();
+                }
+                Err(error) => {
+                    repair.fail(error.to_string());
+                    return Err(error);
+                }
+            }
+        } else {
+            repair.skip("declined");
+        }
     }
     let final_shim_statuses = if fixed {
         env::shim_statuses(&store)

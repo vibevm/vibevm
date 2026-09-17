@@ -6,6 +6,7 @@ pub(super) struct RemovalEffects {
     pub bin: bool,
     pub binary_source: bool,
     pub managed_source: bool,
+    pub failed: bool,
 }
 
 impl RemovalEffects {
@@ -14,6 +15,7 @@ impl RemovalEffects {
         self.bin |= other.bin;
         self.binary_source |= other.binary_source;
         self.managed_source |= other.managed_source;
+        self.failed |= other.failed;
     }
 }
 

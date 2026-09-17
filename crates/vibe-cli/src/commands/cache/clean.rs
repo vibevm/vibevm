@@ -62,20 +62,32 @@ fn clean_all(ctx: &output::Context, assume_yes: bool, root: &std::path::Path) ->
              whole store non-interactively"
         );
     } else {
-        Confirm::new()
-            .with_prompt(format!(
-                "Remove EVERY package entry under {}? Re-fetching them needs the network.",
-                root.display()
-            ))
-            .default(false)
-            .interact()
-            .context("reading user confirmation")?
+        ctx.suspend_progress(|| {
+            Confirm::new()
+                .with_prompt(format!(
+                    "Remove EVERY package entry under {}? Re-fetching them needs the network.",
+                    root.display()
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")
+        })?
     };
     if !approved {
         return Err(InstallError::UserDeclined.into());
     }
 
-    let removed = vibe_registry::remove_all().context("removing the store contents")?;
+    let removal = ctx.progress().task("Removing all cached packages");
+    let removed = match vibe_registry::remove_all().context("removing the store contents") {
+        Ok(removed) => {
+            removal.finish();
+            removed
+        }
+        Err(error) => {
+            removal.fail(error.to_string());
+            return Err(error);
+        }
+    };
     emit(ctx, root, "all", removed, &[])
 }
 
@@ -83,35 +95,49 @@ fn clean_all(ctx: &output::Context, assume_yes: bool, root: &std::path::Path) ->
 /// name. An absent target is an error, not a silent zero: the operator
 /// named a specific thing, and a typo should surface.
 fn clean_package(ctx: &output::Context, spec: &str, root: &std::path::Path) -> Result<()> {
-    let (group, name, version) = parse_package_spec(spec)?;
-    let (count, labels) = match &version {
-        Some(version) => {
-            let removed = vibe_registry::remove_entry(&group, &name, version)
-                .context("removing the store entry")?;
-            if !removed {
-                bail!(
-                    "no entry `{group}/{name}@{version}` in the store ({})",
-                    root.display()
-                );
+    let removal = ctx
+        .progress()
+        .task(format!("Removing cached package {spec}"));
+    let result = (|| -> Result<_> {
+        let (group, name, version) = parse_package_spec(spec)?;
+        match &version {
+            Some(version) => {
+                let removed = vibe_registry::remove_entry(&group, &name, version)
+                    .context("removing the store entry")?;
+                if !removed {
+                    bail!(
+                        "no entry `{group}/{name}@{version}` in the store ({})",
+                        root.display()
+                    );
+                }
+                Ok((1, vec![format!("{group}/{name}@{version}")]))
             }
-            (1, vec![format!("{group}/{name}@{version}")])
+            None => {
+                let removed = vibe_registry::remove_name(&group, &name)
+                    .context("removing the store entries")?;
+                if removed == 0 {
+                    bail!(
+                        "no entries `{group}/{name}` in the store ({})",
+                        root.display()
+                    );
+                }
+                let plural = if removed == 1 { "" } else { "s" };
+                Ok((
+                    removed,
+                    vec![format!("{group}/{name} ({removed} version{plural})")],
+                ))
+            }
         }
-        None => {
-            let removed =
-                vibe_registry::remove_name(&group, &name).context("removing the store entries")?;
-            if removed == 0 {
-                bail!(
-                    "no entries `{group}/{name}` in the store ({})",
-                    root.display()
-                );
-            }
-            let plural = if removed == 1 { "" } else { "s" };
-            (
-                removed,
-                vec![format!("{group}/{name} ({removed} version{plural})")],
-            )
+    })();
+    let (count, labels) = match result {
+        Ok(value) => value,
+        Err(error) => {
+            removal.fail(error.to_string());
+            return Err(error);
         }
     };
+    removal.set_progress(count as u64, Some(count as u64), "entries");
+    removal.finish();
     emit(ctx, root, "package", count, &labels)
 }
 
@@ -123,14 +149,29 @@ fn clean_older_than(ctx: &output::Context, days: u64, root: &std::path::Path) ->
         .checked_sub(Duration::from_secs(days.saturating_mul(86_400)))
         .context("computing the age cutoff")?;
     let targets = vibe_registry::list_older_than(cutoff);
+    let removal = ctx.progress().task("Removing expired cached packages");
+    removal.set_progress(0, Some(targets.len() as u64), "packages");
     let mut labels = Vec::new();
-    for (group, name, version) in &targets {
+    for (index, (group, name, version)) in targets.iter().enumerate() {
         let label = format!("{group}/{name}@{version}");
-        let removed = vibe_registry::remove_entry(group, name, version)
-            .with_context(|| format!("removing the store entry {label}"))?;
+        let removed = match vibe_registry::remove_entry(group, name, version)
+            .with_context(|| format!("removing the store entry {label}"))
+        {
+            Ok(removed) => removed,
+            Err(error) => {
+                removal.fail(error.to_string());
+                return Err(error);
+            }
+        };
         if removed {
             labels.push(label);
         }
+        removal.set_progress((index + 1) as u64, Some(targets.len() as u64), "packages");
+    }
+    if targets.is_empty() {
+        removal.skip("no expired packages");
+    } else {
+        removal.finish();
     }
     emit(ctx, root, "older-than", labels.len(), &labels)
 }

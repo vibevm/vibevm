@@ -103,7 +103,7 @@ fn recorded_matches(recorded: &str, computed: &str) -> bool {
 
 pub(crate) fn run(ctx: &output::Context, args: CacheCheckArgs, root_offline: bool) -> Result<()> {
     let root = vibe_registry::store_root().context("resolving the machine store root")?;
-    let mut verdicts = sweep(&root)?;
+    let mut verdicts = sweep(ctx, &root)?;
 
     if args.repair {
         repair(ctx, &root, &mut verdicts, &args.path, root_offline)?;
@@ -126,14 +126,36 @@ pub(crate) fn run(ctx: &output::Context, args: CacheCheckArgs, root_offline: boo
 /// (`list_all`); hashing is [`vibe_registry::compute_content_hash`]
 /// over the entry (the recipe excludes `.git`, so a git working copy
 /// hashes its tree).
-fn sweep(root: &Path) -> Result<Vec<Verdict>> {
+fn sweep(ctx: &output::Context, root: &Path) -> Result<Vec<Verdict>> {
     let mut verdicts = Vec::new();
-    for (group, name, version) in vibe_registry::list_all() {
+    let entries = vibe_registry::list_all();
+    let total = entries.len() as u64;
+    let sweep = ctx.progress().task("Checking cached package integrity");
+    sweep.set_progress(0, Some(total), "packages");
+    for (index, (group, name, version)) in entries.into_iter().enumerate() {
+        let identity = format!("{group}/{name}@{version}");
+        let component = sweep.progress().task(format!("Hashing {identity}"));
         let path = vibe_registry::entry_dir(root, &group, &name, &version);
-        let computed = vibe_registry::compute_content_hash(&path)
-            .with_context(|| format!("re-hashing `{}`", path.display()))?;
-        let recorded = vibe_registry::recorded_hash(&group, &name, &version)
-            .with_context(|| format!("reading the recorded hash for {group}/{name}@{version}"))?;
+        let computed = match vibe_registry::compute_content_hash(&path)
+            .with_context(|| format!("re-hashing `{}`", path.display()))
+        {
+            Ok(computed) => computed,
+            Err(error) => {
+                component.fail("content hash failed");
+                sweep.fail("cache integrity sweep failed");
+                return Err(error);
+            }
+        };
+        let recorded = match vibe_registry::recorded_hash(&group, &name, &version)
+            .with_context(|| format!("reading the recorded hash for {group}/{name}@{version}"))
+        {
+            Ok(recorded) => recorded,
+            Err(error) => {
+                component.fail("recorded hash read failed");
+                sweep.fail("cache integrity sweep failed");
+                return Err(error);
+            }
+        };
         let kind = match &recorded {
             Some(recorded) if recorded_matches(recorded, &computed) => Kind::Ok,
             Some(recorded) => Kind::Mismatch {
@@ -150,6 +172,18 @@ fn sweep(root: &Path) -> Result<Vec<Verdict>> {
             path,
             kind,
         });
+        component.finish();
+        sweep.set_progress((index + 1) as u64, Some(total), "packages");
+    }
+    if verdicts.is_empty() {
+        sweep.skip("cache is empty");
+    } else {
+        sweep.set_progress(
+            verdicts.len() as u64,
+            Some(verdicts.len() as u64),
+            "packages",
+        );
+        sweep.finish();
     }
     Ok(verdicts)
 }
@@ -164,6 +198,10 @@ fn repair(
     path: &Path,
     root_offline: bool,
 ) -> Result<()> {
+    let repairs = ctx.progress().task("Repairing cached packages");
+    let repair_total = verdicts.iter().filter(|verdict| !verdict.is_ok()).count() as u64;
+    repairs.set_progress(0, Some(repair_total), "packages");
+    let mut repaired = 0_u64;
     // Step (г) pass — the mismatched entries, cheapest-first honest:
     // nothing cheaper than a re-fetch exists without a recorded
     // commit (git copies) or for extracted directories, so every
@@ -173,6 +211,9 @@ fn repair(
         let Kind::Mismatch { .. } = verdict.kind else {
             continue;
         };
+        let component = repairs
+            .progress()
+            .task(format!("Repairing {}", verdict.identity()));
         // The ladder's last rung needs a registry; build it once, and
         // a construction failure (no registry configured at all)
         // fails every remaining re-fetch with it — named, not fatal
@@ -184,6 +225,9 @@ fn repair(
                     verdict.kind = Kind::Failed {
                         error: format!("{e:#}"),
                     };
+                    component.fail("registry resolver unavailable");
+                    repaired += 1;
+                    repairs.set_progress(repaired, Some(repair_total), "packages");
                     continue;
                 }
             }
@@ -218,11 +262,24 @@ fn repair(
         // Step (г): the bad entry dies WITH its sidecar, then the
         // exact same version is fetched fresh (write-once inserts a
         // new record with it).
-        vibe_registry::remove_entry(&group, &name, &version)
-            .with_context(|| format!("removing the damaged entry {identity}"))?;
+        if let Err(error) = vibe_registry::remove_entry(&group, &name, &version)
+            .with_context(|| format!("removing the damaged entry {identity}"))
+        {
+            component.fail("damaged entry removal failed");
+            repairs.fail("cache repair failed");
+            return Err(error);
+        }
         let spec = format!("{}/{name}@={version}", group.as_str());
-        let pkgref =
-            PackageRef::parse(&spec).with_context(|| format!("parsing the repair ref `{spec}`"))?;
+        let pkgref = match PackageRef::parse(&spec)
+            .with_context(|| format!("parsing the repair ref `{spec}`"))
+        {
+            Ok(pkgref) => pkgref,
+            Err(error) => {
+                component.fail("repair coordinate is invalid");
+                repairs.fail("cache repair failed");
+                return Err(error);
+            }
+        };
         verdict.kind = match resolver.resolve_and_fetch(&pkgref, root, None) {
             Ok(cached) => Kind::Refetched {
                 was_git_copy: is_git_copy,
@@ -232,6 +289,13 @@ fn repair(
                 error: format!("{e}"),
             },
         };
+        if matches!(verdict.kind, Kind::Failed { .. }) {
+            component.fail("package re-fetch failed");
+        } else {
+            component.finish();
+        }
+        repaired += 1;
+        repairs.set_progress(repaired, Some(repair_total), "packages");
     }
     // The unrecorded pass: record what IS — the only honest action
     // when no record exists. After the mismatch pass, so a re-fetched
@@ -240,12 +304,42 @@ fn repair(
         if !matches!(verdict.kind, Kind::Unrecorded) {
             continue;
         }
+        let component = repairs
+            .progress()
+            .task(format!("Recording {}", verdict.identity()));
         let path = verdict.path.clone();
-        let computed = vibe_registry::compute_content_hash(&path)
-            .with_context(|| format!("re-hashing `{}`", path.display()))?;
-        vibe_registry::record_hash(&verdict.group, &verdict.name, &verdict.version, &computed)
-            .with_context(|| format!("recording the sidecar for {}", verdict.identity()))?;
+        let computed = match vibe_registry::compute_content_hash(&path)
+            .with_context(|| format!("re-hashing `{}`", path.display()))
+        {
+            Ok(computed) => computed,
+            Err(error) => {
+                component.fail("content hash failed");
+                repairs.fail("cache repair failed");
+                return Err(error);
+            }
+        };
+        if let Err(error) =
+            vibe_registry::record_hash(&verdict.group, &verdict.name, &verdict.version, &computed)
+                .with_context(|| format!("recording the sidecar for {}", verdict.identity()))
+        {
+            component.fail("recorded hash write failed");
+            repairs.fail("cache repair failed");
+            return Err(error);
+        }
         verdict.kind = Kind::RecordedNow;
+        component.finish();
+        repaired += 1;
+        repairs.set_progress(repaired, Some(repair_total), "packages");
+    }
+    if repair_total == 0 {
+        repairs.skip("no repairs needed");
+    } else if verdicts
+        .iter()
+        .any(|verdict| matches!(verdict.kind, Kind::Failed { .. }))
+    {
+        repairs.fail("one or more repairs failed");
+    } else {
+        repairs.finish();
     }
     Ok(())
 }

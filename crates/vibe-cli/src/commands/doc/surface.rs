@@ -25,7 +25,7 @@ use vibe_doc::derived;
 use vibe_doc::surface::{self, SurfaceEnv};
 use vibe_wire::generated::doc_surface::DocSurface;
 
-use super::DocEnv;
+use super::{DocEnv, observe};
 use crate::cli::{DocDiffArgs, DocSurfaceArgs, ProgressCommonArgs};
 
 /// The word that means «the product this command is», rather than a
@@ -35,13 +35,17 @@ const NOW: &str = "now";
 /// `vibe doc surface --record <version>`.
 pub fn run_surface(args: DocSurfaceArgs, env: DocEnv) -> Result<()> {
     let surface_env = surface_env(&env, args.binary.clone(), args.timeout);
-    let obligations = obligations(&env.cwd)?;
-    let recorded = surface::record(&args.record, &obligations, &surface_env)?;
+    let obligations = obligations(&env.cwd, &env.progress)?;
+    let recorded = observe::phase(&env.progress, "Recording documentation surface", || {
+        surface::record(&args.record, &obligations, &surface_env)
+    })?;
     let path = match &args.out {
         Some(dir) => dir.join(format!("{}.json", args.record)),
         None => surface::path_for(&args.path, &args.record),
     };
-    surface::write(&recorded, &path)?;
+    observe::phase(&env.progress, "Writing documentation surface", || {
+        surface::write(&recorded, &path)
+    })?;
     println!(
         "surface {}: {} command(s), {} manifest field(s), {} lock field(s), {} schema(s), \
          {} obligation(s), {} format(s)",
@@ -59,9 +63,17 @@ pub fn run_surface(args: DocSurfaceArgs, env: DocEnv) -> Result<()> {
 
 /// `vibe doc diff <old> <new>`.
 pub fn run_diff(args: DocDiffArgs, env: DocEnv) -> Result<()> {
-    let old = load(&args.path, &args.from, &args, &env)?;
-    let new = load(&args.path, &args.to, &args, &env)?;
-    let document = compare(&old, &new, &args, &env)?;
+    let old = observe::phase(
+        &env.progress,
+        "Loading previous documentation surface",
+        || load(&args.path, &args.from, &args, &env),
+    )?;
+    let new = observe::phase(&env.progress, "Loading next documentation surface", || {
+        load(&args.path, &args.to, &args, &env)
+    })?;
+    let document = observe::phase(&env.progress, "Comparing documentation surfaces", || {
+        compare(&old, &new, &args, &env)
+    })?;
     if args.format == "json" {
         print!("{}", vibe_doc::surface::diff::to_json(&document));
     } else {
@@ -85,7 +97,7 @@ fn load(package_dir: &Path, version: &str, args: &DocDiffArgs, env: &DocEnv) -> 
             );
         }
         let surface_env = surface_env(env, args.binary.clone(), args.timeout);
-        let obligations = obligations(&env.cwd)?;
+        let obligations = obligations(&env.cwd, &env.progress)?;
         // Read and not written: a snapshot keyed on `now` would be a
         // snapshot of nothing a month from today.
         return Ok(surface::record(NOW, &obligations, &surface_env)?);
@@ -159,14 +171,19 @@ fn surface_env(env: &DocEnv, binary: Option<PathBuf>, timeout: u64) -> SurfaceEn
 /// the other five halves of a surface are still a surface, and a snapshot
 /// taken from a warmed store is a legitimate thing to want. The count is
 /// printed, so «no corpus» and «no obligations» do not read the same.
-pub(super) fn obligations(cwd: &Option<PathBuf>) -> Result<Vec<Obligation>> {
+pub(super) fn obligations(
+    cwd: &Option<PathBuf>,
+    progress: &vibe_core::progress::Progress,
+) -> Result<Vec<Obligation>> {
     let Some(root) = cwd.clone() else {
         return Ok(Vec::new());
     };
-    let grounded = crate::commands::progress::grounding::ground(&ProgressCommonArgs {
-        path: root,
-        campaign: None,
-        no_cache: false,
+    let grounded = observe::phase(progress, "Grounding documentation obligations", || {
+        crate::commands::progress::grounding::ground(&ProgressCommonArgs {
+            path: root,
+            campaign: None,
+            no_cache: false,
+        })
     })?;
     Ok(vibe_doc::coverage::obligations(grounded.docs.iter()))
 }

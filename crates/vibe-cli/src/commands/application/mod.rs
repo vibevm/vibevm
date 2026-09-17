@@ -8,6 +8,7 @@ mod distribution;
 mod model;
 mod process;
 mod remote;
+mod report;
 mod selection;
 mod source;
 mod store;
@@ -15,10 +16,12 @@ mod store;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
-use vibe_wire::generated::application_report::{ApplicationReport, ApplicationReportCommand};
+use vibe_core::progress::Progress;
 
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
+
+use report::render;
 
 use model::{
     ApplicationContext, ApplicationOperation, ApplicationProvenance, ApplicationRecord,
@@ -34,6 +37,7 @@ pub fn install(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    let progress = ctx.progress();
     validate_install_args(&args)?;
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
@@ -46,6 +50,7 @@ pub fn install(
         embedded_root.as_deref(),
         spelling,
         offline,
+        &progress,
     )?;
     reject_identity_collision(&index, &resolved.application)?;
     let host = settings
@@ -63,6 +68,7 @@ pub fn install(
         offline,
         args.from_source,
         prior,
+        &progress,
     )?;
     index.applications.insert(
         applied.application.id.clone(),
@@ -75,7 +81,9 @@ pub fn install(
             launchers: applied.launchers.clone(),
         },
     );
+    let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
+        recording.fail("application state recording failed");
         if let Some(publication) = applied.publication.take() {
             publication.rollback()?;
         }
@@ -84,6 +92,7 @@ pub fn install(
         }
         return Err(error);
     }
+    recording.finish();
     if let Some(publication) = applied.publication.take() {
         publication.commit();
     }
@@ -103,6 +112,7 @@ pub fn update(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    let progress = ctx.progress();
     validate_update_args(&args)?;
     let spelling = &args.packages[0];
     let requested = qualified_ref(spelling)?;
@@ -116,6 +126,7 @@ pub fn update(
         embedded_root.as_deref(),
         spelling,
         root_offline,
+        &progress,
     )?;
     if resolved.application.id != prior.application.id {
         bail!("updated application declaration changes the installed application id");
@@ -131,6 +142,7 @@ pub fn update(
         root_offline,
         args.from_source,
         Some(&prior),
+        &progress,
     )?;
     index.applications.insert(
         applied.application.id.clone(),
@@ -143,7 +155,9 @@ pub fn update(
             launchers: applied.launchers.clone(),
         },
     );
+    let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
+        recording.fail("application state recording failed");
         if let Some(publication) = applied.publication.take() {
             publication.rollback()?;
         }
@@ -152,6 +166,7 @@ pub fn update(
         }
         return Err(error);
     }
+    recording.finish();
     if let Some(publication) = applied.publication.take() {
         publication.commit();
     }
@@ -166,15 +181,36 @@ pub fn update(
 }
 
 pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool) -> Result<()> {
+    let progress = ctx.progress();
     validate_uninstall_args(&args)?;
     let requested = qualified_ref(&args.package)?;
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
     let prior = record_for_package(&index, &requested)?.clone();
-    let management = validate_management(&prior.host_root, &prior.management)?;
+    let validation = progress.task("Validating application management ownership");
+    let management = match validate_management(&prior.host_root, &prior.management) {
+        Ok(management) => {
+            validation.finish();
+            management
+        }
+        Err(error) => {
+            validation.fail("application management validation failed");
+            return Err(error);
+        }
+    };
     if management.runtime == model::ManagementRuntime::Builtin {
-        let message = binary::uninstall(&management)?;
+        let removal = progress.task("Removing binary application launchers");
+        let message = match binary::uninstall(&management) {
+            Ok(message) => {
+                removal.finish();
+                message
+            }
+            Err(error) => {
+                removal.fail("binary application removal failed");
+                return Err(error);
+            }
+        };
         index.applications.insert(
             prior.application.id.clone(),
             ApplicationRecord {
@@ -182,7 +218,12 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
                 ..prior.clone()
             },
         );
-        store.save(&index)?;
+        let recording = progress.task("Recording global application state");
+        if let Err(error) = store.save(&index) {
+            recording.fail("application state recording failed");
+            return Err(error);
+        }
+        recording.finish();
         return render(
             ctx,
             "uninstall",
@@ -211,6 +252,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         &context,
         &context_path,
         &reply_path,
+        &progress,
     )?;
     if reply.status != ApplicationStatus::Undeployed {
         bail!("application uninstall did not report undeployed");
@@ -222,7 +264,12 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
             ..prior.clone()
         },
     );
-    store.save(&index)?;
+    let recording = progress.task("Recording global application state");
+    if let Err(error) = store.save(&index) {
+        recording.fail("application state recording failed");
+        return Err(error);
+    }
+    recording.finish();
     render(
         ctx,
         "uninstall",
@@ -292,14 +339,17 @@ fn apply(
     offline: bool,
     from_source: bool,
     prior: Option<&ApplicationRecord>,
+    progress: &Progress,
 ) -> Result<AppliedApplication> {
     let active_prior = prior.filter(|record| record.status == ApplicationStatus::Ready);
-    if let Some(selected) = selection::select_binary(ctx, &resolved, from_source, offline)? {
+    if let Some(selected) =
+        selection::select_binary(ctx, &resolved, from_source, offline, progress)?
+    {
         let target = selected.target;
         std::fs::create_dir_all(&host)?;
         let staging = host.join(format!(".distribution-pending-{}", std::process::id()));
         if let Some(verified) =
-            distribution::fetch_and_verify(&target, &selected.application, &staging)?
+            distribution::fetch_and_verify(&target, &selected.application, &staging, progress)?
         {
             let application = verified.manifest.application.clone();
             let provenance = ApplicationProvenance {
@@ -312,13 +362,23 @@ fn apply(
                     asset_sha256: target.sha256,
                 },
             };
-            let publication = binary::publish(
+            let publishing = progress.task("Publishing verified application distribution");
+            let publication = match binary::publish(
                 settings,
                 &host,
                 verified,
                 active_prior.map(|record| &record.management),
                 active_prior.map_or(&[], |record| record.launchers.as_slice()),
-            )?;
+            ) {
+                Ok(publication) => {
+                    publishing.finish();
+                    publication
+                }
+                Err(error) => {
+                    publishing.fail("application publication failed");
+                    return Err(error);
+                }
+            };
             let management = publication.management();
             let launchers = publication.launchers();
             return Ok(AppliedApplication {
@@ -343,16 +403,32 @@ fn apply(
         offline,
     )?;
     let (context_path, reply_path) = store.request_paths()?;
+    let suspension = progress.task("Preparing source application transition");
     let suspended = active_prior
         .filter(|record| record.management.runtime == model::ManagementRuntime::Builtin)
         .map(|record| binary::suspend(&record.management))
-        .transpose()?;
+        .transpose();
+    let suspended = match suspended {
+        Ok(Some(suspended)) => {
+            suspension.finish();
+            Some(suspended)
+        }
+        Ok(None) => {
+            suspension.skip("no binary application transition required");
+            None
+        }
+        Err(error) => {
+            suspension.fail("application transition preparation failed");
+            return Err(error);
+        }
+    };
     let reply = match dispatch(
         &resolved.installer_entry,
         &resolved.installer_root,
         &context,
         &context_path,
         &reply_path,
+        progress,
     ) {
         Ok(reply) => reply,
         Err(error) => {
@@ -506,53 +582,5 @@ fn validate_uninstall_args(args: &UninstallArgs) -> Result<()> {
     if args.path != Path::new(".") {
         bail!("global uninstall received project-only --path");
     }
-    Ok(())
-}
-
-fn render(
-    ctx: &output::Context,
-    command: &str,
-    application_id: &str,
-    message: &str,
-    host_root: &Path,
-    provenance: Option<&ApplicationProvenance>,
-) -> Result<()> {
-    if ctx.is_json() {
-        let command = match command {
-            "install" => ApplicationReportCommand::Install,
-            "update" => ApplicationReportCommand::Update,
-            "uninstall" => ApplicationReportCommand::Uninstall,
-            _ => unreachable!("closed application command vocabulary"),
-        };
-        return ctx.emit_json(&ApplicationReport {
-            protocol: "vibe-application-command-report/1".into(),
-            ok: true,
-            command,
-            application_id: application_id.into(),
-            host_root: vibe_core::machine_json_path(host_root),
-            message: message.into(),
-            selected_mode: provenance.map(|value| match value.selected {
-                ApplicationSelection::Source { .. } => {
-                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Source
-                }
-                ApplicationSelection::Binary { .. } => {
-                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Binary
-                }
-            }),
-            selected_commit: provenance.and_then(|value| match &value.selected {
-                ApplicationSelection::Source { commit, .. } => commit.clone(),
-                ApplicationSelection::Binary { commit, .. } => Some(commit.clone()),
-            }),
-            available_source_commit: provenance.and_then(|value| {
-                value
-                    .available_source
-                    .as_ref()
-                    .map(|source| source.resolved_commit.clone())
-            }),
-        });
-    }
-    ctx.summary(&format!(
-        "vibe {command} -g: application `{application_id}` — {message}"
-    ));
     Ok(())
 }

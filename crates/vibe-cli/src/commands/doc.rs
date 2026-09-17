@@ -9,10 +9,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
+mod env;
+mod observe;
 pub mod shell;
 pub mod site;
 pub mod surface;
 pub mod todo;
+pub use env::DocEnv;
 
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -20,6 +23,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
 use chrono::Utc;
+use vibe_core::progress::Progress;
 use vibe_doc::build;
 use vibe_doc::citations::{self, SpecSources};
 use vibe_doc::coverage;
@@ -36,45 +40,17 @@ use crate::cli::{
     DocArgs, DocBuildArgs, DocCheckArgs, DocCommand, DocManifestArgs, DocServeArgs,
     ProgressCommonArgs,
 };
-
-/// The ambient values the composition root resolves and hands down, so no
-/// module below `main` reads the environment (the conform ambient-env
-/// gate, and the reason behind it: a check whose behaviour depends on an
-/// unnamed variable is a check nobody can reproduce).
-#[derive(Debug, Clone, Default)]
-pub struct DocEnv {
-    /// `$VIBE_SETTINGS`, when the operator relocated the settings dir.
-    pub settings: Option<OsString>,
-    /// The operator's home, for the real `~/.vibe` the tripwire guards.
-    pub home: Option<OsString>,
-    /// The system temporary directory — where sandboxes go by default.
-    pub temp: PathBuf,
-    /// The working directory, which is the source tree during a panel run.
-    pub cwd: Option<PathBuf>,
-    /// The running binary: the default subject of every example.
-    pub current_exe: Option<PathBuf>,
-    /// The process id, so two runs on one machine cannot share a sandbox.
-    pub pid: u32,
-    /// `$VIBEVM_INSTALL_ROOT/opt`, else `~/.vibe/opt` — where a
-    /// downloaded reader shell is kept (PROP-019 §2.4).
-    pub install_root: Option<PathBuf>,
-    /// Has the invocation already declared that nobody is at the
-    /// keyboard? The one consent in this surface reads it rather than
-    /// guessing from the terminal alone.
-    pub unattended: bool,
-    /// Is the invocation printing a machine document? Same reason.
-    pub json: bool,
-}
+use crate::output;
 
 /// Run `vibe doc …`.
-pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
+pub fn run(ctx: &output::Context, args: DocArgs, env: DocEnv) -> Result<()> {
     match args.command {
         DocCommand::Build(build) => run_build(build, env),
         DocCommand::BuildSite(site) => site::run(site, env),
         DocCommand::Check(check) => run_check(check, env),
         DocCommand::Manifest(manifest) => run_manifest(manifest, env),
         DocCommand::Serve(serve) => run_serve(serve, env),
-        DocCommand::Shell(args) => shell::run(args, env),
+        DocCommand::Shell(args) => shell::run(ctx, args, env),
         DocCommand::Surface(record) => surface::run_surface(record, env),
         DocCommand::Diff(diff) => surface::run_diff(diff, env),
         DocCommand::Todo(queue) => todo::run_todo(queue, env),
@@ -85,7 +61,9 @@ pub fn run(args: DocArgs, env: DocEnv) -> Result<()> {
 /// served as it stands.
 fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
     if let Some(lang) = &args.lang {
-        build::expect_language(&args.path, lang)?;
+        observe::phase(&env.progress, "Checking documentation language", || {
+            build::expect_language(&args.path, lang)
+        })?;
     }
     let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
     // clap admits only the three the parser lists, so this arm is
@@ -100,6 +78,11 @@ fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
         );
     };
     let derived = if args.no_derived {
+        observe::skipped(
+            &env.progress,
+            "Generating derived documentation",
+            "disabled by --no-derived",
+        );
         BTreeMap::new()
     } else {
         generated_derived(&args.path, &env, args.binary.clone())?
@@ -113,8 +96,10 @@ fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
         manifest: manifest::Options::at(Utc::now()),
         derived,
     };
-    let built = build::build(&args.path, &sources, &options)?;
-    build::write(&built, &args.out)?;
+    let built = build::build_observed(&args.path, &sources, &options, &env.progress)?;
+    observe::phase(&env.progress, "Writing documentation output", || {
+        build::write(&built, &args.out)
+    })?;
     print!("{}", built.render());
     println!("  written under {}", args.out.display());
     Ok(())
@@ -123,11 +108,15 @@ fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
 /// `vibe doc manifest` — the machine's view of the package.
 fn run_manifest(args: DocManifestArgs, env: DocEnv) -> Result<()> {
     if let Some(lang) = &args.lang {
-        build::expect_language(&args.path, lang)?;
+        observe::phase(&env.progress, "Checking documentation language", || {
+            build::expect_language(&args.path, lang)
+        })?;
     }
     let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
     let options = manifest::Options::at(Utc::now());
-    let built = manifest::build(&args.path, &sources, &options)?;
+    let built = observe::phase(&env.progress, "Building documentation manifest", || {
+        manifest::build(&args.path, &sources, &options)
+    })?;
 
     if let Some(tier) = &args.llms {
         let tier = match tier.as_str() {
@@ -136,7 +125,9 @@ fn run_manifest(args: DocManifestArgs, env: DocEnv) -> Result<()> {
             "medium" => llms::Tier::Medium,
             _ => llms::Tier::Full,
         };
-        let (set, content) = build::content(&args.path, &sources, &args.base, BTreeMap::new())?;
+        let (set, content) = observe::phase(&env.progress, "Reading documentation pages", || {
+            build::content(&args.path, &sources, &args.base, BTreeMap::new())
+        })?;
         let bodies = llms::bodies(&set, &content);
         print!(
             "{}",
@@ -182,7 +173,9 @@ fn run_serve(args: DocServeArgs, env: DocEnv) -> Result<()> {
     // The shell is resolved before anything else, because `--print-shell`
     // is a question about this binary and not about any package: it must
     // answer on a machine with no documentation to point at.
+    let shell_task = env.progress.task("Resolving documentation reader shell");
     let dressed = shell::resolve(&env, args.bare_shell);
+    shell_task.finish();
     if args.print_shell {
         println!("{}", serde_json::to_string_pretty(&dressed.report())?);
         return Ok(());
@@ -203,8 +196,15 @@ fn run_serve(args: DocServeArgs, env: DocEnv) -> Result<()> {
             .or_else(|| env.cwd.as_deref().and_then(preferred_language)),
     };
     let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
-    let reader = vibe_doc_server::Reader::wearing(&config, sources, Utc::now(), dressed)?;
+    let reader = observe::phase(&env.progress, "Preparing documentation reader", || {
+        vibe_doc_server::Reader::wearing(&config, sources, Utc::now(), dressed)
+    })?;
     let derived = if args.no_derived {
+        observe::skipped(
+            &env.progress,
+            "Generating derived documentation",
+            "disabled by --no-derived",
+        );
         BTreeMap::new()
     } else {
         generated_derived(&args.path, &env, args.binary.clone())?
@@ -234,7 +234,10 @@ fn generated_derived(
     // Keyed the way a backend asks for it — by kind and reference, not
     // by the record's per-page row id: one `vibe list --help` is one
     // text however many pages show it.
-    Ok(derived::generate(package_dir, &derived_env)?
+    Ok(
+        observe::phase(&env.progress, "Generating derived documentation", || {
+            derived::generate(package_dir, &derived_env)
+        })?
         .into_iter()
         .map(|block| {
             (
@@ -242,7 +245,8 @@ fn generated_derived(
                 block.text,
             )
         })
-        .collect())
+        .collect(),
+    )
 }
 
 fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
@@ -262,6 +266,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
              (violates spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY)"
         );
     }
+    let progress = env.progress.clone();
     let runner = RunnerEnv {
         binary: args
             .binary
@@ -286,7 +291,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     };
 
     if args.examples {
-        let report = examples::check(&args.path, &runner, &options)?;
+        let report = examples::check_observed(&args.path, &runner, &options, &progress)?;
         print!("{}", report.render());
         if !report.ok() {
             let counts = report.counts();
@@ -305,7 +310,9 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     if args.citations {
         let coordinate = derived::coordinate_of(&args.path)?;
         let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
-        let report = citations::check(&args.path, &coordinate, &sources)?;
+        let report = observe::phase(&progress, "Checking documentation citations", || {
+            citations::check(&args.path, &coordinate, &sources)
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             bail!(
@@ -318,7 +325,9 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
 
     if args.translations {
         let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
-        let report = translations::check(&args.path, &sources)?;
+        let report = observe::phase(&progress, "Checking documentation translations", || {
+            translations::check(&args.path, &sources)
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             bail!(
@@ -330,15 +339,17 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     }
 
     if args.prompts {
-        let report = prompts::check(
-            &args.path,
-            &runner,
-            &prompts::Options {
-                runner: args.runner.clone(),
-                sample: args.sample,
-                only: args.only.clone(),
-            },
-        )?;
+        let report = observe::phase(&progress, "Checking documented prompts", || {
+            prompts::check(
+                &args.path,
+                &runner,
+                &prompts::Options {
+                    runner: args.runner.clone(),
+                    sample: args.sample,
+                    only: args.only.clone(),
+                },
+            )
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             let counts = report.counts();
@@ -355,7 +366,9 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     }
 
     if args.style {
-        let report = style::check(&args.path, args.min)?;
+        let report = observe::phase(&progress, "Checking documentation style", || {
+            style::check(&args.path, args.min)
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             bail!(
@@ -373,7 +386,9 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     }
 
     if args.media {
-        let report = media::check(&args.path)?;
+        let report = observe::phase(&progress, "Checking documentation media", || {
+            media::check(&args.path)
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             bail!(
@@ -396,6 +411,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
             &runner.repo_root,
             &coordinate,
             &sources,
+            &progress,
         )?;
         print!("{}", report.render());
         if !report.ok() {
@@ -426,7 +442,9 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
             coordinate: derived::coordinate_of(&args.path)?,
             timeout_secs: args.timeout,
         };
-        let report = derived::check(&args.path, &env, args.accept)?;
+        let report = observe::phase(&progress, "Checking derived documentation", || {
+            derived::check(&args.path, &env, args.accept)
+        })?;
         print!("{}", report.render());
         if !report.ok() {
             bail!(
@@ -457,6 +475,7 @@ fn coverage_report(
     repo_root: &Option<PathBuf>,
     coordinate: &str,
     sources: &SpecSources,
+    progress: &Progress,
 ) -> Result<coverage::Report> {
     let Some(root) = repo_root.clone() else {
         bail!(
@@ -466,19 +485,27 @@ fn coverage_report(
              fix: run it from the project whose `facts.toml` names the observed corpus)"
         );
     };
-    let grounded = crate::commands::progress::grounding::ground(&ProgressCommonArgs {
-        path: root,
-        campaign: None,
-        no_cache: false,
+    let grounded = observe::phase(progress, "Grounding documentation obligations", || {
+        crate::commands::progress::grounding::ground(&ProgressCommonArgs {
+            path: root,
+            campaign: None,
+            no_cache: false,
+        })
     })?;
     let obligations = coverage::obligations(grounded.docs.iter());
-    Ok(coverage::check(
-        package_dir,
-        coordinate,
-        sources,
-        &grounded.root,
-        obligations,
-        min,
+    Ok(observe::phase(
+        progress,
+        "Checking documentation coverage",
+        || {
+            coverage::check(
+                package_dir,
+                coordinate,
+                sources,
+                &grounded.root,
+                obligations,
+                min,
+            )
+        },
     )?)
 }
 

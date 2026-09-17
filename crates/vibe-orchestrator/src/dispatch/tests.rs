@@ -62,9 +62,24 @@ fn lease_for(root: &Path) -> Arc<LifecycleLease> {
 #[derive(Default)]
 struct RecordingObserver {
     rows: std::sync::Mutex<Vec<LifecycleContributionReport>>,
+    phase_events: std::sync::Mutex<Vec<(String, String)>>,
 }
 
 impl RunObserver for RecordingObserver {
+    fn observe_phase_started(&self, phase: &str) {
+        self.phase_events
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+            .push((phase.into(), "start".into()));
+    }
+
+    fn observe_phase_finished(&self, phase: &str, status: &str) {
+        self.phase_events
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+            .push((phase.into(), status.into()));
+    }
+
     fn stream_mode(&self) -> vibe_lifecycle::process::StreamMode {
         vibe_lifecycle::process::StreamMode::Null
     }
@@ -100,6 +115,15 @@ impl RunObserver for RecordingObserver {
         _contributions: &[LifecycleContributionReport],
     ) -> anyhow::Result<()> {
         Ok(())
+    }
+}
+
+impl RecordingObserver {
+    fn phase_events(&self) -> Vec<(String, String)> {
+        self.phase_events
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+            .clone()
     }
 }
 
@@ -141,6 +165,74 @@ fn dispatch_reports_the_real_row_through_the_supplied_observer() {
         "one planned row produces one observation"
     );
     assert_eq!(observed[0].phase, "build");
+}
+
+#[test]
+fn untracked_dispatch_terminalizes_a_successful_phase_once() {
+    let project = project_with_one_row();
+    let plan = world::plan_default(project.path(), &[Phase::Build]).expect("the plan loads");
+    let observer = RecordingObserver::default();
+
+    dispatch_plan_untracked(
+        &observer,
+        &plan,
+        &lease_for(project.path()),
+        &agent(),
+        metadata(project.path()),
+    )
+    .expect("the untracked row dispatches");
+
+    assert_eq!(
+        observer.phase_events(),
+        [
+            ("build".into(), "start".into()),
+            ("build".into(), "ok".into())
+        ],
+    );
+}
+
+#[test]
+fn untracked_dispatch_terminalizes_a_failed_phase_once() {
+    let project = tempfile::tempdir().unwrap();
+    fs::create_dir_all(project.path().join("scripts")).unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+         [[extension]]\nid = 'fail'\npoint = 'phase:build'\n\
+         handler = { kind = \"script\", base = \"scripts/fail\" }\n",
+    )
+    .unwrap();
+    fs::write(
+        project.path().join("scripts/fail.sh"),
+        "printf '%s' '{\"artifacts\":[],\"envelope\":1,\"message\":\"failed\",\
+         \"status\":\"fail\",\"tasks\":[]}' > \"$VIBE_REPLY\"\n",
+    )
+    .unwrap();
+    fs::write(
+        project.path().join("scripts/fail.ps1"),
+        "'{\"artifacts\":[],\"envelope\":1,\"message\":\"failed\",\
+         \"status\":\"fail\",\"tasks\":[]}' | Set-Content -NoNewline $env:VIBE_REPLY\n",
+    )
+    .unwrap();
+    let plan = world::plan_default(project.path(), &[Phase::Build]).expect("the plan loads");
+    let observer = RecordingObserver::default();
+
+    dispatch_plan_untracked(
+        &observer,
+        &plan,
+        &lease_for(project.path()),
+        &agent(),
+        metadata(project.path()),
+    )
+    .expect_err("the failing row stops untracked dispatch");
+
+    assert_eq!(
+        observer.phase_events(),
+        [
+            ("build".into(), "start".into()),
+            ("build".into(), "fail".into()),
+        ],
+    );
 }
 
 /// One real row runs; a GENERIC failure follows it; the row comes back.

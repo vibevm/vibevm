@@ -3,6 +3,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
+use vibe_core::progress::ProgressTask;
 
 use super::error::VvmError;
 use super::model::{InstallRecord, Origin};
@@ -10,6 +11,24 @@ use super::store::{INDEX_BINARY_NAME, VersionStore};
 use super::{VvmEnv, git, selfloc, source};
 use crate::cli::VvmWhichArgs;
 use crate::output;
+
+fn read_stage<T>(
+    ctx: &output::Context,
+    label: &str,
+    read: impl FnOnce(&ProgressTask) -> Result<T>,
+) -> Result<T> {
+    let task = ctx.progress().task(label);
+    match read(&task) {
+        Ok(value) => {
+            task.finish();
+            Ok(value)
+        }
+        Err(error) => {
+            task.fail(error.to_string());
+            Err(error)
+        }
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) struct SourceExecution {
@@ -168,13 +187,21 @@ fn running_json(identity: Option<&RunningIdentity>) -> serde_json::Value {
 }
 
 pub(super) fn run_ls_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let mut state = store.load_state()?;
-    state
-        .installs
-        .sort_by(|a, b| a.id.cmp(&b.id).then(a.instance.cmp(&b.instance)));
-    let active = store.active()?;
-    let running = running_identity(&store)?;
+    let (state, active, running) = read_stage(ctx, "Reading installed versions", |task| {
+        let store = env.store()?;
+        let mut state = store.load_state()?;
+        state
+            .installs
+            .sort_by(|a, b| a.id.cmp(&b.id).then(a.instance.cmp(&b.instance)));
+        task.set_progress(
+            state.installs.len() as u64,
+            Some(state.installs.len() as u64),
+            "instances",
+        );
+        let active = store.active()?;
+        let running = running_identity(&store)?;
+        Ok((state, active, running))
+    })?;
     let installed_running = match running.as_ref() {
         Some(RunningIdentity::Installed(record)) => Some(record),
         _ => None,
@@ -231,9 +258,10 @@ pub(super) fn run_ls_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
 }
 
 pub(super) fn run_current_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let active = store.active()?;
-    let running = running_identity(&store)?;
+    let (active, running) = read_stage(ctx, "Reading active and running versions", |_| {
+        let store = env.store()?;
+        Ok((store.active()?, running_identity(&store)?))
+    })?;
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
@@ -279,8 +307,12 @@ pub(super) fn run_current_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()>
 }
 
 pub(super) fn run_source_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
-    let store = env.store()?;
-    let (path, record) = current_source(&store, env)?;
+    let (path, record) = read_stage(ctx, "Resolving current source", |task| {
+        let store = env.store()?;
+        let resolved = current_source(&store, env)?;
+        task.detail(format!("source: {}", resolved.0.display()));
+        Ok(resolved)
+    })?;
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
@@ -289,7 +321,7 @@ pub(super) fn run_source_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> 
             "selector": record.as_ref().map(|record| record.selector().to_string()),
         }));
     }
-    println!("{}", path.display());
+    ctx.suspend_progress(|| println!("{}", path.display()));
     Ok(())
 }
 
@@ -346,16 +378,19 @@ fn require_member(component: &str, path: PathBuf) -> Result<PathBuf> {
 }
 
 pub(super) fn run_which_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmWhichArgs) -> Result<()> {
-    let store = env.store()?;
-    let running = running_identity(&store)?;
-    let active = store.active()?;
-    let (path, selector) = which_resolution(
-        &store,
-        running.as_ref(),
-        active.as_ref(),
-        &args.component,
-        env.cwd.as_deref(),
-    )?;
+    let (path, selector) = read_stage(ctx, "Resolving installed component", |task| {
+        task.detail(format!("component: {}", args.component));
+        let store = env.store()?;
+        let running = running_identity(&store)?;
+        let active = store.active()?;
+        which_resolution(
+            &store,
+            running.as_ref(),
+            active.as_ref(),
+            &args.component,
+            env.cwd.as_deref(),
+        )
+    })?;
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
@@ -365,7 +400,7 @@ pub(super) fn run_which_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmWhichA
             "selector": selector,
         }));
     }
-    println!("{}", path.display());
+    ctx.suspend_progress(|| println!("{}", path.display()));
     Ok(())
 }
 

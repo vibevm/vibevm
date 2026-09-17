@@ -66,7 +66,9 @@ impl CompileObserver for Collector {
 }
 
 pub fn run(ctx: &output::Context, args: AnalyzeArgs) -> Result<()> {
-    let selected = Workspace::discover_selected(&args.path).context("discovering the workspace")?;
+    let selected = observed(ctx, "Discovering extension analysis workspace", || {
+        Workspace::discover_selected(&args.path).context("discovering the workspace")
+    })?;
     let node_rel = selected.selected.as_str().to_string();
     let workspace = selected.workspace;
 
@@ -74,22 +76,39 @@ pub fn run(ctx: &output::Context, args: AnalyzeArgs) -> Result<()> {
     // composition for this one node (owner plan, unit substitution,
     // hoisting, B-006 dedup), observed, writing nothing.
     let collector = Arc::new(Collector::default());
-    let lane =
+    let lane = observed(ctx, "Compiling extension analysis lane", || {
         vibe_workspace::install::analyze_node_lane(&workspace, &node_rel, Some(collector.clone()))
-            .context("analyzing the selected node's lane")?;
+            .context("analyzing the selected node's lane")
+    })?;
 
-    let report = match lane {
-        Some(lane) => lower(&node_rel, &lane, &collector, lane.artifact.bytes().len())?,
-        // A node with no static-lane contributions analyzes to the empty
-        // report — the honest answer, not an error.
-        None => ExtensionsAnalyze {
-            schema: REPORT_EPOCH,
-            command: COMMAND.to_string(),
-            artifacts: Vec::new(),
-        },
-    };
-    let report = verify_through_the_reader(report)?;
+    let report = observed(ctx, "Validating extension analysis report", || {
+        let report = match lane {
+            Some(lane) => lower(&node_rel, &lane, &collector, lane.artifact.bytes().len())?,
+            // A node with no static-lane contributions analyzes to the empty
+            // report — the honest answer, not an error.
+            None => ExtensionsAnalyze {
+                schema: REPORT_EPOCH,
+                command: COMMAND.to_string(),
+                artifacts: Vec::new(),
+            },
+        };
+        verify_through_the_reader(report)
+    })?;
     emit(ctx, args, &report)
+}
+
+fn observed<T>(ctx: &output::Context, label: &str, work: impl FnOnce() -> Result<T>) -> Result<T> {
+    let task = ctx.progress().task(label);
+    match work() {
+        Ok(value) => {
+            task.finish();
+            Ok(value)
+        }
+        Err(error) => {
+            task.fail("extension analysis failed");
+            Err(error)
+        }
+    }
 }
 
 /// Lower the collected evidence into the report document.
@@ -208,10 +227,12 @@ fn verify_through_the_reader(report: ExtensionsAnalyze) -> Result<ExtensionsAnal
 fn emit(ctx: &output::Context, args: AnalyzeArgs, report: &ExtensionsAnalyze) -> Result<()> {
     let json = serde_json::to_string_pretty(report).context("rendering the analyzer report")?;
     if let Some(out) = args.out {
-        std::fs::write(&out, format!("{json}\n"))
-            .with_context(|| format!("writing the analyzer report to {}", out.display()))?;
+        observed(ctx, "Writing extension analysis report", || {
+            std::fs::write(&out, format!("{json}\n"))
+                .with_context(|| format!("writing the analyzer report to {}", out.display()))
+        })?;
     } else if ctx.is_json() {
-        println!("{json}");
+        ctx.suspend_progress(|| println!("{json}"));
     } else {
         human_summary(ctx, report);
     }

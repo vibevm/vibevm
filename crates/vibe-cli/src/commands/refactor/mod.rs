@@ -18,13 +18,13 @@ use convert_source::{ConversionTarget, run_conversion};
 #[derive(Debug, Args)]
 pub struct RefactorArgs {
     #[command(subcommand)]
-    command: RefactorCommand,
+    pub(crate) command: RefactorCommand,
 }
 
 #[derive(Debug, Subcommand)]
 // The shared `Convert` prefix is the intentional user-facing clap namespace.
 #[allow(clippy::enum_variant_names)]
-enum RefactorCommand {
+pub(crate) enum RefactorCommand {
     /// Convert selected authored spec sources through the vibe-specdoc pivot.
     #[command(visible_alias = "convert-src")]
     ConvertSource(ConvertSourceArgs),
@@ -58,7 +58,7 @@ struct ConversionArgs {
 
 /// Arguments for `vibe refactor convert-source`.
 #[derive(Debug, Args)]
-struct ConvertSourceArgs {
+pub(crate) struct ConvertSourceArgs {
     #[command(flatten)]
     conversion: ConversionArgs,
 
@@ -69,7 +69,7 @@ struct ConvertSourceArgs {
 
 /// Arguments for `vibe refactor convert-package-src`.
 #[derive(Debug, Args)]
-struct ConvertPackageSrcArgs {
+pub(crate) struct ConvertPackageSrcArgs {
     #[command(flatten)]
     conversion: ConversionArgs,
 
@@ -80,7 +80,7 @@ struct ConvertPackageSrcArgs {
 
 /// Arguments for `vibe refactor convert-spec-src`.
 #[derive(Debug, Args)]
-struct ConvertSpecSrcArgs {
+pub(crate) struct ConvertSpecSrcArgs {
     #[command(flatten)]
     conversion: ConversionArgs,
 

@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{ApplicationDistributionDecl, Manifest};
+use vibe_core::progress::Progress;
 use vibe_install::InstallSource;
 
 use super::model::{ApplicationIdentity, ApplicationSourceObservation, PackageIdentity};
@@ -28,7 +29,9 @@ pub fn resolve_global_application(
     embedded_registry: Option<&Path>,
     spelling: &str,
     offline: bool,
+    progress: &Progress,
 ) -> Result<ResolvedApplication> {
+    let selection = progress.task(format!("Selecting application source for {spelling}"));
     let requested = qualified_ref(spelling)?;
     if let Some(registry_root) = [explicit_registry, embedded_registry]
         .into_iter()
@@ -40,8 +43,10 @@ pub fn resolve_global_application(
         let selected = registry.resolve(&requested)?;
         let manifest = Manifest::read(selected.source_dir.join(Manifest::FILENAME))?;
         if let Some(source) = manifest.application_source {
-            let observed = resolve_remote_source(settings_root, &source, offline)?;
-            return resolve_application_with_source(
+            selection.detail("published bridge selected an external source registry");
+            let observed =
+                resolve_remote_source(settings_root, &source, offline, &selection.progress())?;
+            let resolved = resolve_application_with_source(
                 &observed.registry_root,
                 spelling,
                 Some(ApplicationSourceObservation {
@@ -51,8 +56,19 @@ pub fn resolve_global_application(
                     source_tree: observed.source_tree,
                 }),
             );
+            match &resolved {
+                Ok(_) => selection.finish(),
+                Err(_) => selection.fail("application source selection failed"),
+            }
+            return resolved;
         }
-        return resolve_application(&registry_root, spelling);
+        selection.detail("using the selected local application registry");
+        let resolved = resolve_application(&registry_root, spelling);
+        match &resolved {
+            Ok(_) => selection.finish(),
+            Err(_) => selection.fail("application source selection failed"),
+        }
+        return resolved;
     }
 
     vibe_core::ensure_default_global_registry()?;
@@ -74,6 +90,7 @@ pub fn resolve_global_application(
         &[],
     )?;
     let store_root = vibe_registry::store::store_root()?;
+    selection.detail("resolving the published application bridge");
     let cached = resolver
         .resolve_and_fetch(&requested, &store_root, None)
         .with_context(|| format!("resolving published application bridge `{spelling}`"))?;
@@ -82,8 +99,8 @@ pub fn resolve_global_application(
             "published global application `{spelling}` must declare [application_source]"
         )
     })?;
-    let observed = resolve_remote_source(settings_root, &source, offline)?;
-    resolve_application_with_source(
+    let observed = resolve_remote_source(settings_root, &source, offline, &selection.progress())?;
+    let resolved = resolve_application_with_source(
         &observed.registry_root,
         spelling,
         Some(ApplicationSourceObservation {
@@ -92,7 +109,12 @@ pub fn resolve_global_application(
             resolved_commit: observed.resolved_commit,
             source_tree: observed.source_tree,
         }),
-    )
+    );
+    match &resolved {
+        Ok(_) => selection.finish(),
+        Err(_) => selection.fail("application source selection failed"),
+    }
+    resolved
 }
 
 pub fn resolve_application(registry_root: &Path, spelling: &str) -> Result<ResolvedApplication> {

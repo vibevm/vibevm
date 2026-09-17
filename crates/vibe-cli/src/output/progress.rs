@@ -20,6 +20,17 @@ pub(crate) use sanitize::sanitize_progress_text;
 const PLAIN_UPDATE_INTERVAL: Duration = Duration::from_secs(1);
 const WAIT_INTERVAL: Duration = Duration::from_secs(15);
 
+/// How this invocation may render progress on stderr.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum ProgressMode {
+    /// The command owns its terminal/protocol, or progress was disabled.
+    Disabled,
+    /// Flushed line records, safe beside independently rendered stdout.
+    Plain,
+    /// Cursor-managed bars for command families that synchronize output.
+    Interactive,
+}
+
 pub(super) struct ProgressRenderer {
     renderer: Renderer,
     verbose: bool,
@@ -42,8 +53,13 @@ struct InteractiveTask {
 }
 
 struct PlainRenderer {
-    writer: Mutex<Box<dyn Write + Send>>,
+    emission: Mutex<PlainEmission>,
     tasks: Mutex<BTreeMap<TaskId, PlainTask>>,
+}
+
+struct PlainEmission {
+    writer: Box<dyn Write + Send>,
+    suspended: usize,
 }
 
 struct PlainTask {
@@ -58,7 +74,10 @@ impl ProgressRenderer {
             Arc::new(Self::interactive(verbose))
         } else {
             let plain = Arc::new(PlainRenderer {
-                writer: Mutex::new(Box::new(io::stderr())),
+                emission: Mutex::new(PlainEmission {
+                    writer: Box::new(io::stderr()),
+                    suspended: 0,
+                }),
                 tasks: Mutex::new(BTreeMap::new()),
             });
             spawn_wait_reporter(Arc::downgrade(&plain));
@@ -95,7 +114,10 @@ impl ProgressRenderer {
     fn plain(writer: Box<dyn Write + Send>, verbose: bool) -> Arc<Self> {
         Arc::new(Self {
             renderer: Renderer::Plain(Arc::new(PlainRenderer {
-                writer: Mutex::new(writer),
+                emission: Mutex::new(PlainEmission {
+                    writer,
+                    suspended: 0,
+                }),
                 tasks: Mutex::new(BTreeMap::new()),
             })),
             verbose,
@@ -105,7 +127,7 @@ impl ProgressRenderer {
     pub(super) fn suspend<R>(&self, render: impl FnOnce() -> R) -> R {
         match &self.renderer {
             Renderer::Interactive(interactive) => interactive.multi.suspend(render),
-            Renderer::Plain(_) => render(),
+            Renderer::Plain(plain) => plain.suspend(render),
         }
     }
 
@@ -262,6 +284,14 @@ fn finish_interactive(
 }
 
 impl PlainRenderer {
+    fn suspend<R>(&self, render: impl FnOnce() -> R) -> R {
+        if let Ok(mut emission) = self.emission.lock() {
+            emission.suspended = emission.suspended.saturating_add(1);
+        }
+        let _guard = PlainSuspendGuard { renderer: self };
+        render()
+    }
+
     fn observe(&self, event: ProgressEvent, verbose: bool) {
         match event.kind {
             ProgressEventKind::Started { label } => {
@@ -389,33 +419,55 @@ impl PlainRenderer {
         let lines = self
             .tasks
             .lock()
-            .map(|mut tasks| {
+            .map(|tasks| {
                 let now = Instant::now();
                 tasks
-                    .values_mut()
+                    .iter()
                     .filter_map(|task| {
+                        let (id, task) = task;
                         if now.duration_since(task.last_update) < WAIT_INTERVAL {
                             return None;
                         }
-                        task.last_update = now;
-                        Some(format!(
-                            "[wait] {} [{}]",
-                            task.label,
-                            format_elapsed(now.duration_since(task.started))
+                        Some((
+                            *id,
+                            format!(
+                                "[wait] {} [{}]",
+                                task.label,
+                                format_elapsed(now.duration_since(task.started))
+                            ),
                         ))
                     })
                     .collect::<Vec<_>>()
             })
             .unwrap_or_default();
-        for line in lines {
-            self.line(&line);
+        for (id, line) in lines {
+            if self.line(&line) {
+                self.touch(id);
+            }
         }
     }
 
-    fn line(&self, line: &str) {
-        if let Ok(mut writer) = self.writer.lock() {
-            let _ = writeln!(writer, "{line}");
-            let _ = writer.flush();
+    fn line(&self, line: &str) -> bool {
+        let Ok(mut emission) = self.emission.lock() else {
+            return false;
+        };
+        if emission.suspended > 0 {
+            return false;
+        }
+        let _ = writeln!(emission.writer, "{line}");
+        let _ = emission.writer.flush();
+        true
+    }
+}
+
+struct PlainSuspendGuard<'a> {
+    renderer: &'a PlainRenderer,
+}
+
+impl Drop for PlainSuspendGuard<'_> {
+    fn drop(&mut self) {
+        if let Ok(mut emission) = self.renderer.emission.lock() {
+            emission.suspended = emission.suspended.saturating_sub(1);
         }
     }
 }

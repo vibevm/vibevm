@@ -36,16 +36,17 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use vibe_doc_shell::{Pin, Provenance, Shell, digest};
 
-use super::DocEnv;
+use super::{DocEnv, observe};
 use crate::cli::{DocShellArgs, DocShellCommand, DocShellInstallArgs, DocShellStatusArgs};
+use crate::output;
 use fetch::{Fetcher, HttpFetcher};
 
 /// Run `vibe doc shell …`.
-pub fn run(args: DocShellArgs, env: DocEnv) -> Result<()> {
+pub fn run(ctx: &output::Context, args: DocShellArgs, env: DocEnv) -> Result<()> {
     match args.command {
         None => run_status(DocShellStatusArgs { json: false }, env),
         Some(DocShellCommand::Status(status)) => run_status(status, env),
-        Some(DocShellCommand::Install(install)) => run_install(install, env, &HttpFetcher),
+        Some(DocShellCommand::Install(install)) => run_install(ctx, install, env, &HttpFetcher),
     }
 }
 
@@ -105,7 +106,12 @@ fn run_status(args: DocShellStatusArgs, env: DocEnv) -> Result<()> {
 
 /// `vibe doc shell install` — the one place in this surface that reaches
 /// the network, and only after a person said so.
-fn run_install(args: DocShellInstallArgs, env: DocEnv, fetcher: &dyn Fetcher) -> Result<()> {
+fn run_install(
+    ctx: &output::Context,
+    args: DocShellInstallArgs,
+    env: DocEnv,
+    fetcher: &dyn Fetcher,
+) -> Result<()> {
     let pin = Pin::compiled_in().context("reading the shell pin compiled into this `vibe`")?;
     if !pin.is_set() {
         bail!(
@@ -136,10 +142,18 @@ fn run_install(args: DocShellInstallArgs, env: DocEnv, fetcher: &dyn Fetcher) ->
         .from
         .clone()
         .unwrap_or_else(|| fetch::RELEASE_ROOT.to_string());
-    consent(&args, &env, &base, &version, &pin)?;
+    consent(ctx, &args, &env, &base, &version, &pin)?;
 
     let staging = into.with_file_name(format!(".download-{}-{}", std::process::id(), pin.sha256));
-    let outcome = install_into(&staging, &into, fetcher, &base, &version, &pin);
+    let outcome = install_into(
+        &staging,
+        &into,
+        fetcher,
+        &base,
+        &version,
+        &pin,
+        &env.progress,
+    );
     let _ = std::fs::remove_dir_all(&staging);
     outcome
 }
@@ -152,6 +166,7 @@ fn install_into(
     base: &str,
     version: &str,
     pin: &Pin,
+    progress: &vibe_core::progress::Progress,
 ) -> Result<()> {
     std::fs::create_dir_all(staging)
         .with_context(|| format!("creating `{}`", staging.display()))?;
@@ -159,10 +174,14 @@ fn install_into(
     let manifest_path = staging.join(fetch::MANIFEST_FILENAME);
     let manifest_url = fetch::asset_url(base, version, fetch::MANIFEST_FILENAME);
     println!("reading {manifest_url}");
-    fetcher.fetch(&manifest_url, &manifest_path, fetch::manifest_max_bytes())?;
-    let manifest_bytes = std::fs::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
-    let manifest = fetch::DocShellManifest::parse(&manifest_bytes, version)?;
+    observe::phase(progress, "Downloading reader shell manifest", || {
+        fetcher.fetch(&manifest_url, &manifest_path, fetch::manifest_max_bytes())
+    })?;
+    let manifest = observe::phase(progress, "Verifying reader shell manifest", || {
+        let manifest_bytes = std::fs::read(&manifest_path)
+            .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+        fetch::DocShellManifest::parse(&manifest_bytes, version)
+    })?;
     // What the release says it is, printed before anything is fetched:
     // an operator who typed `--from` at a mirror should see whose release
     // answered, and a report of a bad download should carry the commit.
@@ -179,21 +198,29 @@ fn install_into(
     let archive_url = fetch::asset_url(base, version, &manifest.asset.name);
     println!("downloading {archive_url}");
     let _cleanup = fetch::Cleanup(archive_path.clone());
-    fetcher.fetch(&archive_url, &archive_path, fetch::asset_max_bytes())?;
-    let archive_bytes = std::fs::read(&archive_path)
-        .with_context(|| format!("reading `{}`", archive_path.display()))?;
-    fetch::require_digest("the shell asset", &archive_bytes, &manifest.asset)?;
+    observe::phase(progress, "Downloading reader shell archive", || {
+        fetcher.fetch(&archive_url, &archive_path, fetch::asset_max_bytes())
+    })?;
+    observe::phase(progress, "Verifying reader shell archive", || {
+        let archive_bytes = std::fs::read(&archive_path)
+            .with_context(|| format!("reading `{}`", archive_path.display()))?;
+        fetch::require_digest("the shell asset", &archive_bytes, &manifest.asset)
+    })?;
 
     let unpacked = staging.join("shell");
-    let count = fetch::unpack(&archive_path, &unpacked)?;
+    let count = observe::phase(progress, "Extracting reader shell", || {
+        fetch::unpack(&archive_path, &unpacked)
+    })?;
 
     // The second check, and the one that matters to a reader: the asset
     // was what the release said, and now the SHELL is what this binary
     // was pinned to. A release could be intact and be another version's.
-    let mut files = digest::read_tree(&unpacked)
-        .with_context(|| format!("reading `{}`", unpacked.display()))?;
-    files.remove(vibe_doc_shell::index::INDEX_FILE);
-    let measured = digest::of(&files);
+    let measured = observe::phase(progress, "Verifying extracted reader shell", || {
+        let mut files = digest::read_tree(&unpacked)
+            .with_context(|| format!("reading `{}`", unpacked.display()))?;
+        files.remove(vibe_doc_shell::index::INDEX_FILE);
+        Ok::<_, anyhow::Error>(digest::of(&files))
+    })?;
     if measured != pin.sha256 {
         bail!(
             "the downloaded shell hashes to {measured} and this `vibe` is pinned to {} \
@@ -204,16 +231,18 @@ fn install_into(
         );
     }
 
-    if let Some(parent) = into.parent() {
-        std::fs::create_dir_all(parent)
-            .with_context(|| format!("creating `{}`", parent.display()))?;
-    }
-    std::fs::rename(&unpacked, into).with_context(|| {
-        format!(
-            "placing the shell at `{}` — it is content-addressed, so a directory that is \
-             already there is already the right one",
-            into.display()
-        )
+    observe::phase(progress, "Publishing reader shell", || {
+        if let Some(parent) = into.parent() {
+            std::fs::create_dir_all(parent)
+                .with_context(|| format!("creating `{}`", parent.display()))?;
+        }
+        std::fs::rename(&unpacked, into).with_context(|| {
+            format!(
+                "placing the shell at `{}` — it is content-addressed, so a directory that is \
+                 already there is already the right one",
+                into.display()
+            )
+        })
     })?;
     println!(
         "the shell is in the store: {count} file(s) at {}",
@@ -232,6 +261,7 @@ fn install_into(
 /// guessing — the pattern `vibe install` set, kept identical because an
 /// operator should not have to learn a second one.
 fn consent(
+    ctx: &output::Context,
     args: &DocShellInstallArgs,
     env: &DocEnv,
     base: &str,
@@ -241,33 +271,35 @@ fn consent(
     if args.assume_yes || env.unattended || env.json {
         return Ok(());
     }
-    println!("The reader's shell is not on this machine.");
-    println!("  from    {base}/v{version}/{}", fetch::MANIFEST_FILENAME);
-    println!("  pinned  {}", pin.sha256);
-    println!(
-        "This is the only moment `vibe doc` uses the network. Reading documentation never \
+    ctx.suspend_progress(|| -> Result<()> {
+        println!("The reader's shell is not on this machine.");
+        println!("  from    {base}/v{version}/{}", fetch::MANIFEST_FILENAME);
+        println!("  pinned  {}", pin.sha256);
+        println!(
+            "This is the only moment `vibe doc` uses the network. Reading documentation never \
          does, and nothing here is sent anywhere."
-    );
-    if !console::user_attended() {
-        bail!(
-            "no terminal to ask at; re-run with `--assume-yes` to take the download as \
+        );
+        if !console::user_attended() {
+            bail!(
+                "no terminal to ask at; re-run with `--assume-yes` to take the download as \
              approved (violates \
              spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-INSTALL-COMMAND; \
              fix: `vibe doc shell install --assume-yes`, or keep the bare shell)"
-        );
-    }
-    let approved = dialoguer::Confirm::new()
-        .with_prompt("Download the documentation shell?")
-        .default(false)
-        .interact()
-        .context("reading the confirmation")?;
-    if !approved {
-        bail!(
-            "declined; the bare shell is what this reader keeps, and it reads \
+            );
+        }
+        let approved = dialoguer::Confirm::new()
+            .with_prompt("Download the documentation shell?")
+            .default(false)
+            .interact()
+            .context("reading the confirmation")?;
+        if !approved {
+            bail!(
+                "declined; the bare shell is what this reader keeps, and it reads \
              (spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-OFFLINE-SHELL)"
-        );
-    }
-    Ok(())
+            );
+        }
+        Ok(())
+    })
 }
 
 #[cfg(test)]

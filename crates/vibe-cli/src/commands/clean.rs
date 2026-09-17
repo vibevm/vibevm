@@ -105,15 +105,17 @@ pub(crate) fn confirm_wipe(
             "no TTY available for confirmation; re-run with `--assume-yes` to clean non-interactively"
         );
     } else {
-        Confirm::new()
-            .with_prompt(format!(
-                "Remove {} dependency slot(s) and {} generated boot artifact(s)?",
-                plan.slot_count,
-                plan.generated.len(),
-            ))
-            .default(false)
-            .interact()
-            .context("reading user confirmation")?
+        ctx.suspend_progress(|| {
+            Confirm::new()
+                .with_prompt(format!(
+                    "Remove {} dependency slot(s) and {} generated boot artifact(s)?",
+                    plan.slot_count,
+                    plan.generated.len(),
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")
+        })?
     };
     if !approved {
         return Err(InstallError::UserDeclined.into());
@@ -122,12 +124,26 @@ pub(crate) fn confirm_wipe(
 }
 
 pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathBuf> {
+    let target_count = usize::from(plan.deps_root.exists()) + plan.generated.len();
+    let wipe = ctx.progress().task("Removing generated workspace state");
+    wipe.set_progress(0, Some(target_count as u64), "targets");
     if plan.slot_count == 0 && plan.generated.is_empty() {
+        wipe.skip("nothing to clean");
         ctx.heading("nothing to clean — no dependency slots, no generated boot artifacts");
     } else {
+        let mut completed = 0u64;
         if plan.deps_root.exists() {
-            std::fs::remove_dir_all(&plan.deps_root)
-                .with_context(|| format!("removing `{}`", plan.deps_root.display()))?;
+            let dependencies = wipe.progress().task("Removing dependency slots");
+            if let Err(error) = std::fs::remove_dir_all(&plan.deps_root)
+                .with_context(|| format!("removing `{}`", plan.deps_root.display()))
+            {
+                dependencies.fail("dependency slot removal failed");
+                wipe.fail("workspace clean failed");
+                return Err(error);
+            }
+            dependencies.finish();
+            completed += 1;
+            wipe.set_progress(completed, Some(target_count as u64), "targets");
             ctx.heading(&format!(
                 "cleaned {} dependency slot(s) — `{}` removed",
                 plan.slot_count,
@@ -135,16 +151,24 @@ pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathB
             ));
         }
         for artifact in &plan.generated {
-            std::fs::remove_file(artifact)
-                .with_context(|| format!("removing `{}`", artifact.display()))?;
-            ctx.heading(&format!(
-                "cleaned generated `{}`",
-                artifact
-                    .file_name()
-                    .map(|n| n.to_string_lossy().into_owned())
-                    .unwrap_or_default()
-            ));
+            let name = artifact
+                .file_name()
+                .map(|name| name.to_string_lossy().into_owned())
+                .unwrap_or_else(|| "generated boot artifact".into());
+            let removal = wipe.progress().task(format!("Removing {name}"));
+            if let Err(error) = std::fs::remove_file(artifact)
+                .with_context(|| format!("removing `{}`", artifact.display()))
+            {
+                removal.fail("generated boot artifact removal failed");
+                wipe.fail("workspace clean failed");
+                return Err(error);
+            }
+            removal.finish();
+            completed += 1;
+            wipe.set_progress(completed, Some(target_count as u64), "targets");
+            ctx.heading(&format!("cleaned generated `{}`", name));
         }
+        wipe.finish();
     }
 
     Ok(plan.project_root)

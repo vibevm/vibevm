@@ -4,17 +4,107 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#context");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#reply");
 
 use std::fs::{self, File, OpenOptions};
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+use std::time::Duration;
 
 use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
 use specmark::spec;
+use vibe_core::progress::{Progress, ProgressDiagnosticLevel};
+
+use crate::output::sanitize_progress_text;
 
 use super::model::{
     ApplicationContext, ApplicationOperation, ApplicationReply, ApplicationStatus, ManagementEntry,
     RESULT_PROTOCOL,
 };
+
+const LIVE_LOG_POLL: Duration = Duration::from_millis(100);
+const MAX_LIVE_LINE_BYTES: usize = 8_192;
+
+#[derive(Clone, Copy)]
+enum LiveLogKind {
+    Stdout,
+    Stderr,
+}
+
+struct LiveLogTail {
+    file: File,
+    pending: Vec<u8>,
+    kind: LiveLogKind,
+    readable: bool,
+}
+
+impl LiveLogTail {
+    fn open(path: &Path, kind: LiveLogKind) -> Option<Self> {
+        OpenOptions::new()
+            .read(true)
+            .open(path)
+            .ok()
+            .map(|file| Self {
+                file,
+                pending: Vec::new(),
+                kind,
+                readable: true,
+            })
+    }
+
+    /// Observe bytes already written to the owned capture file. Read failures
+    /// disable live detail only: progress is ancillary and can never change the
+    /// child process, reply protocol, or final captured diagnostic.
+    fn poll(&mut self, task: &vibe_core::progress::ProgressTask, final_poll: bool) {
+        if !self.readable {
+            return;
+        }
+        let mut chunk = [0u8; 4 * 1024];
+        loop {
+            match self.file.read(&mut chunk) {
+                Ok(0) => break,
+                Ok(read) => self.pending.extend_from_slice(&chunk[..read]),
+                Err(_) => {
+                    self.readable = false;
+                    return;
+                }
+            }
+            self.emit_complete_lines(task);
+            while self.pending.len() >= MAX_LIVE_LINE_BYTES {
+                let bounded: Vec<_> = self.pending.drain(..MAX_LIVE_LINE_BYTES).collect();
+                self.emit(task, &bounded);
+            }
+        }
+        self.emit_complete_lines(task);
+        if final_poll && !self.pending.is_empty() {
+            let tail = std::mem::take(&mut self.pending);
+            self.emit(task, &tail);
+        }
+    }
+
+    fn emit_complete_lines(&mut self, task: &vibe_core::progress::ProgressTask) {
+        while let Some(end) = self.pending.iter().position(|byte| *byte == b'\n') {
+            let line: Vec<_> = self.pending.drain(..=end).collect();
+            self.emit(task, &line);
+        }
+    }
+
+    fn emit(&self, task: &vibe_core::progress::ProgressTask, bytes: &[u8]) {
+        let text = sanitize_progress_text(String::from_utf8_lossy(bytes).trim());
+        if text.is_empty() {
+            return;
+        }
+        let lower = text.to_ascii_lowercase();
+        match self.kind {
+            LiveLogKind::Stderr if lower.contains("error") => {
+                task.diagnostic(ProgressDiagnosticLevel::Error, text)
+            }
+            LiveLogKind::Stderr if lower.contains("warning") => {
+                task.diagnostic(ProgressDiagnosticLevel::Warning, text)
+            }
+            LiveLogKind::Stdout | LiveLogKind::Stderr => task.detail(text),
+        }
+    }
+}
 
 #[spec(
     deviates = "spec://org.vibevm.core/vibevm/common/PROP-059#context",
@@ -46,7 +136,17 @@ pub fn dispatch(
     context: &ApplicationContext,
     context_path: &Path,
     reply_path: &Path,
+    progress: &Progress,
 ) -> Result<ApplicationReply> {
+    let task = progress.task(format!(
+        "Running source application {} for {}",
+        match context.operation {
+            ApplicationOperation::Install => "installer",
+            ApplicationOperation::Update => "updater",
+            ApplicationOperation::Uninstall => "uninstaller",
+        },
+        context.application.id
+    ));
     for path in [context_path, reply_path] {
         vibe_safefs::ensure_no_follow_walk(&context.settings_root, path, true)?;
     }
@@ -61,8 +161,13 @@ pub fn dispatch(
     remove_file_if_present(&stderr_path)?;
     let stdout = File::create(&stdout_path).context("creating application installer stdout")?;
     let stderr = File::create(&stderr_path).context("creating application installer stderr")?;
+    // Separate read handles keep the exact capture files as the child stream
+    // destinations while allowing bounded, sanitized observation during the
+    // wait. The structured application reply remains a different file.
+    let mut stdout_tail = LiveLogTail::open(&stdout_path, LiveLogKind::Stdout);
+    let mut stderr_tail = LiveLogTail::open(&stderr_path, LiveLogKind::Stderr);
     let node = resolve_node()?;
-    let status = Command::new(&node)
+    let mut child = Command::new(&node)
         .arg(entry)
         .current_dir(current_dir)
         .env("VIBE_APPLICATION_CONTEXT", context_path)
@@ -70,9 +175,30 @@ pub fn dispatch(
         .stdin(Stdio::null())
         .stdout(Stdio::from(stdout))
         .stderr(Stdio::from(stderr))
-        .status()
+        .spawn()
         .with_context(|| format!("starting application installer `{}`", entry.display()))?;
-    let diagnostic = bounded_diagnostic(&stderr_path, &stdout_path);
+    let status = loop {
+        if let Some(tail) = &mut stdout_tail {
+            tail.poll(&task, false);
+        }
+        if let Some(tail) = &mut stderr_tail {
+            tail.poll(&task, false);
+        }
+        if let Some(status) = child
+            .try_wait()
+            .context("waiting for the application installer")?
+        {
+            break status;
+        }
+        std::thread::sleep(LIVE_LOG_POLL);
+    };
+    if let Some(tail) = &mut stdout_tail {
+        tail.poll(&task, true);
+    }
+    if let Some(tail) = &mut stderr_tail {
+        tail.poll(&task, true);
+    }
+    let diagnostic = sanitize_progress_text(&bounded_diagnostic(&stderr_path, &stdout_path));
     let parsed = read_reply(reply_path);
     let cleanup = || {
         let _ = fs::remove_file(context_path);
@@ -86,7 +212,9 @@ pub fn dispatch(
             .ok()
             .map(|reply| reply.message.as_str())
             .filter(|value| !value.is_empty());
-        let message = reply_message.unwrap_or(&diagnostic);
+        let message = sanitize_progress_text(reply_message.unwrap_or(&diagnostic));
+        task.diagnostic(ProgressDiagnosticLevel::Error, message.clone());
+        task.fail("source application process failed");
         cleanup();
         bail!(
             "application installer exited {}: {}",
@@ -99,12 +227,18 @@ pub fn dispatch(
     let reply = match parsed {
         Ok(reply) => reply,
         Err(error) => {
+            task.fail("source application reply was invalid");
             cleanup();
             return Err(error);
         }
     };
-    validate_reply(context, &reply)?;
+    if let Err(error) = validate_reply(context, &reply) {
+        task.fail("source application reply was invalid");
+        cleanup();
+        return Err(error);
+    }
     cleanup();
+    task.finish();
     Ok(reply)
 }
 
@@ -249,5 +383,68 @@ fn remove_file_if_present(path: &Path) -> Result<()> {
         Ok(()) => Ok(()),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
         Err(error) => Err(error).with_context(|| format!("removing `{}`", path.display())),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs::File;
+    use std::io::Write;
+    use std::sync::{Arc, Mutex};
+
+    use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
+
+    use super::{LiveLogKind, LiveLogTail};
+
+    #[derive(Default)]
+    struct Recorded(Mutex<Vec<ProgressEvent>>);
+
+    impl ProgressObserver for Recorded {
+        fn observe(&self, event: ProgressEvent) {
+            self.0.lock().unwrap().push(event);
+        }
+    }
+
+    #[test]
+    fn fake_node_log_is_reported_before_child_exit() {
+        let dir = tempfile::tempdir().unwrap();
+        let log = dir.path().join("fake-node.stdout");
+        let mut writer = File::create(&log).unwrap();
+        let mut tail = LiveLogTail::open(&log, LiveLogKind::Stdout).unwrap();
+        let observer = Arc::new(Recorded::default());
+        let progress = Progress::new(observer.clone());
+        let child = progress.task("Running fake Node installer");
+
+        writer.write_all(b"building provider\n").unwrap();
+        writer.flush().unwrap();
+        tail.poll(&child, false);
+
+        let events = observer.0.lock().unwrap();
+        assert!(events.iter().any(|event| matches!(
+            &event.kind,
+            ProgressEventKind::Detail { message } if message == "building provider"
+        )));
+        assert!(
+            !events
+                .iter()
+                .any(|event| matches!(&event.kind, ProgressEventKind::Finished)),
+            "the live line arrives before the child task is marked complete",
+        );
+        drop(events);
+        child.finish();
+    }
+
+    #[test]
+    fn quiet_and_json_contexts_keep_application_progress_inert() {
+        use crate::cli::AgentModeArg;
+        use crate::output::{Context, ProgressMode};
+
+        for (quiet, json) in [(true, false), (false, true)] {
+            let ctx = Context::from_flags(quiet, json, None, false, AgentModeArg::Cli)
+                .with_progress(true, ProgressMode::Plain);
+            let task = ctx.progress().task("hidden fake Node installer");
+            assert_eq!(task.id().get(), 0);
+            task.finish();
+        }
     }
 }

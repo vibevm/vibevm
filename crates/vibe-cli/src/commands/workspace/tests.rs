@@ -198,14 +198,16 @@ fn publish_loop_publishes_every_node_in_order() {
     ];
     let plan = plan(bare_root.path(), false);
     let mut seen: Vec<String> = Vec::new();
-    let published = publish_loop(Some(&creator), &inputs, &plan, &mut |e, _| {
-        seen.push(e.pkgref.clone());
+    let published = publish_loop(Some(&creator), &inputs, &plan, &mut |_, entry, _| {
+        if let Some(entry) = entry {
+            seen.push(entry.pkgref.clone());
+        }
     })
     .expect("publish loop should succeed");
     assert_eq!(published.len(), 2);
     assert_eq!(published[0].pkgref, "org.vibevm/a");
     assert_eq!(published[1].pkgref, "org.vibevm/b");
-    // Progress callback fired once per node, in order.
+    // Progress callback fired once per completed node, in order.
     assert_eq!(seen, vec!["org.vibevm/a", "org.vibevm/b"]);
     // Repos created in order: flow-a then feat-b (kind-name naming).
     assert_eq!(*creator.created.borrow(), vec!["flow-a", "feat-b"]);
@@ -231,7 +233,7 @@ fn publish_loop_stops_on_first_failure_and_reports_partial_progress() {
         input(src.path(), &pkg_rel("c"), "tool", "c"),
     ];
     let plan = plan(bare_root.path(), false);
-    let failure = publish_loop(Some(&creator), &inputs, &plan, &mut |_, _| {})
+    let failure = publish_loop(Some(&creator), &inputs, &plan, &mut |_, _, _| {})
         .expect_err("publish loop should fail on the middle node");
     // Only `a` published before the failure.
     assert_eq!(failure.published.len(), 1);
@@ -261,7 +263,7 @@ fn publish_loop_dry_run_makes_no_network_calls() {
         input(src.path(), &pkg_rel("b"), "stack", "b"),
     ];
     let plan = plan(bare_root.path(), true);
-    let published = publish_loop(None, &inputs, &plan, &mut |_, _| {})
+    let published = publish_loop(None, &inputs, &plan, &mut |_, _, _| {})
         .expect("dry-run publish loop should succeed");
     assert_eq!(published.len(), 2);
     assert_eq!(published[0].pkgref, "org.vibevm/a");

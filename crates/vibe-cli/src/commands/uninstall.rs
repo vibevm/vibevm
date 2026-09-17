@@ -72,6 +72,10 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     } else {
         vibedeps::slot_rel_path(&locked.group, &pkgref.name, &version)
     };
+    let preflight = ctx.progress().task("Preflighting package removal");
+    preflight.detail(format!("selected {group}/{}@{version}", pkgref.name));
+    preflight.detail(format!("materialisation mode: {mode:?}"));
+    preflight.finish();
     if !ctx.is_json() && !ctx.is_quiet() {
         ctx.heading(&format!(
             "\nUninstall {}/{}@{} — remove `{slot}` and regenerate boot.",
@@ -92,15 +96,17 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
              non-interactively; re-run interactively or pass `--assume-yes` to confirm.",
             pkgref.name,
         ),
-        DestructiveGuard::ConfirmInteractively => Confirm::new()
-            .with_prompt(format!(
-                "Remove the in-place slot for {}/{}@{}? This deletes the local git clone; \
-                 restoring it needs a network re-clone.",
-                group, pkgref.name, version
-            ))
-            .default(false)
-            .interact()
-            .context("reading user confirmation")?,
+        DestructiveGuard::ConfirmInteractively => ctx.suspend_progress(|| {
+            Confirm::new()
+                .with_prompt(format!(
+                    "Remove the in-place slot for {}/{}@{}? This deletes the local git clone; \
+                     restoring it needs a network re-clone.",
+                    group, pkgref.name, version
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")
+        })?,
         // Non-in-place, or in-place with an explicit opt-in: the established
         // uninstall confirmation contract (`--assume-yes` / `--unattended` /
         // `--json` imply yes; a non-TTY without them is a hard error).
@@ -112,11 +118,13 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
                     "no TTY available for confirmation; re-run with `--assume-yes` to uninstall non-interactively"
                 );
             } else {
-                Confirm::new()
-                    .with_prompt(format!("Uninstall {}/{}@{}?", group, pkgref.name, version))
-                    .default(false)
-                    .interact()
-                    .context("reading user confirmation")?
+                ctx.suspend_progress(|| {
+                    Confirm::new()
+                        .with_prompt(format!("Uninstall {}/{}@{}?", group, pkgref.name, version))
+                        .default(false)
+                        .interact()
+                        .context("reading user confirmation")
+                })?
             }
         }
     };
@@ -126,13 +134,21 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
 
     // Remove the package's materialised slot — the unversioned in-place git
     // working tree, or the versioned copy/hardlink slot.
-    if mode.is_in_place() {
+    let removing = ctx
+        .progress()
+        .task(format!("Removing {group}/{} package slot", pkgref.name));
+    let removed = if mode.is_in_place() {
         vibedeps::remove_in_place_slot(&workspace.root, &locked.group, &pkgref.name)
-            .context("removing the in-place vibedeps/ slot")?;
+            .context("removing the in-place vibedeps/ slot")
     } else {
         vibedeps::remove_slot(&workspace.root, &locked.group, &pkgref.name, &version)
-            .context("removing the vibedeps/ slot")?;
+            .context("removing the vibedeps/ slot")
+    };
+    if let Err(error) = removed {
+        removing.fail("package slot removal failed");
+        return Err(error);
     }
+    removing.finish();
 
     // Drop the lockfile entry and its root-dependency mirror. Identity is
     // `(group, name)` (PROP-008 §2.3).
@@ -150,23 +166,37 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     // may leave stale, reparable boot output; it must not retain a false lock
     // row for a slot that is already gone.
     let manifest_changed = drop_from_manifest_requires(&mut manifest, group, &pkgref.name);
-    lockfile.write(workspace.lockfile_path())?;
-    if manifest_changed {
-        manifest.write(project_root.join(Manifest::FILENAME))?;
+    let recording = ctx.progress().task("Recording remaining package world");
+    if let Err(error) = lockfile.write(workspace.lockfile_path()) {
+        recording.fail("lockfile recording failed");
+        return Err(error.into());
     }
+    if manifest_changed && let Err(error) = manifest.write(project_root.join(Manifest::FILENAME)) {
+        recording.fail("manifest recording failed");
+        return Err(error.into());
+    }
+    recording.finish();
 
     // Regenerate every node's boot artifacts from the remaining
     // materialised state — the uninstalled package is gone from boot. Re-open
     // the workspace so neither its manifest nor lock snapshot can retain the
     // just-pruned package across this durable-world boundary.
-    let workspace = Workspace::discover(&project_root)
-        .context("rediscovering the pruned workspace before boot regeneration")?;
-    regenerate_boot_with_spec_format(&workspace, spec_format)
-        .context("regenerating boot artifacts")?;
+    let boot = ctx.progress().task("Regenerating workspace boot artifacts");
+    let regenerated = (|| {
+        let workspace = Workspace::discover(&project_root)
+            .context("rediscovering the pruned workspace before boot regeneration")?;
+        regenerate_boot_with_spec_format(&workspace, spec_format)
+            .context("regenerating boot artifacts")
+    })();
+    if let Err(error) = regenerated {
+        boot.fail("boot regeneration failed");
+        return Err(error);
+    }
+    boot.finish();
 
     let package = format!("{group}/{}", pkgref.name);
     let adoption_facts =
-        handle_adoption_facts(&project_root, &package, interactive, args.assume_yes)?;
+        handle_adoption_facts(ctx, &project_root, &package, interactive, args.assume_yes)?;
     emit_report(
         ctx,
         group,
@@ -185,6 +215,7 @@ enum AdoptionFactsDisposition {
 }
 
 fn handle_adoption_facts(
+    ctx: &output::Context,
     project_root: &Path,
     package: &str,
     interactive: bool,
@@ -200,11 +231,13 @@ fn handle_adoption_facts(
         .to_string_lossy()
         .replace('\\', "/");
     let remove = if interactive && !assume_yes {
-        Confirm::new()
-            .with_prompt(format!("Remove its adoption facts ({display})?"))
-            .default(false)
-            .interact()
-            .context("reading adoption-facts confirmation")?
+        ctx.suspend_progress(|| {
+            Confirm::new()
+                .with_prompt(format!("Remove its adoption facts ({display})?"))
+                .default(false)
+                .interact()
+                .context("reading adoption-facts confirmation")
+        })?
     } else {
         false
     };

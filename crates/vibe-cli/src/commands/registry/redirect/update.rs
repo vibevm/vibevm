@@ -10,7 +10,7 @@ use vibe_publish::{
 };
 
 use crate::cli::RegistryRedirectUpdateArgs;
-use crate::commands::registry::resolve_project_root;
+use crate::commands::registry::{observed_stage, resolve_project_root};
 use crate::output;
 
 use super::sync::do_redirect_sync;
@@ -100,9 +100,15 @@ pub(in crate::commands::registry) fn run_redirect_update(
         .map_err(|e| anyhow!("{e}"))?;
     let push_url = creator.push_url(&validated_org, &stub_repo_name);
 
-    let exists = creator
-        .repo_exists(&validated_org, &stub_repo_name)
-        .map_err(|e| anyhow!("{e}"))?;
+    let exists = observed_stage(
+        ctx,
+        format!("Checking redirect stub {stub_repo_name}"),
+        || {
+            creator
+                .repo_exists(&validated_org, &stub_repo_name)
+                .map_err(|e| anyhow!("{e}"))
+        },
+    )?;
     if !exists {
         bail!(
             "stub repository `{stub_repo_name}` does not exist in `{org_segment}` on `{host}`. \
@@ -113,7 +119,9 @@ pub(in crate::commands::registry) fn run_redirect_update(
 
     // Shallow-clone the stub so we have a working tree to write the
     // updated marker into and commit_and_push back onto `main`.
-    let stub_clone = git_publish::shallow_clone(&push_url).map_err(|e| anyhow!("{e}"))?;
+    let stub_clone = observed_stage(ctx, "Cloning redirect stub", || {
+        git_publish::shallow_clone(&push_url).map_err(|e| anyhow!("{e}"))
+    })?;
     let marker_path = stub_clone.path().join(RedirectFile::FILENAME);
     if !marker_path.exists() {
         bail!(
@@ -225,8 +233,10 @@ pub(in crate::commands::registry) fn run_redirect_update(
     })?;
 
     let commit_msg = build_redirect_update_commit_msg(&pkgref.qualified_name(), &changes);
-    git_publish::commit_and_push(stub_clone.path(), &push_url, &commit_msg)
-        .map_err(|e| anyhow!("{e}"))?;
+    observed_stage(ctx, "Pushing updated redirect marker", || {
+        git_publish::commit_and_push(stub_clone.path(), &push_url, &commit_msg)
+            .map_err(|e| anyhow!("{e}"))
+    })?;
     ctx.step(&format!(
         "Pushed updated `{}` to `main`",
         RedirectFile::FILENAME

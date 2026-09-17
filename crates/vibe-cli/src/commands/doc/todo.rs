@@ -23,7 +23,7 @@ use vibe_doc::examples::RunnerEnv;
 use vibe_doc::surface::SurfaceEnv;
 use vibe_doc::todo;
 
-use super::DocEnv;
+use super::{DocEnv, observe};
 use crate::cli::DocTodoArgs;
 
 /// The host's debt file, by the name `MAINTENANCE.md` §3 gives it.
@@ -51,7 +51,7 @@ pub fn run_todo(args: DocTodoArgs, env: DocEnv) -> Result<()> {
         product_version: env!("CARGO_PKG_VERSION").to_owned(),
         sources: super::spec_sources(&env.cwd, settings.as_deref()),
         corpus_root: env.cwd.clone(),
-        obligations: super::surface::obligations(&env.cwd)?,
+        obligations: super::surface::obligations(&env.cwd, &env.progress)?,
         min: args.min,
         // The clock is called HERE and nowhere below: the age of a page
         // is an input to the queue, and a library that read the clock
@@ -80,7 +80,11 @@ pub fn run_todo(args: DocTodoArgs, env: DocEnv) -> Result<()> {
             timeout_secs: args.timeout,
         }),
     };
-    let queue = todo::build(&args.path, &inputs)?;
+    let queue = observe::phase(
+        &env.progress,
+        "Building documentation maintenance queue",
+        || todo::build(&args.path, &inputs),
+    )?;
     if args.format == "json" {
         print!("{}", todo::to_json(&queue));
     } else {

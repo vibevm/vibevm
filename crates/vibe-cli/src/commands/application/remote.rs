@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
 use vibe_core::manifest::ApplicationSourceDecl;
+use vibe_core::progress::Progress;
 use vibe_registry::{GitBackend, ShellGit, compute_portable_content_hash};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -23,6 +24,7 @@ pub fn resolve_remote_source(
     settings_root: &Path,
     declaration: &ApplicationSourceDecl,
     offline: bool,
+    progress: &Progress,
 ) -> Result<ResolvedApplicationSource> {
     let sources = settings_root.join("applications").join("sources");
     fs::create_dir_all(&sources).context("creating application source cache")?;
@@ -33,8 +35,21 @@ pub fn resolve_remote_source(
         .unwrap_or_else(|| std::sync::Arc::new(ShellGit::new()));
     if entry.join(".git").is_dir() {
         if !offline {
-            git.update(&entry, &declaration.tracked_ref)
-                .context("refreshing tracked application source")?;
+            let fetch = progress.task("Fetching tracked application source");
+            fetch.detail(format!("tracked ref: {}", declaration.tracked_ref));
+            match git
+                .update(&entry, &declaration.tracked_ref)
+                .context("refreshing tracked application source")
+            {
+                Ok(()) => fetch.finish(),
+                Err(error) => {
+                    fetch.fail("application source fetch failed");
+                    return Err(error);
+                }
+            }
+        } else {
+            let cached = progress.task("Using cached application source");
+            cached.skip("offline mode");
         }
     } else {
         if offline {
@@ -48,18 +63,32 @@ pub fn resolve_remote_source(
         if pending.exists() {
             fs::remove_dir_all(&pending).context("removing incomplete application source")?;
         }
-        git.bootstrap_embedded(&declaration.url, &declaration.tracked_ref, &pending)
-            .context("cloning tracked application source")?;
+        let clone = progress.task("Cloning tracked application source");
+        clone.detail(format!("tracked ref: {}", declaration.tracked_ref));
+        if let Err(error) = git
+            .bootstrap_embedded(&declaration.url, &declaration.tracked_ref, &pending)
+            .context("cloning tracked application source")
+        {
+            clone.fail("application source clone failed");
+            return Err(error);
+        }
         fs::rename(&pending, &entry).context("publishing tracked application source")?;
+        clone.finish();
     }
     if git.working_tree_dirty(&entry)? {
         bail!("cached application source is dirty; refusing mutable local bytes");
     }
+    let inspect = progress.task("Inspecting resolved application source");
     let resolved_commit = git
         .head_commit(&entry)?
         .ok_or_else(|| anyhow::anyhow!("application source has no observed commit"))?;
     let source_tree =
         compute_portable_content_hash(&entry).context("hashing resolved application source")?;
+    inspect.detail(format!(
+        "resolved commit: {}",
+        &resolved_commit[..12.min(resolved_commit.len())]
+    ));
+    inspect.finish();
     let candidate = entry.join(&declaration.registry_path);
     let registry_root = canonical_directory(&candidate, "external application registry")?;
     if !registry_root.starts_with(&entry) || registry_root == entry {
