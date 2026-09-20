@@ -151,6 +151,26 @@ fn the_pin_parses_and_names_the_web_package() {
 }
 
 #[test]
+fn the_registered_shell_index_corpus_keeps_the_accepted_bytes() {
+    let corpus = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/doc-shell-index/e1/valid/shell.json"
+    ));
+    let index = Index::parse(corpus, Path::new("corpus/shell.json")).unwrap();
+    assert_eq!(index.to_json(), corpus);
+}
+
+#[test]
+fn the_generated_shell_index_reader_keeps_the_epoch_one_unknown_field_refusal() {
+    let corpus = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/doc-shell-index/e1/invalid/unknown_field.json"
+    ));
+    let outcome = Index::parse(corpus, Path::new("corpus/unknown_field.json"));
+    assert!(matches!(outcome, Err(ShellError::Index { .. })));
+}
+
+#[test]
 fn a_pin_of_another_schema_is_refused_rather_than_read() {
     let outcome = Pin::parse("schema = 99\npackage = \"a/b\"\nversion = \"1\"\nsha256 = \"\"\n");
     assert!(matches!(outcome, Err(ShellError::Pin { .. })));

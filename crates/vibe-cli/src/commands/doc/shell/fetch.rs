@@ -29,7 +29,10 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
-use vibe_publish::release_manifest::DistributionAsset;
+
+pub(crate) use vibe_wire::generated::doc_shell_release_manifest::{
+    DistributionAsset, DocShellReleaseManifest as DocShellManifest,
+};
 
 /// Where releases are read from when nobody names somewhere else.
 pub(crate) const RELEASE_ROOT: &str = "https://github.com/vibevm/vibevm/releases/download";
@@ -50,44 +53,30 @@ const ASSET_MAX_BYTES: u64 = 32 * 1024 * 1024;
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(20);
 const TOTAL_TIMEOUT: Duration = Duration::from_secs(10 * 60);
 
-/// The manifest of the shell asset for one release.
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
-pub(crate) struct DocShellManifest {
-    pub(crate) schema_version: u32,
-    pub(crate) product: String,
-    pub(crate) repository: String,
-    pub(crate) version: String,
-    pub(crate) tag: String,
-    pub(crate) source_commit: String,
-    pub(crate) asset: DistributionAsset,
-}
-
 /// The schema this reader knows.
 pub(crate) const MANIFEST_SCHEMA_VERSION: u32 = 1;
 
-impl DocShellManifest {
-    /// Read a manifest and refuse anything it is not.
-    pub(crate) fn parse(bytes: &[u8], version: &str) -> Result<DocShellManifest> {
-        let manifest: DocShellManifest =
-            serde_json::from_slice(bytes).context("reading the shell's release manifest")?;
-        if manifest.schema_version != MANIFEST_SCHEMA_VERSION {
-            bail!(
-                "the shell manifest is written to schema {} and this `vibe` knows \
-                 {MANIFEST_SCHEMA_VERSION}",
-                manifest.schema_version
-            );
-        }
-        if manifest.version != version {
-            bail!(
-                "the shell manifest is for `vibe {}` and this is `vibe {version}` — a shell \
-                 is a build of one version's site package and does not travel between them \
-                 (violates spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN)",
-                manifest.version
-            );
-        }
-        Ok(manifest)
+/// Read a manifest through the registered generated shape and refuse anything
+/// it is not.
+pub(crate) fn parse_manifest(bytes: &[u8], version: &str) -> Result<DocShellManifest> {
+    let manifest: DocShellManifest =
+        serde_json::from_slice(bytes).context("reading the shell's release manifest")?;
+    if manifest.schema_version != MANIFEST_SCHEMA_VERSION {
+        bail!(
+            "the shell manifest is written to schema {} and this `vibe` knows \
+             {MANIFEST_SCHEMA_VERSION}",
+            manifest.schema_version
+        );
     }
+    if manifest.version != version {
+        bail!(
+            "the shell manifest is for `vibe {}` and this is `vibe {version}` — a shell \
+             is a build of one version's site package and does not travel between them \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-PIN)",
+            manifest.version
+        );
+    }
+    Ok(manifest)
 }
 
 /// Where bytes come from, so a test can answer without a network.

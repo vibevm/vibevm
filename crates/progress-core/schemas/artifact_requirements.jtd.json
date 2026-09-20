@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "description": "The PROP-043 authored terminal-artifact requirement set: non-empty, duplicate-free and serialized in the closed vocabulary's declaration order.",
+    "rustOptions": {
+      "package": "progress_core::generated::artifact_requirements"
+    },
+    "x-canonical-set": "nonempty-declaration-order"
+  },
+  "elements": {
+    "ref": "artifact_kind"
+  },
+  "definitions": {
+    "artifact_kind": {
+      "enum": [
+        "specification",
+        "implementation",
+        "verification",
+        "documentation",
+        "decision",
+        "research",
+        "plan",
+        "disposition",
+        "external"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The closed PROP-043 terminal-artifact vocabulary in canonical declaration order."
+      }
+    }
+  }
+}

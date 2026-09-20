@@ -5,16 +5,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 
-use serde::{Deserialize, Serialize};
 use specmark::spec;
 
 use crate::PackageRef;
 use crate::manifest::{declarant_path, is_portable_token};
 
 /// The first user-application runtime vocabulary.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
-#[serde(rename_all = "lowercase")]
 pub enum ApplicationRuntime {
     Node,
 }
@@ -23,9 +21,8 @@ pub enum ApplicationRuntime {
 ///
 /// Artifact digests deliberately live in the release-owned index rather than
 /// in source: publishing a binary must not mutate the commit it describes.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#distribution")]
-#[serde(deny_unknown_fields)]
 pub struct ApplicationDistributionDecl {
     pub repository: String,
     pub release_tag: String,
@@ -35,9 +32,8 @@ pub struct ApplicationDistributionDecl {
 /// A published bridge may delegate its application declaration to a mutable,
 /// explicitly named Git branch. Each operation resolves that branch to an
 /// immutable commit and records the resulting provenance.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#sources")]
-#[serde(deny_unknown_fields)]
 pub struct ApplicationSourceDecl {
     pub kind: ApplicationSourceKind,
     pub url: String,
@@ -45,24 +41,21 @@ pub struct ApplicationSourceDecl {
     pub registry_path: PathBuf,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#sources")]
-#[serde(rename_all = "lowercase")]
 pub enum ApplicationSourceKind {
     Git,
 }
 
 /// Strict package-only `[application]` metadata.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
-#[serde(deny_unknown_fields)]
 pub struct ApplicationDecl {
     pub id: String,
     pub installer_package: PackageRef,
     pub runtime: ApplicationRuntime,
     pub entry: PathBuf,
     pub commands: Vec<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub distribution: Option<ApplicationDistributionDecl>,
 }
 

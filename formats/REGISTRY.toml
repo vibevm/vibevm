@@ -38,6 +38,61 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# ── User-local application durable/exchange records, PROP-059 ───────────────
+[format.application-index]
+epoch = 1
+schema = "schemas/application/e1/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-management]
+epoch = 1
+schema = "schemas/application/e1/management.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-context]
+epoch = 1
+schema = "schemas/application/e1/context.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-reply]
+epoch = 1
+schema = "schemas/application/e1/reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-distribution-index]
+epoch = 1
+schema = "schemas/application/e1/distribution_index.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-bundle-manifest]
+epoch = 1
+schema = "schemas/application/e1/bundle_manifest.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
 [format.cli-extensions-report]
 epoch = 1
 schema = "schemas/extensions_report.jtd.json"
@@ -306,6 +361,22 @@ schema = "schemas/requirements_report.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "formats/corpora/requirements/e2"
+sunset = "none"
+
+# The facts core's owned JSON spelling of one authored `@requires` set.
+# The source annotation can always be reparsed, and the only reader is the
+# neutral progress-core itself.  Its schema-declared canonical-set policy is
+# stronger than JTD's array form: present means non-empty, duplicate-free and
+# emitted in the PROP-043 vocabulary's declaration order.
+[format.facts-artifact-requirements]
+epoch = 1
+schema = "crates/progress-core/schemas/artifact_requirements.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+# This root is an array plus an enum: there are no object members to accept or
+# deny, so object-member strictness is explicitly inapplicable.
+unknown_fields = "allow"
+corpus = "formats/corpora/facts-artifact-requirements/e1"
 sunset = "none"
 
 # ── Compiler IR pass wire (1 JTD), PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ─────────
@@ -886,6 +957,36 @@ schema = "schemas/doc_manifest.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "formats/corpora/doc-manifest/e1"
+sunset = "none"
+
+# `shell.json` travels inside every built/downloaded documentation shell and
+# tells the reader facts that cannot be recovered by inspecting opaque,
+# content-hashed asset names: the build base, island marker and claimed tree
+# digest. It is a rebuildable projection of the web-package build and is read
+# only by our build/reader pair. The epoch-1 reader already refused unknown
+# members before generation, so strictness is declared independently of the
+# parser population and the generated reader preserves that contract.
+[format.doc-shell-index]
+epoch = 1
+schema = "schemas/doc_shell_index.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/doc-shell-index/e1"
+sunset = "none"
+
+# `DOC-SHELL.json` is the release-side partner of the in-archive index: it
+# binds one release to the exact shell archive bytes the installer downloads.
+# The released size/digest fact is not reconstructible after those build bytes
+# are gone, and the only current parser is our installer. Its epoch-1 reader
+# already refused unknown members, so generation preserves that declared rule.
+[format.doc-shell-release-manifest]
+epoch = 1
+schema = "schemas/doc_shell_release_manifest.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/doc-shell-release-manifest/e1"
 sunset = "none"
 
 [format.llms]

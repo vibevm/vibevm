@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "description": "`DOC-SHELL.json` — the release manifest beside one documentation-shell archive (PROP-057 `##SHELL-RELEASE-ASSET`). It binds one vibe release identity to the exact name, byte count and digest of the separately downloadable shell archive. Source of truth for `crates/vibe-wire/src/generated/doc_shell_release_manifest/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_shell_release_manifest"
+    },
+    "x-wire-order": [
+      "schema_version",
+      "product",
+      "repository",
+      "version",
+      "tag",
+      "source_commit",
+      "asset"
+    ]
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "product": { "type": "string" },
+    "repository": { "type": "string" },
+    "version": { "type": "string" },
+    "tag": { "type": "string" },
+    "source_commit": { "type": "string" },
+    "asset": { "ref": "distribution_asset" }
+  },
+  "definitions": {
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64 and refuses fractions, negatives and overflow.",
+        "x-rust-type": "u64"
+      }
+    },
+    "distribution_asset": {
+      "metadata": {
+        "description": "The separately published documentation-shell archive.",
+        "x-wire-order": ["name", "size", "digest"]
+      },
+      "properties": {
+        "name": { "type": "string" },
+        "size": { "ref": "byte_count" },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase `sha256:<64 hex digits>` digest of the complete archive."
+          }
+        }
+      }
+    }
+  }
+}

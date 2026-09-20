@@ -1,0 +1,15 @@
+{
+  "protocol": "vibe-application-context/1",
+  "operation": "install",
+  "application": {
+    "id": "demo",
+    "package": { "group": "org.example", "name": "demo", "version": "1.0.0" },
+    "installerPackage": { "group": "org.example", "name": "installer", "version": "1.0.0" },
+    "commands": ["demo"]
+  },
+  "settingsRoot": "C:/vibe",
+  "hostRoot": "C:/vibe/opt/apps/demo",
+  "registryRoot": "C:/registry",
+  "vibeExecutable": "C:/bin/vibe.exe",
+  "offline": false
+}

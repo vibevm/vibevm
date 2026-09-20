@@ -1,0 +1,29 @@
+{
+  "protocol": "vibe-application-distribution/1",
+  "application": {
+    "id": "demo",
+    "package": { "group": "org.example", "name": "demo", "version": "1.0.0" },
+    "installerPackage": { "group": "org.example", "name": "installer", "version": "1.0.0" },
+    "commands": ["demo"]
+  },
+  "os": "windows",
+  "arch": "x86_64",
+  "sourceCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "sourceTree": "sha256-tree/1:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "management": { "runtime": "builtin", "entry": "management/launch.cmd" },
+  "launchers": [
+    { "command": "demo", "path": "launchers/demo.cmd", "destination": "demo.cmd" }
+  ],
+  "files": [
+    {
+      "path": "management/launch.cmd",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 12
+    },
+    {
+      "path": "launchers/demo.cmd",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size": 12
+    }
+  ]
+}

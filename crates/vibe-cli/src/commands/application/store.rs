@@ -64,8 +64,10 @@ impl ApplicationStore {
         }
         ensure_no_follow_walk(&self.settings_root, &self.index_path, false)?;
         let bytes = fs::read(&self.index_path).context("reading the application index")?;
-        let index: ApplicationIndex =
+        let wire: vibe_wire::generated::application::e1::index::ApplicationIndex =
             serde_json::from_slice(&bytes).context("parsing the application index")?;
+        let index =
+            ApplicationIndex::from_wire(wire).context("parsing the application index selection")?;
         if index.protocol != INDEX_PROTOCOL {
             bail!("application index protocol is unsupported");
         }
@@ -79,8 +81,8 @@ impl ApplicationStore {
         }
         validate_index(index, &self.settings_root)?;
         ensure_no_follow_walk(&self.settings_root, &self.root, false)?;
-        let bytes =
-            serde_json::to_vec_pretty(index).context("serializing the application index")?;
+        let bytes = serde_json::to_vec_pretty(&index.to_wire())
+            .context("serializing the application index")?;
         let temporary = self
             .root
             .join(format!(".index-{}.json", std::process::id()));

@@ -22,6 +22,7 @@ specmark.workspace = true
 thiserror.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+vibe-wire.workspace = true
 sha2.workspace = true
 # The CSP source expression naming an inline script is `'sha256-<base64>'`,
 # and the base64 is the audited codec rather than a handwritten one.

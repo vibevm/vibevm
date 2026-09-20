@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "description": "Release-owned application binary distribution index.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#distribution" },
+    "rustOptions": { "package": "vibe_wire::application::e1::distribution_index" },
+    "x-rust-type": "DistributionIndex",
+    "x-wire-order": ["protocol", "application", "releaseTag", "distributions"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "application": { "ref": "application_identity" },
+    "releaseTag": { "type": "string" },
+    "distributions": { "elements": { "ref": "distribution_target" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "byte_count": { "type": "float64", "metadata": { "x-rust-type": "u64" } },
+    "package_identity": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "application_identity": {
+      "metadata": { "x-wire-order": ["id", "package", "installerPackage", "commands"] },
+      "properties": {
+        "id": { "type": "string" },
+        "package": { "ref": "package_identity" },
+        "installerPackage": { "ref": "package_identity" },
+        "commands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "distribution_target": {
+      "metadata": { "x-wire-order": ["os", "arch", "format", "url", "sha256", "size", "sourceCommit", "sourceTree"] },
+      "properties": {
+        "os": { "type": "string" },
+        "arch": { "type": "string" },
+        "format": { "type": "string" },
+        "url": { "type": "string" },
+        "sha256": { "type": "string" },
+        "size": { "ref": "byte_count" },
+        "sourceCommit": { "type": "string" },
+        "sourceTree": { "type": "string" }
+      }
+    }
+  }
+}

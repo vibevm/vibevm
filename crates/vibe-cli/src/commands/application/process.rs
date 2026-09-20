@@ -13,6 +13,7 @@ use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_core::progress::{Progress, ProgressDiagnosticLevel};
+use vibe_wire::generated::application::e1::reply as reply_wire;
 
 use crate::output::sanitize_progress_text;
 
@@ -348,11 +349,13 @@ fn hash_file(path: &Path) -> Result<String> {
 
 fn read_reply(path: &Path) -> Result<ApplicationReply> {
     let bytes = fs::read(path).context("application installer wrote no reply")?;
-    serde_json::from_slice(&bytes).context("application installer reply is malformed")
+    let wire: reply_wire::ApplicationReply =
+        serde_json::from_slice(&bytes).context("application installer reply is malformed")?;
+    Ok(ApplicationReply::from_wire(wire))
 }
 
-fn write_new_json(path: &Path, value: &impl serde::Serialize) -> Result<()> {
-    let bytes = serde_json::to_vec(value).context("serializing application context")?;
+fn write_new_json(path: &Path, value: &ApplicationContext) -> Result<()> {
+    let bytes = serde_json::to_vec(&value.to_wire()).context("serializing application context")?;
     let mut options = OpenOptions::new();
     options.create_new(true).write(true);
     let mut file = options

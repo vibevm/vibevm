@@ -66,7 +66,7 @@ fn fixture(special_manifest: bool) -> (tempfile::TempDir, PathBuf, DistributionT
             })
             .collect(),
     };
-    let manifest_bytes = serde_json::to_vec(&manifest).unwrap();
+    let manifest_bytes = serde_json::to_vec(&bundle_manifest_to_wire(&manifest)).unwrap();
     let file = File::create(&archive_path).unwrap();
     let mut zip = zip::ZipWriter::new(file);
     if special_manifest {

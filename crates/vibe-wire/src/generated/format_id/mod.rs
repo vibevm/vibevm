@@ -19,6 +19,12 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    ApplicationBundleManifest,
+    ApplicationContext,
+    ApplicationDistributionIndex,
+    ApplicationIndex,
+    ApplicationManagement,
+    ApplicationReply,
     ArtifactRecord,
     BootArtifactTransaction,
     CliApplicationReport,
@@ -47,12 +53,15 @@ pub enum FormatId {
     DistributionBundleManifest,
     DocManifest,
     DocReviews,
+    DocShellIndex,
+    DocShellReleaseManifest,
     DocSiteConfig,
     DocSiteState,
     DocSurface,
     DocSurfaceDiff,
     DocTodo,
     ExtensionsAnalyze,
+    FactsArtifactRequirements,
     Handshake,
     IndexByCap,
     IndexByName,

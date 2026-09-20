@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "product": "vibevm",
+  "repository": "https://github.com/vibevm/vibevm",
+  "version": "1.2.3",
+  "tag": "v1.2.3",
+  "source_commit": "0000000000000000000000000000000000000000",
+  "asset": {
+    "name": "vibevm-doc-shell-1.2.3.zip",
+    "size": 1234,
+    "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

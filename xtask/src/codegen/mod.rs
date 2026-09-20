@@ -15,6 +15,7 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
+mod canonical_set;
 mod derive_floor;
 mod domain_types;
 mod empty_policy;
@@ -39,8 +40,8 @@ mod write;
 use crate::repo_root;
 use format_id::emit_format_id;
 use layout::{
-    module_tree, schema_module_dir, schemas_under, specmap_generated_dir, specmap_schema_dir,
-    vibe_wire_generated_dir,
+    module_tree, progress_core_generated_dir, progress_core_schema_dir, schema_module_dir,
+    schemas_under, specmap_generated_dir, specmap_schema_dir, vibe_wire_generated_dir,
 };
 use output_tree::StagedOutputTree;
 use postproc::{StrictnessSource, rewrite_generated};
@@ -97,6 +98,11 @@ pub(crate) fn run_codegen() -> Result<()> {
         (
             root.join("schemas"),
             vibe_wire_generated_dir(&root),
+            FormatOwner::Ours,
+        ),
+        (
+            progress_core_schema_dir(&root),
+            progress_core_generated_dir(&root),
             FormatOwner::Ours,
         ),
         (
@@ -436,7 +442,11 @@ pub(crate) fn run_check_codegen() -> Result<()> {
     // engine crate `core-ai-native-specmap`, the rest to vibe-wire) — and
     // the second language with them, because a TypeScript consumer left
     // out of the diff is a contract with a gate on one side only.
-    let mut out_dirs = vec![vibe_wire_generated_dir(&root), specmap_generated_dir(&root)];
+    let mut out_dirs = vec![
+        vibe_wire_generated_dir(&root),
+        progress_core_generated_dir(&root),
+        specmap_generated_dir(&root),
+    ];
     out_dirs.extend(typescript_out_files(&root));
     let mut cmd = Command::new("git");
     cmd.arg("diff").arg("--exit-code").arg("--");

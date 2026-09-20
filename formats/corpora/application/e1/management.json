@@ -1,0 +1,12 @@
+{
+  "protocol": "vibe-application-binary-management/1",
+  "applicationId": "demo",
+  "payloadRoot": "C:/vibe/opt/apps/demo/generations/aaaaaaaa",
+  "bundleEntry": "C:/vibe/opt/apps/demo/generations/aaaaaaaa/management/launch.cmd",
+  "launchers": [
+    {
+      "destination": "C:/vibe/opt/bin/demo.cmd",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

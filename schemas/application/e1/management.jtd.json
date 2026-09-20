@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "Core-owned binary application management receipt.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#binary-ownership" },
+    "rustOptions": { "package": "vibe_wire::application::e1::management" },
+    "x-rust-type": "BinaryManagement",
+    "x-wire-order": ["protocol", "applicationId", "payloadRoot", "bundleEntry", "launchers"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "applicationId": { "type": "string" },
+    "payloadRoot": { "ref": "path" },
+    "bundleEntry": { "ref": "path" },
+    "launchers": { "elements": { "ref": "owned_launcher" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "path": { "type": "string", "metadata": { "x-rust-type": "std::path::PathBuf" } },
+    "owned_launcher": {
+      "metadata": { "x-wire-order": ["destination", "sha256"] },
+      "properties": {
+        "destination": { "ref": "path" },
+        "sha256": { "type": "string" }
+      }
+    }
+  }
+}

@@ -154,6 +154,32 @@ fn a_release_for_another_version_is_refused_before_anything_is_downloaded() {
 }
 
 #[test]
+fn the_registered_shell_release_manifest_corpus_is_the_accepted_shape() {
+    let bytes = include_bytes!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/doc-shell-release-manifest/e1/valid/manifest.json"
+    ));
+    let manifest = fetch::parse_manifest(bytes, "1.2.3").unwrap();
+    assert_eq!(manifest.schema_version, fetch::MANIFEST_SCHEMA_VERSION);
+    assert_eq!(manifest.asset.name, "vibevm-doc-shell-1.2.3.zip");
+    let mut encoded = serde_json::to_string_pretty(&manifest).unwrap();
+    encoded.push('\n');
+    assert_eq!(encoded.as_bytes(), bytes);
+}
+
+#[test]
+fn the_generated_shell_release_manifest_reader_keeps_the_unknown_field_refusal() {
+    let bytes = include_bytes!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/doc-shell-release-manifest/e1/invalid/unknown_field.json"
+    ));
+    let message = fetch::parse_manifest(bytes, "1.2.3")
+        .unwrap_err()
+        .to_string();
+    assert!(message.contains("reading the shell's release manifest"));
+}
+
+#[test]
 fn a_shell_that_does_not_hash_to_the_pin_is_refused_after_it_arrives() {
     let tmp = tempfile::tempdir().unwrap();
     let release = tmp.path().join("v9.9.9");

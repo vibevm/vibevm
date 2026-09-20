@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "description": "Owned result exchanged back from a source application installer.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#reply" },
+    "rustOptions": { "package": "vibe_wire::application::e1::reply" },
+    "x-rust-type": "ApplicationReply",
+    "x-wire-order": ["protocol", "operation", "applicationId", "status", "hostRoot", "management", "commands", "message", "launchers"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "operation": { "ref": "application_operation" },
+    "applicationId": { "type": "string" },
+    "status": { "ref": "application_status" },
+    "hostRoot": { "ref": "path" },
+    "management": { "ref": "management_entry", "nullable": true },
+    "commands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "message": { "type": "string" }
+  },
+  "optionalProperties": {
+    "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } }
+  },
+  "definitions": {
+    "path": { "type": "string", "metadata": { "x-rust-type": "std::path::PathBuf" } },
+    "application_operation": {
+      "enum": ["install", "update", "uninstall"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "application_status": {
+      "enum": ["ready", "undeployed", "failed"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "management_runtime": {
+      "enum": ["node", "builtin"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "management_entry": {
+      "metadata": { "x-wire-order": ["runtime", "entry"] },
+      "properties": {
+        "runtime": { "ref": "management_runtime" },
+        "entry": { "ref": "path" }
+      }
+    },
+    "application_launcher_ownership": {
+      "metadata": { "x-wire-order": ["destination", "sha256"] },
+      "properties": {
+        "destination": { "ref": "path" },
+        "sha256": { "type": "string" }
+      }
+    }
+  }
+}

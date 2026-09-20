@@ -93,6 +93,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result, bail};
 
+use super::canonical_set::apply_canonical_set;
 use super::derive_floor::apply_derive_floor;
 use super::domain_types::apply_domain_types;
 use super::empty_policy::apply_empty_policies;
@@ -192,7 +193,8 @@ pub(crate) fn rewrite_generated(
     let bound = apply_domain_types(&strict, &name, resolved, schema)?;
     let floored = apply_derive_floor(&bound, &name)?;
     let opened = open_vocabularies(&floored, &name, resolved, schema)?;
-    super::write::write_generated(file, &opened)
+    let canonical = apply_canonical_set(&opened, &name, resolved, schema)?;
+    super::write::write_generated(file, &canonical)
         .with_context(|| format!("writing the post-processed {name}"))?;
     Ok(())
 }

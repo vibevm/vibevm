@@ -1,0 +1,104 @@
+{
+  "metadata": {
+    "description": "Durable user-local application index.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#ownership" },
+    "rustOptions": { "package": "vibe_wire::application::e1::index" },
+    "x-rust-type": "ApplicationIndex",
+    "x-wire-order": ["protocol", "applications"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "applications": {
+      "values": { "ref": "application_record" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "path": { "type": "string", "metadata": { "x-rust-type": "std::path::PathBuf" } },
+    "application_status": {
+      "enum": ["ready", "undeployed", "failed"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "management_runtime": {
+      "enum": ["node", "builtin"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "package_identity": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "application_identity": {
+      "metadata": { "x-wire-order": ["id", "package", "installerPackage", "commands"] },
+      "properties": {
+        "id": { "type": "string" },
+        "package": { "ref": "package_identity" },
+        "installerPackage": { "ref": "package_identity" },
+        "commands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "management_entry": {
+      "metadata": { "x-wire-order": ["runtime", "entry"] },
+      "properties": {
+        "runtime": { "ref": "management_runtime" },
+        "entry": { "ref": "path" }
+      }
+    },
+    "application_launcher_ownership": {
+      "metadata": { "x-wire-order": ["destination", "sha256"] },
+      "properties": {
+        "destination": { "ref": "path" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "application_source_observation": {
+      "metadata": { "x-wire-order": ["url", "trackedRef", "resolvedCommit", "sourceTree"] },
+      "properties": {
+        "url": { "type": "string" },
+        "trackedRef": { "type": "string" },
+        "resolvedCommit": { "type": "string" },
+        "sourceTree": { "type": "string" }
+      }
+    },
+    "application_selection": {
+      "metadata": { "x-wire-order": ["mode", "commit", "sourceTree", "os", "arch", "assetSha256"] },
+      "properties": {
+        "mode": { "ref": "application_selection_mode" },
+        "commit": { "type": "string", "nullable": true },
+        "sourceTree": { "type": "string", "nullable": true }
+      },
+      "optionalProperties": {
+        "os": { "type": "string", "metadata": { "x-default": null } },
+        "arch": { "type": "string", "metadata": { "x-default": null } },
+        "assetSha256": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "application_selection_mode": {
+      "enum": ["source", "binary"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "application_provenance": {
+      "metadata": { "x-wire-order": ["availableSource", "selected"] },
+      "properties": {
+        "availableSource": { "ref": "application_source_observation", "nullable": true },
+        "selected": { "ref": "application_selection" }
+      }
+    },
+    "application_record": {
+      "metadata": { "x-wire-order": ["application", "hostRoot", "management", "status", "provenance", "launchers"] },
+      "properties": {
+        "application": { "ref": "application_identity" },
+        "hostRoot": { "ref": "path" },
+        "management": { "ref": "management_entry" },
+        "status": { "ref": "application_status" }
+      },
+      "optionalProperties": {
+        "provenance": { "ref": "application_provenance", "metadata": { "x-default": null } },
+        "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } }
+      }
+    }
+  }
+}

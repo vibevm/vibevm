@@ -5,21 +5,319 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::capability_ref::CapabilityRef;
 use crate::error::{Error, Result};
+use crate::manifest::SpecFormat;
 use crate::manifest::project::AuthKind;
+use crate::manifest::purl::Purl;
 use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
+use super::application::{
+    ApplicationDecl, ApplicationDistributionDecl, ApplicationRuntime, ApplicationSourceDecl,
+    ApplicationSourceKind,
+};
 use super::capabilities::{AccessLevel, Requires, link_key};
 use super::deps::{inline_to_git_dep, inline_to_path_dep, inline_to_var_dep};
-use super::{GitPackageDep, GitRefKind, LinkType, PathPackageDep, VarRegistryDep};
+use super::{
+    Authorship, GitPackageDep, GitRefKind, LinkType, Materialization, PackageFormat, PackageMeta,
+    PathPackageDep, PublishPosture, VarRegistryDep, is_false,
+};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum ApplicationRuntimeWire {
+    Node,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum ApplicationSourceKindWire {
+    Git,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ApplicationDistributionDeclWire {
+    repository: String,
+    release_tag: String,
+    index_asset: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ApplicationSourceDeclWire {
+    kind: ApplicationSourceKindWire,
+    url: String,
+    tracked_ref: String,
+    registry_path: PathBuf,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ApplicationDeclWire {
+    id: String,
+    installer_package: PackageRef,
+    runtime: ApplicationRuntimeWire,
+    entry: PathBuf,
+    commands: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    distribution: Option<ApplicationDistributionDeclWire>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct PackageMetaWire {
+    name: String,
+    group: Group,
+    kind: PackageKind,
+    version: semver::Version,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    epoch: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    spec_format: Option<SpecFormat>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    frozen: bool,
+    #[serde(default)]
+    authors: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    license: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    description: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    title: Option<String>,
+    #[serde(default, rename = "abstract", skip_serializing_if = "Option::is_none")]
+    abstract_text: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    authorship: Option<Authorship>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    lang: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    homepage: Option<String>,
+    #[serde(default)]
+    keywords: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    describes: Option<Purl>,
+    #[serde(default, skip_serializing_if = "PublishPosture::is_default")]
+    publish: PublishPosture,
+    #[serde(default, skip_serializing_if = "Materialization::is_default")]
+    materialization: Materialization,
+    #[serde(default, skip_serializing_if = "is_false")]
+    bridge: bool,
+    #[serde(default, skip_serializing_if = "PackageFormat::is_default")]
+    format: PackageFormat,
+}
+
+impl Serialize for ApplicationDecl {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        ApplicationDeclWire::from(self.clone()).serialize(serializer)
+    }
+}
+
+impl<'de> Deserialize<'de> for ApplicationDecl {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(ApplicationDeclWire::deserialize(deserializer)?.into())
+    }
+}
+
+impl Serialize for ApplicationDistributionDecl {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        ApplicationDistributionDeclWire::from(self.clone()).serialize(serializer)
+    }
+}
+
+impl<'de> Deserialize<'de> for ApplicationDistributionDecl {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(ApplicationDistributionDeclWire::deserialize(deserializer)?.into())
+    }
+}
+
+impl Serialize for ApplicationSourceDecl {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        ApplicationSourceDeclWire::from(self.clone()).serialize(serializer)
+    }
+}
+
+impl<'de> Deserialize<'de> for ApplicationSourceDecl {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(ApplicationSourceDeclWire::deserialize(deserializer)?.into())
+    }
+}
+
+impl Serialize for PackageMeta {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        PackageMetaWire::from(self.clone()).serialize(serializer)
+    }
+}
+
+impl<'de> Deserialize<'de> for PackageMeta {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(PackageMetaWire::deserialize(deserializer)?.into())
+    }
+}
+
+impl From<ApplicationDecl> for ApplicationDeclWire {
+    fn from(value: ApplicationDecl) -> Self {
+        Self {
+            id: value.id,
+            installer_package: value.installer_package,
+            runtime: match value.runtime {
+                ApplicationRuntime::Node => ApplicationRuntimeWire::Node,
+            },
+            entry: value.entry,
+            commands: value.commands,
+            distribution: value.distribution.map(Into::into),
+        }
+    }
+}
+
+impl From<ApplicationDeclWire> for ApplicationDecl {
+    fn from(value: ApplicationDeclWire) -> Self {
+        Self {
+            id: value.id,
+            installer_package: value.installer_package,
+            runtime: match value.runtime {
+                ApplicationRuntimeWire::Node => ApplicationRuntime::Node,
+            },
+            entry: value.entry,
+            commands: value.commands,
+            distribution: value.distribution.map(Into::into),
+        }
+    }
+}
+
+impl From<ApplicationDistributionDecl> for ApplicationDistributionDeclWire {
+    fn from(value: ApplicationDistributionDecl) -> Self {
+        Self {
+            repository: value.repository,
+            release_tag: value.release_tag,
+            index_asset: value.index_asset,
+        }
+    }
+}
+
+impl From<ApplicationDistributionDeclWire> for ApplicationDistributionDecl {
+    fn from(value: ApplicationDistributionDeclWire) -> Self {
+        Self {
+            repository: value.repository,
+            release_tag: value.release_tag,
+            index_asset: value.index_asset,
+        }
+    }
+}
+
+impl From<ApplicationSourceDecl> for ApplicationSourceDeclWire {
+    fn from(value: ApplicationSourceDecl) -> Self {
+        Self {
+            kind: match value.kind {
+                ApplicationSourceKind::Git => ApplicationSourceKindWire::Git,
+            },
+            url: value.url,
+            tracked_ref: value.tracked_ref,
+            registry_path: value.registry_path,
+        }
+    }
+}
+
+impl From<ApplicationSourceDeclWire> for ApplicationSourceDecl {
+    fn from(value: ApplicationSourceDeclWire) -> Self {
+        Self {
+            kind: match value.kind {
+                ApplicationSourceKindWire::Git => ApplicationSourceKind::Git,
+            },
+            url: value.url,
+            tracked_ref: value.tracked_ref,
+            registry_path: value.registry_path,
+        }
+    }
+}
+
+impl From<PackageMeta> for PackageMetaWire {
+    fn from(value: PackageMeta) -> Self {
+        Self {
+            name: value.name,
+            group: value.group,
+            kind: value.kind,
+            version: value.version,
+            epoch: value.epoch,
+            spec_format: value.spec_format,
+            frozen: value.frozen,
+            authors: value.authors,
+            license: value.license,
+            description: value.description,
+            title: value.title,
+            abstract_text: value.abstract_text,
+            authorship: value.authorship,
+            lang: value.lang,
+            homepage: value.homepage,
+            keywords: value.keywords,
+            describes: value.describes,
+            publish: value.publish,
+            materialization: value.materialization,
+            bridge: value.bridge,
+            format: value.format,
+        }
+    }
+}
+
+impl From<PackageMetaWire> for PackageMeta {
+    fn from(value: PackageMetaWire) -> Self {
+        Self {
+            name: value.name,
+            group: value.group,
+            kind: value.kind,
+            version: value.version,
+            epoch: value.epoch,
+            spec_format: value.spec_format,
+            frozen: value.frozen,
+            authors: value.authors,
+            license: value.license,
+            description: value.description,
+            title: value.title,
+            abstract_text: value.abstract_text,
+            authorship: value.authorship,
+            lang: value.lang,
+            homepage: value.homepage,
+            keywords: value.keywords,
+            describes: value.describes,
+            publish: value.publish,
+            materialization: value.materialization,
+            bridge: value.bridge,
+            format: value.format,
+        }
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub(super) struct RequiresWire {
+pub(in crate::manifest::package) struct RequiresWire {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     packages: BTreeMap<String, RequiresPackageEntryWire>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -37,23 +335,23 @@ enum RequiresPackageEntryWire {
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(deny_unknown_fields)]
-pub(super) struct InlinePackageDepWire {
+pub(in crate::manifest::package) struct InlinePackageDepWire {
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) version: Option<VersionFieldWire>,
+    pub(in crate::manifest::package) version: Option<VersionFieldWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) path: Option<String>,
+    pub(in crate::manifest::package) path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) git: Option<String>,
+    pub(in crate::manifest::package) git: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) tag: Option<String>,
+    pub(in crate::manifest::package) tag: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) branch: Option<String>,
+    pub(in crate::manifest::package) branch: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) rev: Option<String>,
+    pub(in crate::manifest::package) rev: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) auth: Option<AuthKind>,
+    pub(in crate::manifest::package) auth: Option<AuthKind>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub(super) token_env: Option<String>,
+    pub(in crate::manifest::package) token_env: Option<String>,
     /// Inclusion type (PROP-009 §2.4). Valid on every source kind; lifted
     /// into `Requires::links` by the `TryFrom` conversion.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -71,527 +369,11 @@ pub(super) struct InlinePackageDepWire {
 /// reference (`version.var = "core"`).
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
-pub(super) enum VersionFieldWire {
+pub(in crate::manifest::package) enum VersionFieldWire {
     /// `version = "^0.3"` — a concrete constraint.
     Constraint(String),
     /// `version.var = "core"` — a `[workspace.versions]` placeholder.
     Var { var: String },
 }
 
-impl From<Requires> for RequiresWire {
-    fn from(r: Requires) -> Self {
-        let mut packages: BTreeMap<String, RequiresPackageEntryWire> = BTreeMap::new();
-        for p in &r.packages {
-            let key = wire_key(p.kind, p.group.as_ref(), p.name.as_str());
-            let link = p
-                .group
-                .as_ref()
-                .and_then(|g| r.links.get(&link_key(g, p.name.as_str())).copied());
-            let (access, friend, exclude) = p.group.as_ref().map_or((None, None, None), |group| {
-                visibility_wire(&r, group, p.name.as_str())
-            });
-            let constraint = version_spec_to_constraint_str(&p.version);
-            // A registry dep carrying per-edge metadata needs the inline
-            // form so every explicit declaration survives round-trip.
-            let value =
-                if link.is_some() || access.is_some() || friend.is_some() || exclude.is_some() {
-                    RequiresPackageEntryWire::Inline(InlinePackageDepWire {
-                        version: Some(VersionFieldWire::Constraint(constraint)),
-                        link,
-                        access,
-                        friend,
-                        exclude,
-                        ..Default::default()
-                    })
-                } else {
-                    RequiresPackageEntryWire::Constraint(constraint)
-                };
-            packages.insert(key, value);
-        }
-        for g in &r.git_packages {
-            let key = wire_key(g.kind, Some(&g.group), &g.name);
-            let inline = InlinePackageDepWire {
-                version: g
-                    .version
-                    .as_ref()
-                    .map(|v| VersionFieldWire::Constraint(version_spec_to_constraint_str(v))),
-                path: None,
-                git: Some(g.url.clone()),
-                tag: match &g.ref_kind {
-                    GitRefKind::Tag(s) => Some(s.clone()),
-                    _ => None,
-                },
-                branch: match &g.ref_kind {
-                    GitRefKind::Branch(s) => Some(s.clone()),
-                    _ => None,
-                },
-                rev: match &g.ref_kind {
-                    GitRefKind::Rev(s) => Some(s.clone()),
-                    _ => None,
-                },
-                auth: if g.auth == AuthKind::None {
-                    None
-                } else {
-                    Some(g.auth)
-                },
-                token_env: g.token_env.clone(),
-                link: r.links.get(&link_key(&g.group, &g.name)).copied(),
-                access: r.accesses.get(&link_key(&g.group, &g.name)).copied(),
-                friend: r.friend_flags.get(&link_key(&g.group, &g.name)).copied(),
-                exclude: r.excludes.get(&link_key(&g.group, &g.name)).cloned(),
-            };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
-        }
-        for p in &r.path_packages {
-            let key = wire_key(p.kind, Some(&p.group), &p.name);
-            let inline = InlinePackageDepWire {
-                version: p
-                    .version
-                    .as_ref()
-                    .map(|v| VersionFieldWire::Constraint(version_spec_to_constraint_str(v))),
-                path: Some(p.path.clone()),
-                link: r.links.get(&link_key(&p.group, &p.name)).copied(),
-                access: r.accesses.get(&link_key(&p.group, &p.name)).copied(),
-                friend: r.friend_flags.get(&link_key(&p.group, &p.name)).copied(),
-                exclude: r.excludes.get(&link_key(&p.group, &p.name)).cloned(),
-                ..Default::default()
-            };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
-        }
-        for v in &r.var_packages {
-            let key = wire_key(v.kind, Some(&v.group), &v.name);
-            let inline = InlinePackageDepWire {
-                version: Some(VersionFieldWire::Var { var: v.var.clone() }),
-                link: r.links.get(&link_key(&v.group, &v.name)).copied(),
-                access: r.accesses.get(&link_key(&v.group, &v.name)).copied(),
-                friend: r.friend_flags.get(&link_key(&v.group, &v.name)).copied(),
-                exclude: r.excludes.get(&link_key(&v.group, &v.name)).cloned(),
-                ..Default::default()
-            };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
-        }
-        RequiresWire {
-            packages,
-            capabilities: r.capabilities,
-        }
-    }
-}
-
-impl TryFrom<RequiresWire> for Requires {
-    type Error = String;
-
-    fn try_from(w: RequiresWire) -> std::result::Result<Self, Self::Error> {
-        let mut packages: Vec<PackageRef> = Vec::new();
-        let mut git_packages: Vec<GitPackageDep> = Vec::new();
-        let mut path_packages: Vec<PathPackageDep> = Vec::new();
-        let mut var_packages: Vec<VarRegistryDep> = Vec::new();
-        let mut links: BTreeMap<String, LinkType> = BTreeMap::new();
-        let mut accesses: BTreeMap<String, AccessLevel> = BTreeMap::new();
-        let mut friend_flags: BTreeMap<String, bool> = BTreeMap::new();
-        let mut excludes: BTreeMap<String, Vec<String>> = BTreeMap::new();
-        for (key, entry) in w.packages {
-            let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
-            match entry {
-                RequiresPackageEntryWire::Constraint(spec_str) => {
-                    let version = VersionSpec::parse(&spec_str).map_err(|e| e.to_string())?;
-                    packages.push(
-                        PackageRef::new(kind, Some(group), name, version)
-                            .map_err(|e| e.to_string())?,
-                    );
-                }
-                RequiresPackageEntryWire::Inline(inline) => {
-                    // Per-edge metadata is source-kind independent and keeps
-                    // explicit defaults distinguishable from absent fields.
-                    if let Some(link) = inline.link {
-                        links.insert(link_key(&group, &name), link);
-                    }
-                    if let Some(access) = inline.access {
-                        accesses.insert(link_key(&group, &name), access);
-                    }
-                    if let Some(friend) = inline.friend {
-                        friend_flags.insert(link_key(&group, &name), friend);
-                    }
-                    if let Some(exclude) = inline.exclude.clone() {
-                        excludes.insert(link_key(&group, &name), exclude);
-                    }
-                    // Source dispatch stays path, git, variable, registry.
-                    let mut inline = inline;
-                    if let Some(path) = inline.path.take() {
-                        path_packages.push(
-                            inline_to_path_dep(kind, group, name, path, inline)
-                                .map_err(|e| e.to_string())?,
-                        );
-                    } else if let Some(url) = inline.git.take() {
-                        git_packages.push(
-                            inline_to_git_dep(kind, group, name, url, inline)
-                                .map_err(|e| e.to_string())?,
-                        );
-                    } else if matches!(inline.version, Some(VersionFieldWire::Var { .. })) {
-                        var_packages.push(
-                            inline_to_var_dep(kind, group, name, inline)
-                                .map_err(|e| e.to_string())?,
-                        );
-                    } else {
-                        packages.push(
-                            inline_to_registry_pkgref(kind, group, name, inline)
-                                .map_err(|e| e.to_string())?,
-                        );
-                    }
-                }
-            }
-        }
-        // Defence-in-depth: one `(group, name)` cannot land in two buckets.
-        // The wire form is a single TOML table with unique keys, so this is
-        // unreachable from a valid manifest — kept against a future wire shape.
-        let mut seen: std::collections::HashSet<(Group, String)> = std::collections::HashSet::new();
-        for (group, name) in packages
-            .iter()
-            .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-            .chain(
-                git_packages
-                    .iter()
-                    .map(|g| (g.group.clone(), g.name.clone())),
-            )
-            .chain(
-                path_packages
-                    .iter()
-                    .map(|p| (p.group.clone(), p.name.clone())),
-            )
-            .chain(
-                var_packages
-                    .iter()
-                    .map(|v| (v.group.clone(), v.name.clone())),
-            )
-        {
-            let label = link_key(&group, &name);
-            if !seen.insert((group, name)) {
-                return Err(format!("dependency `{label}` declared more than once"));
-            }
-        }
-        Ok(Requires {
-            packages,
-            capabilities: w.capabilities,
-            git_packages,
-            path_packages,
-            var_packages,
-            links,
-            accesses,
-            friend_flags,
-            excludes,
-        })
-    }
-}
-
-fn visibility_wire(
-    requires: &Requires,
-    group: &Group,
-    name: &str,
-) -> (Option<AccessLevel>, Option<bool>, Option<Vec<String>>) {
-    let key = link_key(group, name);
-    (
-        requires.accesses.get(&key).copied(),
-        requires.friend_flags.get(&key).copied(),
-        requires.excludes.get(&key).cloned(),
-    )
-}
-
-fn parse_pkgref_key(key: &str) -> Result<(Option<PackageKind>, Group, String)> {
-    if key.contains('@') {
-        return Err(Error::BadDependencyDecl {
-            input: key.to_string(),
-            reason: "version constraint must be the value, not part of the key".to_string(),
-        });
-    }
-    let pr = PackageRef::parse(key)?;
-    let group = pr.group.ok_or_else(|| Error::BadDependencyDecl {
-        input: key.to_string(),
-        reason: "a manifest dependency must be group-qualified — write `<group>/<name>`"
-            .to_string(),
-    })?;
-    Ok((pr.kind, group, pr.name.to_string()))
-}
-
-fn inline_to_registry_pkgref(
-    kind: Option<PackageKind>,
-    group: Group,
-    name: String,
-    inline: InlinePackageDepWire,
-) -> Result<PackageRef> {
-    let key_for_err = link_key(&group, &name);
-    if inline.tag.is_some() || inline.branch.is_some() || inline.rev.is_some() {
-        return Err(Error::BadDependencyDecl {
-            input: key_for_err,
-            reason: "registry-resolved dep cannot specify `tag`/`branch`/`rev` without `git`"
-                .to_string(),
-        });
-    }
-    if inline.auth.is_some() || inline.token_env.is_some() {
-        return Err(Error::BadDependencyDecl {
-            input: key_for_err,
-            reason: "registry-resolved dep cannot specify `auth`/`token_env` without `git`"
-                .to_string(),
-        });
-    }
-    let version = match inline.version {
-        Some(VersionFieldWire::Constraint(s)) => VersionSpec::parse(&s)?,
-        Some(VersionFieldWire::Var { .. }) => {
-            unreachable!("a `version.var` entry is dispatched to var_packages")
-        }
-        None => VersionSpec::Latest,
-    };
-    PackageRef::new(kind, Some(group), name, version)
-}
-
-/// The `[requires.packages]` table key for a dependency — the canonical
-/// version-less pkgref `[<kind>:]<group>/<name>` (PROP-008 §2.4 / §2.6).
-fn wire_key(kind: Option<PackageKind>, group: Option<&Group>, name: &str) -> String {
-    let base = match group {
-        Some(g) => format!("{g}/{name}"),
-        None => name.to_string(),
-    };
-    match kind {
-        Some(k) => format!("{k}:{base}"),
-        None => base,
-    }
-}
-
-fn version_spec_to_constraint_str(spec: &VersionSpec) -> String {
-    match spec {
-        VersionSpec::Latest => "*".to_string(),
-        VersionSpec::Req(req) => req.to_string(),
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// Parse a bare `Requires` from a TOML body whose top-level keys are
-    /// `packages` / `capabilities` (i.e. the inside of a `[requires]` table).
-    fn requires_from_toml(body: &str) -> Requires {
-        toml::from_str(body).unwrap()
-    }
-
-    /// The canonical group every fixture package in these tests belongs to.
-    fn org() -> Group {
-        Group::parse("org.vibevm").unwrap()
-    }
-
-    #[test]
-    fn requires_map_bare_constraint_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"org.vibevm/auth" = "*"
-"#,
-        );
-        assert_eq!(r.packages.len(), 2);
-        assert!(r.git_packages.is_empty());
-        // BTreeMap ordering: org.vibevm/auth < org.vibevm/wal alphabetically.
-        assert_eq!(r.packages[0].qualified_name(), "org.vibevm/auth");
-        assert_eq!(r.packages[1].qualified_name(), "org.vibevm/wal");
-    }
-
-    #[test]
-    fn requires_inline_table_with_version_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3" }
-"#,
-        );
-        assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.packages[0].qualified_name(), "org.vibevm/wal");
-        assert!(r.git_packages.is_empty());
-    }
-
-    #[test]
-    fn registry_inline_rejects_git_fields() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/bad" = { version = "^0.3", tag = "v1" }
-"#,
-        )
-        .unwrap_err();
-        assert!(err.to_string().contains("without `git`"));
-    }
-
-    #[test]
-    fn rejects_at_in_pkgref_key() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/wal@^0.3" = "*"
-"#,
-        )
-        .unwrap_err();
-        assert!(
-            err.to_string()
-                .contains("must be the value, not part of the key")
-        );
-    }
-
-    #[test]
-    fn requires_round_trips_through_serialize() {
-        let original = requires_from_toml(
-            r#"capabilities = ["db:any@>=1.0"]
-
-[packages]
-"flow:org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", auth = "token-env", token_env = "MY" }
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        let rendered = toml::to_string_pretty(&original).unwrap();
-        let back: Requires = toml::from_str(&rendered).unwrap();
-        assert_eq!(back.packages.len(), 1);
-        assert_eq!(back.git_packages.len(), 1);
-        assert_eq!(back.git_packages[0].name, "internal");
-        assert_eq!(back.capabilities.len(), 1);
-        assert_eq!(original, back);
-    }
-
-    // --- PROP-009 §2.4 — the `link` inclusion type on wire entries ------
-
-    #[test]
-    fn requires_link_on_registry_dep_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"#,
-        );
-        assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
-    }
-
-    #[test]
-    fn requires_link_dynamic_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/rust" = { version = "^2.0", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.link_for(&org(), "rust"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_absent_is_static() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        assert!(r.links.is_empty());
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_explicit_static_link_is_stored() {
-        // An explicit `link = "dynamic"` is kept, not folded into "absent":
-        // the loading-model precedence (PROP-009 §2.4) lets it override a
-        // workspace default, so the explicit choice must survive — and it
-        // survives a serialize round-trip as an inline table.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-        let back: Requires = toml::from_str(&toml::to_string_pretty(&r).unwrap()).unwrap();
-        assert_eq!(back.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
-    }
-
-    #[test]
-    fn requires_declared_link_is_none_when_unspecified() {
-        // A bare entry declares no `link` — `declared_link` is `None`,
-        // while `link_for` applies the `static` default.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        assert_eq!(r.declared_link(&org(), "wal"), None);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_on_git_source_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.git_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "internal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_on_path_source_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { path = "../flow-wal", link = "static" }
-"#,
-        );
-        assert_eq!(r.path_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
-    }
-
-    #[test]
-    fn requires_link_on_var_dep_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version.var = "core", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.var_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_rejects_unknown_value() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "weird" }
-"#,
-        )
-        .unwrap_err();
-        assert!(
-            err.to_string().contains("variant") || err.to_string().contains("link"),
-            "{err}"
-        );
-    }
-
-    #[test]
-    fn requires_registry_link_renders_as_inline_table() {
-        // A registry dep with a non-default link cannot use the bare-string
-        // form — it must serialise as an inline table so `link` survives.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"#,
-        );
-        let rendered = toml::to_string_pretty(&r).unwrap();
-        assert!(rendered.contains("link = \"static\""), "{rendered}");
-    }
-
-    #[test]
-    fn requires_link_round_trips_across_all_source_kinds() {
-        let original = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
-"org.vibevm/auth" = { path = "../feat-auth", link = "dynamic" }
-"org.vibevm/rust" = { version.var = "core", link = "static" }
-"org.vibevm/plain" = "^0.1"
-"#,
-        );
-        let rendered = toml::to_string_pretty(&original).unwrap();
-        let back: Requires = toml::from_str(&rendered).unwrap();
-        assert_eq!(original, back);
-        // Four declared links survive; the bare entry stays implicitly dynamic.
-        assert_eq!(back.links.len(), 4);
-        assert_eq!(back.link_for(&org(), "wal"), LinkType::Static);
-        assert_eq!(back.link_for(&org(), "internal"), LinkType::Dynamic);
-        assert_eq!(back.link_for(&org(), "auth"), LinkType::Dynamic);
-        assert_eq!(back.link_for(&org(), "rust"), LinkType::Static);
-        assert_eq!(back.link_for(&org(), "plain"), LinkType::Dynamic);
-    }
-}
+mod requires;

@@ -180,7 +180,7 @@ fn install_into(
     let manifest = observe::phase(progress, "Verifying reader shell manifest", || {
         let manifest_bytes = std::fs::read(&manifest_path)
             .with_context(|| format!("reading `{}`", manifest_path.display()))?;
-        fetch::DocShellManifest::parse(&manifest_bytes, version)
+        fetch::parse_manifest(&manifest_bytes, version)
     })?;
     // What the release says it is, printed before anything is fetched:
     // an operator who typed `--from` at a mirror should see whose release

@@ -1,0 +1,19 @@
+{
+  "protocol": "vibe-application-result/1",
+  "operation": "install",
+  "applicationId": "demo",
+  "status": "ready",
+  "hostRoot": "C:/vibe/opt/apps/demo",
+  "management": {
+    "runtime": "node",
+    "entry": "C:/vibe/opt/apps/demo/management/index.mjs"
+  },
+  "commands": ["demo"],
+  "message": "ready",
+  "launchers": [
+    {
+      "destination": "C:/vibe/opt/bin/demo.cmd",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

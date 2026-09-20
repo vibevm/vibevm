@@ -1,0 +1,22 @@
+{
+  "protocol": "vibe-application-distribution-index/1",
+  "application": {
+    "id": "demo",
+    "package": { "group": "org.example", "name": "demo", "version": "1.0.0" },
+    "installerPackage": { "group": "org.example", "name": "installer", "version": "1.0.0" },
+    "commands": ["demo"]
+  },
+  "releaseTag": "v1.0.0",
+  "distributions": [
+    {
+      "os": "windows",
+      "arch": "x86_64",
+      "format": "zip",
+      "url": "https://example.invalid/demo.zip",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 1234,
+      "sourceCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sourceTree": "sha256-tree/1:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ]
+}

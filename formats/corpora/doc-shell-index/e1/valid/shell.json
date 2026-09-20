@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "package": "org.vibevm.doc/web",
+  "version": "0.1.0",
+  "base": "/doc/",
+  "island_marker": "<!--vibe-doc-island-->",
+  "files": 2,
+  "sha256": "d31a244d7cf2026a4195f3828dc76de9160f82905200a331291e6767365bb2a8"
+}

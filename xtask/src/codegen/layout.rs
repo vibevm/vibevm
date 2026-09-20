@@ -57,6 +57,18 @@ pub(crate) fn vibe_wire_generated_dir(root: &Path) -> PathBuf {
     root.join("crates/vibe-wire/src/generated")
 }
 
+/// The neutral facts core owns its own generated wire root. Keeping this tree
+/// beside the model preserves PROP-043's separability law: progress-core does
+/// not acquire a dependency on vibe-wire merely to use its own JSON spelling.
+pub(crate) fn progress_core_schema_dir(root: &Path) -> PathBuf {
+    root.join("crates/progress-core/schemas")
+}
+
+/// Generated types for the neutral facts core's schemas.
+pub(crate) fn progress_core_generated_dir(root: &Path) -> PathBuf {
+    root.join("crates/progress-core/src/generated")
+}
+
 /// `foo.jtd.json` → `foo`.
 fn schema_stem(schema: &Path) -> Result<String> {
     schema

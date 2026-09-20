@@ -8,30 +8,13 @@ use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use vibe_wire::generated::application::e1::management::{BinaryManagement, OwnedLauncher};
 
 use super::distribution::{BundleManifest, VerifiedDistribution};
 use super::model::{ApplicationLauncherOwnership, ManagementEntry, ManagementRuntime};
 
 const MANAGEMENT_PROTOCOL: &str = "vibe-application-binary-management/1";
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-struct BinaryManagement {
-    protocol: String,
-    application_id: String,
-    payload_root: PathBuf,
-    bundle_entry: PathBuf,
-    launchers: Vec<OwnedLauncher>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-struct OwnedLauncher {
-    destination: PathBuf,
-    sha256: String,
-}
 
 pub struct SuspendedBinary {
     files: Vec<(PathBuf, Vec<u8>)>,
@@ -489,7 +472,7 @@ fn read_management(entry: &ManagementEntry) -> Result<BinaryManagement> {
     Ok(value)
 }
 
-fn write_json(path: &Path, value: &impl Serialize) -> Result<()> {
+fn write_json(path: &Path, value: &impl serde::Serialize) -> Result<()> {
     let bytes = serde_json::to_vec_pretty(value)?;
     let mut file = OpenOptions::new().create_new(true).write(true).open(path)?;
     file.write_all(&bytes)?;

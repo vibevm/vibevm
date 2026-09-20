@@ -30,8 +30,7 @@ pub const PAGE_TEMPLATE: &str = "page-template.html";
 pub const INDEX_SCHEMA: u32 = 1;
 
 /// What one shell says about itself.
-#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Index {
     /// The index's shape version.
     pub schema: u32,
@@ -53,6 +52,36 @@ pub struct Index {
     pub sha256: String,
 }
 
+type WireIndex = vibe_wire::generated::doc_shell_index::DocShellIndex;
+
+impl From<WireIndex> for Index {
+    fn from(index: WireIndex) -> Self {
+        Self {
+            schema: index.schema,
+            package: index.package,
+            version: index.version,
+            base: index.base,
+            island_marker: index.island_marker,
+            files: index.files,
+            sha256: index.sha256,
+        }
+    }
+}
+
+impl From<&Index> for WireIndex {
+    fn from(index: &Index) -> Self {
+        Self {
+            schema: index.schema,
+            package: index.package.clone(),
+            version: index.version.clone(),
+            base: index.base.clone(),
+            island_marker: index.island_marker.clone(),
+            files: index.files,
+            sha256: index.sha256.clone(),
+        }
+    }
+}
+
 impl Index {
     /// Read an index from its JSON bytes.
     ///
@@ -66,7 +95,7 @@ impl Index {
     /// assert_eq!(index.base, "/doc/");
     /// ```
     pub fn parse(text: &str, path: &Path) -> ShellResult<Index> {
-        let index: Index = serde_json::from_str(text).map_err(|error| ShellError::Index {
+        let index: WireIndex = serde_json::from_str(text).map_err(|error| ShellError::Index {
             path: path.to_path_buf(),
             message: format!("is not a readable index: {error}"),
         })?;
@@ -79,7 +108,7 @@ impl Index {
                 ),
             });
         }
-        Ok(index)
+        Ok(index.into())
     }
 
     /// Render an index as the bytes the build writes.
@@ -88,7 +117,7 @@ impl Index {
     /// serialisable state that can fail here; a fallible signature would
     /// push an impossible arm onto every caller.
     pub fn to_json(&self) -> String {
-        let mut text = serde_json::to_string_pretty(self).unwrap_or_default();
+        let mut text = serde_json::to_string_pretty(&WireIndex::from(self)).unwrap_or_default();
         text.push('\n');
         text
     }

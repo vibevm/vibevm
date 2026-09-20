@@ -27,6 +27,7 @@ pub mod cache;
 pub mod doc;
 pub mod element;
 pub mod evidence;
+mod generated;
 pub mod journal;
 pub mod model;
 pub mod parse;

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "description": "`shell.json` — the self-description carried inside one documentation shell (PROP-057 `##SHELL-XTASK-EMBED`, `##SHELL-RELATIVE`). The build records the package coordinate, the address base and island marker it built into the shell, and the count and digest of the opaque shell files. A reader uses those named facts instead of guessing from file names. Source of truth for `crates/vibe-wire/src/generated/doc_shell_index/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-XTASK-EMBED"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_shell_index"
+    },
+    "x-wire-order": [
+      "schema",
+      "package",
+      "version",
+      "base",
+      "island_marker",
+      "files",
+      "sha256"
+    ]
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The shell-index shape version. Epoch 1 is the only version this reader accepts."
+      }
+    },
+    "package": {
+      "type": "string",
+      "metadata": {
+        "description": "The web package this shell was built from, in `<group>/<name>` form. Empty only for the built-in fallback, which is not a package build and is never published as `shell.json`."
+      }
+    },
+    "version": {
+      "type": "string",
+      "metadata": {
+        "description": "The version of the web package this shell was built from. Empty only for the unpublished built-in fallback."
+      }
+    },
+    "base": {
+      "type": "string",
+      "metadata": {
+        "description": "The address prefix the shell's template and assets were built under. The local reader uses it as the source prefix when mounting the same shell elsewhere."
+      }
+    },
+    "island_marker": {
+      "type": "string",
+      "metadata": {
+        "description": "The exact marker in the route template that the rendered documentation island replaces."
+      }
+    },
+    "files": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The number of shell payload files, excluding this index."
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "metadata": {
+        "description": "The lowercase hexadecimal tree digest measured over the shell payload, excluding this index so the record does not hash itself."
+      }
+    }
+  }
+}

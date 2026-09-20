@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "description": "Versioned context exchanged with a source application installer.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#context" },
+    "rustOptions": { "package": "vibe_wire::application::e1::context" },
+    "x-rust-type": "ApplicationContext",
+    "x-wire-order": ["protocol", "operation", "application", "settingsRoot", "hostRoot", "registryRoot", "vibeExecutable", "offline"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "operation": { "ref": "application_operation" },
+    "application": { "ref": "application_identity" },
+    "settingsRoot": { "ref": "path" },
+    "hostRoot": { "ref": "path" },
+    "registryRoot": { "ref": "path", "nullable": true },
+    "vibeExecutable": { "ref": "path" },
+    "offline": { "type": "boolean" }
+  },
+  "definitions": {
+    "path": { "type": "string", "metadata": { "x-rust-type": "std::path::PathBuf" } },
+    "application_operation": {
+      "enum": ["install", "update", "uninstall"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "package_identity": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "application_identity": {
+      "metadata": { "x-wire-order": ["id", "package", "installerPackage", "commands"] },
+      "properties": {
+        "id": { "type": "string" },
+        "package": { "ref": "package_identity" },
+        "installerPackage": { "ref": "package_identity" },
+        "commands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}
