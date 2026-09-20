@@ -70,8 +70,9 @@ pub(super) fn target_sort_key(target: &str) -> usize {
     match target {
         "x86_64-pc-windows-msvc" => 0,
         "x86_64-unknown-linux-musl" => 1,
-        "x86_64-apple-darwin" => 2,
-        "aarch64-apple-darwin" => 3,
+        "x86_64-unknown-linux-gnu" => 2,
+        "x86_64-apple-darwin" => 3,
+        "aarch64-apple-darwin" => 4,
         _ => SUPPORTED_DISTRIBUTION_TARGETS.len(),
     }
 }

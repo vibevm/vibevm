@@ -9,7 +9,7 @@ on:
         type: string
         default: "1.0.0"
       upload:
-        description: Replace the version's GitHub draft, upload all four bundles, and publish it
+        description: Replace the version's GitHub draft, upload all five bundles, and publish it
         required: true
         type: boolean
         default: false
@@ -82,10 +82,14 @@ jobs:
             runner: windows-2025
             target: x86_64-pc-windows-msvc
             script: distribution/release/build-windows-x86_64.ps1
-          - label: Linux x86_64
+          - label: Linux x86_64 musl
             runner: ubuntu-24.04
             target: x86_64-unknown-linux-musl
             script: distribution/release/build-linux-x86_64.sh
+          - label: Linux x86_64 GNU
+            runner: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            script: distribution/release/build-linux-x86_64-gnu.sh
           - label: macOS Intel
             runner: macos-15-intel
             target: x86_64-apple-darwin
@@ -163,6 +167,7 @@ jobs:
         target:
           - x86_64-pc-windows-msvc
           - x86_64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
           - x86_64-apple-darwin
           - aarch64-apple-darwin
     steps:
@@ -188,7 +193,7 @@ jobs:
         run: target/debug/xtask dist upload-built --target "${{ matrix.target }}"
 
   finalize:
-    name: Verify four bundles and finalize the release
+    name: Verify five bundles and finalize the release
     if: ${{ always() && inputs.upload && needs.prepare.result == 'success' && needs.upload.result == 'success' }}
     needs:
       - prepare
@@ -208,7 +213,7 @@ jobs:
       - name: Build the release orchestrator without credentials
         run: cargo build --locked --package xtask
 
-      - name: Finalize only the complete four-target draft
+      - name: Finalize only the complete five-target draft
         env:
           VIBEVM_DIST_VERSION: ${{ inputs.version }}
           VIBEVM_PUBLISH_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}

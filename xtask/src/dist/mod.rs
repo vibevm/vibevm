@@ -60,7 +60,7 @@ pub(crate) enum DistCommand {
         out_dir: PathBuf,
     },
 
-    /// Show completeness of the four-target GitHub release.
+    /// Show completeness of the five-target GitHub release.
     Status {
         #[arg(long)]
         version: String,

@@ -14,7 +14,11 @@ pub(super) fn validate_index(
     let mut targets = BTreeSet::new();
     for target in &index.distributions {
         validate_target(target)?;
-        if !targets.insert((target.os.as_str(), target.arch.as_str())) {
+        if !targets.insert((
+            target.os.as_str(),
+            target.arch.as_str(),
+            target.libc.as_deref(),
+        )) {
             bail!("application distribution index repeats a platform target");
         }
     }
@@ -31,6 +35,11 @@ pub(super) fn validate_target(target: &DistributionTarget) -> Result<()> {
         || !tree_hash(&target.source_tree)
         || !portable_token(&target.os)
         || !portable_token(&target.arch)
+        || target
+            .libc
+            .as_deref()
+            .is_some_and(|value| !matches!(value, "gnu" | "musl"))
+        || (target.os == "linux") != target.libc.is_some()
     {
         bail!("application distribution target is malformed");
     }
@@ -47,6 +56,7 @@ pub(super) fn validate_bundle(
         || selected != expected
         || manifest.os != target.os
         || manifest.arch != target.arch
+        || manifest.libc != target.libc
         || manifest.source_commit != target.source_commit
         || manifest.source_tree != target.source_tree
         || manifest.management.runtime != "builtin"
@@ -157,6 +167,7 @@ pub(super) fn distribution_index_from_wire(
             .map(|target| DistributionTarget {
                 os: target.os,
                 arch: target.arch,
+                libc: target.libc,
                 format: target.format,
                 url: target.url,
                 sha256: target.sha256,
@@ -204,6 +215,7 @@ pub(super) fn bundle_manifest_from_wire(value: bundle_wire::BundleManifest) -> B
         },
         os: value.os,
         arch: value.arch,
+        libc: value.libc,
         source_commit: value.source_commit,
         source_tree: value.source_tree,
         management: BundleManagement {
@@ -251,6 +263,7 @@ pub(super) fn bundle_manifest_to_wire(value: &BundleManifest) -> bundle_wire::Bu
         },
         os: value.os.clone(),
         arch: value.arch.clone(),
+        libc: value.libc.clone(),
         source_commit: value.source_commit.clone(),
         source_tree: value.source_tree.clone(),
         management: bundle_wire::BundleManagement {

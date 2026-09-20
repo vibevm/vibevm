@@ -1,5 +1,5 @@
 //! Behaviour of the distribution manifest family — the wire contracts
-//! shared by the four independent vibevm distribution builds.
+//! shared by the five independent vibevm distribution builds.
 //!
 //! The shapes are generated from
 //! [`schemas/distribution/e1/aggregate_distribution_manifest.jtd.json`](../../../../../schemas/distribution/e1/aggregate_distribution_manifest.jtd.json)
@@ -45,7 +45,7 @@ pub const DISTRIBUTION_BASH_INSTALLER_FILENAME: &str = "install.sh";
 pub const DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME: &str = "install.ps1";
 /// Independent parser limit for a bundle manifest or platform fragment.
 pub const DISTRIBUTION_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
-/// Independent parser limit for the four-platform aggregate manifest.
+/// Independent parser limit for the five-platform aggregate manifest.
 pub const DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
 /// Maximum declared size of either executable carried inside a bundle.
 pub const DISTRIBUTION_COMPONENT_MAX_BYTES: u64 = 512 * 1024 * 1024;
@@ -68,9 +68,10 @@ pub const DISTRIBUTION_BUNDLE_MAX_BYTES: u64 = 2 * 1024 * 1024 * 1024 - 1;
 pub const DISTRIBUTION_SCHEMA_VERSION: u32 = 1;
 pub const DISTRIBUTION_PRODUCT: &str = "vibevm";
 pub const DISTRIBUTION_REPOSITORY: &str = "vibevm/vibevm";
-pub const SUPPORTED_DISTRIBUTION_TARGETS: [&str; 4] = [
+pub const SUPPORTED_DISTRIBUTION_TARGETS: [&str; 5] = [
     "x86_64-pc-windows-msvc",
     "x86_64-unknown-linux-musl",
+    "x86_64-unknown-linux-gnu",
     "x86_64-apple-darwin",
     "aarch64-apple-darwin",
 ];

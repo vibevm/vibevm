@@ -14,6 +14,9 @@ pub struct BundleManifest {
 
     pub arch: String,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub libc: Option<String>,
+
     #[serde(rename = "sourceCommit")]
     pub source_commit: String,
 

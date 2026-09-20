@@ -38,6 +38,9 @@ pub struct DistributionTarget {
 
     pub arch: String,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub libc: Option<String>,
+
     pub format: String,
 
     pub url: String,

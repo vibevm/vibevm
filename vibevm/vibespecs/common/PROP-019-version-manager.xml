@@ -597,14 +597,15 @@ instance dirs. It never touches a committer's source tree (external sources are
 held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
 §2.10), and never `~/.cargo`.</RELOCATE-SCOPE></p>
     </relocate>
-    <release-production title="2.18 Native release production — four hosts, one verified release">
+    <release-production title="2.18 Native release production — five targets, one verified release">
       <p><req-release-production fact="true" status="impl/done">`req r1`</req-release-production></p>
       <facts ordered="false">
         <RELEASE-TARGETS fact="true" status="impl/done">The closed native matrix is
   `x86_64-pc-windows-msvc`, `x86_64-unknown-linux-musl`,
+  `x86_64-unknown-linux-gnu`,
   `x86_64-apple-darwin`, and `aarch64-apple-darwin`. Each host builds only its
   own native target; no successful cross-compile is passed off as host proof.</RELEASE-TARGETS>
-        <RELEASE-HOST-SCRIPTS fact="true" status="impl/done">Four dependency-light wrappers under `distribution/release/` drive
+        <RELEASE-HOST-SCRIPTS fact="true" status="impl/done">Five dependency-light wrappers under `distribution/release/` drive
   `cargo xtask dist build`. Construction runs without tests by default;
   `--checks`, `--tests`, and `--self-check` are explicit opt-ins, and
   `--upload` remains the manual build-plus-upload convenience. The Linux
@@ -618,7 +619,7 @@ held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
   entries so its bytes have no architecture-dependent compressor input; the
   outer platform ZIP still applies DEFLATE for transport. A fail-closed
   portability gate rejects tracked paths that cannot have one identity on all
-  four targets (including non-ASCII/case/reserved-name collisions), and the
+  five targets (including non-ASCII/case/reserved-name collisions), and the
   same 200,000-file / 400,000-node / 256-component / 4096-byte path limits are
   enforced before emission and extraction. Optional gates run
   in a disposable source tree and separate Cargo target cache; release

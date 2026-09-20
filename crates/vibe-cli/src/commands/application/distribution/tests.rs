@@ -46,6 +46,7 @@ fn fixture(special_manifest: bool) -> (tempfile::TempDir, PathBuf, DistributionT
         application: identity(),
         os: "windows".into(),
         arch: "x86_64".into(),
+        libc: None,
         source_commit: "a".repeat(40),
         source_tree: format!("sha256-tree/1:{}", "b".repeat(64)),
         management: BundleManagement {
@@ -86,6 +87,7 @@ fn fixture(special_manifest: bool) -> (tempfile::TempDir, PathBuf, DistributionT
     let target = DistributionTarget {
         os: "windows".into(),
         arch: "x86_64".into(),
+        libc: None,
         format: "zip".into(),
         url: "https://example.invalid/demo.zip".into(),
         sha256: digest(&fs::read(&archive_path).unwrap()),
@@ -156,6 +158,7 @@ fn missing_current_platform_is_typed_absence() {
         distributions: vec![DistributionTarget {
             os: "plan9".into(),
             arch: "mips".into(),
+            libc: None,
             format: "zip".into(),
             url: "https://example.invalid/x.zip".into(),
             sha256: "a".repeat(64),
@@ -165,4 +168,29 @@ fn missing_current_platform_is_typed_absence() {
         }],
     };
     assert!(matching_target(&index, &identity()).unwrap().is_none());
+}
+
+#[test]
+fn linux_target_selection_distinguishes_gnu_and_musl() {
+    let target = |libc: &str| DistributionTarget {
+        os: "linux".into(),
+        arch: "x86_64".into(),
+        libc: Some(libc.into()),
+        format: "zip".into(),
+        url: format!("https://example.invalid/{libc}.zip"),
+        sha256: "a".repeat(64),
+        size: 1,
+        source_commit: "b".repeat(40),
+        source_tree: format!("sha256-tree/1:{}", "c".repeat(64)),
+    };
+    let index = DistributionIndex {
+        protocol: INDEX_PROTOCOL.into(),
+        application: identity(),
+        release_tag: "v1.0.0".into(),
+        distributions: vec![target("musl"), target("gnu")],
+    };
+    let selected = matching_target_for(&index, "linux", "x86_64", Some("gnu"))
+        .unwrap()
+        .unwrap();
+    assert_eq!(selected.libc.as_deref(), Some("gnu"));
 }

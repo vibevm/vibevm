@@ -48,6 +48,7 @@ fn verified(root: &Path, asset: char) -> VerifiedDistribution {
             },
             os: "windows".into(),
             arch: "x86_64".into(),
+            libc: None,
             source_commit: "a".repeat(40),
             source_tree: format!("sha256-tree/1:{}", "b".repeat(64)),
             management: BundleManagement {
@@ -73,6 +74,62 @@ fn verified(root: &Path, asset: char) -> VerifiedDistribution {
     }
 }
 
+fn verified_posix(root: &Path) -> VerifiedDistribution {
+    let payload = root.join("staged-posix");
+    fs::create_dir_all(payload.join("management")).unwrap();
+    fs::create_dir_all(payload.join("launchers")).unwrap();
+    let rows = [
+        ("management/launch.sh", b"#!/bin/sh\nexit 0\n".as_slice()),
+        ("launchers/demo", b"#!/bin/sh\nexit 0\n".as_slice()),
+    ];
+    for &(path, bytes) in &rows {
+        fs::write(payload.join(path), bytes).unwrap();
+    }
+    VerifiedDistribution {
+        manifest: BundleManifest {
+            protocol: "vibe-application-distribution/1".into(),
+            application: ApplicationIdentity {
+                id: "demo".into(),
+                package: PackageIdentity {
+                    group: "org.example".into(),
+                    name: "demo".into(),
+                    version: "1.0.0".into(),
+                },
+                installer_package: PackageIdentity {
+                    group: "org.example".into(),
+                    name: "installer".into(),
+                    version: "1.0.0".into(),
+                },
+                commands: vec!["demo".into()],
+            },
+            os: "linux".into(),
+            arch: "x86_64".into(),
+            libc: Some("gnu".into()),
+            source_commit: "a".repeat(40),
+            source_tree: format!("sha256-tree/1:{}", "b".repeat(64)),
+            management: BundleManagement {
+                runtime: "builtin".into(),
+                entry: "management/launch.sh".into(),
+            },
+            launchers: vec![BundleLauncher {
+                command: "demo".into(),
+                path: "launchers/demo".into(),
+                destination: "demo".into(),
+            }],
+            files: rows
+                .iter()
+                .map(|(path, bytes)| BundleFile {
+                    path: (*path).into(),
+                    sha256: digest(bytes),
+                    size: bytes.len() as u64,
+                })
+                .collect(),
+        },
+        payload_root: payload,
+        asset_sha256: "f".repeat(64),
+    }
+}
+
 #[test]
 fn paired_extensions_publish_independently_and_rollback_together() {
     let temp = tempdir().unwrap();
@@ -84,6 +141,20 @@ fn paired_extensions_publish_independently_and_rollback_together() {
     publication.rollback().unwrap();
     assert!(!settings.join("opt/bin/demo.cmd").exists());
     assert!(!settings.join("opt/bin/demo.ps1").exists());
+}
+
+#[test]
+fn posix_bundle_publishes_extensionless_command_and_shell_management_launcher() {
+    let temp = tempdir().unwrap();
+    let settings = temp.path().join("settings");
+    let host = settings.join("opt/apps/demo");
+    let publication = publish(&settings, &host, verified_posix(temp.path()), None, &[]).unwrap();
+    publication.commit();
+    assert!(settings.join("opt/bin/demo").is_file());
+    let stable = host.join("management/launch.sh");
+    assert!(stable.is_file());
+    let body = String::from_utf8(fs::read(stable).unwrap()).unwrap();
+    assert!(body.starts_with("#!/bin/sh\nexec '"), "{body}");
 }
 
 #[test]

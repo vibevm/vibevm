@@ -58,7 +58,7 @@ pub enum ReleaseManifestError {
     #[error(
         "unsupported distribution target `{target}` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
-         fix: build one of the four targets in SUPPORTED_DISTRIBUTION_TARGETS)"
+         fix: build one of the five targets in SUPPORTED_DISTRIBUTION_TARGETS)"
     )]
     UnsupportedTarget { target: String },
     #[error(
@@ -127,7 +127,7 @@ pub enum ReleaseManifestError {
     #[error(
         "platform `{target}` carries a different source archive than the other release bundles \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
-         fix: build all four platform bundles from the same source archive, tree, digest, and commit)"
+         fix: build all five platform bundles from the same source archive, tree, digest, and commit)"
     )]
     SourceArchiveMismatch { target: String },
     #[error(

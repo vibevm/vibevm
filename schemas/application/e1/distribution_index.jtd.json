@@ -32,7 +32,7 @@
       }
     },
     "distribution_target": {
-      "metadata": { "x-wire-order": ["os", "arch", "format", "url", "sha256", "size", "sourceCommit", "sourceTree"] },
+      "metadata": { "x-wire-order": ["os", "arch", "libc", "format", "url", "sha256", "size", "sourceCommit", "sourceTree"] },
       "properties": {
         "os": { "type": "string" },
         "arch": { "type": "string" },
@@ -42,6 +42,9 @@
         "size": { "ref": "byte_count" },
         "sourceCommit": { "type": "string" },
         "sourceTree": { "type": "string" }
+      },
+      "optionalProperties": {
+        "libc": { "type": "string", "metadata": { "x-default": null } }
       }
     }
   }

@@ -42,6 +42,7 @@ pub struct DistributionIndex {
 pub struct DistributionTarget {
     pub os: String,
     pub arch: String,
+    pub libc: Option<String>,
     pub format: String,
     pub url: String,
     pub sha256: String,
@@ -56,6 +57,7 @@ pub struct BundleManifest {
     pub application: ApplicationIdentity,
     pub os: String,
     pub arch: String,
+    pub libc: Option<String>,
     pub source_commit: String,
     pub source_tree: String,
     pub management: BundleManagement,
@@ -158,18 +160,39 @@ pub fn matching_target<'a>(
     if index.protocol != INDEX_PROTOCOL || index.application != *source_application {
         bail!("application distribution index identity is invalid");
     }
-    if std::env::consts::OS != "windows" {
-        return Ok(None);
-    }
+    matching_target_for(
+        index,
+        std::env::consts::OS,
+        std::env::consts::ARCH,
+        current_libc(),
+    )
+}
+
+fn matching_target_for<'a>(
+    index: &'a DistributionIndex,
+    os: &str,
+    arch: &str,
+    libc: Option<&str>,
+) -> Result<Option<&'a DistributionTarget>> {
     let found: Vec<_> = index
         .distributions
         .iter()
-        .filter(|row| row.os == std::env::consts::OS && row.arch == std::env::consts::ARCH)
+        .filter(|row| row.os == os && row.arch == arch && row.libc.as_deref() == libc)
         .collect();
     match found.as_slice() {
         [] => Ok(None),
         [row] => Ok(Some(*row)),
         _ => bail!("application distribution index has duplicate current-platform rows"),
+    }
+}
+
+fn current_libc() -> Option<&'static str> {
+    if cfg!(all(target_os = "linux", target_env = "musl")) {
+        Some("musl")
+    } else if cfg!(all(target_os = "linux", target_env = "gnu")) {
+        Some("gnu")
+    } else {
+        None
     }
 }
 
@@ -318,6 +341,7 @@ fn verify_archive_observed(
             if copied != declared.size || format!("{:x}", digest.finalize()) != declared.sha256 {
                 bail!("distribution file `{name}` differs from its manifest");
             }
+            apply_zip_permissions(&output, entry.unix_mode())?;
             extraction.set_progress((index + 1) as u64, Some(archive_entries as u64), "entries");
         }
         if manifest_entries != 1 || actual_paths != expected_paths {
@@ -336,6 +360,20 @@ fn verify_archive_observed(
         extraction.finish();
     }
     result
+}
+
+#[cfg(unix)]
+fn apply_zip_permissions(path: &Path, mode: Option<u32>) -> Result<()> {
+    use std::os::unix::fs::PermissionsExt;
+    if let Some(mode) = mode {
+        fs::set_permissions(path, fs::Permissions::from_mode(mode & 0o777))?;
+    }
+    Ok(())
+}
+
+#[cfg(not(unix))]
+fn apply_zip_permissions(_path: &Path, _mode: Option<u32>) -> Result<()> {
+    Ok(())
 }
 
 mod codec;

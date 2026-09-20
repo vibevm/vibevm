@@ -164,7 +164,15 @@ fn resolve_target(requested: Option<&str>) -> Result<String> {
             SUPPORTED_DISTRIBUTION_TARGETS.join(", ")
         );
     }
-    if selected != native {
+    let compatible = match (std::env::consts::OS, std::env::consts::ARCH, selected) {
+        ("windows", "x86_64", "x86_64-pc-windows-msvc")
+        | ("linux", "x86_64", "x86_64-unknown-linux-musl")
+        | ("linux", "x86_64", "x86_64-unknown-linux-gnu")
+        | ("macos", "x86_64", "x86_64-apple-darwin")
+        | ("macos", "aarch64", "aarch64-apple-darwin") => true,
+        _ => false,
+    };
+    if !compatible {
         bail!(
             "distribution target `{selected}` does not match this native host (`{native}`); run \
              the wrapper on the target's own operating system and architecture"
@@ -176,7 +184,8 @@ fn resolve_target(requested: Option<&str>) -> Result<String> {
 fn native_target() -> Result<&'static str> {
     match (std::env::consts::OS, std::env::consts::ARCH) {
         ("windows", "x86_64") => Ok("x86_64-pc-windows-msvc"),
-        ("linux", "x86_64") => Ok("x86_64-unknown-linux-musl"),
+        ("linux", "x86_64") if cfg!(target_env = "musl") => Ok("x86_64-unknown-linux-musl"),
+        ("linux", "x86_64") => Ok("x86_64-unknown-linux-gnu"),
         ("macos", "x86_64") => Ok("x86_64-apple-darwin"),
         ("macos", "aarch64") => Ok("aarch64-apple-darwin"),
         (os, arch) => bail!(

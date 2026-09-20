@@ -57,7 +57,11 @@ pub fn suspend(entry: &ManagementEntry) -> Result<SuspendedBinary> {
         .map(|value| value.destination.clone())
         .collect();
     paths.push(entry.entry.clone());
-    paths.push(entry.entry.with_file_name("launch.cmd"));
+    paths.push(
+        entry
+            .entry
+            .with_file_name(stable_launcher_name(&management)),
+    );
     let mut files = Vec::new();
     for path in paths {
         let bytes = fs::read(&path)
@@ -205,19 +209,13 @@ pub fn publish(
     let management_dir = host_root.join("management");
     fs::create_dir_all(&management_dir)?;
     let bundle_entry = generation.join(&verified.manifest.management.entry);
-    let stable_launcher = management_dir.join("launch.cmd");
+    let stable_launcher = management_dir.join(stable_launcher_name_for(&bundle_entry));
     let management_path = management_dir.join("binary.json");
     let launcher_count = verified.manifest.launchers.len();
     let stage_dir = host_root.join(format!(".management-pending-{}", std::process::id()));
     fs::create_dir(&stage_dir)?;
-    let staged_launcher = stage_dir.join("launch.cmd");
-    fs::write(
-        &staged_launcher,
-        format!(
-            "@echo off\r\ncall \"{}\" %*\r\n",
-            bundle_entry.display().to_string().replace('%', "%%")
-        ),
-    )?;
+    let staged_launcher = stage_dir.join(stable_launcher_name_for(&bundle_entry));
+    fs::write(&staged_launcher, stable_launcher_body(&bundle_entry))?;
     let staged_management = stage_dir.join("binary.json");
     write_json(
         &staged_management,
@@ -232,6 +230,15 @@ pub fn publish(
     desired.push((staged_launcher, stable_launcher));
     desired.push((staged_management, management_path.clone()));
     let transaction = publish_files(&desired, &retire)?;
+    if let Err(error) = make_launchers_executable(
+        desired
+            .iter()
+            .take(launcher_count + 1)
+            .map(|(_, destination)| destination.as_path()),
+    ) {
+        transaction.rollback()?;
+        return Err(error).context("marking application launchers executable");
+    }
     for (source, _) in desired.iter().skip(launcher_count) {
         let _ = fs::remove_file(source);
     }
@@ -244,6 +251,52 @@ pub fn publish(
         launchers: public_launchers,
         transaction,
     })
+}
+
+fn stable_launcher_name(management: &BinaryManagement) -> &'static str {
+    stable_launcher_name_for(&management.bundle_entry)
+}
+
+fn stable_launcher_name_for(bundle_entry: &Path) -> &'static str {
+    if bundle_entry
+        .extension()
+        .is_some_and(|extension| extension == "cmd")
+    {
+        "launch.cmd"
+    } else {
+        "launch.sh"
+    }
+}
+
+fn stable_launcher_body(bundle_entry: &Path) -> Vec<u8> {
+    if stable_launcher_name_for(bundle_entry) == "launch.cmd" {
+        return format!(
+            "@echo off\r\ncall \"{}\" %*\r\n",
+            bundle_entry.display().to_string().replace('%', "%%")
+        )
+        .into_bytes();
+    }
+    format!("#!/bin/sh\nexec {} \"$@\"\n", sh_quote(bundle_entry)).into_bytes()
+}
+
+fn sh_quote(path: &Path) -> String {
+    format!("'{}'", path.to_string_lossy().replace('\'', "'\\''"))
+}
+
+#[cfg(unix)]
+fn make_launchers_executable<'a>(paths: impl Iterator<Item = &'a Path>) -> Result<()> {
+    use std::os::unix::fs::PermissionsExt;
+    for path in paths {
+        let mut permissions = fs::metadata(path)?.permissions();
+        permissions.set_mode(0o755);
+        fs::set_permissions(path, permissions)?;
+    }
+    Ok(())
+}
+
+#[cfg(not(unix))]
+fn make_launchers_executable<'a>(_paths: impl Iterator<Item = &'a Path>) -> Result<()> {
+    Ok(())
 }
 
 pub fn uninstall(entry: &ManagementEntry) -> Result<String> {

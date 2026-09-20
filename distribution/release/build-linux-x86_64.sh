@@ -7,6 +7,13 @@ usage() {
         'usage: build-linux-x86_64.sh [--upload] [--checks] [--tests] [--self-check]'
 }
 
+linux_abi=${VIBEVM_LINUX_ABI-musl}
+case "$linux_abi" in
+    musl) rust_target=x86_64-unknown-linux-musl ;;
+    gnu) rust_target=x86_64-unknown-linux-gnu ;;
+    *) printf 'build-linux-x86_64.sh: unsupported VIBEVM_LINUX_ABI=%s\n' "$linux_abi" >&2; exit 2 ;;
+esac
+
 upload=0
 checks=0
 tests=0
@@ -57,13 +64,13 @@ unset VIBEVM_PUBLISH_TOKEN VIBEVM_PUBLISH_TOKEN_GITHUB VIBEVM_PUBLISH_TOKEN_GITV
     GH_ENTERPRISE_TOKEN GITHUB_PAT ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_RUNTIME_TOKEN \
     GIT_CONFIG_COUNT GIT_ASKPASS SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID GIT_SSH GIT_SSH_COMMAND
 
-if ! command -v musl-gcc >/dev/null 2>&1; then
+if [ "$linux_abi" = musl ] && ! command -v musl-gcc >/dev/null 2>&1; then
     printf '%s\n' \
         'build-linux-x86_64.sh: musl-gcc was not found; install your distribution musl toolchain (for Debian/Ubuntu: the musl-tools package), then retry.' >&2
     exit 127
 fi
 if command -v rustup >/dev/null 2>&1; then
-    rustup target add x86_64-unknown-linux-musl
+    rustup target add "$rust_target"
 fi
 
 case ${CARGO_TARGET_DIR-} in
@@ -79,7 +86,7 @@ if [ ! -x "$xtask_binary" ]; then
     exit 1
 fi
 
-set -- dist build --target x86_64-unknown-linux-musl
+set -- dist build --target "$rust_target"
 [ "$checks" -eq 0 ] || set -- "$@" --checks
 [ "$tests" -eq 0 ] || set -- "$@" --tests
 [ "$self_check" -eq 0 ] || set -- "$@" --self-check
@@ -94,4 +101,4 @@ if [ "$legacy_token_set" = x ]; then
     VIBEVM_PUBLISH_TOKEN=$legacy_token_value
     export VIBEVM_PUBLISH_TOKEN
 fi
-exec "$xtask_binary" dist upload-built --target x86_64-unknown-linux-musl
+exec "$xtask_binary" dist upload-built --target "$rust_target"

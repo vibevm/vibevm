@@ -55,6 +55,7 @@ fn cargo_messages_select_exactly_the_two_products() {
 
 #[test]
 fn supported_target_inventory_is_closed() {
-    assert_eq!(SUPPORTED_DISTRIBUTION_TARGETS.len(), 4);
+    assert_eq!(SUPPORTED_DISTRIBUTION_TARGETS.len(), 5);
     assert!(SUPPORTED_DISTRIBUTION_TARGETS.contains(&"x86_64-unknown-linux-musl"));
+    assert!(SUPPORTED_DISTRIBUTION_TARGETS.contains(&"x86_64-unknown-linux-gnu"));
 }

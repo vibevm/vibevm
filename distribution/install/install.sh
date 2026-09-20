@@ -45,7 +45,11 @@ vibe_install_detect_target() {
         Linux)
             case "$vibe_install_arch" in
                 x86_64|amd64)
-                    printf '%s\n' 'x86_64-unknown-linux-musl'
+                    if [ -e /lib/ld-musl-x86_64.so.1 ]; then
+                        printf '%s\n' 'x86_64-unknown-linux-musl'
+                    else
+                        printf '%s\n' 'x86_64-unknown-linux-gnu'
+                    fi
                     ;;
                 *)
                     vibe_install_fail "unsupported Linux architecture '$vibe_install_arch'; this release supports x86_64 only"

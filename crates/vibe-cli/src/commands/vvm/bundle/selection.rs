@@ -76,7 +76,8 @@ pub(super) fn validated_release_base(raw: &str, expected_tag: &str) -> Result<St
 pub(super) fn current_target() -> Result<&'static str> {
     match (std::env::consts::ARCH, std::env::consts::OS) {
         ("x86_64", "windows") => Ok("x86_64-pc-windows-msvc"),
-        ("x86_64", "linux") => Ok("x86_64-unknown-linux-musl"),
+        ("x86_64", "linux") if cfg!(target_env = "musl") => Ok("x86_64-unknown-linux-musl"),
+        ("x86_64", "linux") => Ok("x86_64-unknown-linux-gnu"),
         ("x86_64", "macos") => Ok("x86_64-apple-darwin"),
         ("aarch64", "macos") => Ok("aarch64-apple-darwin"),
         (arch, os) => bail!("no vibevm binary distribution target for {arch}-{os}"),

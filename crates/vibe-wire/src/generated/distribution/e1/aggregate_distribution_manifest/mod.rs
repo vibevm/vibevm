@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-/// The four-platform release aggregate `DISTRIBUTIONS.json`, and with it the
+/// The five-platform release aggregate `DISTRIBUTIONS.json`, and with it the
 /// whole distribution manifest family: the per-bundle `DISTRIBUTION.json`
 /// and the per-build platform fragment are the same document's nested shapes,
 /// published and read standalone as well as inside this root. Every object

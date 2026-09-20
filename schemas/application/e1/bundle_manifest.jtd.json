@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#distribution" },
     "rustOptions": { "package": "vibe_wire::application::e1::bundle_manifest" },
     "x-rust-type": "BundleManifest",
-    "x-wire-order": ["protocol", "application", "os", "arch", "sourceCommit", "sourceTree", "management", "launchers", "files"]
+    "x-wire-order": ["protocol", "application", "os", "arch", "libc", "sourceCommit", "sourceTree", "management", "launchers", "files"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -16,6 +16,9 @@
     "management": { "ref": "bundle_management" },
     "launchers": { "elements": { "ref": "bundle_launcher" }, "metadata": { "x-empty": "emit" } },
     "files": { "elements": { "ref": "bundle_file" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "libc": { "type": "string", "metadata": { "x-default": null } }
   },
   "definitions": {
     "byte_count": { "type": "float64", "metadata": { "x-rust-type": "u64" } },
