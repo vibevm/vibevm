@@ -1,0 +1,109 @@
+name: Build and publish vibevm container images
+
+on:
+  workflow_dispatch:
+    inputs:
+      npm_registry:
+        description: npm registry used while building the documentation image
+        required: false
+        default: "https://registry.npmjs.org"
+        type: string
+  workflow_run:
+    workflows: ["Build vibevm distributions"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vibevm-container-images-1.0.0
+  cancel-in-progress: false
+
+jobs:
+  images:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the released source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Resolve exact mutable-release inputs
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            https://github.com/vibevm/vibevm/releases/download/v1.0.0/DISTRIBUTIONS.json \
+            --output "$RUNNER_TEMP/vibevm-distributions.json"
+          vibe_sha="$(jq -er '.platforms[] | select(.target == "x86_64-unknown-linux-musl") | .bootstrap.digest | sub("^sha256:"; "")' "$RUNNER_TEMP/vibevm-distributions.json")"
+          vibe_commit="$(jq -er '.source_commit' "$RUNNER_TEMP/vibevm-distributions.json")"
+          vibe_tag="$(git ls-remote https://github.com/vibevm/vibevm.git refs/tags/v1.0.0 | awk '{print $1}')"
+          test "$vibe_commit" = "$vibe_tag"
+          curl --fail --location --retry 3 \
+            https://github.com/vibevm/vibevm/releases/download/v1.0.0/vibe-bootstrap-x86_64-unknown-linux-musl \
+            --output docker/vibevm/vibe-bootstrap
+          echo "$vibe_sha  docker/vibevm/vibe-bootstrap" | sha256sum -c -
+          zap_commit="$(git ls-remote https://github.com/vibevm/zap.git refs/tags/v1.0.0 | awk '{print $1}')"
+          test -n "$zap_commit"
+          echo "vibe_sha=$vibe_sha" >> "$GITHUB_OUTPUT"
+          echo "zap_commit=$zap_commit" >> "$GITHUB_OUTPUT"
+
+      - name: Build all four images locally
+        env:
+          NPM_REGISTRY: ${{ inputs.npm_registry || vars.NPM_CONFIG_REGISTRY || 'https://registry.npmjs.org' }}
+          VIBE_SHA: ${{ steps.release.outputs.vibe_sha }}
+          ZAP_COMMIT: ${{ steps.release.outputs.zap_commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build \
+            --build-arg VIBE_SHA256="$VIBE_SHA" \
+            -t vibevm/vibevm:1.0.0 -t vibevm/vibevm:latest \
+            -f docker/vibevm/Dockerfile docker/vibevm
+          docker build \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.0 \
+            --build-arg NPM_CONFIG_REGISTRY="$NPM_REGISTRY" \
+            -t vibevm/vibevm-dev:1.0.0 -t vibevm/vibevm-dev:latest \
+            -f docker/vibevm-dev/Dockerfile docker/vibevm-dev
+          docker build \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.0 \
+            --build-arg ZAP_COMMIT="$ZAP_COMMIT" \
+            -t vibevm/vibevm-zap:1.0.0 -t vibevm/vibevm-zap:latest \
+            -f docker/vibevm-zap/Dockerfile .
+          docker build \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.0 \
+            --build-arg DEV_IMAGE=vibevm/vibevm-dev:1.0.0 \
+            --build-arg NPM_CONFIG_REGISTRY="$NPM_REGISTRY" \
+            -t vibevm/vibevm-doc:1.0.0 -t vibevm/vibevm-doc:latest \
+            -f docker/vibevm-doc/Dockerfile .
+
+      - name: Smoke the unpublished images
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(docker run --rm vibevm/vibevm:1.0.0 vibe --version)" = "vibe 1.0.0"
+          docker run --rm vibevm/vibevm:1.0.0 git --version
+          docker run --rm vibevm/vibevm-dev:1.0.0 sh -lc 'rustc --version && node --version && pnpm --version && vibe --version'
+          docker run -d --name zap-smoke -p 127.0.0.1:18080:8080 vibevm/vibevm-zap:1.0.0
+          docker run -d --name doc-smoke -p 127.0.0.1:18081:80 vibevm/vibevm-doc:1.0.0
+          trap 'docker rm -f zap-smoke doc-smoke >/dev/null 2>&1 || true' EXIT
+          for _ in $(seq 1 60); do curl --fail --silent http://127.0.0.1:18080/ >/dev/null && break; sleep 1; done
+          curl --fail --silent http://127.0.0.1:18080/ >/dev/null
+          curl --fail --silent http://127.0.0.1:18081/ >/dev/null
+          curl --fail --silent http://127.0.0.1:18081/doc/ >/dev/null
+          curl --fail --silent http://127.0.0.1:18081/doc/org.vibevm.core/vibevm-docs/latest/ >/dev/null
+
+      - name: Authenticate to Docker Hub
+        shell: bash
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: printf '%s' "$DOCKERHUB_TOKEN" | docker login --username vibevm --password-stdin
+
+      - name: Publish mutable 1.0.0 and latest tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
+            docker push "vibevm/$image:1.0.0"
+            docker push "vibevm/$image:latest"
+          done

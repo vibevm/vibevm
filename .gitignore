@@ -88,3 +88,4 @@ __pycache__/
 dist/
 !/xtask/src/dist/
 !/xtask/src/dist/**
+docker/vibevm/vibe-bootstrap
