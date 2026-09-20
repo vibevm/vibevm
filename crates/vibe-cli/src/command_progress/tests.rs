@@ -98,9 +98,17 @@ fn only_finite_fallback_starts_and_terminalizes_a_generic_activity() {
 }
 
 #[test]
-fn fast_and_passthrough_commands_allow_plain_named_preparation_stages() {
+fn fast_metadata_is_silent_while_passthrough_commands_allow_plain_stages() {
     for argv in [
+        &["vibe", "extensions"][..],
         &["vibe", "self", "env"][..],
+        &["vibe", "prefs", "list"][..],
+    ] {
+        let policy = parsed_policy(argv, true);
+        assert_eq!(policy.progress_mode(true, false), ProgressMode::Disabled);
+        assert_eq!(policy.fallback_label(), None, "{argv:?}");
+    }
+    for argv in [
         &["vibe", "term"][..],
         &["vibe", "frame"][..],
         &["vibe", "bin", "exec", "tool"][..],

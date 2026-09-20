@@ -360,13 +360,19 @@ fn assert_check_spellings_match(
 ) {
     let facts = user
         .vibe()
-        .args(["facts", "check", "--exhaustive", "--path"])
+        .args(["--no-progress", "facts", "check", "--exhaustive", "--path"])
         .arg(root)
         .output()
         .expect("vibe facts check");
     let alias = user
         .vibe()
-        .args(["progress", "check", "--exhaustive", "--path"])
+        .args([
+            "--no-progress",
+            "progress",
+            "check",
+            "--exhaustive",
+            "--path",
+        ])
         .arg(root)
         .output()
         .expect("vibe progress check");

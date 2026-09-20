@@ -188,7 +188,7 @@ impl Fixture {
             .env(vibe_test_support::REGISTRY_CACHE_ENV, &self.user.cache)
             .env(vibe_test_support::SEARCH_CACHE_ENV, &self.user.search_cache)
             .env_remove("VIBE_NO_DEFAULT_REGISTRY")
-            .args(["extensions", "compile", "--path"])
+            .args(["--no-progress", "extensions", "compile", "--path"])
             .arg(self.root.path())
             .args(["--backend", "json", "--out"])
             .arg(out);

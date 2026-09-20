@@ -103,11 +103,10 @@ impl CommandPolicy {
             Self::ExistingRoot if stderr_interactive => ProgressMode::Interactive,
             Self::ExistingRoot
             | Self::FiniteFallback(_)
-            | Self::FastMetadata
             | Self::Interactive
             | Self::PersistentProtocol
             | Self::TerminalPassthrough => ProgressMode::Plain,
-            Self::SilentMetadata => ProgressMode::Disabled,
+            Self::FastMetadata | Self::SilentMetadata => ProgressMode::Disabled,
         }
     }
 
