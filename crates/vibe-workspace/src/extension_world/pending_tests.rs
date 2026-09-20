@@ -430,7 +430,12 @@ fn exact_admission_refuses_empty_extra_missing_duplicate_conflict_and_identity_d
         "pending build fact carries a different transform plan",
     );
 
-    for valid in ["windows-x86_64", "linux-x86_64", "macos-aarch64"] {
+    for valid in [
+        "windows-x86_64",
+        "linux-x86_64",
+        "macos-x86_64",
+        "macos-aarch64",
+    ] {
         assert_eq!(platform(valid).as_str(), valid);
     }
     for invalid in ["linux-arm64", "linux-x86-64", "../linux", "windows-x86_65"] {

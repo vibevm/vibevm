@@ -8,7 +8,7 @@ use thiserror::Error;
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
 pub enum NativeArtifactError {
     #[error(
-        "unsupported native platform pair os=`{os}` arch=`{arch}`; supported platform keys are: windows-x86_64, linux-x86_64, macos-aarch64 (spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED); fix: use a supported host platform"
+        "unsupported native platform pair os=`{os}` arch=`{arch}`; supported platform keys are: windows-x86_64, linux-x86_64, macos-x86_64, macos-aarch64 (spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED); fix: use a supported host platform"
     )]
     UnsupportedPlatform { os: String, arch: String },
 

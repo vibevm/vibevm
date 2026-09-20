@@ -310,6 +310,7 @@ fn current_target_os(platform: NativePlatform) -> TargetOs {
     match platform {
         NativePlatform::WindowsX86_64 => TargetOs::Windows,
         NativePlatform::LinuxX86_64 => TargetOs::Linux,
+        NativePlatform::MacosX86_64 => TargetOs::Macos,
         NativePlatform::MacosAarch64 => TargetOs::Macos,
     }
 }

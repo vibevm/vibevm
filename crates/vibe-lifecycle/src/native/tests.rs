@@ -128,6 +128,7 @@ fn platform_pairs_and_suffixes_are_closed_and_exact() {
     let cases = [
         ("windows", "x86_64", NativePlatform::WindowsX86_64, ".dll"),
         ("linux", "x86_64", NativePlatform::LinuxX86_64, ".so"),
+        ("macos", "x86_64", NativePlatform::MacosX86_64, ".dylib"),
         ("macos", "aarch64", NativePlatform::MacosAarch64, ".dylib"),
     ];
     for (os, arch, expected, suffix) in cases {

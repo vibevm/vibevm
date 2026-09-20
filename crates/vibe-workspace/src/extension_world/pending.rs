@@ -55,6 +55,7 @@ pub struct PendingPlatformKey(PendingPlatform);
 enum PendingPlatform {
     WindowsX8664,
     LinuxX8664,
+    MacosX8664,
     MacosAarch64,
 }
 
@@ -64,6 +65,7 @@ impl PendingPlatformKey {
         let platform = match value.as_str() {
             "windows-x86_64" => PendingPlatform::WindowsX8664,
             "linux-x86_64" => PendingPlatform::LinuxX8664,
+            "macos-x86_64" => PendingPlatform::MacosX8664,
             "macos-aarch64" => PendingPlatform::MacosAarch64,
             _ => return Err(fault(PendingEvidenceFault::InvalidPlatform)),
         };
@@ -75,6 +77,7 @@ impl PendingPlatformKey {
         match self.0 {
             PendingPlatform::WindowsX8664 => "windows-x86_64",
             PendingPlatform::LinuxX8664 => "linux-x86_64",
+            PendingPlatform::MacosX8664 => "macos-x86_64",
             PendingPlatform::MacosAarch64 => "macos-aarch64",
         }
     }
@@ -390,7 +393,7 @@ enum PendingEvidenceFault {
     #[error(
         "pending platform key is not one supported closed platform value \
          (violates spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY; \
-         fix: pass exactly `windows-x86_64`, `linux-x86_64`, or `macos-aarch64`)"
+         fix: pass exactly `windows-x86_64`, `linux-x86_64`, `macos-x86_64`, or `macos-aarch64`)"
     )]
     InvalidPlatform,
     #[error(

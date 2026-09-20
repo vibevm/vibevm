@@ -127,6 +127,7 @@ fn platform_key() -> &'static str {
     match (std::env::consts::OS, std::env::consts::ARCH) {
         ("windows", "x86_64") => "windows-x86_64",
         ("linux", "x86_64") => "linux-x86_64",
+        ("macos", "x86_64") => "macos-x86_64",
         ("macos", "aarch64") => "macos-aarch64",
         pair => panic!("unsupported test platform {pair:?}"),
     }

@@ -12,6 +12,7 @@ use super::NativeArtifactError;
 pub enum NativePlatform {
     WindowsX86_64,
     LinuxX86_64,
+    MacosX86_64,
     MacosAarch64,
 }
 
@@ -21,6 +22,7 @@ impl NativePlatform {
         match key {
             "windows-x86_64" => Ok(Self::WindowsX86_64),
             "linux-x86_64" => Ok(Self::LinuxX86_64),
+            "macos-x86_64" => Ok(Self::MacosX86_64),
             "macos-aarch64" => Ok(Self::MacosAarch64),
             _ => Err(NativeArtifactError::UnsupportedPlatform {
                 os: bounded(key),
@@ -34,6 +36,7 @@ impl NativePlatform {
         match (os, arch) {
             ("windows", "x86_64") => Ok(Self::WindowsX86_64),
             ("linux", "x86_64") => Ok(Self::LinuxX86_64),
+            ("macos", "x86_64") => Ok(Self::MacosX86_64),
             ("macos", "aarch64") => Ok(Self::MacosAarch64),
             _ => Err(NativeArtifactError::UnsupportedPlatform {
                 os: bounded(os),
@@ -86,6 +89,7 @@ impl NativePlatform {
         match self {
             Self::WindowsX86_64 => "windows-x86_64",
             Self::LinuxX86_64 => "linux-x86_64",
+            Self::MacosX86_64 => "macos-x86_64",
             Self::MacosAarch64 => "macos-aarch64",
         }
     }
@@ -95,6 +99,7 @@ impl NativePlatform {
         match self {
             Self::WindowsX86_64 => ".dll",
             Self::LinuxX86_64 => ".so",
+            Self::MacosX86_64 => ".dylib",
             Self::MacosAarch64 => ".dylib",
         }
     }
@@ -113,6 +118,7 @@ mod tests {
         for platform in [
             NativePlatform::WindowsX86_64,
             NativePlatform::LinuxX86_64,
+            NativePlatform::MacosX86_64,
             NativePlatform::MacosAarch64,
         ] {
             assert_eq!(NativePlatform::from_key(platform.key()).unwrap(), platform);
