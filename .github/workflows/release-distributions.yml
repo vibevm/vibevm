@@ -143,6 +143,24 @@ jobs:
           if [ '${{ inputs.self_check }}' = true ]; then set -- "$@" --self-check; fi
           sh '${{ matrix.script }}' "$@"
 
+      - name: Smoke Intel macOS portable-flow materialization
+        if: ${{ matrix.target == 'x86_64-apple-darwin' }}
+        shell: bash
+        run: |
+          set -eu
+          project="$(mktemp -d)"
+          settings="$(mktemp -d)"
+          vibe="$GITHUB_WORKSPACE/dist/vibe-bootstrap-x86_64-apple-darwin"
+          chmod 0755 "$vibe"
+          VIBE_SETTINGS="$settings" "$vibe" init --path "$project" --no-registry --no-progress
+          VIBE_SETTINGS="$settings" "$vibe" install flow:wal \
+            --path "$project" \
+            --registry "$GITHUB_WORKSPACE/vibevm/vibepacks" \
+            --assume-yes \
+            --no-progress
+          VIBE_SETTINGS="$settings" "$vibe" tree --path "$project" --plain \
+            | grep -F 'org.vibevm.world/wal'
+
       - name: Retain the native bundle as a workflow artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
