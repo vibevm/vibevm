@@ -36,10 +36,11 @@ const CONTENT_TYPES = Object.freeze({
 });
 
 export function parseArguments(argv) {
-  const value = { build: true, install: true, port: DEFAULT_PORT };
+  const value = { build: false, install: true, port: DEFAULT_PORT };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
-    if (argument === "--no-build") value.build = false;
+    if (argument === "--fixture") value.build = true;
+    else if (argument === "--no-build") value.build = false;
     else if (argument === "--no-install") value.install = false;
     else if (argument === "--port") {
       const spelling = argv[index + 1];
@@ -121,6 +122,7 @@ function command(name, args, root) {
 
 async function prepare(options, root) {
   if (
+    options.build &&
     options.install &&
     !existsSync(join(root, "node_modules", ".modules.yaml"))
   ) {
@@ -174,8 +176,9 @@ export async function runLocalSite(
   const options = parseArguments(argv);
   if (options.help) {
     process.stdout.write(
-      "usage: vibevm-doc [--port PORT] [--no-build] [--no-install]\n" +
-        "Build and serve the Qwik site on 127.0.0.1 (default port 4322).\n",
+      "usage: vibevm-doc [--port PORT] [--fixture] [--no-install]\n" +
+        "Serve an existing complete site on 127.0.0.1 (default port 4322).\n" +
+        "--fixture explicitly builds the web package's small test catalogue.\n",
     );
     return null;
   }
@@ -191,7 +194,7 @@ export async function runLocalSite(
       : staticRoot(root);
   if (!existsSync(join(output, "index.html")))
     throw new Error(
-      `${output}: no static site; remove --no-build or run pnpm build:static`,
+      `${output}: no complete static site; run \`vibe run vibevm-doc\` from the main repository, or pass --fixture for the package test catalogue`,
     );
   const server = createStaticServer(output);
   await new Promise((accept, reject) => {

@@ -206,6 +206,13 @@ pub struct Manifest {
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
     pub extensions: Vec<ExtensionDecl>,
 
+    /// `[[command]]` — explicit host-owned commands dispatched by `vibe run`.
+    /// Commands are never imported from dependencies and never interpreted as
+    /// shell strings; their typed handlers are invoked only by an explicit
+    /// user command.
+    #[serde(default, rename = "command", skip_serializing_if = "Vec::is_empty")]
+    pub run_commands: Vec<super::RunCommandDecl>,
+
     /// `[extensions]` / `[[extensions.use]]` — consumer-side activation and
     /// disable controls (PROP-054 §3.3 `HOST-ACTIVATION`).
     #[serde(
@@ -530,6 +537,9 @@ mod tests_extensions;
 #[cfg(test)]
 #[path = "document/tests_mechanism_grammar.rs"]
 mod tests_mechanism_grammar;
+#[cfg(test)]
+#[path = "document/tests_run_commands.rs"]
+mod tests_run_commands;
 #[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;

@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-09-20T12:37:38Z"
+generated_at = "2026-09-20T13:48:01Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
@@ -56,7 +56,7 @@ group = "org.vibevm.doc"
 version = "1.0.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.doc/web/v1.0.0"
-content_hash = "sha256:042aae5c4931eb4eec55096c1a2ec4ecdb6c3ef72a2ca5615350bfbc9b3e2f1d"
+content_hash = "sha256:224000f7c2bb0c32e7c478d84d6a877907c8dbf4eb4c0e4ce3e4c0f792e52476"
 files_written = []
 dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native@=1.0.0"]
 admitted_by = "root-edge"

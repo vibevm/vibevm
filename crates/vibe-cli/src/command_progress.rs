@@ -142,6 +142,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Generate(_) => FiniteFallback("Command generate"),
         Command::Build(_) => FiniteFallback("Command build"),
         Command::Test(_) => FiniteFallback("Command test"),
+        Command::Run(_) => TerminalPassthrough,
         Command::Create(_) => FiniteFallback("Command create"),
         Command::Verify(_) => FiniteFallback("Command verify"),
         Command::Package(_) => FiniteFallback("Command package"),

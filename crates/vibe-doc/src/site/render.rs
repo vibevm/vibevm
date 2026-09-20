@@ -136,6 +136,10 @@ pub struct Rendered {
     pub trees: Vec<PathBuf>,
     /// How many files were written across all three.
     pub files: usize,
+    /// New or changed files physically written across the three projections.
+    pub written: usize,
+    /// Byte-identical files retained from the prior render.
+    pub reused: usize,
     /// The reason the package did not render, when it did not. The
     /// address still carries a page — that is what `##SITE-RENDER-IDEMPOTENT`
     /// asks for — and the state file records the failure so the next run
@@ -162,18 +166,22 @@ impl Rendered {
 pub fn render(pair: &Pair, prepare: &dyn Prepare, options: &Options) -> Result<Rendered> {
     let mut notes = Vec::new();
     match attempt(pair, prepare, options, &mut notes) {
-        Ok((trees, files)) => Ok(Rendered {
+        Ok((trees, files, written, reused)) => Ok(Rendered {
             trees,
             files,
+            written,
+            reused,
             failed: None,
             notes,
         }),
         Err(failure) => {
             let reason = failure.to_string();
-            let (trees, files) = refused(pair, &reason, options)?;
+            let (trees, files, written, reused) = refused(pair, &reason, options)?;
             Ok(Rendered {
                 trees,
                 files,
+                written,
+                reused,
                 failed: Some(reason),
                 notes,
             })
@@ -187,7 +195,7 @@ fn attempt(
     prepare: &dyn Prepare,
     options: &Options,
     notes: &mut Vec<String>,
-) -> Result<(Vec<PathBuf>, usize)> {
+) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
     let source = match &pair.origin {
         // The host's bytes are already on disk — that IS the host
         // channel (`##SITE-HOST-CHECKOUT`), and fetching them would
@@ -233,7 +241,11 @@ fn mirror(source: &Path, options: &Options) -> Option<level0::Adaptation> {
 /// reason level 0 does: a second way of producing a page would be a
 /// second set of rules about what a page is, and the one page nobody
 /// looks at until something is wrong is the worst place to keep them.
-fn refused(pair: &Pair, reason: &str, options: &Options) -> Result<(Vec<PathBuf>, usize)> {
+fn refused(
+    pair: &Pair,
+    reason: &str,
+    options: &Options,
+) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
     let dir = composed_dir(options.work, pair);
     if dir.exists() {
         std::fs::remove_dir_all(&dir).map_err(|e| DocError::io("clearing", &dir, e))?;
@@ -259,14 +271,13 @@ fn build_projections(
     package_dir: &Path,
     derived: BTreeMap<String, String>,
     options: &Options,
-) -> Result<(Vec<PathBuf>, usize)> {
+) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
     let mut trees = Vec::new();
     let mut files = 0;
+    let mut written = 0;
+    let mut reused = 0;
     for format in FORMATS {
         let tree = tree_dir(options.work, pair, *format);
-        if tree.exists() {
-            std::fs::remove_dir_all(&tree).map_err(|e| DocError::io("clearing", &tree, e))?;
-        }
         let built = build::build(
             package_dir,
             options.sources,
@@ -277,11 +288,13 @@ fn build_projections(
                 derived: derived.clone(),
             },
         )?;
-        build::write(&built, &tree)?;
+        let report = build::write_reconciled(&built, &tree)?;
         files += built.files.len();
+        written += report.written + report.removed;
+        reused += report.unchanged;
         trees.push(tree);
     }
-    Ok((trees, files))
+    Ok((trees, files, written, reused))
 }
 
 /// Where a pair's composed documentation package is written.

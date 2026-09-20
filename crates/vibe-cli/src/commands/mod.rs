@@ -58,6 +58,7 @@ pub mod refactor;
 pub mod registry;
 pub mod reinstall;
 pub mod requirements;
+pub mod run;
 pub mod scrape;
 pub mod search;
 pub mod select;

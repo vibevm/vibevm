@@ -359,6 +359,8 @@ pub(crate) struct ManifestWire {
     hooks: HooksDecl,
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
     extensions: Vec<ExtensionDeclWire>,
+    #[serde(default, rename = "command", skip_serializing_if = "Vec::is_empty")]
+    run_commands: Vec<crate::manifest::RunCommandDecl>,
     #[serde(
         default,
         rename = "extensions",
@@ -468,6 +470,7 @@ impl TryFrom<ManifestWire> for Manifest {
             navigation: wire.navigation,
             hooks: wire.hooks,
             extensions,
+            run_commands: wire.run_commands,
             extension_controls: wire.extension_controls.into(),
             mechanism_decls: mechanisms,
             mechanism_routes,
@@ -550,6 +553,7 @@ impl TryFrom<Manifest> for ManifestWire {
             translations: None,
             hooks: manifest.hooks,
             extensions,
+            run_commands: manifest.run_commands,
             extension_controls: manifest.extension_controls.into(),
             mechanisms,
             mechanism_routes,

@@ -112,6 +112,28 @@ test("install retains management and deploys the three launcher genres", async (
   );
 });
 
+test("a local-source install dispatches back through the checkout command", async () => {
+  const root = await mkdtemp(join(tmpdir(), "vibevm-doc-local-source-"));
+  const host = join(root, "checkout");
+  const registry = join(host, "vibevm", "vibepacks");
+  await mkdir(registry, { recursive: true });
+  await writeFile(join(host, "vibe.toml"), "[project]\nname='host'\n");
+  const value = parseApplicationContext({
+    ...context(root),
+    registryRoot: registry,
+  });
+  const reply = await applyOperation(value, {
+    sourceRoot: await fixtureSource(root),
+  });
+  const powershell = reply.launchers.find((launcher) =>
+    launcher.destination.endsWith("vibevm-doc.ps1"),
+  );
+  assert.notEqual(powershell, undefined);
+  const body = await readFile(powershell.destination, "utf8");
+  assert.match(body, /run vibevm-doc --path/u);
+  assert.ok(body.includes(host));
+});
+
 test("uninstall removes owned launchers and the retained host", async () => {
   const root = await mkdtemp(join(tmpdir(), "vibevm-doc-uninstall-"));
   const installed = parseApplicationContext(context(root));

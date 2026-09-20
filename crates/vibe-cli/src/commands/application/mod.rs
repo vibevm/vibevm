@@ -5,6 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 
 mod binary;
 mod distribution;
+mod local_source;
 mod model;
 mod process;
 mod remote;
@@ -33,11 +34,12 @@ use store::ApplicationStore;
 
 pub fn install(
     ctx: &output::Context,
-    args: InstallArgs,
+    mut args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
     let progress = ctx.progress();
+    local_source::expand(&mut args)?;
     validate_install_args(&args)?;
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
@@ -538,7 +540,7 @@ fn validate_install_args(args: &InstallArgs) -> Result<()> {
         bail!("global install requires exactly one fully qualified application package");
     }
     qualified_ref(&args.packages[0])?;
-    if args.path != Path::new(".")
+    if (!args.local_source && args.path != Path::new("."))
         || args.language.is_some()
         || !args.features.is_empty()
         || args.no_default_features

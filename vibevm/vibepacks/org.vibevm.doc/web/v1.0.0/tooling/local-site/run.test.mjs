@@ -17,7 +17,7 @@ import {
 
 test("arguments are strict and preserve the loopback defaults", () => {
   assert.deepEqual(parseArguments([]), {
-    build: true,
+    build: false,
     install: true,
     port: 4322,
   });
@@ -29,6 +29,7 @@ test("arguments are strict and preserve the loopback defaults", () => {
       port: 0,
     },
   );
+  assert.equal(parseArguments(["--fixture"]).build, true);
   assert.throws(() => parseArguments(["--port", "65536"]), /0 through 65535/u);
   assert.throws(() => parseArguments(["--unknown"]), /unknown argument/u);
 });

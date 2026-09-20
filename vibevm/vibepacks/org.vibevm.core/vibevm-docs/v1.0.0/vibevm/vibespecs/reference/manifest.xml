@@ -84,10 +84,12 @@
       <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: a server registered into agents</td><td>`mcp` only</td></tr>
       <tr><td>`[hooks]`</td><td>`pre-install` and `post-install` script base paths</td><td>packages</td></tr>
       <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, optional selector and config: a contribution to the lifecycle</td><td>packages and projects</td></tr>
+      <tr><td>`[[command]]`</td><td>`id`, optional description and a typed script handler: an explicit `vibe run` entry</td><td>projects/workspace hosts only</td></tr>
       <tr><td>`[[embedded_source]]`</td><td>an immutable external source a package refers to without vendoring it</td><td>bridge packages</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS"/>
     <p>A [skill](../glossary/index.xml#skill) is a manifest section, never a kind of its own. `include` narrows which files of `path` are projected into an agent's skill folder, and its absence projects the whole tree. A skill may take its body from a declared `[[embedded_source]]` and add resources below a `references/` folder, under the same include selection and traversal checks.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>

@@ -124,6 +124,24 @@ impl Manifest {
             });
         }
 
+        if has_package && !self.run_commands.is_empty() {
+            return Err(Error::InvalidManifest {
+                reason: "[[command]] is host-owned and cannot be declared by a publishable package"
+                    .into(),
+            });
+        }
+        let mut command_ids = std::collections::BTreeSet::new();
+        for command in &self.run_commands {
+            command
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+            if !command_ids.insert(command.id.as_str()) {
+                return Err(Error::InvalidManifest {
+                    reason: format!("duplicate [[command]] id `{}`", command.id),
+                });
+            }
+        }
+
         let mut embedded_source_names = std::collections::BTreeSet::new();
         for source in &self.embedded_sources {
             source

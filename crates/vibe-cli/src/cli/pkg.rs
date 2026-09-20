@@ -166,6 +166,12 @@ pub struct InstallArgs {
     #[arg(long, requires = "global")]
     pub from_source: bool,
 
+    /// Global-application developer shorthand: resolve from this checkout's
+    /// `vibevm/vibepacks`, force the source implementation, and stay offline.
+    /// Equivalent to `--from-source --registry <root>/vibevm/vibepacks --offline`.
+    #[arg(long, requires = "global")]
+    pub local_source: bool,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,

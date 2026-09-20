@@ -4,11 +4,14 @@
  * @scope spec://org.vibevm.core/vibevm/common/PROP-057#STACK-NATIVE-BUILD
  */
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -29,6 +32,21 @@ const PACKAGE_ROOT = resolve(
   "..",
 );
 const FORMATS = new Set(["html", "md", "xml"]);
+const WEB_INPUTS = [
+  ["package.json", join(PACKAGE_ROOT, "package.json")],
+  ["pnpm-lock.yaml", join(PACKAGE_ROOT, "pnpm-lock.yaml")],
+  ["pnpm-workspace.yaml", join(PACKAGE_ROOT, "pnpm-workspace.yaml")],
+  ["design", join(PACKAGE_ROOT, "design")],
+  ["site/package.json", join(PACKAGE_ROOT, "site", "package.json")],
+  ["site/src", join(PACKAGE_ROOT, "site", "src")],
+  ["site/adapters", join(PACKAGE_ROOT, "site", "adapters")],
+  ["site/vite.config.ts", join(PACKAGE_ROOT, "site", "vite.config.ts")],
+  ["tools", join(PACKAGE_ROOT, "tools")],
+  [
+    "tooling/site-build/build.mjs",
+    join(PACKAGE_ROOT, "tooling", "site-build", "build.mjs"),
+  ],
+];
 
 function failure(message) {
   throw new Error(
@@ -69,6 +87,64 @@ featured = ["org.vibevm.core/vibevm", "org.vibevm.core/vibevm-docs"]
 
 export function siteOutput(hostRoot) {
   return join(resolve(hostRoot), ".vibe", "site-build", "site");
+}
+
+function filesUnder(root, directory = root, found = []) {
+  if (!existsSync(directory)) return found;
+  for (const name of readdirSync(directory).sort()) {
+    const path = join(directory, name);
+    if (statSync(path).isDirectory()) filesUnder(root, path, found);
+    else found.push(relative(root, path));
+  }
+  return found;
+}
+
+export function reconcileTree(staging, destination) {
+  const staged = filesUnder(staging);
+  const wanted = new Set(staged);
+  const report = { removed: 0, reused: 0, written: 0 };
+  mkdirSync(destination, { recursive: true });
+  for (const path of staged) {
+    const source = join(staging, path);
+    const target = join(destination, path);
+    if (
+      existsSync(target) &&
+      readFileSync(source).equals(readFileSync(target))
+    ) {
+      report.reused += 1;
+      continue;
+    }
+    mkdirSync(dirname(target), { recursive: true });
+    copyFileSync(source, target);
+    report.written += 1;
+  }
+  for (const path of filesUnder(destination)) {
+    if (wanted.has(path)) continue;
+    rmSync(join(destination, path), { force: true });
+    report.removed += 1;
+  }
+  return report;
+}
+
+export function webInputFingerprint(trees) {
+  const hash = createHash("sha256");
+  const inputs = [
+    ...WEB_INPUTS,
+    ...trees.map((tree, index) => [`tree/${index}`, tree]),
+  ];
+  for (const [label, root] of inputs) {
+    if (!existsSync(root)) failure(`web input is missing: ${root}`);
+    const files = statSync(root).isDirectory() ? filesUnder(root) : [""];
+    for (const path of files) {
+      hash.update(label);
+      hash.update("\0");
+      hash.update(path.replaceAll("\\", "/"));
+      hash.update("\0");
+      hash.update(readFileSync(path === "" ? root : join(root, path)));
+      hash.update("\0");
+    }
+  }
+  return `sha256:${hash.digest("hex")}`;
 }
 
 export function renderedTrees(outputRoot) {
@@ -165,12 +241,24 @@ function reply(path, status, message, artifacts = []) {
 export async function buildSite(environment = process.env) {
   const contextPath = environment.VIBE_CONTEXT;
   const replyPath = environment.VIBE_REPLY;
-  if (!contextPath || !replyPath)
-    failure("VIBE_CONTEXT and VIBE_REPLY are required");
-  const context = parseContext(readFileSync(contextPath, "utf8"));
+  const context = contextPath
+    ? parseContext(readFileSync(contextPath, "utf8"))
+    : {
+        envelope: 1,
+        execution: { config: {} },
+        project: { root: environment.VIBE_PROJECT_ROOT },
+        run: { force: false },
+      };
+  if (typeof context.project.root !== "string")
+    failure("VIBE_CONTEXT or VIBE_PROJECT_ROOT is required");
+  if (contextPath && !replyPath)
+    failure("VIBE_REPLY is required with VIBE_CONTEXT");
   const hostRoot = resolve(context.project.root);
   const outputRoot = join(hostRoot, ".vibe", "site-build", "catalogue");
   const siteRoot = siteOutput(hostRoot);
+  const stagingRoot = `${siteRoot}.next`;
+  const stagingServerRoot = `${stagingRoot}-server`;
+  const webStatePath = join(hostRoot, ".vibe", "site-build", "web-input.json");
   const configPath = join(hostRoot, ".vibe", "site-build", "site.toml");
   mkdirSync(dirname(configPath), { recursive: true });
   writeFileSync(configPath, siteConfig(hostRoot), "utf8");
@@ -178,7 +266,7 @@ export async function buildSite(environment = process.env) {
   const vibe = environment.VIBE_EXECUTABLE;
   if (!vibe || !isAbsolute(vibe))
     failure("lifecycle supplied no absolute VIBE_EXECUTABLE");
-  const node = environment.VIBE_NODE_EXECUTABLE;
+  const node = environment.VIBE_NODE_EXECUTABLE ?? process.execPath;
   if (!node || !isAbsolute(node))
     failure("launcher supplied no absolute VIBE_NODE_EXECUTABLE");
   const toolEnvironment = packageManagerEnvironment(context, environment);
@@ -199,6 +287,32 @@ export async function buildSite(environment = process.env) {
     environment,
   );
   const trees = renderedTrees(outputRoot);
+  const webFingerprint = webInputFingerprint(trees);
+  let priorFingerprint;
+  try {
+    priorFingerprint = JSON.parse(
+      readFileSync(webStatePath, "utf8"),
+    ).fingerprint;
+  } catch {
+    priorFingerprint = undefined;
+  }
+  if (
+    context.run?.force !== true &&
+    priorFingerprint === webFingerprint &&
+    existsSync(join(siteRoot, "index.html"))
+  ) {
+    const message = `reused the complete site from ${trees.length} unchanged trees`;
+    console.log(`vibevm-doc build: ${message}`);
+    if (replyPath)
+      reply(replyPath, "ok", message, [
+        {
+          id: "vibevm-doc-site",
+          kind: "directory",
+          path: siteRoot.replaceAll("\\", "/"),
+        },
+      ]);
+    return;
+  }
 
   if (!existsSync(join(PACKAGE_ROOT, "node_modules", ".modules.yaml")))
     await command(
@@ -207,6 +321,8 @@ export async function buildSite(environment = process.env) {
       PACKAGE_ROOT,
       toolEnvironment,
     );
+  rmSync(stagingRoot, { recursive: true, force: true });
+  rmSync(stagingServerRoot, { recursive: true, force: true });
   await command(
     node,
     [join(PACKAGE_ROOT, "tools", "build.mjs"), "static"],
@@ -214,17 +330,34 @@ export async function buildSite(environment = process.env) {
     {
       ...toolEnvironment,
       VIBE_DOC_OUT: trees.join(delimiter),
-      VIBE_SITE_DIST: relative(join(PACKAGE_ROOT, "site"), siteRoot),
+      VIBE_SITE_DIST: relative(join(PACKAGE_ROOT, "site"), stagingRoot),
     },
   );
+  const reconciled = reconcileTree(stagingRoot, siteRoot);
+  rmSync(stagingRoot, { recursive: true, force: true });
+  rmSync(stagingServerRoot, { recursive: true, force: true });
+  console.log(
+    `vibevm-doc build: ${reconciled.written} changed, ${reconciled.reused} reused, ${reconciled.removed} stale removed`,
+  );
+  writeFileSync(
+    webStatePath,
+    `${JSON.stringify({ fingerprint: webFingerprint, schema: 1 }, null, 2)}\n`,
+    "utf8",
+  );
 
-  reply(replyPath, "ok", `built the complete site from ${trees.length} trees`, [
-    {
-      id: "vibevm-doc-site",
-      kind: "directory",
-      path: siteRoot.replaceAll("\\", "/"),
-    },
-  ]);
+  if (replyPath)
+    reply(
+      replyPath,
+      "ok",
+      `built the complete site from ${trees.length} trees; ${reconciled.written} changed and ${reconciled.reused} reused`,
+      [
+        {
+          id: "vibevm-doc-site",
+          kind: "directory",
+          path: siteRoot.replaceAll("\\", "/"),
+        },
+      ],
+    );
 }
 
 if (

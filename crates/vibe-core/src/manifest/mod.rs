@@ -26,6 +26,7 @@ mod plane;
 mod project;
 pub mod purl;
 mod redirect;
+mod run_command;
 mod subskill;
 mod target_when;
 
@@ -76,6 +77,7 @@ pub use project::{
     NamingConvention, OverrideSection, ProjectSection, RegistrySection, SpecFormat,
 };
 pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
+pub use run_command::{RunCommandDecl, RunCommandHandler};
 pub use subskill::{
     ActivationRules, DeliveryMode, SubskillConflicts, SubskillContent, SubskillManifest,
     SubskillMeta, SubskillRecommends,

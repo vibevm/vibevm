@@ -34,6 +34,7 @@
     <derived kind="cli-help" ref="vibe validate --help"/>
     <derived kind="cli-help" ref="vibe generate --help"/>
     <derived kind="cli-help" ref="vibe build --help"/>
+    <derived kind="cli-help" ref="vibe run --help"/>
     <derived kind="cli-help" ref="vibe test --help"/>
     <derived kind="cli-help" ref="vibe create --help"/>
     <derived kind="cli-help" ref="vibe verify --help"/>

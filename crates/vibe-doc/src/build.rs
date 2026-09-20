@@ -32,7 +32,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 use vibe_core::progress::Progress;
 
@@ -108,6 +108,17 @@ pub struct Built {
     pub unreadable: Vec<String>,
     /// The card roles whose picture was generated rather than copied.
     pub generated_roles: Vec<String>,
+}
+
+/// What changed on disk when a complete logical build was reconciled with its
+/// prior tree. The builder may compute the complete answer, but unchanged
+/// files retain their bytes and mtimes and remain reusable by downstream
+/// stages.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct WriteReport {
+    pub written: usize,
+    pub unchanged: usize,
+    pub removed: usize,
 }
 
 impl Built {
@@ -327,14 +338,53 @@ fn declared_kind(package_dir: &Path) -> vibe_core::PackageKind {
 
 /// Write a build under `out_dir`, creating the directories it needs.
 pub fn write(built: &Built, out_dir: &Path) -> Result<()> {
+    write_reconciled(built, out_dir).map(|_| ())
+}
+
+/// Reconcile a complete build into an owned output tree, writing only new or
+/// changed files and removing outputs the new build no longer declares.
+pub fn write_reconciled(built: &Built, out_dir: &Path) -> Result<WriteReport> {
+    let desired = built
+        .files
+        .iter()
+        .map(|file| file.path.as_str())
+        .collect::<BTreeSet<_>>();
+    let mut report = WriteReport::default();
+    if out_dir.is_dir() {
+        let mut stale = Vec::new();
+        for entry in walkdir::WalkDir::new(out_dir)
+            .into_iter()
+            .filter_map(std::result::Result::ok)
+            .filter(|entry| entry.file_type().is_file())
+        {
+            let relative = entry
+                .path()
+                .strip_prefix(out_dir)
+                .unwrap_or(entry.path())
+                .to_string_lossy()
+                .replace('\\', "/");
+            if !desired.contains(relative.as_str()) {
+                stale.push(entry.path().to_path_buf());
+            }
+        }
+        for path in stale {
+            std::fs::remove_file(&path).map_err(|e| DocError::io("removing", &path, e))?;
+            report.removed += 1;
+        }
+    }
     for file in &built.files {
         let path = out_dir.join(&file.path);
+        if std::fs::read(&path).is_ok_and(|prior| prior == file.bytes) {
+            report.unchanged += 1;
+            continue;
+        }
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|e| DocError::io("creating", parent, e))?;
         }
         std::fs::write(&path, &file.bytes).map_err(|e| DocError::io("writing", &path, e))?;
+        report.written += 1;
     }
-    Ok(())
+    Ok(report)
 }
 
 /// Refuse a package that is not written in `lang`.

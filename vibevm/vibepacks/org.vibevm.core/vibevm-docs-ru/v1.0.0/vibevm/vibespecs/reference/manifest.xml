@@ -84,10 +84,12 @@
       <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: сервер, регистрируемый у агентов</td><td>только `mcp`</td></tr>
       <tr><td>`[hooks]`</td><td>базовые пути скриптов `pre-install` и `post-install`</td><td>пакеты</td></tr>
       <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, необязательные селектор и config: вклад в жизненный цикл</td><td>пакеты и проекты</td></tr>
+      <tr><td>`[[command]]`</td><td>`id`, необязательное описание и типизированный обработчик-скрипт: явная точка входа `vibe run`</td><td>только проекты и корни workspace</td></tr>
       <tr><td>`[[embedded_source]]`</td><td>неизменяемый внешний источник, на который пакет ссылается, не вендоря его</td><td>пакеты-мосты</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS"/>
     <p>[Навык](../glossary/index.xml#skill) (*skill*) — секция манифеста, а не отдельный вид. `include` сужает, какие файлы из `path` проецируются в папку навыков агента, а его отсутствие проецирует всё дерево. Навык может взять своё тело из объявленного `[[embedded_source]]` и добавить ресурсы под папкой `references/`, с тем же отбором include и теми же проверками обхода.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>

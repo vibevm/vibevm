@@ -162,7 +162,12 @@ export async function applyOperation(context, options = {}) {
     filter: copyFilter(sourceRoot),
   });
   await rename(staging, runtime);
-  const launchers = await writeLaunchers(context.settingsRoot, runtime);
+  const launchers = await writeLaunchers(
+    context.settingsRoot,
+    runtime,
+    localCheckout(context),
+    context.vibeExecutable,
+  );
   const management = join(runtime, "tooling", "local-site", "application.mjs");
   return result(
     context,
@@ -211,9 +216,41 @@ async function requireRuntimeClosure(sourceRoot) {
   }
 }
 
-async function writeLaunchers(settingsRoot, runtime) {
+function localCheckout(context) {
+  if (context.registryRoot === null) return null;
+  const registry = resolve(context.registryRoot);
+  if (
+    basename(registry).toLowerCase() !== "vibepacks" ||
+    basename(dirname(registry)).toLowerCase() !== "vibevm"
+  )
+    return null;
+  const host = resolve(registry, "..", "..");
+  return existsFile(join(host, "vibe.toml")) ? host : null;
+}
+
+function existsFile(path) {
+  return stat(path)
+    .then((metadata) => metadata.isFile())
+    .catch(() => false);
+}
+
+async function writeLaunchers(
+  settingsRoot,
+  runtime,
+  checkoutPromise,
+  vibeExecutable,
+) {
+  const checkout = await checkoutPromise;
   const root = join(settingsRoot, "opt", "bin");
   await mkdir(root, { recursive: true });
+  const shTarget =
+    checkout === null
+      ? `${shQuote(join(runtime, "vibevm-doc.sh"))} "$@"`
+      : `${shQuote(vibeExecutable)} run vibevm-doc --path ${shQuote(checkout)} -- "$@"`;
+  const psTarget =
+    checkout === null
+      ? `& ${psQuote(join(runtime, "vibevm-doc.ps1"))} @args\r\n`
+      : `& ${psQuote(vibeExecutable)} run vibevm-doc --path ${psQuote(checkout)} -- @args\r\n`;
   const rows = [
     {
       destination: join(root, "vibevm-doc"),
@@ -221,7 +258,7 @@ async function writeLaunchers(settingsRoot, runtime) {
       body:
         "#!/bin/sh\n" +
         "# vibe:vibevm-doc application launcher\n" +
-        `exec ${shQuote(join(runtime, "vibevm-doc.sh"))} "$@"\n`,
+        `exec ${shTarget}\n`,
     },
     {
       destination: join(root, "vibevm-doc.ps1"),
@@ -229,7 +266,7 @@ async function writeLaunchers(settingsRoot, runtime) {
       body:
         "\uFEFF# vibe:vibevm-doc application launcher\r\n" +
         "$ErrorActionPreference = 'Stop'\r\n" +
-        `& ${psQuote(join(runtime, "vibevm-doc.ps1"))} @args\r\n` +
+        psTarget +
         "$childExit = $LASTEXITCODE\r\n" +
         "if ($null -eq $childExit) { $childExit = 1 }\r\n" +
         "exit $childExit\r\n",

@@ -33,6 +33,7 @@ fn base_args() -> InstallArgs {
         packages: Vec::new(),
         global: false,
         from_source: false,
+        local_source: false,
         path: PathBuf::from("."),
         registry: None,
         assume_yes: false,

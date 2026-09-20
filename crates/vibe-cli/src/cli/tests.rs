@@ -179,3 +179,39 @@ fn root_offline_reaches_the_install_command() {
     };
     assert!(args.offline, "the shared id carries the root flag down");
 }
+
+#[test]
+fn local_source_is_one_global_application_flag() {
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "install",
+        "-g",
+        "org.vibevm.doc/web",
+        "--local-source",
+    ])
+    .expect("parse local source install");
+    let Command::Install(args) = cli.command else {
+        panic!("argv did not parse to install");
+    };
+    assert!(args.global);
+    assert!(args.local_source);
+}
+
+#[test]
+fn run_keeps_arguments_after_the_separator() {
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "run",
+        "vibevm-doc",
+        "--",
+        "--no-build",
+        "--port",
+        "4323",
+    ])
+    .expect("parse run command");
+    let Command::Run(args) = cli.command else {
+        panic!("argv did not parse to run");
+    };
+    assert_eq!(args.command, "vibevm-doc");
+    assert_eq!(args.args, ["--no-build", "--port", "4323"]);
+}

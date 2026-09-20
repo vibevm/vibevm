@@ -125,6 +125,40 @@ fn writing_a_build_creates_the_tree_it_describes() {
     }
 }
 
+#[test]
+fn reconciled_writes_reuse_equal_files_and_remove_stale_outputs() {
+    let tmp = tempfile::tempdir().unwrap();
+    let out = tmp.path().join("site");
+    fs::create_dir_all(&out).unwrap();
+    fs::write(out.join("stale.txt"), "old").unwrap();
+    let first = Built {
+        files: vec![BuiltFile {
+            path: "page/index.html".into(),
+            bytes: b"one".to_vec(),
+        }],
+        ..Built::default()
+    };
+    let written = write_reconciled(&first, &out).unwrap();
+    assert_eq!(written.written, 1);
+    assert_eq!(written.removed, 1);
+    assert!(!out.join("stale.txt").exists());
+
+    let reused = write_reconciled(&first, &out).unwrap();
+    assert_eq!(reused.unchanged, 1);
+    assert_eq!(reused.written, 0);
+
+    let changed = Built {
+        files: vec![BuiltFile {
+            path: "page/index.html".into(),
+            bytes: b"two".to_vec(),
+        }],
+        ..Built::default()
+    };
+    let rewritten = write_reconciled(&changed, &out).unwrap();
+    assert_eq!(rewritten.written, 1);
+    assert_eq!(fs::read(out.join("page/index.html")).unwrap(), b"two");
+}
+
 /// Every projection carries the same block numbers, so a human quoting
 /// `p02` from the island and an agent quoting `p02` from the Markdown
 /// quote one block (R-26).

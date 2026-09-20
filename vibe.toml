@@ -60,6 +60,14 @@ naming = "name"
 [visibility]
 ignore-concept-warnings = ["WAL"]
 
+# Explicit host command: it first takes the ordinary incremental build path,
+# then serves the complete host-owned site. This is deliberately a typed
+# script handler rather than an npm-style shell string.
+[[command]]
+id = "vibevm-doc"
+description = "Incrementally build and serve the complete VibeVM site"
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/serve" }
+
 # The repository owns the domain and every package whose documentation it
 # publishes, so its ordinary build lifecycle owns their composition too. This
 # host contribution asks the web package's adapter to render the complete
@@ -75,10 +83,12 @@ inputs = [
   "vibevm/vibepacks/**/vibe.toml",
   "vibevm/vibepacks/**/README.md",
   "vibevm/vibepacks/**/vibevm/vibespecs/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/*.css",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/*.js",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/src/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-lock.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-workspace.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/**",
   "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/adapters/**",
   "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/src/**",
   "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/vite.config.ts",
   "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tools/**",

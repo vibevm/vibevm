@@ -135,6 +135,12 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
         for note in &out.notes {
             render_output.push(format!("  note   {} — {note}", queued.pair.spelled()));
         }
+        render_output.push(format!(
+            "  files  {} — {} changed, {} reused",
+            queued.pair.spelled(),
+            out.written,
+            out.reused
+        ));
         if let Some(reason) = &out.failed {
             failures += 1;
             render_output.push(format!("  failed {} — {reason}", queued.pair.spelled()));

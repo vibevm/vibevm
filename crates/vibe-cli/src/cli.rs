@@ -26,6 +26,7 @@ mod progress;
 mod query;
 mod registry;
 mod requirements;
+mod run;
 mod scrape;
 mod select;
 mod skill;
@@ -50,6 +51,7 @@ pub use progress::*;
 pub use query::*;
 pub use registry::*;
 pub use requirements::*;
+pub use run::*;
 pub use scrape::*;
 pub use select::*;
 pub use skill::*;
@@ -174,6 +176,9 @@ pub enum Command {
 
     /// Run the default lifecycle through deterministic tests.
     Test(LifecycleArgs),
+
+    /// Run one explicit host command declared by `[[command]]` in `vibe.toml`.
+    Run(RunArgs),
 
     /// Run the default lifecycle through agentic creation.
     Create(LifecycleArgs),

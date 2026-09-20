@@ -15,30 +15,32 @@ Two adapters, one code base. `pnpm build:static` prerenders every route at
 documentation routes at `base: "/doc/"` for the shell `vibe doc serve`
 embeds. The package is published as source: no build output ever enters it.
 
-For local site testing, run `./vibevm-doc.sh` or
-`./vibevm-doc.ps1`. Both install the pinned pnpm dependencies when absent,
-rebuild the static adapter, and serve it on `http://127.0.0.1:4322/`.
-`--no-build` reuses the last build; `--port <number>` selects another loopback
-port. `vibe install -g org.vibevm.doc/web` installs the same entry point as
-`vibevm-doc` (plus the native PowerShell and CMD shims on Windows); a local
-registry can be selected with the ordinary `--registry <path>` flag.
-
 The complete site, including every package and both editions of the VibeVM
-manual, is a native lifecycle build of the host repository. From the repository
-root run `vibe build`; its build contribution calls the documentation site
-builder over the checkout, then hands every rendered tree to this package's
-ordinary Qwik adapter. The finished domain is written to the host-owned
-`.vibe/site-build/site` directory, outside the source-only package. From this
-package directory the equivalent command is:
+manual, is a native lifecycle build of the main `vibevm` repository. Its normal
+development entry point is one command from that repository root:
 
 ```text
-vibe build --path ../../../../..
+vibe run vibevm-doc
 ```
 
-Serve that exact build without replacing it with the fixture catalogue by
-running `./vibevm-doc.ps1 --no-build` or `./vibevm-doc.sh --no-build`. In a
-source checkout the launcher finds the host-owned output automatically; an
-installed package continues to use its ordinary `site/dist` output.
+The command invokes the native incremental `vibe doc build-site` pipeline and
+the same Qwik adapter as the lifecycle contribution, without reinstalling the
+repository's dependency closure on every preview. It writes the domain to the
+host-owned `.vibe/site-build/site` directory outside this source-only package,
+then serves it on `http://127.0.0.1:4322/`. `--port` and the explicit reuse
+switch pass after `--`, for example
+`vibe run vibevm-doc -- --no-build --port 4400`. From this package directory,
+`vibe build --path ../../../../..` remains the complete lifecycle build.
+
+The low-level `./vibevm-doc.sh` and `./vibevm-doc.ps1` launchers serve an
+existing build and are retained for the globally installed command. They no
+longer silently replace the complete catalogue with fixtures. The small package
+test catalogue is selected explicitly with `--fixture`; it is not an end-user
+site.
+
+`vibe install -g org.vibevm.doc/web --local-source` installs this checkout's
+application command in one spelling. It is the shorthand for
+`--from-source --registry <main-root>/vibevm/vibepacks --offline`.
 
 When the JavaScript closure is absent, the native build runs the pinned
 `pnpm install`. It inherits the standard npm/pnpm configuration, including the

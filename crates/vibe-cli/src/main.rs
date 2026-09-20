@@ -173,6 +173,12 @@ fn main() -> ExitCode {
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
         Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),
+        Command::Run(args) => match commands::run::run(&ctx, args) {
+            Ok(code) => {
+                return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+            }
+            Err(error) => Err(error),
+        },
         Command::Create(args) => run_lifecycle(vibe_lifecycle::Phase::Create, args),
         Command::Verify(args) => run_lifecycle(vibe_lifecycle::Phase::Verify, args),
         Command::Package(args) => run_lifecycle(vibe_lifecycle::Phase::Package, args),
