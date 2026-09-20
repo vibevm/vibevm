@@ -59,3 +59,28 @@ naming = "name"
 # concept warning at the root; no package bytes or edition roster are rewritten.
 [visibility]
 ignore-concept-warnings = ["WAL"]
+
+# The repository owns the domain and every package whose documentation it
+# publishes, so its ordinary build lifecycle owns their composition too. This
+# host contribution asks the web package's adapter to render the complete
+# local catalogue; the adapter itself remains a package-owned implementation.
+[[extension]]
+id = "build-documentation-site"
+point = "phase:build"
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/build" }
+inputs = [
+  "vibe.toml",
+  "VIBEVM-SPEC.md",
+  "vibevm/vibespecs/**",
+  "vibevm/vibepacks/**/vibe.toml",
+  "vibevm/vibepacks/**/README.md",
+  "vibevm/vibepacks/**/vibevm/vibespecs/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/*.css",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/*.js",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/src/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/src/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/vite.config.ts",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tools/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/**",
+]

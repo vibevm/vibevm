@@ -7,6 +7,7 @@ import test from "node:test";
 
 import {
   createStaticServer,
+  nativeStaticRoot,
   parseArguments,
   requestFile,
   staticRoot,
@@ -36,6 +37,7 @@ test("output and request paths stay inside the static tree", () => {
   const packageRoot = resolve("package-root");
   const siteRoot = resolve("site-root");
   assert.equal(staticRoot(packageRoot, {}), join(packageRoot, "site", "dist"));
+  assert.equal(nativeStaticRoot(packageRoot), null);
   assert.equal(
     staticRoot(packageRoot, { VIBE_SITE_DIST: "preview" }),
     join(packageRoot, "site", "preview"),
@@ -46,6 +48,24 @@ test("output and request paths stay inside the static tree", () => {
   );
   assert.equal(requestFile(siteRoot, "/"), join(siteRoot, "index.html"));
   assert.equal(requestFile(siteRoot, "/%2e%2e%2foutside"), null);
+});
+
+test("the native output is selected only for the monorepo source slot", async () => {
+  const host = await mkdtemp(join(tmpdir(), "vibevm-doc-host-"));
+  const packageRoot = join(
+    host,
+    "vibevm",
+    "vibepacks",
+    "org.vibevm.doc",
+    "web",
+    "v1.0.0",
+  );
+  await mkdir(packageRoot, { recursive: true });
+  await writeFile(join(host, "vibe.toml"), "[project]\nname='host'\n");
+  assert.equal(
+    nativeStaticRoot(packageRoot),
+    join(host, ".vibe", "site-build", "site"),
+  );
 });
 
 test("the server answers a prerendered route and its 404", async () => {

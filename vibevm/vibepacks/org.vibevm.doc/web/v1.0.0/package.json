@@ -16,6 +16,7 @@
     "build:embedded": "node tools/build.mjs embedded",
     "test:e2e": "playwright test -c site/tests/playwright.config.ts",
     "test:local-launcher": "node --test tooling/local-site/*.test.mjs",
+    "test:site-build": "node --test tooling/site-build/*.test.mjs",
     "serve:local": "node tooling/local-site/run.mjs"
   },
   "devDependencies": {

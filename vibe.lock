@@ -1,29 +1,16 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-09-20T08:15:25Z"
+generated_at = "2026-09-20T12:37:38Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
     "flow:org.vibevm.world/multi-user-planning@^1.0.0",
     "flow:org.vibevm.world/omnichannel@^1.0.0",
+    "org.vibevm.doc/web@^1.0.0",
     "org.vibevm.world/redbook@^1.0.0",
     "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
     "stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0",
-    "org.vibevm.doc/web@^1.0.0",
 ]
-
-[[package]]
-kind = "app"
-name = "web"
-group = "org.vibevm.doc"
-version = "1.0.0"
-authors = ["Oleg Chirukhin"]
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.doc/web/v1.0.0"
-content_hash = "sha256:dfdca9c2b64365552e981685b18813a9f93ed10eb8cf51212d4aea5b88bd2f73"
-files_written = []
-dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native@=1.0.0"]
-admitted_by = "root-edge"
-source_kind = "registry"
 
 [[package]]
 kind = "flow"
@@ -36,7 +23,7 @@ content_hash = "sha256:60b465e95a1e43bfb00ca4b0babb0cb5277c536d100df5eb3dc7fd2bf
 files_written = []
 dependencies = ["flow:org.vibevm.fractality/delegation-rules@=1.0.0"]
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -48,7 +35,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:99396aea6688cb39b509751cb1c12d379f28bcf986af6e4022ac52574d559a15"
 files_written = []
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -60,7 +47,20 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:a6554fa5f09619a13c04be29e81f4d610a123f454dc4f01479f49c8b0a2b83f4"
 files_written = []
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
+
+[[package]]
+kind = "app"
+name = "web"
+group = "org.vibevm.doc"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.doc/web/v1.0.0"
+content_hash = "sha256:042aae5c4931eb4eec55096c1a2ec4ecdb6c3ef72a2ca5615350bfbc9b3e2f1d"
+files_written = []
+dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native@=1.0.0"]
+admitted_by = "root-edge"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -94,7 +94,7 @@ dependencies = [
     "flow:org.vibevm.world/two-process-model@=1.0.0",
 ]
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "stack"
@@ -110,7 +110,7 @@ dependencies = [
     "mcp:org.vibevm.ai-native/rust-ai-native-mcp@=1.0.0",
 ]
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "stack"
@@ -126,7 +126,7 @@ dependencies = [
     "mcp:org.vibevm.ai-native/typescript-ai-native-mcp@=1.0.0",
 ]
 admitted_by = "root-edge"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -138,7 +138,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai
 content_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "lang"
@@ -151,7 +151,7 @@ content_hash = "sha256:ddfe01d8b1b7c2694ef6409276873c10b6f51fe98c14faf774dbaadde
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "mcp"
@@ -164,7 +164,7 @@ content_hash = "sha256:dc5547b64d48e3c83ecd5e661fa43a9110eff078797136c244befa2c1
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "lang"
@@ -177,7 +177,7 @@ content_hash = "sha256:69ad6e857182be47fbcf086889633ef3b0f384a73c904153a8cfa7ce6
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "mcp"
@@ -190,7 +190,7 @@ content_hash = "sha256:9072ca207ffe04f4a8a420b5d91a50d6e887381b815776022fb99a459
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/typescript-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -202,7 +202,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.fr
 content_hash = "sha256:61fee3dce2ceead0fbc7dbf4f7af820633ad498203aab3283bd7926b529c4f5f"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -214,7 +214,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:1b30f067bd49a71f8f6d42005deba94f87c610e158cb84c8126ed3c54cf709b8"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -226,7 +226,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:0958aff702a907784bf18262c9f1c1a0e0bb339f9406e1fa14b633cd71985615"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -238,7 +238,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:88d66adcd51d8f749c2e96431ddf6b3ea80adb3f1271625bc3a3f09bb658a7a1"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -250,7 +250,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:669fb4a23f0a822cff870f18e5e8f330f82e3c6315515b47c4a691700c7c21e3"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -262,7 +262,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:73a4013beb9920113723cb2fb7eed2737c91c39ba9d3015f6816283416c6a6fc"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -274,7 +274,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:c006b2a93b717fb71459dde404b08ce33d092e9514f4e27a2f350f21d78dad9d"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -286,7 +286,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:b3e5b36ead7c6192e4e63d6bf1169fee722562852ea4b0a8ab66053db45c9157"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -298,7 +298,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:6f454486ce7f3edcc208231b2b88fea61be6b65938ada1914a98ddfcb957960d"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -310,7 +310,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:6716cf448a935bcc00bbaf662b98d52517c89a4ca74e9e78b833f01c100596cb"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -322,7 +322,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:a4257fd33b740d36f02805ab9cc997c3c447bfbc29abf0915f38fd34bbb9f3b3"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -334,7 +334,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:04a03d3bd572cd3c865868c0a096f5f61606197924b886aa369bdaf56af243f8"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -352,7 +352,7 @@ dependencies = [
     "flow:org.vibevm.world/git-conventional-commits@=1.0.0",
 ]
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -364,7 +364,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:db3a36d635ec1dcb08878bb1c0dccb3287b6146882e92a543c4c3397318433e6"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -376,7 +376,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:2c7db23ae8b7a9a3ef1f7d2a7b54425113f43c4ab14f1e83f3458ffb00a33288"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -388,7 +388,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:ce765d63e674cc98a03ab09c8b21f4f6c867007c03be1d8ef320578c6911c60e"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -400,7 +400,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:b2bb48eb16931767dc13b925e92449d0ab6c1fe7c4d525c8379d1e11834a70b9"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -412,7 +412,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:f8141eefd8e3eb76bff982065b66467cff5b7f306c8d600ba47275937153e901"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -424,7 +424,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:0553a9f7253b3c8f2d0ef8eefeb5cfd0fd09a96db5d36b15f13701a0a878ec55"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -436,7 +436,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:384301d5e2bdee4357694666dd8c10a92fd003bb5075e8568a0c306c27363e54"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -448,7 +448,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:5aa2bc90bb97123f16e9676db132f6865473b04085f7a24e9bc19651a691dc7e"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -460,7 +460,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:a4f109741371ec0f02296bf8515fc360a036e804333f0a9dda71629ae0da1db7"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -472,7 +472,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:c068ab0517275cc6c7d11ce0e77e20c8dc9f038c6e6e4ae0832902b063ce0fc5"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -484,7 +484,7 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:e77db029e4ab66a5de85b74d13acc477ed6c268ab7ac94cdc7cc030f06622410"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"
 
 [[package]]
 kind = "flow"
@@ -496,4 +496,4 @@ source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.wo
 content_hash = "sha256:2d12ef2e83579b2b6b8ee7bdb6d01f6d70d187641e8a5e8fb4c5d08369ac4d3d"
 files_written = []
 admitted_by = "public-chain"
-source_kind = "registry"
+source_kind = "local"

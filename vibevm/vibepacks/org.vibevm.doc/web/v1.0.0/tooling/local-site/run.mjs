@@ -60,6 +60,22 @@ export function staticRoot(root = PACKAGE_ROOT, environment = process.env) {
   return join(root, "site", named === "" ? "dist" : named);
 }
 
+/** The host lifecycle output when this source package is inside the monorepo. */
+export function nativeStaticRoot(root = PACKAGE_ROOT) {
+  const host = resolve(root, "../../../../..");
+  const sourceSlot = resolve(
+    host,
+    "vibevm",
+    "vibepacks",
+    "org.vibevm.doc",
+    "web",
+    "v1.0.0",
+  );
+  if (resolve(root) !== sourceSlot || !existsSync(join(host, "vibe.toml")))
+    return null;
+  return join(host, ".vibe", "site-build", "site");
+}
+
 export function requestFile(root, requestUrl) {
   let pathname;
   try {
@@ -164,7 +180,15 @@ export async function runLocalSite(
     return null;
   }
   await prepare(options, root);
-  const output = staticRoot(root);
+  const explicitOutput = (process.env.VIBE_SITE_DIST ?? "").trim() !== "";
+  const nativeOutput = nativeStaticRoot(root);
+  const output =
+    !options.build &&
+    !explicitOutput &&
+    nativeOutput !== null &&
+    existsSync(join(nativeOutput, "index.html"))
+      ? nativeOutput
+      : staticRoot(root);
   if (!existsSync(join(output, "index.html")))
     throw new Error(
       `${output}: no static site; remove --no-build or run pnpm build:static`,
