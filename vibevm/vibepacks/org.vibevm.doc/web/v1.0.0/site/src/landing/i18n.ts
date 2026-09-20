@@ -53,6 +53,17 @@ export type Strings = {
   readonly ogLocale: string;
   readonly metaTitle: string;
   readonly metaDescription: string;
+  /** The three Why pages, as the header and the footer name them. */
+  readonly navWhyVibevm: string;
+  readonly navWhyZap: string;
+  readonly navWhyAiNative: string;
+  /**
+   * The essay's entry in the header and the footer. A pointer's label,
+   * not the essay's title: the page calls itself «Большой Вижен» /
+   * “The Big Vision” — the author's voice — and a menu names where a
+   * link leads in one word.
+   */
+  readonly navVision: string;
   readonly eyebrow: string;
   /** The small status pill beside the install block. */
   readonly badge: string;
@@ -96,6 +107,10 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     metaTitle: "VibeVM — a package manager for Spec-Driven Development",
     metaDescription:
       "An ultimate prompt library, package manager, and agentic system for Spec-Driven Development.",
+    navWhyVibevm: "Why VibeVM",
+    navWhyZap: "Why Zap",
+    navWhyAiNative: "AI-Native Language",
+    navVision: "Vision",
     eyebrow: "Open source · Spec-driven development",
     badge: "Early Access",
     headlineHtml: "Install the <em>context</em> your agents run on.",
@@ -146,6 +161,10 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     metaTitle: "VibeVM — пакетный менеджер для Spec-Driven Development",
     metaDescription:
       "Ультимативная библиотека промптов, пакетный менеджер и агентная система для Spec-Driven Development.",
+    navWhyVibevm: "Почему VibeVM",
+    navWhyZap: "Почему Zap",
+    navWhyAiNative: "AI-Native Языки",
+    navVision: "Видение",
     eyebrow: "Открытый код · Spec-Driven Development",
     badge: "Ранний доступ",
     headlineHtml: "Установите <em>контекст</em> для вашего агента",
@@ -247,4 +266,38 @@ export function otherLocale(locale: Locale): Locale {
 export function localeFromPath(pathname: string): Locale {
   const first = pathname.split("/").find((part) => part.length > 0);
   return LOCALES.find((locale) => locale === first) ?? "en";
+}
+
+/**
+ * The same address with its language taken off — what a page IS, rather
+ * than which edition of it a reader is on.
+ *
+ * It is what lets the two letters in the corner keep a reader where they
+ * are: `/ru/why/zap/` and `/why/zap/` both reduce to `why/zap/`, so the
+ * switch can offer the other language's spelling of THIS page instead of
+ * sending everyone back to the front door. The landing reduces to the
+ * empty string, which is its own address in both languages and needs no
+ * special case.
+ *
+ * Root-relative and without a leading slash, in the form `href` takes,
+ * so the result composes with `localePath` by concatenation.
+ *
+ * A FILE is not a place and answers the empty string. `/404.html` is the
+ * one address on this site that is a file rather than a directory — the
+ * router builds it to exactly that name because that is what
+ * `error_page 404` serves — and it exists once, in English. Treating it
+ * as a page path produced `/404.html/` in the language switch and in the
+ * footer: two addresses that are nothing, on the one page a reader
+ * reaches by already being lost. The Astro layout answered the same
+ * question by being called without a path at all; here the address is
+ * the only input, so the rule is read off the address.
+ */
+export function pathWithinLocale(pathname: string): string {
+  const parts = pathname.split("/").filter((part) => part.length > 0);
+  const rest = LOCALES.some((locale) => locale === parts[0])
+    ? parts.slice(1)
+    : parts;
+  const last = rest[rest.length - 1];
+  if (last === undefined || last.includes(".")) return "";
+  return `${rest.join("/")}/`;
 }

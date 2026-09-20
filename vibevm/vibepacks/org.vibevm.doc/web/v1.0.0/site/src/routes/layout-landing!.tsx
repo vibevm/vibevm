@@ -4,7 +4,7 @@ import { Slot, component$ } from "@qwik.dev/core";
 import { useLocation } from "@qwik.dev/router";
 
 import { LandingChrome } from "../landing/chrome.tsx";
-import { localeFromPath } from "../landing/i18n.ts";
+import { localeFromPath, pathWithinLocale } from "../landing/i18n.ts";
 
 /**
  * The chrome the landing addresses wear — a NAMED layout, and the name
@@ -25,15 +25,24 @@ import { localeFromPath } from "../landing/i18n.ts";
  * without reading the other's conditions.
  *
  * The language comes from the address rather than from a prop, because
- * the layout is one file serving four routes. `/ru/` is Russian; every
+ * the layout is one file serving ten routes. `/ru/…` is Russian; every
  * other landing address is English, which is the address map the Astro
  * site chose — the root serves content instead of redirecting to a
  * prefixed copy of itself.
+ *
+ * So does the page, and for the same reason: the header marks which of
+ * the three Why entries a reader is standing on, and the two letters in
+ * the corner offer the other language's spelling of that same page. Both
+ * are facts about the address, and the address is what a layout has.
  */
 export default component$(() => {
   const location = useLocation();
+  const pathname = location.url.pathname;
   return (
-    <LandingChrome locale={localeFromPath(location.url.pathname)}>
+    <LandingChrome
+      locale={localeFromPath(pathname)}
+      path={pathWithinLocale(pathname)}
+    >
       <Slot />
     </LandingChrome>
   );

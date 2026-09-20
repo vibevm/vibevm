@@ -183,6 +183,20 @@
   align-items: center;
 }
 
+/* The picture arrives through a slot, and the page wraps what it
+   projects in an element of its own. That wrapper must not become the
+   picture's measure — and it silently was: an `<svg>` carrying a
+   `viewBox` and no `width` attribute has a 300px intrinsic width, so a
+   shrink-to-fit wrapper drew the constellation at 300px where the design
+   asks for 420. The graph was a fifth smaller than the landing it was
+   ported from, on every desktop render, and nothing said so until the
+   layout gate measured the drawing against its section. */
+.hero__aside > * {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 /* ---- The install panel -------------------------------------------- */
 
 .install {

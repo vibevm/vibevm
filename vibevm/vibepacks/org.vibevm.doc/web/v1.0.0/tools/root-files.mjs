@@ -32,6 +32,8 @@ import { fileURLToPath } from "node:url";
 
 import { siteConfig } from "../site/src/config.ts";
 import { DOC_SITEMAP } from "../site/src/seo/sitemap.ts";
+import { visionLlmsLine } from "../site/src/vision/meta.ts";
+import { WHY_LLMS, whyLlmsLine } from "../site/src/why/meta.ts";
 import { writeOgCard } from "./og-card.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -288,25 +290,46 @@ function robotsTxt(config) {
   return text;
 }
 
+/**
+ * What a landing-side address is worth to a crawler, and how often it is
+ * worth asking again.
+ *
+ * The four values are the Astro sitemap's, and so is the shape they come
+ * in: the root is the strongest address the site has; the Russian tree
+ * is the one submitted to Yandex and stands one notch below its English
+ * twin; a Why page is a subpage of either; and a front door changes more
+ * often than an argument does.
+ *
+ * It is DERIVED from the address rather than read from a table, which is
+ * the difference between this file and the `sitemap-pages.json` it
+ * replaces: a page added tomorrow is in the sitemap at the right weight
+ * without anyone remembering to add a row for it, and a page removed
+ * leaves no row behind to rot.
+ */
+function rankOf(address) {
+  const russian = address.startsWith("/ru/");
+  const front = address === "/" || address === "/ru/";
+  if (front) return { priority: russian ? "0.9" : "1", changefreq: "weekly" };
+  return { priority: russian ? "0.7" : "0.8", changefreq: "monthly" };
+}
+
 function sitemapXml(config, pages) {
   const landing = landingPages(pages);
-  const entry = (address, priority) =>
+  const entry = (address, priority, changefreq = "weekly") =>
     [
       "  <url>",
       `    <loc>${config.origin}${address}</loc>`,
       `    <lastmod>${config.lastmod}</lastmod>`,
-      "    <changefreq>weekly</changefreq>",
+      `    <changefreq>${changefreq}</changefreq>`,
       `    <priority>${priority}</priority>`,
       "  </url>",
     ].join("\n");
 
   const body = [
-    /* The root is the strongest address the site has, and the Russian
-       tree is the one submitted to Yandex: the two priorities are the
-       Astro sitemap's, carried over rather than recomputed. */
-    ...landing.map((page) =>
-      entry(page.address, page.address === "/" ? "1" : "0.9"),
-    ),
+    ...landing.map((page) => {
+      const rank = rankOf(page.address);
+      return entry(page.address, rank.priority, rank.changefreq);
+    }),
     /* The documentation's own addresses are not here: they are in
        `/doc/sitemap.xml`, an index by package and language written from
        the page manifests (`##SEO-SITEMAP`), which is the file that knows
@@ -390,6 +413,11 @@ function escapeXml(text) {
  * added — the documentation now has an index of its own under `/doc/`,
  * and a root index that did not point at it would send an agent to read
  * the landing twice (`##SITE-ONE-SITE`).
+ *
+ * The three Why pages stand between the site and its two repositories,
+ * where the Astro file put them: an agent reading this index is deciding
+ * what to fetch, and the page that argues for a product is worth more to
+ * that decision than the source tree of it.
  */
 function llmsTxt(config) {
   const origin = config.origin;
@@ -403,6 +431,11 @@ function llmsTxt(config) {
     "## Project",
     "",
     `- [Official site](${origin}): VibeVM — spec-driven development, packaged.`,
+    ...WHY_LLMS.map((entry) => whyLlmsLine(origin, entry)),
+    /* The essay stands after the three product arguments: an agent
+       deciding what to fetch sees the products first and the worldview
+       they are pieces of right behind them. */
+    visionLlmsLine(origin),
     "- [GitHub (canonical source)](https://github.com/vibevm/vibevm): the CLI and package ecosystem.",
     "- [GitVerse (source mirror)](https://gitverse.ru/vibevm/vibevm): source repository on GitVerse.",
     "",

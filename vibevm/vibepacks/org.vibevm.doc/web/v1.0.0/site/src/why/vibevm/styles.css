@@ -1,0 +1,767 @@
+/* `/why/vibevm` — the terracotta page.
+   ---------------------------------------------------------------------
+   The visual direction is the source's: the site's terracotta used at
+   suprematist scale — a wedge of discipline entering a field of drift
+   and resolving into a pinned lattice. One inverted cream band carries
+   the token-economics argument.
+
+   Every measurement is `WhyVibevm.astro`'s. The one systematic change is
+   colour: the source was drawn for a single dark theme and wrote its
+   tones as literals, and this site has two themes and one file where a
+   colour may be written. So `--cream` becomes `--text`, `--dim` becomes
+   `--text-2`, `--faint` becomes `--text-3`, and a hand-typed
+   `rgba(217, 119, 87, …)` becomes a `color-mix()` of `--accent`, which
+   follows the theme instead of contradicting it. */
+
+.why-vv {
+  /* What the shared furniture tints itself with on this page. */
+  --why-accent: var(--accent);
+  --why-accent-bright: var(--accent-hover);
+  --why-accent-soft: var(--accent-soft);
+}
+
+/* --- Hero ----------------------------------------------------------- */
+
+.vv-hero {
+  padding-top: clamp(40px, 8vh, 96px);
+}
+
+.vv-headline {
+  max-width: 15ch;
+}
+
+.vv-lead {
+  margin-top: 24px;
+  max-width: 40rem;
+}
+
+.vv-frieze-wrap {
+  margin: clamp(30px, 5vh, 56px) 0 0;
+}
+
+.vv-frieze-canvas {
+  width: 100%;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(
+      48% 90% at 86% 0%,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 62%
+    ),
+    var(--bg-sink);
+}
+
+.vv-frieze-canvas .vv-frieze {
+  display: block;
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  height: auto;
+}
+
+/* Narrow screens: keep the composition legible by riding closer in and
+   letting both ends bleed off — the crop centres on the wedge apex,
+   where drift turns into order. */
+@media (max-width: 700px) {
+  .vv-frieze-canvas .vv-frieze {
+    width: 210%;
+    max-width: none;
+    margin-left: -48%;
+  }
+}
+
+.vv-frieze-wrap figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- Section scaffolding -------------------------------------------- */
+
+.vv-section {
+  padding-block: clamp(36px, 7vh, 84px);
+}
+
+.vv-k {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.vv-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(27px, 3.6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: balance;
+  max-width: 24ch;
+}
+
+.vv-body {
+  margin: 18px 0 0;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+  max-width: 42rem;
+}
+
+.vv-body--wide {
+  max-width: 48rem;
+}
+
+.vv-note {
+  margin: 14px 0 0;
+  max-width: 46rem;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.vv-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.vv-split .vv-body {
+  margin-top: 0;
+}
+
+.vv-symptoms {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.vv-symptoms li {
+  position: relative;
+  padding-left: 26px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.vv-symptoms li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+  transform: rotate(-8deg);
+}
+
+/* --- Architecture ---------------------------------------------------- */
+
+.vv-arch {
+  margin-top: 30px;
+  display: flex;
+  align-items: stretch;
+}
+
+.vv-arch__col {
+  flex: 1.1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.vv-arch__node {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+
+/* No `overflow-wrap: anywhere` here, unlike the AI-Native page's own
+   architecture nodes — the reference puts it on one and not the other,
+   and it is not decoration: `anywhere` drops a box's minimum content
+   width to one character, which lets the flex row distribute space
+   differently and made the Russian page's architecture band taller than
+   the one it was ported from. */
+.vv-arch__node b {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.vv-arch__sub {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.vv-tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  padding: 3px 9px;
+}
+
+.vv-tag--accent {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.vv-arch__node--lane {
+  flex: 1.35 1 0;
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.vv-lane-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.vv-lane-row em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.vv-arch__join {
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+}
+
+.vv-arch__join i {
+  display: block;
+  width: 100%;
+  border-top: 1px dashed var(--line-strong);
+  position: relative;
+}
+
+.vv-arch__join--arrow i::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  border: 4px solid transparent;
+  border-left-color: var(--accent);
+}
+
+/* --- The inverted token-economics band -------------------------------- */
+
+.vv-token {
+  background: var(--band-paper);
+  padding-block: clamp(40px, 7vh, 80px);
+}
+
+.vv-k--ink {
+  color: var(--band-accent);
+}
+
+.vv-h--ink {
+  color: var(--band-ink);
+  max-width: 30ch;
+}
+
+.vv-token__body {
+  margin: 18px 0 0;
+  max-width: 46rem;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--band-body);
+}
+
+.vv-token__tag {
+  margin: 22px 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--band-ink);
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+}
+
+/* --- Capabilities ----------------------------------------------------- */
+
+.vv-caps {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.vv-cap {
+  background: var(--bg);
+  padding: 26px 26px 28px;
+}
+
+.vv-cap__k {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.vv-cap h3 {
+  margin: 0 0 9px;
+  font-family: var(--font-display);
+  font-size: 19.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.vv-cap p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+/* --- Steps ------------------------------------------------------------ */
+
+.vv-steps {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: vv-step;
+  max-width: 46rem;
+  display: grid;
+  gap: 22px;
+}
+
+.vv-steps li {
+  counter-increment: vv-step;
+  position: relative;
+  padding-left: 52px;
+  min-width: 0;
+}
+
+.vv-steps li::before {
+  content: counter(vv-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.vv-steps p {
+  margin: 7px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* This page's step commands span their column rather than hugging their
+   text: five of them stand under each other and a ragged right edge
+   would read as five different kinds of thing. */
+.vv-cmd {
+  display: flex;
+}
+
+/* --- Fit --------------------------------------------------------------- */
+
+.vv-fit {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.vv-fit__col {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.vv-fit__col h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 18.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.vv-fit__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.vv-fit__col li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.vv-fit__col li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+
+.vv-fit__col--not li::before {
+  background: transparent;
+  border: 2px solid var(--text-3);
+  width: 6px;
+  height: 6px;
+}
+
+.vv-status {
+  margin-top: 20px;
+  max-width: 46rem;
+  border-left: 3px solid var(--accent);
+  padding: 4px 0 4px 18px;
+}
+
+.vv-status b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.vv-status p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+/* --- The start block --------------------------------------------------- */
+
+.vv-cta-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.vv-cta-install {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  min-width: 0;
+  background: color-mix(in srgb, var(--bg-raise) 72%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.vv-cta-links {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.vv-zap-tie {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background:
+    radial-gradient(
+      70% 60% at 80% 0%,
+      color-mix(in srgb, var(--accent-zap) 10%, transparent),
+      transparent 60%
+    ),
+    var(--zap-surface);
+  border: 1px solid color-mix(in srgb, var(--accent-zap) 30%, transparent);
+  border-radius: 14px;
+  padding: 22px;
+  transition:
+    border-color 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.vv-zap-tie:hover {
+  border-color: color-mix(in srgb, var(--accent-zap) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.vv-zap-tie__orb {
+  color: var(--accent-zap);
+}
+
+.vv-zap-tie__orb svg {
+  width: 46px;
+  height: 46px;
+  display: block;
+}
+
+.vv-zap-tie b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.vv-zap-tie p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.vv-zap-tie__link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-zap);
+}
+
+/* --- Summary ------------------------------------------------------------ */
+
+.vv-summary-wrap {
+  padding-bottom: clamp(56px, 10vh, 110px);
+}
+
+.vv-summary {
+  margin: 0;
+  max-width: 48rem;
+  border-left: 3px solid var(--accent);
+  padding: 6px 0 6px 24px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.vv-summary code {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* --- The frieze ---------------------------------------------------------- */
+
+.vv-frieze__ring {
+  stroke: var(--text);
+  stroke-width: 1.5;
+  opacity: 0.15;
+}
+
+.vv-frieze__chaos rect {
+  fill: var(--text-3);
+  opacity: 0.45;
+}
+
+.vv-frieze__chaos .vv-frieze__bright {
+  fill: var(--text);
+  opacity: 0.4;
+}
+
+.vv-frieze__chaos .vv-frieze__turn {
+  fill: var(--text);
+  opacity: 0.62;
+}
+
+.vv-frieze__wedge {
+  fill: var(--accent);
+  transform: translate(70px, -46px);
+  animation: vv-frieze-enter 0.9s cubic-bezier(0.2, 0.8, 0.25, 1) forwards 0.1s;
+}
+
+.vv-frieze__bar {
+  fill: var(--text);
+  opacity: 0.2;
+}
+
+.vv-frieze__edges line {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0.4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: vv-frieze-draw 0.7s ease forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.vv-frieze__nodes rect,
+.vv-frieze__nodes circle {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vv-frieze-pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.vv-frieze__root {
+  fill: var(--accent);
+}
+
+.vv-frieze__sq {
+  fill: var(--bg-raise);
+  stroke: var(--accent);
+  stroke-width: 1.4;
+}
+
+.vv-frieze__pin {
+  fill: var(--bg-raise);
+  stroke: var(--text);
+  stroke-width: 1.3;
+}
+
+.vv-frieze__pin--faint {
+  stroke: var(--text-3);
+}
+
+@keyframes vv-frieze-enter {
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes vv-frieze-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes vv-frieze-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Responsive ----------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .vv-arch {
+    flex-direction: column;
+    gap: 0;
+  }
+  .vv-arch__col {
+    gap: 12px;
+  }
+  .vv-arch__join {
+    flex-basis: auto;
+    width: 44px;
+    height: 34px;
+    margin-left: 30px;
+  }
+  .vv-arch__join i {
+    width: 0;
+    height: 100%;
+    border-top: 0;
+    border-left: 1px dashed var(--line-strong);
+  }
+  .vv-arch__join--arrow i::after {
+    right: auto;
+    top: auto;
+    left: -4px;
+    bottom: -1px;
+    border: 4px solid transparent;
+    border-top-color: var(--accent);
+  }
+}
+
+@media (max-width: 860px) {
+  .vv-split {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .vv-caps {
+    grid-template-columns: 1fr;
+  }
+  .vv-fit {
+    grid-template-columns: 1fr;
+  }
+  .vv-cta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .vv-steps li {
+    padding-left: 40px;
+  }
+  .vv-summary {
+    padding-left: 18px;
+  }
+}
+
+/* --- Motion safety --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .vv-frieze__wedge {
+    animation: none;
+    transform: none;
+  }
+  .vv-frieze__edges line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .vv-frieze__nodes rect,
+  .vv-frieze__nodes circle {
+    animation: none;
+    opacity: 1;
+  }
+  .vv-zap-tie:hover {
+    transform: none;
+  }
+}

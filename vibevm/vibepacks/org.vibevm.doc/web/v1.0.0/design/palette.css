@@ -74,14 +74,73 @@
   --faint-dark-docs: #bdb9b1; /* mint: from --faint-dark, worst |Lc| 21.86 -> 62.05 */
   --accent-docs: #dc8264; /* mint: from --accent-raw, |Lc| on dark --bg 43.29 -> 47.20 */
 
+  /* ---- The three Why pages' own accents ----------------------------
+     Each marketing page carries one accent of its own, and that is the
+     design rather than a decoration: the family reads as three products
+     under one roof, so terracotta belongs to VibeVM, a cosmic green to
+     Zap, and an engineering gold to AI-Native. The values are quoted
+     from the pages that authored them, in the same form as every other
+     raw name here — what the colour IS, never what it is for.
+
+     The dark map is what the pages were drawn on and is carried over
+     literally. The light map had no authored value except the gold's,
+     which the same page already wrote for its cream band; the green's
+     is minted by the rule the four tones above were minted by. */
+  --gold-raw: #d9a441; /* WhyAiNative.astro:806 --an-gold */
+  --gold-bright-raw: #e7bc5f; /* WhyAiNative.astro:807 --an-gold-bright */
+  --ochre-ink: #7a5a1c; /* WhyAiNative.astro:810 --an-ochre-ink — the page's own gold for a light ground */
+  --zap-green-raw: #52d9a2; /* WhyZap.astro:447 --zs-green */
+  --zap-green-bright-raw: #8fefc7; /* WhyZap.astro:448 --zs-green-bright */
+  --zap-green-docs: #28b57c; /* mint: from --zap-green-raw, |Lc| on light --bg 28.81 -> 47.13 */
+
+  /* The deep-space ground of the Zap page: its own three surfaces, kept
+     because the page IS a darker room than the rest of the site and
+     says so on purpose (WhyZap.astro:450-453). */
+  --zap-deep: #0b100e; /* WhyZap.astro:450 --zs-deep */
+  --zap-panel: #0f1713; /* WhyZap.astro:451 --zs-panel */
+  --zap-line: #1c2a24; /* WhyZap.astro:452 --zs-line */
+  --zap-line-strong: #27382f; /* WhyZap.astro:453 --zs-line-strong */
+  --zap-star-raw: #24322c; /* WhyZap.astro:739 .zo-stars circle */
+
+  /* The three language marks of the AI-Native page — a square, a circle
+     and a triangle, each in its language's own mineral tone. They are
+     shapes before they are text, and they stand on both grounds. */
+  --lang-rust: #c65b3e; /* WhyAiNative.astro:811 --an-rust */
+  --lang-ts: #6e9bc5; /* WhyAiNative.astro:812 --an-ts */
+  --lang-go: #56b4c8; /* WhyAiNative.astro:813 --an-go */
+
+  /* The essay's machine-intention mark — the one colour the page
+     `/vision/` adds to the family. A suprematist cobalt, minted for the
+     pair it always stands in: the human intention is the family's own
+     terracotta circle, the machine intention is this cobalt square, and
+     the two must read apart on both grounds without either borrowing a
+     language mark's meaning (`--lang-ts` is TypeScript, not a machine).
+     Two tones of one hue, one per ground, gated by
+     `design/audit/contrast.mjs` at the outline threshold beside the
+     family's other accents. */
+  --cobalt-deep: #3d5a8c; /* the light map's machine mark */
+  --cobalt-bright: #93b5e6; /* the dark map's machine mark */
+
+  /* The inverted band both long pages print one argument on: a cream
+     ground with ink on it, the same in either theme because the band is
+     an inversion of the page and not a reading of it. */
+  --band-paper-raw: #f4f1e8; /* WhyVibevm.astro:619 background: var(--cream) */
+  --band-ink-raw: #14120e; /* WhyAiNative.astro:940 .an-law-quote */
+  --band-body-raw: #4a443a; /* WhyVibevm.astro:624 .vv-token-body */
+  --band-note-raw: #6d6552; /* WhyAiNative.astro:953 .an-law-note */
+  --band-terracotta: #a04e33; /* WhyVibevm.astro:622 .vv-k-ink */
+
   /* ---- Shape and time — anthropic.css ------------------------------ */
   --radius-sm-raw: 8px; /* anthropic.css:86 */
   --radius-md-raw: 12px; /* anthropic.css:87 */
   --radius-lg-raw: 16px; /* anthropic.css:88 */
   --radius-xl-raw: 24px; /* anthropic.css:89 */
   --radius-pill-raw: 999px; /* anthropic.css:90 */
-  --shadow-card-raw: 0 1px 2px rgba(20, 20, 19, 0.04), 0 4px 16px rgba(20, 20, 19, 0.05); /* anthropic.css:93 */
-  --shadow-hover-raw: 0 2px 4px rgba(20, 20, 19, 0.06), 0 12px 32px rgba(20, 20, 19, 0.1); /* anthropic.css:94 */
-  --shadow-mega-raw: 0 24px 64px rgba(20, 20, 19, 0.16), 0 4px 16px rgba(20, 20, 19, 0.08); /* anthropic.css:95 */
+  --shadow-card-raw:
+    0 1px 2px rgba(20, 20, 19, 0.04), 0 4px 16px rgba(20, 20, 19, 0.05); /* anthropic.css:93 */
+  --shadow-hover-raw:
+    0 2px 4px rgba(20, 20, 19, 0.06), 0 12px 32px rgba(20, 20, 19, 0.1); /* anthropic.css:94 */
+  --shadow-mega-raw:
+    0 24px 64px rgba(20, 20, 19, 0.16), 0 4px 16px rgba(20, 20, 19, 0.08); /* anthropic.css:95 */
   --speed-raw: 0.18s; /* anthropic.css:100 */
 }
