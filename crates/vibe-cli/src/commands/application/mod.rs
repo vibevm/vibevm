@@ -395,7 +395,9 @@ fn apply(
             });
         }
     }
-    let registry_root = Some(resolved.registry_root.clone());
+    let resolved = resolved.materialize_source(settings, offline, progress)?;
+    let (installer_entry, installer_root, registry_root) = resolved.source_runtime()?;
+    let registry_root = Some(registry_root.to_path_buf());
     let context = context(
         operation,
         resolved.application.clone(),
@@ -425,8 +427,8 @@ fn apply(
         }
     };
     let reply = match dispatch(
-        &resolved.installer_entry,
-        &resolved.installer_root,
+        installer_entry,
+        installer_root,
         &context,
         &context_path,
         &reply_path,

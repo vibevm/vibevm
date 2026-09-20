@@ -118,9 +118,14 @@ impl Manifest {
                 .validate()
                 .map_err(|reason| Error::InvalidManifest { reason })?;
         }
-        if self.application.is_some() && self.application_source.is_some() {
+        if self.application.is_some()
+            && self.application_source.is_some()
+            && !self.package.as_ref().is_some_and(|package| package.bridge)
+        {
             return Err(Error::InvalidManifest {
-                reason: "[application] and [application_source] are mutually exclusive".into(),
+                reason:
+                    "[application] and [application_source] may coexist only on a bridge package"
+                        .into(),
             });
         }
 

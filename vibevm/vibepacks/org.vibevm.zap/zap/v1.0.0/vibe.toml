@@ -21,3 +21,31 @@ kind = "git"
 url = "https://github.com/vibevm/zap.git"
 tracked_ref = "refs/heads/1.0.0"
 registry_path = "vibevm/vibepacks"
+
+# The bridge carries the complete lightweight binary declaration so an
+# ordinary global install can verify the release before cloning the large,
+# mutable source repository. Source materialization stays available as a
+# deferred fallback and for an explicit `--from-source` request.
+[application]
+id = "zap"
+installer_package = "org.vibevm.zap/lens@=1.0.0"
+runtime = "node"
+entry = "tooling/source-install/application.mjs"
+commands = [
+  "codlens",
+  "codlens-mcp",
+  "quicklens-service",
+  "quicklens-web-auth",
+  "quicklens-web",
+  "zap-wayfinder",
+  "zap-server",
+  "zap-quicklens",
+  "zap-quick-lens",
+  "zap-mock-agent",
+  "zap",
+]
+
+[application.distribution]
+repository = "vibevm/zap"
+release_tag = "v1.0.0"
+index_asset = "DISTRIBUTIONS.json"

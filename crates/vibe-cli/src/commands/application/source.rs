@@ -6,9 +6,9 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use vibe_core::PackageRef;
-use vibe_core::manifest::{ApplicationDistributionDecl, Manifest};
+use vibe_core::manifest::{ApplicationDistributionDecl, ApplicationSourceDecl, Manifest};
 use vibe_core::progress::Progress;
+use vibe_core::{PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 
 use super::model::{ApplicationIdentity, ApplicationSourceObservation, PackageIdentity};
@@ -16,11 +16,65 @@ use super::remote::resolve_remote_source;
 
 pub struct ResolvedApplication {
     pub application: ApplicationIdentity,
-    pub installer_entry: PathBuf,
-    pub installer_root: PathBuf,
     pub distribution: Option<ApplicationDistributionDecl>,
     pub source: Option<ApplicationSourceObservation>,
-    pub registry_root: PathBuf,
+    source_materialization: SourceMaterialization,
+}
+
+enum SourceMaterialization {
+    Ready {
+        installer_entry: PathBuf,
+        installer_root: PathBuf,
+        registry_root: PathBuf,
+    },
+    Deferred(ApplicationSourceDecl),
+}
+
+impl ResolvedApplication {
+    pub fn materialize_source(
+        self,
+        settings_root: &Path,
+        offline: bool,
+        progress: &Progress,
+    ) -> Result<Self> {
+        let declaration = match &self.source_materialization {
+            SourceMaterialization::Ready { .. } => return Ok(self),
+            SourceMaterialization::Deferred(declaration) => declaration.clone(),
+        };
+        let observed = resolve_remote_source(settings_root, &declaration, offline, progress)?;
+        let resolved = resolve_application_with_source(
+            &observed.registry_root,
+            &format!(
+                "{}/{}@={}",
+                self.application.package.group,
+                self.application.package.name,
+                self.application.package.version
+            ),
+            Some(ApplicationSourceObservation {
+                url: observed.url,
+                tracked_ref: observed.tracked_ref,
+                resolved_commit: observed.resolved_commit,
+                source_tree: observed.source_tree,
+            }),
+        )?;
+        if resolved.application != self.application || resolved.distribution != self.distribution {
+            bail!("tracked application source differs from its published bridge declaration");
+        }
+        Ok(resolved)
+    }
+
+    pub fn source_runtime(&self) -> Result<(&Path, &Path, &Path)> {
+        match &self.source_materialization {
+            SourceMaterialization::Ready {
+                installer_entry,
+                installer_root,
+                registry_root,
+            } => Ok((installer_entry, installer_root, registry_root)),
+            SourceMaterialization::Deferred(_) => {
+                bail!("application source was not materialized")
+            }
+        }
+    }
 }
 
 pub fn resolve_global_application(
@@ -42,7 +96,15 @@ pub fn resolve_global_application(
         let registry = crate::registry::application_local_registry(registry_root.clone())?;
         let selected = registry.resolve(&requested)?;
         let manifest = Manifest::read(selected.source_dir.join(Manifest::FILENAME))?;
-        if let Some(source) = manifest.application_source {
+        if let Some(source) = manifest.application_source.clone() {
+            if manifest.application.is_some() {
+                let resolved = resolve_deferred_application(&manifest, source);
+                match &resolved {
+                    Ok(_) => selection.finish(),
+                    Err(_) => selection.fail("application bridge selection failed"),
+                }
+                return resolved;
+            }
             selection.detail("published bridge selected an external source registry");
             let observed =
                 resolve_remote_source(settings_root, &source, offline, &selection.progress())?;
@@ -94,11 +156,19 @@ pub fn resolve_global_application(
     let cached = resolver
         .resolve_and_fetch(&requested, &store_root, None)
         .with_context(|| format!("resolving published application bridge `{spelling}`"))?;
-    let source = cached.manifest.application_source.ok_or_else(|| {
+    let source = cached.manifest.application_source.clone().ok_or_else(|| {
         anyhow::anyhow!(
             "published global application `{spelling}` must declare [application_source]"
         )
     })?;
+    if cached.manifest.application.is_some() {
+        let resolved = resolve_deferred_application(&cached.manifest, source);
+        match &resolved {
+            Ok(_) => selection.finish(),
+            Err(_) => selection.fail("application bridge selection failed"),
+        }
+        return resolved;
+    }
     let observed = resolve_remote_source(settings_root, &source, offline, &selection.progress())?;
     let resolved = resolve_application_with_source(
         &observed.registry_root,
@@ -200,12 +270,69 @@ pub fn resolve_application_with_source(
     };
     Ok(ResolvedApplication {
         application,
-        installer_entry: entry,
-        installer_root: provider_root,
         distribution: declaration.distribution,
         source,
-        registry_root,
+        source_materialization: SourceMaterialization::Ready {
+            installer_entry: entry,
+            installer_root: provider_root,
+            registry_root,
+        },
     })
+}
+
+fn resolve_deferred_application(
+    manifest: &Manifest,
+    source: ApplicationSourceDecl,
+) -> Result<ResolvedApplication> {
+    let package = manifest.require_package()?;
+    let declaration = manifest
+        .application
+        .clone()
+        .ok_or_else(|| anyhow::anyhow!("published application bridge has no [application]"))?;
+    let installer_group = declaration
+        .installer_package
+        .group
+        .as_ref()
+        .ok_or_else(|| anyhow::anyhow!("application installer package is unqualified"))?;
+    let installer_version = exact_version(&declaration.installer_package.version)?;
+    Ok(ResolvedApplication {
+        application: ApplicationIdentity {
+            id: declaration.id,
+            package: PackageIdentity {
+                group: package.group.to_string(),
+                name: package.name.clone(),
+                version: package.version.to_string(),
+            },
+            installer_package: PackageIdentity {
+                group: installer_group.to_string(),
+                name: declaration.installer_package.name.to_string(),
+                version: installer_version,
+            },
+            commands: declaration.commands,
+        },
+        distribution: declaration.distribution,
+        source: None,
+        source_materialization: SourceMaterialization::Deferred(source),
+    })
+}
+
+fn exact_version(spec: &VersionSpec) -> Result<String> {
+    let VersionSpec::Req(requirement) = spec else {
+        bail!("application installer package is not exactly pinned");
+    };
+    let [comparator] = requirement.comparators.as_slice() else {
+        bail!("application installer package is not exactly pinned");
+    };
+    if comparator.op != semver::Op::Exact {
+        bail!("application installer package is not exactly pinned");
+    }
+    let minor = comparator
+        .minor
+        .ok_or_else(|| anyhow::anyhow!("application installer package pin has no minor"))?;
+    let patch = comparator
+        .patch
+        .ok_or_else(|| anyhow::anyhow!("application installer package pin has no patch"))?;
+    Ok(format!("{}.{}.{}", comparator.major, minor, patch))
 }
 
 pub fn qualified_ref(spelling: &str) -> Result<PackageRef> {
@@ -244,4 +371,52 @@ fn contained_directory(root: &Path, path: &Path, label: &str) -> Result<PathBuf>
         bail!("{label} escapes the selected registry");
     }
     Ok(canonical)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn binary_capable_bridge_defers_source_materialization() {
+        let manifest = Manifest::parse_str(
+            r#"
+[package]
+name = "demo"
+group = "org.example"
+kind = "flow"
+version = "1.0.0"
+bridge = true
+
+[application_source]
+kind = "git"
+url = "https://github.com/example/demo.git"
+tracked_ref = "refs/heads/1.0.0"
+registry_path = "vibevm/vibepacks"
+
+[application]
+id = "demo"
+installer_package = "org.example/installer@=1.2.3"
+runtime = "node"
+entry = "tooling/application.mjs"
+commands = ["demo"]
+
+[application.distribution]
+repository = "example/demo"
+release_tag = "v1.0.0"
+index_asset = "DISTRIBUTIONS.json"
+"#,
+        )
+        .unwrap();
+        let resolved =
+            resolve_deferred_application(&manifest, manifest.application_source.clone().unwrap())
+                .unwrap();
+        assert_eq!(resolved.application.id, "demo");
+        assert_eq!(resolved.application.installer_package.version, "1.2.3");
+        assert!(resolved.source.is_none());
+        assert!(matches!(
+            resolved.source_materialization,
+            SourceMaterialization::Deferred(_)
+        ));
+    }
 }

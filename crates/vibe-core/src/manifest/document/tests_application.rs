@@ -45,7 +45,7 @@ fn strict_application_declaration_round_trips() {
 }
 
 #[test]
-fn application_source_proxy_is_strict_and_exclusive() {
+fn application_source_proxy_is_strict_and_bridge_may_carry_binary_metadata() {
     let proxy = r#"
 [package]
 name = "zap"
@@ -83,11 +83,16 @@ registry_path = "vibevm/vibepacks"
         "{proxy}\n[application]{}",
         PACKAGE.split_once("[application]").unwrap().1
     );
+    let combined = Manifest::parse_str(&both).expect("bridge carries binary and source routes");
+    assert!(combined.application.is_some());
+    assert!(combined.application_source.is_some());
+
+    let non_bridge = both.replace("bridge = true\n", "");
     assert!(
-        Manifest::parse_str(&both)
+        Manifest::parse_str(&non_bridge)
             .unwrap_err()
             .to_string()
-            .contains("mutually exclusive")
+            .contains("only on a bridge package")
     );
 }
 
