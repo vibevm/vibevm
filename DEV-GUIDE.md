@@ -96,7 +96,7 @@ The seven steps are a compiled tool, not an npm package. `pnpm floor` finds it i
 target/debug/vibe.exe bin build typescript-ai-native --assume-yes
 ```
 
-From the repo root the same floor runs without pnpm at all, which is the form `tools/self-check.sh` uses:
+From the repo root the same floor runs without pnpm at all. Run it directly when the documentation web package changes:
 
 ```sh
 vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native.exe \
@@ -376,7 +376,7 @@ The full integration/release entry point remains:
 bash tools/self-check.sh
 ```
 
-It runs the complete stage list declared in `tools/self-check.sh`: host workspace tests/lints, spec/conformance/codegen/wire checks and the independently shipped package workspaces. It exits on the first failure unless `--keep-going` is passed. This is an expensive panel, not a per-commit, per-worker or per-milestone requirement.
+It runs the small host release gate declared in `tools/self-check.sh`: formatting, workspace tests and strict clippy, then the host spec, conform, codegen-freshness and wire-compatibility checks. It exits on the first failure unless `--keep-going` is passed. Independently shipped package workspaces, documentation/browser suites, self-traces and specialized policy checks are selected directly when their inputs change; they are not repeated by every host release.
 
 Use affected checks during development and integration. Run the whole panel for the designated final campaign/release gate, an explicit full-check request, or demonstrated cross-cutting impact for which narrower proof is inadequate. Completing an atom, touching two crates, preparing a push or ending a milestone is not by itself that reason.
 
@@ -477,7 +477,7 @@ Three things about the build worth knowing before the first one.
 
 **Level 0 is every package, from its own bytes.** A package that ships no documentation still gets pages: the manifest as a reference page, the README, and the boot snippet when it declares one, beside every specification it carries — copied at its own path, because the path is the address a `spec://` citation resolves to. A `doc` package gets the same treatment and its authored pages besides, which is why there is one rendering path and not two.
 
-**What each check asks.** `--examples` runs every documented command against the debug binary in a sandbox and compares the output exactly, after the fixture's declared normalisation; `tools/self-check.sh` runs them as golden tests, and a red example is fixed in the normalisation rules or in the product, never by loosening the comparison. `--citations` asks one question of every `spec://` a page cites — does the anchor exist. `--derived` rebuilds every generated block and compares it with the record in the package; the cure for a red one is `--derived --accept`. `--translations` checks an adaptation against the documentation it adapts, structure only. `--coverage` requires every spec fact marked `actionstage="doc"` with an audience to be cited by a page for that same audience, and `--min <percent>` lowers the bar for an intermediate run. `--media` judges the card's images by their bytes.
+**What each check asks.** `--examples` runs every documented command against the debug binary in a sandbox and compares the output exactly, after the fixture's declared normalisation. Run it when commands or their documented output change; a red example is fixed in the normalisation rules or in the product, never by loosening the comparison. `--citations` asks one question of every `spec://` a page cites — does the anchor exist. `--derived` rebuilds every generated block and compares it with the record in the package; the cure for a red one is `--derived --accept`. `--translations` checks an adaptation against the documentation it adapts, structure only. `--coverage` requires every spec fact marked `actionstage="doc"` with an audience to be cited by a page for that same audience, and `--min <percent>` lowers the bar for an intermediate run. `--media` judges the card's images by their bytes.
 
 **Two things `doc build` will do that may surprise you.** It runs the product — `derived` blocks are generated from `vibe … --help` and the schemas, one process per block — so a build takes a few seconds; `--no-derived` skips that and marks the blocks as the gaps they are. And it writes the site's own address map (`<group>/<name>/<version>/<document>/index.html`, the projections beside it, `manifest.json` and the four `llms` files at the root), so the output directory is servable as it stands.
 

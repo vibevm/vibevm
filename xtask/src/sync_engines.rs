@@ -14,9 +14,9 @@
 //! `sync-engines` mirrors the authored crates into every target
 //! (incrementally — only differing files are rewritten, extras are
 //! removed, so cargo's mtime-based rebuilds stay quiet); `--check`
-//! byte-compares and exits non-zero on drift. `tools/self-check.sh` runs
-//! the check, so an edit to a vendored copy cannot land silently — the
-//! fix surface is always the authored crate.
+//! byte-compares and exits non-zero on drift. Run the check whenever an
+//! authored or vendored engine changes; the fix surface is always the
+//! authored crate.
 
 use std::collections::BTreeSet;
 use std::fs;
