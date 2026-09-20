@@ -48,6 +48,17 @@ jobs:
           echo "vibe_sha=$vibe_sha" >> "$GITHUB_OUTPUT"
           echo "zap_commit=$zap_commit" >> "$GITHUB_OUTPUT"
 
+      - name: Remember the currently tagged image generations
+        id: previous
+        shell: bash
+        run: |
+          set -euo pipefail
+          for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
+            key="${image//-/_}"
+            digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.0" 2>/dev/null | awk '$1 == "Digest:" { print $2; exit }' || true)"
+            echo "$key=$digest" >> "$GITHUB_OUTPUT"
+          done
+
       - name: Build all four images locally
         env:
           NPM_REGISTRY: ${{ inputs.npm_registry || vars.NPM_CONFIG_REGISTRY || 'https://registry.npmjs.org' }}
@@ -106,4 +117,38 @@ jobs:
           for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
             docker push "vibevm/$image:1.0.0"
             docker push "vibevm/$image:latest"
+          done
+
+      - name: Delete superseded untagged manifests
+        shell: bash
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          OLD_VIBEVM: ${{ steps.previous.outputs.vibevm }}
+          OLD_VIBEVM_DEV: ${{ steps.previous.outputs.vibevm_dev }}
+          OLD_VIBEVM_ZAP: ${{ steps.previous.outputs.vibevm_zap }}
+          OLD_VIBEVM_DOC: ${{ steps.previous.outputs.vibevm_doc }}
+        run: |
+          set -euo pipefail
+          for row in \
+            "vibevm:$OLD_VIBEVM" \
+            "vibevm-dev:$OLD_VIBEVM_DEV" \
+            "vibevm-zap:$OLD_VIBEVM_ZAP" \
+            "vibevm-doc:$OLD_VIBEVM_DOC"; do
+            image="${row%%:*}"
+            old_digest="${row#*:}"
+            test -n "$old_digest" || continue
+            new_digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.0" | awk '$1 == "Digest:" { print $2; exit }')"
+            test "$old_digest" != "$new_digest" || continue
+            if curl --fail --silent "https://hub.docker.com/v2/repositories/vibevm/$image/tags?page_size=100" \
+              | jq -e --arg digest "$old_digest" '.results | any(.digest == $digest)' >/dev/null; then
+              echo "retain $image@$old_digest: another tag still references it"
+              continue
+            fi
+            token="$(curl --fail --silent --user "vibevm:$DOCKERHUB_TOKEN" \
+              "https://auth.docker.io/token?service=registry.docker.io&scope=repository:vibevm/$image:pull,push,delete" \
+              | jq -er '.token')"
+            status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              --request DELETE --header "Authorization: Bearer $token" \
+              "https://registry-1.docker.io/v2/vibevm/$image/manifests/$old_digest")"
+            test "$status" = 202 || test "$status" = 404
           done
