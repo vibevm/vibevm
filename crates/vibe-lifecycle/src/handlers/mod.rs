@@ -515,6 +515,9 @@ fn script_env(
     context_path: &Path,
     reply: &Path,
 ) -> std::collections::BTreeMap<std::ffi::OsString, std::ffi::OsString> {
+    let executable = std::env::current_exe()
+        .map(|path| machine_path(&path))
+        .unwrap_or_else(|_| "vibe".to_string());
     let (group, name, version, kind, dir) = if let Some(target) = target {
         (
             target.group.clone(),
@@ -557,6 +560,7 @@ fn script_env(
         ("VIBE_PACKAGE_DIR".into(), dir),
         ("VIBE_HOOK_PHASE".into(), hook_phase.into()),
         ("VIBE_PROJECT_ROOT".into(), context.project.root.clone()),
+        ("VIBE_EXECUTABLE".into(), executable),
         ("VIBE_EXTENSION_PROVIDER".into(), row.provider().to_string()),
         ("VIBE_CONTEXT".into(), machine_path(context_path)),
         ("VIBE_REPLY".into(), machine_path(reply)),

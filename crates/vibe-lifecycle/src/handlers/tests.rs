@@ -236,6 +236,7 @@ fn script_exit_zero_without_reply_defaults_ok_and_carries_exact_wire_env() {
         "VIBE_CONTEXT",
         "VIBE_REPLY",
         "VIBE_PROJECT_ROOT",
+        "VIBE_EXECUTABLE",
         "VIBE_EXTENSION_PROVIDER",
     ] {
         assert!(seen[0].env.contains_key(&std::ffi::OsString::from(key)));
