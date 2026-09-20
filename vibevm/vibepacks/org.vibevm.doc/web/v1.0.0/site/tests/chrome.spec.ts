@@ -14,9 +14,10 @@
  * So what is checked is geometry over the BUILT bytes, at the widths the
  * site is actually opened at and in both languages: which row each entry
  * stands on, that the rows are the ones the composition declares, that
- * no two things in the bar overlap, that the document never goes wide,
- * and that the control which fell off has a row it shares with something
- * else. A row is read off the boxes — the vertical middles the browser
+ * the two rows stand centred on one axis in the bar's middle rather than
+ * clumped against the brand, that no two things in the bar overlap, that
+ * the document never goes wide, and that the control which fell off has
+ * a row it shares with something else. A row is read off the boxes — the vertical middles the browser
  * actually computed — because that is the only statement of «which line
  * is this on» that a CSS change cannot quietly make true while the page
  * says otherwise.
@@ -166,7 +167,9 @@ async function scrolls(page: Page): Promise<boolean> {
  * The desktop widths must produce the two rows the composition declares,
  * in the owner's order — the software and where its source is kept, then
  * the essay and the three arguments it is the worldview of — with the
- * brand centred against both rather than standing on either. The phone
+ * brand centred against both rather than standing on either, and the
+ * cluster of the two standing in the bar's middle, leaning toward the
+ * brand. The phone
  * must produce a different composition rather than the same one
  * squeezed. And at every width, in both languages, nothing may overlap
  * anything, the page may not go wide, and the theme switch may not be
@@ -245,6 +248,45 @@ for (const one of PAGES) {
         Math.abs(brand.middle - between),
         `the brand is centred — ${at}`,
       ).toBeLessThanOrEqual(3);
+
+      /* The centred cluster. The grid stands the two rows in the middle
+         of the bar rather than against the brand — where they used to
+         clump, with every spare pixel pooled into one void before the
+         field — and leans them a little toward the brand, because the
+         right flank is the heavier one and an arithmetic centre reads
+         as pushed into it. What is asserted is the rule and not the
+         pixel: one axis for both rows, a lean that is real but bounded,
+         and clear air after the brand where the clump used to be. */
+      const links = ROWS[one.locale].map((row) =>
+        row.filter(
+          (name) => name !== "search" && name !== "lang" && name !== "theme",
+        ),
+      );
+      const span = (line: readonly Box[], names: readonly string[]) => {
+        const own = line.filter((box) => names.includes(box.name));
+        return { x: own[0].x, right: own[own.length - 1].right };
+      };
+      const tools = span(lines[0], links[0]);
+      const story = span(lines[2], links[1]);
+      expect(
+        Math.abs((tools.x + tools.right) / 2 - (story.x + story.right) / 2),
+        `the rows share one axis — ${at}`,
+      ).toBeLessThanOrEqual(8);
+
+      const cluster =
+        (Math.min(tools.x, story.x) + Math.max(tools.right, story.right)) / 2;
+      expect(
+        width / 2 - cluster,
+        `the cluster leans toward the brand — ${at}`,
+      ).toBeGreaterThanOrEqual(4);
+      expect(
+        width / 2 - cluster,
+        `…and only leans — ${at}`,
+      ).toBeLessThanOrEqual(64);
+      expect(
+        Math.min(tools.x, story.x) - brand.right,
+        `air after the brand — ${at}`,
+      ).toBeGreaterThanOrEqual(40);
     }
   });
 }

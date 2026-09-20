@@ -68,8 +68,8 @@
    So the bar is a grid of two rows and three columns, and every part of
    it is placed by name:
 
-       brand │ Documentation GitHub GitVerse │ [ search      Ctrl K ]
-       brand │ Vision  Why VibeVM  Why Zap …  │        EN RU  ☀ ☾ ▣
+       brand │    Documentation GitHub GitVerse     │ [ search   Ctrl K ]
+       brand │ Vision  Why VibeVM  Why Zap  AI-N…   │       EN RU  ☀ ☾ ▣
 
    The brand spans both rows and is centred against them, so it stands
    where it always stood and the composition grows around it rather than
@@ -77,6 +77,22 @@
    two right-hand cells are the controls each row earns: the field that
    searches the documentation over the row that leads to it, and the two
    preferences under it.
+
+   The middle column is as wide as its widest row and no wider; the
+   bar's spare width lives in the two flanks beside it. That is what
+   stands the cluster in the middle of the bar instead of against the
+   brand — where it used to clump, with every spare pixel pooled into
+   one accidental void before the search field. The flanks are
+   deliberately unequal: the right one carries the heavier furniture, a
+   search field over two preference controls flush against the window's
+   edge, and a cluster centred by arithmetic reads as pushed into it.
+   The right flank's larger share — 1.2fr against 1fr — leans the
+   cluster toward the brand by the few dozen pixels that make it look
+   centred rather than measure centred; a narrower window shrinks both
+   flanks and the lean with them, and below 760px the compact bar takes
+   over as before. Within the cluster the two rows centre on one axis,
+   the short line of three symmetric over the long line of four: one
+   composition, not two lists.
 
    The row heights are written down rather than inferred, and that is
    what aligns the two halves: the nav repeats the same two tracks and
@@ -99,7 +115,9 @@
   --search-box-w: clamp(11rem, 17vw, 15rem);
 
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  /* The two flexible flanks around the content-sized middle; the
+     unequal shares are the optical centring described above. */
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1.2fr);
   grid-template-rows: var(--bar-row-a) var(--bar-row-b);
   grid-template-areas:
     "brand nav search"
@@ -125,6 +143,10 @@
 
 .landing-page .docs-header__brand {
   grid-area: brand;
+  /* The left flank is wider than the word standing in it, and a grid
+     item stretches by default: the link keeps the word's width so the
+     click target is the brand, not the air beside it. */
+  justify-self: start;
 }
 
 .landing-nav {
@@ -140,6 +162,11 @@
 .landing-nav__row {
   display: flex;
   align-items: center;
+  /* On the cluster's own axis, not against its edge: the short row
+     stands symmetric over the long one, which is what makes the two
+     rows one composition. The compact bar sets them back against the
+     margin, where a list is what a thumb scans. */
+  justify-content: center;
   gap: var(--nav-gap);
   min-width: 0;
 }
@@ -253,6 +280,13 @@
   .landing-nav {
     grid-template-rows: auto auto;
     row-gap: 0.5rem;
+  }
+
+  /* A list again, not a composition: under the brand the two rows run
+     down the page, and lines that each found their own centre would
+     give the column a ragged spine. */
+  .landing-nav__row {
+    justify-content: flex-start;
   }
 
   /* Against the preferences rather than against the brand: the two
