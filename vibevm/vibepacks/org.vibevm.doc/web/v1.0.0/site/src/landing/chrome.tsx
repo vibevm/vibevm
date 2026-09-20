@@ -99,56 +99,87 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
   return (
     <div class="landing-page">
       <DocsHeader brand="VibeVM" homeHref={href(localePath(props.locale))}>
+        {/* The bar is TWO rows and says so.
+            ---------------------------------------------------------
+            It used to be one list of nine things with `flex-wrap` under
+            it, which is not a composition but a permission: the row
+            filled up, the last item fell through, and what landed on the
+            second line was whatever happened to be last in the file —
+            the theme switch, alone, under the brand, outside a bar that
+            is 64px tall and therefore did not even contain it. Nothing
+            chose that. This does.
+
+            The first row is the software and where it is kept; the
+            second is the argument for it. Each row is an element, so
+            what stands on which line is a fact about the markup rather
+            than about how wide the reader's window happened to be — and
+            each row is paired with the control that belongs beside it,
+            which is what keeps the pairing true at every width instead
+            of only at the one that was measured. */}
         <nav class="landing-nav">
-          {why.map((one) => (
+          <div class="landing-nav__row landing-nav__row--tools">
+            <a class="landing-nav__link" href={href("doc/")}>
+              {t.documentation}
+            </a>
+            <a class="landing-nav__link" href={GITHUB_URL} rel="noopener">
+              GitHub
+            </a>
+            <a class="landing-nav__link" href={GITVERSE_URL} rel="noopener">
+              GitVerse
+            </a>
+          </div>
+          <div class="landing-nav__row landing-nav__row--story">
+            {/* The essay stands first and the three product arguments
+                after it: it is the worldview they are pieces of, and a
+                reader who wants the whole picture should not have to
+                find it through one of the parts. */}
             <a
-              key={one.page}
               class="landing-nav__link"
-              href={whyHref(one.page, locale)}
-              {...(here === whyPath(one.page)
+              href={visionHref(locale)}
+              {...(isVisionPath(here)
                 ? { "aria-current": "page" as const }
                 : {})}
             >
-              {one.label}
+              {t.navVision}
             </a>
-          ))}
-          {/* The essay stands beside the three product arguments: it is
-              the worldview they are pieces of, and a reader who wants
-              the whole picture should not have to find it through one
-              of the parts. */}
-          <a
-            class="landing-nav__link"
-            href={visionHref(locale)}
-            {...(isVisionPath(here) ? { "aria-current": "page" as const } : {})}
-          >
-            {t.navVision}
-          </a>
-          <a class="landing-nav__link" href={href("doc/")}>
-            {t.documentation}
-          </a>
-          <a
-            class="landing-nav__link landing-nav__link--wide"
-            href={GITHUB_URL}
-            rel="noopener"
-          >
-            GitHub
-          </a>
-          <a
-            class="landing-nav__link landing-nav__link--wide"
-            href={GITVERSE_URL}
-            rel="noopener"
-          >
-            GitVerse
-          </a>
-          <span class="landing-nav__search">
-            <SearchBox
-              label={t.search}
-              placeholder={t.searchPlaceholder}
-              shortcut="Ctrl K"
-              emptyLabel={t.searchEmpty}
-              find$={findInDocumentation}
-            />
-          </span>
+            {why.map((one) => (
+              <a
+                key={one.page}
+                class="landing-nav__link"
+                href={whyHref(one.page, locale)}
+                {...(here === whyPath(one.page)
+                  ? { "aria-current": "page" as const }
+                  : {})}
+              >
+                {one.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+
+        {/* The search stands over the first row, because that row is the
+            documentation and the two mirrors of its source, and this
+            field searches exactly that. */}
+        <span class="landing-nav__search">
+          <SearchBox
+            label={t.search}
+            placeholder={t.searchPlaceholder}
+            shortcut="Ctrl K"
+            emptyLabel={t.searchEmpty}
+            find$={findInDocumentation}
+          />
+        </span>
+
+        {/* And the two preferences stand together under it, at the end
+            of the second row. Which language the furniture speaks and
+            which map of the palette it is drawn in are the same kind of
+            answer — a fact about the reader rather than about the page —
+            and the manual's header already carries them in this order,
+            behind the same field. What changes here is only that the
+            order is wrapped onto two lines deliberately; the corner, the
+            sequence and the tab order a reader learns in one half of the
+            site are the ones they find in the other. */}
+        <div class="landing-nav__prefs">
           <span class="landing-nav__lang">
             <SiteLanguageSwitch
               label={t.siteLanguage}
@@ -174,7 +205,7 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
             systemLabel={t.themeSystem}
             compact={true}
           />
-        </nav>
+        </div>
       </DocsHeader>
 
       {/* The landing is a composition inside a column and the Why pages

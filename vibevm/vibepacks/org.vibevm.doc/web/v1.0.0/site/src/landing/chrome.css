@@ -56,13 +56,110 @@
   min-width: 0;
 }
 
-.landing-nav {
-  display: flex;
+/* The landing's header: a two-row composition, declared.
+   ---------------------------------------------------------------------
+   The bar carries more than a bar's width of things — seven
+   destinations, a search field, two languages and three themes — and it
+   used to carry them as one wrapping list. A wrapping list does not
+   compose; it overflows and then reports where the overflow landed. What
+   it reported here was the theme switch, alone, on a line of its own
+   under the brand, outside a header that is one row tall.
+
+   So the bar is a grid of two rows and three columns, and every part of
+   it is placed by name:
+
+       brand │ Documentation GitHub GitVerse │ [ search      Ctrl K ]
+       brand │ Vision  Why VibeVM  Why Zap …  │        EN RU  ☀ ☾ ▣
+
+   The brand spans both rows and is centred against them, so it stands
+   where it always stood and the composition grows around it rather than
+   pushing it up. The two nav rows are elements, not wrap events. The
+   two right-hand cells are the controls each row earns: the field that
+   searches the documentation over the row that leads to it, and the two
+   preferences under it.
+
+   The row heights are written down rather than inferred, and that is
+   what aligns the two halves: the nav repeats the same two tracks and
+   the same gap, so its first line sits on the search field's centre and
+   its second on the theme switch's, without a subgrid and without either
+   column knowing the other's contents. Row A is the height of the search
+   field, row B the height of the theme pill; if either control is
+   redrawn, these are the two numbers to move. */
+.landing-page .docs-header__inner {
+  --bar-row-a: 2.15rem;
+  --bar-row-b: 1.75rem;
+  --bar-row-gap: 0.45rem;
+  /* The space between two entries, given as a range rather than a
+     number: between the widest window and the narrowest desktop the bar
+     loses about a third of its room, and spending it on the gaps is
+     cheaper than spending it on the type. */
+  --nav-gap: clamp(0.9rem, 1.5vw, 1.375rem);
+  /* The field narrows with the window instead of holding 15rem until
+     the row breaks. The design system reads this name (search-box). */
+  --search-box-w: clamp(11rem, 17vw, 15rem);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: var(--bar-row-a) var(--bar-row-b);
+  grid-template-areas:
+    "brand nav search"
+    "brand nav prefs";
   align-items: center;
-  flex-wrap: wrap;
-  gap: 22px;
+  column-gap: 1.5rem;
+  row-gap: var(--bar-row-gap);
+  /* The bar is as tall as its own composition. The documentation's
+     header is still the one row it was — `--site-header-h` is untouched,
+     and the reading controls that stand clear of it are not on this
+     half of the site. */
+  height: auto;
+  padding-block: 0.65rem;
+}
+
+/* The slot's wrapper carries no meaning and would otherwise be a box
+   between the grid and the things it places. It is a plain `div` with no
+   role, so dissolving it costs nothing and buys the header one grid
+   instead of two nested ones. */
+.landing-page .docs-header__actions {
+  display: contents;
+}
+
+.landing-page .docs-header__brand {
+  grid-area: brand;
+}
+
+.landing-nav {
+  grid-area: nav;
+  display: grid;
+  grid-template-rows: var(--bar-row-a) var(--bar-row-b);
+  row-gap: var(--bar-row-gap);
+  min-width: 0;
   font-size: 14px;
   color: var(--text-2);
+}
+
+.landing-nav__row {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-gap);
+  min-width: 0;
+}
+
+.landing-nav__search {
+  grid-area: search;
+  justify-self: end;
+}
+
+/* The two answers about the reader rather than about the page, kept
+   together and kept in the corner. The theme switch is the last thing in
+   the bar in reading order and in tab order, which is where the
+   documentation's header leaves it too — the difference is that here it
+   is placed, and a control that is placed cannot be orphaned. */
+.landing-nav__prefs {
+  grid-area: prefs;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
 }
 
 .landing-nav__link {
@@ -120,20 +217,79 @@
   color: var(--text-2);
 }
 
-/* With three Why pages in the bar, the two repository links are the
-   first to yield: they are named again in the footer of every page and
-   in the landing's own two buttons, while a Why page is named nowhere
-   else in the chrome. This is the width the Astro header yielded them
-   at, and for the same reason. */
-@media (max-width: 860px) {
-  .landing-nav__link--wide {
-    display: none;
+/* The compact bar — a different composition, not a narrower one.
+   ---------------------------------------------------------------------
+   Below this width the two rows and their two controls no longer share a
+   line with the brand: the longest row is the Russian second one, and
+   with the brand and the preferences beside it the bar needs about
+   730px. Rather than let that shortfall express itself as a wrap, the
+   grid is re-declared — the brand's line takes the field and the two
+   preferences, which puts the theme switch in the first corner a thumb
+   reaches rather than in the last place a wrap could drop it, and the
+   two nav rows take the full width underneath. The field moves onto
+   that line rather than onto one of its own: a row for it cost between
+   24 and 45 pixels of permanently sticky header, and it buys nothing a
+   column of the same row does not.
+
+   760px rather than 768px on purpose: a tablet held upright gets the
+   desktop composition, which fits it with room to spare. */
+@media (max-width: 760px) {
+  .landing-page .docs-header__inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "brand search prefs"
+      "nav   nav    nav";
+    column-gap: 1rem;
+    row-gap: 0.6rem;
+    padding-block: 0.7rem;
+    /* Sharing the brand's line rather than owning one, so the field
+       gives the bar a column of a line instead of a line of the
+       screen — the difference, measured, was 24 to 45 pixels of sticky
+       header at every width between a phone and a small laptop. */
+    --search-box-w: clamp(11rem, 30vw, 20rem);
+  }
+
+  .landing-nav {
+    grid-template-rows: auto auto;
+    row-gap: 0.5rem;
+  }
+
+  /* Against the preferences rather than against the brand: the two
+     controls read as the pair they are, and the gap falls where the bar
+     has nothing to say. */
+  .landing-nav__search {
+    justify-self: end;
   }
 }
 
-@media (max-width: 680px) {
+/* A phone. The four destinations of the second row are 374px of Russian
+   at 13px, and a 390px phone offers 350 — so that row is given two
+   columns and two lines, which is a shape, where `flex-wrap` would have
+   given the same two lines as an accident and a different two on the
+   next translation. The first row's three entries fit across even the
+   narrowest phone sold and keep their line. */
+@media (max-width: 600px) {
   .landing-nav {
-    gap: 8px 16px;
+    font-size: 13px;
+  }
+
+  /* Two columns as wide as their words, not as wide as half the window:
+     a pair of 280px tracks holding «Видение» would read as a table with
+     a column missing rather than as a list of four places. */
+  .landing-nav__row--story {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: var(--nav-gap);
+    row-gap: 0.4rem;
+  }
+
+  /* Not the mechanism, a floor: nothing in this row wraps at any width a
+     phone actually has, and below them a wrapped row is better than a
+     row that pushes the page sideways. */
+  .landing-nav__row--tools {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
   }
 }
 
@@ -141,15 +297,14 @@
   .landing-shell {
     padding-inline: 20px;
   }
+
   /* The last thing to go is the search box, and it is the one that is
      still a tap away: the documentation's own header carries the same
-     field. What stays is what only this bar offers — the three pages,
-     the way in, the language and the theme. */
+     field. What stays is what only this bar offers — the seven pages,
+     the language and the theme. Its column goes with it and needs no
+     second template to say so: the middle track is the flexible one, so
+     with nothing in it the preferences simply take the corner. */
   .landing-nav__search {
     display: none;
-  }
-  .landing-nav {
-    gap: 8px 14px;
-    font-size: 13px;
   }
 }

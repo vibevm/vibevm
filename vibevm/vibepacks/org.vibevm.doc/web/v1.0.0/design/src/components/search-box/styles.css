@@ -15,9 +15,16 @@
   white-space: nowrap;
 }
 
+/* The field is 15rem wide and gives way to the window at 40vw — and
+   both numbers are published rather than fixed, because the header a box
+   stands in is the only thing that knows how much room it has. The
+   landing's bar hands it a range that narrows with the window and then
+   the whole of a line on a phone; a header that names neither gets the
+   two numbers this box has always had. A knob the host sets is the
+   alternative to a host that reaches in and overrides the rule. */
 .search-box__input {
-  width: 15rem;
-  max-width: 40vw;
+  width: var(--search-box-w, 15rem);
+  max-width: var(--search-box-max, 40vw);
   padding: 0.4rem 3.6rem 0.4rem 0.7rem;
   background: var(--bg-sink);
   border: 1px solid var(--line);
