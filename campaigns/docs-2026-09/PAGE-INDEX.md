@@ -2,7 +2,7 @@
 
 <status stage="doc" state="work" comment="генерируется скриптом campaigns/docs-2026-09/tasks/page-index.py из страниц пакета vibevm-docs; руками не править"/>
 
-Страниц: 49; секций с якорями: 316; примеров: 62; промптов: 20; ссылок `rule`: 781; блоков `derived`: 73; фигур: 0.
+Страниц: 49; секций с якорями: 316; примеров: 62; промптов: 20; ссылок `rule`: 791; блоков `derived`: 76; фигур: 0.
 
 | Страница | Якорь | Заголовок | Первые слова |
 |---|---|---|---|
@@ -290,7 +290,7 @@
 | `model/registries` | `mirrors-and-overrides` | Mirrors, overrides and git sources | A *mirror* is another address for the same registry, tried first for |
 | `model/registries` | `authentication` | Authentication | A public registry needs no credentials, and vibe sends none: it silences |
 | `model/registries` | `local-sources` | Packages on this machine | A vibe built from a source checkout treats that checkout's in-tree packages |
-| `model/registries` | `edge-cases` | Edge cases and rules | A vibe built from a source checkout treats that checkout's in-tree packages |
+| `model/registries` | `edge-cases` | Edge cases and rules | The embedded registry exists for one person: the developer of vibe itself, |
 | `model/two-trees` | `root` | Two trees: what you write and what vibe writes | |
 | `model/two-trees` | `the-rule` | The founding rule | Think of how a C++ program uses a library: you write `#include`, |
 | `model/two-trees` | `why-commit` | Why the copies are committed | The copied tree is committed to your repository, which surprises people who |

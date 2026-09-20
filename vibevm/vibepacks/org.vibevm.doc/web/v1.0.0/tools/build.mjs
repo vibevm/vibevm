@@ -145,7 +145,8 @@ function docAddressCount() {
     if (manifest.package?.translation !== undefined) continue;
     const card = manifest.package;
     const at = `${card.group}/${card.name}`;
-    if (!sources.has(at)) sources.set(at, { pages: manifest.pages.length, editions: 1 });
+    if (!sources.has(at))
+      sources.set(at, { pages: manifest.pages.length, editions: 1 });
   }
   const languages = new Set();
   for (const manifest of all) {
@@ -423,6 +424,75 @@ function checkLocalHead(outDirName) {
 }
 
 /**
+ * What the previous site's framework would have left behind, checked for
+ * in the bytes rather than assumed absent.
+ *
+ * The domain used to be built by another framework, and the migration's
+ * claim is that this build is the whole of it — one runtime, one router,
+ * one set of assets. That claim is cheap to make and cheap to break: a
+ * copied fragment of markup, a stylesheet that still points at the old
+ * asset directory, an island element nothing renders. Each of those
+ * would serve two sites from one origin and none of them would fail a
+ * test about a page.
+ *
+ * The marks are the ones only that framework emits: its asset directory,
+ * its island element, and the attributes it stamps on hydrated nodes.
+ * `something.astro:123` is NOT one of them — several stylesheets in this
+ * package cite the source file a colour was quoted from, and a check
+ * that forbade the word would forbid the provenance that makes those
+ * values auditable.
+ */
+const FOREIGN_MARKS = [
+  { pattern: /\/_astro\//, what: "an `/_astro/` asset path" },
+  { pattern: /<astro-island/i, what: "an `<astro-island>` element" },
+  { pattern: /\bdata-astro-[a-z]/i, what: "a `data-astro-*` attribute" },
+  {
+    pattern: /from\s*["']astro[:/]/,
+    what: "an import from the other framework",
+  },
+];
+
+function checkNoForeignRuntime(outDirName) {
+  const out = join(SITE_ROOT, outDirName);
+  const offences = [];
+  for (const file of files(out)) {
+    if (!/\.(html|js|css|json|txt|xml)$/.test(file)) continue;
+    const text = readFileSync(file, "utf8");
+    for (const mark of FOREIGN_MARKS) {
+      if (mark.pattern.test(text)) {
+        offences.push(`${file.slice(out.length + 1)} carries ${mark.what}`);
+      }
+    }
+  }
+  if (offences.length > 0) {
+    process.stderr.write(
+      [
+        `build (${mode}): the output still carries the previous framework:`,
+        ...offences.map((one) => `  ${one}`),
+        "",
+        "One domain, one runtime. Anything here means two sites are being",
+        "served from one origin.",
+        "",
+      ].join("\n"),
+    );
+    process.exit(1);
+  }
+  process.stdout.write(
+    `build (${mode}): no trace of the previous framework — ${FOREIGN_MARKS.length} mark(s) looked for, none found\n`,
+  );
+}
+
+/** Every file under a directory, as absolute paths. */
+function files(dir, found = []) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) files(full, found);
+    else found.push(full);
+  }
+  return found;
+}
+
+/**
  * The policy line, from the bytes that were actually written.
  *
  * Every inline script of every page is hashed and the union goes into
@@ -603,6 +673,7 @@ if (plan.countsLanding) {
   }
 
   writeCsp(plan.outDir);
+  checkNoForeignRuntime(plan.outDir);
 
   if (lintLinks(plan.outDir) !== 0) {
     process.stderr.write(
@@ -614,6 +685,7 @@ if (plan.countsLanding) {
   // 7. The other build is read back for the opposite reason: a page of
   //    the local reader must publish none of the public head.
   checkLocalHead(plan.outDir);
+  checkNoForeignRuntime(plan.outDir);
 }
 
 process.stdout.write(`build (${mode}): ok\n`);

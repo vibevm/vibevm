@@ -69,7 +69,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
   <what-appeared title="What appeared on disk">
     <p>Open `hello-vibe/vibe.toml`: it names the project and, after the install, lists `org.vibevm.world/wal` under its requirements with a version range. Open `hello-vibe/vibe.lock`: it pins the exact version and the content [fingerprint](../glossary/index.xml#fingerprint). Under `hello-vibe/vibevm/vibedeps/` sits the package's published tree, unchanged. Under `hello-vibe/vibevm/vibespecs/boot/` sit your two boot files and the generated `INDEX.md`; a generated `STATIC.md` appears beside it as soon as a package asks to be read first and in full, which `wal` does not. And at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` stands the block that points an agent at them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW"/>
-    <p>Open a new [agent session](../glossary/index.xml#agent-session) in `hello-vibe` and ask it what rules it follows: it will name the package you installed a moment ago, because it read the lane before answering.</p>
+    <p>Open a new [agent session](../glossary/index.xml#agent-session) in `hello-vibe` and ask it what rules it follows: it will name the package you installed a moment ago, because it read the [boot lane](../glossary/index.xml#boot-lane) before answering.</p>
   </what-appeared>
   <edge-cases title="Edge cases and rules">
     <p>A repeated `vibe install` with no package names installs whatever the manifest requires; that is the command after cloning an existing project.</p>

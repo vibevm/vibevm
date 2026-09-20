@@ -1,5 +1,13 @@
-/* tokens.css — the thirteen semantic names every component is allowed to
+/* tokens.css — the fifteen semantic names every component is allowed to
    read, in two maps.
+   ---------------------------------------------------------------------
+   Thirteen of them are the site's own voice. The last two — `--accent-gold`
+   and `--accent-zap` — are the accents the two other products in the family
+   are drawn with, and they live here rather than in the pages that use them
+   for the reason every colour lives here: a page that wrote its own hex
+   would have one value for both themes, and on the light ground the greens
+   and golds of a page drawn for ink are not readable. They are gated by
+   `design/audit/contrast.mjs` at the same threshold `--accent` is.
    ---------------------------------------------------------------------
    A component asks for a ROLE (`--text-2`, `--bg-raise`) and never for a
    colour; the colour it gets depends on the theme, and the theme is set
@@ -35,6 +43,37 @@
   --accent-soft: var(--terracotta-bg);
   --code-bg: var(--cream-100);
   --selection: var(--terracotta-soft);
+  --accent-gold: var(--ochre-ink);
+  --accent-gold-bright: var(--gold-raw);
+  --accent-zap: var(--zap-green-docs);
+  --accent-zap-bright: var(--zap-green-raw);
+  /* The Zap page is drawn in a darker room than the rest of the site —
+     a deep-space ground with its own panels and hairlines. That idea has
+     no counterpart on a light page, so in this map the page keeps the
+     site's own surfaces and carries its identity in its accent alone.
+     Recorded as a deliberate difference: the dark map is the drawing. */
+  --zap-ground: var(--ivory-100);
+  --zap-surface: var(--ivory-50);
+  --zap-hairline: var(--border);
+  --zap-hairline-strong: var(--border-strong);
+  --zap-star: var(--border-strong);
+  /* The inverted band two of the pages print one argument on. It is an
+     inversion of the page rather than a reading of it, so it is the same
+     cream with the same ink in both maps — what changes with the theme
+     is how far it stands from the page around it. */
+  --band-paper: var(--band-paper-raw);
+  --band-ink: var(--band-ink-raw);
+  --band-body: var(--band-body-raw);
+  --band-note: var(--band-note-raw);
+  --band-accent: var(--band-terracotta);
+  /* The three language marks: a square, a circle and a triangle. They
+     are shapes before they are text and stand on either ground. */
+  --mark-rust: var(--lang-rust);
+  --mark-ts: var(--lang-ts);
+  --mark-go: var(--lang-go);
+  /* The essay's machine-intention mark: the cobalt square that stands
+     opposite the terracotta circle on `/vision/`. */
+  --intent-machine: var(--cobalt-deep);
 }
 
 /* The dark map, chosen by the system. `:not([data-theme="light"])` is
@@ -56,6 +95,24 @@
     --accent-soft: var(--accent-soft-raw);
     --code-bg: var(--ink-sink);
     --selection: var(--accent-soft-raw);
+    --accent-gold: var(--gold-raw);
+    --accent-gold-bright: var(--gold-bright-raw);
+    --accent-zap: var(--zap-green-raw);
+    --accent-zap-bright: var(--zap-green-bright-raw);
+    --zap-ground: var(--zap-deep);
+    --zap-surface: var(--zap-panel);
+    --zap-hairline: var(--zap-line);
+    --zap-hairline-strong: var(--zap-line-strong);
+    --zap-star: var(--zap-star-raw);
+    --band-paper: var(--band-paper-raw);
+    --band-ink: var(--band-ink-raw);
+    --band-body: var(--band-body-raw);
+    --band-note: var(--band-note-raw);
+    --band-accent: var(--band-terracotta);
+    --mark-rust: var(--lang-rust);
+    --mark-ts: var(--lang-ts);
+    --mark-go: var(--lang-go);
+    --intent-machine: var(--cobalt-bright);
   }
 }
 
@@ -74,6 +131,24 @@
   --accent-soft: var(--accent-soft-raw);
   --code-bg: var(--ink-sink);
   --selection: var(--accent-soft-raw);
+  --accent-gold: var(--gold-raw);
+  --accent-gold-bright: var(--gold-bright-raw);
+  --accent-zap: var(--zap-green-raw);
+  --accent-zap-bright: var(--zap-green-bright-raw);
+  --zap-ground: var(--zap-deep);
+  --zap-surface: var(--zap-panel);
+  --zap-hairline: var(--zap-line);
+  --zap-hairline-strong: var(--zap-line-strong);
+  --zap-star: var(--zap-star-raw);
+  --band-paper: var(--band-paper-raw);
+  --band-ink: var(--band-ink-raw);
+  --band-body: var(--band-body-raw);
+  --band-note: var(--band-note-raw);
+  --band-accent: var(--band-terracotta);
+  --mark-rust: var(--lang-rust);
+  --mark-ts: var(--lang-ts);
+  --mark-go: var(--lang-go);
+  --intent-machine: var(--cobalt-bright);
 }
 
 /* Shape and time do not change with the theme, so they are written once

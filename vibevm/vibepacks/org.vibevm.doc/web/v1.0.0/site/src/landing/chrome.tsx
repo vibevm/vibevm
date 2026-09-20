@@ -14,6 +14,8 @@ import { SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
 import { findInDocumentation } from "../reader/search.ts";
 import { rememberSiteLanguage } from "../reader/site-language.ts";
 import { startThemeSwitch } from "../reader/theme.ts";
+import { isVisionPath, visionHref } from "../vision/paths.ts";
+import { type WhyPage, whyHref, whyPageOf, whyPath } from "../why/paths.ts";
 import styles from "./chrome.css?inline";
 import {
   GITHUB_URL,
@@ -28,6 +30,14 @@ import {
 export type LandingChromeProps = {
   /** Which language's page this is; the chrome speaks it too. */
   readonly locale: Locale;
+  /**
+   * Which page of this language the chrome is standing over, as its path
+   * inside the locale — `""` for the landing, `"why/zap/"` for a Why
+   * page. Two things read it: the entry that marks itself current, and
+   * the language switch, which offers the other language's spelling of
+   * THIS page rather than its front door.
+   */
+  readonly path: string;
 };
 
 /**
@@ -59,6 +69,17 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
   const t = STRINGS[props.locale];
   const other = otherLocale(props.locale);
   const locale = props.locale;
+  const here = props.path;
+
+  /* The three Why pages, as the header and the footer both list them —
+     one array rather than two lists that would drift the first time a
+     fourth product joins the family. The label travels with the slug so
+     that adding a page is one entry and not three edits. */
+  const why: readonly { page: WhyPage; label: string }[] = [
+    { page: "vibevm", label: t.navWhyVibevm },
+    { page: "zap", label: t.navWhyZap },
+    { page: "ai-native", label: t.navWhyAiNative },
+  ];
 
   /* The two behaviours the landing has. A documentation page starts the
      whole reader and the theme is one of its settings; here there is no
@@ -79,6 +100,29 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
     <div class="landing-page">
       <DocsHeader brand="VibeVM" homeHref={href(localePath(props.locale))}>
         <nav class="landing-nav">
+          {why.map((one) => (
+            <a
+              key={one.page}
+              class="landing-nav__link"
+              href={whyHref(one.page, locale)}
+              {...(here === whyPath(one.page)
+                ? { "aria-current": "page" as const }
+                : {})}
+            >
+              {one.label}
+            </a>
+          ))}
+          {/* The essay stands beside the three product arguments: it is
+              the worldview they are pieces of, and a reader who wants
+              the whole picture should not have to find it through one
+              of the parts. */}
+          <a
+            class="landing-nav__link"
+            href={visionHref(locale)}
+            {...(isVisionPath(here) ? { "aria-current": "page" as const } : {})}
+          >
+            {t.navVision}
+          </a>
           <a class="landing-nav__link" href={href("doc/")}>
             {t.documentation}
           </a>
@@ -111,10 +155,14 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
               items={LOCALES.map((one) => ({
                 language: one,
                 label: SITE_LANGUAGE_LABEL[one],
-                /* Here the language IS a place: the landing is written
-                   out in full at `/` and `/ru/`, so the entry is a link
-                   and the address is the answer. */
-                href: href(localePath(one)),
+                /* Here the language IS a place: the landing and each Why
+                   page are written out in full in both languages, so the
+                   entry is a link and the address is the answer — and
+                   the address it names is THIS page's, not the front
+                   door's. A switch that always pointed home would cost a
+                   reader their place for the price of a translation they
+                   already have. */
+                href: href(`${localePath(one)}${here}`),
                 current: one === locale,
               }))}
             />
@@ -129,20 +177,42 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
         </nav>
       </DocsHeader>
 
-      <main class="landing-shell">
+      {/* The landing is a composition inside a column and the Why pages
+          are long-form editorial that bleeds to the window: a frieze
+          spanning the full width, an inverted band the page is cut in
+          half by, a deep-space ground behind the whole of it. So the
+          measure belongs to the page, and this asks the one question it
+          can answer from the address — the same address it already read
+          the language and the current entry off. A Why page brings its
+          own `.why-shell` to every section that wants the column back. */}
+      <main
+        class={
+          whyPageOf(here) === null && !isVisionPath(here)
+            ? "landing-shell"
+            : "landing-full"
+        }
+      >
         <Slot />
       </main>
 
       <Footer copyright={t.copyright}>
         <div class="landing-footer__brand">VibeVM — {t.footerTagline}</div>
         <div class="landing-footer__links">
+          {why.map((one) => (
+            <a key={one.page} href={whyHref(one.page, locale)}>
+              {one.label}
+            </a>
+          ))}
+          <a href={visionHref(locale)}>{t.navVision}</a>
           <a href={GITHUB_URL} rel="noopener">
             GitHub
           </a>
           <a href={GITVERSE_URL} rel="noopener">
             GitVerse
           </a>
-          <a href={href(localePath(other))}>{other.toUpperCase()}</a>
+          <a href={href(`${localePath(other)}${here}`)}>
+            {other.toUpperCase()}
+          </a>
         </div>
       </Footer>
     </div>

@@ -1,0 +1,280 @@
+/* The furniture all three Why pages repeat: the column, the eyebrow, the
+   headline, the lead, the buttons, the status pill, a command line.
+   ---------------------------------------------------------------------
+   These were global classes on the Astro site — `.shell`, `.eyebrow`,
+   `.headline`, `.btn`, `.cmd` — shared by the landing and the three
+   product pages alike. Here the landing's copies live inside the design
+   system, where they belong: the hero, the install panel and the
+   capability cards are components the documentation could also use.
+
+   What is left over is this file, and it is not the same thing. A Why
+   page's hero is not the landing's: there is no install panel under it,
+   the composition beside it differs per page, and each page tints the
+   whole set with an accent of its own. Three pages genuinely repeat
+   these seven shapes, so they are written once — and nothing else is.
+   A fourth product page adds its own section styles, never another copy
+   of the button.
+
+   Every measurement is the Astro stylesheet's, to the half pixel. Every
+   colour is a semantic token, which is the one systematic difference:
+   the source was drawn for one theme and this site has two, so `--dim`
+   becomes `--text-2`, `--cream` becomes `--text`, and a hand-written
+   `rgba()` of the accent becomes a `color-mix()` that follows it. */
+
+/* --- The column --------------------------------------------------- */
+
+.why-shell {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+/* A page of this family clips its own overflow rather than letting the
+   document scroll sideways: two of the three ride a wide drawing past
+   the edge of the window on purpose, and `clip` trims the tail without
+   creating a scroll container the way `hidden` would. */
+.why-page {
+  overflow: clip;
+}
+
+/* --- Eyebrow ------------------------------------------------------- */
+
+.why-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 26px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* The dot takes the page's accent from a variable the page sets, so one
+   rule serves terracotta, green and gold. */
+.why-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--why-accent);
+  box-shadow: 0 0 0 4px var(--why-accent-soft);
+}
+
+/* --- Headline and lead --------------------------------------------- */
+
+.why-headline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 6.4vw, 74px);
+  line-height: 1.03;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.why-headline em {
+  font-style: italic;
+  color: var(--why-accent);
+}
+
+.why-lead {
+  margin: 26px 0 0;
+  font-size: 18.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+  max-width: 32rem;
+}
+
+.why-lead strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* --- Buttons -------------------------------------------------------- */
+
+.why-cta {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.why-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition:
+    transform var(--speed) ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.why-btn:active {
+  transform: translateY(1px);
+}
+
+/* The label on a filled button is the page's own ground: dark ink on the
+   accent in the dark theme, ivory on it in the light one. One
+   declaration, both themes, no new token. */
+.why-btn--primary {
+  background: var(--why-accent);
+  color: var(--bg);
+}
+
+.why-btn--primary:hover {
+  background: var(--why-accent-bright);
+  transform: translateY(-2px);
+}
+
+.why-btn--ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.why-btn--ghost:hover {
+  border-color: var(--text-2);
+  background: var(--bg-raise);
+}
+
+.why-arrow {
+  transition: transform var(--speed) ease;
+}
+
+/* The arrow leaves with the pointer. Where a page's arrow points down
+   into the page rather than out of it, the page says so over this rule
+   — which is what the two later pages do. */
+.why-btn--primary:hover .why-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* --- Status pill ---------------------------------------------------- */
+
+.why-release {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--why-accent);
+  background: var(--why-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--why-accent) 34%, transparent);
+  border-radius: var(--radius-pill);
+  padding: 10px 18px;
+}
+
+.why-release-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--why-accent);
+  box-shadow: 0 0 0 4px var(--why-accent-soft);
+  animation: why-release-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes why-release-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px var(--why-accent-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--why-accent) 5%, transparent);
+  }
+}
+
+/* --- A command line -------------------------------------------------- */
+
+/* A command chip hugs its text. That is the reference's default and it
+   is the reason the chip reads as a thing you could copy rather than as
+   a field: `inline-flex`, shrink-to-fit, scrolling inside when the line
+   is longer than the column. Two of the three pages override it to span
+   their column — the ones whose step lists are wide — and they say so
+   where they stand. */
+.why-cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  /* The command is one unbreakable line: without a minimum of zero, a
+     grid or flex parent grows to its width and the page scrolls
+     sideways. What scrolls is the box, never the document. */
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 15px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.why-cmd__prompt {
+  color: var(--why-accent);
+  user-select: none;
+  flex: none;
+}
+
+.why-cmd code {
+  font: inherit;
+  color: inherit;
+}
+
+/* --- A labelled command, as the install panels print one -------------- */
+
+.why-install {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.why-install__label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Inside a labelled install panel the chip spans its column, so that
+   three stacked commands line up down their left and right edges. */
+.why-install .why-cmd {
+  display: flex;
+  width: 100%;
+}
+
+/* --- The column narrows before the type does -------------------------- */
+
+@media (max-width: 520px) {
+  .why-shell {
+    padding-inline: 20px;
+  }
+}
+
+/* --- Motion safety ---------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .why-btn:hover {
+    transform: none;
+  }
+  .why-release-dot {
+    animation: none;
+  }
+}

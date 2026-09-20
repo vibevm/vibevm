@@ -1,0 +1,793 @@
+/* `/vision/` — the essay page.
+   ---------------------------------------------------------------------
+   An editorial long read in the family's suprematist language: the
+   argument in a reading measure, four drawings placed where the text
+   needs them, one law on the inverted cream band. The page's own accent
+   is the AI-Native gold — the essay is where that family's worldview is
+   argued — and the two intentions carry their own marks: a terracotta
+   circle for the human, a tilted cobalt square for the machine
+   (`--intent-machine`, minted for this page in `palette.css`). Colour
+   never carries the distinction alone; the shapes differ first.
+
+   Every colour is a semantic token (PROP-057 `##STACK-DESIGN-FLOOR`).
+   The reading measure is narrower than the family's 1100px shell on
+   purpose: a long essay is read, not scanned, and 42rem is a line a
+   reader finishes. */
+
+.bv-page {
+  --why-accent: var(--accent-gold);
+  --why-accent-bright: var(--accent-gold-bright);
+  --why-accent-soft: color-mix(in srgb, var(--accent-gold) 13%, transparent);
+  --bv-gold-line: color-mix(in srgb, var(--accent-gold) 40%, transparent);
+  --bv-ink-soft: color-mix(in srgb, var(--text) 30%, transparent);
+}
+
+/* --- Hero --------------------------------------------------------------- */
+
+.bv-hero {
+  padding-top: clamp(40px, 8vh, 96px);
+}
+
+.bv-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(46px, 8.4vw, 100px);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.bv-canvas {
+  margin: clamp(28px, 5vh, 52px) 0 0;
+}
+
+.bv-canvas__frame {
+  width: 100%;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(
+      42% 90% at 18% 20%,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      40% 85% at 72% 10%,
+      color-mix(in srgb, var(--intent-machine) 9%, transparent),
+      transparent 62%
+    ),
+    var(--bg-sink);
+}
+
+.bv-field {
+  display: block;
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  height: auto;
+}
+
+/* Narrow screens ride in on the span from the circle to the square,
+   where the idea reads; the tail of the node field is cropped. */
+@media (max-width: 700px) {
+  .bv-field {
+    width: 150%;
+    max-width: none;
+    margin-left: -12%;
+  }
+}
+
+.bv-canvas figcaption,
+.bv-figure figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- The reading measure -------------------------------------------------- */
+
+.bv-measure {
+  max-width: calc(42rem + 64px);
+}
+
+.bv-measure > p {
+  margin: 20px 0 0;
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--text-2);
+  max-width: 42rem;
+}
+
+.bv-lede {
+  margin: clamp(36px, 7vh, 72px) 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 25px);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  max-width: 46rem;
+}
+
+.bv-section {
+  padding-block: clamp(26px, 5vh, 56px) 0;
+}
+
+.bv-h {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(26px, 3.4vw, 38px);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: balance;
+  max-width: 27ch;
+}
+
+/* The kicker line over a heading is drawn, not written: a short gold
+   rule with the section's own air above it. */
+.bv-h::before {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-bottom: 18px;
+  background: var(--accent-gold);
+}
+
+/* --- Section breaks -------------------------------------------------------- */
+
+.bv-break {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(34px, 6vh, 64px) 0;
+}
+
+.bv-mark {
+  width: 76px;
+  height: 16px;
+}
+
+.bv-mark__human {
+  fill: var(--accent);
+}
+
+.bv-mark__spec {
+  fill: var(--accent-gold);
+}
+
+.bv-mark__machine {
+  fill: var(--intent-machine);
+}
+
+/* --- Figures ---------------------------------------------------------------- */
+
+.bv-figure {
+  margin: clamp(28px, 5vh, 48px) 0 0;
+}
+
+.bv-figure__frame {
+  padding-block: clamp(18px, 3vh, 34px);
+}
+
+.bv-figure__frame > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-sink);
+}
+
+.bv-figure__frame--star > svg {
+  background:
+    radial-gradient(
+      52% 75% at 82% 12%,
+      color-mix(in srgb, var(--accent-gold) 12%, transparent),
+      transparent 64%
+    ),
+    var(--bg-sink);
+}
+
+.bv-figure .why-shell {
+  padding-top: 0;
+}
+
+/* --- The dichotomy inset ------------------------------------------------------ */
+
+.bv-dichotomy {
+  margin-top: clamp(26px, 4vh, 40px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.bv-dichotomy__col {
+  border-radius: var(--radius-md);
+  padding: 20px 22px 22px;
+  min-width: 0;
+  background: var(--bg-raise);
+}
+
+/* The two columns say what they are with their own borders: the
+   specification's is dashed — sampled, probabilistic — and the code's
+   is solid. The border repeats the argument; the tones only agree. */
+.bv-dichotomy__col--spec {
+  border: 1.5px dashed var(--bv-gold-line);
+}
+
+.bv-dichotomy__col--code {
+  border: 1px solid var(--line-strong);
+}
+
+.bv-dichotomy__col h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.bv-dichotomy__col--spec h3 {
+  color: var(--accent-gold);
+}
+
+.bv-dichotomy__col--code h3 {
+  color: var(--text);
+}
+
+.bv-chip {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+}
+
+.bv-chip--spec {
+  background: var(--accent-gold);
+  transform: rotate(45deg);
+}
+
+.bv-chip--code {
+  background: var(--text);
+}
+
+.bv-dichotomy__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.bv-dichotomy__col li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.bv-dichotomy__col--spec li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.42em;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--accent-gold);
+  border-radius: 50%;
+}
+
+.bv-dichotomy__col--code li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.48em;
+  width: 7px;
+  height: 7px;
+  background: var(--bv-ink-soft);
+}
+
+/* --- The law on the band -------------------------------------------------------- */
+
+.bv-law {
+  margin-top: clamp(40px, 7vh, 72px);
+  background: var(--band-paper);
+  padding-block: clamp(44px, 8vh, 88px);
+}
+
+.bv-law__inner {
+  max-width: calc(46rem + 64px);
+}
+
+.bv-law__k {
+  margin: 0 0 22px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ochre-ink);
+}
+
+.bv-law__lead {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--band-note);
+}
+
+.bv-law__quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.4vw, 37px);
+  line-height: 1.28;
+  letter-spacing: -0.012em;
+  color: var(--band-ink);
+  border-left: 3px solid var(--gold-raw);
+  padding-left: 22px;
+  text-wrap: balance;
+}
+
+.bv-law__body {
+  margin: 22px 0 0;
+  max-width: 44rem;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--band-body);
+}
+
+/* --- The inheritance split and the pull quote ------------------------------------- */
+
+.bv-inherit {
+  margin-top: clamp(24px, 4vh, 40px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+.bv-inherit__text > p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--text-2);
+  max-width: 42rem;
+}
+
+.bv-pull {
+  margin: 22px 0 0;
+  border-left: 3px solid var(--accent-gold);
+  padding: 4px 0 4px 22px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(19px, 2.3vw, 24px);
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.bv-inherit__figure {
+  margin: 0;
+  max-width: 300px;
+  width: 100%;
+  justify-self: center;
+}
+
+.bv-ladder {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bv-inherit__figure figcaption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- Disclaimer -------------------------------------------------------------------- */
+
+/* The frame is dashed for the same reason the specification column's
+   is: this text declares itself provisional, and the drawing agrees. */
+.bv-disclaimer {
+  margin-top: clamp(44px, 8vh, 80px);
+  border: 1.5px dashed color-mix(in srgb, var(--accent-gold) 55%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-gold) 7%, transparent);
+  padding: 22px 24px 24px;
+}
+
+.bv-disclaimer__k {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.bv-disclaimer__body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-2);
+  max-width: 44rem;
+}
+
+.bv-disclaimer__body em {
+  font-style: italic;
+  color: var(--text);
+}
+
+/* --- The tie out ---------------------------------------------------------------------- */
+
+.bv-tie {
+  margin: clamp(28px, 5vh, 44px) 0 clamp(56px, 10vh, 110px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 14px;
+  padding: 22px 24px;
+  border: 1px solid var(--bv-gold-line);
+  background:
+    radial-gradient(
+      70% 60% at 80% 0%,
+      color-mix(in srgb, var(--accent-gold) 10%, transparent),
+      transparent 60%
+    ),
+    var(--bg-raise);
+  transition:
+    border-color 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.bv-tie:hover {
+  border-color: color-mix(in srgb, var(--accent-gold) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.bv-tie__k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.bv-tie b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.bv-tie p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+  max-width: 44rem;
+}
+
+.bv-tie__link {
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-gold);
+}
+
+/* --- The hero field, coloured ---------------------------------------------------------- */
+
+.bv-field__cross path {
+  stroke: var(--text);
+  opacity: 0.09;
+}
+
+.bv-field__floor {
+  stroke: var(--text-2);
+  stroke-width: 1.5;
+  opacity: 0.7;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bv-draw 1.1s ease forwards 0.1s;
+}
+
+.bv-field__tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+.bv-field__arc {
+  stroke: var(--accent-gold);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 8;
+  opacity: 0.85;
+}
+
+.bv-field__halo {
+  stroke: color-mix(in srgb, var(--accent) 34%, transparent);
+  stroke-width: 1.4;
+}
+
+.bv-field__human {
+  fill: var(--accent);
+}
+
+.bv-field__machine {
+  fill: var(--intent-machine);
+}
+
+.bv-field__hair {
+  stroke: var(--text);
+  opacity: 0.16;
+}
+
+.bv-field__source {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bv-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: var(--d, 0.1s);
+}
+
+.bv-field__edge {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bv-draw 0.7s ease forwards;
+  animation-delay: var(--d, 0.4s);
+}
+
+.bv-field__node--m {
+  fill: var(--intent-machine);
+}
+
+.bv-field__node--h {
+  fill: var(--accent);
+}
+
+/* --- The star, coloured ------------------------------------------------------------------ */
+
+.bv-star__sun {
+  fill: var(--accent-gold-bright);
+}
+
+.bv-star__corona {
+  stroke: var(--accent-gold-bright);
+  stroke-width: 1.4;
+  stroke-dasharray: 2 9;
+  opacity: 0.55;
+}
+
+.bv-star__ray path {
+  stroke: var(--accent-gold-bright);
+  opacity: 0.75;
+}
+
+.bv-star__extra {
+  stroke: var(--accent-gold-bright);
+  stroke-width: 2;
+}
+
+.bv-star__ground {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.bv-star__dc-body {
+  fill: var(--text);
+}
+
+.bv-star__dc-win {
+  fill: var(--bg);
+}
+
+.bv-star__cord {
+  stroke: var(--text);
+  stroke-width: 1.8;
+  opacity: 0.85;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bv-draw 1.2s ease forwards 0.2s;
+}
+
+.bv-star__plug-body {
+  fill: var(--text);
+}
+
+.bv-star__plug-pin {
+  stroke: var(--text);
+  stroke-width: 2.5;
+}
+
+/* --- The two layers, coloured -------------------------------------------------------------- */
+
+.bv-layers__src-h {
+  fill: var(--accent);
+}
+
+.bv-layers__src-m {
+  fill: var(--intent-machine);
+}
+
+.bv-layers__feed {
+  stroke: var(--text);
+  opacity: 0.25;
+}
+
+.bv-layers__cloud {
+  stroke: var(--accent-gold);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 7;
+  opacity: 0.75;
+}
+
+.bv-layers__samples circle {
+  fill: var(--accent-gold);
+  opacity: 0.8;
+}
+
+.bv-layers__edge {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.6;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bv-draw 0.7s ease forwards;
+  animation-delay: var(--d, 0.2s);
+}
+
+.bv-layers__joints rect {
+  fill: var(--bg-sink);
+  stroke: var(--accent-gold);
+  stroke-width: 1.5;
+}
+
+.bv-layers__blocks rect {
+  fill: var(--text);
+  opacity: 0.82;
+}
+
+.bv-layers__blocks rect.bv-layers__block--loose {
+  opacity: 0.4;
+}
+
+.bv-layers__flag {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.bv-layers__metal {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.bv-layers__tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+/* --- The ladder, coloured -------------------------------------------------------------------- */
+
+.bv-ladder__spec {
+  stroke: var(--accent-gold);
+  stroke-width: 2;
+}
+
+.bv-ladder__lines rect {
+  fill: var(--accent-gold);
+  opacity: 0.75;
+}
+
+.bv-ladder__edge {
+  stroke: var(--text);
+  opacity: 0.5;
+}
+
+.bv-ladder__joint {
+  fill: var(--bg);
+  stroke: var(--text-2);
+  stroke-width: 1.5;
+}
+
+.bv-ladder__heir {
+  stroke: var(--intent-machine);
+  stroke-width: 2;
+}
+
+.bv-ladder__ghost {
+  stroke: var(--accent-gold);
+  stroke-width: 1.5;
+  opacity: 0.55;
+}
+
+.bv-ladder__ghost--heir {
+  stroke: var(--intent-machine);
+  stroke-width: 1.5;
+  opacity: 0.55;
+}
+
+.bv-ladder__code {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.bv-ladder__code-lines rect {
+  fill: var(--text);
+  opacity: 0.75;
+}
+
+@keyframes bv-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bv-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Responsive -------------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .bv-inherit {
+    grid-template-columns: 1fr;
+  }
+  .bv-inherit__figure {
+    justify-self: start;
+    max-width: 260px;
+  }
+  .bv-dichotomy {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .bv-law__quote {
+    padding-left: 16px;
+  }
+  .bv-pull {
+    padding-left: 16px;
+  }
+}
+
+/* --- Motion safety ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-field__floor,
+  .bv-field__edge,
+  .bv-star__cord,
+  .bv-layers__edge {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .bv-field__source {
+    animation: none;
+    opacity: 1;
+  }
+  .bv-tie:hover {
+    transform: none;
+  }
+}

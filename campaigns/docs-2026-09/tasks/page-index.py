@@ -12,7 +12,7 @@ import glob
 import os
 import xml.etree.ElementTree as ET
 
-ROOT = "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v0.1.0/vibevm/vibespecs"
+ROOT = "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs"
 NS = "{https://vibevm.org/spec/1}"
 OUT = "campaigns/docs-2026-09/PAGE-INDEX.md"
 

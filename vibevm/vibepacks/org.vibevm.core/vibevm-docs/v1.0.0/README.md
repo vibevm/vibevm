@@ -31,5 +31,5 @@ author has read it as a stranger would. @status:doc/work
 
 @fact:TRANSLATIONS Translations are separate packages named
 `vibevm-docs-<lang>` in the same group, mirroring these pages file for file
-and block for block; the first one, `vibevm-docs-ru`, follows once this
-manual has been read and used. @status:doc/work
+and block for block; the first one, `vibevm-docs-ru`, mirrors this manual
+and the site serves it beside the source. @status:doc/work

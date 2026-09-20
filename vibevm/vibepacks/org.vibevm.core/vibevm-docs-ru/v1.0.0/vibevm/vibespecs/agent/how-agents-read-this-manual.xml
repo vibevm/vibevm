@@ -20,7 +20,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER"/>
   </the-files>
   <offline title="Без сети">
-    <p>Те же страницы живут в машинном [хранилище](../glossary/index.xml#store), как только выполнен `vibe cache add org.vibevm.core/vibevm-docs`. `vibe explain "spec://org.vibevm.core/vibevm-docs-ru/&lt;page&gt;#&lt;anchor&gt;"` печатает страницу или блок; `vibe doc manifest --llms small` печатает список страниц из хранилища. Ничто на этом пути не обращается к сети, и потому проприетарную документацию читают именно так.</p>
+    <p>Те же страницы живут в машинном [хранилище](../glossary/index.xml#store) (*store*), как только выполнен `vibe cache add org.vibevm.core/vibevm-docs`. `vibe explain "spec://org.vibevm.core/vibevm-docs-ru/&lt;page&gt;#&lt;anchor&gt;"` печатает страницу или блок; `vibe doc manifest --llms small` печатает список страниц из хранилища. Ничто на этом пути не обращается к сети, и потому проприетарную документацию читают именно так.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP"/>
   </offline>
   <citing title="Как сослаться на место">
@@ -42,7 +42,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-SEVEN-PREDICATES-JOINED-BY-AND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR"/>
-    <p>`query_package` возвращает полную запись установленного пакета из лока. `read_subskill` возвращает содержимое активного [поднавыка](../glossary/index.xml#subskill), где бы он ни жил: в дереве проекта или в машинном хранилище. `materialise_subskill` копирует лениво подтянутый поднавык в дерево проекта и отказывается перезаписывать без `force`; это единственный инструмент, который пишет.</p>
+    <p>`query_package` возвращает полную запись установленного пакета из лока. `read_subskill` возвращает содержимое активного [поднавыка](../glossary/index.xml#subskill) (*subskill*), где бы он ни жил: в дереве проекта или в машинном хранилище. `materialise_subskill` копирует лениво подтянутый поднавык в дерево проекта и отказывается перезаписывать без `force`; это единственный инструмент, который пишет.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-QUERY-PACKAGE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-READ-SUBSKILL"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#TOOL-MATERIALISE-SUBSKILL"/>
@@ -54,7 +54,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-026#ENRICHED-RESPONSES"/>
   </the-tools>
   <edge-cases title="Особые случаи и правила">
-    <p>Текст, написанный для агентов, никогда не входит в [стартовую полосу](../glossary/index.xml#boot-lane) проекта; это руководство берут, когда нужно, а не читают на каждом старте сессии.</p>
+    <p>Текст, написанный для агентов, никогда не входит в [стартовую полосу](../glossary/index.xml#boot-lane) (*boot lane*) проекта; это руководство берут, когда нужно, а не читают на каждом старте сессии.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-DOC-NEVER-BOOTS"/>
     <p>Сама стартовая полоса — чистое чтение файлов: ничто в ней не выполняется, и руководства в ней нет.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING"/>

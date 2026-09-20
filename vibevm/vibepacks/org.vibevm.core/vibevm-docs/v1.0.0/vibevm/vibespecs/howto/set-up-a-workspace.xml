@@ -52,11 +52,11 @@ format = "normal"</expect>
     </example>
   </by-hand>
   <one-manifest title="One manifest, three roles">
-    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is. A `[package]` table makes it a publishable package; a `[project]` table makes it a consumer that is never published; a `[workspace]` table makes it [coordinate](../glossary/index.xml#coordinate) members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
+    <p>Every node has a file named `vibe.toml`, and what the file contains decides what the node is. A `[package]` table makes it a publishable package; a `[project]` table makes it a consumer that is never published; a `[workspace]` table makes it the root that names the members. A node cannot be both a package and a project, but a workspace root may be either, or neither.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
   </one-manifest>
   <members-referring title="Members referring to each other">
-    <p>A member requires a sibling by path rather than by [registry](../glossary/index.xml#registry), with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary coordinate in each published copy.</p>
+    <p>A member requires a sibling by path rather than by [registry](../glossary/index.xml#registry), with a `path` source in its requirements. The lock file records such an entry with a source kind of `path` and the member's folder relative to the root, so the lock stays portable across machines. When the workspace is published, the path becomes an ordinary [coordinate](../glossary/index.xml#coordinate) in each published copy.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#MEMBER-IS-NODE"/>
     <p>A path is a third source of packages beside registries and git. A member requires another by path during development and by version once published, in one line of two halves, `{ path = "../flow-wal", version = "^0.1" }`: the published copy names the registry version, which an outside consumer can resolve, and the path never leaves the workspace. A version placeholder declared once at the root stands in for a number repeated across members.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PATH-SOURCE"/>

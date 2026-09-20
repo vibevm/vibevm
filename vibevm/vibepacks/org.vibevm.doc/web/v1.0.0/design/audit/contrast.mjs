@@ -77,16 +77,25 @@ function sRGBtoY([r, g, b]) {
 /** Lightness contrast of text over background, in Lc (-108 .. 106). */
 function apcaContrast(txtY, bgY) {
   if (Math.min(txtY, bgY) < 0 || Math.max(txtY, bgY) > 1.1) return 0.0;
-  const tY = txtY > SA98G.blkThrs ? txtY : txtY + Math.pow(SA98G.blkThrs - txtY, SA98G.blkClmp);
-  const bY = bgY > SA98G.blkThrs ? bgY : bgY + Math.pow(SA98G.blkThrs - bgY, SA98G.blkClmp);
+  const tY =
+    txtY > SA98G.blkThrs
+      ? txtY
+      : txtY + Math.pow(SA98G.blkThrs - txtY, SA98G.blkClmp);
+  const bY =
+    bgY > SA98G.blkThrs
+      ? bgY
+      : bgY + Math.pow(SA98G.blkThrs - bgY, SA98G.blkClmp);
   if (Math.abs(bY - tY) < SA98G.deltaYmin) return 0.0;
   let sapc;
   let out;
   if (bY > tY) {
-    sapc = (Math.pow(bY, SA98G.normBG) - Math.pow(tY, SA98G.normTXT)) * SA98G.scaleBoW;
+    sapc =
+      (Math.pow(bY, SA98G.normBG) - Math.pow(tY, SA98G.normTXT)) *
+      SA98G.scaleBoW;
     out = sapc < SA98G.loClip ? 0.0 : sapc - SA98G.loBoWoffset;
   } else {
-    sapc = (Math.pow(bY, SA98G.revBG) - Math.pow(tY, SA98G.revTXT)) * SA98G.scaleWoB;
+    sapc =
+      (Math.pow(bY, SA98G.revBG) - Math.pow(tY, SA98G.revTXT)) * SA98G.scaleWoB;
     out = sapc > -SA98G.loClip ? 0.0 : sapc + SA98G.loWoBoffset;
   }
   return out * 100.0;
@@ -112,7 +121,8 @@ function parseColour(text) {
   const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(value);
   if (hex !== null) {
     const digits = hex[1];
-    const wide = digits.length === 3 ? [...digits].map((c) => c + c).join("") : digits;
+    const wide =
+      digits.length === 3 ? [...digits].map((c) => c + c).join("") : digits;
     return [
       parseInt(wide.slice(0, 2), 16),
       parseInt(wide.slice(2, 4), 16),
@@ -221,19 +231,33 @@ function blockAfter(css, pattern) {
   return null;
 }
 
-const paletteCss = stripComments(readFileSync(join(DESIGN_ROOT, "palette.css"), "utf8"));
-const tokensCss = stripComments(readFileSync(join(DESIGN_ROOT, "tokens.css"), "utf8"));
+const paletteCss = stripComments(
+  readFileSync(join(DESIGN_ROOT, "palette.css"), "utf8"),
+);
+const tokensCss = stripComments(
+  readFileSync(join(DESIGN_ROOT, "tokens.css"), "utf8"),
+);
 
 const palette = declarations(blockAfter(paletteCss, /:root\s*\{/) ?? "");
 
-const lightBody = blockAfter(tokensCss, /:root\s*,\s*\[data-theme="light"\]\s*\{/);
-const mediaOuter = blockAfter(tokensCss, /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{/);
+const lightBody = blockAfter(
+  tokensCss,
+  /:root\s*,\s*\[data-theme="light"\]\s*\{/,
+);
+const mediaOuter = blockAfter(
+  tokensCss,
+  /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{/,
+);
 const mediaBody =
-  mediaOuter === null ? null : blockAfter(mediaOuter, /:root:not\(\[data-theme="light"\]\)\s*\{/);
+  mediaOuter === null
+    ? null
+    : blockAfter(mediaOuter, /:root:not\(\[data-theme="light"\]\)\s*\{/);
 const attrBody = blockAfter(tokensCss, /(?:^|\n)\[data-theme="dark"\]\s*\{/);
 
 if (lightBody === null || mediaBody === null || attrBody === null) {
-  process.stderr.write("contrast: tokens.css does not carry the three theme blocks.\n");
+  process.stderr.write(
+    "contrast: tokens.css does not carry the three theme blocks.\n",
+  );
   process.exit(1);
 }
 
@@ -256,7 +280,14 @@ function resolve(map, name, seen = new Set()) {
 /* The matrix                                                          */
 /* ------------------------------------------------------------------ */
 
-const BACKGROUNDS = ["--bg", "--bg-raise", "--bg-sink", "--code-bg", "--selection", "--accent-soft"];
+const BACKGROUNDS = [
+  "--bg",
+  "--bg-raise",
+  "--bg-sink",
+  "--code-bg",
+  "--selection",
+  "--accent-soft",
+];
 const GATED_TEXT = [
   ["--text", 75],
   ["--text-2", 60],
@@ -265,6 +296,17 @@ const GATED_TEXT = [
 const GATED_OUTLINE = [
   ["--accent", 45],
   ["--accent-hover", 45],
+  /* The two accents the family's other products are drawn with. They
+     carry headings, eyebrows and the prompt of a command line on the
+     Why pages, which is the same role `--accent` has on the landing —
+     so the same threshold, measured on the same ground. */
+  ["--accent-gold", 45],
+  ["--accent-zap", 45],
+  /* The essay's machine-intention mark. It carries no text — the cobalt
+     square is a shape beside the terracotta circle — but it is held to
+     the same outline threshold as the family's accents, so a theme
+     change cannot quietly wash the machine out of the argument. */
+  ["--intent-machine", 45],
 ];
 const DECORATIVE = ["--line", "--line-strong"];
 
@@ -304,7 +346,14 @@ for (const [themeName, map] of themes) {
     for (const paper of papers) {
       const lc = pairLc(map, ink, paper);
       if (lc === null) {
-        failures.push({ theme: themeName, ink, paper, lc: 0, min, missing: true });
+        failures.push({
+          theme: themeName,
+          ink,
+          paper,
+          lc: 0,
+          min,
+          missing: true,
+        });
         continue;
       }
       gatedPairs += 1;
@@ -326,7 +375,10 @@ for (const [themeName, map] of themes) {
   const number = resolve(map, "--text-3");
   const page = resolve(map, "--bg");
   if (number !== null && page !== null) {
-    const halved = alphaBlend([number[0], number[1], number[2], 0.5], page.slice(0, 3));
+    const halved = alphaBlend(
+      [number[0], number[1], number[2], 0.5],
+      page.slice(0, 3),
+    );
     const lc = apcaContrast(sRGBtoY(halved), sRGBtoY(page.slice(0, 3)));
     referencePairs += 1;
     lines.push(
@@ -343,7 +395,10 @@ const divergences = [];
 for (const key of new Set([...darkMedia.keys(), ...darkAttr.keys()])) {
   const a = darkMedia.get(key);
   const b = darkAttr.get(key);
-  if (a !== b) divergences.push(`${key}: media=${a ?? "(absent)"} attr=${b ?? "(absent)"}`);
+  if (a !== b)
+    divergences.push(
+      `${key}: media=${a ?? "(absent)"} attr=${b ?? "(absent)"}`,
+    );
 }
 
 const literals = [];
@@ -353,7 +408,8 @@ for (const [scope, map] of [
   ["dark(attr)", darkAttr],
 ]) {
   for (const [name, value] of map) {
-    if (!/^var\(\s*--[\w-]+\s*\)$/.test(value)) literals.push(`${scope} ${name}: ${value}`);
+    if (!/^var\(\s*--[\w-]+\s*\)$/.test(value))
+      literals.push(`${scope} ${name}: ${value}`);
   }
 }
 
@@ -398,17 +454,23 @@ process.stdout.write(lines.join("\n"));
 process.stdout.write("\n\n");
 
 if (MINT) {
-  process.stdout.write("--- minting candidates (minimal same-hue lightness shift) ---\n");
+  process.stdout.write(
+    "--- minting candidates (minimal same-hue lightness shift) ---\n",
+  );
   const seen = new Set();
   for (const f of failures) {
     const key = `${f.theme}/${f.ink}`;
     if (seen.has(key)) continue;
     seen.add(key);
     const map = f.theme === "light" ? light : darkAttr;
-    const papers = GATED_TEXT.some(([n]) => n === f.ink) ? BACKGROUNDS : ["--bg"];
+    const papers = GATED_TEXT.some(([n]) => n === f.ink)
+      ? BACKGROUNDS
+      : ["--bg"];
     const from = resolve(map, f.ink);
     const candidate = mint(map, f.ink, f.min, papers, f.theme === "light");
-    const worstBefore = Math.min(...papers.map((p) => Math.abs(pairLc(map, f.ink, p) ?? 0)));
+    const worstBefore = Math.min(
+      ...papers.map((p) => Math.abs(pairLc(map, f.ink, p) ?? 0)),
+    );
     if (candidate === null) {
       process.stdout.write(`  ${f.theme} ${f.ink}: no candidate on this hue\n`);
       continue;
@@ -427,7 +489,7 @@ process.stdout.write(
 );
 process.stdout.write(
   divergences.length === 0
-    ? "@media(prefers-color-scheme:dark) agrees with [data-theme=\"dark\"]: OK (0 divergences)\n"
+    ? '@media(prefers-color-scheme:dark) agrees with [data-theme="dark"]: OK (0 divergences)\n'
     : `@media(prefers-color-scheme:dark) differs from [data-theme="dark"]:\n  ${divergences.join("\n  ")}\n`,
 );
 process.stdout.write(
@@ -436,8 +498,11 @@ process.stdout.write(
     : `tokens.css carries literals, which belong in palette.css:\n  ${literals.join("\n  ")}\n`,
 );
 
-const red = failures.length > 0 || divergences.length > 0 || literals.length > 0;
+const red =
+  failures.length > 0 || divergences.length > 0 || literals.length > 0;
 if (red && !MINT) {
-  process.stderr.write("contrast: the design floor is red — see the pairs above.\n");
+  process.stderr.write(
+    "contrast: the design floor is red — see the pairs above.\n",
+  );
 }
 process.exit(red && !MINT ? 1 : 0);

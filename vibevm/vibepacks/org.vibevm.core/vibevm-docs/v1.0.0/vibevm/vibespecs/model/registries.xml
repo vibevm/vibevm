@@ -85,7 +85,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#LOCAL-NO-PREFER-FLAG"/>
   </local-sources>
   <edge-cases title="Edge cases and rules">
-    <p>A vibe built from a source checkout treats that checkout's in-tree packages as an ambient registry, consulted first: a developer of vibe installs the packages being developed without publishing them. A distributed vibe has no such registry.</p>
+    <p>The embedded registry exists for one person: the developer of vibe itself, who installs the packages being developed without publishing them. A distributed vibe has no such registry.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#AMBIENT-DEFAULT"/>
     <p>The source repository of vibe itself is mirrored on two hosts, but that is a different thing from the package registry: the mirrors carry the program's source, the registry carries packages, and the credentials for the two are never shared.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-016#ORTHOGONALITY-LAW"/>

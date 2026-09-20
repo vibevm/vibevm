@@ -42,7 +42,7 @@ vibe registry add: `acme` registered (1 total registry).</expect>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
   </redirects>
   <tokens title="Tokens">
-    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or your CI secret [store](../glossary/index.xml#store), not in the repository.</p>
+    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or among your CI secrets, not in the repository.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
   </tokens>
   <edge-cases title="Edge cases and rules">

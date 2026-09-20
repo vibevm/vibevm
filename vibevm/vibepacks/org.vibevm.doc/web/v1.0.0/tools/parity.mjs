@@ -131,7 +131,13 @@ const DIFFERENCES = [
     matches: (fragment) =>
       fragment === "Search the documentation" ||
       fragment === "Искать в документации" ||
-      fragment === "Ctrl K",
+      fragment === "Ctrl K" ||
+      /* The third string the widget needs: what the list says when a
+         word matches nothing. It is in the document from the first byte
+         rather than written in by a script, so a reader who types into
+         the field gets an answer without waiting for one. */
+      fragment === "Nothing here carries that word." ||
+      fragment === "Здесь нет ничего с этим словом.",
   },
   {
     id: "D-11",
@@ -162,6 +168,76 @@ const DIFFERENCES = [
     reason:
       "One line added, pointing at `/doc/llms.txt`: a root index that did not name the documentation's own index would send an agent to read the landing twice.",
     matches: (line) => line.includes("/doc/llms.txt"),
+  },
+  {
+    id: "D-29",
+    where: "addresses",
+    reason:
+      "The AI-Native page is served at `/why/ai-native/` and not at `/why/ai-native-language/`. The review worktree that authored the page wrote the longer slug while the family was still being named; the owner settled on the short one. There is no redirect from the longer form because that form was never served from this domain — it existed only in a review worktree, so nothing holds a link to it.",
+    matches: (address) =>
+      address === "/why/ai-native-language/" ||
+      address === "/ru/why/ai-native-language/" ||
+      address === "/why/ai-native/" ||
+      address === "/ru/why/ai-native/",
+  },
+  {
+    id: "D-30",
+    where: "slug",
+    reason:
+      "Every self-naming tag of the AI-Native page follows its address: `canonical`, `og:url` and both `hreflang` entries spell `ai-native` where the reference spelled `ai-native-language`. The comparison rewrites the reference's address into the port's before matching, so that the slug is reported once — here — and every other value on the page is still compared literally.",
+    matches: (note) => note === "ai-native",
+  },
+  {
+    id: "D-31",
+    where: "sitemap",
+    reason:
+      "The sitemap follows the same address. `/why/ai-native-language/` leaves it and `/why/ai-native/` enters it, in both languages, at the priority and change frequency the Astro file gave the page — those are now derived from the address rather than kept in a hand-written table, so a page added tomorrow is weighted without anyone editing a row.",
+    matches: (path) => path.includes("/why/ai-native"),
+  },
+  {
+    id: "D-32",
+    where: "llms.txt",
+    reason:
+      "The AI-Native entry in the agent index points at the canonical address. The owner's words about the page are unchanged; only the URL inside the link follows the routing decision (D-29).",
+    matches: (link) => link.includes("/why/ai-native"),
+  },
+  {
+    id: "D-33",
+    where: "addresses",
+    reason:
+      "`/vision/` and `/ru/vision/` are new: the owner's essay «Большой Вижен» / “The Big Vision”, commissioned 2026-09-17 as an authored article surface beside the three Why pages. The Astro site never carried it, so the pair exists only in this build.",
+    matches: (address) => address === "/vision/" || address === "/ru/vision/",
+  },
+  {
+    id: "D-34",
+    where: "text",
+    reason:
+      "The essay's entries on the existing pages: the header and footer gain one link — «Vision» / «Видение» — on every landing page, and the AI-Native hero gains the doorway block naming the essay and one line of invitation. All of it arrived with `/vision/` (D-33); none of it replaces any of the owner's copy.",
+    matches: (fragment) =>
+      fragment === "Vision" ||
+      fragment === "Видение" ||
+      fragment === "The essay" ||
+      fragment === "Эссе" ||
+      fragment === "The Big Vision →" ||
+      fragment === "Большой Вижен →" ||
+      fragment ===
+        "The worldview behind this discipline: two sources of intention, an expensive probabilistic layer over a cheap deterministic one — and traceable edges between them." ||
+      fragment ===
+        "Мировоззрение за этой дисциплиной: два источника намерения, дорогой вероятностный слой над дешёвым детерминированным — и трассируемые рёбра между ними.",
+  },
+  {
+    id: "D-35",
+    where: "sitemap",
+    reason:
+      "The sitemap gains the essay's pair of addresses, weighted by the same address-derived rule every landing page is (D-31): 0.8 for the English page, 0.7 for the Russian one, monthly.",
+    matches: (path) => path.includes("/vision/"),
+  },
+  {
+    id: "D-36",
+    where: "llms.txt",
+    reason:
+      "One line added under «## Project», pointing at `/vision/`: the agent index that names the three product arguments now names the worldview essay they are pieces of.",
+    matches: (link) => link.includes("/vision/"),
   },
 ];
 
@@ -482,14 +558,34 @@ function compareBytes(name, reference, port, referenceFile, portFile) {
   say(`    note      not byte for byte: ${a.length} bytes became ${b.length}`);
 }
 
-function comparePage(address, reference, port) {
+/**
+ * Compare one page of the reference against its page here.
+ *
+ * `rewrite` maps an address of the reference into this build's address
+ * space. Exactly one page needs it — the AI-Native page, whose slug the
+ * owner shortened — and it is a function rather than a set of exceptions
+ * because the point is to compare everything ELSE literally: the rewrite
+ * is cited once, by name, and then every tag on the page has to match
+ * exactly like every other page's.
+ */
+function comparePage(address, reference, port, rewrite = (value) => value) {
   check(`page ${address}`);
   const a = readFileSync(reference, "utf8");
   const b = readFileSync(port, "utf8");
 
   const same = (what, x, y) => {
-    if (x === y) ok(`${what}: ${x.length > 70 ? `${x.slice(0, 67)}…` : x}`);
-    else fail(`${what}: «${x}» became «${y}»`);
+    const expected = rewrite(x);
+    if (expected === y) {
+      ok(`${what}: ${y.length > 70 ? `${y.slice(0, 67)}…` : y}`);
+      if (expected !== x) {
+        known(
+          explain("slug", "ai-native"),
+          `${what} follows the canonical address: «${x}» → «${y}»`,
+        );
+      }
+      return;
+    }
+    fail(`${what}: «${x}» became «${y}»`);
   };
 
   same("lang", lang(a), lang(b));
@@ -509,7 +605,13 @@ function comparePage(address, reference, port) {
     const y = metaB.get(name);
     if (y === undefined) fail(`meta ${name}: dropped («${x}»)`);
     else if (x === y) ok(`meta ${name}`);
-    else
+    else if (rewrite(x) === y) {
+      ok(`meta ${name}`);
+      known(
+        explain("slug", "ai-native"),
+        `meta ${name} follows the canonical address`,
+      );
+    } else
       difference(
         "meta",
         { name, reference: x, port: y },
@@ -538,7 +640,13 @@ function comparePage(address, reference, port) {
   const jsonB = structuredData(b);
   if (jsonA === null && jsonB === null) ok("no structured data on either");
   else if (jsonA === jsonB) ok("structured data (normalised) identical");
-  else fail(`structured data: «${jsonA}» became «${jsonB}»`);
+  else if (jsonA !== null && rewrite(jsonA) === jsonB) {
+    ok("structured data (normalised) identical");
+    known(
+      explain("slug", "ai-native"),
+      "the WebPage url follows the canonical address",
+    );
+  } else fail(`structured data: «${jsonA}» became «${jsonB}»`);
 
   const umamiA = umami(a);
   const umamiB = umami(b);
@@ -582,7 +690,12 @@ function compareSitemap(reference, port) {
   const a = locations(reference);
   const b = locations(port);
   for (const location of a.filter((location) => !b.includes(location))) {
-    fail(`address dropped from the sitemap: ${location}`);
+    const path = new URL(location).pathname;
+    difference(
+      "sitemap",
+      path,
+      `address dropped from the sitemap: ${location}`,
+    );
   }
   for (const location of b.filter((location) => !a.includes(location))) {
     const path = new URL(location).pathname;
@@ -639,7 +752,7 @@ function compareLlms(reference, port) {
   const before = links(a);
   const after = links(b);
   for (const link of before.filter((link) => !after.includes(link))) {
-    fail(`link dropped from llms.txt: ${link}`);
+    difference("llms.txt", link, `link dropped from llms.txt: ${link}`);
   }
   for (const link of after.filter((link) => !before.includes(link))) {
     difference("llms.txt", link, `link added to llms.txt: ${link}`);
@@ -662,15 +775,48 @@ function run(referenceRoot, portRoot) {
 
   compareAddresses(reference, port);
 
-  for (const address of ["/", "/ru/", "/404.html"]) {
-    const a = reference.get(address);
-    const b = port.get(address);
+  /**
+   * Every page of the marketing half, as a pair of addresses.
+   *
+   * A pair and not one address, because one page moved: the owner
+   * shortened the AI-Native slug (D-29). Naming both sides here is what
+   * lets the comparison stay literal everywhere else — the rewrite is
+   * declared in one place, and a page that quietly stopped existing on
+   * either side is a missing pair rather than a silent skip.
+   */
+  const PAGES = [
+    { reference: "/", port: "/" },
+    { reference: "/ru/", port: "/ru/" },
+    { reference: "/404.html", port: "/404.html" },
+    { reference: "/why/vibevm/", port: "/why/vibevm/" },
+    { reference: "/ru/why/vibevm/", port: "/ru/why/vibevm/" },
+    { reference: "/why/zap/", port: "/why/zap/" },
+    { reference: "/ru/why/zap/", port: "/ru/why/zap/" },
+    {
+      reference: "/why/ai-native-language/",
+      port: "/why/ai-native/",
+      rewrite: (value) => value.replaceAll("ai-native-language", "ai-native"),
+    },
+    {
+      reference: "/ru/why/ai-native-language/",
+      port: "/ru/why/ai-native/",
+      rewrite: (value) => value.replaceAll("ai-native-language", "ai-native"),
+    },
+  ];
+
+  for (const pair of PAGES) {
+    const a = reference.get(pair.reference);
+    const b = port.get(pair.port);
     if (a === undefined || b === undefined) {
-      check(`page ${address}`);
-      fail("the page is missing from one of the builds");
+      check(`page ${pair.port}`);
+      fail(
+        `the page is missing from one of the builds (reference ${
+          a === undefined ? "absent" : "present"
+        }, this build ${b === undefined ? "absent" : "present"})`,
+      );
       continue;
     }
-    comparePage(address, a, b);
+    comparePage(pair.port, a, b, pair.rewrite);
   }
 
   compareBytes("robots.txt", reference, port, "/robots.txt", "/robots.txt");

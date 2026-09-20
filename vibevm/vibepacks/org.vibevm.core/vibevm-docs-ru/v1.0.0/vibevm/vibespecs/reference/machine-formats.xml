@@ -53,7 +53,7 @@
     <derived kind="jtd-schema" ref="schemas/doc_manifest.jtd.json"/>
     <derived kind="jtd-schema" ref="schemas/doc_todo.jtd.json"/>
     <derived kind="jtd-schema" ref="schemas/doc_surface.jtd.json"/>
-    <p>У документов сервера [индекса](../glossary/index.xml#index-registry), контракта и плана [зачистки](../glossary/index.xml#scrape), трассы компилятора и нативного ABI есть собственные схемы в той же папке; реестр перечисляет их все.</p>
+    <p>У документов сервера [индекса](../glossary/index.xml#index-registry), контракта и плана [зачистки](../glossary/index.xml#scrape) (*scrape*), трассы компилятора и нативного ABI есть собственные схемы в той же папке; реестр перечисляет их все.</p>
   </the-documents>
   <edge-cases title="Особые случаи и правила">
     <p>Документ, который не описывает ни одна схема, — дефект, а не задумка; кампания, которая писала это руководство, занесла найденные в бэклог продукта, а примеры на этих страницах помечают такие документы как непроверенные, а не как прошедшие.</p>

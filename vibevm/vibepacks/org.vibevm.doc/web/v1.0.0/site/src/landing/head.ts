@@ -32,9 +32,17 @@ import { THEME_COLOR } from "./theme-color.ts";
  * all (`##SITE-ANALYTICS`).
  */
 
-/** The absolute address of a locale's landing — `canonical` and `og:url`. */
-function absolute(locale: Locale): string {
-  return `${SITE.origin}${href(localePath(locale))}`;
+/**
+ * The absolute address of a page in one language — `canonical`, `og:url`
+ * and one half of the `hreflang` pair.
+ *
+ * The path is the page's address inside its language, so `""` is the
+ * landing and `"why/zap/"` is a Why page. One function for both because
+ * they are the same address with a different tail, and a second one
+ * would be a second opinion about where the language sits.
+ */
+function absolute(locale: Locale, path = ""): string {
+  return `${SITE.origin}${href(`${localePath(locale)}${path}`)}`;
 }
 
 /**
@@ -47,7 +55,7 @@ function absolute(locale: Locale): string {
  * so the parity test can say so, and so the decision to change it is
  * taken deliberately rather than absorbed into a move.
  */
-function structuredData(): string {
+function siteGraph(): string {
   return JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
@@ -73,6 +81,38 @@ function structuredData(): string {
 }
 
 /**
+ * The structured data of a page that is not the front door.
+ *
+ * The site graph belongs to the root and is published there once: a
+ * `SoftwareApplication` repeated on every page of the domain would be
+ * the same claim asserted six more times, and a crawler that read it
+ * that way would have six answers to «what is this product» instead of
+ * one. A subpage says the smaller true thing — this is a page, it is
+ * called this, it is in this language, and it is part of that site.
+ *
+ * That split is the Astro layout's own (`BaseLayout.astro:24`), kept
+ * rather than improved: the address map and what each address claims
+ * about itself are the half of the move a reader never sees and a
+ * crawler sees first.
+ */
+function pageGraph(
+  canonical: string,
+  title: string,
+  description: string,
+  language: string,
+): string {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    url: canonical,
+    description,
+    inLanguage: language,
+    isPartOf: { "@type": "WebSite", name: "VibeVM", url: SITE.origin },
+  });
+}
+
+/**
  * The faces the page will certainly set, preloaded before the stylesheet
  * asks for them.
  *
@@ -94,34 +134,67 @@ function fontPreloads(locale: Locale): readonly string[] {
   return [...shared, "Spectral-cyrillic-600.woff2", "Inter-cyrillic.woff2"];
 }
 
-/** The head of a landing page in one language. */
-export function landingHead(locale: Locale): DocumentHeadValue {
+/** What a page of the marketing half declares about itself. */
+export type PageHeadProps = {
+  /** Which language's spelling of the page this is. */
+  readonly locale: Locale;
+  /**
+   * The page's address inside its language, slash-ended: `""` for the
+   * landing, `"why/zap/"` for a Why page. It is what makes `canonical`
+   * and the `hreflang` pair name this page rather than the front door.
+   */
+  readonly path: string;
+  /** The `<title>`, already in the page's language. */
+  readonly title: string;
+  readonly description: string;
+  /**
+   * The page's structured data, serialised, when `WebPage` is not what
+   * the page IS. The essay passes an `Article`; everything else omits
+   * this and gets the default split — the site graph on the front door,
+   * a `WebPage` everywhere else. One optional field rather than a
+   * second builder, so a page cannot end up with two graphs.
+   */
+  readonly graph?: string;
+};
+
+/**
+ * The head of one page of the marketing half of the domain, in one
+ * language.
+ *
+ * Every page declares the same set of tags and differs in four values,
+ * which is why there is one builder and not one per page: a `canonical`
+ * that a route forgot, or an `hreflang` pair naming the landing from a
+ * Why page, is a defect no reader can see and no test would catch if
+ * each route composed its own head by hand.
+ */
+export function pageHead(props: PageHeadProps): DocumentHeadValue {
+  const { locale, path, title, description } = props;
   const t = STRINGS[locale];
-  const canonical = absolute(locale);
+  const canonical = absolute(locale, path);
   const image = `${SITE.origin}${href("og.png")}`;
 
   return {
-    title: t.metaTitle,
+    title,
     meta: [
-      { name: "description", content: t.metaDescription },
+      { name: "description", content: description },
       { name: "theme-color", content: THEME_COLOR },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "VibeVM" },
       { property: "og:locale", content: t.ogLocale },
       { property: "og:url", content: canonical },
-      { property: "og:title", content: t.metaTitle },
-      { property: "og:description", content: t.metaDescription },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
       { property: "og:image", content: image },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: t.metaTitle },
-      { name: "twitter:description", content: t.metaDescription },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
       { name: "twitter:image", content: image },
     ],
     links: [
       { rel: "canonical", href: canonical },
-      { rel: "alternate", hreflang: "en", href: absolute("en") },
-      { rel: "alternate", hreflang: "ru", href: absolute("ru") },
-      { rel: "alternate", hreflang: "x-default", href: absolute("en") },
+      { rel: "alternate", hreflang: "en", href: absolute("en", path) },
+      { rel: "alternate", hreflang: "ru", href: absolute("ru", path) },
+      { rel: "alternate", hreflang: "x-default", href: absolute("en", path) },
       { rel: "icon", href: href("favicon.svg"), type: "image/svg+xml" },
       {
         rel: "alternate",
@@ -145,11 +218,26 @@ export function landingHead(locale: Locale): DocumentHeadValue {
          a crawler to wonder about. */
       {
         type: "application/ld+json",
-        dangerouslySetInnerHTML: structuredData(),
+        dangerouslySetInnerHTML:
+          props.graph ??
+          (path.length === 0
+            ? siteGraph()
+            : pageGraph(canonical, title, description, t.htmlLang)),
       },
       ...analytics(),
     ],
   };
+}
+
+/** The head of a landing page in one language. */
+export function landingHead(locale: Locale): DocumentHeadValue {
+  const t = STRINGS[locale];
+  return pageHead({
+    locale,
+    path: "",
+    title: t.metaTitle,
+    description: t.metaDescription,
+  });
 }
 
 /**

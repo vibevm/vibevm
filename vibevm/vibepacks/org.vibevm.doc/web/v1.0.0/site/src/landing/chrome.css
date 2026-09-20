@@ -47,9 +47,19 @@
   padding-inline: 32px;
 }
 
+/* A page that draws to the edge of the window. It still has to be a
+   flex child that can shrink — without the minimum reset, a wide code
+   line or an unbreakable command inside it widens the whole column and
+   the page scrolls sideways on a phone. */
+.landing-full {
+  width: 100%;
+  min-width: 0;
+}
+
 .landing-nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 22px;
   font-size: 14px;
   color: var(--text-2);
@@ -57,9 +67,19 @@
 
 .landing-nav__link {
   transition: color var(--speed) ease;
+  /* A page's name is one thing to read, not two lines to parse: the
+     entries wrap as entries and never mid-word. */
+  white-space: nowrap;
 }
 
 .landing-nav__link:hover {
+  color: var(--text);
+}
+
+/* The page you are already on says so, and says it the way the rest of
+   the site does — in the ink the page is read in rather than in the
+   accent, which belongs to what you can still go and do. */
+.landing-nav__link[aria-current="page"] {
   color: var(--text);
 }
 
@@ -100,22 +120,36 @@
   color: var(--text-2);
 }
 
+/* With three Why pages in the bar, the two repository links are the
+   first to yield: they are named again in the footer of every page and
+   in the landing's own two buttons, while a Why page is named nowhere
+   else in the chrome. This is the width the Astro header yielded them
+   at, and for the same reason. */
+@media (max-width: 860px) {
+  .landing-nav__link--wide {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .landing-nav {
+    gap: 8px 16px;
+  }
+}
+
 @media (max-width: 520px) {
   .landing-shell {
     padding-inline: 20px;
   }
-  .landing-nav__link--wide {
-    display: none;
-  }
-  /* Four things do not fit across a phone, and the search box is the one
-     that is still one tap away: the documentation's own header carries
-     the same field, and at this width it carries the brand, the field
-     and the language and nothing else. What stays here is what only
-     this page offers — the way in, the language and the theme. */
+  /* The last thing to go is the search box, and it is the one that is
+     still a tap away: the documentation's own header carries the same
+     field. What stays is what only this bar offers — the three pages,
+     the way in, the language and the theme. */
   .landing-nav__search {
     display: none;
   }
   .landing-nav {
-    gap: 14px;
+    gap: 8px 14px;
+    font-size: 13px;
   }
 }

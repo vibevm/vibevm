@@ -1,0 +1,686 @@
+/* `/why/zap` — the deep-space page.
+   ---------------------------------------------------------------------
+   Orbital cartography on a darker ground, green energy accents, and one
+   terracotta node as the family tie back to VibeVM. Every measurement is
+   `WhyZap.astro`'s; the colours are tokens, so the page follows the
+   reader's theme instead of contradicting it.
+
+   The page's own room — ground, panel, hairlines — comes through the
+   `--zap-*` tokens rather than through literals here, which is what lets
+   the dark map be the drawing byte for byte and the light map be a
+   deliberate decision rather than an accident. */
+
+.why-zap {
+  /* What the shared furniture tints itself with on this page. */
+  --why-accent: var(--accent-zap);
+  --why-accent-bright: var(--accent-zap-bright);
+  --why-accent-soft: color-mix(in srgb, var(--accent-zap) 13%, transparent);
+
+  background:
+    radial-gradient(
+      56% 42% at 82% 4%,
+      color-mix(in srgb, var(--accent-zap) 7%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      50% 40% at 8% 92%,
+      color-mix(in srgb, var(--accent-zap) 4.5%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      var(--bg) 0%,
+      var(--zap-ground) 340px,
+      var(--zap-ground) 100%
+    );
+}
+
+/* --- Hero ------------------------------------------------------------- */
+
+.wz-hero {
+  padding-block: clamp(40px, 8vh, 96px) clamp(28px, 5vh, 64px);
+}
+
+.wz-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.wz-lead {
+  max-width: 33rem;
+}
+
+/* The arrow points down into the page rather than out of it, so it
+   leaves downward — over the shared rule, which sends it up and to the
+   right the way a link out of the site does. */
+.why-zap .why-btn--primary:hover .why-arrow {
+  transform: translateY(2px);
+}
+
+.wz-hero__art {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.wz-hero__art figcaption {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+  max-width: 30rem;
+}
+
+/* --- Section scaffolding ----------------------------------------------- */
+
+.wz-section {
+  padding-block: clamp(34px, 6vh, 72px);
+}
+
+.wz-k {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-zap);
+}
+
+.wz-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(27px, 3.6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: balance;
+  max-width: 30ch;
+}
+
+.wz-body {
+  margin: 18px 0 0;
+  max-width: 46rem;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.wz-note {
+  margin: 14px 0 0;
+  max-width: 46rem;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.wz-card {
+  background: var(--zap-surface);
+  border: 1px solid var(--zap-hairline);
+  border-radius: 14px;
+  padding: 24px 24px 26px;
+}
+
+.wz-card h3 {
+  margin: 0 0 9px;
+  font-family: var(--font-display);
+  font-size: 19.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.wz-card p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+.wz-problems {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* --- Architecture flow -------------------------------------------------- */
+
+.wz-arch {
+  margin-top: 30px;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.wz-arch__node {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  background: var(--zap-surface);
+  border: 1px solid var(--zap-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.wz-arch__node b {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.wz-arch__node span {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.wz-arch__node--core {
+  border-color: color-mix(in srgb, var(--accent-zap) 45%, transparent);
+  box-shadow: 0 0 34px color-mix(in srgb, var(--accent-zap) 7%, transparent)
+    inset;
+}
+
+.wz-arch__node--core b {
+  color: var(--accent-zap);
+}
+
+.wz-arch__link {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-inline: 6px;
+  width: 118px;
+}
+
+.wz-arch__link i {
+  display: block;
+  width: 100%;
+  height: 0;
+  border-top: 1px dashed var(--zap-hairline-strong);
+  position: relative;
+}
+
+.wz-arch__link i::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  border: 4px solid transparent;
+  border-left-color: var(--accent-zap);
+}
+
+.wz-arch__link em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* --- Map readings -------------------------------------------------------- */
+
+.wz-readings {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.wz-reading {
+  margin: 0;
+  background: var(--zap-surface);
+  border: 1px solid var(--zap-hairline);
+  border-radius: 14px;
+  padding: 20px 20px 18px;
+}
+
+.wz-reading figcaption {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.wz-reading figcaption b {
+  color: var(--accent-zap);
+  font-weight: 600;
+}
+
+/* --- Capabilities --------------------------------------------------------- */
+
+.wz-caps {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* --- Laws ----------------------------------------------------------------- */
+
+.wz-laws {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 46rem;
+  display: grid;
+  gap: 0;
+}
+
+.wz-laws li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding-block: 16px;
+  border-top: 1px solid var(--zap-hairline);
+}
+
+.wz-laws li:last-child {
+  border-bottom: 1px solid var(--zap-hairline);
+}
+
+.wz-laws__mark {
+  flex: 0 0 auto;
+  margin-top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-zap);
+}
+
+.wz-laws b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 17.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.wz-laws p {
+  margin: 3px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- Steps ---------------------------------------------------------------- */
+
+.wz-steps {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: wz-step;
+  max-width: 46rem;
+  display: grid;
+  gap: 22px;
+}
+
+.wz-steps li {
+  counter-increment: wz-step;
+  position: relative;
+  padding-left: 52px;
+  min-width: 0;
+}
+
+.wz-steps li::before {
+  content: counter(wz-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-zap);
+}
+
+.wz-steps h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.wz-steps p {
+  margin: 7px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.wz-cmd {
+  border-color: var(--zap-hairline-strong);
+  background: var(--zap-surface);
+}
+
+.wz-cmd code {
+  color: var(--text);
+}
+
+.wz-link {
+  color: var(--accent-zap);
+  transition: color 0.2s ease;
+}
+
+.wz-link:hover {
+  color: var(--accent-zap-bright);
+}
+
+.wz-endnotes {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.wz-family {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.wz-family h3 {
+  color: var(--accent);
+}
+
+.wz-family__link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent);
+}
+
+.wz-family__link:hover {
+  color: var(--accent-hover);
+}
+
+/* --- Summary --------------------------------------------------------------- */
+
+.wz-summary-wrap {
+  padding-bottom: clamp(56px, 10vh, 110px);
+}
+
+.wz-summary {
+  margin: 0;
+  max-width: 46rem;
+  border-left: 3px solid var(--accent-zap);
+  padding: 6px 0 6px 24px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.wz-summary code {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  color: var(--accent-zap);
+  background: color-mix(in srgb, var(--accent-zap) 13%, transparent);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* --- The orbital map --------------------------------------------------------- */
+
+.wz-orbital {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.wz-orbital__stars circle {
+  fill: var(--zap-star);
+}
+
+.wz-orbital__ring {
+  stroke: color-mix(in srgb, var(--accent-zap) 28%, transparent);
+  stroke-width: 1.1;
+  stroke-dasharray: 1.5 9;
+  stroke-linecap: round;
+}
+
+.wz-orbital__ring--far {
+  stroke-dasharray: 2 12;
+  stroke: color-mix(in srgb, var(--accent-zap) 18%, transparent);
+}
+
+.wz-orbital__orbits {
+  transform-origin: 210px 250px;
+  animation: wz-orbit 240s linear infinite;
+}
+
+.wz-orbital__path {
+  stroke: var(--accent-zap);
+  stroke-width: 1.75;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: wz-draw 1.3s ease forwards 0.35s;
+}
+
+.wz-orbital__arrow {
+  stroke: var(--accent-zap);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  animation: wz-appear 0.4s ease forwards 1.6s;
+}
+
+.wz-orbital__core {
+  fill: var(--accent-zap);
+}
+
+.wz-orbital__core-ring {
+  stroke: var(--accent-zap);
+  stroke-width: 1.25;
+  opacity: 0.65;
+}
+
+.wz-orbital__halo {
+  fill: color-mix(in srgb, var(--accent-zap) 13%, transparent);
+}
+
+.wz-orbital__node {
+  stroke: var(--accent-zap);
+  stroke-width: 1.4;
+  fill: var(--zap-surface);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wz-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.wz-orbital__node--fill {
+  fill: var(--accent-zap);
+}
+
+.wz-orbital__node--project {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.wz-orbital__ping {
+  stroke: var(--accent-zap-bright);
+  stroke-width: 1.4;
+  fill: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wz-ping 3.2s ease-out infinite 1.2s;
+  opacity: 0;
+}
+
+.wz-orbital__ping--late {
+  animation-delay: 2.2s;
+}
+
+/* --- The two reading figures --------------------------------------------------- */
+
+.wz-reading-art {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+}
+
+.wz-reading-art__ring {
+  stroke: var(--zap-hairline-strong);
+  stroke-width: 1;
+  stroke-dasharray: 1.5 8;
+  stroke-linecap: round;
+}
+
+.wz-reading-art__core,
+.wz-reading-art__dot {
+  fill: var(--accent-zap);
+}
+
+.wz-reading-art__dot--open {
+  fill: var(--zap-surface);
+  stroke: var(--accent-zap);
+  stroke-width: 1.4;
+}
+
+.wz-reading-art__chain {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+}
+
+.wz-reading-art__tip {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes wz-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wz-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes wz-appear {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes wz-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes wz-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(3.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.1);
+  }
+}
+
+/* --- Responsive ------------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .wz-arch {
+    flex-direction: column;
+  }
+  .wz-arch__link {
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+    padding-block: 8px;
+  }
+  .wz-arch__link i {
+    width: 34px;
+    flex: 0 0 auto;
+  }
+  .wz-arch__link em {
+    text-align: left;
+  }
+}
+
+@media (max-width: 860px) {
+  .wz-hero__grid {
+    grid-template-columns: 1fr;
+  }
+  .wz-hero__art {
+    max-width: 460px;
+    margin-inline: 0;
+  }
+  .wz-problems,
+  .wz-caps,
+  .wz-readings,
+  .wz-endnotes {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .wz-steps li {
+    padding-left: 40px;
+  }
+  .wz-summary {
+    padding-left: 18px;
+  }
+}
+
+/* --- Motion safety ----------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .wz-orbital__orbits {
+    animation: none;
+  }
+  .wz-orbital__path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .wz-orbital__arrow {
+    animation: none;
+    opacity: 1;
+  }
+  .wz-orbital__node {
+    animation: none;
+    opacity: 1;
+  }
+  .wz-orbital__ping {
+    animation: none;
+    opacity: 0;
+  }
+}

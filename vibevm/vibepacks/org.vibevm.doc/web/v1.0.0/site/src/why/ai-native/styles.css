@@ -1,0 +1,1276 @@
+/* `/why/ai-native` — the engineering-gold page.
+   ---------------------------------------------------------------------
+   A suprematist drafting table: one neutral core projected onto three
+   language surfaces, each clamped by the discipline's envelope brackets;
+   one cream band prints the central law. Terracotta appears only as the
+   family tie back to VibeVM, and the Zap green only as the tie to Zap.
+
+   Every measurement is `WhyAiNative.astro`'s. The colours are tokens —
+   `--accent-gold` for the page, `--mark-rust` / `--mark-ts` /
+   `--mark-go` for the three language marks, and the `--band-*` set for
+   the inverted band, whose ground is the same cream in either theme
+   because the band is an inversion of the page rather than a reading of
+   it. */
+
+.why-an {
+  /* What the shared furniture tints itself with on this page. */
+  --why-accent: var(--accent-gold);
+  --why-accent-bright: var(--accent-gold-bright);
+  --why-accent-soft: color-mix(in srgb, var(--accent-gold) 13%, transparent);
+  --an-gold-line: color-mix(in srgb, var(--accent-gold) 40%, transparent);
+}
+
+/* --- Hero -------------------------------------------------------------- */
+
+.an-hero {
+  padding-top: clamp(40px, 8vh, 96px);
+}
+
+.an-headline {
+  max-width: 21ch;
+  font-size: clamp(38px, 5.8vw, 66px);
+  line-height: 1.06;
+}
+
+.an-lead {
+  margin-top: 24px;
+  max-width: 44rem;
+}
+
+/* The arrow points down into the page, so it leaves downward. */
+.why-an .why-btn--primary:hover .why-arrow {
+  transform: translateY(2px);
+}
+
+.an-blueprint {
+  margin: clamp(30px, 5vh, 56px) 0 0;
+}
+
+.an-blueprint__canvas {
+  width: 100%;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(
+      46% 85% at 14% 0%,
+      color-mix(in srgb, var(--accent-gold) 8%, transparent),
+      transparent 62%
+    ),
+    var(--bg-sink);
+}
+
+.an-projection {
+  display: block;
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  height: auto;
+}
+
+/* Narrow screens: ride closer in and crop both ends — centre on the span
+   from the core to the first two stations, where the idea reads. */
+@media (max-width: 700px) {
+  .an-projection {
+    width: 142%;
+    max-width: none;
+    margin-left: -9%;
+  }
+}
+
+.an-blueprint figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- The doorway into the essay ----------------------------------------- */
+
+/* A reading entry, not a CTA: no fill, no pill — a gold rule down the
+   left, a kicker, the essay's own title and one line of invitation.
+   Its children are plain blocks and the anchor is a plain block, so the
+   layout gates, which scan flex and grid containers, see prose here —
+   which is what it is. */
+.an-vision-entry {
+  display: block;
+  margin-top: 34px;
+  max-width: 44rem;
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 18px;
+}
+
+.an-vision-entry__k {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.an-vision-entry__head {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.an-vision-entry__sub {
+  display: block;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.an-vision-entry:hover .an-vision-entry__head {
+  color: var(--accent-gold);
+}
+
+/* --- Section scaffolding ------------------------------------------------- */
+
+.an-section {
+  padding-block: clamp(36px, 7vh, 84px);
+}
+
+.an-k {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.an-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(27px, 3.6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: balance;
+  max-width: 27ch;
+}
+
+.an-body {
+  margin: 18px 0 0;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+  max-width: 44rem;
+}
+
+.an-body--wide {
+  max-width: 48rem;
+}
+
+.an-note {
+  margin: 14px 0 0;
+  max-width: 48rem;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.an-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.an-split .an-body {
+  margin-top: 0;
+}
+
+.an-symptoms {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.an-symptoms li {
+  position: relative;
+  padding-left: 26px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* The corner-bracket marker — the page's own glyph, and the same shape
+   the blueprint clamps its stations with. */
+.an-symptoms li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.42em;
+  width: 9px;
+  height: 9px;
+  border-left: 2px solid var(--accent-gold);
+  border-top: 2px solid var(--accent-gold);
+}
+
+/* --- The law: the inverted cream band ------------------------------------ */
+
+.an-law {
+  background: var(--band-paper);
+  padding-block: clamp(40px, 7vh, 80px);
+}
+
+.an-law__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 4.5vw, 64px);
+  align-items: center;
+}
+
+.an-k--ink {
+  color: var(--ochre-ink);
+}
+
+.an-law__quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.8vw, 31px);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  color: var(--band-ink);
+  border-left: 3px solid var(--gold-raw);
+  padding-left: 20px;
+  text-wrap: balance;
+}
+
+.an-law__quote em {
+  font-style: italic;
+  color: var(--ochre-ink);
+}
+
+.an-law__body {
+  margin: 20px 0 0;
+  max-width: 46rem;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--band-body);
+}
+
+.an-law__note {
+  margin: 16px 0 0;
+  max-width: 44rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--band-note);
+}
+
+.an-envelope-fig {
+  margin: 0 auto;
+  max-width: 340px;
+  width: 100%;
+}
+
+.an-envelope {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.an-envelope-fig figcaption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--band-note);
+}
+
+.an-law__contract {
+  margin-top: clamp(28px, 5vh, 44px);
+  padding-top: 26px;
+  border-top: 1px solid color-mix(in srgb, var(--band-ink) 16%, transparent);
+}
+
+.an-law__contract b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ochre-ink);
+  margin-bottom: 10px;
+}
+
+.an-law__contract p {
+  margin: 0;
+  max-width: 48rem;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--band-body);
+}
+
+.an-law__contract p strong {
+  color: var(--band-ink);
+  font-weight: 600;
+}
+
+/* The envelope drawing sits on the cream band, so its tones are the
+   band's and not the page's — in either theme. */
+.an-envelope__ring {
+  stroke: var(--ochre-ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 7;
+  opacity: 0.75;
+}
+
+.an-envelope__node rect {
+  fill: var(--ochre-ink);
+}
+
+.an-envelope__bracket {
+  stroke: var(--ochre-ink);
+  stroke-width: 2.25;
+}
+
+.an-envelope__file {
+  stroke: var(--band-ink);
+  stroke-width: 1.6;
+}
+
+.an-envelope__code rect {
+  fill: color-mix(in srgb, var(--band-ink) 62%, transparent);
+}
+
+/* --- Architecture --------------------------------------------------------- */
+
+.an-arch {
+  margin-top: 30px;
+  display: flex;
+  align-items: stretch;
+}
+
+.an-arch__node {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+
+.an-arch__node b {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.an-arch__sub {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.an-tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  padding: 3px 9px;
+}
+
+.an-tag--gold {
+  color: var(--accent-gold);
+  border-color: var(--an-gold-line);
+}
+
+.an-arch__node--core {
+  flex: 1 1 0;
+  border-color: var(--an-gold-line);
+}
+
+.an-arch__node--project {
+  flex: 1 1 0;
+}
+
+.an-arch__stacks {
+  flex: 1.35 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.an-arch__node--stack {
+  flex: 1 1 auto;
+  position: relative;
+  padding-left: 40px;
+}
+
+.an-arch__node--stack .an-mark {
+  position: absolute;
+  left: 16px;
+  top: 20px;
+}
+
+.an-b-rust {
+  border-color: color-mix(in srgb, var(--mark-rust) 42%, transparent);
+}
+
+.an-b-ts {
+  border-color: color-mix(in srgb, var(--mark-ts) 42%, transparent);
+}
+
+.an-b-go {
+  border-color: color-mix(in srgb, var(--mark-go) 42%, transparent);
+}
+
+.an-arch__join {
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+}
+
+.an-arch__join i {
+  display: block;
+  width: 100%;
+  border-top: 1px dashed var(--line-strong);
+  position: relative;
+}
+
+.an-arch__join--arrow i::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  border: 4px solid transparent;
+  border-left-color: var(--accent-gold);
+}
+
+/* --- The three language marks: square, circle, triangle -------------------- */
+
+.an-mark {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
+.an-mark--rust {
+  background: var(--mark-rust);
+}
+
+.an-mark--ts {
+  background: transparent;
+  border: 2.5px solid var(--mark-ts);
+  border-radius: 50%;
+}
+
+.an-mark--go {
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 7.5px solid transparent;
+  border-right: 7.5px solid transparent;
+  border-bottom: 13px solid var(--mark-go);
+}
+
+/* --- Compare cards ---------------------------------------------------------- */
+
+.an-compare {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.an-lang-card {
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  padding: 22px 22px 24px;
+  min-width: 0;
+}
+
+.an-lang-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.an-floor-label {
+  margin: 0 0 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.an-floor-label--add {
+  color: var(--accent-gold);
+  margin-top: 16px;
+}
+
+.an-floor-chain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 0;
+}
+
+.an-floor-chain li {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.an-floor-chain li:not(:last-child)::after {
+  content: "→";
+  margin-inline: 7px;
+  color: var(--text-3);
+}
+
+.an-floor-chain__add {
+  color: var(--accent-gold);
+}
+
+.an-adds {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.an-adds li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.an-adds li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.44em;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid var(--accent-gold);
+  border-top: 2px solid var(--accent-gold);
+}
+
+/* --- Mechanisms -------------------------------------------------------------- */
+
+.an-mechs {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: an-mech;
+  display: grid;
+  gap: clamp(30px, 5vh, 48px);
+  max-width: 52rem;
+}
+
+.an-mechs > li {
+  counter-increment: an-mech;
+  position: relative;
+  padding-left: 56px;
+  min-width: 0;
+}
+
+.an-mechs > li::before {
+  content: counter(an-mech, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 4px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold);
+}
+
+.an-mechs h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.an-mechs > li > p {
+  margin: 9px 0 0;
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+.an-beforeafter {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.an-codefig {
+  margin: 0;
+  min-width: 0;
+}
+
+.an-codefig > figcaption:not(.an-artifact-note) {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+
+.an-codefig--after > figcaption {
+  color: var(--accent-gold);
+}
+
+.an-code {
+  margin: 0;
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.an-code code {
+  font: inherit;
+  color: inherit;
+  white-space: pre;
+}
+
+.an-codefig--after .an-code {
+  border-color: var(--an-gold-line);
+}
+
+.an-beforeafter .an-code {
+  font-size: 11.5px;
+}
+
+.an-code__hl {
+  color: var(--accent-gold);
+}
+
+.an-artifact-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-3);
+  max-width: 44rem;
+}
+
+.an-codefig--baseline {
+  max-width: 24rem;
+}
+
+.an-mechs > li > .an-codefig {
+  margin-top: 18px;
+}
+
+.an-tagrows {
+  margin-top: 18px;
+  display: grid;
+  gap: 7px;
+}
+
+.an-tagrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.an-tagrow code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+/* --- Family -------------------------------------------------------------------- */
+
+.an-family {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.an-family__card p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.an-family__card h3 {
+  margin-bottom: 10px;
+}
+
+.an-family__tag {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* --- Dogfood -------------------------------------------------------------------- */
+
+.an-doglist {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  max-width: 48rem;
+}
+
+.an-doglist li {
+  position: relative;
+  padding: 14px 18px 14px 40px;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.an-doglist li::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  width: 9px;
+  height: 9px;
+  border-left: 2px solid var(--accent-gold);
+  border-top: 2px solid var(--accent-gold);
+}
+
+/* --- Status ----------------------------------------------------------------------- */
+
+.an-status-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.an-status-col {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.an-status-col h3 {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.an-status-col--0 {
+  border-color: var(--an-gold-line);
+}
+
+.an-status-col--0 h3 {
+  color: var(--accent-gold);
+}
+
+.an-status-col--1 h3 {
+  color: var(--text-2);
+}
+
+.an-status-col--2 h3 {
+  color: var(--text-3);
+}
+
+.an-status-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.an-status-col li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.58;
+  color: var(--text-2);
+}
+
+.an-status-col li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 7px;
+  height: 2px;
+  background: var(--text-3);
+}
+
+.an-status-col--0 li::before {
+  background: var(--accent-gold);
+}
+
+.an-status-tail {
+  margin: 20px 0 0;
+  max-width: 46rem;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 14px;
+}
+
+/* --- Start ------------------------------------------------------------------------- */
+
+.an-steps {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: an-step;
+  max-width: 46rem;
+  display: grid;
+  gap: 22px;
+}
+
+.an-steps li {
+  counter-increment: an-step;
+  position: relative;
+  padding-left: 52px;
+  min-width: 0;
+}
+
+.an-steps li::before {
+  content: counter(an-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold);
+}
+
+.an-steps h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.an-steps p {
+  margin: 7px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* As on the VibeVM page, the step commands span their column. */
+.an-cmd {
+  display: flex;
+}
+
+.an-link {
+  color: var(--accent-gold);
+  transition: color 0.2s ease;
+}
+
+.an-link:hover {
+  color: var(--accent-gold-bright);
+}
+
+.an-cta-links {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.an-ties {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.an-tie {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.an-tie b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.an-tie p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.an-tie__link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.an-tie--vibevm {
+  background:
+    radial-gradient(
+      70% 60% at 80% 0%,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      transparent 60%
+    ),
+    var(--bg-raise);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.an-tie--vibevm:hover {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.an-tie--vibevm .an-tie__link {
+  color: var(--accent);
+}
+
+.an-tie--zap {
+  background:
+    radial-gradient(
+      70% 60% at 80% 0%,
+      color-mix(in srgb, var(--accent-zap) 9%, transparent),
+      transparent 60%
+    ),
+    var(--zap-surface);
+  border-color: color-mix(in srgb, var(--accent-zap) 30%, transparent);
+}
+
+.an-tie--zap:hover {
+  border-color: color-mix(in srgb, var(--accent-zap) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.an-tie--zap .an-tie__link {
+  color: var(--accent-zap);
+}
+
+/* --- Summary --------------------------------------------------------------------------- */
+
+.an-summary-wrap {
+  padding-bottom: clamp(56px, 10vh, 110px);
+}
+
+.an-summary {
+  margin: 0;
+  max-width: 48rem;
+  border-left: 3px solid var(--accent-gold);
+  padding: 6px 0 6px 24px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.an-summary code {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  color: var(--accent-gold);
+  background: color-mix(in srgb, var(--accent-gold) 13%, transparent);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* --- The blueprint ----------------------------------------------------------------------- */
+
+.an-projection__cross path {
+  stroke: var(--text);
+  opacity: 0.09;
+}
+
+.an-projection__floor {
+  stroke: var(--accent-gold);
+  stroke-width: 1.5;
+  opacity: 0.55;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: an-draw 1.1s ease forwards 0.15s;
+}
+
+.an-projection__tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+.an-projection__exit {
+  stroke: var(--accent-gold);
+  stroke-width: 2;
+}
+
+.an-projection__halo {
+  stroke: var(--an-gold-line);
+  stroke-width: 1.4;
+}
+
+.an-projection__core-body {
+  fill: var(--accent-gold);
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: an-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards 0.1s;
+}
+
+.an-projection__hair {
+  stroke: var(--text);
+  opacity: 0.16;
+}
+
+.an-projection__ray {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: an-draw 0.8s ease forwards;
+  animation-delay: var(--d, 0.3s);
+}
+
+.an-projection__station .an-projection__mark,
+.an-projection__station .an-projection__dots,
+.an-projection__station .an-projection__brackets {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: an-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: var(--d, 0.6s);
+}
+
+.an-projection__station .an-projection__brackets {
+  animation-name: an-clamp;
+}
+
+.an-projection__mark--rust {
+  fill: var(--mark-rust);
+}
+
+.an-projection__mark--ts {
+  stroke: var(--mark-ts);
+  stroke-width: 2.25;
+  fill: var(--bg-raise);
+}
+
+.an-projection__mark--go {
+  fill: color-mix(in srgb, var(--mark-go) 22%, transparent);
+  stroke: var(--mark-go);
+  stroke-width: 2;
+}
+
+.an-projection__dot--r {
+  fill: var(--text);
+  opacity: 0.8;
+}
+
+.an-projection__dot--t {
+  fill: var(--mark-ts);
+  opacity: 0.9;
+}
+
+.an-projection__dot--g {
+  fill: var(--text);
+  opacity: 0.85;
+}
+
+.an-projection__bracket {
+  stroke: var(--accent-gold);
+  stroke-width: 2.25;
+}
+
+.an-projection__drop {
+  stroke: var(--text);
+  opacity: 0.12;
+  stroke-dasharray: 2 6;
+}
+
+@keyframes an-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes an-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes an-clamp {
+  from {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Responsive ------------------------------------------------------------------------- */
+
+@media (min-width: 861px) {
+  .an-beforeafter {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 1020px) {
+  .an-compare,
+  .an-family,
+  .an-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .an-arch {
+    flex-direction: column;
+  }
+  .an-arch__join {
+    flex-basis: auto;
+    width: 40px;
+    height: 32px;
+    margin-left: 30px;
+  }
+  .an-arch__join i {
+    width: 0;
+    height: 100%;
+    border-top: 0;
+    border-left: 1px dashed var(--line-strong);
+  }
+  .an-arch__join--arrow i::after {
+    right: auto;
+    top: auto;
+    left: -4px;
+    bottom: -1px;
+    border: 4px solid transparent;
+    border-top-color: var(--accent-gold);
+  }
+}
+
+@media (max-width: 860px) {
+  .an-split {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .an-law__grid {
+    grid-template-columns: 1fr;
+  }
+  .an-envelope-fig {
+    max-width: 300px;
+    margin-inline: 0;
+  }
+  .an-ties {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .an-mechs > li,
+  .an-steps li {
+    padding-left: 40px;
+  }
+  .an-summary {
+    padding-left: 18px;
+  }
+}
+
+/* --- Motion safety ---------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .an-projection__floor,
+  .an-projection__ray {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .an-projection__core-body,
+  .an-projection__station .an-projection__mark,
+  .an-projection__station .an-projection__dots,
+  .an-projection__station .an-projection__brackets {
+    animation: none;
+    opacity: 1;
+  }
+  .an-tie:hover {
+    transform: none;
+  }
+}

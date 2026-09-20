@@ -10,7 +10,7 @@
     <assert>vibe check --path vibevm/vibepacks/org.acme/static-site/v0.1.0 --quiet</assert>
   </prompt>
   <what-happens title="Что происходит">
-    <p>Агент создаёт оба слота через `vibe init package`, задаёт их виды в [манифестах](../glossary/index.xml#manifest), пишет спецификацию feat, критерии приёмки и требование [возможности](../glossary/index.xml#capability), пишет описание stack, его соглашения и возможность, которую он предоставляет, и проверяет каждый. Когда проект позже ставит feat, резолвер ищет пакет, предоставляющий `ui:page-host`, среди stack-пакетов проекта; stack ему подходит, и двое сопоставляются, хотя ни один не называет другого.</p>
+    <p>Агент создаёт оба слота через `vibe init package`, задаёт их виды в [манифестах](../glossary/index.xml#manifest), пишет спецификацию feat, критерии приёмки и требование [возможности](../glossary/index.xml#capability) (*capability*), пишет описание stack, его соглашения и возможность, которую он предоставляет, и проверяет каждый. Когда проект позже ставит feat, резолвер ищет пакет, предоставляющий `ui:page-host`, среди stack-пакетов проекта; stack ему подходит, и двое сопоставляются, хотя ни один не называет другого.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#SHAPE-REGISTRY-ARRAY"/>
   </what-happens>
   <a-feat title="Feat">
@@ -32,7 +32,7 @@
       <tr><td>`vibevm/vibespecs/stacks/&lt;name&gt;/conventions.md`, `tooling.md`, `deployment.md`</td><td>именование и раскладка, команды сборки и тестов, как сборка поставляется</td></tr>
       <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>необязательный фрагмент, который показывает активный stack на старте сессии</td></tr>
     </table>
-    <p>Stack может также привязать в манифесте [вклады](../glossary/index.xml#contribution) жизненного цикла, чтобы `vibe build` и `vibe test` в проекте-потребителе запускали тулчейн stack без дополнительной настройки.</p>
+    <p>Stack может также привязать в манифесте [вклады](../glossary/index.xml#contribution) (*contribution*) жизненного цикла, чтобы `vibe build` и `vibe test` в проекте-потребителе запускали тулчейн stack без дополнительной настройки.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET"/>
   </a-stack>
   <capabilities title="Возможности">

@@ -88,7 +88,7 @@
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
-    <p>[Навык](../glossary/index.xml#skill) — секция манифеста, а не отдельный вид. `include` сужает, какие файлы из `path` проецируются в папку навыков агента, а его отсутствие проецирует всё дерево. Навык может взять своё тело из объявленного `[[embedded_source]]` и добавить ресурсы под папкой `references/`, с тем же отбором include и теми же проверками обхода.</p>
+    <p>[Навык](../glossary/index.xml#skill) (*skill*) — секция манифеста, а не отдельный вид. `include` сужает, какие файлы из `path` проецируются в папку навыков агента, а его отсутствие проецирует всё дерево. Навык может взять своё тело из объявленного `[[embedded_source]]` и добавить ресурсы под папкой `references/`, с тем же отбором include и теми же проверками обхода.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-SHAPE"/>
@@ -115,6 +115,6 @@
   </documentation-tables>
   <example-manifest title="Полный пример">
     <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs-ru"/>
-    <p>Манифест этого перевода, сгенерированный из самого пакета, показывает пакет `doc` с карточкой, [предметом](../glossary/index.xml#subject) и таблицей `[translates]`, которая называет источник.</p>
+    <p>Манифест этого перевода, сгенерированный из самого пакета, показывает пакет `doc` с карточкой, [предметом](../glossary/index.xml#subject) (*subject*) и таблицей `[translates]`, которая называет источник.</p>
   </example-manifest>
 </spec>
