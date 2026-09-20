@@ -21,6 +21,7 @@ pub fn select_binary(
     ctx: &output::Context,
     application: &ResolvedApplication,
     from_source: bool,
+    binary_only: bool,
     offline: bool,
     progress: &Progress,
 ) -> Result<Option<SelectedBinary>> {
@@ -36,7 +37,8 @@ pub fn select_binary(
     let Some(target) = matching_target(&index, &application.application)? else {
         return Ok(None);
     };
-    if source_differs(target, application.source.as_ref())
+    if !binary_only
+        && source_differs(target, application.source.as_ref())
         && !ctx.is_json()
         && !ctx.is_unattended()
         && console::user_attended()

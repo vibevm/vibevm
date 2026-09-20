@@ -221,10 +221,11 @@ fn failed_index_commit_after_source_transition_restores_binary_bytes() {
     publication.commit();
     let original_cmd = fs::read(settings.join("opt/bin/demo.cmd")).unwrap();
     let original_receipt = fs::read(&management.entry).unwrap();
-    let suspended = suspend(&management).unwrap();
+    let suspended = suspend(&host, &management).unwrap();
 
     let cmd = settings.join("opt/bin/demo.cmd");
     let ps1 = settings.join("opt/bin/demo.ps1");
+    fs::create_dir_all(host.join("management")).unwrap();
     fs::write(&cmd, b"@echo source\r\n").unwrap();
     fs::write(&ps1, b"Write-Output source\r\n").unwrap();
     fs::write(host.join("management/binary.json"), b"source replacement").unwrap();
@@ -242,4 +243,38 @@ fn failed_index_commit_after_source_transition_restores_binary_bytes() {
     suspended.rollback_after_source(&source).unwrap();
     assert_eq!(fs::read(cmd).unwrap(), original_cmd);
     assert_eq!(fs::read(management.entry).unwrap(), original_receipt);
+}
+
+#[test]
+fn successful_source_transition_gets_a_clean_host_and_retires_binary_backup() {
+    let temp = tempdir().unwrap();
+    let settings = temp.path().join("settings");
+    let host = settings.join("opt/apps/demo");
+    let publication = publish(&settings, &host, verified(temp.path(), 'g'), None, &[]).unwrap();
+    let management = publication.management();
+    publication.commit();
+
+    let suspended = suspend(&host, &management).unwrap();
+    assert!(
+        !host.exists(),
+        "the source updater receives a clean host path"
+    );
+    fs::create_dir_all(&host).unwrap();
+    fs::write(host.join("source-owner.json"), b"owned by source").unwrap();
+    suspended.commit().unwrap();
+
+    assert_eq!(
+        fs::read(host.join("source-owner.json")).unwrap(),
+        b"owned by source"
+    );
+    assert!(!settings.join("opt/bin/demo.cmd").exists());
+    assert!(
+        fs::read_dir(settings.join("opt/apps"))
+            .unwrap()
+            .all(|entry| !entry
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .contains("suspended"))
+    );
 }

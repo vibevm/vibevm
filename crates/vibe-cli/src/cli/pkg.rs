@@ -466,6 +466,22 @@ pub struct UpdateArgs {
     #[arg(long, requires = "global")]
     pub from_source: bool,
 
+    /// Global-application developer shorthand: resolve from this checkout's
+    /// `vibevm/vibepacks`, force the source implementation, and stay offline.
+    /// Equivalent to `--from-source --registry <root>/vibevm/vibepacks --offline`.
+    #[arg(long, requires = "global")]
+    pub local_source: bool,
+
+    /// For a global application, require the verified published binary.
+    /// Refuse instead of falling back to source when this platform has no
+    /// valid distribution.
+    #[arg(
+        long,
+        requires = "global",
+        conflicts_with_all = ["from_source", "local_source"]
+    )]
+    pub binary: bool,
+
     /// Explicit local source registry for a global application update.
     #[arg(long)]
     pub registry: Option<PathBuf>,

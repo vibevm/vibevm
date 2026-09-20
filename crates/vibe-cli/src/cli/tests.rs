@@ -198,6 +198,52 @@ fn local_source_is_one_global_application_flag() {
 }
 
 #[test]
+fn update_accepts_the_same_local_source_shorthand() {
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "update",
+        "-g",
+        "org.vibevm.zap/zap",
+        "--local-source",
+    ])
+    .expect("parse local source update");
+    let Command::Update(args) = cli.command else {
+        panic!("argv did not parse to update");
+    };
+    assert!(args.global);
+    assert!(args.local_source);
+    assert!(
+        !args.from_source,
+        "the application boundary expands the shorthand"
+    );
+    assert!(args.registry.is_none());
+}
+
+#[test]
+fn global_update_can_explicitly_require_the_published_binary() {
+    let cli = Cli::try_parse_from(["vibe", "update", "-g", "org.vibevm.zap/zap", "--binary"])
+        .expect("parse binary application update");
+    let Command::Update(args) = cli.command else {
+        panic!("argv did not parse to update");
+    };
+    assert!(args.binary);
+    assert!(!args.from_source);
+    assert!(!args.local_source);
+
+    assert!(
+        Cli::try_parse_from([
+            "vibe",
+            "update",
+            "-g",
+            "org.vibevm.zap/zap",
+            "--binary",
+            "--local-source",
+        ])
+        .is_err()
+    );
+}
+
+#[test]
 fn run_keeps_arguments_after_the_separator() {
     let cli = Cli::try_parse_from([
         "vibe",

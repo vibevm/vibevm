@@ -17,7 +17,15 @@ use super::model::{ApplicationLauncherOwnership, ManagementEntry, ManagementRunt
 const MANAGEMENT_PROTOCOL: &str = "vibe-application-binary-management/1";
 
 pub struct SuspendedBinary {
-    files: Vec<(PathBuf, Vec<u8>)>,
+    host_root: PathBuf,
+    host_backup: PathBuf,
+    launchers: Vec<SuspendedFile>,
+}
+
+struct SuspendedFile {
+    path: PathBuf,
+    bytes: Vec<u8>,
+    permissions: fs::Permissions,
 }
 
 pub struct BinaryPublication {
@@ -41,8 +49,15 @@ impl BinaryPublication {
     }
 }
 
-pub fn suspend(entry: &ManagementEntry) -> Result<SuspendedBinary> {
+pub fn suspend(host_root: &Path, entry: &ManagementEntry) -> Result<SuspendedBinary> {
     let management = read_management(entry)?;
+    if !entry.entry.starts_with(host_root) {
+        bail!(
+            "binary application management entry `{}` is outside host `{}`",
+            entry.entry.display(),
+            host_root.display()
+        );
+    }
     for launcher in &management.launchers {
         if hash_file(&launcher.destination)? != launcher.sha256 {
             bail!(
@@ -51,51 +66,70 @@ pub fn suspend(entry: &ManagementEntry) -> Result<SuspendedBinary> {
             );
         }
     }
-    let mut paths: Vec<_> = management
+    let mut launchers = Vec::new();
+    for path in management
         .launchers
         .iter()
         .map(|value| value.destination.clone())
-        .collect();
-    paths.push(entry.entry.clone());
-    paths.push(
-        entry
-            .entry
-            .with_file_name(stable_launcher_name(&management)),
-    );
-    let mut files = Vec::new();
-    for path in paths {
+    {
+        let metadata = fs::metadata(&path)
+            .with_context(|| format!("reading binary-owned file `{}`", path.display()))?;
         let bytes = fs::read(&path)
             .with_context(|| format!("reading binary-owned file `{}`", path.display()))?;
-        files.push((path, bytes));
+        launchers.push(SuspendedFile {
+            path,
+            bytes,
+            permissions: metadata.permissions(),
+        });
     }
-    for (removed, (path, _)) in files.iter().enumerate() {
-        if let Err(error) = fs::remove_file(path) {
-            for (restore, bytes) in files[..removed].iter().rev() {
-                let _ = fs::write(restore, bytes);
+    let name = host_root
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| anyhow::anyhow!("binary application host has no portable name"))?;
+    let host_backup =
+        host_root.with_file_name(format!(".{name}-binary-suspended-{}", std::process::id()));
+    if host_backup.exists() {
+        bail!(
+            "binary application transition backup already exists at `{}`",
+            host_backup.display()
+        );
+    }
+    fs::rename(host_root, &host_backup).with_context(|| {
+        format!(
+            "suspending binary application host `{}`",
+            host_root.display()
+        )
+    })?;
+    for (removed, file) in launchers.iter().enumerate() {
+        if let Err(error) = fs::remove_file(&file.path) {
+            for restore in launchers[..removed].iter().rev() {
+                let _ = write_suspended_file(restore);
             }
-            return Err(error)
-                .with_context(|| format!("suspending binary-owned file `{}`", path.display()));
+            let _ = fs::rename(&host_backup, host_root);
+            return Err(error).with_context(|| {
+                format!("suspending binary-owned file `{}`", file.path.display())
+            });
         }
     }
-    Ok(SuspendedBinary { files })
+    Ok(SuspendedBinary {
+        host_root: host_root.to_path_buf(),
+        host_backup,
+        launchers,
+    })
 }
 
 impl SuspendedBinary {
     pub fn restore(self) -> Result<()> {
-        for (path, bytes) in self.files {
-            if path.exists() {
-                if fs::read(&path)? == bytes {
-                    continue;
-                }
-                bail!(
-                    "cannot restore binary application because `{}` was replaced",
-                    path.display()
-                );
-            }
-            fs::write(&path, bytes)
-                .with_context(|| format!("restoring binary-owned file `{}`", path.display()))?;
-        }
-        Ok(())
+        self.restore_host_and_launchers()
+    }
+
+    pub fn commit(self) -> Result<()> {
+        fs::remove_dir_all(&self.host_backup).with_context(|| {
+            format!(
+                "removing retired binary application host `{}`",
+                self.host_backup.display()
+            )
+        })
     }
 
     pub fn rollback_after_source(
@@ -111,15 +145,54 @@ impl SuspendedBinary {
             }
             fs::remove_file(&launcher.destination)?;
         }
-        for (path, _) in &self.files {
-            if path.exists() {
-                fs::remove_file(path).with_context(|| {
-                    format!("removing replacement application file `{}`", path.display())
+        self.restore_host_and_launchers()
+    }
+
+    fn restore_host_and_launchers(self) -> Result<()> {
+        if !self.host_backup.is_dir() {
+            bail!(
+                "cannot restore binary application because transition backup `{}` is unavailable",
+                self.host_backup.display()
+            );
+        }
+        if self.host_root.exists() {
+            fs::remove_dir_all(&self.host_root).with_context(|| {
+                format!(
+                    "removing replacement application host `{}`",
+                    self.host_root.display()
+                )
+            })?;
+        }
+        fs::rename(&self.host_backup, &self.host_root).with_context(|| {
+            format!(
+                "restoring binary application host `{}`",
+                self.host_root.display()
+            )
+        })?;
+        for file in &self.launchers {
+            if file.path.exists() {
+                fs::remove_file(&file.path).with_context(|| {
+                    format!(
+                        "removing replacement application file `{}`",
+                        file.path.display()
+                    )
                 })?;
             }
+            write_suspended_file(file)?;
         }
-        self.restore()
+        Ok(())
     }
+}
+
+fn write_suspended_file(file: &SuspendedFile) -> Result<()> {
+    fs::write(&file.path, &file.bytes)
+        .with_context(|| format!("restoring binary-owned file `{}`", file.path.display()))?;
+    fs::set_permissions(&file.path, file.permissions.clone()).with_context(|| {
+        format!(
+            "restoring permissions for binary-owned file `{}`",
+            file.path.display()
+        )
+    })
 }
 
 pub fn publish(
@@ -251,10 +324,6 @@ pub fn publish(
         launchers: public_launchers,
         transaction,
     })
-}
-
-fn stable_launcher_name(management: &BinaryManagement) -> &'static str {
-    stable_launcher_name_for(&management.bundle_entry)
 }
 
 fn stable_launcher_name_for(bundle_entry: &Path) -> &'static str {

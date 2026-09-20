@@ -39,7 +39,7 @@ pub fn install(
     root_offline: bool,
 ) -> Result<()> {
     let progress = ctx.progress();
-    local_source::expand(&mut args)?;
+    local_source::expand_install(&mut args)?;
     validate_install_args(&args)?;
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
@@ -69,6 +69,7 @@ pub fn install(
         ApplicationOperation::Install,
         offline,
         args.from_source,
+        false,
         prior,
         &progress,
     )?;
@@ -98,6 +99,9 @@ pub fn install(
     if let Some(publication) = applied.publication.take() {
         publication.commit();
     }
+    if let Some(suspended) = applied.suspended.take() {
+        suspended.commit()?;
+    }
     render(
         ctx,
         "install",
@@ -110,11 +114,12 @@ pub fn install(
 
 pub fn update(
     ctx: &output::Context,
-    args: UpdateArgs,
+    mut args: UpdateArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
     let progress = ctx.progress();
+    let offline = root_offline || local_source::expand_update(&mut args)?;
     validate_update_args(&args)?;
     let spelling = &args.packages[0];
     let requested = qualified_ref(spelling)?;
@@ -127,7 +132,7 @@ pub fn update(
         args.registry.as_deref(),
         embedded_root.as_deref(),
         spelling,
-        root_offline,
+        offline,
         &progress,
     )?;
     if resolved.application.id != prior.application.id {
@@ -141,8 +146,9 @@ pub fn update(
         prior.host_root.clone(),
         resolved,
         ApplicationOperation::Update,
-        root_offline,
+        offline,
         args.from_source,
+        args.binary,
         Some(&prior),
         &progress,
     )?;
@@ -171,6 +177,9 @@ pub fn update(
     recording.finish();
     if let Some(publication) = applied.publication.take() {
         publication.commit();
+    }
+    if let Some(suspended) = applied.suspended.take() {
+        suspended.commit()?;
     }
     render(
         ctx,
@@ -340,12 +349,13 @@ fn apply(
     operation: ApplicationOperation,
     offline: bool,
     from_source: bool,
+    binary_only: bool,
     prior: Option<&ApplicationRecord>,
     progress: &Progress,
 ) -> Result<AppliedApplication> {
     let active_prior = prior.filter(|record| record.status == ApplicationStatus::Ready);
     if let Some(selected) =
-        selection::select_binary(ctx, &resolved, from_source, offline, progress)?
+        selection::select_binary(ctx, &resolved, from_source, binary_only, offline, progress)?
     {
         let target = selected.target;
         std::fs::create_dir_all(&host)?;
@@ -395,11 +405,23 @@ fn apply(
             });
         }
     }
+    if binary_only {
+        bail!(
+            "no verified published binary is available for this application and platform; remove `--binary` to permit source fallback"
+        );
+    }
     let resolved = resolved.materialize_source(settings, offline, progress)?;
     let (installer_entry, installer_root, registry_root) = resolved.source_runtime()?;
     let registry_root = Some(registry_root.to_path_buf());
+    let provider_operation = if active_prior
+        .is_some_and(|record| record.management.runtime == model::ManagementRuntime::Builtin)
+    {
+        ApplicationOperation::Install
+    } else {
+        operation
+    };
     let context = context(
-        operation,
+        provider_operation,
         resolved.application.clone(),
         settings,
         host,
@@ -410,7 +432,7 @@ fn apply(
     let suspension = progress.task("Preparing source application transition");
     let suspended = active_prior
         .filter(|record| record.management.runtime == model::ManagementRuntime::Builtin)
-        .map(|record| binary::suspend(&record.management))
+        .map(|record| binary::suspend(&record.host_root, &record.management))
         .transpose();
     let suspended = match suspended {
         Ok(Some(suspended)) => {
@@ -575,7 +597,11 @@ fn validate_update_args(args: &UpdateArgs) -> Result<()> {
         bail!("global update requires exactly one fully qualified application package");
     }
     qualified_ref(&args.packages[0])?;
-    if args.path != Path::new(".") || args.exact || args.auth_required || args.trace_compile {
+    if (!args.local_source && args.path != Path::new("."))
+        || args.exact
+        || args.auth_required
+        || args.trace_compile
+    {
         bail!("global update received project-only package flags");
     }
     Ok(())
