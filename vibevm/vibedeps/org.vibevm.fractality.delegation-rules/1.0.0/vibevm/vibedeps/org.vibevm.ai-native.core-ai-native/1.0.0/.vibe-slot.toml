@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:73bf90ad4897bc577bd8a1b8c811c29e7b3086032c3797ffcc90e1acb3fd3d49"
+source_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
 spec_format = "mixed"
 
 [[file]]
@@ -340,7 +340,7 @@ sha256 = "3a47f08375ed86c095e1dc2116c24f331e59055449cf85c23791445e08eebbcc"
 
 [[file]]
 path = "specmap.toml"
-sha256 = "ff36c24081285be5937206cca15a06087575b00029268b391614ed678d3dfa13"
+sha256 = "22091fa5a34fbccf307da78ee9d8558c89166434f7b52cd39b507138cbc14d31"
 
 [[file]]
 path = "vibe.toml"

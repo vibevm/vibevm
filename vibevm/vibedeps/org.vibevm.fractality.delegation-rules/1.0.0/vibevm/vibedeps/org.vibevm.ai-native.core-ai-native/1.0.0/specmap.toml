@@ -17,7 +17,7 @@ namespace = "core-ai-native"
 scan_roots = ["crates/*"]
 
 # The Discipline corpus (manifesto, cards format, playbooks, mechanisms).
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 # No repo-root spec document here (the consumer hosts VIBEVM-SPEC.md).
 root_spec_docs = []

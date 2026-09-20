@@ -9,6 +9,7 @@ authors = ["Oleg Chirukhin"]
 
 [requires.packages]
 "flow:org.vibevm.world/omnichannel" = "^1.0.0"
+"org.vibevm.doc/web" = "^1.0.0"
 "stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
 "stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.0"
 
@@ -27,13 +28,6 @@ exclude = [
   "org.vibevm.world/wal",
   "org.vibevm.world/wal-specspaces",
 ]
-
-# redbook@1 is immutable and its dormant wal-specspaces member fragment names
-# the WAL concept. This consumer deliberately excludes that whole continuity
-# family in favour of multi-user-planning, so silence only that known legacy
-# concept warning at the root; no package bytes or edition roster are rewritten.
-[visibility]
-ignore-concept-warnings = ["WAL"]
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of packages it authors: flow:multi-user-planning above resolves from
@@ -58,3 +52,10 @@ url = "https://github.com/vibespecs"
 name = "vibespecs-gitverse"
 url = "https://gitverse.ru/vibespecs"
 naming = "name"
+
+# redbook@1 is immutable and its dormant wal-specspaces member fragment names
+# the WAL concept. This consumer deliberately excludes that whole continuity
+# family in favour of multi-user-planning, so silence only that known legacy
+# concept warning at the root; no package bytes or edition roster are rewritten.
+[visibility]
+ignore-concept-warnings = ["WAL"]

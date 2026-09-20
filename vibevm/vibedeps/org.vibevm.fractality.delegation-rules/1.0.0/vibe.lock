@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-09-10T17:44:48Z"
+generated_at = "2026-09-10T18:33:15Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.world/redbook@^1.0.0",
@@ -62,7 +62,7 @@ name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
-content_hash = "sha256:73bf90ad4897bc577bd8a1b8c811c29e7b3086032c3797ffcc90e1acb3fd3d49"
+content_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "registry"
@@ -73,7 +73,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
-content_hash = "sha256:48ac92478ef72c74c66a2300aeb5ea3c27dcfd34669230068f17635d03fc8aa0"
+content_hash = "sha256:ddfe01d8b1b7c2694ef6409276873c10b6f51fe98c14faf774dbaadde0aa8ab4"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
@@ -85,7 +85,7 @@ name = "rust-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
-content_hash = "sha256:98d7feeed0ce1411a78d900b0d353b0e5216bec5b5004bf92c469b50d715af5a"
+content_hash = "sha256:dc5547b64d48e3c83ecd5e661fa43a9110eff078797136c244befa2c15d3484e"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"
