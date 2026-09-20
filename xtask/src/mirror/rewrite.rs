@@ -112,10 +112,10 @@ fn configured_ref(full_ref: &str) -> Result<&str> {
         if valid_short_ref(branch) {
             return Ok(branch);
         }
-    } else if let Some(tag) = full_ref.strip_prefix("refs/tags/") {
-        if valid_short_ref(tag) {
-            return Ok(tag);
-        }
+    } else if let Some(tag) = full_ref.strip_prefix("refs/tags/")
+        && valid_short_ref(tag)
+    {
+        return Ok(tag);
     }
     bail!("--ref must be one full refs/heads/NAME or refs/tags/NAME spelling")
 }

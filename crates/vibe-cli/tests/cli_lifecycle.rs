@@ -100,11 +100,10 @@ fn deploy_reports_all_nine_canonical_phases_through_the_generated_reader() {
     assert_eq!(report.steps.len(), 9);
     assert_eq!(status(&report, "validate"), "ok");
     assert_eq!(status(&report, "install"), "fresh");
-    for phase in [
-        "generate", "build", "test", "create", "verify", "package", "deploy",
-    ] {
-        assert_eq!(status(&report, phase), "no-op");
+    for phase in ["generate", "build", "test", "create", "package", "deploy"] {
+        assert_eq!(status(&report, phase), "no-op", "phase {phase}");
     }
+    assert_eq!(status(&report, "verify"), "ok");
     let state: LifecycleState =
         toml::from_str(&fs::read_to_string(project.path().join(".vibe/lifecycle.toml")).unwrap())
             .unwrap();
