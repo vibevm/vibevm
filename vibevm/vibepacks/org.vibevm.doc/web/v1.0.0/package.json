@@ -14,7 +14,9 @@
     "audit:contrast": "node design/audit/contrast.mjs",
     "build:static": "node tools/build.mjs static",
     "build:embedded": "node tools/build.mjs embedded",
-    "test:e2e": "playwright test -c site/tests/playwright.config.ts"
+    "test:e2e": "playwright test -c site/tests/playwright.config.ts",
+    "test:local-launcher": "node --test tooling/local-site/*.test.mjs",
+    "serve:local": "node tooling/local-site/run.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",

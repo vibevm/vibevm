@@ -14,3 +14,11 @@ Two adapters, one code base. `pnpm build:static` prerenders every route at
 `base: "/"` for the server. `pnpm build:embedded` builds only the
 documentation routes at `base: "/doc/"` for the shell `vibe doc serve`
 embeds. The package is published as source: no build output ever enters it.
+
+For local site testing, run `./vibevm-doc.sh` or
+`./vibevm-doc.ps1`. Both install the pinned pnpm dependencies when absent,
+rebuild the static adapter, and serve it on `http://127.0.0.1:4322/`.
+`--no-build` reuses the last build; `--port <number>` selects another loopback
+port. `vibe install -g org.vibevm.doc/web` installs the same entry point as
+`vibevm-doc` (plus the native PowerShell and CMD shims on Windows); a local
+registry can be selected with the ordinary `--registry <path>` flag.

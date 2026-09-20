@@ -27,6 +27,13 @@ What it leaves out: the text of the documentation, which lives in the `doc` pack
 min_vibe_version = "1.1.0"
 requires_kinds = []
 
+[application]
+id = "vibevm-doc"
+installer_package = "org.vibevm.doc/web@=1.0.0"
+runtime = "node"
+entry = "tooling/local-site/application.mjs"
+commands = ["vibevm-doc"]
+
 # The TypeScript discipline the package is authored under: the seven-step
 # floor, the structural gate and the traceability map all come from this
 # family (spec://org.vibevm.core/vibevm/common/PROP-057#STACK-FLOOR).
