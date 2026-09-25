@@ -35,6 +35,186 @@
     );
 }
 
+/* --- The release banner ------------------------------------------------ */
+
+/* The first thing on the page, and a strip rather than a card: it runs
+   the full width of the window under the site's header, a slot through
+   which the page's room shows before the page begins. The panel is the
+   room's own, a little translucent so the glow the page lights in its
+   top corner still reaches through it; one pool of green sits behind the
+   beacon, and a line of light runs along the lower edge, brightest in the
+   middle and gone at both ends, where the room starts.
+
+   The strip draws nothing new. It carries the hero's two figures at the
+   size of a line of type: the ping becomes a beacon, and the trajectory
+   that leaves the orbital map becomes the dotted path from the words to
+   the month, with a spark that runs it. The dots are the orbit rings'
+   own stroke — a round point every nine pixels. */
+
+.wz-soon {
+  position: relative;
+  background:
+    radial-gradient(
+      36% 240% at 10% 50%,
+      color-mix(in srgb, var(--accent-zap) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      28% 220% at 90% 50%,
+      color-mix(in srgb, var(--accent-zap) 5%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--zap-surface) 80%, transparent);
+}
+
+.wz-soon::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent-zap) 55%, transparent) 24%,
+    color-mix(in srgb, var(--accent-zap) 55%, transparent) 76%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.wz-soon__line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-block: 0;
+  padding-block: 16px;
+}
+
+/* The hero's ping at the size of a letter: a lit point with its halo,
+   and two rings leaving it in turn on the orbital map's own curve. */
+.wz-soon__beacon {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-zap);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent-zap) 16%, transparent),
+    0 0 14px color-mix(in srgb, var(--accent-zap) 55%, transparent);
+}
+
+.wz-soon__beacon::before,
+.wz-soon__beacon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--accent-zap-bright);
+  opacity: 0;
+  animation: wz-ping 3.2s ease-out infinite 0.6s;
+}
+
+.wz-soon__beacon::after {
+  animation-delay: 2.2s;
+}
+
+.wz-soon__label {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--accent-zap);
+  white-space: nowrap;
+}
+
+/* The path takes whatever the words and the month leave of the column,
+   so on a wide window it is a long approach and on a phone a short one.
+   Everything on it is drawn in `currentColor`, which is set once here:
+   the dots, the arrowhead, and the mask the dots fade in through as they
+   leave the words. */
+.wz-soon__path {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 40px;
+  height: 12px;
+  color: var(--accent-zap);
+}
+
+.wz-soon__path::before {
+  content: "";
+  position: absolute;
+  inset: 50% 10px auto 0;
+  height: 3px;
+  transform: translateY(-50%);
+  background: radial-gradient(
+      circle,
+      color-mix(in srgb, currentColor 72%, transparent) 0 1px,
+      transparent 1.4px
+    )
+    0 50% / 9px 3px repeat-x;
+  -webkit-mask-image: linear-gradient(90deg, transparent, currentColor 32%);
+  mask-image: linear-gradient(90deg, transparent, currentColor 32%);
+}
+
+/* The arrowhead, which lights for a moment when the spark reaches it —
+   the same period and the same delay as the spark, so the two stay in
+   step for as long as the page is open. */
+.wz-soon__path::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+  animation: wz-soon-arrive 5.6s ease-out infinite 1.4s;
+}
+
+/* The spark: a short stroke of the bright green, faint at its tail and
+   brightest at its head, that runs the path, slows into the arrowhead
+   and goes out there, then rests before the next run. It is drawn at the
+   far end of a layer as long as the path, and the layer is what moves —
+   so the run always ends exactly at the arrow, however long the path.
+   The track clips it, so it never crosses the words or the month. */
+.wz-soon__path i {
+  position: absolute;
+  inset: 50% 10px auto 0;
+  height: 2px;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+.wz-soon__path i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent calc(100% - 56px),
+    var(--accent-zap-bright)
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+  animation: wz-soon-run 5.6s cubic-bezier(0.45, 0, 0.25, 1) infinite 1.4s;
+}
+
+.wz-soon__date {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
 /* --- Hero ------------------------------------------------------------- */
 
 .wz-hero {
@@ -615,6 +795,42 @@
   }
 }
 
+/* The spark's layer starts one path-length to the left, where nothing of
+   it shows, and stops at rest, where its head touches the arrow. */
+@keyframes wz-soon-run {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  8% {
+    opacity: 1;
+  }
+  56% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+/* The moment of arrival: 56% of the spark's period. */
+@keyframes wz-soon-arrive {
+  0%,
+  50%,
+  78%,
+  100% {
+    border-color: currentColor;
+    filter: none;
+  }
+  60% {
+    border-color: var(--accent-zap-bright);
+    filter: drop-shadow(0 0 4px var(--accent-zap-bright));
+  }
+}
+
 /* --- Responsive ------------------------------------------------------------- */
 
 @media (max-width: 960px) {
@@ -659,6 +875,20 @@
   .wz-summary {
     padding-left: 18px;
   }
+  .wz-soon__line {
+    gap: 12px;
+    padding-block: 14px;
+  }
+  .wz-soon__label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+  }
+  .wz-soon__path {
+    min-width: 28px;
+  }
+  .wz-soon__date {
+    font-size: 18px;
+  }
 }
 
 /* --- Motion safety ----------------------------------------------------------- */
@@ -682,5 +912,16 @@
   .wz-orbital__ping {
     animation: none;
     opacity: 0;
+  }
+  /* The banner keeps its lit point and its path; what goes is what only
+     exists as motion — the leaving rings and the spark. */
+  .wz-soon__beacon::before,
+  .wz-soon__beacon::after,
+  .wz-soon__path i::after {
+    animation: none;
+    opacity: 0;
+  }
+  .wz-soon__path::after {
+    animation: none;
   }
 }

@@ -16,6 +16,12 @@
  * one. And the first step's link is a locale-relative address, which is
  * why it travels as a flag rather than as a string: a path written into
  * a string table is a path nothing rewrites when the base changes.
+ *
+ * One pair came later than the port: the release banner over the hero
+ * (2026-09-25). Its English is the owner's own words; its Russian is an
+ * adaptation of them rather than a gloss. The month it names is written
+ * once more in machine form, `RELEASE_MONTH`, and the two sit side by
+ * side here so that a date moved in one is seen to be moved in the other.
  */
 
 export type Law = {
@@ -47,6 +53,10 @@ export type Step =
     };
 
 export type Strings = {
+  /** The banner over the hero: what is announced, and when. */
+  readonly soonLabel: string;
+  readonly soonDate: string;
+
   readonly eyebrow: string;
   readonly headlineHtml: string;
   readonly lead: string;
@@ -110,8 +120,17 @@ export const COMMANDS = {
   quicklens: "zap-quicklens",
 } as const;
 
+/**
+ * The month the banner announces, as a `<time datetime>` reads it: the
+ * `soonDate` of both languages, in the one form that has no language.
+ */
+export const RELEASE_MONTH = "2026-10";
+
 export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
   en: {
+    soonLabel: "Coming soon",
+    soonDate: "October 2026",
+
     eyebrow: "org.vibevm.zap · local-first agent workspace",
     headlineHtml: "Your agents, on <em>one map</em>.",
     lead: "Zap is a local workspace for running coding agents in parallel: projects, conversations, questions, managed work, and Git worktrees on one navigable surface. Zap Wayfinder keeps durable state on your machine; Zap Quick Lens opens it in the browser or Electron. Codex, Claude Code, OpenCode, and Qwen Code connect with the logins you already have.",
@@ -253,6 +272,9 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
       "Zap puts projects, agent conversations, questions, managed work, and Git worktrees on one local map. Questions survive restarts, integration passes through your review, and nothing spends a model turn until you press Start. Local preview, in the VibeVM family: <code>vibe install -g org.vibevm.zap/zap</code>.",
   },
   ru: {
+    soonLabel: "Скоро",
+    soonDate: "Октябрь 2026",
+
     eyebrow: "org.vibevm.zap · локальное рабочее пространство агентов",
     headlineHtml: "Все агенты&nbsp;— на&nbsp;<em>одной карте</em>.",
     lead: "Zap — локальное рабочее пространство для параллельной работы кодовых агентов: проекты, переписка, вопросы, управляемые задачи и Git-worktree на одной навигируемой поверхности. Zap Wayfinder держит устойчивое состояние на вашей машине; Zap Quick Lens открывает его в браузере или Electron. Codex, Claude Code, OpenCode и Qwen Code подключаются с теми логинами, которые у вас уже есть.",

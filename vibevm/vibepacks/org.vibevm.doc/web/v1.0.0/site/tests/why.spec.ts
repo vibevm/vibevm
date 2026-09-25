@@ -104,6 +104,36 @@ for (const one of PAGES) {
 }
 
 /**
+ * The Zap page announces its release before anything else.
+ *
+ * The banner is the first thing inside the page — above the hero, under
+ * the site's header — and it names the same month in both languages
+ * twice: once in words for a reader, once in the form a machine reads,
+ * `<time datetime>`. It is a paragraph and not a heading, which is what
+ * keeps the outline test below true: the page's first heading is still
+ * its headline.
+ */
+const RELEASE = [
+  { route: "/why/zap/", label: "Coming soon", date: "October 2026" },
+  { route: "/ru/why/zap/", label: "Скоро", date: "Октябрь 2026" },
+] as const;
+
+for (const one of RELEASE) {
+  test(`${one.route} opens with its release banner`, async ({ page }) => {
+    await page.goto(one.route);
+    const first = page.locator("main .why-page > :first-child");
+    await expect(first).toHaveClass(/\bwz-soon\b/);
+
+    await expect(first.locator(".wz-soon__label")).toHaveText(one.label);
+    const month = first.locator("time");
+    await expect(month).toHaveText(one.date);
+    await expect(month).toHaveAttribute("datetime", "2026-10");
+
+    await expect(first.locator("h1, h2, h3, h4, h5, h6")).toHaveCount(0);
+  });
+}
+
+/**
  * What each page tells a crawler about itself.
  *
  * `canonical` names this address and not the landing; the `hreflang` set

@@ -7,7 +7,7 @@ import { type Locale, localePath } from "../../landing/i18n.ts";
 import shared from "../shared.css?inline";
 import { whyHref } from "../paths.ts";
 import { Orbital, ReadingGoal, ReadingOrder } from "./art.tsx";
-import { COMMANDS, STRINGS } from "./i18n.ts";
+import { COMMANDS, RELEASE_MONTH, STRINGS } from "./i18n.ts";
 import styles from "./styles.css?inline";
 
 export type WhyZapProps = {
@@ -24,6 +24,14 @@ export type WhyZapProps = {
  * graph, four capability cards, five laws on hairlines, the start list
  * with two end-notes, and a closing paragraph.
  *
+ * Over all of it runs one strip the source did not have: the release
+ * banner, added by the owner after the port. It is the first thing in
+ * the page and it borrows the hero's own drawing rather than a new one —
+ * the ping becomes a beacon, and the trajectory that leaves the orbital
+ * map becomes the line that runs from the words to the month. It is a
+ * paragraph, not a heading: the page still opens its outline with its
+ * headline.
+ *
  * The page is drawn in a darker room than the rest of the site — a
  * deep-space ground with its own panels and hairlines — and that is the
  * design and not an accident of the port. In the light theme the room
@@ -32,9 +40,10 @@ export type WhyZapProps = {
  * the page was drawn on and what this site serves by default, is the
  * drawing.
  *
- * Nothing here hydrates. The orbits turn, the trajectory draws itself
- * and the ping expands — all three in CSS, over elements the server
- * already wrote, and all three off for a reader who asked for stillness.
+ * Nothing here hydrates. The orbits turn, the trajectory draws itself,
+ * the ping expands and the banner's spark runs its line — all of it in
+ * CSS, over elements the server already wrote, and all of it off for a
+ * reader who asked for stillness.
  */
 export const WhyZap = component$<WhyZapProps>((props) => {
   useStyles$(shared);
@@ -48,6 +57,19 @@ export const WhyZap = component$<WhyZapProps>((props) => {
 
   return (
     <div class="why-page why-zap">
+      <div class="wz-soon">
+        <p class="why-shell wz-soon__line">
+          <span class="wz-soon__beacon" aria-hidden="true" />
+          <span class="wz-soon__label">{t.soonLabel}</span>
+          <span class="wz-soon__path" aria-hidden="true">
+            <i />
+          </span>
+          <time class="wz-soon__date" dateTime={RELEASE_MONTH}>
+            {t.soonDate}
+          </time>
+        </p>
+      </div>
+
       <section class="wz-hero" aria-labelledby="wz-headline">
         <div class="why-shell wz-hero__grid">
           <div class="wz-hero__copy">
