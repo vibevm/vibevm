@@ -62,6 +62,53 @@
   color: var(--text-2);
 }
 
+/* Where to begin, beside the machine index at the head of a package's
+   page. It is the same pill as the one next to it and the accent is the
+   whole difference: one of the two is what a person came for. */
+.doc-package__start {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  font-size: 0.78rem;
+  color: var(--text);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.doc-package__start:hover {
+  border-color: var(--accent-hover);
+  color: var(--accent);
+}
+
+/* A chapter of the learning path, over the cards of its pages. It spans
+   the shelf's whole row so that the cards under it flow in the shelf's
+   own grid — the heading starts a row and the pages fill it, rather than
+   each chapter becoming a grid of its own width. The heading is the
+   column's heading in the column's own shape, so a reader meets one
+   spelling of a chapter on both. */
+.doc-chapter {
+  grid-column: 1 / -1;
+  margin: 0.9rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.doc-chapter:first-child {
+  margin-top: 0;
+}
+
+.doc-chapter__number {
+  margin-right: 0.45em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
 .doc-package__llms {
   padding: 0.2rem 0.65rem;
   border: 1px solid var(--line);

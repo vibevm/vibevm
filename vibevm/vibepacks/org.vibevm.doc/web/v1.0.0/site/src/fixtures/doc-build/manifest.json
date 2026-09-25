@@ -43,6 +43,23 @@
         "id": "reference",
         "title": "Reference pages"
       }
+    ],
+    "chapters": [
+      {
+        "id": "reading",
+        "title": "Reading a page",
+        "pages": [
+          "guide/every-block"
+        ]
+      },
+      {
+        "id": "tables",
+        "title": "Tables to look things up in",
+        "pages": [
+          "reference/addresses"
+        ],
+        "appendix": true
+      }
     ]
   },
   "pages": [

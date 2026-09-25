@@ -29,7 +29,18 @@ import type {
 import type { Authorship } from "../generated/doc-manifest.ts";
 
 import { bridgeOf } from "./bridge.ts";
-import { contentsOf, type Contents } from "./contents.ts";
+import {
+  pageCards,
+  pathCards,
+  type PageCard,
+  type PathShelf,
+} from "./cards.ts";
+import {
+  contentsOf,
+  neighboursOf,
+  type Contents,
+  type PathNeighbours,
+} from "./contents.ts";
 import {
   catalogueHref,
   docHref,
@@ -242,50 +253,6 @@ export function packageVersionChoices(
   );
 }
 
-/** One page of a documentation, as the «Pages» shelf shows it. */
-export type PageCard = {
-  readonly title: string;
-  readonly href: string;
-  /**
-   * The page's own leading fact, from the manifest. Absent when the page
-   * declares none — in which case the card shows no disclosure at all,
-   * rather than the documentation's abstract under a page's name.
-   */
-  readonly summary?: string;
-};
-
-/**
- * The pages of a documentation as CARDS, which is not the same list as
- * its navigation.
- *
- * The navigation lists the source's pages, in the source's words, in
- * every language: an adaptation in progress is not a smaller manual, and
- * a reader must be told which pages exist before being told which of
- * them have been adapted. A card is the other question — «what is this
- * one about» — so it is the page as the chosen edition HAS it, with the
- * source's text standing in where the adaptation has not reached, which
- * is exactly what the reader will find on opening it.
- *
- * The summary is the page's own leading fact and never the
- * documentation's abstract. They answer different questions and are
- * about different things; the shelf was showing the second under the
- * name of the first, once per page, so every page of a manual claimed to
- * cover the whole of it.
- */
-export function pageCards(library: Library, at: string | null): PageCard[] {
-  return sourceEdition(library).pages.map((declared) => {
-    const document = documentOf(declared.path);
-    const resolved = resolvePage(library, at, document);
-    const page = resolved?.page ?? declared;
-    const summary = page.summary.trim();
-    return {
-      title: page.title,
-      href: docHref(addressOf(library, at, document)),
-      ...(summary.length === 0 ? {} : { summary }),
-    };
-  });
-}
-
 /** The machine surfaces that lie beside a page, as the meta row shows them. */
 export function projectionLinks(address: DocAddress): MetaLink[] {
   return [
@@ -325,6 +292,13 @@ export type PageView = {
   readonly versions: readonly VersionChoice[];
   /** The manual's own pages, grouped as the column beside the text shows them. */
   readonly contents: Contents;
+  /**
+   * Where the learning path leads from this page, when the documentation
+   * declared one and this page stands on it (`##NAV-CHAPTERS-READER`).
+   * `null` is «there is no path to walk from here», which is every page
+   * of every documentation that declared none.
+   */
+  readonly path: PathNeighbours | null;
 };
 
 /** Everything one package page needs, as values. */
@@ -382,6 +356,19 @@ export type PackageView = {
   readonly contents: Contents;
   /** The same pages as `contents`, with what each one is about on them. */
   readonly pages: readonly PageCard[];
+  /**
+   * The same cards again, grouped into the chapters of the declared
+   * learning path, or `null` when the documentation declared none — in
+   * which case the shelf is `pages` in the manifest's order, as it was.
+   */
+  readonly chapters: readonly PathShelf[] | null;
+  /**
+   * Where a reader is asked to begin: the first page of the declared
+   * path, or the first page of the manifest when there is no path
+   * (`##NAV-CHAPTERS-READER`). Absent only for a documentation with no
+   * pages at all, which has nowhere to be opened at.
+   */
+  readonly start?: string;
   readonly llms: string;
   readonly subjects: readonly { package: string; version: string }[];
   readonly adaptations: readonly {
@@ -444,6 +431,7 @@ function pageView(library: Library, address: DocAddress): PageView | null {
     languages: pageLanguageChoices(library, address.document, address.lang),
     versions: versionChoices(library, address),
     contents: contentsOf(library, address.lang, address.document),
+    path: neighboursOf(library, address.lang, address.document),
   };
 }
 
@@ -457,6 +445,15 @@ function packageView(
   const card = here.card;
   const bridge = bridgeOf(card);
   const kind = kindOf(card);
+  const cards = pageCards(library, address.lang);
+  const chapters = pathCards(library, address.lang);
+  /* Where the reader is asked to begin. A declared path says so itself,
+     and its first page is rarely the manifest's first: the manifest is
+     ordered by the layer law, which on the official manual opens with the
+     architecture and reaches installing the product thirty pages later
+     (`##NAV-CHAPTERS`). Without a path the manifest's first page is still
+     the best answer there is. */
+  const start = chapters?.flatMap((one) => one.pages)[0] ?? cards[0];
 
   return {
     kind: "package",
@@ -486,7 +483,9 @@ function packageView(
     ],
     versions: packageVersionChoices(library, address),
     contents: contentsOf(library, address.lang, null),
-    pages: pageCards(library, address.lang),
+    pages: cards,
+    chapters,
+    ...(start === undefined ? {} : { start: start.href }),
     llms: llmsHref(address),
     subjects: card.subjects.map((subject) => ({
       package: subject.package,

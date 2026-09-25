@@ -120,6 +120,8 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
   Pages: "Страницы",
   "In the order the layer law gives them: text that stands still before text that moves with the product.":
     "В порядке закона слоёв: сначала текст, который стоит на месте, затем текст, который движется вместе с продуктом.",
+  "In the order of the learning path": "В порядке учебного пути",
+  "Start here": "Начать отсюда",
   "This documentation has no pages yet.":
     "У этой документации пока нет страниц.",
 
@@ -129,6 +131,18 @@ export const RUSSIAN_CHROME: Readonly<Record<string, string>> = {
   Contents: "Оглавление",
   "On this page": "На этой странице",
   "Rules this page cites": "Правила, которые цитирует эта страница",
+
+  /* The two views of one manual and the path through it. The word
+     «Chapter» stands alone in the table because it stands alone in the
+     document: a caption is the word, the chapter's number and the
+     chapter's own title, and only the first of the three is furniture. */
+  "Contents view": "Вид оглавления",
+  "In order": "По порядку",
+  "By section": "По разделам",
+  "The learning path": "Учебный путь",
+  Chapter: "Глава",
+  Previous: "Назад",
+  Next: "Дальше",
   "Documentation language": "Язык документации",
   Everything: "Все языки",
   Version: "Версия",

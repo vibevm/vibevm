@@ -44,6 +44,17 @@
  * in only where the adaptation has not reached the page, which is
  * exactly the text that address will serve: the link then says what
  * opening it will show, which is the whole job of a label.
+ *
+ * **And there are two orders, for two audiences.** The four rules above
+ * are about the list the manifest gives, which is the layer law's: text
+ * that stands still before text that moves, written for an agent's
+ * prompt cache. A documentation MAY also declare a learning path — the
+ * chapters a person reads it in — and where it has, the column opens on
+ * the path and offers the folders beside it (`##NAV-CHAPTERS`,
+ * `##NAV-CHAPTERS-READER`). Neither order is computed here and neither
+ * moves the other: the path is a list of documents the author wrote
+ * down, and the same rules about names, editions and fallbacks govern
+ * both views of it.
  */
 
 import { docHref } from "./href.ts";
@@ -57,7 +68,15 @@ import {
   type Library,
 } from "./library.ts";
 
-import type { ContentsItem, ContentsSection } from "@vibe-docs/design";
+import type { NavigationChapter } from "../generated/doc-manifest.ts";
+
+import type {
+  ContentsChapter,
+  ContentsItem,
+  ContentsSection,
+  PagerChapter,
+  PagerLink,
+} from "@vibe-docs/design";
 
 /** The manual's pages, grouped the way the column shows them. */
 export type Contents = {
@@ -67,6 +86,13 @@ export type Contents = {
    */
   readonly pinned: readonly ContentsItem[];
   readonly sections: readonly ContentsSection[];
+  /**
+   * The declared learning path, in the order a reader walks it. Empty
+   * when the documentation declared none, which is the column exactly as
+   * it was before a path could be declared — and the one value the
+   * column reads to decide whether to offer the switch at all.
+   */
+  readonly chapters: readonly ContentsChapter[];
 };
 
 /** The folder a document lives in, or the empty string at the root. */
@@ -100,12 +126,198 @@ function titleOf(here: Edition, source: Edition, folder: string): string {
   return fromDirectoryName(folder);
 }
 
+/**
+ * What a chapter of the path is called here, asking the reader's edition
+ * first.
+ *
+ * The ladder is the folders' one rung shorter. A translation names the
+ * chapters of the path it takes from its source and names them by `id`
+ * (`##NAV-CHAPTERS-TRANSLATION`), so a chapter it has not named keeps the
+ * source's words — and there is no third rung, because a chapter has no
+ * directory to fall back on: its title is the only name it has.
+ */
+function chapterTitleOf(here: Edition, chapter: NavigationChapter): string {
+  const named = here.navigation?.chapters?.find((row) => row.id === chapter.id);
+  return named === undefined ? chapter.title : named.title;
+}
+
 /** The edition the reader is at, or the source when there is no such one. */
 function editionAt(library: Library, at: string | null): Edition {
   return (
     editions(library).find((one) => one.segment === at) ??
     sourceEdition(library)
   );
+}
+
+/**
+ * What each page of the source documentation is called where the reader
+ * is standing.
+ *
+ * The list is the source's pages and the words are the edition's:
+ * `resolvePage` is the one place that knows which edition will answer for
+ * an address, so a label and the text behind the link cannot disagree. A
+ * page this edition carries is named in its own words; one it has not
+ * reached resolves to the source's page, which is both the title shown
+ * and the text that address serves.
+ *
+ * It is a map rather than a lookup per entry because the pinned list, the
+ * folders and the chapters all name the same pages, and each of them asks
+ * this question about every page it names.
+ */
+function servedTitles(
+  library: Library,
+  at: string | null,
+): ReadonlyMap<string, string> {
+  const titles = new Map<string, string>();
+  for (const page of sourceEdition(library).pages) {
+    const document = documentOf(page.path);
+    const served = resolvePage(library, at, document);
+    titles.set(document, (served?.page ?? page).title);
+  }
+  return titles;
+}
+
+/** One page of the declared learning path, as the reader will open it. */
+export type PathPage = {
+  /** The document path without its extension, as the path spells it. */
+  readonly document: string;
+  /** Its title, in the words of the edition that will serve it. */
+  readonly label: string;
+  readonly href: string;
+};
+
+/** One chapter of the declared learning path. */
+export type PathChapter = {
+  readonly id: string;
+  /** The number the reader sees, `1`; empty for an appendix chapter. */
+  readonly number: string;
+  readonly title: string;
+  readonly appendix: boolean;
+  readonly pages: readonly PathPage[];
+};
+
+/**
+ * The learning path this documentation declared, chapter by chapter, or
+ * `null` when it declared none (`##NAV-CHAPTERS`).
+ *
+ * `null` and not an empty list, because the two are different answers and
+ * every reader of this function turns on the difference: a documentation
+ * with no path is shown exactly as it was before paths existed, while one
+ * that opened the table and named no chapter has made a statement about
+ * itself. The structure of the path is always the SOURCE's — a
+ * translation takes the path of the documentation it adapts and only
+ * renames its chapters (`##NAV-CHAPTERS-TRANSLATION`) — and the words are
+ * the reader's edition's, one rung at a time, exactly as they are for a
+ * folder and for a page.
+ *
+ * The numbers are the chapters' places in the count, and an appendix
+ * takes no place in it: it is pages a reader looks things up in rather
+ * than reads through, so it is named and not numbered
+ * (`##NAV-CHAPTERS-READER`), and the chapter after it keeps the number it
+ * would have had.
+ *
+ * A chapter's page that names no page of this documentation is passed
+ * over rather than drawn as a dead entry, for the reason a stale pin is:
+ * `vibe check` is where a path that names a missing page is reported, and
+ * a site that rendered a link to nothing would be the second opinion.
+ */
+export function learningPath(
+  library: Library,
+  at: string | null,
+): readonly PathChapter[] | null {
+  const source = sourceEdition(library);
+  const declared = source.navigation?.chapters;
+  if (declared === undefined) return null;
+
+  const here = editionAt(library, at);
+  const titles = servedTitles(library, at);
+  let counted = 0;
+
+  return declared.map((chapter) => {
+    const appendix = chapter.appendix === true;
+    if (!appendix) counted += 1;
+    return {
+      id: chapter.id,
+      number: appendix ? "" : String(counted),
+      title: chapterTitleOf(here, chapter),
+      appendix,
+      pages: chapter.pages
+        .filter((document) => titles.has(document))
+        .map((document) => ({
+          document,
+          label: titles.get(document) ?? document,
+          href: docHref(addressOf(library, at, document)),
+        })),
+    };
+  });
+}
+
+/** Where the path leads from one page of it, in both directions. */
+export type PathNeighbours = {
+  /** Absent on the first page of the path. */
+  readonly previous?: PagerLink;
+  /** Absent on the last. */
+  readonly next?: PagerLink;
+};
+
+/** The chapter a neighbour stands in, as its caption states it. */
+function captionOf(chapter: PathChapter): PagerChapter {
+  return {
+    ...(chapter.appendix ? {} : { number: chapter.number }),
+    title: chapter.title,
+  };
+}
+
+/**
+ * The page before this one on the path and the page after it, or `null`
+ * when there is no path or this page is not on it
+ * (`##NAV-CHAPTERS-READER`).
+ *
+ * The second `null` is not a case `vibe check` allows — a path that
+ * leaves a page of the package out is an error of the package — and it is
+ * answered all the same, because the site renders whatever manifest a
+ * deployment handed it and a page that is off the path has no previous
+ * and no next to show.
+ *
+ * A neighbour carries its chapter only when that chapter is not this
+ * page's. Inside a chapter every page shares it, and printing it on each
+ * would be one heading repeated once per page; at the seam between two it
+ * is the whole point — a reader is being told they are leaving one lesson
+ * for the next.
+ */
+export function neighboursOf(
+  library: Library,
+  at: string | null,
+  document: string,
+): PathNeighbours | null {
+  const path = learningPath(library, at);
+  if (path === null) return null;
+
+  const walked = path.flatMap((chapter) =>
+    chapter.pages.map((page) => ({ page, chapter })),
+  );
+  const standing = walked.findIndex((step) => step.page.document === document);
+  if (standing === -1) return null;
+
+  const here = walked[standing]?.chapter;
+  const link = (
+    step: (typeof walked)[number] | undefined,
+  ): PagerLink | null => {
+    if (step === undefined) return null;
+    const crossing = step.chapter.id !== here?.id;
+    return {
+      href: step.page.href,
+      title: step.page.label,
+      ...(crossing ? { chapter: captionOf(step.chapter) } : {}),
+    };
+  };
+
+  const previous = link(walked[standing - 1]);
+  const next = link(walked[standing + 1]);
+  return {
+    ...(previous === null ? {} : { previous }),
+    ...(next === null ? {} : { next }),
+  };
 }
 
 /**
@@ -129,18 +341,7 @@ export function contentsOf(
     current: document === currentDocument,
   });
 
-  /* The list is the source's pages and the words are the edition's:
-     `resolvePage` is the one place that knows which edition will answer
-     for an address, so the label and the text behind the link cannot
-     disagree. A page this edition carries is named in its own words; one
-     it has not reached resolves to the source's page, which is both the
-     title shown and the text that address serves. */
-  const titles = new Map<string, string>();
-  for (const page of source.pages) {
-    const document = documentOf(page.path);
-    const served = resolvePage(library, at, document);
-    titles.set(document, (served?.page ?? page).title);
-  }
+  const titles = servedTitles(library, at);
 
   /* A pin names a document, and a pin that names no page of this
      documentation is passed over rather than drawn as a dead entry: the
@@ -169,6 +370,16 @@ export function contentsOf(
       id: folder,
       title: folder.length === 0 ? "" : titleOf(here, source, folder),
       items,
+    })),
+    /* The path as the column shows it: the chapters the documentation
+       declared, with the page the reader is on marked in this view too.
+       A documentation that declared none gives the empty list, which is
+       what the column reads as «offer no switch». */
+    chapters: (learningPath(library, at) ?? []).map((chapter) => ({
+      id: chapter.id,
+      number: chapter.number,
+      title: chapter.title,
+      items: chapter.pages.map((page) => entry(page.document, page.label)),
     })),
   };
 }

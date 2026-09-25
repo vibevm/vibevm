@@ -99,6 +99,16 @@ for wave B; the value is the text a person sees. Placeholders are in braces.
 | `settings.reset` | Reset |
 | `reading.return` | Return to where you were |
 | `reading.contents` | Contents |
+| `contents.view` | Contents view |
+| `contents.view.path` | In order |
+| `contents.view.sections` | By section |
+| `contents.chapter` | Chapter |
+| `path.label` | The learning path |
+| `path.previous` | Previous |
+| `path.next` | Next |
+| `pages.order.layer` | In the order the layer law gives them: text that stands still before text that moves with the product. |
+| `pages.order.path` | In the order of the learning path |
+| `pages.start` | Start here |
 | `fallback.notice` | This page is not yet available in {language}. You are reading the {source-language} original. |
 | `fallback.ok` | OK |
 | `example.expected` | Expected output |

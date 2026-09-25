@@ -37,6 +37,13 @@
         "id": "reference",
         "title": "Справочные страницы"
       }
+    ],
+    "chapters": [
+      {
+        "id": "reading",
+        "title": "Как читать страницу",
+        "pages": []
+      }
     ]
   },
   "pages": [

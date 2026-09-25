@@ -36,6 +36,15 @@
   color: var(--text-3);
 }
 
+/* The chapter's place in the path, in the accent and in figures of one
+   width: a column of chapters is a column of numbers, and proportional
+   digits would put every title at a slightly different indent. */
+.contents__number {
+  margin-right: 0.45em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
 .contents__list {
   margin: 0.4rem 0 0;
   padding: 0;
@@ -62,6 +71,73 @@
 .contents__link--current {
   border-left-color: var(--accent);
   color: var(--accent);
+}
+
+/* Which of the two views is showing, decided by the root element and by
+   nothing else.
+
+   The server writes both panes and the switch over them; the reader's
+   choice arrives as `data-contents-view` on `<html>`, stamped before the
+   first stylesheet is parsed. The path is the default
+   (`##NAV-CHAPTERS-READER`), so the ABSENCE of the attribute is the path
+   — which is also what a reader with scripting off gets, and the one
+   rule below says the same thing about the pane and about the pill it
+   belongs to. Everything is scoped to `.contents__nav--path`, because a
+   documentation that declared no path renders one pane and hiding it
+   would leave the column empty. */
+.contents__nav--path > .contents__pane {
+  display: none;
+}
+
+:root:not([data-contents-view="sections"])
+  .contents__nav--path
+  > .contents__pane--path,
+:root[data-contents-view="sections"]
+  .contents__nav--path
+  > .contents__pane--sections {
+  display: block;
+}
+
+/* The switch itself: the design system's pills, in the column's size.
+   It is not the `tab-pills` component — these two buttons select a view
+   of one list rather than one panel out of several, and the pressed one
+   is decided by the stylesheet rather than by the markup — but it wears
+   the same tokens, so a reader meets one kind of switch on the page. */
+.contents__views {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin: 0 0 0.9rem;
+  padding: 0.15rem;
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.contents__view {
+  padding: 0.16rem 0.6rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    background var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.contents__view:hover {
+  color: var(--text);
+}
+
+:root:not([data-contents-view="sections"])
+  .contents__view[data-contents-choice="path"],
+:root[data-contents-view="sections"]
+  .contents__view[data-contents-choice="sections"] {
+  background: var(--bg-raise);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
 }
 
 /* The column shape. The class is put on the page by the same behaviour

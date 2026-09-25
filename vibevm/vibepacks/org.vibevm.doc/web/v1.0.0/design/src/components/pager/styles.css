@@ -1,0 +1,108 @@
+/* The two ways out of a page on the learning path. Two cards, one per
+   direction, each keeping its own side of the column so that a page with
+   only one neighbour does not move the other's place. */
+
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin: 2.4rem 0 0;
+}
+
+.pager__link {
+  display: block;
+  padding: 0.75rem 0.9rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--speed) ease;
+}
+
+.pager__link:hover {
+  border-color: var(--line-strong);
+}
+
+/* Each way keeps its column, so the last page of the path shows «back»
+   on the left and the first shows «on» on the right, where the reader
+   already found them on every page between the two. */
+.pager__link--previous {
+  grid-column: 1;
+}
+
+.pager__link--next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.pager__way {
+  display: flex;
+  gap: 0.35em;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.pager__link--next .pager__way {
+  justify-content: flex-end;
+}
+
+/* The arrow moves and nothing else does: two pixels towards where the
+   link leads, which reads as the direction rather than as an animation. */
+.pager__arrow {
+  display: inline-block;
+  transition: transform var(--speed) ease;
+}
+
+.pager__link--previous:hover .pager__arrow {
+  transform: translateX(-2px);
+}
+
+.pager__link--next:hover .pager__arrow {
+  transform: translateX(2px);
+}
+
+.pager__chapter {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.74rem;
+  color: var(--text-2);
+}
+
+.pager__chapter-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.pager__title {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* A reader who asked for stillness gets the border and not the step.
+   The base stylesheet takes every transition's DURATION away, which
+   leaves a transform that jumps instead of one that does not happen, so
+   the movement itself is what is refused here. */
+@media (prefers-reduced-motion: reduce) {
+  .pager__link--previous:hover .pager__arrow,
+  .pager__link--next:hover .pager__arrow {
+    transform: none;
+  }
+}
+
+/* Under this width the column is too narrow for two cards side by side,
+   and they stand one under the other in the order they are read in. */
+@media (max-width: 639px) {
+  .pager {
+    grid-template-columns: 1fr;
+  }
+
+  .pager__link--previous,
+  .pager__link--next {
+    grid-column: 1;
+  }
+}

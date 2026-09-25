@@ -26,6 +26,28 @@ export type ContentsSection = {
   readonly items: ReadonlyArray<ContentsItem>;
 };
 
+/**
+ * One chapter of the declared learning path
+ * (`spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-READER`).
+ *
+ * A chapter is not a folder. The path is written by the author out of
+ * whichever pages a lesson needs, so a chapter names pages from any
+ * number of directories and the `id` is its own word rather than a path
+ * segment.
+ */
+export type ContentsChapter = {
+  /** The chapter's identity in the package; the key, never the name. */
+  readonly id: string;
+  /**
+   * The number the reader sees over it, `1`. Empty for an appendix
+   * chapter, which is pages a reader looks things up in rather than reads
+   * through and therefore carries no place in the count.
+   */
+  readonly number: string;
+  readonly title: string;
+  readonly items: ReadonlyArray<ContentsItem>;
+};
+
 export type ContentsProps = {
   /** What the column is called, said once and read aloud: «Contents». */
   readonly label: string;
@@ -35,6 +57,19 @@ export type ContentsProps = {
    */
   readonly pinned: ReadonlyArray<ContentsItem>;
   readonly sections: ReadonlyArray<ContentsSection>;
+  /**
+   * The declared learning path, in the order a reader walks it. Empty
+   * when the documentation declared none — and then the column is the
+   * sections alone, with no switch over it, exactly as it was before a
+   * path could be declared.
+   */
+  readonly chapters: ReadonlyArray<ContentsChapter>;
+  /** What the switch over the two views is called: «Contents view». */
+  readonly viewLabel: string;
+  /** The button that shows the path: «In order». */
+  readonly pathLabel: string;
+  /** The button that shows the folders: «By section». */
+  readonly sectionsLabel: string;
 };
 
 /**
@@ -57,42 +92,119 @@ export type ContentsProps = {
  * reader. Two elements would be two lists to keep in step, and the one
  * nobody was looking at would go stale.
  *
+ * **Two views of one manual, and both are always in the document.** A
+ * documentation that declared a learning path is shown as that path by
+ * default and as its folders on request (`##NAV-CHAPTERS-READER`), which
+ * is a choice the reader makes and keeps. So the server writes both and
+ * the stylesheet shows one, by an attribute a script stamps on the root
+ * element before the first stylesheet is parsed — the same arrangement
+ * the theme has, and for the same reason: a view that appeared and then
+ * changed would be the page telling the reader their setting did not
+ * take. Nothing here is hydrated, and a documentation with no path
+ * renders neither the switch nor the second pane.
+ *
  * Links, never buttons: every entry is a place with an address, and a
  * reader who middle-clicks one must get a tab. `aria-current="page"` and
  * not only a class, because the mark is information and a colour is not
- * readable aloud.
+ * readable aloud. The switch is the opposite case and is therefore two
+ * buttons: choosing a view changes no address, and a reader who copies
+ * the address must not hand someone else their own reading habit.
  *
  * The order is the manifest's and this component does not sort. Which
- * pages stand first and what their folders are called is the
- * documentation's own statement (`##NAV-PINNED`), worked out where the
- * manifest is read; a column that re-ordered what it was handed would be
- * a second opinion about the layer law.
+ * pages stand first, what their folders are called and which chapter
+ * holds which page are the documentation's own statements
+ * (`##NAV-PINNED`, `##NAV-CHAPTERS`), worked out where the manifest is
+ * read; a column that re-ordered what it was handed would be a second
+ * opinion about the layer law.
  */
 export const Contents = component$<ContentsProps>((props) => {
   useStyles$(styles);
+  const path = props.chapters.length > 0;
   return (
     <details class="contents" data-contents>
       <summary class="contents__summary">{props.label}</summary>
-      <nav class="contents__nav" aria-label={props.label}>
-        {props.pinned.length === 0 ? null : (
-          <ul class="contents__list">
-            {props.pinned.map((item) => (
-              <Entry key={item.href} item={item} />
-            ))}
-          </ul>
+      <nav
+        class={path ? "contents__nav contents__nav--path" : "contents__nav"}
+        aria-label={props.label}
+      >
+        {!path ? null : (
+          <div
+            class="contents__views"
+            role="group"
+            aria-label={props.viewLabel}
+            data-contents-views
+          >
+            {/* The marked button is decided by the stylesheet out of the
+                root's attribute, so the pressed pill and the pane below
+                it cannot disagree at the first frame. `aria-pressed` is
+                written here for the default view and corrected by the
+                reader for a stored one — it is read aloud rather than
+                seen, so a late correction costs nothing. */}
+            <button
+              class="contents__view"
+              type="button"
+              data-contents-choice="path"
+              aria-pressed="true"
+            >
+              {props.pathLabel}
+            </button>
+            <button
+              class="contents__view"
+              type="button"
+              data-contents-choice="sections"
+              aria-pressed="false"
+            >
+              {props.sectionsLabel}
+            </button>
+          </div>
         )}
-        {props.sections.map((section) => (
-          <div key={section.id} class="contents__section">
-            {section.title.length === 0 ? null : (
-              <h2 class="contents__heading">{section.title}</h2>
-            )}
+        {!path ? null : (
+          <div class="contents__pane contents__pane--path" data-contents-path>
+            {props.chapters.map((chapter) => (
+              <div key={chapter.id} class="contents__section">
+                <h2 class="contents__heading">
+                  {chapter.number.length === 0 ? null : (
+                    <span class="contents__number">{chapter.number}</span>
+                  )}
+                  {chapter.title}
+                </h2>
+                <ul class="contents__list">
+                  {chapter.items.map((item) => (
+                    <Entry key={item.href} item={item} />
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* The folders, unchanged: the pinned pages first and outside
+            every group, then one group per folder. It is the whole of
+            the column for a documentation with no path, and the second
+            view for one that has it. */}
+        <div
+          class="contents__pane contents__pane--sections"
+          data-contents-sections
+        >
+          {props.pinned.length === 0 ? null : (
             <ul class="contents__list">
-              {section.items.map((item) => (
+              {props.pinned.map((item) => (
                 <Entry key={item.href} item={item} />
               ))}
             </ul>
-          </div>
-        ))}
+          )}
+          {props.sections.map((section) => (
+            <div key={section.id} class="contents__section">
+              {section.title.length === 0 ? null : (
+                <h2 class="contents__heading">{section.title}</h2>
+              )}
+              <ul class="contents__list">
+                {section.items.map((item) => (
+                  <Entry key={item.href} item={item} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </nav>
     </details>
   );

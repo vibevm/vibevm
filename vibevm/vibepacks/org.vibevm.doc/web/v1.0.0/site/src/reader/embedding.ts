@@ -62,6 +62,7 @@ function settingsPatch(value: unknown): Partial<ReaderSettings> | null {
     font?: number;
     width?: number;
     anchors?: boolean;
+    contents?: ReaderSettings["contents"];
   } = {};
   const theme = data["theme"];
   if (theme === "dark" || theme === "light" || theme === "system") {
@@ -73,6 +74,10 @@ function settingsPatch(value: unknown): Partial<ReaderSettings> | null {
   if (typeof width === "number" && Number.isFinite(width)) patch.width = width;
   const anchors = data["anchors"];
   if (typeof anchors === "boolean") patch.anchors = anchors;
+  const contents = data["contents"];
+  if (contents === "path" || contents === "sections") {
+    patch.contents = contents;
+  }
   return patch;
 }
 

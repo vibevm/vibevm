@@ -39,6 +39,14 @@ async function scrolls(page: Page): Promise<boolean> {
  * sideways, so a manual of thirty pages put everything after the sixth
  * behind a gesture. What is measured here is the column's two shapes and
  * the promise that replaced the row: no sideways scroll at either width.
+ *
+ * Every case below is about the SECTIONS view — the pinned pages and the
+ * folders of `##NAV-PINNED`, which a declared learning path does not
+ * change. The fixture now declares a path, so that view is the second one
+ * the column offers and its pane is named rather than assumed: the whole
+ * point of `##NAV-CHAPTERS-READER` is that this list is still there and
+ * still exactly what it was. The path itself is measured in
+ * `learning-path.spec.ts`.
  */
 test("the manual's pages stand in a column, grouped by their folders", async ({
   page,
@@ -48,19 +56,20 @@ test("the manual's pages stand in a column, grouped by their folders", async ({
 
   const column = page.locator("[data-contents]");
   await expect(column.locator(".contents__summary")).toBeHidden();
+  const sections = column.locator("[data-contents-sections]");
   /* The manifest pins this page and names one folder, so the column is
      the documentation's own statement about itself: the pinned page
      first and outside every group, then the folder under the words the
      package chose rather than the name of the directory. */
-  await expect(column.locator("a").first()).toHaveText("Every block once");
-  await expect(column.locator(".contents__heading")).toHaveText([
+  await expect(sections.locator("a").first()).toHaveText("Every block once");
+  await expect(sections.locator(".contents__heading")).toHaveText([
     "Reference pages",
   ]);
-  await expect(column.locator("a")).toHaveText([
+  await expect(sections.locator("a")).toHaveText([
     "Every block once",
     "Addresses",
   ]);
-  await expect(column.locator("a[aria-current='page']")).toHaveText(
+  await expect(sections.locator("a[aria-current='page']")).toHaveText(
     "Every block once",
   );
 });
@@ -80,14 +89,14 @@ test("a folder is named in the words of the edition being read", async ({
     "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/",
   );
 
-  const column = page.locator("[data-contents]");
-  await expect(column.locator(".contents__heading")).toHaveText([
+  const sections = page.locator("[data-contents] [data-contents-sections]");
+  await expect(sections.locator(".contents__heading")).toHaveText([
     "Справочные страницы",
   ]);
   /* The pins are the source's — a pin names a document, and a document
      is the same one in every language — and they lead to the
      adaptation's own addresses. */
-  await expect(column.locator("a").first()).toHaveAttribute(
+  await expect(sections.locator("a").first()).toHaveAttribute(
     "href",
     "/doc/ru/com.example.docs/fixture-manual/0.1.0/guide/every-block/",
   );
@@ -95,7 +104,7 @@ test("a folder is named in the words of the edition being read", async ({
      adaptation carries the pinned page and named it, so the link is its
      name; it has not reached the other page, so that link keeps the
      source's — which is the text that address actually serves. */
-  await expect(column.locator("a")).toHaveText([
+  await expect(sections.locator("a")).toHaveText([
     "Каждый блок по разу",
     "Addresses",
   ]);

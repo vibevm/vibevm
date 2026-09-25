@@ -95,11 +95,38 @@ named group — has a document of its own to be measured on.
 
 Both of them also say what their list of pages should look like
 (`##NAV-PINNED`): the source pins its guide page and names the folder its
-other page lives in, and the adaptation names that same folder in its own
+other pages live in, and the adaptation names that same folder in its own
 words. Without those two tables every page the package builds shows the
 fallback — no pinned page, and a heading made from a directory name — so
 the rule that a documentation decides its own navigation would be true in
 the code and invisible in every build.
+
+And the source declares a **learning path** (`##NAV-CHAPTERS`), which is
+the second order a manual has: two chapters, one page each, the second of
+them an appendix. Two pages are as much of a path as this library can
+carry — see the note on its length below — and they carry what a build
+has to draw: a numbered chapter, an appendix that takes no number, a
+chapter whose `id` is not a folder of the page tree, the two ends of the
+path, and a step that crosses from one chapter into the other. The
+adaptation names the first chapter and leaves the appendix unnamed,
+because a chapter a translation has not named keeps the source's words
+(`##NAV-CHAPTERS-TRANSLATION`) and that rule is invisible in a build where
+every chapter is named. The two libraries in `doc-build-pair*/` declare no
+path at all, so the case that must not change — a documentation shown
+exactly as it was before a path could be declared — has a package of its
+own to be measured on.
+
+**Why this library is not larger.** A third page was written for it and
+taken out again: the site's own Content-Security-Policy names one hash per
+distinct inline script, the serving configuration cannot carry a value of
+4096 bytes (`site/src/seo/csp.ts`, `CSP_CONF_LIMIT`), and the fixture
+build stands at 3607 of the 4000 bytes that leaves. One more page is four
+more addresses and eight more hashes — 4039 bytes, over the ceiling, and
+`csp.test.ts` goes red because the generator then writes no policy at all.
+So the fixture library cannot grow by a page until the deployment's answer
+to that ceiling is decided (X-044), and what needs a path of three pages —
+a page with a neighbour on both sides — is measured in
+`site/src/lib/contents.test.ts`, over a library written inside the test.
 
 The source is also the library's bridge. It declares the two authorships
 a bridge keeps apart — who maintains the wrapper, who wrote the bytes it

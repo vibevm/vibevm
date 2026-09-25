@@ -15,6 +15,7 @@ import {
   ForAgent,
   Lightbox,
   PackageHeader,
+  Pager,
   PageMeta,
   Prose,
   ReturnToPlace,
@@ -27,8 +28,23 @@ import {
 } from "@vibe-docs/design";
 
 import { ISLAND_PLACEHOLDER } from "../../lib/island-placeholder.ts";
-import { AGENT_LEAD, MEASURE, PLATFORMS } from "../../lib/reading.ts";
-import { DOC_GLYPH } from "../../lib/view.ts";
+import {
+  AGENT_LEAD,
+  CONTENTS_PATH_LABEL,
+  CONTENTS_SECTIONS_LABEL,
+  CONTENTS_VIEW_LABEL,
+  MEASURE,
+  PAGES_BY_LAYER,
+  PAGES_BY_PATH,
+  PATH_CHAPTER_WORD,
+  PATH_LABEL,
+  PATH_NEXT,
+  PATH_PREVIOUS,
+  PLATFORMS,
+  START_HERE,
+} from "../../lib/reading.ts";
+import type { PageCard } from "../../lib/cards.ts";
+import { DOC_GLYPH, type PackageView } from "../../lib/view.ts";
 import { startReader } from "../../reader/mount.ts";
 import {
   dressHead,
@@ -111,6 +127,7 @@ export const ServedReader = component$(() => {
         </CodeChrome>
         <ServedAgent served={served} compact={false} />
         <CitedRules label="Rules this page cites" />
+        <ServedPager served={served} />
       </Prose>
       <RulePanel
         label="The rule this page quotes"
@@ -146,6 +163,38 @@ const ServedContents = component$<{ served: Signal<ServedPage | null> }>(
         label="Contents"
         pinned={contents === null ? [] : [...contents.pinned]}
         sections={contents === null ? [] : [...contents.sections]}
+        chapters={contents === null ? [] : [...contents.chapters]}
+        viewLabel={CONTENTS_VIEW_LABEL}
+        pathLabel={CONTENTS_PATH_LABEL}
+        sectionsLabel={CONTENTS_SECTIONS_LABEL}
+      />
+    );
+  },
+);
+
+/**
+ * Where the learning path leads from the page being served, at the end of
+ * the reading column.
+ *
+ * Nothing until the manifest is in, for the reason the column shows
+ * nothing meanwhile: the fixture's path names documents this reader does
+ * not carry. A documentation that declared no path shows nothing here at
+ * all, on this reader as on the site (`##NAV-CHAPTERS-READER`).
+ */
+const ServedPager = component$<{ served: Signal<ServedPage | null> }>(
+  (props) => {
+    const view = props.served.value?.view;
+    if (view === undefined || view.kind !== "page") return null;
+    const path = view.path;
+    if (path === null) return null;
+    return (
+      <Pager
+        label={PATH_LABEL}
+        chapterWord={PATH_CHAPTER_WORD}
+        previousLabel={PATH_PREVIOUS}
+        nextLabel={PATH_NEXT}
+        {...(path.previous === undefined ? {} : { previous: path.previous })}
+        {...(path.next === undefined ? {} : { next: path.next })}
       />
     );
   },
@@ -186,6 +235,11 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
               : { kind: view.packageKind })}
             glyph={DOC_GLYPH}
           >
+            {view.start === undefined ? null : (
+              <a class="doc-package__start" href={view.start}>
+                {START_HERE}
+              </a>
+            )}
             <a class="doc-package__llms" href={view.llms}>
               llms.txt
             </a>
@@ -195,28 +249,25 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
           </DocBar>
           <Shelf
             title="Pages"
-            caption="In the order the layer law gives them: text that stands still before text that moves with the product."
+            caption={view.chapters === null ? PAGES_BY_LAYER : PAGES_BY_PATH}
             emptyLabel="This documentation has no pages yet."
             empty={view.pages.length === 0}
           >
-            {view.pages.map((one) => (
-              <Card
-                key={one.href}
-                title={one.title}
-                href={one.href}
-                publisher={view.publisher}
-                coordinate={view.coordinate}
-                {...(one.summary === undefined
-                  ? {}
-                  : { abstract: one.summary })}
-                status={view.status}
-                {...(view.packageKind === undefined
-                  ? {}
-                  : { kind: view.packageKind })}
-                glyph={DOC_GLYPH}
-                abstractLabel="what it covers"
-              />
-            ))}
+            {view.chapters === null
+              ? view.pages.map((one) => (
+                  <ServedPageCard key={one.href} view={view} page={one} />
+                ))
+              : view.chapters.flatMap((chapter) => [
+                  <h3 key={`chapter:${chapter.id}`} class="doc-chapter">
+                    {chapter.number.length === 0 ? null : (
+                      <span class="doc-chapter__number">{chapter.number}</span>
+                    )}
+                    {chapter.title}
+                  </h3>,
+                  ...chapter.pages.map((one) => (
+                    <ServedPageCard key={one.href} view={view} page={one} />
+                  )),
+                ])}
           </Shelf>
         </>
       );
@@ -247,6 +298,34 @@ const ServedHead = component$<{ served: Signal<ServedPage | null> }>(
     );
   },
 );
+
+/**
+ * One page of the served documentation, as a card on its package's page.
+ *
+ * Written once for the two orders the shelf above draws, for the reason
+ * the site's own route has such a component: a card written out twice is a
+ * card that starts differing in one of them.
+ */
+const ServedPageCard = component$<{
+  view: PackageView;
+  page: PageCard;
+}>((props) => (
+  <Card
+    title={props.page.title}
+    href={props.page.href}
+    publisher={props.view.publisher}
+    coordinate={props.view.coordinate}
+    {...(props.page.summary === undefined
+      ? {}
+      : { abstract: props.page.summary })}
+    status={props.view.status}
+    {...(props.view.packageKind === undefined
+      ? {}
+      : { kind: props.view.packageKind })}
+    glyph={DOC_GLYPH}
+    abstractLabel="what it covers"
+  />
+));
 
 /** The citation and the projections, once the reader has said what page this is. */
 const ServedAgent = component$<{

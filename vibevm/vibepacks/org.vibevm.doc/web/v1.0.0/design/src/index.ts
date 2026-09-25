@@ -17,10 +17,17 @@ export {
 } from "./components/docs-header/index.tsx";
 export {
   Contents,
+  type ContentsChapter,
   type ContentsItem,
   type ContentsProps,
   type ContentsSection,
 } from "./components/contents/index.tsx";
+export {
+  Pager,
+  type PagerChapter,
+  type PagerLink,
+  type PagerProps,
+} from "./components/pager/index.tsx";
 export { DocCard, type DocCardProps } from "./components/doc-card/index.tsx";
 export {
   SearchBox,

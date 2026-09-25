@@ -3,23 +3,40 @@
 /**
  * What a reader may change about the reading, and where it is kept.
  *
- * Four settings and one rule about each: the theme, the text size, the
- * column width, and whether the block numbers are shown. They are kept
+ * Five settings and one rule about each: the theme, the text size, the
+ * column width, whether the block numbers are shown, and — where the
+ * documentation declared a learning path — which of the two views of the
+ * contents the column opens on (`##NAV-CHAPTERS-READER`). They are kept
  * in `localStorage` on the public site and handed to the host through
  * `postMessage` in an embedded reader, and this module does not know
  * which of the two it is in — it publishes and it is told, and the
  * bridge decides where that goes. A module that reached for storage
  * directly would be a module that cannot run inside an editor.
  *
- * The theme is the one setting a page may carry without a reader — the
- * landing offers it in the header and offers nothing else — so what a
- * theme IS lives in `theme.ts` and this module is one of its two
- * callers. Everything below about the theme is therefore a delegation,
- * and the three states, the storage key and the stamping are stated
- * once, there.
+ * Two of the five are applied before this module exists, so what they
+ * ARE lives beside them rather than here. The theme is the one setting a
+ * page may carry without a reader at all — the landing offers it in the
+ * header and offers nothing else — so it lives in `theme.ts`; the
+ * contents view is written into the document by the same script that
+ * writes the theme, ahead of the first stylesheet, so it lives in
+ * `contents-view.ts`. Everything below about either of them is a
+ * delegation, and their states, keys and stamping are stated once, there.
+ *
+ * The panel offers three of the five. The theme is in the header of every
+ * page of the site and the contents view is a switch over the list it
+ * switches, which is where a reader looks for it; both are still settings
+ * of the reading, kept under one prefix, reset by one button, and carried
+ * over one bridge to a host that keeps them.
  */
 
 import { SITE } from "../config.ts";
+import {
+  applyContentsView,
+  isContentsView,
+  storedContentsView,
+  DEFAULT_CONTENTS_VIEW,
+  type ContentsView,
+} from "./contents-view.ts";
 import { all } from "./dom.ts";
 import { readLocal, removeLocal, writeLocal } from "./storage.ts";
 import { applyTheme, isTheme, storedTheme, type Theme } from "./theme.ts";
@@ -30,7 +47,7 @@ const FONT_STEPS = [80, 90, 100, 110, 120, 135, 150] as const;
 /** The column widths, in pixels. Desktop only; a phone has one. */
 const WIDTH_STEPS = [740, 900, 1100, 1400] as const;
 
-export type { Theme };
+export type { ContentsView, Theme };
 
 export type ReaderSettings = {
   readonly theme: Theme;
@@ -40,6 +57,8 @@ export type ReaderSettings = {
   readonly width: number;
   /** Whether the pipeline's block numbers are shown. */
   readonly anchors: boolean;
+  /** Which view of the contents the column opens on. */
+  readonly contents: ContentsView;
 };
 
 /**
@@ -47,14 +66,17 @@ export type ReaderSettings = {
  *
  * The theme is the deployment's rather than a constant here (F-48): the
  * same value `theme-init.js` was built with, so the panel's marked
- * button and the page painted before it agree. The other three are the
- * reading defaults and belong to the reader rather than to a domain.
+ * button and the page painted before it agree. The contents view is the
+ * one the norm names — the declared path — and it is stated where the
+ * view is stated, for the same reason. The other three are the reading
+ * defaults and belong to the reader rather than to a domain.
  */
 export const DEFAULT_SETTINGS: ReaderSettings = {
   theme: SITE.defaultTheme,
   font: 100,
   width: 740,
   anchors: true,
+  contents: DEFAULT_CONTENTS_VIEW,
 };
 
 /** Where the settings live, and who else is told when they change. */
@@ -91,6 +113,7 @@ function stored(): ReaderSettings {
     font: isStep(FONT_STEPS, font) ? font : DEFAULT_SETTINGS.font,
     width: isStep(WIDTH_STEPS, width) ? width : DEFAULT_SETTINGS.width,
     anchors: anchors === null ? DEFAULT_SETTINGS.anchors : anchors !== "off",
+    contents: storedContentsView(),
   };
 }
 
@@ -99,15 +122,19 @@ function keep(settings: ReaderSettings): void {
   writeLocal("font", String(settings.font));
   writeLocal("width", String(settings.width));
   writeLocal("anchors", settings.anchors ? "on" : "off");
+  writeLocal("contents", settings.contents);
 }
 
 function forget(): void {
-  for (const key of ["theme", "font", "width", "anchors"]) removeLocal(key);
+  for (const key of ["theme", "font", "width", "anchors", "contents"]) {
+    removeLocal(key);
+  }
 }
 
 /** Put the settings on the document. Everything visual happens here. */
 function apply(settings: ReaderSettings): void {
   applyTheme(settings.theme);
+  applyContentsView(settings.contents);
 
   for (const column of all(".prose")) {
     column.style.setProperty("--reader-font", String(settings.font / 100));
@@ -181,6 +208,18 @@ export function startSettings(bridge: SettingsBridge): SettingsHandle {
       return;
     }
 
+    /* The switch over the contents. It is the one setting whose control
+       is not in the panel, and it is handled here all the same: the
+       choice is kept, published and reset with the other four, and a
+       second listener on the document for one attribute would be a
+       second place that decides what a reading setting is. */
+    const view = target.closest("[data-contents-choice]");
+    if (view instanceof HTMLElement) {
+      const choice = view.dataset["contentsChoice"];
+      if (isContentsView(choice)) change({ ...settings, contents: choice });
+      return;
+    }
+
     const step = target.closest("[data-step]");
     if (step instanceof HTMLElement) {
       const delta = Number.parseInt(step.dataset["delta"] ?? "0", 10);
@@ -241,6 +280,9 @@ export function startSettings(bridge: SettingsBridge): SettingsHandle {
             : settings.width,
         anchors:
           typeof patch.anchors === "boolean" ? patch.anchors : settings.anchors,
+        contents: isContentsView(patch.contents)
+          ? patch.contents
+          : settings.contents,
       };
       settings = next;
       apply(settings);

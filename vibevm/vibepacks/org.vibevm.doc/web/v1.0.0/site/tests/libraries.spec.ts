@@ -175,6 +175,33 @@ test("a page names the pages of its own documentation and no other's", async ({
   }
 });
 
+/**
+ * A documentation that declared no learning path is exactly what it was
+ * (`##NAV-CHAPTERS-READER`).
+ *
+ * The pair declares none and the manual beside it in this very build
+ * declares one, which is the whole reason this belongs here: the two
+ * libraries are rendered by one build, from one component, and the
+ * unchanged case has to be unchanged in the presence of the changed one.
+ */
+test("a documentation with no declared path shows one view and no pager", async ({
+  page,
+}) => {
+  await page.goto(`${origin}${PAIR}`);
+  await expect(page.locator("[data-contents] .contents__list")).not.toHaveCount(
+    0,
+  );
+  await expect(page.locator("[data-contents-views]")).toHaveCount(0);
+  await expect(page.locator("[data-contents-path]")).toHaveCount(0);
+  await expect(page.locator("[data-contents-sections] a")).toHaveCount(2);
+  await expect(page.locator("[data-pager]")).toHaveCount(0);
+
+  // While the manual in the same build opens on its path and carries one.
+  await page.goto(`${origin}${MANUAL}`);
+  await expect(page.locator("[data-contents-views]")).toHaveCount(1);
+  await expect(page.locator("[data-pager-next]")).toHaveCount(1);
+});
+
 test("an adaptation is never served under its own coordinate", async ({
   page,
 }) => {

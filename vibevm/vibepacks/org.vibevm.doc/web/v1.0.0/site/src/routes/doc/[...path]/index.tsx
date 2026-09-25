@@ -17,6 +17,7 @@ import {
   LanguageSelector,
   Lightbox,
   PackageHeader,
+  Pager,
   PageMeta,
   Prose,
   ReturnToPlace,
@@ -37,15 +38,26 @@ import { BUILT } from "../../../lib/library-source.ts";
 import { documentationParams } from "../../../lib/pages.ts";
 import {
   AGENT_LEAD,
+  CONTENTS_PATH_LABEL,
+  CONTENTS_SECTIONS_LABEL,
+  CONTENTS_VIEW_LABEL,
   MEASURE,
+  PAGES_BY_LAYER,
+  PAGES_BY_PATH,
+  PATH_CHAPTER_WORD,
+  PATH_LABEL,
+  PATH_NEXT,
+  PATH_PREVIOUS,
   PLATFORMS,
   SHELF_MEASURE,
+  START_HERE,
 } from "../../../lib/reading.ts";
 import { startDocLanguage } from "../../../reader/doc-language.ts";
 import { startReader } from "../../../reader/mount.ts";
 import { latestAliasParams } from "../../../seo/addresses.ts";
 import { documentationHead } from "../../../seo/head.ts";
 import { IS_LOCAL_READER } from "../../../seo/mode.ts";
+import type { PageCard } from "../../../lib/cards.ts";
 import {
   DOC_GLYPH,
   viewOf,
@@ -134,6 +146,10 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
         label="Contents"
         pinned={view.contents.pinned}
         sections={view.contents.sections}
+        chapters={view.contents.chapters}
+        viewLabel={CONTENTS_VIEW_LABEL}
+        pathLabel={CONTENTS_PATH_LABEL}
+        sectionsLabel={CONTENTS_SECTIONS_LABEL}
       />
       <Toc label="On this page" />
       <Prose measure={MEASURE}>
@@ -186,6 +202,22 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
             reader who has finished reading it. The markers in the text
             are where a rule is read — this is only the list of them. */}
         <CitedRules label="Rules this page cites" />
+        {/* And after everything the page carries, the way on: a reader
+            who has reached the end of a page of a textbook is asking
+            where the next lesson is (`##NAV-CHAPTERS-READER`). A
+            documentation that declared no path shows nothing here. */}
+        {view.path === null ? null : (
+          <Pager
+            label={PATH_LABEL}
+            chapterWord={PATH_CHAPTER_WORD}
+            previousLabel={PATH_PREVIOUS}
+            nextLabel={PATH_NEXT}
+            {...(view.path.previous === undefined
+              ? {}
+              : { previous: view.path.previous })}
+            {...(view.path.next === undefined ? {} : { next: view.path.next })}
+          />
+        )}
       </Prose>
       <RulePanel
         label="The rule this page quotes"
@@ -231,6 +263,16 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
         {...(view.packageKind === undefined ? {} : { kind: view.packageKind })}
         glyph={DOC_GLYPH}
       >
+        {/* Where to begin, said in one link rather than left to be
+            inferred from a shelf of fifty cards. It is the first page of
+            the declared learning path where there is one, and the first
+            page of the manifest where there is not
+            (`##NAV-CHAPTERS-READER`). */}
+        {view.start === undefined ? null : (
+          <a class="doc-package__start" href={view.start}>
+            {START_HERE}
+          </a>
+        )}
         <a class="doc-package__llms" href={view.llms}>
           llms.txt
         </a>
@@ -255,7 +297,7 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
         >
           <Card
             title={view.title}
-            href={view.pages[0]?.href ?? view.llms}
+            href={view.start ?? view.llms}
             publisher={view.publisher}
             coordinate={view.coordinate}
             {...(view.description === undefined
@@ -306,9 +348,21 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
             />
           ))}
         </Shelf>
+        {/* The pages, in one of the two orders the manual has. A
+            documentation that declared a learning path is shelved by
+            chapter, in the order a person is asked to read it; one that
+            declared none keeps the manifest's order, which is the layer
+            law's, and the caption says which of the two a reader is
+            looking at (`##NAV-CHAPTERS-READER`).
+
+            The chapter headings are children of the shelf's own grid
+            rather than wrappers around groups of cards: a heading spans
+            the row and the cards flow on under it, so the grid stays one
+            grid and a chapter of two cards does not make a row of its
+            own width. */}
         <Shelf
           title="Pages"
-          caption="In the order the layer law gives them: text that stands still before text that moves with the product."
+          caption={view.chapters === null ? PAGES_BY_LAYER : PAGES_BY_PATH}
           emptyLabel="This documentation has no pages yet."
           empty={view.pages.length === 0}
         >
@@ -317,29 +371,56 @@ const PackagePage = component$<{ view: PackageView }>((props) => {
               the same question the two above it do — what am I about to
               open. Drawing these with a different mark would read as a
               difference where there is none. */}
-          {view.pages.map((page) => (
-            <Card
-              key={page.href}
-              title={page.title}
-              href={page.href}
-              publisher={view.publisher}
-              coordinate={view.coordinate}
-              {...(page.summary === undefined
-                ? {}
-                : { abstract: page.summary })}
-              status={view.status}
-              {...(view.packageKind === undefined
-                ? {}
-                : { kind: view.packageKind })}
-              glyph={DOC_GLYPH}
-              abstractLabel="what it covers"
-            />
-          ))}
+          {view.chapters === null
+            ? view.pages.map((page) => (
+                <PageOfPackage key={page.href} view={view} page={page} />
+              ))
+            : view.chapters.flatMap((chapter) => [
+                <h3 key={`chapter:${chapter.id}`} class="doc-chapter">
+                  {chapter.number.length === 0 ? null : (
+                    <span class="doc-chapter__number">{chapter.number}</span>
+                  )}
+                  {chapter.title}
+                </h3>,
+                ...chapter.pages.map((page) => (
+                  <PageOfPackage key={page.href} view={view} page={page} />
+                )),
+              ])}
         </Shelf>
       </Prose>
     </div>
   );
 });
+
+/**
+ * One page of a documentation, as a card on that documentation's own
+ * page.
+ *
+ * It is a component and not a line of JSX in two places because the
+ * shelf above draws it twice — once per chapter of the declared path, and
+ * once per page of the manifest where there is no path — and a card
+ * written out twice is a card that starts differing in one of them.
+ */
+const PageOfPackage = component$<{
+  view: PackageView;
+  page: PageCard;
+}>((props) => (
+  <Card
+    title={props.page.title}
+    href={props.page.href}
+    publisher={props.view.publisher}
+    coordinate={props.view.coordinate}
+    {...(props.page.summary === undefined
+      ? {}
+      : { abstract: props.page.summary })}
+    status={props.view.status}
+    {...(props.view.packageKind === undefined
+      ? {}
+      : { kind: props.view.packageKind })}
+    glyph={DOC_GLYPH}
+    abstractLabel="what it covers"
+  />
+));
 
 /**
  * One documentation address, at the shape D-06 gives it.

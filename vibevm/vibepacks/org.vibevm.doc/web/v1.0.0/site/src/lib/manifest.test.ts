@@ -224,31 +224,16 @@ test("anything that is not a manifest is not a manifest", () => {
 /**
  * The learning path across the erasure boundary (`##NAV-CHAPTERS`).
  *
- * The fixture declares a navigation and no path, which is the state of
- * every documentation written before the rows existed — so the absence has
- * to survive as an absence. The site turns on exactly that: no path means
- * the sections view it always showed, a declared path means the contents
+ * The fixture declares one, so the rows themselves are measured on the
+ * bytes the site is actually built from; the state of every documentation
+ * written before the rows existed is the same fixture with the table taken
+ * away. The site turns on exactly that distinction: no path means the
+ * sections view it always showed, a declared path means the contents
  * opens on the path, and an empty array read as «no path» would hide a
  * package that opened the table and named nothing.
  */
 test("a declared learning path crosses, and no path stays no path", () => {
-  const silent = parseDocManifest(fixture());
-  assert.equal(silent.ok, true);
-  if (!silent.ok) return;
-  assert.notEqual(silent.value.navigation, undefined);
-  assert.equal("chapters" in (silent.value.navigation ?? {}), false);
-
-  const declared = JSON.parse(JSON.stringify(fixture()));
-  declared.navigation.chapters = [
-    { id: "guide", title: "The guide", pages: ["guide/every-block"] },
-    {
-      id: "reference",
-      title: "Appendices",
-      pages: ["reference/addresses"],
-      appendix: true,
-    },
-  ];
-  const parsed = parseDocManifest(declared);
+  const parsed = parseDocManifest(fixture());
   assert.equal(
     parsed.ok,
     true,
@@ -257,21 +242,39 @@ test("a declared learning path crosses, and no path stays no path", () => {
   if (!parsed.ok) return;
   const path = parsed.value.navigation?.chapters;
   assert.equal(path?.length, 2);
-  assert.equal(path?.[0]?.id, "guide");
-  assert.equal(path?.[0]?.title, "The guide");
+  assert.equal(path?.[0]?.id, "reading");
+  assert.equal(path?.[0]?.title, "Reading a page");
   assert.deepEqual(path?.[0]?.pages, ["guide/every-block"]);
   // Absent is not `false` in the reading; it is `false` only in meaning.
   assert.equal("appendix" in (path?.[0] ?? {}), false);
   assert.equal(path?.[1]?.appendix, true);
 
+  // A translation names the chapters of the path it takes and lists no
+  // page of its own, which reaches the type as the empty array it wrote.
+  const adapted = parseDocManifest(fixture(ADAPTATION));
+  assert.equal(adapted.ok, true);
+  if (!adapted.ok) return;
+  assert.deepEqual(
+    adapted.value.navigation?.chapters?.map((one) => [one.id, one.pages]),
+    [["reading", []]],
+  );
+
+  const silent = JSON.parse(JSON.stringify(fixture()));
+  delete silent.navigation.chapters;
+  const none = parseDocManifest(silent);
+  assert.equal(none.ok, true);
+  if (!none.ok) return;
+  assert.notEqual(none.value.navigation, undefined);
+  assert.equal("chapters" in (none.value.navigation ?? {}), false);
+
   // An empty path is a package that opened the table and named nothing,
   // and it arrives as the empty array it wrote.
   const empty = JSON.parse(JSON.stringify(fixture()));
   empty.navigation.chapters = [];
-  const none = parseDocManifest(empty);
-  assert.equal(none.ok, true);
-  if (!none.ok) return;
-  assert.deepEqual(none.value.navigation?.chapters, []);
+  const opened = parseDocManifest(empty);
+  assert.equal(opened.ok, true);
+  if (!opened.ok) return;
+  assert.deepEqual(opened.value.navigation?.chapters, []);
 });
 
 /**
