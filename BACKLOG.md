@@ -1979,3 +1979,13 @@ structure, and it goes when the file does.
 | @fact:B176-SEVERITY **severity** | P2 — every example of the Russian manual is invisible to its readers, while every check stays green. |
 | @fact:B176-DISPOSITION **disposition** | `open` — when the package declares `[translates]`, read the source's examples through the same lookup `translations.rs` uses and put them into `Content::examples` for all three projections; add a golden that renders a borrowed example, and a site check that fails on `data-unresolved` in a published tree. The fix reaches vibevm.org only with a release of vibe, because the site image renders with the released binary. |
 | @fact:B176-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), found in the full-site preview, 2026-09-25. |
+
+## B-177 — a gap cannot fail the site build while the documentation image shares a step with the product images {#b-177}
+
+| field | value |
+|---|---|
+| @fact:B177-WHAT **what** | B-176 asked for a site check that fails when a published tree carries `data-unresolved`. `vibe doc build-site` runs inside `docker/vibevm-doc/Dockerfile`, and `.github/workflows/docker-images.yml` builds `vibevm`, `vibevm-dev`, `vibevm-zap` and `vibevm-doc` in one step and publishes them together. A render that exited non-zero on a gap would therefore withhold the product's images over a documentation defect, which PROP-057 `##INV-NO-RELEASE-GATE` rules out. The render measures instead (`9905a71c0`): each version's gaps are counted by kind, and a gap in the host's own documentation prints as a `warn` line. |
+| @fact:B177-EVIDENCE **evidence** | 2026-09-26: the workflow step «Build all four images locally» runs the four `docker build` calls in one `set -euo pipefail` script, and «Publish mutable 1.0.0 and latest tags» comes after it; the site image renders with `RUN vibe doc build-site --config /site.toml --out /out --web /web`. Each kind of gap already has a check that fails on it — `vibe doc check --citations`, `--derived` and `--translations` — and since B-176 the translation check and the build find the source through one function. |
+| @fact:B177-SEVERITY **severity** | P3 — every kind of gap is gated by a check and counted by the build; what is missing is a red at the site's own build. |
+| @fact:B177-DISPOSITION **disposition** | `open` — an owner decision, because the change is to CI: build and publish `vibevm-doc` in a job of its own, then let `vibe doc build-site` exit non-zero when a host documentation has a gap. The host renders from the checkout with every input in hand, so a gap there is a defect; a registry package's gap stays the page `##SITE-RENDER-IDEMPOTENT` asks for. |
+| @fact:B177-FILED **filed by** | the B-176 fix, 2026-09-26. |
