@@ -1969,3 +1969,13 @@ structure, and it goes when the file does.
 | @fact:B175-SEVERITY **severity** | P3 — every run of the whole `vibe-wire` suite is red for a reason that no product behaviour carries; the property that the test protects still holds. |
 | @fact:B175-DISPOSITION **disposition** | `open` — make the assertion independent of the family's size: check that `requirements-report` has no `cli-` prefix and sits in its own registry section, instead of counting a family that grows with every new command. |
 | @fact:B175-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), 2026-09-25. |
+
+## B-176 — a translation's borrowed examples render as empty frames {#b-176}
+
+| field | value |
+|---|---|
+| @fact:B176-WHAT **what** | A translation must not author examples and points at the source's with `example ref` (PROP-057 `##LOC-EXAMPLE-REF`). The island and Markdown renderers resolve such a reference through `Content::examples` (`crates/vibe-doc/src/html.rs:275`, `md.rs:197`), but the build never fills that map: `crates/vibe-doc/src/build.rs:162` sets `examples: BTreeMap::new()`. Every borrowed example therefore renders as a frame that holds only its block number, marked `data-unresolved="true"`. |
+| @fact:B176-EVIDENCE **evidence** | 2026-09-25: `vibe doc build --format html` of `org.vibevm.core/vibevm-docs-ru` at `d5f74e5af` leaves 62 unresolved example references on 34 pages; the English source has none. The live page `https://vibevm.org/doc/ru/org.vibevm.core/vibevm-docs/latest/start/what-vibevm-is/` shows block 02 as an empty frame where the English page shows `vibe --version` and its expected output. `vibe doc check --translations` finds the source's examples, so the source is reachable from a translation; only the build does not ask for them. |
+| @fact:B176-SEVERITY **severity** | P2 — every example of the Russian manual is invisible to its readers, while every check stays green. |
+| @fact:B176-DISPOSITION **disposition** | `open` — when the package declares `[translates]`, read the source's examples through the same lookup `translations.rs` uses and put them into `Content::examples` for all three projections; add a golden that renders a borrowed example, and a site check that fails on `data-unresolved` in a published tree. The fix reaches vibevm.org only with a release of vibe, because the site image renders with the released binary. |
+| @fact:B176-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), found in the full-site preview, 2026-09-25. |
