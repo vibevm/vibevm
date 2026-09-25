@@ -117,7 +117,10 @@
   display: grid;
   /* The two flexible flanks around the content-sized middle; the
      unequal shares are the optical centring described above. */
-  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1.2fr);
+  grid-template-columns:
+    minmax(max-content, 1fr)
+    auto
+    minmax(max-content, 1.2fr);
   grid-template-rows: var(--bar-row-a) var(--bar-row-b);
   grid-template-areas:
     "brand nav search"
