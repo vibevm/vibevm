@@ -97,9 +97,72 @@ impl PageSet {
 /// assert!(set.unreadable.is_empty());
 /// ```
 pub fn read_package(package_dir: &Path) -> Result<PageSet> {
+    let mut set = PageSet::default();
+    for (rel, path) in walk_package(package_dir)? {
+        let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
+        match vibe_specdoc::from_xml_with(&text, Vocabulary::Doc) {
+            Ok(doc) => set.pages.push(Page { rel, path, doc }),
+            Err(e) => set.unreadable.push(UnreadablePage {
+                rel,
+                path,
+                message: e.to_string(),
+            }),
+        }
+    }
+    Ok(set)
+}
+
+/// Every page address the package carries, in the same order
+/// [`read_package`] returns them, WITHOUT reading a single page.
+///
+/// The address is the document path a `[navigation]` row spells — the
+/// `rel` of a [`Page`] with its `.xml` dropped — because that is the
+/// spelling an author has to correct when a path names a page the package
+/// does not have.
+///
+/// Its whole reason is that «which pages does this package have» is a
+/// question about a DIRECTORY, and a caller that only asks it should not
+/// pay for the pivot: `vibe check` compares a declared learning path
+/// against the tree, and a malformed page must be counted as a page there
+/// rather than vanish from the comparison because it would not parse.
+///
+/// ```
+/// use std::fs;
+/// let tmp = tempfile::tempdir().unwrap();
+/// let dir = tmp.path().join("vibevm/vibespecs/start");
+/// fs::create_dir_all(&dir).unwrap();
+/// // Not a document the pivot would take — and still a page of the tree.
+/// fs::write(dir.join("index.xml"), "not xml at all").unwrap();
+/// fs::write(dir.join("notes.txt"), "not a page").unwrap();
+///
+/// assert_eq!(
+///     vibe_doc::pages::documents(tmp.path()).unwrap(),
+///     vec!["start/index".to_string()]
+/// );
+/// ```
+pub fn documents(package_dir: &Path) -> Result<Vec<String>> {
+    Ok(walk_package(package_dir)?
+        .into_iter()
+        .map(|(rel, _)| document_of(&rel).to_owned())
+        .collect())
+}
+
+/// A page address as a document path: the same address without the
+/// extension a pin and a chapter row both leave off.
+pub fn document_of(rel: &str) -> &str {
+    rel.strip_suffix(".xml").unwrap_or(rel)
+}
+
+/// `<package>/vibevm/vibespecs/**/*.xml` as `(address, path)` pairs,
+/// sorted by address so two runs over an unchanged package report in the
+/// same sequence.
+///
+/// A missing spec root is not an error: a package may legitimately carry
+/// no pages yet, and an empty walk says so more usefully than a refusal.
+fn walk_package(package_dir: &Path) -> Result<Vec<(String, PathBuf)>> {
     let root = package_dir.join(SPEC_ROOT);
     if !root.is_dir() {
-        return Ok(PageSet::default());
+        return Ok(Vec::new());
     }
     let mut found: Vec<(String, PathBuf)> = Vec::new();
     for entry in walkdir::WalkDir::new(&root).sort_by_file_name() {
@@ -129,20 +192,7 @@ pub fn read_package(package_dir: &Path) -> Result<PageSet> {
         found.push((rel, path));
     }
     found.sort_by(|a, b| a.0.cmp(&b.0));
-
-    let mut set = PageSet::default();
-    for (rel, path) in found {
-        let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
-        match vibe_specdoc::from_xml_with(&text, Vocabulary::Doc) {
-            Ok(doc) => set.pages.push(Page { rel, path, doc }),
-            Err(e) => set.unreadable.push(UnreadablePage {
-                rel,
-                path,
-                message: e.to_string(),
-            }),
-        }
-    }
-    Ok(set)
+    Ok(found)
 }
 
 #[cfg(test)]

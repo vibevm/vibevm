@@ -388,6 +388,140 @@ fn a_documentation_may_pin_pages_and_name_its_sections() {
     assert!(doc_manifest("").expect("optional").navigation.is_none());
 }
 
+/// The learning path parses beside the pinning and changes nothing about
+/// it: chapters in the order written, pages in the order written, and the
+/// appendix mark where the author put it (`##NAV-CHAPTERS`).
+#[test]
+fn a_documentation_may_declare_a_learning_path() {
+    let manifest = doc_manifest(
+        "\n[navigation]\npinned = [\"start/what-vibevm-is\"]\n\n\
+         [[navigation.chapter]]\nid = \"start\"\ntitle = \"Getting started\"\n\
+         pages = [\"start/what-vibevm-is\", \"start/index\"]\n\n\
+         [[navigation.chapter]]\nid = \"reference\"\ntitle = \"Appendices\"\n\
+         pages = [\"glossary/index\"]\nappendix = true\n",
+    )
+    .expect("the learning path parses");
+    let navigation = manifest.navigation.as_ref().expect("the table");
+    assert_eq!(navigation.chapters.len(), 2);
+    assert_eq!(navigation.chapters[0].id, "start");
+    assert_eq!(navigation.chapters[0].title, "Getting started");
+    assert_eq!(
+        navigation.chapters[0].pages.as_deref().unwrap(),
+        [
+            "start/what-vibevm-is".to_string(),
+            "start/index".to_string()
+        ]
+    );
+    assert!(!navigation.chapters[0].appendix);
+    assert!(navigation.chapters[1].appendix);
+
+    // A package that declares no path is the state every documentation
+    // written before the rows was in, and it stays legal.
+    let pinned_only = doc_manifest("\n[navigation]\npinned = [\"start/index\"]\n")
+        .expect("a navigation without chapters")
+        .navigation
+        .expect("the table");
+    assert!(pinned_only.chapters.is_empty());
+}
+
+/// A chapter is a handle and a name: without the id nothing can rename
+/// it, without the title the contents numbers a blank line, and two rows
+/// under one id make every mention of it ambiguous.
+#[test]
+fn a_chapter_needs_an_id_and_a_title_and_may_not_share_either() {
+    let blank_id =
+        refusal("\n[[navigation.chapter]]\nid = \"  \"\ntitle = \"Getting started\"\npages = []\n");
+    assert!(blank_id.contains("empty `id`"), "{blank_id}");
+    assert!(blank_id.contains("NAV-CHAPTERS-CHECKED"), "{blank_id}");
+
+    let blank_title =
+        refusal("\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"\"\npages = []\n");
+    assert!(blank_title.contains("empty `title`"), "{blank_title}");
+    assert!(
+        blank_title.contains("NAV-CHAPTERS-CHECKED"),
+        "{blank_title}"
+    );
+
+    let twice = refusal(
+        "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"One\"\npages = [\"a/one\"]\n\n\
+         [[navigation.chapter]]\nid = \"start\"\ntitle = \"Two\"\npages = [\"a/two\"]\n",
+    );
+    assert!(twice.contains("the id `start` twice"), "{twice}");
+    assert!(twice.contains("NAV-CHAPTERS-CHECKED"), "{twice}");
+}
+
+/// The path meets every page ONCE, and a chapter holds pages spelled as
+/// pins are spelled — so a page in two chapters and a page carrying its
+/// extension are both refused.
+#[test]
+fn a_chapter_page_is_a_document_path_named_once_on_the_whole_path() {
+    let twice = refusal(
+        "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"One\"\n\
+         pages = [\"start/index\", \"model/two-trees\"]\n\n\
+         [[navigation.chapter]]\nid = \"model\"\ntitle = \"Two\"\n\
+         pages = [\"model/two-trees\"]\n",
+    );
+    assert!(twice.contains("`model/two-trees` twice"), "{twice}");
+    assert!(twice.contains("NAV-CHAPTERS-CHECKED"), "{twice}");
+
+    for spelled in ["start/index.xml", "/start/index", "../x", ""] {
+        let message = refusal(&format!(
+            "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"One\"\npages = [\"{spelled}\"]\n"
+        ));
+        assert!(message.contains("not a document path"), "{message}");
+        assert!(message.contains("NAV-CHAPTERS-CHECKED"), "{message}");
+    }
+}
+
+/// `pages` is a list of paths and `appendix` is a yes or a no. Neither
+/// refusal is written here: the grammar of a TOML value is TOML's, and a
+/// second copy of it in this crate would be a second answer to «is this a
+/// list of strings».
+#[test]
+fn a_chapter_whose_fields_are_the_wrong_shape_does_not_parse() {
+    let pages = refusal(
+        "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"One\"\npages = \"start/index\"\n",
+    );
+    assert!(pages.contains("pages"), "{pages}");
+
+    let appendix = refusal(
+        "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"One\"\npages = []\nappendix = \"yes\"\n",
+    );
+    assert!(appendix.contains("appendix"), "{appendix}");
+}
+
+/// A translation takes the path of the documentation it adapts and only
+/// renames its chapters: a row with `id` and `title` is legal, and the
+/// same row carrying `pages` is refused, because two copies of one order
+/// are two things to keep in step (`##NAV-CHAPTERS-TRANSLATION`).
+#[test]
+fn a_translation_names_its_chapters_and_may_not_re_declare_their_pages() {
+    const ADAPTS: &str = "\n[translates]\npackage = \"org.vibevm.core/vibevm-docs\"\nversion = \"^0.3\"\n\
+         \n[i18n]\ncanonical = \"ru\"\n";
+
+    let named = doc_manifest(&format!(
+        "{ADAPTS}\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"Первые шаги\"\n"
+    ))
+    .expect("a translation may name its chapters");
+    let chapters = &named.navigation.as_ref().expect("the table").chapters;
+    assert_eq!(chapters[0].title, "Первые шаги");
+    assert!(
+        chapters[0].pages.is_none(),
+        "an unlisted `pages` stays unlisted"
+    );
+
+    // Even an EMPTY list is the translation listing pages: the legal
+    // shape is a row without the key at all.
+    for spelled in ["[]", "[\"start/index\"]"] {
+        let message = refusal(&format!(
+            "{ADAPTS}\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"Первые шаги\"\n\
+             pages = {spelled}\n"
+        ));
+        assert!(message.contains("declares [translates]"), "{message}");
+        assert!(message.contains("NAV-CHAPTERS-TRANSLATION"), "{message}");
+    }
+}
+
 /// A pin names a DOCUMENT, so it carries no extension: one document is
 /// served as three projections, and a pin at one of them would be a pin
 /// at one format.

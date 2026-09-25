@@ -166,6 +166,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod agent;
 pub mod build;
+pub mod chapters;
 pub mod citations;
 pub mod content;
 pub mod coverage;

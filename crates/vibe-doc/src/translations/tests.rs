@@ -316,3 +316,48 @@ fn the_report_names_the_coordinate_and_where_it_came_from() {
     );
     assert!(text.contains("0 problem(s)"), "{text}");
 }
+
+/// A chapter row the source does not declare (`##NAV-CHAPTERS-TRANSLATION`).
+///
+/// A translation renames the source's chapters and invents none: the path
+/// is one fact, declared once, in the documentation being adapted. A row
+/// under an unknown id renames nothing — it is a title nobody will ever
+/// show, which is exactly how a chapter id renamed on one side and not
+/// the other looks.
+#[test]
+fn a_chapter_the_source_does_not_declare_is_a_problem() {
+    let named = |id: &str| NavigationChapter {
+        id: id.to_owned(),
+        title: id.to_owned(),
+        pages: Vec::new(),
+        appendix: false,
+    };
+    let source = [named("start"), named("model")];
+
+    let problems = unknown_chapters(&source, &[named("start"), named("modell")]);
+    assert_eq!(
+        problems,
+        vec![Problem::UnknownChapter {
+            id: "modell".to_owned()
+        }],
+        "only the row the source has no chapter for"
+    );
+
+    // The problem is the manifest's, not a page's: a report that named a
+    // page for it would send its reader to the wrong file.
+    assert_eq!(problems[0].page(), "vibe.toml");
+    let text = problems[0].render("org.demo/lib-docs");
+    assert!(text.contains("UNKNOWN CHAPTER modell"), "{text}");
+    assert!(text.contains("org.demo/lib-docs"), "{text}");
+    assert!(text.contains("NAV-CHAPTERS-TRANSLATION"), "{text}");
+
+    // Renaming every chapter the source declares is the ordinary case,
+    // and naming only some of them is legal too: a chapter a translation
+    // does not name keeps the source's title.
+    assert!(unknown_chapters(&source, &[named("model")]).is_empty());
+    assert!(unknown_chapters(&source, &[]).is_empty());
+
+    // A source with no path at all makes every row unknown, which is the
+    // same defect written larger rather than a case of its own.
+    assert_eq!(unknown_chapters(&[], &[named("start")]).len(), 1);
+}

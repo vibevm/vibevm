@@ -420,6 +420,23 @@ pub struct DocCheckArgs {
     #[arg(long)]
     pub translations: bool,
 
+    /// Measure the declared learning path: every link from a page to a
+    /// page the path reaches later, links into an appendix chapter
+    /// excepted. It is the one check here that only reports — an
+    /// orientation page points ahead on purpose, so the number is read by
+    /// a person and never gates a build. A package that declares no path
+    /// is not measured, and says so.
+    #[arg(long)]
+    pub chapters: bool,
+
+    /// With `--chapters`, print the measurement as the JSON a machine
+    /// reads instead of the lines a person reads: the page-and-target
+    /// pairs and their count. It belongs to that check alone, because it
+    /// is the only one here whose output is a measurement rather than a
+    /// verdict an exit code already carries.
+    #[arg(long)]
+    pub json: bool,
+
     /// Require every documentation obligation of the specifications — a
     /// fact marked `actionstage="doc"` naming an audience — to be cited
     /// by a page written for that same audience.

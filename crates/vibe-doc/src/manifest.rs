@@ -36,6 +36,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER");
 
 pub mod layer;
+pub mod navigation;
 pub mod page;
 pub mod reviews;
 pub mod status;
@@ -45,13 +46,14 @@ use std::path::Path;
 use chrono::{DateTime, Utc};
 use vibe_wire::generated::doc_manifest::{
     AdaptedSource, Audience, Authorship, BridgeAuthorship, CardMedia, DocManifest, DocPackage,
-    DocPage, DocumentedSubject, Navigation, NavigationSection, PackageKind,
+    DocPage, DocumentedSubject, Navigation, PackageKind,
 };
 
 use crate::citations::SpecSources;
 use crate::error::{DocError, Result};
 use crate::pages::{self, PageSet};
 
+pub use navigation::chapters;
 pub use reviews::Reviews;
 
 /// The manifest's own version, written into every document this library
@@ -240,9 +242,22 @@ fn assemble(
             package,
             // Carried as the package wrote it, and applied to nothing
             // here: `pages` stays in the layer law's order, and where a
-            // pinned page STANDS is the reader's business
-            // (`##NAV-PINNED`). A projection that also reordered the
-            // list would give the site two orders to choose between.
+            // pinned page stands or which chapter a reader meets it in
+            // is the reader's business (`##NAV-PINNED`,
+            // `##NAV-CHAPTERS`).
+            //
+            // There ARE two orders now, and that is the decision rather
+            // than a thing to resolve (`##NAV-CHAPTERS-DECISION`): the
+            // layer law orders this corpus for machines by mutation
+            // frequency, a declared learning path orders it for people
+            // by what one has to learn first. Both are written down and
+            // neither is derived from the other, so `pages` is the law
+            // for the `llms` tiers and the MCP surface exactly as it was,
+            // and the path travels beside it as a declaration the
+            // reader follows. A projection that folded the path back
+            // into `pages` would take the choice away from both
+            // audiences and hand the agents' prompt cache the order a
+            // textbook wants.
             navigation: card.navigation.clone(),
             pages: rows,
         },
@@ -351,7 +366,7 @@ impl Card {
                 }),
             authorship: field("authorship").as_deref().and_then(authorship),
             kind: kind.as_deref().and_then(package_kind),
-            navigation: navigation(&parsed),
+            navigation: navigation::read(&parsed),
             // A rendering is a projection unless the package it renders
             // is documentation. Read off the KIND rather than off a
             // marker the composition would have to remember to write:
@@ -473,47 +488,6 @@ fn bridge(parsed: &toml::Value) -> Option<BridgeAuthorship> {
         maintainers: list(package.get("authors")),
         upstream_authors,
         upstream_license,
-    })
-}
-
-/// Read `[navigation]` as the wire carries it: the pinned paths in the
-/// order they were written, and one row per named section.
-///
-/// Read as data like the rest of the card, and `None` when the package
-/// says nothing — which is the state of every documentation written
-/// before the table existed, and the state the site renders as «the
-/// pages in the order the manifest gives them».
-fn navigation(parsed: &toml::Value) -> Option<Navigation> {
-    let table = parsed.get("navigation")?;
-    let strings = |value: Option<&toml::Value>| -> Vec<String> {
-        value
-            .and_then(toml::Value::as_array)
-            .map(|entries| {
-                entries
-                    .iter()
-                    .filter_map(toml::Value::as_str)
-                    .map(str::to_owned)
-                    .collect()
-            })
-            .unwrap_or_default()
-    };
-    let sections = table
-        .get("section")
-        .and_then(toml::Value::as_array)
-        .map(|rows| {
-            rows.iter()
-                .filter_map(|row| {
-                    Some(NavigationSection {
-                        id: row.get("id").and_then(toml::Value::as_str)?.to_owned(),
-                        title: row.get("title").and_then(toml::Value::as_str)?.to_owned(),
-                    })
-                })
-                .collect()
-        })
-        .unwrap_or_default();
-    Some(Navigation {
-        pinned: strings(table.get("pinned")),
-        sections,
     })
 }
 

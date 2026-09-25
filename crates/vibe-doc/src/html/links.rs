@@ -218,6 +218,59 @@ impl<'a> Links<'a> {
     }
 }
 
+/// The page of THIS package that a link on `page` names, or `None` when
+/// the link names anything else.
+///
+/// `page` is a page address as the package spells it — `start/index.xml`,
+/// the `rel` of a read page — and `target` is the address exactly as the
+/// prose wrote it. The answer is a document path without an extension,
+/// the spelling `[navigation]` and a `spec://` address both use.
+///
+/// It lives here because this module already holds the one reading of
+/// what a relative address inside a page means: a path from one `.xml` to
+/// another inside the package directory, walked from the page's own
+/// folder, refused when it climbs out. [`Links::cited`] does exactly this
+/// for a quoted document; a measurement over the corpus needs it for the
+/// page's own prose, and a second copy of the walk would be a second
+/// opinion on which file a link points at.
+///
+/// `None` covers four different things a link can be, and all four are
+/// «not a page of this package»: a `spec://` citation or any other
+/// scheme, an address already written against the site's root, a fragment
+/// alone (a place on the page that says it), and a file that is not a
+/// page — an image beside the pages keeps its name and never had a
+/// document path.
+///
+/// ```
+/// use vibe_doc::html::links::target_document;
+///
+/// assert_eq!(
+///     target_document("start/index.xml", "../model/two-trees.xml#p07").as_deref(),
+///     Some("model/two-trees")
+/// );
+/// assert_eq!(
+///     target_document("start/index.xml", "first-project.xml").as_deref(),
+///     Some("start/first-project")
+/// );
+/// // Not a page of this package, four ways.
+/// assert!(target_document("start/index.xml", "#p07").is_none());
+/// assert!(target_document("start/index.xml", "../media/card.png").is_none());
+/// assert!(target_document("start/index.xml", "spec://org.demo/lib/guide").is_none());
+/// assert!(target_document("start/index.xml", "https://vibevm.org/").is_none());
+/// // A path that climbs out of the package names no page of it.
+/// assert!(target_document("start/index.xml", "../../elsewhere/page.xml").is_none());
+/// ```
+pub fn target_document(page: &str, target: &str) -> Option<String> {
+    if has_scheme(target) || target.starts_with("//") || target.starts_with('/') {
+        return None;
+    }
+    let (path, _fragment) = split_fragment(target);
+    let stem = path.strip_suffix(".xml")?;
+    let mut directory: Vec<&str> = page.split('/').collect();
+    directory.pop();
+    walk(&directory, stem)
+}
+
 /// A relative address written beside a page's source file, as the site
 /// addresses it: one level deeper, and a page's `.xml` traded for the
 /// slash the address map ends in (`##SITE-TRAILING-SLASH`).

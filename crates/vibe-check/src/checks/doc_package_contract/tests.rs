@@ -178,6 +178,96 @@ fn a_pin_at_a_page_that_is_not_there_is_an_error() {
     assert!(hits[0].contains("NAV-PINNED"), "{}", hits[0]);
 }
 
+/// Write `<package>/vibevm/vibespecs/<document>.xml` for each document,
+/// so a test can give a package a page tree without writing a page the
+/// pivot would take: this rule reads the directory, never the documents.
+fn write_pages(root: &Path, documents: &[&str]) {
+    for document in documents {
+        let path = root
+            .join("vibevm/vibespecs")
+            .join(format!("{document}.xml"));
+        fs::create_dir_all(path.parent().expect("a page lives in a folder")).unwrap();
+        fs::write(path, "<spec/>\n").unwrap();
+    }
+}
+
+/// The declared learning path against the tree, both ways round: a
+/// chapter naming a page the package does not carry, and a page of the
+/// package no chapter holds. The second is the finding the rule exists
+/// for — a page added later must be given its place, and the alternative
+/// is a page missing from the reader's contents with nothing said.
+#[test]
+fn a_learning_path_must_name_pages_that_exist_and_cover_the_ones_that_do() {
+    let project = tempdir().unwrap();
+    write_doc_package(
+        project.path(),
+        "\n[[navigation.chapter]]\nid = \"start\"\ntitle = \"Getting started\"\n\
+         pages = [\"start/index\", \"start/gone\"]\n",
+    );
+    write_pages(project.path(), &["start/index", "model/two-trees"]);
+
+    let hits: Vec<String> = contract_findings(&findings(project.path()))
+        .into_iter()
+        .filter(|f| f.severity == Severity::Error)
+        .map(|f| f.message.clone())
+        .collect();
+    assert_eq!(hits.len(), 2, "one each way round: {hits:?}");
+
+    let missing = hits
+        .iter()
+        .find(|m| m.contains("start/gone"))
+        .expect("a chapter page the package does not carry");
+    assert!(missing.contains("chapter `start`"), "{missing}");
+    assert!(missing.contains("NAV-CHAPTERS-CHECKED"), "{missing}");
+
+    let uncovered = hits
+        .iter()
+        .find(|m| m.contains("model/two-trees"))
+        .expect("a page of the package no chapter holds");
+    assert!(uncovered.contains("no chapter"), "{uncovered}");
+    assert!(uncovered.contains("NAV-CHAPTERS-CHECKED"), "{uncovered}");
+}
+
+/// A documentation with no chapters is not a documentation with an
+/// incomplete path, so the rule does not run on it at all — which is what
+/// keeps every manual written before the rows existed passing untouched.
+/// A translation is skipped for the other reason: it takes its source's
+/// path and names no pages, so measuring its coverage would measure the
+/// source's (`##NAV-CHAPTERS-TRANSLATION`).
+#[test]
+fn a_package_that_declares_no_path_and_a_translation_are_both_left_alone() {
+    let silent = tempdir().unwrap();
+    write_doc_package(
+        silent.path(),
+        "\n[navigation]\npinned = [\"start/index\"]\n\n\
+         [[navigation.section]]\nid = \"start\"\ntitle = \"Start\"\n",
+    );
+    write_pages(silent.path(), &["start/index", "model/two-trees"]);
+    let report = findings(silent.path());
+    assert!(
+        contract_findings(&report).is_empty(),
+        "no path declared, nothing to cover: {:?}",
+        report.findings
+    );
+
+    let adapted = tempdir().unwrap();
+    write_doc_package(
+        adapted.path(),
+        "\n[translates]\npackage = \"org.vibevm.core/vibevm-docs\"\nversion = \"^0.1\"\n\
+         \n[i18n]\ncanonical = \"ru\"\n\n\
+         [[navigation.chapter]]\nid = \"start\"\ntitle = \"Первые шаги\"\n",
+    );
+    write_pages(adapted.path(), &["start/index", "model/two-trees"]);
+    let report = findings(adapted.path());
+    assert!(
+        contract_findings(&report)
+            .iter()
+            .all(|f| !f.message.contains("NAV-CHAPTERS-CHECKED")),
+        "a translation's coverage is its source's: {:?}",
+        report.findings
+    );
+}
+
 /// The subject's end of the edge. A `primary` in a foreign group is
 /// legal — a group may hand its documentation to another publisher — so
 /// it warns rather than fails, and only when the groups actually differ.

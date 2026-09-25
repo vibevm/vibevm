@@ -1,3 +1,5 @@
+use std::ffi::OsString;
+
 use super::*;
 
 fn args() -> DocCheckArgs {
@@ -6,6 +8,8 @@ fn args() -> DocCheckArgs {
         derived: false,
         citations: false,
         translations: false,
+        chapters: false,
+        json: false,
         media: false,
         coverage: false,
         style: false,
@@ -31,7 +35,73 @@ fn a_check_with_no_check_named_says_which_ones_exist() {
     assert!(e.to_string().contains("--coverage"), "{e}");
     assert!(e.to_string().contains("--style"), "{e}");
     assert!(e.to_string().contains("--prompts"), "{e}");
+    assert!(e.to_string().contains("--chapters"), "{e}");
     assert!(e.to_string().contains("PROP-057#PIPE-LIBRARY"), "{e}");
+}
+
+/// The learning-path measurement does not change the exit code, however
+/// many links point ahead — the norm's own ruling
+/// (`##NAV-CHAPTERS-CHECKED`), because an orientation page points ahead on
+/// purpose and a gate here would teach an author to stop writing it.
+///
+/// The package below declares a two-chapter path and the first page links
+/// into the second chapter, so the measurement is not empty; the run still
+/// succeeds. It is the one block of `run_check` that never bails, and that
+/// is what this pins.
+#[test]
+fn the_learning_path_measurement_reports_and_never_fails() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let pages = tmp.path().join("vibevm/vibespecs");
+    for (document, text) in [
+        (
+            "start/index",
+            "later comes [the model](../model/two-trees.xml)",
+        ),
+        ("model/two-trees", "one paragraph"),
+    ] {
+        let path = pages.join(format!("{document}.xml"));
+        std::fs::create_dir_all(path.parent().expect("a folder")).expect("mkdir");
+        std::fs::write(
+            path,
+            format!(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+                 <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+                   <title id=\"root\">T</title>\n  <p>{text}</p>\n\
+                 </spec>\n"
+            ),
+        )
+        .expect("write");
+    }
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
+         version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n\n\
+         [[documents]]\npackage = \"org.demo/lib\"\nversion = \"^1.0\"\n\n\
+         [navigation]\npinned = []\n\n\
+         [[navigation.chapter]]\nid = \"start\"\ntitle = \"Getting started\"\n\
+         pages = [\"start/index\"]\n\n\
+         [[navigation.chapter]]\nid = \"model\"\ntitle = \"How it works\"\n\
+         pages = [\"model/two-trees\"]\n",
+    )
+    .expect("write");
+
+    for json in [false, true] {
+        let checked = DocCheckArgs {
+            chapters: true,
+            json,
+            path: tmp.path().to_path_buf(),
+            ..args()
+        };
+        run_check(checked, DocEnv::default())
+            .expect("a link pointing ahead is measured, never gated");
+    }
+
+    // And the measurement itself is the one the library took, so the
+    // surface stays thin: one pair, counted once.
+    let report = vibe_doc::chapters::check(tmp.path()).expect("the library measures it");
+    assert_eq!(report.forward_link_count, 1);
+    assert_eq!(report.forward_links[0].page, "start/index");
+    assert_eq!(report.forward_links[0].target, "model/two-trees");
 }
 
 /// The prompt check calls a real agent, so a run with no agent to call

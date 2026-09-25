@@ -75,6 +75,48 @@ pub fn render(text: &str) -> String {
 /// );
 /// ```
 pub fn render_linked(text: &str, links: &Links) -> String {
+    let mut found: Vec<String> = Vec::new();
+    scan(text, links, &mut found)
+}
+
+/// Every address one unit's text points at, in the order it was written
+/// — the same five conventions read by the same scanner, with the HTML
+/// thrown away.
+///
+/// It is the one way to ask «what does this prose link to», and it exists
+/// so that nothing has to ask with a second parser: a regular expression
+/// over `](…)` would disagree with the renderer the first time a code
+/// span held a bracket, and then a measurement over the corpus would
+/// count links no reader can click. Both a `[text](href)` and an
+/// `<https://…>` autolink are addresses; what rides inside a code span is
+/// not, for the reason it is not markup either.
+///
+/// ```
+/// use vibe_doc::html::inline::hrefs;
+///
+/// assert_eq!(
+///     hrefs("see [the glossary](../glossary/index.xml#term) and [p07](#p07)"),
+///     vec!["../glossary/index.xml#term".to_owned(), "#p07".to_owned()]
+/// );
+/// // A code span is text, in this reading exactly as in the renderer's.
+/// assert!(hrefs("write `[label](target)` to link").is_empty());
+/// // Markup nests, so a link inside emphasis is still a link.
+/// assert_eq!(hrefs("*see [it](a.xml)*"), vec!["a.xml".to_owned()]);
+/// ```
+pub fn hrefs(text: &str) -> Vec<String> {
+    let mut found: Vec<String> = Vec::new();
+    scan(text, &Links::verbatim(), &mut found);
+    found
+}
+
+/// The one walk over a unit's inline Markdown: it renders, and it
+/// records every address it passes.
+///
+/// Both callers above are this function with one of its two results
+/// dropped, which is what keeps «what the reader sees» and «what the
+/// prose points at» two answers from ONE grammar. Splitting them would
+/// give the corpus two opinions about where a link is.
+fn scan(text: &str, links: &Links, found: &mut Vec<String>) -> String {
     let chars: Vec<char> = text.chars().collect();
     let mut out = String::with_capacity(text.len());
     let mut i = 0usize;
@@ -83,15 +125,15 @@ pub fn render_linked(text: &str, links: &Links) -> String {
             i = next;
             continue;
         }
-        if let Some(next) = link(&chars, i, &mut out, links) {
+        if let Some(next) = link(&chars, i, &mut out, links, found) {
             i = next;
             continue;
         }
-        if let Some(next) = autolink(&chars, i, &mut out, links) {
+        if let Some(next) = autolink(&chars, i, &mut out, links, found) {
             i = next;
             continue;
         }
-        if let Some(next) = emphasis(&chars, i, &mut out, links) {
+        if let Some(next) = emphasis(&chars, i, &mut out, links, found) {
             i = next;
             continue;
         }
@@ -173,7 +215,13 @@ fn code_span(chars: &[char], at: usize, out: &mut String) -> Option<usize> {
 
 /// `[text](href)` — the text may carry its own inline markup, the href
 /// may not.
-fn link(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
+fn link(
+    chars: &[char],
+    at: usize,
+    out: &mut String,
+    links: &Links,
+    found: &mut Vec<String>,
+) -> Option<usize> {
     if chars[at] != '[' {
         return None;
     }
@@ -185,13 +233,20 @@ fn link(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<us
     let label: String = chars[at + 1..close].iter().collect();
     let href: String = chars[close + 2..end].iter().collect();
     out.push_str(&open_anchor(&href, links));
-    out.push_str(&render_linked(&label, links));
+    found.push(href);
+    out.push_str(&scan(&label, links, found));
     out.push_str("</a>");
     Some(end + 1)
 }
 
 /// `<https://example.org>` — the address is its own label.
-fn autolink(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
+fn autolink(
+    chars: &[char],
+    at: usize,
+    out: &mut String,
+    links: &Links,
+    found: &mut Vec<String>,
+) -> Option<usize> {
     if chars[at] != '<' {
         return None;
     }
@@ -205,18 +260,25 @@ fn autolink(chars: &[char], at: usize, out: &mut String, links: &Links) -> Optio
     }
     out.push_str(&open_anchor(&body, links));
     out.push_str(&escape(&body));
+    found.push(body);
     out.push_str("</a>");
     Some(end + 1)
 }
 
 /// `**strong**` before `*em*`, because the longer marker wins; `_em_`
 /// only at a word boundary, so `snake_case_names` stay whole.
-fn emphasis(chars: &[char], at: usize, out: &mut String, links: &Links) -> Option<usize> {
+fn emphasis(
+    chars: &[char],
+    at: usize,
+    out: &mut String,
+    links: &Links,
+    found: &mut Vec<String>,
+) -> Option<usize> {
     if chars[at] == '*' && chars.get(at + 1) == Some(&'*') {
         if let Some(end) = find_marker(chars, at + 2, "**") {
             let body: String = chars[at + 2..end].iter().collect();
             out.push_str("<strong>");
-            out.push_str(&render_linked(&body, links));
+            out.push_str(&scan(&body, links, found));
             out.push_str("</strong>");
             return Some(end + 2);
         }
@@ -229,7 +291,7 @@ fn emphasis(chars: &[char], at: usize, out: &mut String, links: &Links) -> Optio
         }
         let body: String = chars[at + 1..end].iter().collect();
         out.push_str("<em>");
-        out.push_str(&render_linked(&body, links));
+        out.push_str(&scan(&body, links, found));
         out.push_str("</em>");
         return Some(end + 1);
     }
@@ -240,7 +302,7 @@ fn emphasis(chars: &[char], at: usize, out: &mut String, links: &Links) -> Optio
         }
         let body: String = chars[at + 1..end].iter().collect();
         out.push_str("<em>");
-        out.push_str(&render_linked(&body, links));
+        out.push_str(&scan(&body, links, found));
         out.push_str("</em>");
         return Some(end + 1);
     }

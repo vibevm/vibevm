@@ -30,7 +30,7 @@ use std::path::Path;
 
 use specmark::cell;
 use vibe_core::PackageKind;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, NavigationDecl};
 // Where a package's pages live (PROP-052), borrowed from the pipeline
 // that walks them rather than spelled a second time here.
 use vibe_doc::pages::SPEC_ROOT;
@@ -60,6 +60,89 @@ fn manifest_of(project_root: &Path) -> Option<Manifest> {
 /// The group half of a `<group>/<name>` coordinate.
 fn group_of(coordinate: &str) -> Option<&str> {
     coordinate.split_once('/').map(|(group, _)| group)
+}
+
+/// The declared learning path against the page tree it claims to cover
+/// (PROP-057 `##NAV-CHAPTERS-CHECKED`).
+///
+/// Two findings and they are each other's mirror: a chapter naming a page
+/// the package does not have, and a page of the package no chapter names.
+/// The second is the one the rule exists for — a page added later must be
+/// GIVEN its place on the path, and without this it would simply be
+/// missing from the reader's contents with nothing said.
+///
+/// Three things this deliberately does not do. It does not run on a
+/// package that declared no path: a documentation with no chapters is not
+/// a documentation with an incomplete one, and every manual written before
+/// the rows existed is in that state. It does not run on a translation:
+/// an adaptation takes its source's path and names no pages at all
+/// (`##NAV-CHAPTERS-TRANSLATION`), so measuring its coverage would be
+/// measuring the source's. And it does not restate the manifest grammar —
+/// a blank id, a duplicate id, a page named twice and a path spelled with
+/// an extension are refused by `Manifest::validate` before this cell sees
+/// the file.
+fn check_learning_path(
+    project_root: &Path,
+    manifest: &Manifest,
+    navigation: &NavigationDecl,
+    manifest_path: &Path,
+    report: &mut CheckReport,
+) {
+    if navigation.chapters.is_empty() || manifest.translates.is_some() {
+        return;
+    }
+    // «Which pages does this package have» is a question about a
+    // directory, asked of the pipeline that owns the answer. A page the
+    // pivot would refuse is still a page of the tree and still owes the
+    // path a place, so the addresses are walked rather than the documents
+    // read.
+    let Ok(present) = vibe_doc::pages::documents(project_root) else {
+        return;
+    };
+    let mut placed: Vec<&str> = Vec::new();
+    for chapter in &navigation.chapters {
+        for page in chapter.pages.iter().flatten() {
+            placed.push(page);
+            if present.iter().any(|document| document == page) {
+                continue;
+            }
+            report.err(
+                CheckId::DocPackageContract,
+                Some(manifest_path.to_path_buf()),
+                None,
+                format!(
+                    "the learning path's chapter `{id}` names `{page}`, and this package carries \
+                     no page at `{SPEC_ROOT}/{page}.{PAGE_EXTENSION}` — a path that walks through \
+                     a page nobody wrote leads a reader to a dead link and numbers a chapter one \
+                     page longer than it is \
+                     (violates \
+                     spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED; \
+                     fix: correct the path, or drop it from the chapter if the page is gone)",
+                    id = chapter.id,
+                ),
+            );
+        }
+    }
+    for document in &present {
+        if placed.contains(&document.as_str()) {
+            continue;
+        }
+        report.err(
+            CheckId::DocPackageContract,
+            Some(manifest_path.to_path_buf()),
+            None,
+            format!(
+                "this package carries `{SPEC_ROOT}/{document}.{PAGE_EXTENSION}` and no chapter of \
+                 the learning path holds it — followed from the first page of the first chapter \
+                 to the last, the path meets every page of the package, so a page added later \
+                 must be given its place on it rather than left out of the contents in silence \
+                 (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED; \
+                 fix: add `{document}` to the chapter it belongs to, in the order a reader should \
+                 meet it)"
+            ),
+        );
+    }
 }
 
 impl Check for DocPackageContractCheck {
@@ -163,6 +246,7 @@ impl Check for DocPackageContractCheck {
                     ),
                 );
             }
+            check_learning_path(project_root, &manifest, navigation, &manifest_path, report);
         }
 
         // The front door. A reader who arrived at the repository rather

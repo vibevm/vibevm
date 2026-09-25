@@ -27,6 +27,8 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+use super::is_false;
+
 /// `[[documents]]` — one subject this documentation documents.
 ///
 /// A `doc` package declares at least one; the `version` is a semver
@@ -176,14 +178,18 @@ impl MediaDecl {
     }
 }
 
-/// `[navigation]` — where a documentation asks its own pages to stand.
+/// `[navigation]` — where a documentation asks its own pages to stand,
+/// and the order it asks a person to read them in.
 ///
-/// Two statements and no third: which pages are listed first, and what
-/// the folders of the page tree are called. Everything else keeps the
-/// order the layer law already gave it (PROP-048 `##THE-LAYER-LAW`,
-/// PROP-057 `##NAV-PINNED`), so this is a correction to a list the
-/// manifest already holds rather than a second table of contents that
-/// would have to be kept in step with the first.
+/// Three statements: which pages are listed first, what the folders of
+/// the page tree are called (PROP-057 `##NAV-PINNED`), and the learning
+/// path (`##NAV-CHAPTERS`). None of them moves `pages`, which keeps the
+/// order the layer law already gave it (PROP-048 `##THE-LAYER-LAW`): the
+/// pinning is a correction to where two pages stand, and the path is a
+/// second order for a second audience, carried beside the list rather
+/// than replacing it. Two orders for two readers is the decision
+/// (`##NAV-CHAPTERS-DECISION`) — a corpus ordered for machines by
+/// mutation frequency, and for people by what one has to learn first.
 ///
 /// ```
 /// use vibe_core::manifest::NavigationDecl;
@@ -194,9 +200,16 @@ impl MediaDecl {
 ///     [[section]]
 ///     id = "start"
 ///     title = "Start"
+///
+///     [[chapter]]
+///     id = "start"
+///     title = "Getting started"
+///     pages = ["start/what-vibevm-is", "start/index"]
 /// "#).unwrap();
 /// assert_eq!(n.pinned, vec!["start/what-vibevm-is", "start/index"]);
 /// assert_eq!(n.sections[0].title, "Start");
+/// assert_eq!(n.chapters[0].pages.as_deref().unwrap().len(), 2);
+/// assert!(!n.chapters[0].appendix);
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -210,13 +223,71 @@ pub struct NavigationDecl {
     /// page tree.
     #[serde(default, rename = "section", skip_serializing_if = "Vec::is_empty")]
     pub sections: Vec<NavigationSectionDecl>,
+    /// `[[navigation.chapter]]` — the learning path, in the order a
+    /// reader walks it. Empty for a package that declares none, which is
+    /// every documentation written before the rows existed and which the
+    /// reader shows exactly as it did before.
+    #[serde(default, rename = "chapter", skip_serializing_if = "Vec::is_empty")]
+    pub chapters: Vec<NavigationChapterDecl>,
 }
 
 impl NavigationDecl {
     /// `true` when the table says nothing at all.
     pub fn is_empty(&self) -> bool {
-        self.pinned.is_empty() && self.sections.is_empty()
+        self.pinned.is_empty() && self.sections.is_empty() && self.chapters.is_empty()
     }
+}
+
+/// `[[navigation.chapter]]` — one chapter of the learning path.
+///
+/// The id is the chapter's identity and never shown, for the reason a
+/// section carries one: a translation names the same chapters as its
+/// source and shows other words for them
+/// (PROP-057 `##NAV-CHAPTERS-TRANSLATION`).
+///
+/// `pages` is an `Option` because absence and emptiness are different
+/// facts here and the rule turns on the difference: a source edition
+/// declares the pages a chapter holds, and a translation declares a
+/// chapter's name and NO pages at all. A `pages = []` in a translation
+/// is still a translation listing pages, which is refused; a row with no
+/// `pages` key is the legal shape.
+///
+/// ```
+/// use vibe_core::manifest::NavigationChapterDecl;
+///
+/// let source: NavigationChapterDecl = toml::from_str(r#"
+///     id = "reference"
+///     title = "Appendices"
+///     pages = ["reference/commands", "glossary/index"]
+///     appendix = true
+/// "#).unwrap();
+/// assert_eq!(source.pages.as_deref().unwrap()[0], "reference/commands");
+/// assert!(source.appendix);
+///
+/// // A translation names the chapter and leaves the path to its source.
+/// let adapted: NavigationChapterDecl =
+///     toml::from_str("id = \"reference\"\ntitle = \"Приложения\"\n").unwrap();
+/// assert!(adapted.pages.is_none());
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NavigationChapterDecl {
+    /// The chapter's identity inside the package — used once, shown
+    /// never.
+    pub id: String,
+    /// What the contents shows over the chapter's pages, in this
+    /// package's own language.
+    pub title: String,
+    /// The document paths the chapter holds, in reading order, spelled
+    /// as a pin spells them. Absent in a translation, which takes the
+    /// path of the documentation it adapts.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pages: Option<Vec<String>>,
+    /// `true` for a chapter of pages a reader looks things up in rather
+    /// than reads through — the reference tables, the errors, the
+    /// glossary.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub appendix: bool,
 }
 
 /// `[[navigation.section]]` — one folder of the page tree under the name
@@ -264,6 +335,18 @@ pub(crate) fn pinned_path_form_is_valid(value: &str) -> bool {
         any = true;
     }
     any
+}
+
+/// `true` for a chapter id: any name that is not blank.
+///
+/// Weaker than a section's on purpose. A section id IS a folder of the
+/// page tree and has to spell one; a chapter is a unit of a lesson plan
+/// that has no folder behind it — a chapter may gather pages from four
+/// folders, and two chapters may draw on one. What the id must do is be
+/// there, so a translation has something to name the chapter by
+/// (PROP-057 `##NAV-CHAPTERS-TRANSLATION`).
+pub(crate) fn chapter_id_form_is_valid(value: &str) -> bool {
+    !value.trim().is_empty()
 }
 
 /// `true` for a section id: exactly one path segment, which is what a

@@ -33,6 +33,7 @@ import {
   type DocPage,
   type DocumentedSubject,
   type Navigation,
+  type NavigationChapter,
   type NavigationSection,
 } from "../generated/doc-manifest.ts";
 
@@ -463,8 +464,48 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
 }
 
 /**
+ * The learning path, chapter by chapter in the order a reader walks it
+ * (`##NAV-CHAPTERS`).
+ *
+ * Read with exactly the strictness `sections` is read with, and for the
+ * same reason: this file is the one door from bytes into the type, and a
+ * row it waved through would reach the contents as a chapter with no
+ * title or a page list that is not a list of pages. A malformed row is a
+ * failure named by its own path, never an exception and never a silently
+ * dropped chapter — a contents missing chapter four is worse than a shell
+ * that says which row it could not read.
+ *
+ * `appendix` is a flag, so absence is not `false` in the reading and only
+ * in the meaning: a manifest omits it for every ordinary chapter, and a
+ * value that is not a boolean is refused rather than coerced.
+ */
+function chapters(rows: unknown[], at: string): Parsed<NavigationChapter[]> {
+  const out: NavigationChapter[] = [];
+  for (const [index, item] of rows.entries()) {
+    const where = `${at}[${index}]`;
+    if (!isRecord(item)) return fail(where, "expected an object");
+    const id = str(item, "id", where);
+    if (!id.ok) return id;
+    const title = str(item, "title", where);
+    if (!title.ok) return title;
+    const pages = strings(item, "pages", where);
+    if (!pages.ok) return pages;
+    const mark = flag(item, "appendix", where);
+    if (!mark.ok) return mark;
+    out.push({
+      id: id.value,
+      title: title.value,
+      pages: pages.value,
+      ...(mark.value === undefined ? {} : { appendix: mark.value }),
+    });
+  }
+  return { ok: true, value: out };
+}
+
+/**
  * What the documentation asked its own list of pages to look like
- * (`##NAV-PINNED`).
+ * (`##NAV-PINNED`), and the order it asks a person to read them in
+ * (`##NAV-CHAPTERS`).
  *
  * Optional for the reason `media` is: a manifest written before the
  * field existed is still a manifest, and a reader that refused one would
@@ -473,6 +514,13 @@ function card(value: unknown, at: string): Parsed<DocPackage> {
  * order under their folders' own names — never «it asked for nothing to
  * be pinned», which is a package that declared the table and left the
  * list empty, and which arrives here as the empty array it wrote.
+ *
+ * `chapters` keeps that distinction one level deeper, and the site turns
+ * on it: a documentation with no path shows the sections view it always
+ * showed, and one that declared a path opens on the path. So an absent
+ * `chapters` stays absent here rather than becoming an empty array — the
+ * two are different answers, and only one of them changes what a reader
+ * sees.
  */
 function navigation(value: unknown, at: string): Parsed<Navigation> {
   if (!isRecord(value)) return fail(at, "expected an object");
@@ -490,7 +538,22 @@ function navigation(value: unknown, at: string): Parsed<Navigation> {
     if (!title.ok) return title;
     sections.push({ id: id.value, title: title.value });
   }
-  return { ok: true, value: { pinned: pinned.value, sections } };
+  let path: NavigationChapter[] | undefined = undefined;
+  if (field(value, "chapters") !== undefined) {
+    const declared = list(value, "chapters", at);
+    if (!declared.ok) return declared;
+    const parsed = chapters(declared.value, `${at}.chapters`);
+    if (!parsed.ok) return parsed;
+    path = parsed.value;
+  }
+  return {
+    ok: true,
+    value: {
+      pinned: pinned.value,
+      sections,
+      ...(path === undefined ? {} : { chapters: path }),
+    },
+  };
 }
 
 /** Turn a parsed JSON document into a manifest, or say where it failed. */

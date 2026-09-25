@@ -220,3 +220,98 @@ test("anything that is not a manifest is not a manifest", () => {
     assert.equal(parseDocManifest(value).ok, false);
   }
 });
+
+/**
+ * The learning path across the erasure boundary (`##NAV-CHAPTERS`).
+ *
+ * The fixture declares a navigation and no path, which is the state of
+ * every documentation written before the rows existed — so the absence has
+ * to survive as an absence. The site turns on exactly that: no path means
+ * the sections view it always showed, a declared path means the contents
+ * opens on the path, and an empty array read as «no path» would hide a
+ * package that opened the table and named nothing.
+ */
+test("a declared learning path crosses, and no path stays no path", () => {
+  const silent = parseDocManifest(fixture());
+  assert.equal(silent.ok, true);
+  if (!silent.ok) return;
+  assert.notEqual(silent.value.navigation, undefined);
+  assert.equal("chapters" in (silent.value.navigation ?? {}), false);
+
+  const declared = JSON.parse(JSON.stringify(fixture()));
+  declared.navigation.chapters = [
+    { id: "guide", title: "The guide", pages: ["guide/every-block"] },
+    {
+      id: "reference",
+      title: "Appendices",
+      pages: ["reference/addresses"],
+      appendix: true,
+    },
+  ];
+  const parsed = parseDocManifest(declared);
+  assert.equal(
+    parsed.ok,
+    true,
+    parsed.ok ? "" : `${parsed.error.path}: ${parsed.error.reason}`,
+  );
+  if (!parsed.ok) return;
+  const path = parsed.value.navigation?.chapters;
+  assert.equal(path?.length, 2);
+  assert.equal(path?.[0]?.id, "guide");
+  assert.equal(path?.[0]?.title, "The guide");
+  assert.deepEqual(path?.[0]?.pages, ["guide/every-block"]);
+  // Absent is not `false` in the reading; it is `false` only in meaning.
+  assert.equal("appendix" in (path?.[0] ?? {}), false);
+  assert.equal(path?.[1]?.appendix, true);
+
+  // An empty path is a package that opened the table and named nothing,
+  // and it arrives as the empty array it wrote.
+  const empty = JSON.parse(JSON.stringify(fixture()));
+  empty.navigation.chapters = [];
+  const none = parseDocManifest(empty);
+  assert.equal(none.ok, true);
+  if (!none.ok) return;
+  assert.deepEqual(none.value.navigation?.chapters, []);
+});
+
+/**
+ * A malformed chapter is a failure named by its own path. A contents
+ * missing chapter four is worse than a shell that says which row it could
+ * not read, so nothing here is dropped quietly.
+ */
+test("a malformed chapter is refused by the path of the field that failed", () => {
+  const cases: readonly (readonly [unknown, string])[] = [
+    [{ id: "guide", pages: [] }, "$.navigation.chapters[0].title"],
+    [{ title: "The guide", pages: [] }, "$.navigation.chapters[0].id"],
+    [{ id: "guide", title: "The guide" }, "$.navigation.chapters[0].pages"],
+    [
+      { id: "guide", title: "The guide", pages: "guide/every-block" },
+      "$.navigation.chapters[0].pages",
+    ],
+    [
+      { id: "guide", title: "The guide", pages: [7] },
+      "$.navigation.chapters[0].pages[0]",
+    ],
+    [
+      { id: "guide", title: "The guide", pages: [], appendix: "yes" },
+      "$.navigation.chapters[0].appendix",
+    ],
+    ["a chapter", "$.navigation.chapters[0]"],
+  ];
+  for (const [row, path] of cases) {
+    const broken = JSON.parse(JSON.stringify(fixture()));
+    broken.navigation.chapters = [row];
+    const refused = parseDocManifest(broken);
+    assert.equal(refused.ok, false, `${path} must be refused`);
+    if (refused.ok) continue;
+    assert.equal(refused.error.path, path);
+  }
+
+  // The list itself is a list, and the failure says so at the table.
+  const broken = JSON.parse(JSON.stringify(fixture()));
+  broken.navigation.chapters = { guide: "The guide" };
+  const refused = parseDocManifest(broken);
+  assert.equal(refused.ok, false);
+  if (refused.ok) return;
+  assert.equal(refused.error.path, "$.navigation.chapters");
+});

@@ -48,12 +48,13 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use vibe_specdoc::doc::{Block, SpecDoc};
+use vibe_wire::generated::doc_manifest::NavigationChapter;
 
 use crate::citations::sources::{Source, SpecSources};
 use crate::error::{DocError, Result};
 use crate::manifest;
 use crate::numbering::{Numbering, block_at, number_blocks};
-use crate::pages::{self, Page, PageSet};
+use crate::pages::{self, Page, PageSet, document_of};
 
 /// The manifest key a translation declares its source under.
 pub const TRANSLATES: &str = "translates";
@@ -73,6 +74,9 @@ pub enum Problem {
     OwnExample { page: String, id: String },
     /// The translation borrows an example the source page does not have.
     UnknownExampleRef { page: String, id: String },
+    /// The translation names a chapter of the learning path the source
+    /// does not declare.
+    UnknownChapter { id: String },
     /// The two pages part at a block: a different kind at the same
     /// number, or one page running out of blocks before the other.
     Block {
@@ -88,7 +92,10 @@ pub enum Problem {
 }
 
 impl Problem {
-    /// The page the problem is on.
+    /// The page the problem is on, or the manifest when the problem is
+    /// the manifest's: a chapter the source does not declare is a defect
+    /// of the `[navigation]` table, and naming a page for it would send
+    /// the reader of a report to the wrong file.
     pub fn page(&self) -> &str {
         match self {
             Problem::MissingPage { page }
@@ -98,6 +105,7 @@ impl Problem {
             | Problem::OwnExample { page, .. }
             | Problem::UnknownExampleRef { page, .. }
             | Problem::Block { page, .. } => page,
+            Problem::UnknownChapter { .. } => crate::derived::manifest::MANIFEST,
         }
     }
 
@@ -132,6 +140,12 @@ impl Problem {
                 "  UNKNOWN EXAMPLE {page}#{id}\n    the translation borrows an example the \
                  source page does not carry"
             ),
+            Problem::UnknownChapter { id } => format!(
+                "  UNKNOWN CHAPTER {id}\n    the translation renames a chapter of the learning \
+                 path that `{adapts}` does not declare; a translation names the source's \
+                 chapters and adds none of its own\n    \
+                 (spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-TRANSLATION)"
+            ),
             Problem::Block {
                 page,
                 at,
@@ -146,12 +160,6 @@ impl Problem {
             ),
         }
     }
-}
-
-/// A page address as a `spec://` doc-path: the same path without its
-/// extension, the form the addressing grammar spells a document in.
-fn document_of(page: &str) -> &str {
-    page.strip_suffix(".xml").unwrap_or(page)
 }
 
 /// One `--translations` run.
@@ -258,9 +266,39 @@ pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
     let translation = pages::read_package(package_dir)?;
     let source = pages::read_package(&instance.root)?;
     let mut report = compare(&source, &translation);
+    // The chapters are the manifests' business rather than the pages',
+    // so they are compared from the two manifests and folded in here.
+    report.problems.extend(unknown_chapters(
+        &manifest::chapters(&instance.root)?,
+        &manifest::chapters(package_dir)?,
+    ));
     report.adapts = Some(coordinate);
     report.source = Some(instance.source);
     Ok(report)
+}
+
+/// The chapters a translation names that its source does not declare
+/// (`##NAV-CHAPTERS-TRANSLATION`).
+///
+/// A translation renames the source's chapters and invents none: the
+/// path is one fact, declared once, in the documentation being adapted.
+/// A row under an id the source never used renames nothing — it is a
+/// title nobody will ever show, which is how a chapter id renamed on one
+/// side and not the other looks.
+///
+/// A source that declares no path at all makes every row of the
+/// translation unknown, and that is the correct reading rather than a
+/// special case: naming chapters of a path that does not exist is the
+/// same defect written larger.
+fn unknown_chapters(
+    source: &[NavigationChapter],
+    translation: &[NavigationChapter],
+) -> Vec<Problem> {
+    translation
+        .iter()
+        .filter(|row| !source.iter().any(|theirs| theirs.id == row.id))
+        .map(|row| Problem::UnknownChapter { id: row.id.clone() })
+        .collect()
 }
 
 /// Compare two read packages. Split from [`check`] so the comparison is

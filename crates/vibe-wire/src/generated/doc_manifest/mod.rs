@@ -370,12 +370,13 @@ pub struct DocumentedSubject {
 
 pub use crate::generated::shared::Group;
 
-/// The two things a package may say about how its pages are listed (PROP-057
-/// `##NAV-PINNED`): which of them stand first, and what the folders they live
-/// in are called. It changes only where the named pages stand — every other
-/// page keeps the order the layer law gave it — so a navigation is a small
-/// correction to a list the manifest already holds, never a second table of
-/// contents beside it.
+/// What a package may say about how its pages are listed: which of them
+/// stand first and what the folders they live in are called (PROP-057 `##NAV-
+/// PINNED`), and the learning path a reader is meant to follow (`##NAV-
+/// CHAPTERS`). None of it moves `pages`, which keeps the layer law's order
+/// (PROP-048 `##THE-LAYER-LAW`) — the pinning is a small correction to where
+/// two pages stand, and the path is a second order carried BESIDE the list for
+/// people to read by, never a rewrite of the list machines read by.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Navigation {
     /// The document paths the site and the local reader list first, in the
@@ -389,6 +390,52 @@ pub struct Navigation {
     /// navigation shows for it. A folder the package does not name is shown
     /// under its own directory name, which is a fallback and not a translation.
     pub sections: Vec<NavigationSection>,
+
+    /// The learning path, chapter by chapter in the order a reader walks
+    /// them (PROP-057 `##NAV-CHAPTERS`), present only for a package that
+    /// declared one. Absence and emptiness are different answers and both are
+    /// kept: absent is «this documentation declared no path», which is every
+    /// documentation written before the rows existed and which the reader
+    /// renders exactly as it did before; an empty array is a package that
+    /// opened the table and named no chapter. The order in which a reader
+    /// should learn is a judgment only the author can make, so it is declared
+    /// rather than derived, and the machine carries the declaration whole.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub chapters: Option<Vec<NavigationChapter>>,
+}
+
+/// One chapter of the learning path: a title a reader sees over the pages it
+/// holds, and those pages in reading order (PROP-057 `##NAV-CHAPTERS`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NavigationChapter {
+    /// The chapter's identity inside the package, used once and never shown —
+    /// `start`. An id and not a title, for the reason a section carries one:
+    /// a translation names the same chapters as its source while showing other
+    /// words for them (`##NAV-CHAPTERS-TRANSLATION`).
+    pub id: String,
+
+    /// What the contents shows over the chapter's pages, in the package's own
+    /// language.
+    pub title: String,
+
+    /// The document paths the chapter holds, in reading order and spelled
+    /// as a pin spells them — under the spec root, forward slashes, without
+    /// the extension. Empty in a translation's manifest and nowhere else:
+    /// a translation takes the path of the documentation it adapts and only
+    /// renames its chapters, so its rows carry a title and no pages (`##NAV-
+    /// CHAPTERS-TRANSLATION`). Written even when empty, because a row that
+    /// names a chapter and holds no page is a fact about a translation rather
+    /// than a hole a reader fills in.
+    pub pages: Vec<String>,
+
+    /// True for a chapter of pages a reader looks things up in rather than
+    /// reads through — the reference tables, the errors, the glossary. The
+    /// contents leaves such a chapter unnumbered, and the measure of forward
+    /// links excepts links INTO it, because pointing a reader at a definition
+    /// is not the same as sending them ahead of the lesson (`##NAV-CHAPTERS-
+    /// CHECKED`). False, and therefore absent, for an ordinary chapter.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub appendix: bool,
 }
 
 /// One folder of the page tree under the name a reader sees.

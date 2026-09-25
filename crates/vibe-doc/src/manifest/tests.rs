@@ -144,6 +144,118 @@ fn the_navigation_is_carried_and_the_page_order_is_left_alone() {
     assert_eq!(navigation.sections[0].title, "Start");
 }
 
+/// The learning path reaches the manifest as the package wrote it, and
+/// the list of pages is NOT resorted by it.
+///
+/// That is the whole of `##NAV-CHAPTERS`: `pages` keeps the layer law's
+/// order for the machines that read by it, and the path travels beside it
+/// for the people who read by that. The proof is the comparison — the same
+/// package built with a path and without one gives the same `pages` — and
+/// not a spelling typed here, because a list typed here would agree with
+/// whatever the code did.
+#[test]
+fn the_learning_path_is_carried_whole_and_moves_no_page() {
+    let card = "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
+                version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n";
+    let tmp = tempfile::tempdir().expect("temp");
+    let root = tmp.path().join(crate::pages::SPEC_ROOT);
+    for document in ["start/index", "model/two-trees", "glossary/index"] {
+        let path = root.join(format!("{document}.xml"));
+        std::fs::create_dir_all(path.parent().expect("a page lives in a folder")).expect("mkdir");
+        std::fs::write(
+            &path,
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+             <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+               <title id=\"root\">T</title>\n  <p>One paragraph.</p>\n\
+             </spec>\n",
+        )
+        .expect("write");
+    }
+    std::fs::write(tmp.path().join("vibe.toml"), card).expect("write");
+
+    // What the layer law gave this tree, read from the build rather than
+    // typed here: a list typed here would agree with whatever the code
+    // did, and the claim is that the code does not move this one.
+    let layer_order: Vec<String> =
+        build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at()))
+            .expect("the package without a path builds")
+            .manifest
+            .pages
+            .iter()
+            .map(|page| page.path.clone())
+            .collect();
+    assert_eq!(layer_order.len(), 3);
+
+    // The same tree, with a path declared over its pages in the REVERSE
+    // of that order — the sharpest form of «two orders, and the machine
+    // keeps both».
+    let declared: Vec<String> = layer_order
+        .iter()
+        .rev()
+        .map(|page| format!("\"{}\"", crate::pages::document_of(page)))
+        .collect();
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        format!(
+            "{card}\n[navigation]\npinned = []\n\n\
+             [[navigation.chapter]]\nid = \"lesson\"\ntitle = \"The lesson\"\n\
+             pages = [{}]\n\n\
+             [[navigation.chapter]]\nid = \"back\"\ntitle = \"Look it up\"\n\
+             pages = []\nappendix = true\n",
+            declared.join(", ")
+        ),
+    )
+    .expect("write");
+
+    let built = build(tmp.path(), &SpecSources::new(), &Options::at(rendered_at()))
+        .expect("the package with a path builds");
+    let navigation = built.manifest.navigation.expect("the package declared one");
+    let chapters = navigation.chapters.expect("the path is carried");
+    assert_eq!(chapters.len(), 2);
+    assert_eq!(chapters[0].id, "lesson");
+    assert_eq!(chapters[0].title, "The lesson");
+    assert!(!chapters[0].appendix, "an ordinary chapter is numbered");
+    assert!(
+        chapters[1].appendix,
+        "the appendix mark is carried as given"
+    );
+    assert_eq!(
+        chapters[0].pages,
+        layer_order
+            .iter()
+            .rev()
+            .map(|page| crate::pages::document_of(page).to_owned())
+            .collect::<Vec<String>>(),
+        "the chapter holds the pages in the order the author wrote them"
+    );
+
+    let after: Vec<String> = built
+        .manifest
+        .pages
+        .iter()
+        .map(|page| page.path.clone())
+        .collect();
+    assert_eq!(
+        after, layer_order,
+        "the declared path must not move a single page of the manifest's own list"
+    );
+
+    // And the fixture, which declares nothing, carries no navigation at
+    // all — a different answer from an empty path, and the state every
+    // documentation written before the rows existed is in.
+    assert!(
+        super::build(
+            &fixture("manual"),
+            &SpecSources::new(),
+            &Options::at(rendered_at())
+        )
+        .expect("the fixture builds")
+        .manifest
+        .navigation
+        .is_none()
+    );
+}
+
 /// A documentation package's pages were written by somebody, so its
 /// rendering is not a projection; the level-zero view of any other kind
 /// is one, and the manifest is the only place a shelf can learn which

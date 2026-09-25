@@ -65,10 +65,10 @@ pub use package::{
     Authorship, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment, Compatibility,
     ConditionalTarget, ConflictsList, DocumentationDecl, DocumentsDecl, EmbeddedSourceAuth,
     EmbeddedSourceDecl, EmbeddedSourceKind, FeaturesTable, GitPackageDep, GitRefKind, HooksDecl,
-    LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl, NavigationDecl,
-    NavigationSectionDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget, PackageFormat,
-    PackageMeta, PathPackageDep, Provides, PublishPosture, Recommends, Requires, RequiresAny,
-    SkillDecl, SkillResourceDecl, Suggests, TargetOs, TranslatesDecl, VarRegistryDep,
+    LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl, NavigationChapterDecl,
+    NavigationDecl, NavigationSectionDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget,
+    PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture, Recommends, Requires,
+    RequiresAny, SkillDecl, SkillResourceDecl, Suggests, TargetOs, TranslatesDecl, VarRegistryDep,
     VisibilityMeta, WhenCondition,
 };
 pub use project::{
