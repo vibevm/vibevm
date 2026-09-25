@@ -29,8 +29,15 @@
 //! machine that has never compiled anything still produces every page,
 //! with the generated blocks marked as the gaps they are rather than
 //! silently empty.
+//!
+//! What it does do is COUNT those gaps and say the number ([`gaps`]). A
+//! build that leaves half its examples unfilled and reports the same
+//! summary as one with every input in hand is a build whose report cannot
+//! be read, and the count costs one line.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
+
+pub mod gaps;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -42,6 +49,8 @@ use crate::error::{DocError, Result};
 use crate::numbering::{expand_derived, number_blocks};
 use crate::pages::{self, Page, PageSet};
 use crate::{html, llms, manifest, md, media, translations, xml};
+
+pub use gaps::{Unresolved, unresolved};
 
 /// Which projection a build writes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -108,6 +117,11 @@ pub struct Built {
     pub unreadable: Vec<String>,
     /// The card roles whose picture was generated rather than copied.
     pub generated_roles: Vec<String>,
+    /// The blocks this build rendered as marked gaps, summed over its
+    /// pages ([`gaps`]). A measurement and not a verdict: it changes no
+    /// exit code, and it is here so that a build which fetched nothing
+    /// cannot look like a build which needed nothing.
+    pub unresolved: Unresolved,
 }
 
 /// What changed on disk when a complete logical build was reconciled with its
@@ -123,6 +137,10 @@ pub struct WriteReport {
 
 impl Built {
     /// The human form.
+    ///
+    /// The gap census closes the summary line, beside the pages the pivot
+    /// refused, because the two answer one question between them: what
+    /// this build could not read, and what it read and could not fill.
     pub fn render(&self) -> String {
         let mut out = String::new();
         for page in &self.unreadable {
@@ -131,7 +149,7 @@ impl Built {
         let bytes: usize = self.files.iter().map(|f| f.bytes.len()).sum();
         out.push_str(&format!(
             "build: {} file(s), {bytes} byte(s), {} placeholder(s) generated ({}), \
-             {} unreadable page(s)\n",
+             {} unreadable page(s), {}\n",
             self.files.len(),
             self.generated_roles.len(),
             if self.generated_roles.is_empty() {
@@ -139,7 +157,8 @@ impl Built {
             } else {
                 self.generated_roles.join(", ")
             },
-            self.unreadable.len()
+            self.unreadable.len(),
+            self.unresolved.render()
         ));
         out
     }
@@ -250,7 +269,13 @@ pub fn build_observed(
     let render = progress.task("Rendering documentation pages");
     render.set_progress(0, Some(set.pages.len() as u64), "pages");
     let mut files = Vec::new();
+    // The census is taken page by page beside the render, of the same page
+    // and the same bundle: a second walk of the finished bytes would be a
+    // second answer, and the projections do not all mark a gap the same
+    // way (`gaps::unresolved`).
+    let mut unresolved = Unresolved::default();
     for page in &set.pages {
+        unresolved += gaps::unresolved(page, &content);
         files.push(BuiltFile {
             path: page_path(&prefix, &page.rel, options.format),
             bytes: render_page(page, &content, options.format).into_bytes(),
@@ -308,6 +333,7 @@ pub fn build_observed(
         files,
         unreadable: set.unreadable.iter().map(|u| u.rel.clone()).collect(),
         generated_roles,
+        unresolved,
     })
 }
 

@@ -14,6 +14,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+use vibe_doc::build;
 use vibe_doc::citations::{RuleText, Source};
 use vibe_doc::content::{Content, ExampleBody};
 use vibe_doc::html;
@@ -171,4 +172,47 @@ fn the_island_carries_no_script_no_style_and_no_page_furniture() {
 #[test]
 fn two_renders_of_the_fixture_page_are_the_same_bytes() {
     assert_eq!(island(), island());
+}
+
+/// The gap census counts exactly the blocks the island marks.
+///
+/// The island's `data-unresolved` is what a reader and a shell actually
+/// see, so it is the definition and the census is the thing that has to
+/// agree with it. A number in a build's summary that the page in front of
+/// somebody does not corroborate is worse than no number: it would be
+/// read, and believed.
+///
+/// Two bundles, because one proves nothing. With everything fetched this
+/// page carries the single gap the fixture keeps on purpose — the rule
+/// the bundle deliberately omits — and with nothing fetched it carries
+/// one of every kind there is.
+#[test]
+fn the_gap_census_counts_the_blocks_the_island_marks() {
+    let page = read_fixture_page();
+
+    assert_eq!(
+        build::unresolved(&page, &content(&page.rel)),
+        build::Unresolved {
+            examples: 0,
+            rules: 1,
+            derived: 0,
+        }
+    );
+    assert_eq!(
+        build::unresolved(&page, &Content::new()),
+        build::Unresolved {
+            examples: 1,
+            rules: 2,
+            derived: 1,
+        }
+    );
+
+    for bundle in [content(&page.rel), Content::new()] {
+        let island = build::render_page(&page, &bundle, build::Format::Html);
+        assert_eq!(
+            build::unresolved(&page, &bundle).total(),
+            island.matches("data-unresolved=\"true\"").count(),
+            "{island}"
+        );
+    }
 }

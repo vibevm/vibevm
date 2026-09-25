@@ -279,6 +279,49 @@ fn a_source_this_build_cannot_reach_leaves_a_marked_gap_and_still_builds() {
     assert!(!first.contains("vibe --version"), "{first}");
 }
 
+/// A build says how many blocks it left as marked gaps, and the summary
+/// carries the number.
+///
+/// This is the report B-176 did not have. The defect lived unseen because
+/// a build that filled none of its borrowed examples printed the same
+/// summary as a build that filled every one — the pages said
+/// `data-unresolved` and nothing that an operator reads said anything at
+/// all. Both halves are asserted here, because a count is only worth
+/// having if the two cases differ.
+#[test]
+fn a_build_says_how_many_blocks_it_left_as_marked_gaps() {
+    let blind = build(
+        &fixture("borrowed/adaptation"),
+        &SpecSources::new(),
+        &options(Format::Html),
+    )
+    .expect("the fixture builds");
+    assert_eq!(
+        blind.unresolved,
+        Unresolved {
+            examples: 2,
+            rules: 0,
+            derived: 0,
+        }
+    );
+    let summary = blind.render();
+    assert!(
+        summary.contains("2 unresolved block(s) (2 example, 0 rule, 0 derived)"),
+        "{summary}"
+    );
+
+    let reached = build(
+        &fixture("borrowed/adaptation"),
+        &borrowed_world(),
+        &options(Format::Html),
+    )
+    .expect("the fixture builds");
+    assert!(reached.unresolved.is_empty(), "{:?}", reached.unresolved);
+    let summary = reached.render();
+    assert!(summary.contains("0 unresolved block(s)"), "{summary}");
+    assert!(!summary.contains("example,"), "{summary}");
+}
+
 /// A source documentation borrows nothing: it authors its examples, and
 /// the bundle a build hands its renderers is empty.
 #[test]

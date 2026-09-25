@@ -23,6 +23,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use chrono::Utc;
+use vibe_doc::build::Unresolved;
 use vibe_doc::citations::SpecSources;
 use vibe_doc::site::{Site, feed, level0, queue, render, state};
 use vibe_wire::generated::doc_site_state::RenderedVersion;
@@ -141,6 +142,9 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
             out.written,
             out.reused
         ));
+        if let Some(line) = gaps(&queued.pair, out.unresolved) {
+            render_output.push(line);
+        }
         if let Some(reason) = &out.failed {
             failures += 1;
             render_output.push(format!("  failed {} — {reason}", queued.pair.spelled()));
@@ -247,6 +251,37 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
 /// Is this pair the host's?
 fn host(pair: &vibe_doc::site::Pair) -> bool {
     !matches!(pair.origin, vibe_doc::site::Origin::Registry)
+}
+
+/// What one version's marked gaps read as, and nothing when it left none.
+///
+/// A line and not a failed run, on purpose. These blocks are gated by the
+/// checks — `vibe doc check --citations`, `--derived`, `--translations` —
+/// and the site renders every version whatever happens
+/// (`##SITE-RENDER-IDEMPOTENT`): a registry of hundreds will always hold
+/// a documentation whose subject this machine does not have, and a builder
+/// that stopped for it would publish nothing at all. So the count is said
+/// out loud where an operator is already reading, and no exit code moves.
+///
+/// The host's half says more, because the host's half means more. A
+/// registry pair is rendered from whatever the store happens to hold, and
+/// a gap there is usually the world being incomplete rather than the page
+/// being wrong; the host's own documentation is rendered from the checkout
+/// with every input in hand, so a gap in it is a defect somebody can go
+/// and fix today.
+fn gaps(pair: &vibe_doc::site::Pair, unresolved: Unresolved) -> Option<String> {
+    if unresolved.is_empty() {
+        return None;
+    }
+    let spelled = pair.spelled();
+    let counted = unresolved.render();
+    Some(match host(pair) {
+        true => format!(
+            "  warn   {spelled} — {counted}; the host's documentation renders from the \
+             checkout with every input in hand, so each one is a defect"
+        ),
+        false => format!("  gaps   {spelled} — {counted}"),
+    })
 }
 
 /// What every polled version states, in the one shape the reverse fold

@@ -66,6 +66,28 @@ fn package(root: &Path) {
     fs::write(root.join("README.md"), "# wal\n\nA log.\n").expect("the README");
 }
 
+/// A page that quotes a rule — the one block a site build is likeliest to
+/// be unable to fill, because the registry publishes a documentation
+/// whether or not this machine holds its subject.
+const CITING_PAGE: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+  <title id=\"root\">What it quotes</title>\n  \
+  <status stage=\"doc\" state=\"work\" audience=\"user\"/>\n  \
+  <p>The rule below is cited from a specification nothing here carries.</p>\n  \
+  <the-rule title=\"The rule\">\n    \
+    <rule ref=\"spec://com.example/subject/common/PROP-001#A-RULE\"/>\n  \
+  </the-rule>\n\
+</spec>\n";
+
+/// The same package, carrying one page whose citation no world here
+/// resolves.
+fn citing_package(root: &Path) {
+    package(root);
+    let dir = root.join(crate::pages::SPEC_ROOT).join("guide");
+    fs::create_dir_all(&dir).expect("the spec root");
+    fs::write(dir.join("cited.xml"), CITING_PAGE).expect("the page");
+}
+
 /// A package the catalog says nothing about — `static`, not `const`,
 /// because the options borrow it and a `const` is a fresh temporary at
 /// every mention.
@@ -138,6 +160,36 @@ fn the_pages_land_at_the_address_the_site_mounts_them_under() {
         "the manifest page is not at its address"
     );
     assert!(html.join("manifest.json").is_file());
+}
+
+/// A reference this render could not fill travels out with the render,
+/// counted ONCE for the pair.
+///
+/// Three projections come out of one composed package, one world and one
+/// set of generated texts, so the three builds agree by construction and a
+/// count that added them up would report a page's single unfilled citation
+/// as three. Saying it three times is the same defect as not saying it: the
+/// number stops being something an operator can compare against the page.
+#[test]
+fn a_reference_a_render_cannot_fill_is_counted_once_for_the_pair() {
+    let tmp = tempfile::tempdir().expect("a temporary directory");
+    let source = tmp.path().join("src");
+    citing_package(&source);
+    let work = tmp.path().join("trees");
+    let sources = SpecSources::new();
+
+    let rendered = render(&pair(), &Handy { source }, &options(&work, &sources)).expect("a render");
+
+    assert!(rendered.ok(), "{:?}", rendered.failed);
+    assert_eq!(rendered.trees.len(), FORMATS.len());
+    assert_eq!(
+        rendered.unresolved,
+        build::Unresolved {
+            examples: 0,
+            rules: 1,
+            derived: 0,
+        }
+    );
 }
 
 /// A registry of hundreds will always hold one broken package, and a

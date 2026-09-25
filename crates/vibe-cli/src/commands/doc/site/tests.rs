@@ -134,6 +134,62 @@ fn the_rendered_trees_stay_where_the_next_run_can_hand_them_over() {
     );
 }
 
+/// One version of one pair, in the shape the report's own lines are
+/// formatted from.
+fn pair(origin: vibe_doc::site::Origin) -> vibe_doc::site::Pair {
+    vibe_doc::site::Pair {
+        source: "vibespecs".into(),
+        group: "org.vibevm.core".into(),
+        name: "vibevm-docs".into(),
+        version: "1.0.0".into(),
+        content_hash: "sha256:aa".into(),
+        origin,
+        entry: None,
+    }
+}
+
+/// The gap census as the report says it: nothing when a version left no
+/// gap, one word for a registry pair, and a sentence for the host's own
+/// documentation, which is rendered with every input in hand.
+///
+/// Neither line is a failure, and that is the point being pinned: the
+/// checks gate these blocks and the site renders every version whatever
+/// happens, so the census is a measurement an operator reads rather than
+/// a verdict a run acts on.
+#[test]
+fn a_version_that_left_marked_gaps_says_so_in_one_line() {
+    let counted = Unresolved {
+        examples: 62,
+        rules: 0,
+        derived: 0,
+    };
+    assert_eq!(
+        gaps(
+            &pair(vibe_doc::site::Origin::Registry),
+            Unresolved::default()
+        ),
+        None
+    );
+
+    let registry = gaps(&pair(vibe_doc::site::Origin::Registry), counted).expect("a line");
+    assert!(registry.starts_with("  gaps   "), "{registry}");
+    assert!(
+        registry.contains("62 unresolved block(s) (62 example, 0 rule, 0 derived)"),
+        "{registry}"
+    );
+    assert!(!registry.contains("defect"), "{registry}");
+
+    let own = gaps(
+        &pair(vibe_doc::site::Origin::HostProject {
+            root: std::path::PathBuf::from("checkout"),
+        }),
+        counted,
+    )
+    .expect("a line");
+    assert!(own.starts_with("  warn   "), "{own}");
+    assert!(own.contains("so each one is a defect"), "{own}");
+}
+
 /// Every name the renderer sets on the static build is a name the site
 /// package reads.
 ///

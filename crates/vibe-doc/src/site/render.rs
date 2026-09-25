@@ -145,6 +145,14 @@ pub struct Rendered {
     /// asks for — and the state file records the failure so the next run
     /// tries again.
     pub failed: Option<String>,
+    /// The blocks the pages were rendered with as marked gaps
+    /// ([`build::Unresolved`]), counted once for the pair rather than once
+    /// per projection: the three projections come out of ONE bundle, so
+    /// three counts would be one fact said three times.
+    ///
+    /// A refused version carries its own count like any other, which is
+    /// zero — the page a refusal shows quotes nothing and borrows nothing.
+    pub unresolved: build::Unresolved,
     /// Things worth saying out loud about this package.
     pub notes: Vec<String>,
 }
@@ -166,23 +174,25 @@ impl Rendered {
 pub fn render(pair: &Pair, prepare: &dyn Prepare, options: &Options) -> Result<Rendered> {
     let mut notes = Vec::new();
     match attempt(pair, prepare, options, &mut notes) {
-        Ok((trees, files, written, reused)) => Ok(Rendered {
+        Ok((trees, files, written, reused, unresolved)) => Ok(Rendered {
             trees,
             files,
             written,
             reused,
             failed: None,
+            unresolved,
             notes,
         }),
         Err(failure) => {
             let reason = failure.to_string();
-            let (trees, files, written, reused) = refused(pair, &reason, options)?;
+            let (trees, files, written, reused, unresolved) = refused(pair, &reason, options)?;
             Ok(Rendered {
                 trees,
                 files,
                 written,
                 reused,
                 failed: Some(reason),
+                unresolved,
                 notes,
             })
         }
@@ -195,7 +205,7 @@ fn attempt(
     prepare: &dyn Prepare,
     options: &Options,
     notes: &mut Vec<String>,
-) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
+) -> Result<(Vec<PathBuf>, usize, usize, usize, build::Unresolved)> {
     let source = match &pair.origin {
         // The host's bytes are already on disk — that IS the host
         // channel (`##SITE-HOST-CHECKOUT`), and fetching them would
@@ -245,7 +255,7 @@ fn refused(
     pair: &Pair,
     reason: &str,
     options: &Options,
-) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
+) -> Result<(Vec<PathBuf>, usize, usize, usize, build::Unresolved)> {
     let dir = composed_dir(options.work, pair);
     if dir.exists() {
         std::fs::remove_dir_all(&dir).map_err(|e| DocError::io("clearing", &dir, e))?;
@@ -271,11 +281,12 @@ fn build_projections(
     package_dir: &Path,
     derived: BTreeMap<String, String>,
     options: &Options,
-) -> Result<(Vec<PathBuf>, usize, usize, usize)> {
+) -> Result<(Vec<PathBuf>, usize, usize, usize, build::Unresolved)> {
     let mut trees = Vec::new();
     let mut files = 0;
     let mut written = 0;
     let mut reused = 0;
+    let mut unresolved = build::Unresolved::default();
     for format in FORMATS {
         let tree = tree_dir(options.work, pair, *format);
         let built = build::build(
@@ -288,13 +299,21 @@ fn build_projections(
                 derived: derived.clone(),
             },
         )?;
+        // The gap census of the pair, taken from one projection and not
+        // added up over three: every format here builds from the same
+        // package, the same world and the same generated text, so the
+        // three answers are one answer — and summing them would treat a
+        // page with one unfilled example as a page with three.
+        if matches!(format, Format::Html) {
+            unresolved = built.unresolved;
+        }
         let report = build::write_reconciled(&built, &tree)?;
         files += built.files.len();
         written += report.written + report.removed;
         reused += report.unchanged;
         trees.push(tree);
     }
-    Ok((trees, files, written, reused))
+    Ok((trees, files, written, reused, unresolved))
 }
 
 /// Where a pair's composed documentation package is written.
