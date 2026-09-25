@@ -2,6 +2,10 @@
 
 What changed for a reader, by date. This package carries one number and is republished under it in place, so a date and not a number says which edition a line belongs to. Written by hand from `JOURNAL.md`; the product's own versions are named where a change follows them.
 
+## 1.0.0 — 2026-09-25
+
+- **The manual reads like a textbook.** The list beside a page follows a learning path: ten chapters from what VibeVM is and installing vibe, through everyday work, agents, the lifecycle and writing packages, to the appendices, with the glossary last. A switch above the list brings back the grouping by section, and every page ends with the previous and the next page on the path.
+
 ## 1.0.0 — 2026-09-14
 
 What is new for a reader since the pages were first laid out:
