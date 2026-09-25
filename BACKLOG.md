@@ -1959,3 +1959,13 @@ structure, and it goes when the file does.
 | @fact:B174-SEVERITY **severity** | P2 — two gates have reported nothing for a whole corpus for two weeks while looking like a tool failure; no product runtime is affected. |
 | @fact:B174-DISPOSITION **disposition** | `open` — keep each cell's text on one line (or turn the table into a list) in the canonical package, reinstall its projection, and rerun both gates at the root. The edit changes the package's content hash, so it is a commit of its own and not part of a documentation feature. |
 | @fact:B174-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), 2026-09-25. |
+
+## B-175 — a registry count in a wire test missed the fourteenth CLI report {#b-175}
+
+| field | value |
+|---|---|
+| @fact:B175-WHAT **what** | `crates/vibe-wire/tests/requirements_report_wire.rs:102` counts the `cli-*` rows of `formats/REGISTRY.toml` and asserts 13, to prove that the requirements report did not join the CLI report family. `53f1521a5` (2026-09-17) registered `[format.cli-application-report]`, the fourteenth such row, and did not move the count. The test `the_format_is_inventoried_under_a_surface_neutral_id` has failed since. |
+| @fact:B175-EVIDENCE **evidence** | 2026-09-25 on `main` at `13da768aa`: `cargo test -p vibe-wire --test requirements_report_wire` gives 6 passed, 1 failed, `left: 14, right: 13`. The count was last set in `9cac46d13` (2026-09-09), an ancestor of `53f1521a5`. The distribution workflow does not run tests by default, so a release is not blocked. |
+| @fact:B175-SEVERITY **severity** | P3 — every run of the whole `vibe-wire` suite is red for a reason that no product behaviour carries; the property that the test protects still holds. |
+| @fact:B175-DISPOSITION **disposition** | `open` — make the assertion independent of the family's size: check that `requirements-report` has no `cli-` prefix and sits in its own registry section, instead of counting a family that grows with every new command. |
+| @fact:B175-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), 2026-09-25. |
