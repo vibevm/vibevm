@@ -173,16 +173,28 @@ fn an_example_ref_renders_the_body_it_borrows() {
     let doc = page("  <example ref=\"v\"/>\n");
     let mut content = Content::new();
     content.examples.insert(
-        "v".to_owned(),
-        ExampleBody {
-            run: "vibe --version".to_owned(),
-            expect: "vibe 1.0.0".to_owned(),
-            ..ExampleBody::default()
-        },
+        "guide/one.xml".to_owned(),
+        BTreeMap::from([(
+            "v".to_owned(),
+            ExampleBody {
+                run: "vibe --version".to_owned(),
+                expect: "vibe 1.0.0".to_owned(),
+                ..ExampleBody::default()
+            },
+        )]),
     );
-    let island = to_html(&doc, &content);
+    let island = to_html_numbered(&doc, "guide/one.xml", &content, &Numbering::none());
     assert!(island.contains("data-example-ref=\"v\""), "{island}");
     assert!(island.contains("vibe --version"), "{island}");
+
+    // The same bundle, read for ANOTHER page, lends nothing: an id names
+    // an example only together with the page that authored it.
+    let elsewhere = to_html_numbered(&doc, "guide/two.xml", &content, &Numbering::none());
+    assert!(
+        elsewhere.contains("data-unresolved=\"true\""),
+        "{elsewhere}"
+    );
+    assert!(!elsewhere.contains("vibe --version"), "{elsewhere}");
 
     // Without the source in hand the island says so rather than
     // inventing a command.

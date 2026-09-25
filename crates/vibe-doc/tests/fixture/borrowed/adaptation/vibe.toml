@@ -1,0 +1,38 @@
+# The adaptation half of the borrowed-example fixture: two pages that
+# borrow `demo` from the source pages at their own addresses (PROP-057
+# ##LOC-EXAMPLE-REF, ##LOC-MIRROR).
+#
+# Both pages write the same `<example ref="demo"/>`, and the two must come
+# out carrying DIFFERENT bodies — each its own source page's. A build in
+# which they agree has resolved the id against the wrong page, which is
+# the defect this pair exists to catch. A translation authors no example
+# of its own: a command has no translation, and its output is checked once,
+# on the source.
+[package]
+name = "borrowed-ru"
+group = "com.example.docs"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["vibevm"]
+license = "UPL-1.0"
+description = "Две страницы, и каждая заимствует у источника свой пример с именем `demo`."
+title = "Пара с заимствованными примерами"
+abstract = """
+Что покрывает: две страницы, которые заимствуют у разных страниц источника примеры с одним и тем же именем.
+Для кого: для того, кто меняет, как разрешаются заимствованные примеры.
+Что предполагает известным: ничего.
+Чего не покрывает: всё остальное.
+"""
+
+[i18n]
+canonical = "ru"
+
+[[documents]]
+package = "com.example/subject"
+version = "^1.0"
+
+[translates]
+package = "com.example.docs/borrowed"
+version = "^0.1"

@@ -1,0 +1,35 @@
+# The source half of the borrowed-example fixture: two pages that author
+# an example under the SAME id and with DIFFERENT bodies (PROP-057
+# ##LOC-EXAMPLE-REF).
+#
+# That collision is the whole point. An example id is unique on its page
+# and nowhere wider, so a pipeline that kept borrowed bodies by bare id
+# would render one page's command under the other page's reference and
+# report no gap while doing it. A fixture whose two ids differ cannot show
+# that; this one can. The second example also spells a language, an exit
+# code and a stderr, so every field of a body is carried across the
+# borrowing and not merely the command.
+[package]
+name = "borrowed"
+group = "com.example.docs"
+kind = "doc"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["vibevm"]
+license = "UPL-1.0"
+description = "Two pages, each authoring an example called `demo`."
+title = "The Borrowed Pair"
+abstract = """
+What it covers: two pages whose examples share one id and differ in every field.
+For whom: whoever changes how a translation's borrowed examples are resolved.
+What it assumes known: nothing; it documents nothing real.
+What it leaves out: everything else.
+"""
+
+[i18n]
+canonical = "en"
+
+[[documents]]
+package = "com.example/subject"
+version = "^1.0"

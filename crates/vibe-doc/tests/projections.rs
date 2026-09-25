@@ -24,7 +24,10 @@ use vibe_doc::{html, md, pages, xml};
 /// are pinned WITH it, because the interesting bytes are the resolved
 /// ones: the rule's text in the island and the Markdown, and the address
 /// the XML deliberately keeps instead.
-fn content() -> Content {
+///
+/// `page` is the address the borrowed example is stored under: ids are
+/// unique per page, so a bundle is keyed by page and then by id.
+fn content(page: &str) -> Content {
     let uri = "spec://com.example/subject/common/PROP-001#A-RULE";
     let mut rules = BTreeMap::new();
     rules.insert(
@@ -43,15 +46,17 @@ fn content() -> Content {
         Content::derived_key(vibe_specdoc::doc::DerivedKind::CliHelp, "vibe list --help"),
         "Usage: vibe list [OPTIONS]\n".to_owned(),
     );
-    let mut examples = BTreeMap::new();
-    examples.insert(
-        "version".to_owned(),
-        ExampleBody {
-            run: "vibe --version".to_owned(),
-            expect: "vibe 1.0.0".to_owned(),
-            ..ExampleBody::default()
-        },
-    );
+    let examples = BTreeMap::from([(
+        page.to_owned(),
+        BTreeMap::from([(
+            "version".to_owned(),
+            ExampleBody {
+                run: "vibe --version".to_owned(),
+                expect: "vibe 1.0.0".to_owned(),
+                ..ExampleBody::default()
+            },
+        )]),
+    )]);
     Content {
         rules,
         derived,
@@ -60,11 +65,14 @@ fn content() -> Content {
     }
 }
 
-fn fixture_page() -> vibe_specdoc::doc::SpecDoc {
+/// The fixture package's one page: its address inside the package and its
+/// document. The address is read from the page, because it is what the
+/// two substituting backends resolve a borrowed example against.
+fn fixture_page() -> pages::Page {
     let package = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixture/manual");
     let set = pages::read_package(&package).expect("the fixture package reads");
     assert!(set.unreadable.is_empty(), "{:?}", set.unreadable);
-    set.pages[0].doc.clone()
+    set.pages[0].clone()
 }
 
 fn assert_golden(name: &str, got: &str) {
@@ -136,13 +144,14 @@ fn collect(text: &str, needle: &str, end: char) -> BTreeSet<u32> {
 /// exactly `1..=len` with no gaps and no repeats.
 #[test]
 fn the_three_projections_carry_one_set_of_numbers() {
-    let doc = fixture_page();
-    let numbering = number_blocks(&doc);
-    let content = content();
+    let page = fixture_page();
+    let doc = &page.doc;
+    let numbering = number_blocks(doc);
+    let content = content(&page.rel);
 
-    let island = html::to_html_numbered(&doc, &content, &numbering);
-    let markdown = md::to_markdown_numbered(&doc, &content, &numbering);
-    let dialect = xml::to_xml_numbered(&doc, &numbering);
+    let island = html::to_html_numbered(doc, &page.rel, &content, &numbering);
+    let markdown = md::to_markdown_numbered(doc, &page.rel, &content, &numbering);
+    let dialect = xml::to_xml_numbered(doc, &numbering);
 
     let expected: BTreeSet<u32> = (1..=numbering.len() as u32).collect();
     assert_eq!(numbers_in_html(&island), expected, "the island");
@@ -154,22 +163,23 @@ fn the_three_projections_carry_one_set_of_numbers() {
 /// the document, so `#p12` cannot move because somebody rebuilt.
 #[test]
 fn a_second_render_carries_the_same_numbers() {
-    let doc = fixture_page();
-    let content = content();
-    let first = number_blocks(&doc);
-    let second = number_blocks(&doc);
+    let page = fixture_page();
+    let doc = &page.doc;
+    let content = content(&page.rel);
+    let first = number_blocks(doc);
+    let second = number_blocks(doc);
     assert_eq!(first, second);
     assert_eq!(
-        html::to_html_numbered(&doc, &content, &first),
-        html::to_html_numbered(&doc, &content, &second)
+        html::to_html_numbered(doc, &page.rel, &content, &first),
+        html::to_html_numbered(doc, &page.rel, &content, &second)
     );
     assert_eq!(
-        md::to_markdown_numbered(&doc, &content, &first),
-        md::to_markdown_numbered(&doc, &content, &second)
+        md::to_markdown_numbered(doc, &page.rel, &content, &first),
+        md::to_markdown_numbered(doc, &page.rel, &content, &second)
     );
     assert_eq!(
-        xml::to_xml_numbered(&doc, &first),
-        xml::to_xml_numbered(&doc, &second)
+        xml::to_xml_numbered(doc, &first),
+        xml::to_xml_numbered(doc, &second)
     );
 }
 
@@ -177,8 +187,9 @@ fn a_second_render_carries_the_same_numbers() {
 /// projection, and the numbers before it are untouched by its presence.
 #[test]
 fn the_footnotes_section_is_numbered_in_no_projection() {
-    let doc = fixture_page();
-    let numbering = number_blocks(&doc);
+    let page = fixture_page();
+    let doc = &page.doc;
+    let numbering = number_blocks(doc);
     let footnotes = doc
         .sections
         .iter()
@@ -187,7 +198,7 @@ fn the_footnotes_section_is_numbered_in_no_projection() {
     let path = vibe_doc::numbering::BlockPath::new(vec![footnotes as u16], 0);
     assert_eq!(numbering.get(&path), None);
 
-    let markdown = md::to_markdown_numbered(&doc, &content(), &numbering);
+    let markdown = md::to_markdown_numbered(doc, &page.rel, &content(&page.rel), &numbering);
     let apparatus = markdown
         .split("## Footnotes")
         .nth(1)
@@ -201,20 +212,21 @@ fn the_footnotes_section_is_numbered_in_no_projection() {
 /// The shape of each projection, pinned.
 #[test]
 fn the_three_projections_are_pinned() {
-    let doc = fixture_page();
-    let numbering = number_blocks(&doc);
-    let content = content();
+    let page = fixture_page();
+    let doc = &page.doc;
+    let numbering = number_blocks(doc);
+    let content = content(&page.rel);
     assert_golden(
         "guide-every-block.numbered.html",
-        &html::to_html_numbered(&doc, &content, &numbering),
+        &html::to_html_numbered(doc, &page.rel, &content, &numbering),
     );
     assert_golden(
         "guide-every-block.md",
-        &md::to_markdown_numbered(&doc, &content, &numbering),
+        &md::to_markdown_numbered(doc, &page.rel, &content, &numbering),
     );
     assert_golden(
         "guide-every-block.xml",
-        &xml::to_xml_numbered(&doc, &numbering),
+        &xml::to_xml_numbered(doc, &numbering),
     );
 }
 
@@ -222,10 +234,11 @@ fn the_three_projections_are_pinned() {
 /// the neutral element costs a caller no branch.
 #[test]
 fn the_neutral_numbering_leaves_every_projection_bare() {
-    let doc = fixture_page();
-    let content = content();
+    let page = fixture_page();
+    let doc = &page.doc;
+    let content = content(&page.rel);
     let none = Numbering::none();
-    assert!(numbers_in_html(&html::to_html_numbered(&doc, &content, &none)).is_empty());
-    assert!(numbers_in_md(&md::to_markdown_numbered(&doc, &content, &none)).is_empty());
-    assert!(numbers_in_xml(&xml::to_xml_numbered(&doc, &none)).is_empty());
+    assert!(numbers_in_html(&html::to_html_numbered(doc, &page.rel, &content, &none)).is_empty());
+    assert!(numbers_in_md(&md::to_markdown_numbered(doc, &page.rel, &content, &none)).is_empty());
+    assert!(numbers_in_xml(&xml::to_xml_numbered(doc, &none)).is_empty());
 }

@@ -50,11 +50,15 @@ use std::path::Path;
 use vibe_specdoc::doc::{Block, SpecDoc};
 use vibe_wire::generated::doc_manifest::NavigationChapter;
 
-use crate::citations::sources::{Source, SpecSources};
+use crate::citations::sources::{Instance, Source, SpecSources};
 use crate::error::{DocError, Result};
 use crate::manifest;
 use crate::numbering::{Numbering, block_at, number_blocks};
 use crate::pages::{self, Page, PageSet, document_of};
+
+mod borrowed;
+
+pub use borrowed::{borrowed, borrowed_by};
 
 /// The manifest key a translation declares its source under.
 pub const TRANSLATES: &str = "translates";
@@ -230,22 +234,54 @@ fn where_from(source: Source) -> &'static str {
     }
 }
 
-/// Check the translation at `package_dir` against the source it declares.
+/// What a package adapts, and which instance of it answered.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Adapted {
+    /// The `<group>/<name>` coordinate of the documentation being
+    /// mirrored, exactly as `[translates].package` spells it.
+    pub coordinate: String,
+    /// The instance the four sources offered for it, nearest first.
+    pub instance: Instance,
+}
+
+/// The source documentation `package_dir` adapts, located.
 ///
-/// A package that declares no `[translates]` is a source documentation:
-/// the run is green and says so, because «run the check on everything»
-/// must not be a way to fail for the packages the check does not apply
-/// to.
+/// `Ok(None)` means the package declares no `[translates]` — it is a
+/// source documentation, and there is nothing to look for.
 ///
-/// A source the four sources cannot reach IS an error. A mirror check
-/// with nothing to mirror against has no verdict to give, and reporting
-/// green would be the worst of the three possible answers.
-pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
+/// One lookup, two callers: the mirror check ([`check`]) reads the source
+/// to compare structure, and [`borrowed`] reads it for the example bodies
+/// a translation's pages borrow. A second spelling of «which source does
+/// this package adapt» would be the day one of them looked in a different
+/// tree than the other reported on.
+///
+/// Both refusals are errors rather than a silent `None`: a coordinate that
+/// is not `<group>/<name>` is a manifest defect, and a source no source
+/// holds leaves a mirror check with no verdict to give — green would be
+/// the worst of the three possible answers there.
+///
+/// ```
+/// use vibe_doc::citations::SpecSources;
+/// use vibe_doc::translations::adapted;
+///
+/// let dir = tempfile::tempdir().unwrap();
+/// std::fs::write(
+///     dir.path().join("vibe.toml"),
+///     "[package]\nname = \"pair\"\ngroup = \"com.example.docs\"\n",
+/// )
+/// .unwrap();
+///
+/// // A source documentation adapts nothing, so there is nothing to find
+/// // — and that is not a failure.
+/// assert_eq!(adapted(dir.path(), &SpecSources::new())?, None);
+/// # Ok::<(), vibe_doc::DocError>(())
+/// ```
+pub fn adapted(package_dir: &Path, sources: &SpecSources) -> Result<Option<Adapted>> {
     let Some((coordinate, _constraint)) = manifest::relations(package_dir, TRANSLATES)?
         .into_iter()
         .next()
     else {
-        return Ok(Report::default());
+        return Ok(None);
     };
     let (group, name) = coordinate
         .split_once('/')
@@ -262,6 +298,30 @@ pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
                  `vibe cache add {coordinate}`, or point the check at a tree that carries it"
             ),
         })?;
+    Ok(Some(Adapted {
+        coordinate,
+        instance,
+    }))
+}
+
+/// Check the translation at `package_dir` against the source it declares.
+///
+/// A package that declares no `[translates]` is a source documentation:
+/// the run is green and says so, because «run the check on everything»
+/// must not be a way to fail for the packages the check does not apply
+/// to.
+///
+/// A source the four sources cannot reach IS an error. A mirror check
+/// with nothing to mirror against has no verdict to give, and reporting
+/// green would be the worst of the three possible answers.
+pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
+    let Some(Adapted {
+        coordinate,
+        instance,
+    }) = adapted(package_dir, sources)?
+    else {
+        return Ok(Report::default());
+    };
 
     let translation = pages::read_package(package_dir)?;
     let source = pages::read_package(&instance.root)?;

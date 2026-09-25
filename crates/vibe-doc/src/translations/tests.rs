@@ -1,4 +1,7 @@
-//! The mirror, and the four ways it breaks.
+//! The mirror, and the four ways it breaks — and, after them, the bodies
+//! a translation borrows from the source it mirrors.
+
+use vibe_specdoc::doc::BlockNode;
 
 use super::*;
 use crate::manifest::tests::fixture;
@@ -360,4 +363,136 @@ fn a_chapter_the_source_does_not_declare_is_a_problem() {
     // A source with no path at all makes every row unknown, which is the
     // same defect written larger rather than a case of its own.
     assert_eq!(unknown_chapters(&[], &[named("start")]).len(), 1);
+}
+
+/// The world that reaches the borrowed-example fixture's source: the
+/// checkout arm answers for the coordinate its adaptation adapts.
+fn borrowed_world() -> SpecSources {
+    SpecSources::for_checkout(
+        fixture("borrowed/source"),
+        Some("com.example.docs"),
+        "borrowed",
+    )
+}
+
+/// The one lookup of «which source does this package adapt», and the two
+/// answers it gives without failing.
+#[test]
+fn a_source_documentation_adapts_nothing_and_an_adaptation_names_its_instance() {
+    assert_eq!(
+        adapted(&fixture("manual"), &SpecSources::new()).expect("no translates, no work"),
+        None
+    );
+
+    let found = adapted(&fixture("borrowed/adaptation"), &borrowed_world())
+        .expect("the source is reachable")
+        .expect("the adaptation declares one");
+    assert_eq!(found.coordinate, "com.example.docs/borrowed");
+    assert_eq!(found.instance.root, fixture("borrowed/source"));
+    assert_eq!(found.instance.source, Source::Checkout);
+}
+
+/// The refusal an unreachable source has always produced, now produced
+/// once: `check` and the borrowed-example reader ask one function.
+#[test]
+fn an_unreachable_source_is_the_same_refusal_the_check_gives() {
+    let error = adapted(&fixture("borrowed/adaptation"), &SpecSources::new())
+        .expect_err("nothing to mirror against");
+    assert!(
+        error.to_string().contains("com.example.docs/borrowed"),
+        "{error}"
+    );
+    assert!(error.to_string().contains("vibe cache add"), "{error}");
+}
+
+/// The bundle a build hands the renderers: by page address, then by id,
+/// each page's own body. The fixture's two pages author `demo` with
+/// different commands on purpose, and every field travels.
+#[test]
+fn borrowed_bodies_are_kept_under_the_page_that_authored_them() {
+    let found = borrowed(&fixture("borrowed/adaptation"), &borrowed_world());
+    assert_eq!(
+        found.keys().collect::<Vec<_>>(),
+        vec!["guide/first.xml", "guide/second.xml"]
+    );
+    assert_eq!(found["guide/first.xml"]["demo"].run, "vibe --version");
+
+    let second = &found["guide/second.xml"]["demo"];
+    assert_eq!(second.run, "vibe list");
+    assert_eq!(second.expect, "no packages");
+    assert_eq!(second.lang.as_deref(), Some("ps1"));
+    assert_eq!(second.exit, Some(2));
+    assert_eq!(
+        second.stderr.as_deref(),
+        Some("error: nothing is installed")
+    );
+}
+
+/// Nothing to borrow is an empty bundle and never a refusal: a renderer
+/// must not abort over a text it could not fetch, so every way of having
+/// no source lends nothing and the references render as the gaps they are.
+#[test]
+fn nothing_to_borrow_is_an_empty_bundle() {
+    // A source no source holds.
+    assert!(borrowed(&fixture("borrowed/adaptation"), &SpecSources::new()).is_empty());
+    // Packages that adapt nothing at all.
+    assert!(borrowed(&fixture("borrowed/source"), &borrowed_world()).is_empty());
+    assert!(borrowed(&fixture("manual"), &SpecSources::new()).is_empty());
+}
+
+/// One page at a time, for a surface answering one request — and every
+/// address it refuses before any of them could become a read.
+#[test]
+fn one_page_is_read_by_its_address_and_nothing_outside_the_source_is() {
+    let dir = fixture("borrowed/adaptation");
+    let world = borrowed_world();
+    assert_eq!(
+        borrowed_by(&dir, "guide/second.xml", &world)["demo"].run,
+        "vibe list"
+    );
+    // A page the source does not carry.
+    assert!(borrowed_by(&dir, "guide/third.xml", &world).is_empty());
+    // And every spelling that is not a page address at all.
+    for bad in [
+        "",
+        "../vibe.toml",
+        "guide/../../vibe.toml",
+        "/vibe.toml",
+        "guide\\second.xml",
+    ] {
+        assert!(borrowed_by(&dir, bad, &world).is_empty(), "`{bad}`");
+    }
+}
+
+/// Two authored examples under one id on one page: the FIRST in document
+/// order wins.
+///
+/// The document is built rather than parsed, and that is the point. An
+/// example's id is a fact anchor, so the pivot refuses a file that defines
+/// one twice — the collision cannot arrive through a page, and a test that
+/// wrote one would be testing the pivot's refusal instead. The tie-break
+/// is proved on the walk, where the case can exist, because «which example
+/// does this id name» must have one answer whatever reaches it.
+#[test]
+fn the_first_of_a_repeated_id_on_one_page_wins() {
+    let example = |run: &str| BlockNode {
+        when: None,
+        block: Block::Example {
+            id: "demo".to_owned(),
+            fixture: "none".to_owned(),
+            lang: None,
+            exit: None,
+            run: run.to_owned(),
+            expect: String::new(),
+            stderr: None,
+        },
+    };
+    let doc = SpecDoc {
+        preamble: vec![example("first"), example("second")],
+        ..SpecDoc::default()
+    };
+
+    let found = borrowed::authored(&doc);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert_eq!(found["demo"].run, "first");
 }

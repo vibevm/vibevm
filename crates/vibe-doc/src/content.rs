@@ -19,7 +19,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 use std::collections::BTreeMap;
 
-use vibe_specdoc::doc::DerivedKind;
+use vibe_specdoc::doc::{Block, DerivedKind};
 
 use crate::citations::RuleText;
 
@@ -47,6 +47,67 @@ pub struct ExampleBody {
     pub stderr: Option<String>,
 }
 
+impl ExampleBody {
+    /// The body an AUTHORED example lends, and `None` for every other
+    /// block — a borrowed `example ref` included, because it holds an
+    /// address and no body of its own.
+    ///
+    /// This is the ONE conversion from the pivot's block to this bundle,
+    /// and it lives here because both ends of a borrowing depend on it
+    /// agreeing with itself: a backend renders an authored example
+    /// through it, and [`crate::translations::borrowed`] fills the
+    /// bundle a borrowing page resolves against with it. Two spellings
+    /// would part the day the genre grew a sixth field, and then one
+    /// page would show a `stderr` the other dropped.
+    ///
+    /// ```
+    /// use vibe_doc::content::ExampleBody;
+    /// use vibe_specdoc::doc::Block;
+    ///
+    /// let doc = vibe_specdoc::from_xml_with(
+    ///     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+    ///      <spec xmlns=\"https://vibevm.org/spec/1\">\n\
+    ///        <title id=\"root\">Hello</title>\n\
+    ///        <example id=\"version\" fixture=\"none\">\n\
+    ///          <run>vibe --version</run>\n\
+    ///          <expect>vibe 1.0.0</expect>\n\
+    ///        </example>\n\
+    ///      </spec>\n",
+    ///     vibe_specdoc::Vocabulary::Doc,
+    /// )
+    /// .unwrap();
+    ///
+    /// let body = ExampleBody::of(&doc.preamble[0].block).expect("the page authors one");
+    /// assert_eq!(body.run, "vibe --version");
+    /// assert_eq!(body.expect, "vibe 1.0.0");
+    ///
+    /// // A reference lends nothing: it names an example, it is not one.
+    /// let borrowed = Block::ExampleRef {
+    ///     id: "version".to_owned(),
+    /// };
+    /// assert!(ExampleBody::of(&borrowed).is_none());
+    /// ```
+    pub fn of(block: &Block) -> Option<ExampleBody> {
+        match block {
+            Block::Example {
+                lang,
+                exit,
+                run,
+                expect,
+                stderr,
+                ..
+            } => Some(ExampleBody {
+                lang: lang.clone(),
+                exit: *exit,
+                run: run.clone(),
+                expect: expect.clone(),
+                stderr: stderr.clone(),
+            }),
+            _ => None,
+        }
+    }
+}
+
 /// Everything the backends need that is not in the document.
 #[derive(Debug, Clone, Default)]
 pub struct Content {
@@ -55,8 +116,26 @@ pub struct Content {
     pub rules: BTreeMap<String, RuleText>,
     /// Generated `derived` text by `<kind>:<reference>`.
     pub derived: BTreeMap<String, String>,
-    /// Example bodies by id, for a translation's `example ref`.
-    pub examples: BTreeMap<String, ExampleBody>,
+    /// Example bodies for a translation's `example ref`, by the
+    /// BORROWING page's address in its own package (a [`Page::rel`], e.g.
+    /// `start/what-vibevm-is.xml`) and then by example id.
+    ///
+    /// Two levels rather than one, because an example id is unique on its
+    /// PAGE and nowhere wider: the runner addresses an example as
+    /// `page#id`, the mirror check compares a reference against the
+    /// same-path source page, and an English manual reuses an id like
+    /// `tree` across half a dozen chapters. A map keyed by bare id would
+    /// hand one page the command another page authored, and report no gap
+    /// while doing it.
+    ///
+    /// The page address is the borrowing page's own and not the source's,
+    /// which costs nothing and says something: a translation mirrors its
+    /// source file for file (`##LOC-MIRROR`), so the two addresses are
+    /// equal by law, and keying on the borrower's means a renderer needs
+    /// to know only the page it is rendering.
+    ///
+    /// [`Page::rel`]: crate::pages::Page::rel
+    pub examples: BTreeMap<String, BTreeMap<String, ExampleBody>>,
     /// The base a citation's link is built on. Empty means «no links»:
     /// the island then carries the address in `data-uri` and no `href`,
     /// which is what a projection with nowhere to point should do.
@@ -91,6 +170,45 @@ impl Content {
         self.derived
             .get(&Content::derived_key(kind, reference))
             .map(String::as_str)
+    }
+
+    /// The body one borrowed example resolves to, when this build read the
+    /// source page it is borrowed from.
+    ///
+    /// `page` is the BORROWING page's address in its own package. It is a
+    /// parameter rather than an ambient lookup for the reason the two
+    /// levels of [`Content::examples`] exist: an id alone does not name an
+    /// example, and a function that accepted one would be a function that
+    /// guessed.
+    ///
+    /// ```
+    /// use std::collections::BTreeMap;
+    /// use vibe_doc::content::{Content, ExampleBody};
+    ///
+    /// let body = ExampleBody {
+    ///     run: "vibe --version".to_owned(),
+    ///     expect: "vibe 1.0.0".to_owned(),
+    ///     ..ExampleBody::default()
+    /// };
+    /// let content = Content {
+    ///     examples: BTreeMap::from([(
+    ///         "start/what-vibevm-is.xml".to_owned(),
+    ///         BTreeMap::from([("version".to_owned(), body)]),
+    ///     )]),
+    ///     ..Content::new()
+    /// };
+    ///
+    /// assert_eq!(
+    ///     content
+    ///         .example("start/what-vibevm-is.xml", "version")
+    ///         .map(|b| b.run.as_str()),
+    ///     Some("vibe --version")
+    /// );
+    /// // The same id on another page is another example, or none at all.
+    /// assert!(content.example("start/first-project.xml", "version").is_none());
+    /// ```
+    pub fn example(&self, page: &str, id: &str) -> Option<&ExampleBody> {
+        self.examples.get(page)?.get(id)
     }
 
     /// The link a citation points at, by the deterministic address map of

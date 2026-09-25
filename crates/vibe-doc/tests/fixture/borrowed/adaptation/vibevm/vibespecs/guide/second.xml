@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Вторая</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p><LEAD-SECOND fact="true" status="doc/work">Вторая страница тоже заимствует `demo` — другую команду, со всеми полями.</LEAD-SECOND></p>
+  <example ref="demo"/>
+</spec>

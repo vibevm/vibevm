@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Первая</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p><LEAD-FIRST fact="true" status="doc/work">Первая страница заимствует пример `demo`, и вторая тоже.</LEAD-FIRST></p>
+  <example ref="demo"/>
+</spec>

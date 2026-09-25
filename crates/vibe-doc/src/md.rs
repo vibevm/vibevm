@@ -33,11 +33,23 @@ use crate::content::{Content, ExampleBody};
 use crate::numbering::{BlockPath, Numbering};
 
 /// Render a page as Markdown, without block numbers.
+///
+/// The document renders with NO address in a package, so a translation's
+/// borrowed example renders as the note it already renders as: an id
+/// alone does not name an example, and a caller that has a page address
+/// passes it to [`to_markdown_numbered`] instead.
 pub fn to_markdown(doc: &SpecDoc, content: &Content) -> String {
-    to_markdown_numbered(doc, content, &Numbering::none())
+    markdown(doc, None, content, &Numbering::none())
 }
 
 /// Render a page as Markdown carrying its block numbers.
+///
+/// `page` is the document's address in its own package — a
+/// [`crate::pages::Page::rel`], e.g. `start/what-vibevm-is.xml`. It is
+/// what lets a translation's `example ref` find the body it borrows:
+/// example ids are unique per page, so the bundle is keyed by page and
+/// then by id, and a renderer that did not know which page it was
+/// rendering could only guess (`##LOC-EXAMPLE-REF`).
 ///
 /// ```
 /// use vibe_doc::{content::Content, md, numbering::number_blocks};
@@ -51,11 +63,31 @@ pub fn to_markdown(doc: &SpecDoc, content: &Content) -> String {
 /// )
 /// .unwrap();
 ///
-/// let text = md::to_markdown_numbered(&doc, &Content::new(), &number_blocks(&doc));
+/// let text = md::to_markdown_numbered(
+///     &doc,
+///     "start/hello.xml",
+///     &Content::new(),
+///     &number_blocks(&doc),
+/// );
 /// assert!(text.starts_with("# Hello {#root}\n"));
 /// assert!(text.contains("[p01] one"));
 /// ```
-pub fn to_markdown_numbered(doc: &SpecDoc, content: &Content, numbering: &Numbering) -> String {
+pub fn to_markdown_numbered(
+    doc: &SpecDoc,
+    page: &str,
+    content: &Content,
+    numbering: &Numbering,
+) -> String {
+    markdown(doc, Some(page), content, numbering)
+}
+
+/// The one renderer both entry points call.
+///
+/// `page` is `None` for a document with no address in a package, which is
+/// the only difference between them: an absent address resolves no
+/// borrowed example, and the note says the body is copied at projection
+/// time rather than printing a command from some other page.
+fn markdown(doc: &SpecDoc, page: Option<&str>, content: &Content, numbering: &Numbering) -> String {
     let mut out = String::new();
     if let Some(title) = &doc.title {
         out.push_str("# ");
@@ -69,9 +101,9 @@ pub fn to_markdown_numbered(doc: &SpecDoc, content: &Content, numbering: &Number
         out.push_str(&status_md(status));
         out.push_str("\n\n");
     }
-    blocks_md(&mut out, &doc.preamble, &[], 1, content, numbering);
+    blocks_md(&mut out, &doc.preamble, &[], 1, page, content, numbering);
     for (i, section) in doc.sections.iter().enumerate() {
-        section_md(&mut out, section, &[i as u16], 2, content, numbering);
+        section_md(&mut out, section, &[i as u16], 2, page, content, numbering);
     }
     out
 }
@@ -81,6 +113,7 @@ fn section_md(
     s: &Section,
     path: &[u16],
     level: usize,
+    page: Option<&str>,
     content: &Content,
     numbering: &Numbering,
 ) {
@@ -100,11 +133,11 @@ fn section_md(
         out.push_str(&status_md(status));
         out.push_str("\n\n");
     }
-    blocks_md(out, &s.blocks, path, level, content, numbering);
+    blocks_md(out, &s.blocks, path, level, page, content, numbering);
     for (i, sub) in s.sections.iter().enumerate() {
         let mut child = path.to_vec();
         child.push(i as u16);
-        section_md(out, sub, &child, level + 1, content, numbering);
+        section_md(out, sub, &child, level + 1, page, content, numbering);
     }
 }
 
@@ -113,6 +146,7 @@ fn blocks_md(
     nodes: &[BlockNode],
     path: &[u16],
     level: usize,
+    page: Option<&str>,
     content: &Content,
     numbering: &Numbering,
 ) {
@@ -126,12 +160,12 @@ fn blocks_md(
             .get(&BlockPath::new(path.to_vec(), i as u16))
             .map(|n| format!("[{}] ", Numbering::spell(n)))
             .unwrap_or_default();
-        block_md(out, &node.block, &label, content);
+        block_md(out, &node.block, &label, page, content);
         out.push_str("\n\n");
     }
 }
 
-fn block_md(out: &mut String, b: &Block, label: &str, content: &Content) {
+fn block_md(out: &mut String, b: &Block, label: &str, page: Option<&str>, content: &Content) {
     match b {
         Block::Paragraph(u) => {
             out.push_str(label);
@@ -194,7 +228,10 @@ fn block_md(out: &mut String, b: &Block, label: &str, content: &Content) {
             stderr,
             ..
         } => example_md(out, label, lang.as_deref(), run, expect, stderr.as_deref()),
-        Block::ExampleRef { id } => match content.examples.get(id) {
+        // A borrowed example is resolved against the page being rendered,
+        // never against the id alone: ids are unique per page, and a
+        // document with no address in a package borrows nothing.
+        Block::ExampleRef { id } => match page.and_then(|page| content.example(page, id)) {
             Some(ExampleBody {
                 lang,
                 run,

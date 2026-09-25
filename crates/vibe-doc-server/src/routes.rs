@@ -339,7 +339,13 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
     let content = vibe_doc::content::Content {
         rules: vibe_doc::citations::resolve_rules(&one, &reader.sources),
         derived: reader.derived.clone(),
-        examples: BTreeMap::new(),
+        // The same one-page economy for the examples a translation
+        // borrows: only the SOURCE page at this address is read, not the
+        // whole source package (`##LOC-EXAMPLE-REF`).
+        examples: BTreeMap::from([(
+            found.rel.clone(),
+            vibe_doc::translations::borrowed_by(&reader.package_dir, &found.rel, &reader.sources),
+        )]),
         base: reader.base.clone(),
     };
     let body = build::render_page(found, &content, format);

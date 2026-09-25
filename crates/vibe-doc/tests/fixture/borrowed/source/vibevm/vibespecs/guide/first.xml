@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">First</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p><LEAD-FIRST fact="true" status="doc/work">The first page authors an example called `demo`, and so does the second.</LEAD-FIRST></p>
+  <example id="demo" fixture="none">
+    <run>vibe --version</run>
+    <expect>vibe 1.0.0</expect>
+  </example>
+</spec>

@@ -31,7 +31,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGE
 
 use std::collections::BTreeMap;
 
-use vibe_spec::SpecAddress;
+use vibe_spec::{Authority, SpecAddress};
 
 use crate::build::{self, Format};
 use crate::citations::{self, Source, SpecSources};
@@ -159,8 +159,14 @@ fn fetch(
         true => parsed.doc_path.clone(),
         false => format!("{}.xml", parsed.doc_path),
     };
+    // When the page belongs to a translation, the examples it borrows come
+    // from the source page at the SAME address. The package root is found
+    // the way `locate` found the file — through the chain, by the
+    // authority's coordinate — so the two cannot disagree about which
+    // instance answered. One page is read, not the source package.
+    let examples = borrowed_by(&rel, parsed, sources);
     let page = Page {
-        rel,
+        rel: rel.clone(),
         path: located.path.clone(),
         doc,
     };
@@ -175,7 +181,7 @@ fn fetch(
     let content = Content {
         rules: citations::resolve_rules(&one, sources),
         derived: BTreeMap::new(),
-        examples: BTreeMap::new(),
+        examples: BTreeMap::from([(rel, examples)]),
         base: crate::content::SITE_BASE.to_owned(),
     };
     Ok(FetchedPage {
@@ -184,6 +190,27 @@ fn fetch(
         source: located.source,
         text: build::render_page(&page, &content, format),
     })
+}
+
+/// The example bodies the page at `rel` borrows, or none at all.
+///
+/// An undotted authority names no package, so it names no root to read a
+/// source from, and an address the chain cannot place lends nothing —
+/// both answer with an empty map rather than a refusal, because a
+/// reference this run could not fill renders as the marked gap it is
+/// ([`crate::translations::borrowed_by`]).
+fn borrowed_by(
+    rel: &str,
+    parsed: &SpecAddress,
+    sources: &SpecSources,
+) -> BTreeMap<String, crate::content::ExampleBody> {
+    let Authority::Package { group, name, .. } = &parsed.authority else {
+        return BTreeMap::new();
+    };
+    sources
+        .instance_of(group, name)
+        .map(|instance| crate::translations::borrowed_by(&instance.root, rel, sources))
+        .unwrap_or_default()
 }
 
 #[cfg(test)]

@@ -1,7 +1,10 @@
 //! What the reader is before it answers anything: where it binds, what
 //! it is pointed at, and what it refuses to start on.
 
+use axum::body::Body;
+use axum::http::{Method, Request};
 use chrono::{TimeZone, Utc};
+use tower::util::ServiceExt;
 use vibe_doc::citations::SpecSources;
 
 use super::*;
@@ -156,4 +159,75 @@ fn a_directory_that_is_not_a_package_is_a_named_refusal() {
         .expect_err("there is no manifest");
     assert!(e.to_string().contains("LOCAL-SERVE"), "{e}");
     assert!(e.to_string().contains("vibe cache add"), "{e}");
+}
+
+/// One of the pipeline's committed fixture packages, by name.
+///
+/// The pair lives beside the library that owns the borrowing law rather
+/// than being copied here: one fixture, one place to correct it.
+fn doc_fixture(name: &str) -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../vibe-doc/tests/fixture")
+        .join(name)
+}
+
+/// A reader on the borrowed-example fixture's adaptation, in a world whose
+/// checkout arm holds the source it adapts.
+fn borrowed_reader() -> Reader {
+    let sources = SpecSources::for_checkout(
+        doc_fixture("borrowed/source"),
+        Some("com.example.docs"),
+        "borrowed",
+    );
+    Reader::open(
+        &Config::new(doc_fixture("borrowed/adaptation")),
+        sources,
+        when(),
+    )
+    .expect("the adaptation opens")
+}
+
+/// One GET against the router — no listener is bound, as everywhere else
+/// in this crate.
+async fn served(reader: Reader, path: &str) -> String {
+    let response = build_app(std::sync::Arc::new(reader))
+        .oneshot(
+            Request::builder()
+                .method(Method::GET)
+                .uri(path)
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .expect("the router answers");
+    let bytes = axum::body::to_bytes(response.into_body(), 8 * 1024 * 1024)
+        .await
+        .expect("the body reads");
+    String::from_utf8_lossy(&bytes).into_owned()
+}
+
+/// A translation's page is served with the example its SOURCE page authors
+/// — in the island a person reads and in the Markdown beside it
+/// (`##LOC-EXAMPLE-REF`). Only that one source page is read per request,
+/// which is the same economy the reader already applies to citations.
+#[tokio::test]
+async fn a_borrowed_example_is_served_with_the_source_pages_body() {
+    const AT: &str = "/doc/com.example.docs/borrowed-ru/0.1.0/guide/second";
+
+    let island = served(borrowed_reader(), &format!("{AT}/")).await;
+    assert!(island.contains("data-example-ref=\"demo\""), "{island}");
+    assert!(island.contains("vibe list"), "{island}");
+    assert!(island.contains("error: nothing is installed"), "{island}");
+    assert!(!island.contains("data-unresolved"), "{island}");
+
+    let markdown = served(borrowed_reader(), &format!("{AT}.md")).await;
+    assert!(markdown.contains("```ps1\nvibe list\n```"), "{markdown}");
+    assert!(
+        markdown.contains("```output\nno packages\n```"),
+        "{markdown}"
+    );
+    assert!(
+        !markdown.contains("copied from the source page"),
+        "{markdown}"
+    );
 }

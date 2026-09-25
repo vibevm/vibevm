@@ -17,6 +17,7 @@ use std::path::{Path, PathBuf};
 use vibe_doc::citations::{RuleText, Source};
 use vibe_doc::content::{Content, ExampleBody};
 use vibe_doc::html;
+use vibe_doc::numbering::Numbering;
 use vibe_doc::pages;
 
 fn fixture_package() -> PathBuf {
@@ -34,7 +35,10 @@ fn golden_path(name: &str) -> PathBuf {
 /// example. The second rule is deliberately absent — an island has to
 /// show an unresolved citation honestly, and a golden that never
 /// contains one cannot prove it.
-fn content() -> Content {
+///
+/// `page` is the address the borrowed example is stored under: ids are
+/// unique per page, so a bundle is keyed by page and then by id.
+fn content(page: &str) -> Content {
     let mut rules = BTreeMap::new();
     rules.insert(
         "spec://com.example/subject/common/PROP-001#A-RULE".to_owned(),
@@ -53,15 +57,17 @@ fn content() -> Content {
         "Usage: vibe list [OPTIONS]\n\nOptions:\n      --json  Machine-readable output\n"
             .to_owned(),
     );
-    let mut examples = BTreeMap::new();
-    examples.insert(
-        "version".to_owned(),
-        ExampleBody {
-            run: "vibe --version".to_owned(),
-            expect: "vibe 1.0.0".to_owned(),
-            ..ExampleBody::default()
-        },
-    );
+    let examples = BTreeMap::from([(
+        page.to_owned(),
+        BTreeMap::from([(
+            "version".to_owned(),
+            ExampleBody {
+                run: "vibe --version".to_owned(),
+                expect: "vibe 1.0.0".to_owned(),
+                ..ExampleBody::default()
+            },
+        )]),
+    )]);
     Content {
         rules,
         derived,
@@ -70,7 +76,11 @@ fn content() -> Content {
     }
 }
 
-fn read_fixture_page() -> vibe_specdoc::doc::SpecDoc {
+/// The fixture package's one page: its address inside the package and its
+/// document. The address is read from the page rather than written down
+/// beside it, because it is the key the borrowed example is stored under
+/// and two spellings of it would be two chances to disagree.
+fn read_fixture_page() -> pages::Page {
     let set = pages::read_package(&fixture_package()).expect("the fixture package reads");
     assert!(
         set.unreadable.is_empty(),
@@ -79,7 +89,19 @@ fn read_fixture_page() -> vibe_specdoc::doc::SpecDoc {
     );
     assert_eq!(set.pages.len(), 1, "one page, so one golden");
     assert_eq!(set.pages[0].rel, "guide/every-block.xml");
-    set.pages[0].doc.clone()
+    set.pages[0].clone()
+}
+
+/// The island the golden pins: the fixture page at its own address, with
+/// everything the pipeline would have fetched, and no block numbers.
+fn island() -> String {
+    let page = read_fixture_page();
+    html::to_html_numbered(
+        &page.doc,
+        &page.rel,
+        &content(&page.rel),
+        &Numbering::none(),
+    )
 }
 
 /// Compare against the golden, or write it when the author asked.
@@ -128,8 +150,7 @@ fn first_difference(want: &str, got: &str) -> String {
 /// Every block of the genre, once, rendered as an island.
 #[test]
 fn the_island_of_the_fixture_page_is_pinned() {
-    let doc = read_fixture_page();
-    assert_golden("guide-every-block.html", &html::to_html(&doc, &content()));
+    assert_golden("guide-every-block.html", &island());
 }
 
 /// The island's own contract, restated on the golden's subject: no
@@ -137,7 +158,7 @@ fn the_island_of_the_fixture_page_is_pinned() {
 /// and the content security policy depends on this holding.
 #[test]
 fn the_island_carries_no_script_no_style_and_no_page_furniture() {
-    let island = html::to_html(&read_fixture_page(), &content());
+    let island = island();
     for forbidden in ["<script", "<style", "<html", "<head", "<body", "onclick="] {
         assert!(
             !island.contains(forbidden),
@@ -149,9 +170,5 @@ fn the_island_carries_no_script_no_style_and_no_page_furniture() {
 /// Rendering is a pure function of the page and the bundle.
 #[test]
 fn two_renders_of_the_fixture_page_are_the_same_bytes() {
-    let doc = read_fixture_page();
-    assert_eq!(
-        html::to_html(&doc, &content()),
-        html::to_html(&doc, &content())
-    );
+    assert_eq!(island(), island());
 }

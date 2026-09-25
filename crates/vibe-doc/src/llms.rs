@@ -111,7 +111,7 @@ pub fn bodies(set: &PageSet, content: &Content) -> BTreeMap<String, String> {
             let numbering = number_blocks(&expanded);
             (
                 page.rel.clone(),
-                md::to_markdown_numbered(&expanded, content, &numbering),
+                md::to_markdown_numbered(&expanded, &page.rel, content, &numbering),
             )
         })
         .collect()

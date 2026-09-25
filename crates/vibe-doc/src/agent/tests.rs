@@ -10,14 +10,22 @@ const PAGE: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
   <title id=\"root\">Boot lane</title>\n  \
   <p>The boot lane is what a session reads first.</p>\n  \
-  <rule ref=\"spec://com.example/host/common/PROP-001#A-RULE\"/>\n\
+  <rule ref=\"spec://com.example/host/common/PROP-001#A-RULE\"/>\n  \
+  <example id=\"demo\" fixture=\"none\">\n    \
+    <run>vibe --version</run>\n    \
+    <expect>vibe 1.0.0</expect>\n  \
+  </example>\n\
 </spec>\n";
 
+/// The adaptation BORROWS the example rather than authoring one: a command
+/// has no translation, so its output is checked once, on the source
+/// (PROP-057 `##LOC-EXAMPLE-REF`).
 const ADAPTED: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
   <title id=\"root\">Загрузочная полоса</title>\n  \
   <p>Загрузочная полоса — это то, что сессия читает первым.</p>\n  \
-  <rule ref=\"spec://com.example/host/common/PROP-001#A-RULE\"/>\n\
+  <rule ref=\"spec://com.example/host/common/PROP-001#A-RULE\"/>\n  \
+  <example ref=\"demo\"/>\n\
 </spec>\n";
 
 /// A checkout whose in-tree registry holds a documentation package and,
@@ -41,23 +49,38 @@ fn world(tmp: &Path, with_adaptation: bool) -> PathBuf {
     )
     .unwrap();
 
-    write_package(&repo, "thing-docs", "en", PAGE);
+    write_package(&repo, "thing-docs", "en", PAGE, None);
     if with_adaptation {
-        write_package(&repo, "thing-docs-ru", "ru", ADAPTED);
+        write_package(
+            &repo,
+            "thing-docs-ru",
+            "ru",
+            ADAPTED,
+            Some("com.example/thing-docs"),
+        );
     }
     repo
 }
 
-fn write_package(repo: &Path, name: &str, lang: &str, page: &str) {
+/// One documentation package in the checkout's in-tree registry.
+///
+/// `adapts`, when given, is the coordinate the package declares as its
+/// `[translates]` source — which is what makes it a translation, and what
+/// the borrowed-example reader follows to find the bodies its pages
+/// borrow.
+fn write_package(repo: &Path, name: &str, lang: &str, page: &str, adapts: Option<&str>) {
     let dir = repo.join(format!("vibevm/vibepacks/com.example/{name}/v0.1.0"));
     fs::create_dir_all(dir.join("vibevm/vibespecs/model")).unwrap();
+    let translates = adapts
+        .map(|coordinate| format!("[translates]\npackage = \"{coordinate}\"\nversion = \"^0.1\"\n"))
+        .unwrap_or_default();
     fs::write(
         dir.join("vibe.toml"),
         format!(
             "[package]\nname = \"{name}\"\ngroup = \"com.example\"\nkind = \"doc\"\n\
              version = \"0.1.0\"\ntitle = \"Thing\"\nabstract = \"What it covers.\"\n\
              [i18n]\ncanonical = \"{lang}\"\n\
-             [[documents]]\npackage = \"com.example/thing\"\nversion = \"^1.0\"\n"
+             [[documents]]\npackage = \"com.example/thing\"\nversion = \"^1.0\"\n{translates}"
         ),
     )
     .unwrap();
@@ -115,6 +138,33 @@ fn a_language_reaches_the_adaptation_published_beside_the_source() {
     assert_eq!(page.lang, "ru");
     assert!(page.address.contains("thing-docs-ru"), "{}", page.address);
     assert!(page.text.contains("Загрузочная"), "{}", page.text);
+}
+
+/// The adaptation's page carries the example body its SOURCE page authors.
+/// An agent reading a translated page gets the command, not a note saying
+/// a pipeline will copy one (`##LOC-EXAMPLE-REF`).
+#[test]
+fn an_adaptation_carries_the_example_body_it_borrows() {
+    let tmp = tempfile::tempdir().unwrap();
+    let repo = world(tmp.path(), true);
+    let page = read_page(ADDRESS, Format::Md, Some("ru"), &sources(&repo)).unwrap();
+
+    assert_eq!(page.lang, "ru");
+    assert!(
+        page.text.contains("```sh\nvibe --version\n```"),
+        "{}",
+        page.text
+    );
+    assert!(
+        page.text.contains("```output\nvibe 1.0.0\n```"),
+        "{}",
+        page.text
+    );
+    assert!(
+        !page.text.contains("copied from the source page"),
+        "{}",
+        page.text
+    );
 }
 
 /// An adaptation this machine does not hold is a fallback, not a

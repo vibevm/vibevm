@@ -41,7 +41,7 @@ use crate::content::Content;
 use crate::error::{DocError, Result};
 use crate::numbering::{expand_derived, number_blocks};
 use crate::pages::{self, Page, PageSet};
-use crate::{html, llms, manifest, md, media, xml};
+use crate::{html, llms, manifest, md, media, translations, xml};
 
 /// Which projection a build writes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -159,7 +159,11 @@ pub fn content(
     let content = Content {
         rules: citations::resolve_rules(&set, sources),
         derived,
-        examples: BTreeMap::new(),
+        // A translation authors no example and borrows every one from the
+        // source page at its own address (`##LOC-EXAMPLE-REF`,
+        // `##LOC-MIRROR`). A source documentation adapts nothing, so this
+        // is empty for it and costs a manifest read.
+        examples: translations::borrowed(package_dir, sources),
         base: base.to_owned(),
     };
     Ok((set, content))
@@ -171,12 +175,18 @@ pub fn content(
 /// The order is the norm's and it is load-bearing: expand `derived`,
 /// number what is there, then render. Numbering before expansion would
 /// give the web and the local reader different `p12`s for one block.
+///
+/// The page's own address travels to the two backends that substitute
+/// text, because a borrowed example is addressed as `page#id` and an id
+/// alone would resolve against whatever page used it first. The XML
+/// projection needs none of it: it keeps `<example ref="…"/>` by its own
+/// contract.
 pub fn render_page(page: &Page, content: &Content, format: Format) -> String {
     let expanded = expand_derived(&page.doc, content);
     let numbering = number_blocks(&expanded);
     match format {
-        Format::Html => html::to_html_numbered(&expanded, content, &numbering),
-        Format::Md => md::to_markdown_numbered(&expanded, content, &numbering),
+        Format::Html => html::to_html_numbered(&expanded, &page.rel, content, &numbering),
+        Format::Md => md::to_markdown_numbered(&expanded, &page.rel, content, &numbering),
         Format::Xml => xml::to_xml_numbered(&expanded, &numbering),
     }
 }

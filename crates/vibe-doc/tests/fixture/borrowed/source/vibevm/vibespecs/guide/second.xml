@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Second</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p><LEAD-SECOND fact="true" status="doc/work">The second page authors `demo` too, with another command and every field spelled.</LEAD-SECOND></p>
+  <example id="demo" fixture="none" lang="ps1" exit="2">
+    <run>vibe list</run>
+    <expect>no packages</expect>
+    <stderr>error: nothing is installed</stderr>
+  </example>
+</spec>

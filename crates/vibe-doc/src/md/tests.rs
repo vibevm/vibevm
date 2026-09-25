@@ -17,9 +17,13 @@ fn page(body: &str) -> SpecDoc {
     vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc).expect("page parses")
 }
 
+/// The address the rendered page is given. Any page address serves these
+/// laws, and a borrowed example is resolved against exactly this one.
+const PAGE: &str = "guide/one.xml";
+
 fn rendered(body: &str, content: &Content) -> String {
     let doc = page(body);
-    to_markdown_numbered(&doc, content, &number_blocks(&doc))
+    to_markdown_numbered(&doc, PAGE, content, &number_blocks(&doc))
 }
 
 /// The number opens the block.

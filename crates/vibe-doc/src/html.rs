@@ -51,6 +51,7 @@ pub mod inline;
 pub mod links;
 
 mod emit;
+mod example;
 
 use vibe_specdoc::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 
@@ -64,6 +65,11 @@ use links::Links;
 type Attrs = Vec<(&'static str, String)>;
 
 /// Render a page as an island, without block numbers.
+///
+/// The document renders with NO address in a package, so a translation's
+/// borrowed example renders as the marked gap it is: an id alone does not
+/// name an example, and a caller that has a page address passes it to
+/// [`to_html_numbered`] instead.
 ///
 /// ```
 /// use vibe_doc::{content::Content, html};
@@ -84,7 +90,7 @@ type Attrs = Vec<(&'static str, String)>;
 /// assert!(!island.contains("<script"));
 /// ```
 pub fn to_html(doc: &SpecDoc, content: &Content) -> String {
-    to_html_numbered(doc, content, &Numbering::none())
+    island(doc, None, content, &Numbering::none())
 }
 
 /// Render a page as an island carrying its block numbers.
@@ -95,6 +101,13 @@ pub fn to_html(doc: &SpecDoc, content: &Content) -> String {
 /// heading keeps its own named anchor and takes no number: it has an
 /// address already, and that address is immutable while `pNN` lives by
 /// the current text (PROP-057 `##READER-NUMBERED-BLOCKS`).
+///
+/// `page` is the document's address in its own package — a
+/// [`crate::pages::Page::rel`], e.g. `start/what-vibevm-is.xml`. It is
+/// what lets a translation's `example ref` find the body it borrows:
+/// example ids are unique per page, so the bundle is keyed by page and
+/// then by id, and a renderer that did not know which page it was
+/// rendering could only guess (`##LOC-EXAMPLE-REF`).
 ///
 /// ```
 /// use vibe_doc::{content::Content, html, numbering::number_blocks};
@@ -108,10 +121,30 @@ pub fn to_html(doc: &SpecDoc, content: &Content) -> String {
 /// )
 /// .unwrap();
 ///
-/// let island = html::to_html_numbered(&doc, &Content::new(), &number_blocks(&doc));
+/// let island = html::to_html_numbered(
+///     &doc,
+///     "start/hello.xml",
+///     &Content::new(),
+///     &number_blocks(&doc),
+/// );
 /// assert!(island.contains("<p data-p=\"1\"><a class=\"p-anchor\" id=\"p01\" href=\"#p01\">01</a>one</p>"));
 /// ```
-pub fn to_html_numbered(doc: &SpecDoc, content: &Content, numbering: &Numbering) -> String {
+pub fn to_html_numbered(
+    doc: &SpecDoc,
+    page: &str,
+    content: &Content,
+    numbering: &Numbering,
+) -> String {
+    island(doc, Some(page), content, numbering)
+}
+
+/// The one renderer both entry points call.
+///
+/// `page` is `None` for a document with no address in a package, which is
+/// the only difference between them: an absent address resolves no
+/// borrowed example, and the frame says so rather than showing a command
+/// from some other page.
+fn island(doc: &SpecDoc, page: Option<&str>, content: &Content, numbering: &Numbering) -> String {
     let mut out = String::new();
     let mut attrs: Attrs = vec![("class", "doc-page".to_owned())];
     push_status(&mut attrs, doc.status.as_ref());
@@ -129,20 +162,34 @@ pub fn to_html_numbered(doc: &SpecDoc, content: &Content, numbering: &Numbering)
             &render_linked(&title.text, &Links::page(&content.base)),
         );
     }
-    blocks_html(&mut out, 1, &doc.preamble, &[], content, numbering);
+    blocks_html(&mut out, 1, &doc.preamble, &[], page, content, numbering);
     for (i, section) in doc.sections.iter().enumerate() {
-        section_html(&mut out, 1, section, 2, &[i as u16], content, numbering);
+        section_html(
+            &mut out,
+            1,
+            section,
+            2,
+            &[i as u16],
+            page,
+            content,
+            numbering,
+        );
     }
     close(&mut out, 0, "article");
     out
 }
 
+// A recursive descent carries the whole render down: where it is in the
+// tree, which page it is rendering, and what was fetched for it. Bundling
+// the tail into a struct would hide the recursion's own state among it.
+#[allow(clippy::too_many_arguments)]
 fn section_html(
     out: &mut String,
     depth: usize,
     s: &Section,
     level: usize,
     path: &[u16],
+    page: Option<&str>,
     content: &Content,
     numbering: &Numbering,
 ) {
@@ -162,11 +209,20 @@ fn section_html(
         &[],
         &render_linked(&s.title, &Links::page(&content.base)),
     );
-    blocks_html(out, depth + 1, &s.blocks, path, content, numbering);
+    blocks_html(out, depth + 1, &s.blocks, path, page, content, numbering);
     for (i, sub) in s.sections.iter().enumerate() {
         let mut child = path.to_vec();
         child.push(i as u16);
-        section_html(out, depth + 1, sub, level + 1, &child, content, numbering);
+        section_html(
+            out,
+            depth + 1,
+            sub,
+            level + 1,
+            &child,
+            page,
+            content,
+            numbering,
+        );
     }
     close(out, depth, "section");
 }
@@ -176,16 +232,24 @@ fn blocks_html(
     depth: usize,
     nodes: &[BlockNode],
     path: &[u16],
+    page: Option<&str>,
     content: &Content,
     numbering: &Numbering,
 ) {
     for (i, node) in nodes.iter().enumerate() {
         let num = numbering.get(&BlockPath::new(path.to_vec(), i as u16));
-        block(out, depth, node, content, num);
+        block(out, depth, node, page, content, num);
     }
 }
 
-fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, num: Option<u32>) {
+fn block(
+    out: &mut String,
+    depth: usize,
+    node: &BlockNode,
+    page: Option<&str>,
+    content: &Content,
+    num: Option<u32>,
+) {
     let mut attrs: Attrs = Vec::new();
     push_when(&mut attrs, node.when.as_ref());
     push_p(&mut attrs, num);
@@ -245,52 +309,28 @@ fn block(out: &mut String, depth: usize, node: &BlockNode, content: &Content, nu
             pre_code(out, depth, &attrs, lang.as_deref(), text, num);
         }
         Block::Rule { uri, .. } => rule(out, depth, uri, &attrs, content, num),
-        Block::Example {
+        // Through the one conversion, so an authored example and the same
+        // example borrowed by a translation are the same bytes.
+        Block::Example { id, fixture, .. } => example::authored(
+            out,
+            depth,
             id,
             fixture,
-            lang,
-            exit,
-            run,
-            expect,
-            stderr,
-        } => {
-            attrs.push(("class", "example".to_owned()));
-            attrs.push(("data-example", id.clone()));
-            attrs.push(("data-fixture", fixture.clone()));
-            // A zero is the default and says nothing; a non-zero code is
-            // the page promising that the command FAILS, which a reader
-            // needs to see before typing it.
-            if exit.unwrap_or(0) != 0 {
-                attrs.push(("data-exit", exit.unwrap_or(0).to_string()));
-            }
-            let body = ExampleBody {
-                lang: lang.clone(),
-                exit: *exit,
-                run: run.clone(),
-                expect: expect.clone(),
-                stderr: stderr.clone(),
-            };
-            example_body(out, depth, &attrs, &body, num);
-        }
-        Block::ExampleRef { id } => match content.examples.get(id) {
-            Some(body) => {
-                attrs.push(("class", "example".to_owned()));
-                attrs.push(("data-example", id.clone()));
-                attrs.push(("data-example-ref", id.clone()));
-                if body.exit.unwrap_or(0) != 0 {
-                    attrs.push(("data-exit", body.exit.unwrap_or(0).to_string()));
-                }
-                example_body(out, depth, &attrs, body, num);
-            }
-            None => {
-                attrs.push(("class", "example".to_owned()));
-                attrs.push(("data-example-ref", id.clone()));
-                attrs.push(("data-unresolved", "true".to_owned()));
-                open(out, depth, "div", &attrs);
-                anchor_line(out, depth + 1, num);
-                close(out, depth, "div");
-            }
-        },
+            &ExampleBody::of(&node.block).unwrap_or_default(),
+            attrs,
+            num,
+        ),
+        // A borrowed example is resolved against the page being rendered,
+        // never against the id alone: ids are unique per page, and a
+        // document with no address in a package borrows nothing.
+        Block::ExampleRef { id } => example::borrowed(
+            out,
+            depth,
+            id,
+            page.and_then(|page| content.example(page, id)),
+            attrs,
+            num,
+        ),
         Block::Derived { kind, reference } => {
             attrs.push(("class", "derived".to_owned()));
             attrs.push(("data-derived", kind.as_str().to_owned()));
@@ -443,45 +483,6 @@ fn rule(
         .unwrap_or_else(|| escape(uri));
     line(out, depth + 1, "a", &link_attrs, &body);
     close(out, depth, "blockquote");
-}
-
-/// An example's two (or three) verbatim blocks.
-fn example_body(
-    out: &mut String,
-    depth: usize,
-    attrs: &Attrs,
-    body: &ExampleBody,
-    num: Option<u32>,
-) {
-    open(out, depth, "div", attrs);
-    anchor_line(out, depth + 1, num);
-    pre_code(
-        out,
-        depth + 1,
-        &[("class", "example-run".to_owned())],
-        Some(body.lang.as_deref().unwrap_or("sh")),
-        &body.run,
-        None,
-    );
-    pre_code(
-        out,
-        depth + 1,
-        &[("class", "example-output".to_owned())],
-        None,
-        &body.expect,
-        None,
-    );
-    if let Some(err) = &body.stderr {
-        pre_code(
-            out,
-            depth + 1,
-            &[("class", "example-stderr".to_owned())],
-            None,
-            err,
-            None,
-        );
-    }
-    close(out, depth, "div");
 }
 
 /// A table. The first row is the header when the source had one — the
