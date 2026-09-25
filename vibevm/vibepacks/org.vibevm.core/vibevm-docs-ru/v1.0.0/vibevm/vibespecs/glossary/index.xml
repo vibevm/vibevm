@@ -106,6 +106,10 @@
     <p>Для чего пакет нужен (*kind*), один из восьми: `flow`, `feat`, `stack`, `tool`, `lang`, `mcp`, `doc`, `app`. Метаданные, а не идентичность; набор растёт только поправкой.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
   </kind>
+  <learning-path title="учебный путь">
+    <p>Порядок, в котором пакет документации предлагает людям читать свои страницы (*learning path*): главы из страниц в порядке чтения, справочные страницы в конце, в приложении. Порядок, в котором страницы читают машины, остаётся прежним.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS"/>
+  </learning-path>
   <lifecycle title="жизненный цикл">
     <p>Фиксированный порядок шагов сборки, которые выполняет vibe (*lifecycle*): однофазный цикл `clean` и девятифазный цикл `default` от `validate` до `deploy`. См. *фаза*.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>

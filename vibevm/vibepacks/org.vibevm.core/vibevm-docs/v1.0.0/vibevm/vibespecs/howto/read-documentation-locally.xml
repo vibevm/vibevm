@@ -26,6 +26,10 @@
     </example>
     <p>3. Pick a language with the selector on any page. Where a page has no translation, the reader shows the manual's own language and says so.</p>
   </by-hand>
+  <reading-order title="Reading in order">
+    <p>A manual that declares a [learning path](../glossary/index.xml#learning-path) opens in that order. The list beside the page shows its chapters, numbered, with the reference pages last, and every page ends with links to the previous and the next page on the path. A switch above the list shows the same pages grouped by section instead, and the reader remembers your choice. A manual without a path lists its pages by section.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-READER"/>
+  </reading-order>
   <private-packages title="Private packages">
     <p>The same reader shows the documentation of packages that live in a private registry or only on your machine: whatever the store holds, the reader renders. This is the intended path for proprietary documentation, and it is why the reader never contacts the public site.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE"/>

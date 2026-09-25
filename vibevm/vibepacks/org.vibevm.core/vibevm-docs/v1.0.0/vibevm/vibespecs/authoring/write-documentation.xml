@@ -24,9 +24,15 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-MAY-DECLARE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#KIND-DOC-PAGES-LOCATION"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#COMPANION-NAME"/>
-    <p>Two more declarations are for the reader rather than the site. `authorship` in `[package]` says who wrote the prose, `human`, `ai` or `mixed`; it is a property of the document a shelf can filter by, never an attribution of the commits, whose law is the repository's own. `[navigation]` pins the pages a newcomer should see first and names the sections of the page tree; every other page keeps the order the package declares.</p>
+    <p>Two more declarations are for the reader rather than the site. `authorship` in `[package]` says who wrote the prose, `human`, `ai` or `mixed`; it is a property of the document a shelf can filter by, never an attribution of the commits, whose law is the repository's own. `[navigation]` pins the pages a newcomer should see first and names the sections of the page tree.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
+    <p>A manual read from end to end also needs an order to learn in, and only its author can write that order. `[[navigation.chapter]]` rows declare it as a [learning path](../glossary/index.xml#learning-path): each row has an `id`, a `title` and the chapter's `pages` in reading order. The rows in their written order run from the first page of the first chapter to the last page of the last. Mark a chapter of reference pages with `appendix = true`, and the reader shows it without a number, the way a textbook shows its appendices. The path changes no other order: machines still read the pages in the order vibe computes for them.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS"/>
+    <p>Every page of the package stands in exactly one chapter. `vibe check` refuses a path that names a missing page, names a page twice or leaves a page out, so a page added later cannot drop off the path. `vibe doc check` also lists the links that point further along the path than the reader has come. The list is a hint about the order and never a failure, because an overview page points ahead on purpose.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED"/>
+    <p>A translation does not repeat the path. It names the chapters in its own language with `id` and `title` rows and takes the order from the documentation it adapts.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-TRANSLATION"/>
   </the-manifest>
   <the-vocabulary title="The vocabulary of a page">
     <p>Pages are written in the project's XML dialect, extended for documentation with a small vocabulary that ordinary specifications do not have. Each element is checked by a tool, which is the point of having it.</p>

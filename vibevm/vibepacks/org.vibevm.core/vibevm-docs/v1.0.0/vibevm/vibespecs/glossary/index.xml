@@ -106,6 +106,10 @@
     <p>What a package is for, one of eight: `flow`, `feat`, `stack`, `tool`, `lang`, `mcp`, `doc`, `app`. Metadata, not identity; the set grows only by amendment.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"/>
   </kind>
+  <learning-path title="learning path">
+    <p>The order a documentation package declares for people to read its pages in: chapters of pages in reading order, the reference pages last, in an appendix. The order machines read the pages in stays as it is.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS"/>
+  </learning-path>
   <lifecycle title="lifecycle">
     <p>The fixed order of build steps vibe runs: the one-phase `clean` lifecycle and the nine-phase `default` lifecycle from `validate` to `deploy`. See *phase*.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"/>
