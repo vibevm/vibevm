@@ -69,7 +69,7 @@ const VIBE_BIN =
 /** The documentation the reader is pointed at. */
 const MANUAL =
   process.env["VIBE_MANUAL"] ??
-  join(REPO, "vibevm", "vibepacks", "org.vibevm.core", "vibevm-docs", "v0.1.0");
+  join(REPO, "vibevm", "vibepacks", "org.vibevm.core", "vibevm-docs", "v1.0.0");
 
 /** Hosts that are never this reader, named so a failure reads plainly. */
 const NEVER = [
