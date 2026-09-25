@@ -997,14 +997,15 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
-# ── Documentation maintenance (4 records, 4 JTD), PROP-057 §10 ──────────────
+# ── Documentation maintenance (5 records, 5 JTD), PROP-057 §10 ──────────────
 # The kitchen of the documentation developers (`##OBS-SURFACE-SNAPSHOTS`,
-# `##OBS-MAINTENANCE-TOOLS`). None of it reaches a reader, and none of it is
-# read by a parser this project does not own — so all four state `ours`, in
-# contrast with the two records above, which crawlers and the site's shell
-# read. They are inventoried all the same: `##M-FORMAT-REGISTRY` asks whether
-# a surface is a contract, not whether a stranger reads it, and these are read
-# by a `vibe` that may be months newer than the one that wrote them.
+# `##OBS-MAINTENANCE-TOOLS`, `##NAV-CHAPTERS-CHECKED`). None of it reaches a
+# reader, and none of it is read by a parser this project does not own — so all
+# five state `ours`, in contrast with the two records above, which crawlers and
+# the site's shell read. They are inventoried all the same:
+# `##M-FORMAT-REGISTRY` asks whether a surface is a contract, not whether a
+# stranger reads it, and these are read by a `vibe` that may be months newer
+# than the one that wrote them.
 #
 # `doc-surface` is the structural snapshot of the product on one declared
 # version, kept at `maintenance/surface/<version>.json` in a documentation
@@ -1015,6 +1016,15 @@ sunset = "none"
 # `doc-surface-diff` is what `vibe doc diff` prints — the changes between two
 # snapshots, already translated into the pages to update. Recoverable: two
 # snapshots reproduce it exactly.
+#
+# `doc-chapters` is what `vibe doc check --chapters --json` prints — the one
+# number the declared learning path is measured by, and the pairs it was
+# counted from (`##NAV-CHAPTERS-CHECKED`). Recoverable: it is a reading of the
+# tree, taken again by running the check again. Registered for the reason the
+# group states rather than because a stranger reads it — the document is a
+# machine surface of this project's own, so the law's answer is a schema and
+# generated types, not a `#[derive(Serialize)]` that drifts from the print
+# (PROP-044 §2, law 5).
 #
 # `doc-todo` is the maintenance queue by the current state and the eight
 # numbers of the monthly review. Recoverable: it is a reading of the tree.
@@ -1034,6 +1044,14 @@ sunset = "none"
 [format.doc-surface-diff]
 epoch = 1
 schema = "schemas/doc_surface_diff.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+[format.doc-chapters]
+epoch = 1
+schema = "schemas/doc_chapters.jtd.json"
 recoverable = true
 foreign_parsers = "ours"
 corpus = "none"

@@ -1,6 +1,7 @@
 //! The learning path, measured — and the three links that are not
 //! forward links.
 
+use vibe_wire::generated::doc_chapters::{DocChapters, ForwardLink};
 use vibe_wire::generated::doc_manifest::NavigationChapter;
 
 use super::*;
@@ -82,8 +83,8 @@ fn a_link_ahead_is_counted_and_a_link_back_is_not() {
         "only the link that points ahead of the reader"
     );
     assert_eq!(report.forward_link_count, 1);
-    assert!(report.render().contains("start/index -> model/two-trees"));
-    assert!(report.render().contains("1 link(s) pointing ahead"));
+    assert!(render(&report).contains("start/index -> model/two-trees"));
+    assert!(render(&report).contains("1 link(s) pointing ahead"));
 }
 
 /// A link into an appendix chapter is not a forward link, however far
@@ -158,16 +159,20 @@ fn a_package_without_a_path_is_not_measured_and_says_so() {
     let report = measure(&[], &[page("start/index.xml", "nothing")]);
     assert!(!report.measured);
     assert_eq!(report.forward_link_count, 0);
-    assert!(report.render().contains("declares no learning path"));
+    assert!(render(&report).contains("declares no learning path"));
     assert!(
-        !report.render().contains("link(s) pointing ahead"),
+        !render(&report).contains("link(s) pointing ahead"),
         "a package with no path prints no count: {}",
-        report.render()
+        render(&report)
     );
 }
 
 /// The JSON a machine reads: the pairs in their own field and the count
-/// beside them, so a reading does not have to count the list.
+/// beside them, so a reading does not have to count the list. The
+/// document is the registered `doc-chapters` format, so it carries the
+/// schema version every neighbouring `vibe doc` document carries, and it
+/// reads back through the generated type that wrote it — the round trip
+/// a handwritten writer had no reader to prove.
 #[test]
 fn the_json_carries_the_pairs_and_their_count() {
     let report = measure(
@@ -177,13 +182,43 @@ fn the_json_carries_the_pairs_and_their_count() {
             "first [the trees](../model/two-trees.xml)",
         )],
     );
-    let json: serde_json::Value =
-        serde_json::from_str(&to_json(&report)).expect("the measurement is JSON");
+    let text = to_json(&report);
+    let json: serde_json::Value = serde_json::from_str(&text).expect("the measurement is JSON");
+    assert_eq!(json["schema_version"], SCHEMA_VERSION);
     assert_eq!(json["forward_link_count"], 1);
     assert_eq!(json["forward_links"][0]["page"], "start/index");
     assert_eq!(json["forward_links"][0]["target"], "model/two-trees");
     assert_eq!(json["chapters"], 3);
     assert_eq!(json["measured"], true);
+    assert_eq!(
+        serde_json::from_str::<DocChapters>(&text).expect("the format reads its own bytes"),
+        report
+    );
+
+    // The order the schema declares, which is the order the print has
+    // always had: a generated struct's fields would otherwise stand
+    // alphabetically, and `chapters` would come before the version.
+    let keys: Vec<&str> = text
+        .lines()
+        .filter_map(|line| line.trim().strip_prefix('"'))
+        .filter_map(|rest| rest.split_once("\":"))
+        .map(|(key, _)| key)
+        .collect();
+    assert_eq!(
+        keys,
+        vec![
+            "schema_version",
+            "chapters",
+            "pages",
+            "forward_links",
+            "page",
+            "target",
+            "forward_link_count",
+            "unreadable",
+            "measured",
+        ],
+        "{text}"
+    );
 }
 
 /// Over a real tree: the fixture manual declares no path, so the check
@@ -193,5 +228,5 @@ fn the_json_carries_the_pairs_and_their_count() {
 fn a_fixture_package_that_declares_no_path_is_read_and_left_unmeasured() {
     let report = check(&crate::manifest::tests::fixture("manual")).expect("the package reads");
     assert!(!report.measured);
-    assert!(report.render().contains("declares no learning path"));
+    assert!(render(&report).contains("declares no learning path"));
 }

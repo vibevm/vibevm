@@ -43,12 +43,24 @@
 //! declared an order» print the same digit and mean opposite things. A
 //! page the pivot could not read is named rather than counted clean — its
 //! links are unknown, and an unknown is not an absence.
+//!
+//! ## The machine form is a registered format
+//!
+//! The document `--json` prints is a wire surface of this project's own,
+//! so it is a JTD schema in `formats/REGISTRY.toml` (record
+//! `doc-chapters`) with generated types, and never a
+//! `#[derive(Serialize)]` on a struct written here: a handwritten writer
+//! of our own format is the mechanism by which the other wire bans break
+//! unnoticed (PROP-044 §2, law 5). The field prose therefore lives in
+//! `schemas/doc_chapters.jtd.json` and reaches this crate as the
+//! generated type's own documentation — one description, read by the
+//! schema's reader and by this file's reader alike.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED");
 
 use std::path::Path;
 
-use serde::Serialize;
+use vibe_wire::generated::doc_chapters::{DocChapters, ForwardLink};
 use vibe_wire::generated::doc_manifest::NavigationChapter;
 
 use crate::error::Result;
@@ -56,77 +68,60 @@ use crate::html::links::target_document;
 use crate::manifest;
 use crate::pages::{self, Page, document_of};
 
-/// One link that sends a reader ahead of where the path has taken them.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-pub struct ForwardLink {
-    /// The document that carries the link, as a `[navigation]` row spells
-    /// a page: under the spec root, without the extension.
-    pub page: String,
-    /// The document it points at — further along the path than `page`.
-    pub target: String,
-}
+/// The schema version a measurement taken today carries.
+pub const SCHEMA_VERSION: u32 = 1;
 
-/// One `--chapters` run.
-#[derive(Debug, Clone, Default, Serialize)]
-pub struct Report {
-    /// How many chapters the path declares. Zero means the package
-    /// declared no path, which is the one state `measured` is false for.
-    pub chapters: usize,
-    /// How many pages stand on the path.
-    pub pages: usize,
-    /// Every link that points ahead, page by page in the order the path
-    /// walks them and, within a page, in the order the prose writes them.
-    pub forward_links: Vec<ForwardLink>,
-    /// How many there are — the number a machine reads without counting
-    /// the list, and the one figure this report exists to produce.
-    pub forward_link_count: usize,
-    /// Pages the pivot refused. Their links are unknown, so the count
-    /// above is a floor rather than an answer while this is not empty.
-    pub unreadable: Vec<String>,
-    /// `false` for a package that declared no path. Nothing here is zero
-    /// because nobody looked.
-    pub measured: bool,
-}
-
-impl Report {
-    /// The human form: the links that point ahead, then the numbers.
-    ///
-    /// There is deliberately no `ok()` beside it. Every other report in
-    /// this crate has one because the surface above turns it into an exit
-    /// code; this one has no verdict to give, and a method named `ok`
-    /// would invite the gate the norm refuses.
-    pub fn render(&self) -> String {
-        let mut out = String::new();
-        if !self.measured {
-            out.push_str(
-                "chapters: this package declares no learning path — its contents is the pages in \
-                 the order the manifest gives them, and there is nothing to measure\n",
-            );
-            return out;
-        }
-        for link in &self.forward_links {
-            out.push_str(&format!("  AHEAD {} -> {}\n", link.page, link.target));
-        }
-        for page in &self.unreadable {
-            out.push_str(&format!("  unreadable {page}\n"));
-        }
-        out.push_str(&format!(
-            "chapters: {} chapter(s), {} page(s) on the path, {} link(s) pointing ahead of the \
-             reader, {} unreadable page(s) — a measurement and not a gate\n",
-            self.chapters,
-            self.pages,
-            self.forward_link_count,
-            self.unreadable.len()
-        ));
-        out
+/// The shape of a package that declared no path: nothing measured, and
+/// `measured` saying which of the two zeros this is.
+fn unmeasured() -> DocChapters {
+    DocChapters {
+        schema_version: SCHEMA_VERSION,
+        chapters: 0,
+        pages: 0,
+        forward_links: Vec::new(),
+        forward_link_count: 0,
+        unreadable: Vec::new(),
+        measured: false,
     }
 }
 
+/// The human form: the links that point ahead, then the numbers.
+///
+/// There is deliberately no `ok()` beside it. Every other report in this
+/// crate has one because the surface above turns it into an exit code;
+/// this one has no verdict to give, and a function named `ok` would
+/// invite the gate the norm refuses.
+pub fn render(report: &DocChapters) -> String {
+    let mut out = String::new();
+    if !report.measured {
+        out.push_str(
+            "chapters: this package declares no learning path — its contents is the pages in the \
+             order the manifest gives them, and there is nothing to measure\n",
+        );
+        return out;
+    }
+    for link in &report.forward_links {
+        out.push_str(&format!("  AHEAD {} -> {}\n", link.page, link.target));
+    }
+    for page in &report.unreadable {
+        out.push_str(&format!("  unreadable {page}\n"));
+    }
+    out.push_str(&format!(
+        "chapters: {} chapter(s), {} page(s) on the path, {} link(s) pointing ahead of the reader, \
+         {} unreadable page(s) — a measurement and not a gate\n",
+        report.chapters,
+        report.pages,
+        report.forward_link_count,
+        report.unreadable.len()
+    ));
+    out
+}
+
 /// The measurement as a machine reads it.
-pub fn to_json(report: &Report) -> String {
-    // Strings, numbers and sequences only, so there is no serialisable
-    // state that can fail here; a fallible signature would push an
-    // impossible arm onto every caller.
+pub fn to_json(report: &DocChapters) -> String {
+    // Generated from the schema, so it holds only JSON scalars and
+    // sequences and cannot fail to serialise; a fallible signature would
+    // push an impossible arm onto every caller.
     let mut text = serde_json::to_string_pretty(report).unwrap_or_default();
     text.push('\n');
     text
@@ -137,13 +132,13 @@ pub fn to_json(report: &Report) -> String {
 /// A package that declares none is measured as nothing, which is not the
 /// same as measured as zero: the report says which of the two it is, and
 /// the caller prints it either way.
-pub fn check(package_dir: &Path) -> Result<Report> {
+pub fn check(package_dir: &Path) -> Result<DocChapters> {
     let chapters = manifest::chapters(package_dir)?;
     if chapters.is_empty() {
         // Nothing is read: a package that declared no path is not asked
         // about its links, and reading every page to say so would be a
         // walk for an answer already given.
-        return Ok(Report::default());
+        return Ok(unmeasured());
     }
     let set = pages::read_package(package_dir)?;
     let mut report = measure(&chapters, &set.pages);
@@ -154,9 +149,9 @@ pub fn check(package_dir: &Path) -> Result<Report> {
 /// The measurement over an already-read package. Split from [`check`] so
 /// it is testable without a tree, the way the mirror check's comparison
 /// is.
-pub fn measure(chapters: &[NavigationChapter], pages: &[Page]) -> Report {
+pub fn measure(chapters: &[NavigationChapter], pages: &[Page]) -> DocChapters {
     if chapters.is_empty() {
-        return Report::default();
+        return unmeasured();
     }
     // Where the path takes a reader, and which pages it takes them to for
     // reference rather than for reading. Both are read off the
@@ -202,10 +197,11 @@ pub fn measure(chapters: &[NavigationChapter], pages: &[Page]) -> Report {
         }
     }
 
-    Report {
-        chapters: chapters.len(),
-        pages: position.len(),
-        forward_link_count: forward_links.len(),
+    DocChapters {
+        schema_version: SCHEMA_VERSION,
+        chapters: chapters.len() as u32,
+        pages: position.len() as u32,
+        forward_link_count: forward_links.len() as u32,
         forward_links,
         unreadable: Vec::new(),
         measured: true,

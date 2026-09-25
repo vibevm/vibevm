@@ -360,7 +360,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
         if args.json {
             print!("{}", chapters::to_json(&report));
         } else {
-            print!("{}", report.render());
+            print!("{}", chapters::render(&report));
         }
     }
 

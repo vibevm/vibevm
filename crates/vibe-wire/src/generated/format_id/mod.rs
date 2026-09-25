@@ -51,6 +51,7 @@ pub enum FormatId {
     DeployReceipt,
     DistributionAggregateManifest,
     DistributionBundleManifest,
+    DocChapters,
     DocManifest,
     DocReviews,
     DocShellIndex,

@@ -21,6 +21,7 @@ pub mod deploy_inverse;
 pub mod deploy_lock_resources;
 pub mod deploy_receipt;
 pub mod distribution;
+pub mod doc_chapters;
 pub mod doc_manifest;
 pub mod doc_reviews;
 pub mod doc_shell_index;

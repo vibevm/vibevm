@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "description": "The measurement of a documentation package's declared learning path (PROP-057 `##NAV-CHAPTERS`, `##NAV-CHAPTERS-CHECKED`). `vibe doc check --chapters --json` prints exactly one of these. It answers one question — how often the path sends a reader ahead of itself — because every link from a page to a page the path reaches LATER is a place where the text needs something it has not taught yet. It is a MEASURER and never a gate: the norm rules the forward links a report rather than a verdict, because an orientation page points ahead ON PURPOSE, and a gate here would teach an author that the way to a green run is to stop writing the page that tells a reader where they are. Nothing in it is zero because nobody looked — a package that declared no path carries `measured = false`, and a page the pivot could not read is named in `unreadable` rather than counted clean. Source of truth for `crates/vibe-wire/src/generated/doc_chapters/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::doc_chapters"
+    },
+    "x-wire-order": [
+      "schema_version",
+      "chapters",
+      "pages",
+      "forward_links",
+      "forward_link_count",
+      "unreadable",
+      "measured"
+    ]
+  },
+  "properties": {
+    "schema_version": { "type": "uint32" },
+    "chapters": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many chapters the path declares. Zero means the package declared no path, which is the one state `measured` is false for."
+      }
+    },
+    "pages": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many pages stand on the path. A page two chapters both name stands on it once, because the path takes a reader past it once."
+      }
+    },
+    "forward_links": {
+      "elements": { "ref": "forward_link" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every link that points ahead, page by page in the order the path walks them and, within a page, in the order the prose writes them. Written even when empty: «no link points ahead» is the answer a clean path gives, and a missing key would read as a measurement nobody took."
+      }
+    },
+    "forward_link_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many there are — the number a machine reads without counting the list, and the one figure this report exists to produce (`##NAV-CHAPTERS-CHECKED`). A floor rather than an answer while `unreadable` is not empty."
+      }
+    },
+    "unreadable": {
+      "elements": { "type": "string" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Pages the pivot refused, by their path under the spec root. Their links are unknown, and an unknown is not an absence, so the count above is a floor while this list has anything in it."
+      }
+    },
+    "measured": {
+      "type": "boolean",
+      "metadata": {
+        "description": "`false` for a package that declared no path, and the reason every other row is not read as a clean result: «no link points ahead» and «nobody declared an order» print the same digit and mean opposite things. A package without a path is not walked at all, so the numbers beside this are zero because nothing was asked."
+      }
+    }
+  },
+  "definitions": {
+    "forward_link": {
+      "metadata": {
+        "description": "One link that sends a reader ahead of where the path has taken them. Two kinds of link are not here and both fall out of one rule rather than a special case: a link INTO a chapter declared `appendix = true` is excepted, because looking a term up in the glossary is not being sent ahead of the lesson, and a fragment alone names a place on the page that says it, which is no link to another page in any reading (`##NAV-CHAPTERS-CHECKED`).",
+        "x-wire-order": ["page", "target"]
+      },
+      "properties": {
+        "page": {
+          "type": "string",
+          "metadata": {
+            "description": "The document that carries the link, as a `[navigation]` row spells a page: under the spec root, without the extension."
+          }
+        },
+        "target": {
+          "type": "string",
+          "metadata": {
+            "description": "The document it points at — further along the path than `page`."
+          }
+        }
+      }
+    }
+  }
+}
