@@ -91,6 +91,61 @@ title = "Questions"
 id = "glossary"
 title = "Glossary"
 
+# The learning path: the order a newcomer reads the manual in, chapter by
+# chapter, with the reference pages last (PROP-057 ##NAV-CHAPTERS). It moves
+# no other order: `pages` in the page manifest and the llms files keep the
+# layer law. Every page stands in exactly one chapter; `vibe check` holds that.
+[[navigation.chapter]]
+id = "getting-started"
+title = "Getting started"
+pages = ["start/what-vibevm-is", "start/index", "start/install-vibe", "start/first-project", "start/what-a-project-contains"]
+
+[[navigation.chapter]]
+id = "how-a-project-works"
+title = "How a project works"
+pages = ["model/two-trees", "model/boot-lane", "model/packages-and-kinds", "model/registries"]
+
+[[navigation.chapter]]
+id = "everyday-work"
+title = "Everyday work with packages"
+pages = ["howto/install-a-package", "model/lock-and-store", "model/versions", "howto/update-packages", "howto/remove-a-package", "howto/work-offline", "howto/use-a-private-registry"]
+
+[[navigation.chapter]]
+id = "through-your-agent"
+title = "Working through your agent"
+pages = ["agent/give-your-agent-the-skill", "agent/ask-your-agent", "howto/read-documentation-locally", "agent/how-agents-read-this-manual"]
+
+[[navigation.chapter]]
+id = "build-and-ship"
+title = "Build and ship a project"
+pages = ["lifecycle/phases", "lifecycle/build-package-deploy", "lifecycle/extensions-and-providers", "lifecycle/scrape"]
+
+[[navigation.chapter]]
+id = "writing-packages"
+title = "Writing packages"
+pages = ["authoring/write-a-flow", "authoring/specs-agents-can-cite", "authoring/facts-and-status-markers", "authoring/write-a-feat-or-stack", "authoring/write-a-lang-package", "authoring/ship-tools-and-mcp-servers"]
+
+[[navigation.chapter]]
+id = "beyond-one-package"
+title = "Beyond one package"
+pages = ["model/dependency-visibility", "authoring/bridge-a-repository", "howto/set-up-a-workspace", "howto/publish-a-package"]
+
+[[navigation.chapter]]
+id = "documentation"
+title = "Documentation as a package"
+pages = ["authoring/write-documentation", "authoring/translate-documentation", "architecture/how-this-manual-is-maintained"]
+
+[[navigation.chapter]]
+id = "under-the-hood"
+title = "Under the hood"
+pages = ["architecture/how-vibe-is-built", "architecture/traceability", "architecture/what-the-lifecycle-epic-delivered"]
+
+[[navigation.chapter]]
+id = "appendices"
+title = "Appendices"
+appendix = true
+pages = ["reference/commands", "reference/manifest", "reference/lock-file", "reference/tree", "reference/settings-and-environment", "reference/machine-formats", "diagnostics/errors", "faq/index", "glossary/index"]
+
 [[skill]]
 name = "vibevm-docs"
 path = "vibevm/vibespecs/skills/vibevm-docs"

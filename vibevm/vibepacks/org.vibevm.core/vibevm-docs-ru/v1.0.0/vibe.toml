@@ -96,3 +96,45 @@ title = "Вопросы"
 [[navigation.section]]
 id = "glossary"
 title = "Глоссарий"
+
+# Учебный путь берётся у исходного издания (PROP-057 ##NAV-CHAPTERS-TRANSLATION):
+# здесь только названия глав по-русски, без страниц.
+[[navigation.chapter]]
+id = "getting-started"
+title = "Первые шаги"
+
+[[navigation.chapter]]
+id = "how-a-project-works"
+title = "Как устроен проект"
+
+[[navigation.chapter]]
+id = "everyday-work"
+title = "Повседневная работа с пакетами"
+
+[[navigation.chapter]]
+id = "through-your-agent"
+title = "Работа через агента"
+
+[[navigation.chapter]]
+id = "build-and-ship"
+title = "Сборка и выкладка проекта"
+
+[[navigation.chapter]]
+id = "writing-packages"
+title = "Свои пакеты"
+
+[[navigation.chapter]]
+id = "beyond-one-package"
+title = "За пределами одного пакета"
+
+[[navigation.chapter]]
+id = "documentation"
+title = "Документация как пакет"
+
+[[navigation.chapter]]
+id = "under-the-hood"
+title = "Под капотом"
+
+[[navigation.chapter]]
+id = "appendices"
+title = "Приложения"
