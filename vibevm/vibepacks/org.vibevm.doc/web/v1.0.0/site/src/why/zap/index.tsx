@@ -30,7 +30,9 @@ export type WhyZapProps = {
  * the ping becomes a beacon, and the trajectory that leaves the orbital
  * map becomes the line that runs from the words to the month. It is a
  * paragraph, not a heading: the page still opens its outline with its
- * headline.
+ * headline. Until that month there is nothing to install, so the start
+ * list carries one sentence the source did not: that its commands work
+ * from the release, not before it.
  *
  * The page is drawn in a darker room than the rest of the site — a
  * deep-space ground with its own panels and hairlines — and that is the
@@ -237,6 +239,7 @@ export const WhyZap = component$<WhyZapProps>((props) => {
           <h2 class="wz-h" id="wz-start-h">
             {t.startH}
           </h2>
+          <p class="wz-body">{t.startNote}</p>
           <ol class="wz-steps">
             {t.steps.map((step) => (
               <li key={step.kind === "cmd" ? step.cmd : step.head}>

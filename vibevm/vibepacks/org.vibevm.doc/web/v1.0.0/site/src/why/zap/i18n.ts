@@ -17,11 +17,17 @@
  * why it travels as a flag rather than as a string: a path written into
  * a string table is a path nothing rewrites when the base changes.
  *
- * One pair came later than the port: the release banner over the hero
- * (2026-09-25). Its English is the owner's own words; its Russian is an
- * adaptation of them rather than a gloss. The month it names is written
- * once more in machine form, `RELEASE_MONTH`, and the two sit side by
- * side here so that a date moved in one is seen to be moved in the other.
+ * Two changes came later than the port, both on the owner's word of
+ * 2026-09-25. The first is the release banner over the hero: its English
+ * is the owner's own words, its Russian an adaptation of them rather than
+ * a gloss. The second follows from it: there is no preview of Zap, so no
+ * line here may say there is one or invite a reader to install it today.
+ * The badge, the first button, the status card and the closing paragraph
+ * were corrected for that and nothing else, and the start list gained one
+ * sentence saying when its commands begin to work. The month the banner
+ * names is written once more in machine form, `RELEASE_MONTH`, and the
+ * two sit side by side here so that a date moved in one is seen to be
+ * moved in the other.
  */
 
 export type Law = {
@@ -102,6 +108,8 @@ export type Strings = {
 
   readonly startK: string;
   readonly startH: string;
+  /** When the commands of the start list begin to work. */
+  readonly startNote: string;
   readonly steps: readonly Step[];
   readonly statusHead: string;
   readonly statusBody: string;
@@ -134,8 +142,8 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     eyebrow: "org.vibevm.zap · local-first agent workspace",
     headlineHtml: "Your agents, on <em>one map</em>.",
     lead: "Zap is a local workspace for running coding agents in parallel: projects, conversations, questions, managed work, and Git worktrees on one navigable surface. Zap Wayfinder keeps durable state on your machine; Zap Quick Lens opens it in the browser or Electron. Codex, Claude Code, OpenCode, and Qwen Code connect with the logins you already have.",
-    badge: "Local preview",
-    ctaStart: "Start with vibe",
+    badge: "In development",
+    ctaStart: "How it starts",
     ctaVibevm: "Why VibeVM",
     heroArtAlt:
       "An orbital map of one campaign: dotted rings of decomposition around a goal core, work nodes on the rings, one trajectory of verified prerequisites leaving the system, and an expanding ping marking a question that waits for a human.",
@@ -236,6 +244,8 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     startK: "Start",
     startH: "From zero to a running coordinator",
+    startNote:
+      "The commands below will work once Zap is released in October 2026.",
     steps: [
       {
         kind: "cmd",
@@ -261,7 +271,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     ],
     statusHead: "Where it is today",
     statusBody:
-      "Zap is a local preview: one human, one machine, full journal retained. Gamelens, IDE clients, and multi-person collaboration are named future components — not features of this release. Authoritative planning operations need a configured planning source; a pending source is shown as pending, not simulated.",
+      "Zap is in development: there is no preview yet, and the release is due in October 2026. It will be a local release: one human, one machine, full journal retained. Gamelens, IDE clients, and multi-person collaboration are named future components — not features of that release. Authoritative planning operations need a configured planning source; a pending source is shown as pending, not simulated.",
     familyHead: "In the VibeVM family",
     familyBody:
       "The engine also installs into a VibeVM project as a flow package, adding its specifications and three skills — zap-draft, zap-state, zap-run. Installation activates nothing until you say so.",
@@ -269,7 +279,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     summaryK: "In one paragraph",
     summaryHtml:
-      "Zap puts projects, agent conversations, questions, managed work, and Git worktrees on one local map. Questions survive restarts, integration passes through your review, and nothing spends a model turn until you press Start. Local preview, in the VibeVM family: <code>vibe install -g org.vibevm.zap/zap</code>.",
+      "Zap puts projects, agent conversations, questions, managed work, and Git worktrees on one local map. Questions survive restarts, integration passes through your review, and nothing spends a model turn until you press Start. Arriving in October 2026, in the VibeVM family: <code>vibe install -g org.vibevm.zap/zap</code>.",
   },
   ru: {
     soonLabel: "Скоро",
@@ -278,8 +288,8 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     eyebrow: "org.vibevm.zap · локальное рабочее пространство агентов",
     headlineHtml: "Все агенты&nbsp;— на&nbsp;<em>одной карте</em>.",
     lead: "Zap — локальное рабочее пространство для параллельной работы кодовых агентов: проекты, переписка, вопросы, управляемые задачи и Git-worktree на одной навигируемой поверхности. Zap Wayfinder держит устойчивое состояние на вашей машине; Zap Quick Lens открывает его в браузере или Electron. Codex, Claude Code, OpenCode и Qwen Code подключаются с теми логинами, которые у вас уже есть.",
-    badge: "Локальное превью",
-    ctaStart: "Начать с vibe",
+    badge: "В разработке",
+    ctaStart: "Как всё начнётся",
     ctaVibevm: "Почему VibeVM",
     heroArtAlt:
       "Орбитальная карта одной кампании: пунктирные кольца декомпозиции вокруг ядра-цели, узлы работы на кольцах, одна траектория проверенных пререквизитов, уходящая из системы, и расходящийся сигнал — вопрос, ожидающий человека.",
@@ -380,6 +390,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     startK: "Старт",
     startH: "От нуля до работающего координатора",
+    startNote: "Команды ниже заработают с выходом Zap — в октябре 2026 года.",
     steps: [
       {
         kind: "cmd",
@@ -405,7 +416,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     ],
     statusHead: "Где продукт сегодня",
     statusBody:
-      "Zap — локальное превью: один человек, одна машина, журнал хранится целиком. Gamelens, IDE-клиенты и совместная работа нескольких людей названы будущими компонентами — это не функции текущего релиза. Авторитетные операции планирования требуют настроенного источника; ожидающий источник показан как ожидающий, а не симулируется.",
+      "Zap в разработке: превью пока нет, релиз ожидается в октябре 2026 года. Это будет локальный релиз: один человек, одна машина, журнал хранится целиком. Gamelens, IDE-клиенты и совместная работа нескольких людей названы будущими компонентами — это не функции этого релиза. Авторитетные операции планирования требуют настроенного источника; ожидающий источник показан как ожидающий, а не симулируется.",
     familyHead: "В семье VibeVM",
     familyBody:
       "Движок также ставится в VibeVM-проект как flow-пакет, добавляя свои спецификации и три скилла — zap-draft, zap-state, zap-run. Установка ничего не активирует, пока вы не скажете.",
@@ -413,6 +424,6 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     summaryK: "Одним абзацем",
     summaryHtml:
-      "Zap собирает проекты, переписку агентов, вопросы, управляемые задачи и Git-worktree на одной локальной карте. Вопросы переживают рестарты, интеграция проходит через ваше ревью, и ни один ход модели не тратится, пока вы не нажали Start. Локальное превью в семье VibeVM: <code>vibe install -g org.vibevm.zap/zap</code>.",
+      "Zap собирает проекты, переписку агентов, вопросы, управляемые задачи и Git-worktree на одной локальной карте. Вопросы переживают рестарты, интеграция проходит через ваше ревью, и ни один ход модели не тратится, пока вы не нажали Start. Выходит в октябре 2026 года, в семье VibeVM: <code>vibe install -g org.vibevm.zap/zap</code>.",
   },
 };
