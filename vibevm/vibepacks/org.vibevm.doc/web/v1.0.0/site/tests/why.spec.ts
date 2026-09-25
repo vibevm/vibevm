@@ -131,6 +131,21 @@ for (const one of RELEASE) {
 
     await expect(first.locator("h1, h2, h3, h4, h5, h6")).toHaveCount(0);
   });
+
+  /* Zap is not working software yet, so the page is an announcement and
+     tells nobody how to install it (owner, 2026-09-25): no command a
+     reader could run, and no button down to the start section, which is
+     commented out until the release. */
+  test(`${one.route} announces Zap and does not install it`, async ({
+    page,
+  }) => {
+    await page.goto(one.route);
+    const main = page.locator("main");
+    await expect(main.locator("#zap-start")).toHaveCount(0);
+    await expect(main.locator("a[href='#zap-start']")).toHaveCount(0);
+    await expect(main.locator(".why-cmd, .wz-steps")).toHaveCount(0);
+    expect(await main.innerText()).not.toMatch(/vibe install|zap-quicklens/);
+  });
 }
 
 /**
@@ -385,11 +400,15 @@ for (const one of PAGES) {
  * The keyboard reaches the page.
  *
  * Tabbing from the top must arrive at the page's own first action — the
- * button under the hero — after the chrome's controls, and the element
- * that has focus must be one a reader can see has it. What is checked is
- * that focus lands on the link and that the ring is drawn, which is the
- * design system's one rule about focus and the only one a page can
- * break by removing an outline.
+ * first button under the hero — after the chrome's controls, and the
+ * element that has focus must be one a reader can see has it. What is
+ * checked is that focus lands on the link and that the ring is drawn,
+ * which is the design system's one rule about focus and the only one a
+ * page can break by removing an outline.
+ *
+ * The action is found by where it stands, not by where it leads: on the
+ * Zap page, whose start section waits for the release, the first button
+ * leads to another page rather than down this one.
  */
 for (const one of PAGES) {
   test(`${one.route} gives its first action a visible focus ring`, async ({
@@ -397,7 +416,7 @@ for (const one of PAGES) {
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(one.route);
-    const action = page.locator("main a[href^='#']").first();
+    const action = page.locator("main .why-cta a").first();
     await action.focus();
     await expect(action).toBeFocused();
     const outline = await action.evaluate(

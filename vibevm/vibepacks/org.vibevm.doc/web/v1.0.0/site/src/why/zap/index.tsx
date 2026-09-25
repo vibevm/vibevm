@@ -2,12 +2,14 @@
 
 import { component$, useStyles$ } from "@qwik.dev/core";
 
-import { href } from "../../lib/href.ts";
-import { type Locale, localePath } from "../../landing/i18n.ts";
+/* `href`, `localePath` and `COMMANDS` serve only the start section, which
+   is commented out below until the release; they come back with it. */
+// import { href } from "../../lib/href.ts";
+import type { Locale /* , localePath */ } from "../../landing/i18n.ts";
 import shared from "../shared.css?inline";
 import { whyHref } from "../paths.ts";
 import { Orbital, ReadingGoal, ReadingOrder } from "./art.tsx";
-import { COMMANDS, RELEASE_MONTH, STRINGS } from "./i18n.ts";
+import { /* COMMANDS, */ RELEASE_MONTH, STRINGS } from "./i18n.ts";
 import styles from "./styles.css?inline";
 
 export type WhyZapProps = {
@@ -31,8 +33,10 @@ export type WhyZapProps = {
  * map becomes the line that runs from the words to the month. It is a
  * paragraph, not a heading: the page still opens its outline with its
  * headline. Until that month there is nothing to install, so the start
- * list carries one sentence the source did not: that its commands work
- * from the release, not before it.
+ * section — the list of commands «from zero to a running coordinator»
+ * with its two end-notes — is commented out by the owner's decision of
+ * 2026-09-25, together with the hero's button that led to it. Its
+ * strings stay in `i18n.ts`, so it returns by removing the comments.
  *
  * The page is drawn in a darker room than the rest of the site — a
  * deep-space ground with its own panels and hairlines — and that is the
@@ -54,8 +58,8 @@ export const WhyZap = component$<WhyZapProps>((props) => {
   const vibevmHref = whyHref("vibevm", props.locale);
   /* The link out of the first step goes to the landing in this page's
      own language, through the same function every other address on the
-     site is written with. */
-  const homeHref = href(localePath(props.locale));
+     site is written with. Commented out with the start section. */
+  // const homeHref = href(localePath(props.locale));
 
   return (
     <div class="why-page why-zap">
@@ -86,6 +90,7 @@ export const WhyZap = component$<WhyZapProps>((props) => {
             />
             <p class="why-lead wz-lead">{t.lead}</p>
             <div class="why-cta">
+              {/* The button to the start section, commented out with it.
               <a class="why-btn why-btn--primary" href="#zap-start">
                 {t.ctaStart}
                 <svg
@@ -105,6 +110,7 @@ export const WhyZap = component$<WhyZapProps>((props) => {
                   />
                 </svg>
               </a>
+              */}
               <a class="why-btn why-btn--ghost" href={vibevmHref}>
                 {t.ctaVibevm}
               </a>
@@ -233,6 +239,8 @@ export const WhyZap = component$<WhyZapProps>((props) => {
         </div>
       </section>
 
+      {/* The start section, «from zero to a running coordinator»: commented
+          out by the owner until the release (2026-09-25).
       <section class="wz-section" id="zap-start" aria-labelledby="wz-start-h">
         <div class="why-shell">
           <p class="wz-k">{t.startK}</p>
@@ -281,6 +289,7 @@ export const WhyZap = component$<WhyZapProps>((props) => {
           </div>
         </div>
       </section>
+      */}
 
       <section
         class="wz-section wz-summary-wrap"

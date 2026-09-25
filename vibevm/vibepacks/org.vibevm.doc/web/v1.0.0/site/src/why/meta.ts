@@ -50,12 +50,12 @@ export const WHY_META: Readonly<
     en: {
       title: "Why Zap — your coding agents, on one map",
       description:
-        "Zap brings projects, agent conversations, durable questions, managed work, and Git worktrees onto one local surface. Codex, Claude Code, OpenCode, and Qwen Code — with your own logins, and no inference until you press Start.",
+        "Zap is announced for October 2026: a local workspace meant to bring projects, agent conversations, durable questions, managed work, and Git worktrees onto one surface — Codex, Claude Code, OpenCode, and Qwen Code with your own logins, and no inference until you press Start.",
     },
     ru: {
       title: "Почему Zap — ваши кодовые агенты на одной карте",
       description:
-        "Zap собирает проекты, переписку агентов, устойчивые вопросы, управляемые задачи и Git-worktree на одной локальной поверхности. Codex, Claude Code, OpenCode и Qwen Code — с вашими логинами, без инференса до нажатия Start.",
+        "Zap анонсирован на октябрь 2026 года: локальное рабочее пространство, которое должно собрать проекты, переписку агентов, устойчивые вопросы, управляемые задачи и Git-worktree на одной поверхности — Codex, Claude Code, OpenCode и Qwen Code с вашими логинами и без инференса до нажатия Start.",
     },
   },
   "ai-native": {

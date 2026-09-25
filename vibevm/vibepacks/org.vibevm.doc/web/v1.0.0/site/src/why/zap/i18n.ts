@@ -28,6 +28,14 @@
  * names is written once more in machine form, `RELEASE_MONTH`, and the
  * two sit side by side here so that a date moved in one is seen to be
  * moved in the other.
+ *
+ * The third change, the same evening and on the same word: Zap is not
+ * working software yet, so the whole page is an announcement, a
+ * declaration of intent. Every sentence about what Zap does says what it
+ * will do; the recorded acceptance run, which spoke of a working build,
+ * is gone; and no line the page renders carries an installation command.
+ * The start section and its button are commented out in `index.tsx`; its
+ * strings below are kept so that it returns unchanged when Zap does.
  */
 
 export type Law = {
@@ -141,7 +149,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     eyebrow: "org.vibevm.zap · local-first agent workspace",
     headlineHtml: "Your agents, on <em>one map</em>.",
-    lead: "Zap is a local workspace for running coding agents in parallel: projects, conversations, questions, managed work, and Git worktrees on one navigable surface. Zap Wayfinder keeps durable state on your machine; Zap Quick Lens opens it in the browser or Electron. Codex, Claude Code, OpenCode, and Qwen Code connect with the logins you already have.",
+    lead: "Zap is the local workspace we are building for running coding agents in parallel: projects, conversations, questions, managed work, and Git worktrees on one navigable surface. Zap Wayfinder will keep durable state on your machine; Zap Quick Lens will open it in the browser or Electron. Codex, Claude Code, OpenCode, and Qwen Code are to connect with the logins you already have.",
     badge: "In development",
     ctaStart: "How it starts",
     ctaVibevm: "Why VibeVM",
@@ -155,24 +163,24 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     problems: [
       {
         head: "The lost question",
-        body: "An agent hits an ambiguity and asks — into a terminal that scrolled past an hour ago. In Zap a question is a durable object: it stays pending until answered, cancelled, or expired, and the conversation keeps moving in parallel.",
+        body: "An agent hits an ambiguity and asks — into a terminal that scrolled past an hour ago. In Zap a question will be a durable object: it will stay pending until answered, cancelled, or expired, while the conversation keeps moving in parallel.",
       },
       {
         head: "The shared checkout",
-        body: "Two tasks in one working tree end in stepped-on edits. Zap prepares an owned root worktree per plan and isolated child worktrees per managed task — resume returns to the same worktree, uncommitted edits intact.",
+        body: "Two tasks in one working tree end in stepped-on edits. Zap will prepare an owned root worktree per plan and isolated child worktrees per managed task, and resuming will return to the same worktree with uncommitted edits intact.",
       },
       {
         head: "Exit 0 — then what?",
-        body: "A clean exit says a process ended, not that the work is right. Zap records process exit, the typed report, and your acceptance as three separate records — success never skips review.",
+        body: "A clean exit says a process ended, not that the work is right. Zap will record process exit, the typed report, and your acceptance as three separate records, so that success never skips review.",
       },
     ],
 
-    thesisK: "What Zap is",
+    thesisK: "What Zap will be",
     thesisH: "A planning engine with a viewer — not a wrapper",
     thesisBody:
-      "Zap ships as two packages under one discipline. The Rust engine — flow:org.vibevm.zap/zap — keeps one typed durable history: intent, obligations, uncertainty, decisions, lowering, agent packets, execution, evidence, holds, recovery. The client — tool:org.vibevm.zap/lens — is Zap Wayfinder, the local service that owns that state, and Zap Quick Lens, the viewer that renders it. The coordinator may replan inside an Owner-defined envelope, and authority and economics gates stand in front of every live effect.",
+      "Zap is planned as two packages under one discipline. The Rust engine — flow:org.vibevm.zap/zap — is to keep one typed durable history: intent, obligations, uncertainty, decisions, lowering, agent packets, execution, evidence, holds, recovery. The client — tool:org.vibevm.zap/lens — is to be Zap Wayfinder, the local service that owns that state, and Zap Quick Lens, the viewer that renders it. The coordinator will be free to replan inside an Owner-defined envelope, and authority and economics gates will stand in front of every live effect.",
     archAlt:
-      "Architecture: agent CLIs connect over authenticated loopback MCP to Zap Wayfinder, which owns the durable journal; Quick Lens viewers attach to Wayfinder through one-time paired sessions.",
+      "The planned architecture: agent CLIs connect over authenticated loopback MCP to Zap Wayfinder, which owns the durable journal; Quick Lens viewers attach to Wayfinder through one-time paired sessions.",
     archAgentsHead: "Your agent CLIs",
     archAgentsBody: "Codex · Claude Code · OpenCode · Qwen Code",
     archLink1: "MCP over authenticated loopback",
@@ -183,12 +191,12 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     archViewHead: "Zap Quick Lens",
     archViewBody: "browser · Electron · zap-server headless",
     archNote:
-      "Two separate channels: agents authenticate to an exact workspace scope, and a UI login never grants agent authority. Everything binds loopback. Opening or closing a viewer neither starts nor stops agents.",
+      "Two separate channels are planned: agents will authenticate to an exact workspace scope, and a UI login will never grant agent authority. Everything will bind loopback. Opening or closing a viewer will neither start nor stop agents.",
 
     mapK: "Navigation",
     mapH: "A map that refuses to guess",
     mapBody:
-      "The workspace renders your projects as regions on one pan-and-zoom map, and the plan graph has exactly two readings. Missing members, partial relations, and prerequisite cycles are called out on the graph instead of being smoothed into a plausible-looking order — and coordinates never promise a duration the source did not state.",
+      "The workspace will render your projects as regions on one pan-and-zoom map, and the plan graph will have exactly two readings. Missing members, partial relations, and prerequisite cycles will be called out on the graph instead of being smoothed into a plausible-looking order — and coordinates will never promise a duration the source did not state.",
     readingGoalHead: "Goal structure",
     readingGoalBody:
       "Decomposition placed outward from the one active outcome the source identifies.",
@@ -196,29 +204,29 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     readingOrderBody:
       "Left-to-right steps built only from verified prerequisites. A stage has no invented internal order.",
 
-    capsK: "Capabilities",
-    capsH: "What that buys you",
+    capsK: "Planned capabilities",
+    capsH: "What it is meant to give you",
     caps: [
       {
         head: "Questions that survive restarts",
-        body: "Question groups carry choices, multi-select, and free text, with drafts, cancellation, and amendment history. In the recorded acceptance flow, a live agent published a question, the browser answered it, the agent read the answer through a bounded inbox and filed a typed report — and after a Wayfinder restart, all of it was still there.",
+        body: "Question groups will carry choices, multi-select, and free text, with drafts, cancellation, and amendment history. A question, its answer, and the typed report an agent files after reading it are meant to outlive a restart of Wayfinder.",
       },
       {
         head: "Integration with a gate",
-        body: "Promotion into your main line passes a candidate diff, registered checks, and human review under a single writer lease. Conflicts become a managed resolution task. There is no automatic stash, reset, or force-push.",
+        body: "Promotion into your main line will pass a candidate diff, registered checks, and human review under a single writer lease. Conflicts will become a managed resolution task. There will be no automatic stash, reset, or force-push.",
       },
       {
         head: "Routing you can read",
-        body: "Named configurations over your existing accounts, task specializations, and an economy/quality slider. Subscription meters show the observed reading: an unknown value stays unknown, and percentages are never converted into an invented number of tokens.",
+        body: "Named configurations over your existing accounts, task specializations, and an economy/quality slider. Subscription meters will show the observed reading: an unknown value stays unknown, and percentages are never converted into an invented number of tokens.",
       },
       {
         head: "Nothing starts implicitly",
-        body: "Registering a project spends zero inference. The coordinator starts when you press Start development. zap-server brings up the whole stack headless without a single model turn.",
+        body: "Registering a project will spend no inference. The coordinator will start only when you press Start development, and zap-server will bring up the whole stack headless without a single model turn.",
       },
     ],
 
     lawsK: "Trust",
-    lawsH: "Rules Zap refuses to break",
+    lawsH: "The rules Zap is built on",
     laws: [
       {
         rule: "A completed process is not an accepted result.",
@@ -230,15 +238,15 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
       },
       {
         rule: "No demo data in live views.",
-        why: "An unavailable planning source renders as unavailable.",
+        why: "An unavailable planning source will render as unavailable.",
       },
       {
         rule: "No bot author.",
-        why: "Commit-producing operations refuse until your Git identity is configured.",
+        why: "Commit-producing operations will refuse until your Git identity is configured.",
       },
       {
         rule: "Controls tell the truth.",
-        why: "The UI shows only what the selected provider adapter actually supports.",
+        why: "The UI will show only what the selected provider adapter actually supports.",
       },
     ],
 
@@ -279,7 +287,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     summaryK: "In one paragraph",
     summaryHtml:
-      "Zap puts projects, agent conversations, questions, managed work, and Git worktrees on one local map. Questions survive restarts, integration passes through your review, and nothing spends a model turn until you press Start. Arriving in October 2026, in the VibeVM family: <code>vibe install -g org.vibevm.zap/zap</code>.",
+      "Zap is meant to put projects, agent conversations, questions, managed work, and Git worktrees on one local map, where questions survive restarts, integration passes through your review, and nothing spends a model turn until you press Start. This is an announcement, not a release: we plan to ship Zap in October 2026, in the VibeVM family.",
   },
   ru: {
     soonLabel: "Скоро",
@@ -287,7 +295,7 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     eyebrow: "org.vibevm.zap · локальное рабочее пространство агентов",
     headlineHtml: "Все агенты&nbsp;— на&nbsp;<em>одной карте</em>.",
-    lead: "Zap — локальное рабочее пространство для параллельной работы кодовых агентов: проекты, переписка, вопросы, управляемые задачи и Git-worktree на одной навигируемой поверхности. Zap Wayfinder держит устойчивое состояние на вашей машине; Zap Quick Lens открывает его в браузере или Electron. Codex, Claude Code, OpenCode и Qwen Code подключаются с теми логинами, которые у вас уже есть.",
+    lead: "Zap — локальное рабочее пространство для параллельной работы кодовых агентов, которое мы строим: проекты, переписка, вопросы, управляемые задачи и Git-worktree на одной навигируемой поверхности. Zap Wayfinder будет держать устойчивое состояние на вашей машине, Zap Quick Lens — открывать его в браузере или Electron. Codex, Claude Code, OpenCode и Qwen Code должны подключаться с теми логинами, которые у вас уже есть.",
     badge: "В разработке",
     ctaStart: "Как всё начнётся",
     ctaVibevm: "Почему VibeVM",
@@ -301,24 +309,24 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     problems: [
       {
         head: "Потерянный вопрос",
-        body: "Агент упирается в неоднозначность и спрашивает — в терминал, который прокрутился час назад. В Zap вопрос — устойчивый объект: он ждёт ответа, отмены или истечения срока, а переписка тем временем продолжается.",
+        body: "Агент упирается в неоднозначность и спрашивает — в терминал, который прокрутился час назад. В Zap вопрос будет устойчивым объектом: он будет ждать ответа, отмены или истечения срока, а переписка тем временем продолжится.",
       },
       {
         head: "Общий checkout",
-        body: "Две задачи в одном рабочем дереве заканчиваются затёртыми правками. Zap готовит корневой worktree на каждый план и изолированные дочерние worktree на управляемые задачи — возобновление возвращает в тот же worktree, незакоммиченные правки целы.",
+        body: "Две задачи в одном рабочем дереве заканчиваются затёртыми правками. Zap будет готовить корневой worktree на каждый план и изолированные дочерние worktree на управляемые задачи, а возобновление вернёт в тот же worktree с целыми незакоммиченными правками.",
       },
       {
         head: "Exit 0 — и что дальше?",
-        body: "Чистый код выхода говорит, что процесс завершился, а не что работа верна. Zap записывает выход процесса, типизированный отчёт и вашу приёмку как три отдельные записи — успех не перепрыгивает ревью.",
+        body: "Чистый код выхода говорит, что процесс завершился, а не что работа верна. Zap будет записывать выход процесса, типизированный отчёт и вашу приёмку как три отдельные записи — успех не перепрыгнет ревью.",
       },
     ],
 
-    thesisK: "Что такое Zap",
+    thesisK: "Каким будет Zap",
     thesisH: "Движок планирования с вьюером — а не обёртка",
     thesisBody:
-      "Zap поставляется двумя пакетами одной дисциплины. Rust-движок — flow:org.vibevm.zap/zap — ведёт одну типизированную устойчивую историю: намерения, обязательства, неопределённость, решения, lowering, пакеты для агентов, исполнение, свидетельства, удержания, восстановление. Клиент — tool:org.vibevm.zap/lens — это Zap Wayfinder, локальный сервис-владелец состояния, и Zap Quick Lens, вьюер, который его отрисовывает. Координатор может перестраивать маршрут внутри конверта, заданного владельцем, а перед каждым живым эффектом стоят шлюзы полномочий и экономики.",
+      "Zap задуман как два пакета одной дисциплины. Rust-движок — flow:org.vibevm.zap/zap — будет вести одну типизированную устойчивую историю: намерения, обязательства, неопределённость, решения, lowering, пакеты для агентов, исполнение, свидетельства, удержания, восстановление. Клиент — tool:org.vibevm.zap/lens — это будущие Zap Wayfinder, локальный сервис-владелец состояния, и Zap Quick Lens, вьюер, который его отрисовывает. Координатор сможет перестраивать маршрут внутри конверта, заданного владельцем, а перед каждым живым эффектом будут стоять шлюзы полномочий и экономики.",
     archAlt:
-      "Архитектура: агентские CLI подключаются по аутентифицированному loopback-MCP к Zap Wayfinder, владеющему устойчивым журналом; вьюеры Quick Lens присоединяются к Wayfinder через одноразовые парные сессии.",
+      "Задуманная архитектура: агентские CLI подключаются по аутентифицированному loopback-MCP к Zap Wayfinder, владеющему устойчивым журналом; вьюеры Quick Lens присоединяются к Wayfinder через одноразовые парные сессии.",
     archAgentsHead: "Ваши агентские CLI",
     archAgentsBody: "Codex · Claude Code · OpenCode · Qwen Code",
     archLink1: "MCP по аутентифицированному loopback",
@@ -329,12 +337,12 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     archViewHead: "Zap Quick Lens",
     archViewBody: "браузер · Electron · zap-server без окна",
     archNote:
-      "Два раздельных канала: агенты аутентифицируются на точный scope рабочего пространства, а вход в UI не даёт агентских полномочий. Всё слушает loopback. Открытие и закрытие вьюера не запускает и не останавливает агентов.",
+      "Задуманы два раздельных канала: агенты будут аутентифицироваться на точный scope рабочего пространства, а вход в UI не даст агентских полномочий. Всё будет слушать loopback. Открытие и закрытие вьюера не будет ни запускать, ни останавливать агентов.",
 
     mapK: "Навигация",
     mapH: "Карта, которая не угадывает",
     mapBody:
-      "Рабочее пространство отрисовывает проекты регионами на одной карте с панорамированием и зумом, а у графа плана ровно два прочтения. Недостающие элементы, частичные связи и циклы пререквизитов показываются на графе, а не сглаживаются в правдоподобный порядок — и координаты не обещают длительность, которой источник не называл.",
+      "Рабочее пространство будет отрисовывать проекты регионами на одной карте с панорамированием и зумом, а у графа плана будет ровно два прочтения. Недостающие элементы, частичные связи и циклы пререквизитов будут показаны на графе, а не сглажены в правдоподобный порядок — и координаты не будут обещать длительность, которой источник не называл.",
     readingGoalHead: "Goal structure",
     readingGoalBody:
       "Декомпозиция, разложенная наружу от единственной активной цели, которую называет источник.",
@@ -342,29 +350,29 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
     readingOrderBody:
       "Шаги слева направо — только по проверенным пререквизитам. Внутри этапа порядок не выдумывается.",
 
-    capsK: "Возможности",
-    capsH: "Что это даёт",
+    capsK: "Задуманные возможности",
+    capsH: "Что это должно дать",
     caps: [
       {
         head: "Вопросы переживают рестарты",
-        body: "Группы вопросов несут варианты, множественный выбор и свободный текст — с черновиками, отменой и историей поправок. В записанном приёмочном прогоне живой агент опубликовал вопрос, браузер ответил, агент прочитал ответ через ограниченный inbox и отправил типизированный отчёт — и после рестарта Wayfinder всё это осталось на месте.",
+        body: "Группы вопросов будут нести варианты, множественный выбор и свободный текст — с черновиками, отменой и историей поправок. Вопрос, ответ на него и типизированный отчёт, который агент подаст, прочитав ответ, должны пережить рестарт Wayfinder.",
       },
       {
         head: "Интеграция со шлюзом",
-        body: "Продвижение в основную ветку проходит через diff кандидата, зарегистрированные проверки и ревью человека под единственной writer-арендой. Конфликты становятся управляемой задачей разрешения. Автоматических stash, reset и force-push нет.",
+        body: "Продвижение в основную ветку будет проходить через diff кандидата, зарегистрированные проверки и ревью человека под единственной writer-арендой. Конфликты будут становиться управляемой задачей разрешения. Автоматических stash, reset и force-push не будет.",
       },
       {
         head: "Маршрутизация, которую можно прочитать",
-        body: "Именованные конфигурации поверх ваших существующих аккаунтов, специализации задач и слайдер экономия/качество. Счётчики подписок показывают наблюдаемое значение: неизвестное остаётся неизвестным, а проценты никогда не превращаются в выдуманное число токенов.",
+        body: "Именованные конфигурации поверх ваших существующих аккаунтов, специализации задач и слайдер экономия/качество. Счётчики подписок будут показывать наблюдаемое значение: неизвестное остаётся неизвестным, а проценты никогда не превращаются в выдуманное число токенов.",
       },
       {
         head: "Ничего не запускается неявно",
-        body: "Регистрация проекта не тратит ни одного вызова модели. Координатор стартует, когда вы нажимаете Start development. zap-server поднимает весь стек без окна — и без единого хода модели.",
+        body: "Регистрация проекта не будет тратить ни одного вызова модели. Координатор стартует, только когда вы нажмёте Start development, а zap-server поднимет весь стек без окна — и без единого хода модели.",
       },
     ],
 
     lawsK: "Доверие",
-    lawsH: "Правила, которые Zap не нарушает",
+    lawsH: "Правила, на которых строится Zap",
     laws: [
       {
         rule: "Завершённый процесс — не принятый результат.",
@@ -376,15 +384,15 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
       },
       {
         rule: "Никаких демо-данных в живых видах.",
-        why: "Недоступный источник планирования показан как недоступный.",
+        why: "Недоступный источник планирования будет показан как недоступный.",
       },
       {
         rule: "Никакого бот-автора.",
-        why: "Операции, создающие коммит, отказывают, пока не настроена ваша Git-идентичность.",
+        why: "Операции, создающие коммит, будут отказывать, пока не настроена ваша Git-идентичность.",
       },
       {
         rule: "Контролы говорят правду.",
-        why: "UI показывает только то, что выбранный адаптер провайдера реально поддерживает.",
+        why: "UI будет показывать только то, что выбранный адаптер провайдера реально поддерживает.",
       },
     ],
 
@@ -424,6 +432,6 @@ export const STRINGS: Readonly<Record<"en" | "ru", Strings>> = {
 
     summaryK: "Одним абзацем",
     summaryHtml:
-      "Zap собирает проекты, переписку агентов, вопросы, управляемые задачи и Git-worktree на одной локальной карте. Вопросы переживают рестарты, интеграция проходит через ваше ревью, и ни один ход модели не тратится, пока вы не нажали Start. Выходит в октябре 2026 года, в семье VibeVM: <code>vibe install -g org.vibevm.zap/zap</code>.",
+      "Zap должен собрать проекты, переписку агентов, вопросы, управляемые задачи и Git-worktree на одной локальной карте, где вопросы переживают рестарты, интеграция проходит через ваше ревью, а ни один ход модели не тратится, пока вы не нажали Start. Это анонс, а не выпуск: мы планируем выпустить Zap в октябре 2026 года, в семье VibeVM.",
   },
 };
