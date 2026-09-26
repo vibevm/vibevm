@@ -2020,3 +2020,13 @@ structure, and it goes when the file does.
 | @fact:B180-SEVERITY **severity** | P3 — the suite is red for reasons that are each one small drift; the narration in (3) and (4) may also be a behaviour change in what a script reads. |
 | @fact:B180-DISPOSITION **disposition** | `open` — add `run` to the inventory; decide whether `verify`'s `ok` is the intended result and re-pin or fix; find which change routed the narration into the pinned stream, and either keep narration out of it or re-pin with the reason. |
 | @fact:B180-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), found while gating the tree and init fixes, 2026-09-26. |
+
+## B-181 — the redbook's packages still describe the layout from before the tree moved into `vibevm/` {#b-181}
+
+| field | value |
+|---|---|
+| @fact:B181-WHAT **what** | 28 packages of `org.vibevm.world` (the redbook and its members) carry about 170 mentions of the pre-PROP-052 `spec/` layout: `spec/WAL.md`, `spec/flows/<flow>/…`, `spec/common/PROP-000`, `spec/boot/…`. Some sit in text an agent reads: the `wal` boot snippet says the flow owns «the protocol files under `spec/flows/wal/`», the `wal-status` skill says «Read `spec/WAL.md` end to end» and points at `spec/flows/wal/WAL-PROTOCOL.md`, and `WAL-PROTOCOL.xml` names `vibedeps/flow-wal/<version>/spec/flows/wal/`. The `addressable-specs` layout diagram draws a `spec/` tree. The current layout is `vibevm/vibespecs/` (the WAL `vibevm/vibespecs/WAL.xml`), which the same flows also name in other places. |
+| @fact:B181-EVIDENCE **evidence** | 2026-09-26: a grep of `vibevm/vibepacks/org.vibevm.world/*/v1.0.0` for `` `spec/ ``, `spec/flows/`, `spec/WAL`, `spec/boot/`, `spec/common/` and `spec/modules/` outside `spec://` addresses: licensing 14, wal 13, addressable-specs 13, health-audit 8, git-attribution-policy 8, conflict-protocol 7, sixteen more with 1 to 6 each. The `vibe init` template had the same staleness and was fixed in `78415ee85`. |
+| @fact:B181-SEVERITY **severity** | P2 — a new project's agent reads two layouts for one project, and may create a `spec/` tree the tools do not read. |
+| @fact:B181-DISPOSITION **disposition** | `open` — one sweep over the redbook's texts that rewrites every path to the current layout (package-relative paths to `vibevm/vibespecs/…`, a consumer's paths to `vibevm/vibedeps/<group>.<name>/<version>/…`), leaving `spec://` addresses alone; then republish the changed packages, which is the owner's call. |
+| @fact:B181-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), found walking the first-project tutorial, 2026-09-26. |
