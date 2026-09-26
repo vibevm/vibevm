@@ -11,8 +11,8 @@
     <p>Follow [Install vibe](install-vibe.xml). On Windows it is an archive and a script; elsewhere it is a clone and a script. You are done when a new terminal answers `vibe --version`. Everything vibe owns lives under one folder in your home directory, and you can move that folder with one environment variable.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
   </step-2>
-  <step-3 title="Step 3: create a project and install one package">
-    <p>Follow [Create your first project](first-project.xml). Give the prompt to your agent, or run the four commands by hand. The package you install is a way of working; the agent reads it at every session start from then on. Note the plan vibe shows before it writes anything: nothing is installed until you say yes.</p>
+  <step-3 title="Step 3: create a project and specify its first program">
+    <p>Follow [Create your first project](first-project.xml). You create a folder, install the redbook, a collection of working practices, and look at how its packages landed on disk. Then you open your agent in the folder and write the [specification](../glossary/index.xml#specification) of a small calculator, by hand or with the agent. The practices are a way of working; the agent reads them at every session start from then on. Note the plan vibe shows before it writes anything: nothing is installed until you say yes.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
   </step-3>
   <step-4 title="Step 4: look at what appeared">

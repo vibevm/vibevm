@@ -2,24 +2,34 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Create your first project</title>
   <status stage="doc" state="work" audience="user"/>
-  <p>A project is a folder your agent works in. This page creates one, adds the first shared rule set to it, and shows what appeared on disk and why the agent will now read it. Ten minutes, no prior knowledge.</p>
-  <prompt id="first-project">Create a VibeVM project named hello-vibe in the current folder, install the package org.vibevm.world/wal into it from the default registry, and show me the reading list the agent gets at session start.
-    <needs>the vibevm skill installed for your agent; network access to github.com/vibespecs, or the package already in the machine store</needs>
-    <outcome>a folder `hello-vibe` with `vibe.toml`, `vibe.lock`, a `vibevm/` directory, and `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` ending with a `&lt;vibevm&gt;` block; `vibe check` reports no errors</outcome>
-    <assert>test -f hello-vibe/vibe.toml</assert>
-    <assert>test -f hello-vibe/vibe.lock</assert>
-    <assert>grep -q "org.vibevm.world/wal" hello-vibe/vibe.lock</assert>
-    <assert>vibe check --path hello-vibe --quiet</assert>
-  </prompt>
-  <what-happens title="What happens">
-    <p>The agent runs `vibe init hello-vibe`, which creates the folder with a [manifest](../glossary/index.xml#manifest), an empty [lock file](../glossary/index.xml#lock-file), the two boot files that are yours to edit, and the three agent instruction files. It then runs `vibe install org.vibevm.world/wal --path hello-vibe`. vibe reads the manifest's [registries](../glossary/index.xml#registry), finds the package, resolves a version, fetches it into the machine [store](../glossary/index.xml#store), and shows a plan. On confirmation it copies the package into `hello-vibe/vibevm/vibedeps/`, writes the lock file, and generates the boot files the agent will read. Finally the agent runs `vibe tree` to show that reading list and `vibe check` to confirm the project is consistent.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"/>
-  </what-happens>
-  <by-hand title="By hand">
+  <p>This page takes you from an empty folder to the first description of a program, written before the program exists. The program is Hello VibeVM, a small calculator for the command line. You give the folder a published set of working rules and look at what arrived. Then you describe the calculator, by hand or by asking your coding agent. Plan for about an hour, most of it the agent's; you install nothing but vibe and an agent.</p>
+  <what-you-need title="What you need">
+    <table>
+      <tr><td>What</td><td>Why</td><td>Where to get it</td></tr>
+      <tr><td>`vibe`</td><td>creates the project and installs the rules</td><td>[Install vibe](install-vibe.xml)</td></tr>
+      <tr><td>git</td><td>the rules you install ask for one commit per idea</td><td>git-scm.com, or your system's package manager</td></tr>
+      <tr><td>a coding agent</td><td>reads the rules and writes with you</td><td>Claude Code, Codex, Gemini CLI, or an agent inside your editor</td></tr>
+      <tr><td>the vibevm skill, optional</td><td>lets the agent run the first step for you</td><td>[Give your agent the vibevm skill](../agent/give-your-agent-the-skill.xml)</td></tr>
+    </table>
+    <p>Pick a short folder for the project. Windows refuses file paths longer than 260 characters, and the deepest installed file sits about 140 characters below the project folder. Keep the project's own path under 120 characters: `C:\dev\hello-vibevm` works, a folder eight levels down may not.</p>
+    <p>The first install needs a network connection. After it, every [package](../glossary/index.xml#package) you installed stays in the machine [store](../glossary/index.xml#store), and a second project reuses it.</p>
+  </what-you-need>
+  <create title="Step 1: create the project">
+    <prompt id="first-project">Create a VibeVM project named hello-vibevm in the current folder, set spec_format = "xml" in its manifest, make it a git repository on branch main, install org.vibevm.world/redbook into it from the default registry, commit the result, and show me the tree of what an agent reads at session start.
+      <needs>the vibevm skill installed for your agent; git; network access to github.com/vibespecs, or the packages already in the machine store</needs>
+      <outcome>a folder `hello-vibevm` with `vibe.toml`, `vibe.lock`, a `vibevm/` directory, and `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` ending with a `&lt;vibevm&gt;` block; 27 packages installed and committed on `main`; `vibe check` reports no errors</outcome>
+      <assert>grep -q 'spec_format = "xml"' hello-vibevm/vibe.toml</assert>
+      <assert>grep -q "org.vibevm.world/redbook" hello-vibevm/vibe.lock</assert>
+      <assert>test -f hello-vibevm/vibevm/vibespecs/boot/STATIC.xml</assert>
+      <assert>git -C hello-vibevm rev-parse --verify main</assert>
+      <assert>test -z "$(git -C hello-vibevm status --porcelain)"</assert>
+      <assert>vibe check --path hello-vibevm --quiet</assert>
+    </prompt>
+    <p>A [project](../glossary/index.xml#project) is a folder with a [manifest](../glossary/index.xml#manifest) in it, and everything vibe does, it does to one. Hand the request above to your agent, or take the steps yourself; both roads end in the same folder.</p>
     <p>1. Create the project. The name becomes the folder:</p>
     <example id="init" fixture="empty">
-      <run>vibe init hello-vibe</run>
-      <expect>Initializing project `hello-vibe` in `hello-vibe`
+      <run>vibe init hello-vibevm</run>
+      <expect>Initializing project `hello-vibevm` in `hello-vibevm`
   ✓ created  vibevm/vibespecs/boot/00-core.md
   ✓ created  vibevm/vibespecs/boot/90-user.md
   ✓ created  vibe.toml
@@ -31,50 +41,208 @@
   ✓ created  AGENTS.md
   ✓ created  GEMINI.md
 
-Done. Project `hello-vibe`: 10 files created, 0 kept.
+Done. Project `hello-vibevm`: 10 files created, 0 kept.
 
 Next:
   • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
   • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
     </example>
-    <p>2. Install a package. The install shows a plan and asks for confirmation; `--assume-yes` skips the question in a script:</p>
-    <example id="install" fixture="hello-vibe-empty">
-      <run>vibe install org.vibevm.world/wal --path hello-vibe --assume-yes --quiet</run>
-      <expect>vibe install: 1 package materialised</expect>
+    <p>2. Open `hello-vibevm/vibe.toml`, the project's [manifest](../glossary/index.xml#manifest). Add one line under `[project]`:</p>
+    <fence lang="toml">[project]
+spec_format = "xml"
+name = "hello-vibevm"</fence>
+    <p>3. Make the folder a git repository with a branch named `main`:</p>
+    <fence lang="shell">git init -b main hello-vibevm</fence>
+    <p>The line in step 2 decides how the rules you install land on disk. A package author may write in XML or in Markdown. With `spec_format = "xml"`, vibe converts every Markdown document of a package to XML as it copies the package in. The installed text then has one form. The files you write yourself are never converted. On this page they stay Markdown.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#SETTING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
+  </create>
+  <redbook title="Step 2: install the redbook">
+    <p>The redbook is a collection of working practices for a team of people and agents, taken from a book on AI-native development. Each practice is its own package with its own rules. Two processes, the person's and the agent's, share one task. Files are the only memory they share. Every decision is written down with its reason, and every commit carries one idea. The redbook names 21 practices, and two of them bring 5 more, so one install gives the project 27 packages.</p>
+    <p>1. Install it. vibe finds the package in the default [registry](../glossary/index.xml#registry), downloads 27 packages and copies them in; it takes about a minute. Leave off `--assume-yes` to see the plan first and answer it yourself; the default answer is no:</p>
+    <example id="install" fixture="hello-vibevm-empty">
+      <run>vibe install org.vibevm.world/redbook --path hello-vibevm --assume-yes --quiet</run>
+      <expect>vibe install: 27 packages materialised</expect>
     </example>
-    <p>3. Look at what is recorded:</p>
-    <example id="list" fixture="hello-vibe">
-      <run>vibe list --path hello-vibe</run>
-      <expect>KIND  NAME  VERSION  ROLE     BOOT SNIPPET
-flow  wal  1.0.0    package  —
+    <p>2. Check the project:</p>
+    <example id="check" fixture="hello-vibevm">
+      <run>vibe check --path hello-vibevm</run>
+      <expect>vibe check: clean — every check passed against `&lt;TMP&gt;/work/hello-vibevm`</expect>
+    </example>
+    <p>3. Commit everything, the installed packages included. The folder `vibevm/vibedeps/` is vibe's copy of the packages. You commit it too, so a fresh clone of the project is readable before anyone runs vibe:</p>
+    <fence lang="shell">git -C hello-vibevm add -A
+git -C hello-vibevm commit -m "chore: create the project and install the redbook"</fence>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIBEDEPS-COMMITTED"/>
+  </redbook>
+  <look title="Step 3: look at what arrived">
+    <p>Run `vibe tree` in the project folder. On a terminal it opens an interactive tree of the 27 packages. The arrows move, `Space` folds a branch, `Enter` opens a package's card, and `Esc` leaves. In a script, or with `--plain`, the same tree prints as text:</p>
+    <example id="tree" fixture="hello-vibevm">
+      <run>vibe tree --plain --path hello-vibevm</run>
+      <expect>project: &lt;TMP&gt;/work/hello-vibevm
+STATIC.xml: 37217 bytes, 300 lines, 4 contribution(s)
+packages: 27   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.xml
 
-1 package installed.</expect>
+org.vibevm.world/redbook                                        dynamic  .  .  .
+├─ org.vibevm.world/addressable-specs [public-chain]            dynamic  .  .  .
+├─ org.vibevm.world/campaign-plans [public-chain]               dynamic  .  .  .
+├─ org.vibevm.world/comparative-research [public-chain]         dynamic  .  .  .
+├─ org.vibevm.world/conflict-protocol [public-chain]            dynamic  .  .  .
+├─ org.vibevm.world/decision-records [public-chain]             dynamic  .  .  .
+├─ org.vibevm.world/dev-runtime-docs [public-chain]             dynamic  .  .  .
+├─ org.vibevm.world/discovery-prompt [public-chain]             dynamic  .  .  .
+├─ org.vibevm.world/git-practices [public-chain]                dynamic  .  .  .
+│  ├─ org.vibevm.world/git-atomic-commits [public-chain]        static   .  .  x
+│  ├─ org.vibevm.world/git-attribution-policy [public-chain]    static   .  .  x
+│  ├─ org.vibevm.world/git-autonomy [public-chain]              static   .  .  x
+│  └─ org.vibevm.world/git-conventional-commits [public-chain]  static   .  .  x
+├─ org.vibevm.world/health-audit [public-chain]                 dynamic  .  .  .
+├─ org.vibevm.world/licensing [public-chain]                    dynamic  .  .  .
+├─ org.vibevm.world/managed-blocks [public-chain]               dynamic  .  .  .
+├─ org.vibevm.world/manual-tests [public-chain]                 dynamic  .  .  .
+├─ org.vibevm.world/operating-modes [public-chain]              dynamic  .  .  .
+├─ org.vibevm.world/qualified-naming [public-chain]             dynamic  .  .  .
+├─ org.vibevm.world/secrets-hygiene [public-chain]              dynamic  .  .  .
+├─ org.vibevm.world/source-mirrors [public-chain]               dynamic  .  .  .
+├─ org.vibevm.world/spec-genres [public-chain]                  dynamic  .  .  .
+├─ org.vibevm.world/sync-from-code [public-chain]               dynamic  .  .  .
+├─ org.vibevm.world/tool-design-lessons [public-chain]          dynamic  .  .  .
+├─ org.vibevm.world/two-process-model [public-chain]            dynamic  .  .  .
+└─ org.vibevm.world/wal-specspaces [public-chain]               dynamic  .  .  .
+   └─ org.vibevm.world/wal [public-chain]                       dynamic  .  .  .</expect>
     </example>
-    <p>4. Look at the reading list the agent gets:</p>
-    <example id="tree" fixture="hello-vibe">
-      <run>vibe tree --plain --path hello-vibe</run>
-      <expect>project: &lt;TMP&gt;/work/hello-vibe
-STATIC.md: (none)
-packages: 1   roots: 1
-columns: load  T=transitive  C=condition  S=in STATIC.md
-
-org.vibevm.world/wal  dynamic  .  .  .</expect>
-    </example>
-    <p>5. Check the project:</p>
-    <example id="check" fixture="hello-vibe">
-      <run>vibe check --path hello-vibe</run>
-      <expect>vibe check: clean — every check passed against `&lt;TMP&gt;/work/hello-vibe`</expect>
-    </example>
-  </by-hand>
-  <what-appeared title="What appeared on disk">
-    <p>Open `hello-vibe/vibe.toml`: it names the project and, after the install, lists `org.vibevm.world/wal` under its requirements with a version range. Open `hello-vibe/vibe.lock`: it pins the exact version and the content [fingerprint](../glossary/index.xml#fingerprint). Under `hello-vibe/vibevm/vibedeps/` sits the package's published tree, unchanged. Under `hello-vibe/vibevm/vibespecs/boot/` sit your two boot files and the generated `INDEX.md`; a generated `STATIC.md` appears beside it as soon as a package asks to be read first and in full, which `wal` does not. And at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md` stands the block that points an agent at them.</p>
+    <p>Each row is one package and says how its rules reach the agent. The four git practices are `static`: an agent reads them first and in full at every session start, because they govern every commit. The others are `dynamic`: the agent reads them next, one file per package, in a fixed order. That reading list is the [boot lane](../glossary/index.xml#boot-lane). In this project it runs to about 30 files and 190 kilobytes, which an agent reads before its first word.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TREE-ANSWER"/>
+    <p>Now open the folder and see the same thing as files:</p>
+    <p>1. Open `hello-vibevm/vibevm/vibedeps/`. It holds 27 folders, one per package, each named by the package's group, name and version: `org.vibevm.world.two-process-model/1.0.0/`. Inside one is the package as its author published it, with every document in XML.</p>
+    <p>2. Open `.vibe-slot.toml` in the same folder. It is vibe's record of this copy. It names the format and the converter's recipe, and holds two hashes: one of what the author published, one of what landed here. Then it lists every file with its own hash and one word, `copied` or `converted`. A `README.md` of the package, for example, arrives as `README.xml`.</p>
+    <p>3. Open `hello-vibevm/vibevm/vibespecs/boot/`. `STATIC.xml` holds the four git practices joined into one file, and `INDEX.md` lists the rest of the lane in order. Both files are generated. The other two files there, `00-core.md` and `90-user.md`, are yours to edit, and no install ever touches them.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET"/>
+    <p>4. Open `hello-vibevm/CLAUDE.md`. Its last lines are a block vibe wrote: they send an agent to the two generated files. `AGENTS.md` and `GEMINI.md` end with the same block, because different agents look for different file names.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#ONE-BLOCK-LAW"/>
-    <p>Open a new [agent session](../glossary/index.xml#agent-session) in `hello-vibe` and ask it what rules it follows: it will name the package you installed a moment ago, because it read the [boot lane](../glossary/index.xml#boot-lane) before answering.</p>
+  </look>
+  <open-the-agent title="Step 4: open your agent in the project">
+    <p>Start the agent inside the project folder, not above it: an agent reads the instruction file of the folder it starts in.</p>
+    <table>
+      <tr><td>Agent</td><td>How to start it</td><td>The file it reads first</td></tr>
+      <tr><td>Claude Code</td><td>`cd hello-vibevm`, then `claude`</td><td>`CLAUDE.md`</td></tr>
+      <tr><td>Codex</td><td>`cd hello-vibevm`, then `codex`</td><td>`AGENTS.md`</td></tr>
+      <tr><td>Gemini CLI</td><td>`cd hello-vibevm`, then `gemini`</td><td>`GEMINI.md`</td></tr>
+      <tr><td>an agent inside Cursor, VS Code or a JetBrains IDE</td><td>open the `hello-vibevm` folder as the project, then open the agent's panel</td><td>`AGENTS.md`, or `CLAUDE.md` for Claude in the editor</td></tr>
+    </table>
+    <p>Before you ask for any work, ask the agent one question: «What rules does this project follow? Name the practices and where you read them.» The first answer takes a few minutes, because the agent reads the whole lane before it says anything. It should list the practices of the redbook, tell the four static git rules from the rest, and say where it read each. A good answer adds that these rules win over its own habits: for example, its commits will carry no line that credits the agent.</p>
+    <p>If it names no practice, it did not start in the folder. Close it, `cd hello-vibevm`, and start it again.</p>
+    <p>The agent may also say that some practices assume a bigger project than a calculator. It is right: one practice expects a tool that updates itself, another a history kept on several git hosts. The collection has opinions. A practice that does not fit can go, with [Remove a package](../howto/remove-a-package.xml).</p>
+  </open-the-agent>
+  <specify title="Step 5: write the specification">
+    <p>In the redbook's way of working, a program starts as a [specification](../glossary/index.xml#specification): a text that says what the program must do, written before the code. It is the channel between you and the agent. You decide what the calculator is; the agent reads the decision in a file, not in a chat that ends with the session.</p>
+    <p>The rules sort such texts into two kinds. A PROP is a contract: the standing rules of one part of the program, changed rarely and never deleted. A FEAT is one slice of work under that contract: its scope and the checks that say it is done. Every rule sits under a heading with an [anchor](../glossary/index.xml#anchor), `{#division-by-zero}`, so a test, a commit or a message can point at exactly one rule.</p>
+    <p>Two roads lead to the same two files. Write them yourself, or ask your agent to write them and answer its questions.</p>
+  </specify>
+  <by-hand-spec title="Write it yourself">
+    <p>1. Create the folder `hello-vibevm/vibevm/vibespecs/modules/calculator/`.</p>
+    <p>2. In it, create `PROP-001.md`, the contract:</p>
+    <fence lang="markdown"># PROP-001: The calculator {#root}
+
+Hello VibeVM is a command-line calculator. This document is its contract:
+what the program accepts, what it prints, and how it fails.
+
+## Input {#input}
+
+The program takes one argument, an expression in quotes: two numbers and
+one operator, separated by spaces, as in `hello-vibevm "2 + 3"`.
+
+## Numbers {#numbers}
+
+A number is a decimal with an optional sign and fraction: `-4`, `2.5`.
+
+## Operators {#operators}
+
+The operators are `+`, `-`, `*` and `/`, and no others.
+
+## Result {#result}
+
+The program prints the result on one line of standard output and exits
+with code 0. A whole result prints without a fraction: `"2 + 3"` prints
+`5`, and `"7 / 2"` prints `3.5`.
+
+## Division by zero {#division-by-zero}
+
+Dividing by zero is an error. The program prints `error: division by zero`
+on standard error and exits with code 1.
+
+## Bad input {#bad-input}
+
+Any other input is an error: no argument, a word where a number belongs,
+or an operator not listed above. The program names the problem on standard
+error and exits with code 2.
+
+## Decision: one quoted argument {#decision-one-argument}
+
+- Decision: the expression arrives as one argument in quotes.
+- Why: unquoted, a shell reads `*` as a file pattern, and Git Bash on
+  Windows turns a lone `/` into a path.
+- Revisit when: the calculator gets an interactive mode.
+
+## Decision: Rust {#decision-rust}
+
+- Decision: the calculator is written in Rust.
+- Why: one binary with no runtime to install, and a compiler that catches
+  a class of mistakes before the program runs.
+- Revisit when: the calculator must run inside a web page.</fence>
+    <p>3. Create `FEAT-001.md` beside it, the first slice:</p>
+    <fence lang="markdown"># FEAT-001: Four operations {#root}
+
+The first slice of Hello VibeVM: the four operations on two numbers and the
+two errors, as [PROP-001](PROP-001.md) states them.
+
+## Scope {#scope}
+
+Everything PROP-001 states, and nothing more: no longer expressions, no
+history, no interactive mode.
+
+## Acceptance {#acceptance}
+
+| Command                    | Standard output | Standard error            | Exit code |
+|----------------------------|-----------------|---------------------------|-----------|
+| `hello-vibevm "2 + 3"`     | `5`             |                           | 0         |
+| `hello-vibevm "10 - 4.5"`  | `5.5`           |                           | 0         |
+| `hello-vibevm "6 * 7"`     | `42`            |                           | 0         |
+| `hello-vibevm "7 / 2"`     | `3.5`           |                           | 0         |
+| `hello-vibevm "-4 * 2.5"`  | `-10`           |                           | 0         |
+| `hello-vibevm "1 / 0"`     |                 | `error: division by zero` | 1         |
+| `hello-vibevm "2 ^ 3"`     |                 | names the operator `^`    | 2         |
+| `hello-vibevm "2 +"`       |                 | names the missing number  | 2         |</fence>
+    <p>4. Ask the agent to read the two files and name what is missing or ambiguous. A good review finds real gaps: this contract says nothing about a result too large to print. Decide each point yourself, and let the agent edit the files.</p>
+    <p>5. Commit the specification:</p>
+    <fence lang="shell">git -C hello-vibevm add vibevm/vibespecs/modules
+git -C hello-vibevm commit -m "docs(calculator): specify Hello VibeVM"</fence>
+  </by-hand-spec>
+  <agent-spec title="Ask your agent to write it">
+    <prompt id="hello-spec">Hello VibeVM is a Rust command-line calculator: `hello-vibevm "7 / 2"` prints `3.5`. It takes one quoted expression, two decimal numbers around `+`, `-`, `*` or `/`; dividing by zero exits with code 1. Specify it in Markdown the way this project's rules require: a short contract and its first feature slice. Write no code; list the files.
+      <needs>an agent session started in `hello-vibevm` after the redbook install</needs>
+      <outcome>two new Markdown files under `vibevm/vibespecs/modules/`, a PROP with the contract and a FEAT with the first slice and its acceptance checks, one anchored heading per rule, and a `REVIEW` marker on every value the agent chose for you; no source code</outcome>
+      <assert>find vibevm/vibespecs/modules -name 'PROP-*.md' | grep -q .</assert>
+      <assert>find vibevm/vibespecs/modules -name 'FEAT-*.md' | grep -q .</assert>
+      <assert>test ! -e Cargo.toml</assert>
+      <assert>vibe check --quiet</assert>
+    </prompt>
+    <p>The phrase that does the work is «the way this project's rules require». The agent reads the redbook's rule on kinds of documents, decides that the contract is a PROP and the slice a FEAT, and writes both under `vibevm/vibespecs/modules/` with an anchor on every rule. When this page was tested, two agents from two vendors, given only this request and the installed rules, put the same two files in the same place.</p>
+    <p>Expect more than you asked for. Everything the request left open, the agent settles with a cautious default, writes the decision down with its reason, and marks it `REVIEW` for you. In the test run a frontier model spent about 25 minutes here, and most of what it wrote was those decisions. That is the practices working as designed: under the two-process practice, what the program means is yours to decide.</p>
+    <p>So answer the markers one by one. Read the list the agent gives you, answer the questions you have an opinion on in plain words, «a result keeps at most ten digits after the point», and say that the rest stand. Do not approve the whole file in one sentence. In the test run, one such sentence settled eight decisions its author never read. When every marker has an answer, ask the agent to commit the specification.</p>
+  </agent-spec>
+  <what-appeared title="What appeared on disk">
+    <p>Open `hello-vibevm/vibe.toml`: it names the project, fixes the format of installed text, and lists `org.vibevm.world/redbook` under its requirements with a version range. Open `hello-vibevm/vibe.lock`, the project's [lock file](../glossary/index.xml#lock-file): it pins all 27 packages to exact versions and content [fingerprints](../glossary/index.xml#fingerprint). The rest splits into two trees. `vibevm/vibedeps/` and the generated boot files belong to vibe, which rewrites them on every install. `vibevm/vibespecs/modules/` and your two boot files belong to you, and vibe never writes into them.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
+    <p>If the agent wrote the specification, it may also have left `vibevm/vibespecs/WAL.xml`: a short record of where the work stands, which the next session reads first. One of the installed practices asks for it.</p>
   </what-appeared>
   <edge-cases title="Edge cases and rules">
     <p>A repeated `vibe install` with no package names installs whatever the manifest requires; that is the command after cloning an existing project.</p>
     <p>If the folder already has a `CLAUDE.md`, vibe appends its block at the end and leaves your text alone. If it finds two blocks or a broken one, it stops with an error and changes nothing until you fix the file.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#CLASS-MALFORMED"/>
     <p>Declining the install plan is not an error: nothing is written, and the store keeps what was fetched for next time.</p>
+    <p>If the agent starts writing code before the specification is settled, stop it and ask which rule it followed. The redbook's practices put the specification first; an agent that skipped them usually started outside the project folder.</p>
+    <p>On Windows, `git add` may print one warning per file: LF will be replaced by CRLF. It comes from Git's `core.autocrlf` setting and is harmless: the commit keeps the files' LF endings.</p>
   </edge-cases>
 </spec>

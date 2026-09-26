@@ -153,6 +153,11 @@ id = "first-project"
 fixture = "empty"
 
 [[doc.prompts.prompt]]
+page = "start/first-project.xml"
+id = "hello-spec"
+fixture = "hello-vibevm-cwd"
+
+[[doc.prompts.prompt]]
 page = "start/install-vibe.xml"
 id = "install-vibe"
 fixture = "empty"

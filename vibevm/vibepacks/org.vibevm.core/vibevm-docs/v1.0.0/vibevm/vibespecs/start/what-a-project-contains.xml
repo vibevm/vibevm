@@ -24,7 +24,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
     <p>`vibevm/vibepacks/` holds packages this repository develops in place: a project that also publishes packages keeps their sources here, and vibe treats the directory as a small local registry. Most projects do not have it.</p>
   </the-files>
   <the-boot-files title="The boot files">
-    <p>The exception in your tree is `vibevm/vibespecs/boot/`. Two files there are yours: `00-core` holds the project's foundations, `90-user` holds your personal overrides, and vibe never touches either. Two files there are generated: `INDEX.md`, a manifest of what the agent reads, always present, and `STATIC.md`, the text it reads first and in full, present only when some package asked to be read that way. Both carry a header saying they are generated; the header is not decoration.</p>
+    <p>The exception in your tree is `vibevm/vibespecs/boot/`. Two files there are yours: `00-core` holds the project's foundations, `90-user` holds your personal overrides, and vibe never touches either. Two files there are generated: `INDEX.md`, a manifest of what the agent reads, always present, and `STATIC.md`, the text it reads first and in full, present only when some package asked to be read that way. A project that pins `spec_format = "xml"` in its manifest gets `STATIC.xml` instead. Both carry a header saying they are generated; the header is not decoration.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED"/>
     <p>The agent finds the boot files through a short [managed block](../glossary/index.xml#managed-block) at the end of `CLAUDE.md`, `AGENTS.md` and `GEMINI.md`, between the lines `&lt;vibevm&gt;` and `&lt;/vibevm&gt;`. vibe rewrites what is between the two markers and nothing else in those files; the rest of the file is yours, and so is the position of the block once it exists.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#OUTSIDE-PRESERVED"/>
@@ -36,7 +36,7 @@ org.vibevm.world/wal  dynamic  .  .  .</expect>
       <tr><td>`vibe.lock`</td><td>vibe</td><td>yes</td><td>never</td></tr>
       <tr><td>`vibevm/vibespecs/`</td><td>you</td><td>yes</td><td>yes</td></tr>
       <tr><td>`vibevm/vibespecs/boot/00-core`, `90-user`</td><td>you</td><td>yes</td><td>yes</td></tr>
-      <tr><td>`vibevm/vibespecs/boot/INDEX.md`, `STATIC.md`</td><td>vibe</td><td>yes</td><td>never</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/INDEX.md`, `STATIC.md` or `STATIC.xml`</td><td>vibe</td><td>yes</td><td>never</td></tr>
       <tr><td>`vibevm/vibedeps/`</td><td>vibe</td><td>yes</td><td>never</td></tr>
       <tr><td>`vibevm/vibepacks/`</td><td>you, when the repository develops packages</td><td>yes</td><td>yes</td></tr>
       <tr><td>the `&lt;vibevm&gt;` block in agent instruction files</td><td>vibe</td><td>yes</td><td>only its position</td></tr>

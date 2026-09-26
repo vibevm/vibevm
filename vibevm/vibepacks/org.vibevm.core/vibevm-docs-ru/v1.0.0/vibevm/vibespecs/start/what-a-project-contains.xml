@@ -16,7 +16,7 @@
     <p>В `vibevm/vibepacks/` лежат пакеты, которые этот репозиторий разрабатывает на месте: проект, который и сам публикует пакеты, держит их исходники здесь, и vibe считает этот каталог маленьким локальным реестром. У большинства проектов его нет.</p>
   </the-files>
   <the-boot-files title="Стартовые файлы">
-    <p>Исключение в вашем дереве — `vibevm/vibespecs/boot/`. Два файла там ваши: `00-core` держит основы проекта, `90-user` — ваши личные переопределения, и vibe не трогает ни тот, ни другой. Два файла там сгенерированы: `INDEX.md`, манифест того, что читает агент, есть всегда, а `STATIC.md`, текст, который он читает первым и целиком, есть только когда какой-то пакет попросил читать себя именно так. Оба несут заголовок о том, что они сгенерированы; этот заголовок не украшение.</p>
+    <p>Исключение в вашем дереве — `vibevm/vibespecs/boot/`. Два файла там ваши: `00-core` держит основы проекта, `90-user` — ваши личные переопределения, и vibe не трогает ни тот, ни другой. Два файла там сгенерированы: `INDEX.md`, манифест того, что читает агент, есть всегда, а `STATIC.md`, текст, который он читает первым и целиком, есть только когда какой-то пакет попросил читать себя именно так. Проект, который закрепил в манифесте `spec_format = "xml"`, получает вместо него `STATIC.xml`. Оба несут заголовок о том, что они сгенерированы; этот заголовок не украшение.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED"/>
     <p>Агент находит стартовые файлы через короткий [управляемый блок](../glossary/index.xml#managed-block) (*managed block*) в конце `CLAUDE.md`, `AGENTS.md` и `GEMINI.md`, между строками `&lt;vibevm&gt;` и `&lt;/vibevm&gt;`. vibe переписывает то, что между двумя маркерами, и ничего больше в этих файлах; остальной файл ваш, и место блока, раз он появился, — тоже ваше.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#OUTSIDE-PRESERVED"/>
@@ -28,7 +28,7 @@
       <tr><td>`vibe.lock`</td><td>vibe</td><td>да</td><td>никогда</td></tr>
       <tr><td>`vibevm/vibespecs/`</td><td>вы</td><td>да</td><td>да</td></tr>
       <tr><td>`vibevm/vibespecs/boot/00-core`, `90-user`</td><td>вы</td><td>да</td><td>да</td></tr>
-      <tr><td>`vibevm/vibespecs/boot/INDEX.md`, `STATIC.md`</td><td>vibe</td><td>да</td><td>никогда</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/INDEX.md`, `STATIC.md` или `STATIC.xml`</td><td>vibe</td><td>да</td><td>никогда</td></tr>
       <tr><td>`vibevm/vibedeps/`</td><td>vibe</td><td>да</td><td>никогда</td></tr>
       <tr><td>`vibevm/vibepacks/`</td><td>вы, когда репозиторий разрабатывает пакеты</td><td>да</td><td>да</td></tr>
       <tr><td>блок `&lt;vibevm&gt;` в файлах инструкций для агентов</td><td>vibe</td><td>да</td><td>только его место</td></tr>
