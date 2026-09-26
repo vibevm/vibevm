@@ -1,0 +1,8 @@
+# The same tree as `hello-vibevm`, entered: the working directory is the
+# project itself, for the pages and prompts whose commands take no
+# `--path`.
+schema = 1
+
+[fixture]
+from = "hello-vibevm"
+cwd = "work/hello-vibevm"

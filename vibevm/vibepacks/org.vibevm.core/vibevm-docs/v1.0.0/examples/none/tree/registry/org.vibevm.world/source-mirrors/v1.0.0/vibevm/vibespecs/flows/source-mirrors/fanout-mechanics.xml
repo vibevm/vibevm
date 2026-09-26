@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Fan-out mechanics</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines the machinery of the
+fan-out: the committed **target manifest**, the fan-out **procedure**
+(fetch, verify ancestry, push fast-forward-only, report), the
+**fail-loud** semantics of a diverged target, the read-only **drift
+check**, bringing an accepted web merge **home**, why deletions and
+rewrites **do not propagate**, a **reference implementation**, and how
+to pin the never-`--force` invariant as a **test**.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">The model this
+serves is in [`SOURCE-MIRRORS-PROTOCOL.xml`](SOURCE-MIRRORS-PROTOCOL.xml);
+the daily rhythm in [`daily-loop.xml`](daily-loop.xml).</sibling-document-pointers></p>
+  <manifest title="The committed target manifest">
+    <p><THE-HOST-SET-LIVES-IN-A-SMALL-COMMITTED-FILE fact="true" status="impl/done">The set of hosts lives in a small **committed** file at the repo root —
+TOML or YAML, whatever the project already reads.</THE-HOST-SET-LIVES-IN-A-SMALL-COMMITTED-FILE></p>
+    <p><THE-MANIFEST-IS-REVIEWED-LIKE-CODE fact="true" status="impl/done">It is reviewed like
+code, because it *is* infrastructure.</THE-MANIFEST-IS-REVIEWED-LIKE-CODE></p>
+    <fence lang="toml">schema = 1
+
+[[target]]
+name = "host-a"
+url  = "git@host-a.example:org/project.git"
+mode = "push"            # the maintainer pushes mainline here
+refs = ["main", "tags"]  # what to mirror
+audience = "region-1"
+
+[[target]]
+name = "host-b"
+url  = "git@host-b.example:org/project.git"
+mode = "push"
+refs = ["main", "tags"]
+audience = "region-2"</fence>
+    <p><A-MACHINE-LOCAL-GIT-REMOTE-CANNOT-SERVE-THIS-ROLE fact="true" status="impl/done">A **machine-local git remote cannot serve this role.** Two reasons:</A-MACHINE-LOCAL-GIT-REMOTE-CANNOT-SERVE-THIS-ROLE></p>
+    <table>
+      <tr>
+        <td>Requirement</td>
+        <td>Local remote</td>
+        <td>Committed manifest</td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR fact="true" status="spec/done">Shared with every contributor</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR></td>
+        <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-LOCAL-REMOTE fact="true" status="spec/done">No — lives in one `.git/config`</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-LOCAL-REMOTE></td>
+        <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — checked into the tree</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-COMMITTED-MANIFEST></td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-VERIFIABLE-IN-CI fact="true" status="spec/done">Verifiable in CI / a sweep</ROW-REQ-VERIFIABLE-IN-CI></td>
+        <td><ROW-REQ-VERIFIABLE-IN-CI-LOCAL-REMOTE fact="true" status="spec/done">No — not visible to CI</ROW-REQ-VERIFIABLE-IN-CI-LOCAL-REMOTE></td>
+        <td><ROW-REQ-VERIFIABLE-IN-CI-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — a file CI can read</ROW-REQ-VERIFIABLE-IN-CI-COMMITTED-MANIFEST></td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES fact="true" status="spec/done">Reviewed when a host changes</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES></td>
+        <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-LOCAL-REMOTE fact="true" status="spec/done">No — silent edit</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-LOCAL-REMOTE></td>
+        <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — shows up in a diff</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-COMMITTED-MANIFEST></td>
+      </tr>
+    </table>
+    <p><THE-MANIFEST-CARRIES-NO-CREDENTIALS fact="true" status="impl/done">The manifest carries **no credentials.**</THE-MANIFEST-CARRIES-NO-CREDENTIALS></p>
+    <p><AUTHENTICATION-IS-THE-MAINTAINERS-PER-HOST-KEYS fact="true" status="impl/done">Authentication is the
+maintainer's per-host keys, held in the agent or SSH config — never in
+the tree.</AUTHENTICATION-IS-THE-MAINTAINERS-PER-HOST-KEYS></p>
+    <p><ADDING-A-HOST-IS-ONE-TARGET-BLOCK fact="true" status="impl/done">Adding a host is one `[[target]]` block.</ADDING-A-HOST-IS-ONE-TARGET-BLOCK></p>
+    <p><A-SELF-PULL-TARGET-IS-ONLY-VERIFIED fact="true" status="impl/done">A `self-pull` target
+(a host that mirrors *itself* from elsewhere) is listed with
+`mode = "self-pull"`: the tool does not push to it, only verifies it is
+level with mainline.</A-SELF-PULL-TARGET-IS-ONLY-VERIFIED></p>
+  </manifest>
+  <procedure title="The fan-out procedure">
+    <p><FAN-OUT-PUSHES-MAINLINE-TO-EVERY-PUSH-TARGET fact="true" status="impl/done">Fan-out pushes mainline to every `push` target.</FAN-OUT-PUSHES-MAINLINE-TO-EVERY-PUSH-TARGET></p>
+    <p><the-shape-is-always-the-same-four-steps fact="true" status="impl/done">The shape is always the
+same four steps, per target:</the-shape-is-always-the-same-four-steps></p>
+    <facts ordered="true">
+      <STEP-FETCH fact="true" status="impl/done">**Fetch** the target's `main` (by URL, read-only).</STEP-FETCH>
+      <STEP-VERIFY-ANCESTRY fact="true" status="impl/done">**Verify ancestry** — the target's `main` must be an *ancestor* of
+   local mainline. If it is not, the target has diverged: abort *that*
+   target, loud (§fail-loud). Do not touch it.</STEP-VERIFY-ANCESTRY>
+      <STEP-PUSH-FAST-FORWARD-ONLY fact="true" status="impl/done">**Push fast-forward-only** — `main` and tags, never `--force`.</STEP-PUSH-FAST-FORWARD-ONLY>
+      <STEP-REPORT fact="true" status="impl/done">**Report** the target as `ok`, `sync` (already level), or a named
+   `DRIFT`.</STEP-REPORT>
+    </facts>
+    <p><THE-PUSH-IS-BY-URL-FROM-THE-MANIFEST fact="true" status="impl/done">The push is **by URL**, from the manifest, so the manifest is the one
+source of truth for the target set — not a pile of git remotes that can
+drift out of step with it.</THE-PUSH-IS-BY-URL-FROM-THE-MANIFEST></p>
+    <p><THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST fact="true" status="impl/done">This is the *only* way history reaches a host:
+not `git push host-a`, not a click in a web UI — the fan-out.</THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST></p>
+  </procedure>
+  <fail-loud title="Fail-loud semantics">
+    <p><A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK fact="true" status="impl/done">A non-fast-forward on a target means that host carries a `main` your
+mainline does not — almost always a direct write or a force-push to
+that host.</A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK></p>
+    <p><the-fan-outs-response-is-fixed fact="true" status="impl/done">The fan-out's response is fixed:</the-fan-outs-response-is-fixed></p>
+    <facts ordered="false">
+      <RESPONSE-ABORT-THAT-TARGET fact="true" status="spec/done">**Abort that target**, with a message naming the divergence (the
+  host, and the commits it has that mainline lacks). *Half built: the host is
+  named, the commits are not — by anything. This document's own reference
+  script below aborts the target and prints `"$name: DRIFT — host has commits
+  mainline lacks"`, which states that a divergence exists without enumerating
+  one commit of it; and the only port in the perimeter, `xtask/src/mirror.rs`,
+  names the failed `&lt;target&gt;:&lt;ref&gt;` pairs and relays git's rejection text
+  (`:296-303`, `:313-320`) while performing no `ls-remote` and no `merge-base`
+  on the push path, so it never learns the target's tip and cannot compute the
+  range. Searched for the commit-range computation, not the wording:
+  `merge-base` · `is-ancestor` · `ls-remote` · `rev-list` over the standing
+  perimeter — the only `ls-remote` in the fan-out is `remote_main`
+  (`mirror.rs:157`), reached solely from `probe` and the `self-pull` arm, and
+  `rev-list` appears nowhere.*</RESPONSE-ABORT-THAT-TARGET>
+      <RESPONSE-NEVER-FORCE fact="true" status="impl/done">**Never `--force`.** The tool has no force path to reach for.</RESPONSE-NEVER-FORCE>
+      <RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS fact="true" status="impl/done">**Do not block the other targets.** A divergence on host B does not
+  stop host A from receiving its legitimate fast-forward.</RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS>
+    </facts>
+    <quote><A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE fact="true" status="impl/done">A diverged target is a signal to investigate, never something to
+silently clobber.</A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE></quote>
+    <p><RECONCILIATION-IS-DELIBERATE-AND-MANUAL fact="true" status="impl/done">Reconciliation is deliberate and manual: fetch the host, inspect the
+divergent commits, merge what is wanted **into mainline**, then re-fan
+([`daily-loop.xml` §drift](daily-loop.xml#drift)).</RECONCILIATION-IS-DELIBERATE-AND-MANUAL></p>
+  </fail-loud>
+  <drift-check title="The read-only drift check">
+    <p><a-check-mode-answers-is-everyone-level fact="true" status="impl/done">A `--check` mode answers "is everyone level?" without pushing anything:</a-check-mode-answers-is-everyone-level></p>
+    <fence lang="sh">project-mirror --check     # read-only; non-zero exit on drift</fence>
+    <p><CHECK-FETCHES-EACH-TARGET-AND-COMPARES-TO-MAINLINE fact="true" status="impl/done">It fetches each target and compares to mainline.</CHECK-FETCHES-EACH-TARGET-AND-COMPARES-TO-MAINLINE></p>
+    <p><SYNC-MEANS-LEVEL-DRIFT-NAMES-A-HOST-THAT-MOVED fact="true" status="impl/done">`sync` everywhere means
+all hosts equal mainline; a `DRIFT` line names a host that has moved.</SYNC-MEANS-LEVEL-DRIFT-NAMES-A-HOST-THAT-MOVED></p>
+    <p><CHECK-WRITES-NOTHING-AND-IS-SAFE-AS-A-PRE-FLIGHT fact="true" status="impl/done">It writes nothing — safe as a pre-flight before a fan-out or inside a sweep.</CHECK-WRITES-NOTHING-AND-IS-SAFE-AS-A-PRE-FLIGHT></p>
+  </drift-check>
+  <bring-home title="Bringing an accepted web merge home">
+    <p><A-WEB-MERGE-PUTS-THAT-HOSTS-MAIN-AHEAD fact="true" status="impl/done">When a PR is merged through a host's web UI, *that host's* `main` is now
+ahead of mainline.</A-WEB-MERGE-PUTS-THAT-HOSTS-MAIN-AHEAD></p>
+    <p><IT-IS-NOT-INTEGRATED-UNTIL-IT-IS-BROUGHT-HOME fact="true" status="impl/done">It is **not integrated** until it is brought home.</IT-IS-NOT-INTEGRATED-UNTIL-IT-IS-BROUGHT-HOME></p>
+    <p><do-that-first-then-fan-out fact="true" status="impl/done">Do that first, then fan out:</do-that-first-then-fan-out></p>
+    <fence lang="sh">git fetch &lt;host-a-url&gt; main
+git merge --ff-only FETCH_HEAD   # fast-forward local mainline
+project-mirror                   # now fan out to everyone else</fence>
+    <p><THE-FF-ONLY-IS-LOAD-BEARING fact="true" status="impl/done">The `--ff-only` is load-bearing: if local mainline cannot fast-forward
+to the host's `main`, your tree has commits the host lacks, and the
+merge must be reconciled by hand before fan-out.</THE-FF-ONLY-IS-LOAD-BEARING></p>
+    <p><THE-HOST-YOU-PULLED-FROM-BECOMES-A-NO-OP fact="true" status="impl/done">The host you pulled
+from becomes a no-op on the next fan-out; every other host catches up.</THE-HOST-YOU-PULLED-FROM-BECOMES-A-NO-OP></p>
+  </bring-home>
+  <no-propagate title="Deletions and history rewrites do not propagate">
+    <p><two-things-the-fan-out-will-not-carry fact="true" status="impl/done">Two things the fan-out deliberately will **not** carry:</two-things-the-fan-out-will-not-carry></p>
+    <table>
+      <tr>
+        <td>Action on one host</td>
+        <td>Propagates?</td>
+        <td>Why</td>
+      </tr>
+      <tr>
+        <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH fact="true" status="spec/done">Delete a branch</ROW-NO-PROPAGATE-DELETE-A-BRANCH></td>
+        <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH-PROPAGATES fact="true" status="spec/done">**No**</ROW-NO-PROPAGATE-DELETE-A-BRANCH-PROPAGATES></td>
+        <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH-WHY fact="true" status="spec/done">An accidental deletion must not cascade to every host</ROW-NO-PROPAGATE-DELETE-A-BRANCH-WHY></td>
+      </tr>
+      <tr>
+        <td><ROW-NO-PROPAGATE-REWRITE-HISTORY fact="true" status="spec/done">Rewrite / force-push history</ROW-NO-PROPAGATE-REWRITE-HISTORY></td>
+        <td><ROW-NO-PROPAGATE-REWRITE-HISTORY-PROPAGATES fact="true" status="spec/done">**No**</ROW-NO-PROPAGATE-REWRITE-HISTORY-PROPAGATES></td>
+        <td><ROW-NO-PROPAGATE-REWRITE-HISTORY-WHY fact="true" status="spec/done">The fan-out is fast-forward-only; a rewrite is a divergence, and divergences fail loud</ROW-NO-PROPAGATE-REWRITE-HISTORY-WHY></td>
+      </tr>
+    </table>
+    <p><DELETING-A-BRANCH-EVERYWHERE-IS-A-PER-HOST-ACT fact="true" status="impl/done">Deleting a branch everywhere is a deliberate, per-host act.</DELETING-A-BRANCH-EVERYWHERE-IS-A-PER-HOST-ACT></p>
+    <p><THE-FAN-OUT-ONLY-EVER-ADVANCES-REFS fact="true" status="impl/done">The fan-out
+only ever *advances* refs, so no single mistake can subtract history
+from the whole fleet at once.</THE-FAN-OUT-ONLY-EVER-ADVANCES-REFS></p>
+  </no-propagate>
+  <reference title="Reference implementation">
+    <p><A-FAN-OUT-IS-ABOUT-FIFTEEN-LINES-OF-SH fact="true" status="impl/done">A fan-out is about fifteen lines of `sh`.</A-FAN-OUT-IS-ABOUT-FIFTEEN-LINES-OF-SH></p>
+    <p><THERE-IS-NO-FORCE-IN-IT-BY-LAW fact="true" status="impl/done">There is **no `--force` in it,
+by law** — the absence is the invariant, not an oversight:</THERE-IS-NO-FORCE-IN-IT-BY-LAW></p>
+    <fence lang="sh">#!/bin/sh
+# Fan out local mainline to every push target in the manifest.
+# There is deliberately NO --force here. A non-fast-forward target
+# is a divergence to investigate by hand, never something to clobber.
+set -eu
+branch=main
+
+# read_targets emits: "&lt;name&gt; &lt;url&gt; &lt;mode&gt;" per line from the manifest.
+read_targets | while read -r name url mode; do
+    [ "$mode" = "push" ] || { echo "$name: skip ($mode)"; continue; }
+
+    # Fail-loud ancestry gate: the target's main must be an ancestor
+    # of local mainline, or we refuse to touch it.
+    remote_head=$(git ls-remote "$url" "refs/heads/$branch" | cut -f1)
+    if [ -n "$remote_head" ] &amp;&amp; ! git merge-base --is-ancestor "$remote_head" "$branch"; then
+        echo "$name: DRIFT — host has commits mainline lacks; reconcile by hand"
+        continue
+    fi
+
+    # Fast-forward-only push. No '+', no --force, ever.
+    if git push "$url" "$branch:$branch" &amp;&amp; git push --tags "$url"; then
+        echo "$name: ok"
+    else
+        echo "$name: push failed"
+    fi
+done</fence>
+    <p><ADAPT-READ-TARGETS-TO-THE-PROJECTS-MANIFEST-FORMAT fact="true" status="impl/done">Adapt `read_targets` to the manifest format the project uses.</ADAPT-READ-TARGETS-TO-THE-PROJECTS-MANIFEST-FORMAT></p>
+    <p><the-two-invariants-to-preserve-when-you-port-it fact="true" status="impl/done">The two
+invariants to preserve when you port it:</the-two-invariants-to-preserve-when-you-port-it></p>
+    <facts ordered="false">
+      <INVARIANT-THE-ANCESTRY-GATE fact="true" status="impl/done">the **ancestry gate** before
+  every push,</INVARIANT-THE-ANCESTRY-GATE>
+      <INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH fact="true" status="impl/done">and the **absence of any force path**.</INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH>
+    </facts>
+  </reference>
+  <never-force-test title="Pin the invariant with a test">
+    <p><A-RULE-WITH-NO-CHECKER-IS-A-WISH fact="true" status="impl/done">A rule with no checker is a wish.</A-RULE-WITH-NO-CHECKER-IS-A-WISH></p>
+    <p><build-the-push-command-in-one-place-and-assert fact="true" status="impl/done">Build the push command in one place
+and assert, in a test or a CI step, that it can never emit a force:</build-the-push-command-in-one-place-and-assert></p>
+    <fence lang="sh"># CI guard: no force flag may appear in the fan-out script.
+if grep -nE -- '--force|[[:space:]]-f([[:space:]]|$)|push[^|]*\+' fanout.sh; then
+    echo "FAIL: a force path exists in the fan-out — remove it" &gt;&amp;2
+    exit 1
+fi</fence>
+    <p><BETTER-STILL-UNIT-TEST-A-PURE-PUSH-ARGUMENT-FUNCTION fact="true" status="impl/done">Better still, in a project with a real test suite, factor the push
+arguments into one pure function and unit-test that its output never
+contains `--force`, `-f`, or a `+`-prefixed refspec for any ref shape.</BETTER-STILL-UNIT-TEST-A-PURE-PUSH-ARGUMENT-FUNCTION></p>
+    <p><THE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">The invariant is then **runnable capital, not a prose promise** — a rule
+you cannot run is a rule you cannot trust.</THE-INVARIANT-IS-RUNNABLE-CAPITAL></p>
+  </never-force-test>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST fact="true" status="impl/done">The target set is a committed, credential-free manifest — shared,
+  CI-visible, reviewed like code. A local git remote cannot serve it.</SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST>
+      <SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT fact="true" status="impl/done">Fan-out per target: fetch, verify the target is an ancestor of
+  mainline, push fast-forward-only by URL, report.</SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT>
+      <SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD fact="true" status="spec/done">A non-fast-forward aborts *that* target loud, names the divergence,
+  and never forces. Reconcile into mainline by hand, then re-fan. *Three of the
+  four are built and the fourth is half built. Loud per-target abort with the
+  other targets still served, and a non-zero exit: `xtask/src/mirror.rs:296-320`.
+  Never forces, and hardened past this document's ask into a unit test —
+  `push_args` is a pure function and `push_args_never_force`
+  (`mirror.rs:426-440`) asserts no `--force`, `-f` or `+`-refspec for four ref
+  shapes, which `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:64` calls «runnable
+  capital, not prose». «Reconcile by hand, then re-fan» is the failure message
+  itself (`mirror.rs:315-319`). What is only half built is «names the
+  divergence» in the sense `##RESPONSE-ABORT-THAT-TARGET` defines it: the
+  diverged target is named, the commits it carries are not, by any
+  implementation including this document's own reference script.*</SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD>
+      <SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST fact="true" status="impl/done">A `--check` mode probes drift read-only; bring a web merge home with
+  `merge --ff-only` before fanning out.</SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST>
+      <SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE fact="true" status="impl/done">Deletions and history rewrites do not propagate — a safety choice.</SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE>
+      <SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH fact="true" status="impl/done">The reference fan-out is ~15 lines with no force path; pin that
+  absence with a test or a CI grep.</SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH>
+    </facts>
+  </summary>
+</spec>

@@ -1,0 +1,23 @@
+# The first project of the manual, scaffolded and pinned to XML, with
+# nothing installed yet. The manifest line is added the way the page tells
+# the reader to add it, so the rest of the file stays exactly what
+# `vibe init` wrote.
+schema = 1
+
+[fixture]
+from = "empty"
+
+[[fixture.step]]
+run = "vibe init hello-vibevm"
+
+[[fixture.step]]
+
+[fixture.step.edit]
+path = "work/hello-vibevm/vibe.toml"
+from = '''
+[project]
+name = "hello-vibevm"'''
+to = '''
+[project]
+spec_format = "xml"
+name = "hello-vibevm"'''

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Conventional Commits</title>
+  <status stage="impl" state="done"/>
+  <p><EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS fact="true" status="impl/done">Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
+specification: a **typed header** and a body that explains *why*.</EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS></p>
+  <header title="Header">
+    <fence>type(scope): short imperative subject line</fence>
+    <facts ordered="false">
+      <HEADER-SUBJECT-LENGTH-MOOD-AND-CASE fact="true" status="impl/done">Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.</HEADER-SUBJECT-LENGTH-MOOD-AND-CASE>
+      <HEADER-THE-ALLOWED-TYPE-SET fact="true" status="impl/done">`type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
+  `ci` `revert`.</HEADER-THE-ALLOWED-TYPE-SET>
+      <HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM fact="true" status="impl/done">`scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).</HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM>
+    </facts>
+  </header>
+  <body title="Body">
+    <p><BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY fact="true" status="impl/done">A blank line after the subject, then a free-form body that answers *why*, not *what* — the
+diff already shows what changed.</BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY></p>
+    <p><CITE-SPEC-URIS-WHERE-RELEVANT fact="true" status="impl/done">Cite `spec://…` URIs where relevant.</CITE-SPEC-URIS-WHERE-RELEVANT></p>
+    <p><sibling-document-pointers fact="true" status="impl/done">Full format — the
+allowed-type table, scope rules, body structure, worked examples, and anti-patterns — is in
+@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root.</sibling-document-pointers></p>
+  </body>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-SUMMARISE-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — write *why*.</NEVER-SUMMARISE-WHAT-CHANGED>
+      <NEVER-CAPITALISE-OR-OMIT-THE-TYPE fact="true" status="impl/done">Never capitalise the first word after the `type(scope):` prefix, and never omit the type.</NEVER-CAPITALISE-OR-OMIT-THE-TYPE>
+    </facts>
+  </never>
+  <format-is-not-atomicity title="Note — format is not atomicity">
+    <p><FORMAT-DOES-NOT-ENFORCE-ATOMICITY fact="true" status="impl/done">Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
+(one commit = one logical idea).</FORMAT-DOES-NOT-ENFORCE-ATOMICITY></p>
+    <p><A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE fact="true" status="impl/done">A `feat: add foo, bar, and baz` message is valid Conventional
+Commits *and* a violation of the atomic rule.</A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE></p>
+    <p><ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER fact="true" status="impl/done">Atomicity is the separate `git-atomic-commits` flow;
+the two run together.</ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER></p>
+  </format-is-not-atomicity>
+</spec>

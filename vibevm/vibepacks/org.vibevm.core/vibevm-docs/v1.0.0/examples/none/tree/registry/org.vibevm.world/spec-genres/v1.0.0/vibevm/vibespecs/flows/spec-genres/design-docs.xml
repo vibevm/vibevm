@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Design docs: the contract/lore split in practice</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The genre table says a module contract
+is binding and a design doc is lore.</scope-of-this-document></p>
+  <p><this-file-is-the-practical-edge fact="true" status="impl/done">This file is the practical
+edge: *what spills out* of a contract into a design doc, *what never
+leaves*, the fork-by-fork shape a design doc uses to record a
+decision session, the orthogonal-decomposition lesson that makes big
+designs shippable, and how a design doc grows stale honestly.</this-file-is-the-practical-edge></p>
+  <split title="What stays in the contract, what spills out">
+    <p><a-contract-is-read-under-time-pressure fact="true" status="spec/done">A contract is read by an implementer under time pressure.</a-contract-is-read-under-time-pressure></p>
+    <p><EVERYTHING-IN-A-CONTRACT-MUST-EARN-ITS-PLACE fact="true" status="impl/done">Everything
+in it must earn its place.</EVERYTHING-IN-A-CONTRACT-MUST-EARN-ITS-PLACE></p>
+    <p><THE-SPLIT-IS-LOAD-BEARING-VERSUS-NARRATIVE fact="true" status="impl/done">So the split is not "short versus long" —
+it is "load-bearing versus narrative".</THE-SPLIT-IS-LOAD-BEARING-VERSUS-NARRATIVE></p>
+    <p><never-leaves-the-contract-lead fact="true" status="impl/done">**Never leaves the contract:**</never-leaves-the-contract-lead></p>
+    <facts ordered="false">
+      <KEEP-THE-DECISION-ITSELF fact="true" status="impl/done">The **decision itself** — the value, the shape, the chosen option.</KEEP-THE-DECISION-ITSELF>
+      <KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY fact="true" status="impl/done">Its **one-paragraph load-bearing why** — the single reason that, if
+  forgotten, would get the decision reverted by accident.</KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY>
+      <KEEP-THE-CONSTRAINTS fact="true" status="impl/done">The **constraints** the decision must satisfy.</KEEP-THE-CONSTRAINTS>
+      <KEEP-THE-INVARIANTS fact="true" status="impl/done">The **invariants** it establishes for everything downstream.</KEEP-THE-INVARIANTS>
+    </facts>
+    <p><spills-out-into-the-design-doc-lead fact="true" status="impl/done">**Spills out into the design doc:**</spills-out-into-the-design-doc-lead></p>
+    <facts ordered="false">
+      <SPILL-PRECEDENT-STUDIES fact="true" status="impl/done">**Precedent studies** — how three other tools solved this, at
+  length. (Contrast with the research genre: research studies an
+  external system for its own sake; a precedent study in a design doc
+  is marshalled to justify *our* choice.)</SPILL-PRECEDENT-STUDIES>
+      <SPILL-FORKS-WEIGHED-AT-LENGTH fact="true" status="impl/done">**Forks weighed at length** — every option considered, not just the
+  winner.</SPILL-FORKS-WEIGHED-AT-LENGTH>
+      <SPILL-PARKED-IDEAS fact="true" status="impl/done">**Parked ideas** — the "we could later…" branches, explicitly
+  marked as not-yet-decided so no one implements them.</SPILL-PARKED-IDEAS>
+      <SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE fact="true" status="impl/done">**The narrative "how we got here"** — the path of the discussion,
+  the analogies, the owner's mental model.</SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE>
+    </facts>
+    <p><THE-BOUNDARY-TEST-CONTRACT-SIDE fact="true" status="impl/done">The test at the boundary: *if deleting this sentence would change
+what an implementer builds, it is contract.*</THE-BOUNDARY-TEST-CONTRACT-SIDE></p>
+    <p><THE-BOUNDARY-TEST-LORE-SIDE fact="true" status="impl/done">If deleting it only
+costs a future reader the story, it is lore.</THE-BOUNDARY-TEST-LORE-SIDE></p>
+  </split>
+  <forks title="The fork-by-fork decision record">
+    <p><FORKS-ARE-THE-MOST-VALUABLE-THING-A-DESIGN-DOC-PRESERVES fact="true" status="impl/done">The most valuable thing a design doc preserves is the set of forks a
+session resolved — because those are exactly the questions a later
+session will otherwise re-litigate.</FORKS-ARE-THE-MOST-VALUABLE-THING-A-DESIGN-DOC-PRESERVES></p>
+    <p><RECORD-EACH-FORK-AS-A-FIXED-SKELETON fact="true" status="impl/done">Record each fork as a fixed
+skeleton, so the reasoning is scannable rather than buried in prose:</RECORD-EACH-FORK-AS-A-FIXED-SKELETON></p>
+    <fence>### Fork N — &lt;the question in one line&gt;
+
+- Options:   &lt;A&gt; | &lt;B&gt; | &lt;C&gt;
+- Chosen:    &lt;the winner&gt;
+- Why:       &lt;the deciding reason — a constraint, a cost, a precedent&gt;
+- Rejected:  &lt;A&gt; — because &lt;reason&gt;
+             &lt;C&gt; — because &lt;reason&gt;
+- Consequence: &lt;what this fork now forces downstream, if anything&gt;</fence>
+    <p><two-properties-make-the-shape-pay-off fact="true" status="impl/done">Two properties make this shape pay off.</two-properties-make-the-shape-pay-off></p>
+    <p><REJECTED-LINES-ARE-LOAD-BEARING fact="true" status="impl/done">First, the **Rejected** lines
+are load-bearing: "we considered X and rejected it because Y" is the
+single sentence that stops the same X being re-proposed next quarter.</REJECTED-LINES-ARE-LOAD-BEARING></p>
+    <p><A-CONSEQUENCE-SIGNALS-A-TWO-WAY-LINK-CHECK fact="true" status="impl/done">Second, a fork with a **Consequence** that constrains a contract is a
+signal to check the two-way link — that consequence probably belongs,
+in one line, at the contract anchor too.</A-CONSEQUENCE-SIGNALS-A-TWO-WAY-LINK-CHECK></p>
+  </forks>
+  <decomposition title="The orthogonal-decomposition lesson">
+    <p><SPLIT-A-LARGE-DESIGN-INTO-INDEPENDENTLY-SHIPPABLE-AXES fact="true" status="impl/done">When a design is large, the highest-leverage move is usually to split
+it into **independently-shippable axes that compose** — decisions
+that have different cost, different dependencies, and can ship as
+different milestones.</SPLIT-A-LARGE-DESIGN-INTO-INDEPENDENTLY-SHIPPABLE-AXES></p>
+    <p><why-keeping-the-axes-separate-clarifies fact="true" status="spec/done">Keeping the axes separate is often the single
+most clarifying move of a design session: it turns one intimidating
+change into a short chain where the cheap, independent part ships
+first and unblocks the rest.</why-keeping-the-axes-separate-clarifies></p>
+    <p><worked-sketch-four-axes fact="true" status="impl/done">A worked sketch. A request to "make the tool multi-package with
+proper naming" decomposes into four axes:</worked-sketch-four-axes></p>
+    <fence>Axis A — Workspace      : project = a set of modules   | independent → do first
+Axis B — Selective pub  : each module opts in/out      | depends on A
+Axis C — Qualified names: reverse-FQDN identity        | depends on the index
+Axis D — Conflict-aware : collisions fail loudly       | depends on C</fence>
+    <p><the-finding-decomposition-surfaces fact="true" status="spec/done">The finding that decomposition surfaces: Axis A alone closes most of
+the request and depends on nothing, while the expensive part (naming,
+discovery) is separable and can come later.</the-finding-decomposition-surfaces></p>
+    <p><without-the-split-it-looks-like-a-big-bang fact="true" status="spec/done">Without the split, the
+whole thing looks like one big-bang change; with it, the sequencing
+is obvious.</without-the-split-it-looks-like-a-big-bang></p>
+    <p><THE-DESIGN-DOC-RECORDS-THE-DECOMPOSITION-IN-FULL fact="true" status="impl/done">The design doc is where this decomposition and its
+dependency chain are recorded in full; the contract for each axis
+carries only that axis's decision.</THE-DESIGN-DOC-RECORDS-THE-DECOMPOSITION-IN-FULL></p>
+  </decomposition>
+  <staleness title="Growing stale honestly">
+    <p><A-DESIGN-DOC-RECORDS-WHAT-WAS-TRUE-WHEN-WRITTEN fact="true" status="impl/done">A design doc records **what was true at the moment it was written**.</A-DESIGN-DOC-RECORDS-WHAT-WAS-TRUE-WHEN-WRITTEN></p>
+    <p><STALENESS-IS-THE-GENRES-NATURE-NOT-A-FLAW fact="true" status="impl/done">That is not a flaw to be patched away — it is the genre's nature, and
+pretending otherwise causes more harm than the staleness itself.</STALENESS-IS-THE-GENRES-NATURE-NOT-A-FLAW></p>
+    <p><honest-posture-lead fact="true" status="impl/done">The honest posture:</honest-posture-lead></p>
+    <facts ordered="false">
+      <CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT fact="true" status="impl/done">**Corrections happen on contract conflict.** When the contract
+  moves and the design doc now contradicts it, fix the contradicting
+  passage and note what changed. This is targeted, not cosmetic.</CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT>
+      <WHOLESALE-REWRITES-DO-NOT-HAPPEN fact="true" status="impl/done">**Wholesale rewrites do not happen** just because time passed. A
+  design doc is not living documentation to be kept current sentence
+  by sentence; that would cost real effort to no benefit and would
+  erase the record of how the thinking actually evolved.</WHOLESALE-REWRITES-DO-NOT-HAPPEN>
+      <A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED fact="true" status="impl/done">**A superseded design doc is archived, not deleted.** The path from
+  a rejected early design to the shipped one is itself lore the next
+  reader may need.</A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED>
+    </facts>
+    <p><A-DESIGN-DOC-MAY-READ-AS-A-DATED-SNAPSHOT fact="true" status="impl/done">So a design doc is allowed to read as a snapshot with a date on it.</A-DESIGN-DOC-MAY-READ-AS-A-DATED-SNAPSHOT></p>
+    <p><IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT fact="true" status="impl/done">What it is never allowed to do is quietly diverge from the contract
+and then get cited as current — that is the exact failure the
+precedence law
+([`SPEC-GENRES-PROTOCOL.xml#precedence`](SPEC-GENRES-PROTOCOL.xml#precedence))
+exists to prevent.</IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT></p>
+  </staleness>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-WHAT-THE-CONTRACT-KEEPS fact="true" status="impl/done">Contract keeps the decision, its one-paragraph why, constraints,
+  and invariants; everything narrative spills into the design doc.</SUM-WHAT-THE-CONTRACT-KEEPS>
+      <SUM-THE-BOUNDARY-TEST fact="true" status="impl/done">The boundary test: if deleting a sentence changes what gets built,
+  it is contract; if it only costs the story, it is lore.</SUM-THE-BOUNDARY-TEST>
+      <SUM-RECORD-FORKS-AS-A-SKELETON fact="true" status="impl/done">Record forks as a fixed skeleton — options, chosen, why, rejected,
+  consequence — so settled questions are not re-litigated.</SUM-RECORD-FORKS-AS-A-SKELETON>
+      <SUM-DECOMPOSE-INTO-COMPOSABLE-AXES fact="true" status="impl/done">Decompose large designs into independent, composable axes; ship the
+  cheap independent one first.</SUM-DECOMPOSE-INTO-COMPOSABLE-AXES>
+      <SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT fact="true" status="impl/done">A design doc is a dated snapshot; correct it on contract conflict,
+  never rewrite it wholesale to fake currency.</SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT>
+    </facts>
+  </summary>
+</spec>
