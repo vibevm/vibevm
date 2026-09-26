@@ -26,6 +26,8 @@
  */
 
 import type { Locale } from "../landing/i18n.ts";
+import { CHANNEL_URLS } from "./i18n.ts";
+import { newsPath } from "./paths.ts";
 
 export type NewsMeta = {
   readonly title: string;
@@ -44,3 +46,19 @@ export const NEWS_META: Readonly<Record<Locale, NewsMeta>> = {
       "Новости, поддержка и обсуждения VibeVM: новостной канал в Telegram, чат поддержки, Reddit и создатель в X.",
   },
 };
+
+/**
+ * How the root `llms.txt` names this page under «## Project» — the same
+ * shape as the essay's and the Why pages' entries, for the same reader:
+ * an agent deciding what to fetch, and here also deciding which channels
+ * are this project's own. English only, as the file is.
+ */
+export const NEWS_LLMS = {
+  label: "News & support",
+  gloss: `the official channels: the Telegram news channel (${CHANNEL_URLS.news}), the support and bug-report chat (${CHANNEL_URLS.support}), the community on Reddit (${CHANNEL_URLS.reddit}), a chat for general discussion (${CHANNEL_URLS.conversation}), and the creator of VibeVM, Oleg Chirukhin, on X (${CHANNEL_URLS.creator}).`,
+} as const;
+
+/** The `llms.txt` entry of the channels page, against a given origin. */
+export function newsLlmsLine(origin: string): string {
+  return `- [${NEWS_LLMS.label}](${origin}/${newsPath()}): ${NEWS_LLMS.gloss}`;
+}

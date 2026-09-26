@@ -27,6 +27,20 @@
 import type { Locale } from "../landing/i18n.ts";
 
 /** One channel: a place, on a platform, at an address, for a reason. */
+/**
+ * The five addresses, once. The page's two languages, the root
+ * `llms.txt` (`meta.ts`) and the structured data's `sameAs`
+ * (`landing/head.ts`) all read them from here, so a channel that moves is
+ * one edit and no reader, person or crawler, is left holding the old one.
+ */
+export const CHANNEL_URLS = {
+  news: "https://t.me/vibevm",
+  support: "https://t.me/vibevm_chat",
+  reddit: "https://www.reddit.com/r/vibevm/",
+  conversation: "https://t.me/chat_1red2black",
+  creator: "https://x.com/1red2black",
+} as const;
+
 export type Channel = {
   /** What the channel calls itself. */
   readonly name: string;
@@ -83,13 +97,13 @@ const EN: NewsStrings = {
         {
           name: "VibeVM News",
           platform: "Telegram channel",
-          href: "https://t.me/vibevm",
+          href: CHANNEL_URLS.news,
           body: "Releases and announcements.",
         },
         {
           name: "Oleg Chirukhin",
           platform: "X",
-          href: "https://x.com/1red2black",
+          href: CHANNEL_URLS.creator,
           body: "The creator of VibeVM.",
         },
       ],
@@ -101,13 +115,13 @@ const EN: NewsStrings = {
         {
           name: "VibeVM Chat",
           platform: "Telegram chat",
-          href: "https://t.me/vibevm_chat",
+          href: CHANNEL_URLS.support,
           body: "Support and bug reports.",
         },
         {
           name: "r/vibevm",
           platform: "Reddit",
-          href: "https://www.reddit.com/r/vibevm/",
+          href: CHANNEL_URLS.reddit,
           body: "The VibeVM community on Reddit.",
         },
       ],
@@ -119,7 +133,7 @@ const EN: NewsStrings = {
         {
           name: "1red2black chat",
           platform: "Telegram chat",
-          href: "https://t.me/chat_1red2black",
+          href: CHANNEL_URLS.conversation,
           body: "Off-topic and general discussion.",
         },
       ],
@@ -138,13 +152,13 @@ const RU: NewsStrings = {
         {
           name: "VibeVM News",
           platform: "Канал в Telegram",
-          href: "https://t.me/vibevm",
+          href: CHANNEL_URLS.news,
           body: "Выпуски и анонсы.",
         },
         {
           name: "Олег Чирухин",
           platform: "X",
-          href: "https://x.com/1red2black",
+          href: CHANNEL_URLS.creator,
           body: "Создатель VibeVM.",
         },
       ],
@@ -156,13 +170,13 @@ const RU: NewsStrings = {
         {
           name: "VibeVM Chat",
           platform: "Чат в Telegram",
-          href: "https://t.me/vibevm_chat",
+          href: CHANNEL_URLS.support,
           body: "Поддержка и баг-репорты.",
         },
         {
           name: "r/vibevm",
           platform: "Reddit",
-          href: "https://www.reddit.com/r/vibevm/",
+          href: CHANNEL_URLS.reddit,
           body: "Сообщество VibeVM на Reddit.",
         },
       ],
@@ -174,7 +188,7 @@ const RU: NewsStrings = {
         {
           name: "Чат 1red2black",
           platform: "Чат в Telegram",
-          href: "https://t.me/chat_1red2black",
+          href: CHANNEL_URLS.conversation,
           body: "Флуд и общие обсуждения.",
         },
       ],

@@ -13,6 +13,7 @@ import {
   STRINGS,
   localePath,
 } from "./i18n.ts";
+import { CHANNEL_URLS } from "../news/i18n.ts";
 import { THEME_COLOR } from "./theme-color.ts";
 
 /**
@@ -60,7 +61,10 @@ function absolute(locale: Locale, path = ""): string {
  * `disambiguatingDescription`, the property schema.org keeps for exactly
  * this — search engines had been joining this VibeVM with Phala
  * Network's, and the graph now says in its own vocabulary that they are
- * two things.
+ * two things. `sameAs` lists the project's own channels beside its two
+ * repositories — the Telegram news channel and the Reddit community — so
+ * the graph says which accounts are this VibeVM's; the creator's own
+ * account is a person's and stays off it.
  */
 function siteGraph(): string {
   return JSON.stringify({
@@ -76,7 +80,12 @@ function siteGraph(): string {
           "An ultimate prompt library, package manager, and agentic system for Spec-Driven Development.",
         disambiguatingDescription: PHALA_DISAMBIGUATION_EN,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-        sameAs: [GITHUB_URL, GITVERSE_URL],
+        sameAs: [
+          GITHUB_URL,
+          GITVERSE_URL,
+          CHANNEL_URLS.news,
+          CHANNEL_URLS.reddit,
+        ],
       },
       {
         "@type": "WebSite",
