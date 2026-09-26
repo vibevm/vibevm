@@ -2010,3 +2010,13 @@ structure, and it goes when the file does.
 | @fact:B179-DISPOSITION **disposition** | `open` — propagate walk errors instead of swallowing them; refuse an insert whose tree lacks files its manifest or boot snippet names; carry the registry index's `content_hash` as the expected hash when no lock pin exists; give `vibe cache check` a rung that compares an entry with the registry, and let `--repair` re-fetch a mismatch; mark entries inserted from an in-tree source, so a consumer outside that project never receives one checkout's working copy as the published package. |
 | @fact:B179-WORKAROUND **workaround** | Remove each manifest-only `v1.0.0/` directory and its sibling `v1.0.0.sha256` (a directory whose whole subtree holds only `vibe.toml`), then re-fetch from a folder that is not a vibevm project, so the projectless resolver reads `~/.vibe/registry.toml` rather than the checkout's in-tree packages. |
 | @fact:B179-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), found walking the first-project tutorial, 2026-09-26. |
+
+## B-180 — five tests of `vibe-cli` fail on `main` {#b-180}
+
+| field | value |
+|---|---|
+| @fact:B180-WHAT **what** | `cargo test -p vibe-cli --no-fail-fast` on `main` gives 1284 passed and 5 failed, in four targets. (1) `command_progress::tests::top_level_policy_inventory_matches_clap`: clap exposes a `run` verb that `TOP_LEVEL_COMMANDS` in `crates/vibe-cli/src/command_progress.rs` does not list. (2) Two tests of `cli_lifecycle_golden`: the `verify` phase reports `ok` where the golden pins `no-op`, and the `status` key of the `verification` object moved. (3) `cli_progress_sidecar::sidecar_absent_runs_cold` and (4) `cli_scrape_environment::execute_and_recover_without_home_refuse_bounded`: command progress narration, `[start] …` / `[done] …`, now reaches a stream both tests pin as free of it. |
+| @fact:B180-EVIDENCE **evidence** | 2026-09-26, at `aa44b6e12`, in a clean worktree with its own target directory (investigation `TF`); none of the four targets is touched by the change that ran them. The release workflow runs without tests by default, so no release was blocked. |
+| @fact:B180-SEVERITY **severity** | P3 — the suite is red for reasons that are each one small drift; the narration in (3) and (4) may also be a behaviour change in what a script reads. |
+| @fact:B180-DISPOSITION **disposition** | `open` — add `run` to the inventory; decide whether `verify`'s `ok` is the intended result and re-pin or fix; find which change routed the narration into the pinned stream, and either keep narration out of it or re-pin with the reason. |
+| @fact:B180-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), found while gating the tree and init fixes, 2026-09-26. |
