@@ -48,8 +48,8 @@ build:static`.
 | `com.example.docs/fixture-manual/0.1.0/guide/every-block.md` | copy of `crates/vibe-doc/tests/golden/guide-every-block.md` |
 | `com.example.docs/fixture-manual/0.1.0/guide/every-block.xml` | copy of `crates/vibe-doc/tests/golden/guide-every-block.xml` |
 | `com.example.docs/fixture-manual/0.1.0/guide/every-block/index.html` | copy of `crates/vibe-doc/tests/golden/guide-every-block.numbered.html` — the same bytes as `island.html` |
-| `com.example.docs/fixture-manual/0.1.0/reference/addresses.{md,xml}` | the site's own, for the second page `manifest.json` declares |
-| `com.example.docs/fixture-manual/0.1.0/reference/addresses/index.html` | the site's own, in the shape the pipeline renders that page's `.xml` into |
+| `com.example.docs/fixture-manual/0.1.0/reference/addresses.{md,xml}` | `vibe doc build --format md\|xml` over `crates/vibe-doc/tests/fixture/manual` — the second page `manifest.json` declares, and the package's **glossary** |
+| `com.example.docs/fixture-manual/0.1.0/reference/addresses/index.html` | the same build's `html`, which is the island the pipeline renders that page's `.xml` into |
 | `llms.txt`, `llms-full.txt` | the site's own, in the shape `vibe doc build` writes them |
 
 A tree is a whole edition and not only its agent surfaces. Its
@@ -116,12 +116,24 @@ path at all, so the case that must not change — a documentation shown
 exactly as it was before a path could be declared — has a package of its
 own to be measured on.
 
+And the source declares a **glossary** (`##GLOSSARY-DECLARED`). The
+reference page is it: each of its top-level sections is one entry — a term in
+the heading, the definition in the first paragraph — and the guide page links
+two of them. That pair is what a card is measured on
+(`##READER-GLOSSARY-CARD`): the guide page's island carries `data-gloss` and
+`aria-describedby` on those links and one hidden `gloss-defs` block with the
+two definitions, while the glossary page's own island carries neither, because
+the entries are defined there. No new page was needed for it — see the ceiling
+below — and the two libraries in `doc-build-pair*/` declare no glossary at all,
+so the case that must not change has a package of its own here too.
+
 **Why this library is not larger.** A third page was written for it and
 taken out again: the site's own Content-Security-Policy names one hash per
 distinct inline script, the serving configuration cannot carry a value of
 4096 bytes (`site/src/seo/csp.ts`, `CSP_CONF_LIMIT`), and the fixture
-build stands at 3607 of the 4000 bytes that leaves. One more page is four
-more addresses and eight more hashes — 4039 bytes, over the ceiling, and
+build stands at 3824 of the 4000 bytes that leaves (3607 when the third
+page was taken out; the reader has grown since). One more page is four
+more addresses and eight more hashes — over the ceiling, and
 `csp.test.ts` goes red because the generator then writes no policy at all.
 So the fixture library cannot grow by a page until the deployment's answer
 to that ceiling is decided (X-044), and what needs a path of three pages —

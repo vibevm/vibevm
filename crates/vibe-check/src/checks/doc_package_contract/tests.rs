@@ -370,3 +370,97 @@ abstract = "Four answers."
         report.findings
     );
 }
+
+/// A real glossary page: two entries, the second of which opens with a
+/// list where a definition belongs.
+///
+/// Written as a page the PIVOT takes, unlike [`write_pages`] above: whether
+/// an entry states a definition is a question about a document, so this
+/// rule reads the documents and a `<spec/>` stub would only ever be
+/// reported as unreadable.
+fn write_glossary(root: &Path, entries: &str) {
+    let path = root.join("vibevm/vibespecs/glossary/index.xml");
+    fs::create_dir_all(path.parent().expect("a page lives in a folder")).unwrap();
+    fs::write(
+        path,
+        format!(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+             <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+               <title id=\"root\">Glossary</title>\n{entries}</spec>\n"
+        ),
+    )
+    .unwrap();
+}
+
+/// The declared glossary against the package that declared it: the page has
+/// to be there, and every entry has to name a term and state a definition
+/// (`##GLOSSARY-CHECKED`).
+#[test]
+fn a_declared_glossary_must_be_a_page_of_entries() {
+    let declaring = "\n[glossary]\npage = \"glossary/index\"\n";
+
+    // A page nobody wrote: every link to a term in it is a dead link.
+    let missing = tempdir().unwrap();
+    write_doc_package(missing.path(), declaring);
+    let found = findings(missing.path());
+    let messages: Vec<&str> = contract_findings(&found)
+        .iter()
+        .map(|f| f.message.as_str())
+        .collect();
+    assert!(
+        messages
+            .iter()
+            .any(|m| m.contains("glossary/index") && m.contains("GLOSSARY-CHECKED")),
+        "{messages:?}"
+    );
+
+    // A page whose entries are not entries.
+    let broken = tempdir().unwrap();
+    write_doc_package(broken.path(), declaring);
+    write_glossary(
+        broken.path(),
+        "  <lock-file title=\"lock file\"><list ordered=\"false\">\
+         <item>Not a definition.</item></list></lock-file>\n",
+    );
+    let found = findings(broken.path());
+    assert!(
+        contract_findings(&found)
+            .iter()
+            .any(|f| f.message.contains("does not open with a paragraph")),
+        "{:?}",
+        found.findings
+    );
+
+    // And the page the norm describes owes nothing.
+    let good = tempdir().unwrap();
+    write_doc_package(good.path(), declaring);
+    write_glossary(
+        good.path(),
+        "  <lock-file title=\"lock file\"><p>The record of which exact versions a project \
+         uses.</p></lock-file>\n",
+    );
+    let found = findings(good.path());
+    assert!(contract_findings(&found).is_empty(), "{:?}", found.findings);
+}
+
+/// A documentation that declares no glossary is not a documentation with a
+/// broken one, and the path `glossary/index.xml` means nothing by itself
+/// (`##GLOSSARY-DECLARED`).
+#[test]
+fn a_package_that_declares_no_glossary_is_left_alone() {
+    let project = tempdir().unwrap();
+    write_doc_package(project.path(), "");
+    // The page is even there, under the name the old convention used, and
+    // its entries are broken. Nothing declared it, so nothing is judged.
+    write_glossary(
+        project.path(),
+        "  <lock-file title=\"\"><list ordered=\"false\"><item>Nothing.</item></list>\
+         </lock-file>\n",
+    );
+    let report = findings(project.path());
+    assert!(
+        contract_findings(&report).is_empty(),
+        "{:?}",
+        report.findings
+    );
+}

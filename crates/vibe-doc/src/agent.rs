@@ -187,6 +187,14 @@ fn fetch(
         // belongs to is the instance that held it, and a second read of
         // its manifest could only disagree (`##LOC-LANGUAGE-FIELD`).
         lang: located.lang.clone(),
+        // No glossary, and the MCP surface is why: it answers for ONE page
+        // by address and refuses the island outright, because the island is
+        // for a reader with a browser. The definitions of a glossary are a
+        // browse of the whole package, and what an agent reads here — the
+        // `.md` and the `.xml` — carries the glossary page whole, in the
+        // layer law's order, beside every other page
+        // (`##READER-GLOSSARY-CARD` is a reader's affordance).
+        glossary: None,
     };
     Ok(FetchedPage {
         address: address.to_owned(),

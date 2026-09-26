@@ -14,6 +14,7 @@ import {
   Fab,
   FallbackNotice,
   ForAgent,
+  GlossaryCard,
   LanguageSelector,
   Lightbox,
   PackageHeader,
@@ -225,6 +226,10 @@ const DocumentationPage = component$<{ view: PageView }>((props) => {
         openLabel="open the rule"
         closeLabel="close"
       />
+      {/* And the card a glossary term shows beside itself, empty until a
+          pointer rests on one: the definitions are already in the island,
+          resolved at build time (`##READER-GLOSSARY-CARD`). */}
+      <GlossaryCard />
       <SettingsPanel label="Reading settings" />
       <ReturnToPlace label="back to where you were" />
       <Lightbox label="The picture or table you opened" closeLabel="close" />

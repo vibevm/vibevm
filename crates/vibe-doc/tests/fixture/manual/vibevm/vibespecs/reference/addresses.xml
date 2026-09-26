@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Addresses</title>
+  <status stage="impl" state="done" audience="user"/>
+  <p><ADDRESS-SHAPE fact="true" status="impl/done">A page address ends with a slash and the projections lie beside it as files: `…/&lt;document&gt;/`, `…/&lt;document&gt;.md`, `…/&lt;document&gt;.xml`.</ADDRESS-SHAPE></p>
+  <language title="The language segment">
+    <p>The language is the segment after `/doc/`, and the source language carries no segment at all. A translation is served under the source package's coordinate, which is what lets one address become another by changing one segment.</p>
+  </language>
+  <island title="island">
+    <p>A page's content as finished HTML, rendered by the pipeline and inserted whole: the shell parses nothing of it. See [the language segment](/doc/com.example.docs/fixture-manual/latest/reference/addresses/#language).</p>
+  </island>
+  <resolver title="resolver">
+    <p>The one address that knows what a mount carries, asked with a `spec://` citation and answering with the page it names.</p>
+  </resolver>
+</spec>

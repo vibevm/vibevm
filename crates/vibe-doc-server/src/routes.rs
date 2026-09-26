@@ -354,6 +354,15 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
         // the same package; a manifest it cannot read leaves the project
         // default standing, as it does in a build.
         lang: vibe_doc::manifest::language(&reader.package_dir).unwrap_or_default(),
+        // The glossary this documentation declared, from the page set this
+        // request already read: a term on this page carries its definition
+        // in the island, so the local reader shows the same card the site
+        // does and asks the network for nothing (`##READER-GLOSSARY-CARD`,
+        // `##LOCAL-SERVE`). The one-page economy above does not apply —
+        // whether a link is a term is a question about ANOTHER page of the
+        // same package, and that page is in hand.
+        glossary: vibe_doc::glossary::read(&reader.package_dir, &set)
+            .map_err(|e| ApiError::internal(e.to_string()))?,
     };
     let body = build::render_page(found, &content, format);
     match format {

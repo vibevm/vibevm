@@ -1,7 +1,7 @@
 <article class="doc-page" data-status="impl/done" data-audience="user,dev">
   <h1 id="root">Every block once</h1>
   <p data-p="1" data-fact="LEAD" data-status="impl/done"><a class="p-anchor" id="p01" href="#p01">01</a>This page uses every block of the documentation genre <strong>once</strong>, so the island backend has a subject with no gaps.</p>
-  <p data-p="2"><a class="p-anchor" id="p02" href="#p02">02</a>Inline conventions ride inside a unit: <code>code</code>, <strong>strong</strong>, <em>emphasis</em> and <a href="/doc/com.example.docs/fixture-manual/latest/guide/every-block/">a link</a>.</p>
+  <p data-p="2"><a class="p-anchor" id="p02" href="#p02">02</a>Inline conventions ride inside a unit: <code>code</code>, <strong>strong</strong>, <em>emphasis</em> and <a href="/doc/com.example.docs/fixture-manual/latest/guide/every-block/">a link</a>. A term of the declared glossary carries its definition with it: the <a href="../../reference/addresses/#island" data-gloss="island" aria-describedby="gloss-island">island</a> is served under a <a href="../../reference/addresses/#language" data-gloss="language" aria-describedby="gloss-language">language segment</a>, and the <a href="../../reference/addresses/#island" data-gloss="island" aria-describedby="gloss-island">island</a> again names it once.</p>
   <section id="prose">
     <h2>Prose blocks</h2>
     <ul data-p="3">
@@ -111,4 +111,14 @@
     <h2>Footnotes</h2>
     <p>Apparatus, not flow: these blocks take no numbers, because their count changes whenever a reference above them does.</p>
   </section>
+  <aside class="gloss-defs" hidden="" data-gloss-defs="">
+    <div class="gloss-def" id="gloss-island" data-gloss="island">
+      <p class="gloss-def__term">island</p>
+      <p class="gloss-def__text">A page's content as finished HTML, rendered by the pipeline and inserted whole: the shell parses nothing of it. See <a href="/doc/com.example.docs/fixture-manual/latest/reference/addresses/#language">the language segment</a>.</p>
+    </div>
+    <div class="gloss-def" id="gloss-language" data-gloss="language">
+      <p class="gloss-def__term">The language segment</p>
+      <p class="gloss-def__text">The language is the segment after <code>/doc/</code>, and the source language carries no segment at all. A translation is served under the source package's coordinate, which is what lets one address become another by changing one segment.</p>
+    </div>
+  </aside>
 </article>

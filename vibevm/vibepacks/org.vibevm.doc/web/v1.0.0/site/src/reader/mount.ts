@@ -32,6 +32,7 @@ import { startCatalogueTabs } from "./catalogue-tabs.ts";
 import { startDocLanguage } from "./doc-language.ts";
 import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
 import { startFallback } from "./fallback.ts";
+import { startGlossaryCard } from "./glossary-card.ts";
 import { startLanguageSwitch } from "./language.ts";
 import { startPlatformSwitch } from "./platform.ts";
 import { startPrintedRules } from "./print-rules.ts";
@@ -104,6 +105,7 @@ export function startReader(context: ReaderContext): () => void {
     startCitedRules(),
     startPlatformSwitch(),
     startRuleTransclusion(),
+    startGlossaryCard(),
     startPrintedRules(),
     startAnchors(),
     startLanguageSwitch(),

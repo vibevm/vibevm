@@ -173,6 +173,7 @@ pub mod coverage;
 pub mod derived;
 pub mod error;
 pub mod examples;
+pub mod glossary;
 pub mod html;
 pub mod llms;
 pub mod manifest;

@@ -145,6 +145,46 @@ fn check_learning_path(
     }
 }
 
+/// The declared glossary against the package that declared it
+/// (PROP-057 `##GLOSSARY-CHECKED`).
+///
+/// Three findings, and the library owns all three: the page has to be
+/// there, every entry has to name its term, and every entry has to state a
+/// definition. The judgment lives in `vibe_doc::glossary` rather than here
+/// because the reader shows those same entries in its cards and the style
+/// linter measures those same terms — three surfaces, one reading of what a
+/// glossary is.
+///
+/// A package that declares none yields nothing: a documentation without a
+/// glossary is not a documentation with a broken one, and the path
+/// `glossary/index.xml` means nothing by itself (`##GLOSSARY-DECLARED`).
+fn check_glossary(project_root: &Path, manifest_path: &Path, report: &mut CheckReport) {
+    // The pages are read here rather than walked: whether an entry states a
+    // definition is a question about a DOCUMENT, and the pivot is what
+    // answers it. A page the pivot refuses is reported as that.
+    let Ok(set) = vibe_doc::pages::read_package(project_root) else {
+        return;
+    };
+    let Ok(defects) = vibe_doc::glossary::check(project_root, &set) else {
+        return;
+    };
+    for defect in defects {
+        report.err(
+            CheckId::DocPackageContract,
+            Some(manifest_path.to_path_buf()),
+            None,
+            format!(
+                "{} \
+                 (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-CHECKED; \
+                 fix: correct the page or the entry, or drop [glossary] if this documentation \
+                 defines no terms)",
+                defect.render()
+            ),
+        );
+    }
+}
+
 impl Check for DocPackageContractCheck {
     fn id(&self) -> CheckId {
         CheckId::DocPackageContract
@@ -247,6 +287,12 @@ impl Check for DocPackageContractCheck {
                 );
             }
             check_learning_path(project_root, &manifest, navigation, &manifest_path, report);
+        }
+
+        // The glossary a documentation declares: the page has to be there,
+        // and its sections have to be entries a reader can use.
+        if manifest.glossary.is_some() {
+            check_glossary(project_root, &manifest_path, report);
         }
 
         // The front door. A reader who arrived at the repository rather

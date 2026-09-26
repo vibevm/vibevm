@@ -41,6 +41,15 @@
 //!   verbatim;
 //! * a `derived` block is the fence its generator built at this build.
 //!
+//! A page whose documentation declared a glossary carries two things more:
+//! every link to an entry of it takes `data-gloss` and `aria-describedby`
+//! ([`inline`]), and the island ends with one hidden `aside` holding the
+//! definitions of the entries THIS page names, resolved at build time so
+//! that nothing is fetched or parsed in the browser
+//! (`##READER-GLOSSARY-CARD`, `##PIPE-SHELL-PARSES-NOTHING`). The block
+//! takes no number: it is apparatus and not flow, and the numbers name the
+//! text a reader reads (`##READER-NUMBERED-BLOCKS`).
+//!
 //! A block whose text this build could not fetch is marked
 //! `data-unresolved` and shows its address. Refusing to render the page
 //! would tell an author about one defect per run; the checks
@@ -54,6 +63,7 @@ pub mod links;
 
 mod emit;
 mod example;
+mod gloss;
 mod rule;
 
 use vibe_specdoc::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
@@ -64,8 +74,25 @@ use emit::{anchor, anchor_line, close, line, open, pre_code, push_p, void};
 use inline::{escape, render_linked};
 use links::Links;
 
+pub use gloss::GLOSS_DEF_ID;
+
 /// One attribute, already escaped.
 type Attrs = Vec<(&'static str, String)>;
+
+/// The links of the page's OWN prose, able to recognise a term of the
+/// declared glossary.
+///
+/// One function rather than a `Links::page(&content.base)` at every block,
+/// because the glossary lens has to be on every one of them or on none: a
+/// card that appeared in a paragraph and not in a list item would be a
+/// reader wondering which words have definitions.
+fn prose<'a>(content: &'a Content, page: Option<&'a str>) -> Links<'a> {
+    let links = Links::page(&content.base);
+    match page {
+        Some(page) => links.glossing(page, content.glossary.as_ref()),
+        None => links,
+    }
+}
 
 /// Render a page as an island, without block numbers.
 ///
@@ -162,7 +189,7 @@ fn island(doc: &SpecDoc, page: Option<&str>, content: &Content, numbering: &Numb
             1,
             "h1",
             &attrs,
-            &render_linked(&title.text, &Links::page(&content.base)),
+            &render_linked(&title.text, &prose(content, page)),
         );
     }
     blocks_html(&mut out, 1, &doc.preamble, &[], page, content, numbering);
@@ -178,6 +205,10 @@ fn island(doc: &SpecDoc, page: Option<&str>, content: &Content, numbering: &Numb
             numbering,
         );
     }
+    // Last inside the article, hidden, numbered nowhere: the definitions of
+    // the glossary terms this page links, so a card and a screen reader both
+    // have them without a request (`##READER-GLOSSARY-CARD`).
+    gloss::defs(&mut out, 1, doc, page, content);
     close(&mut out, 0, "article");
     out
 }
@@ -210,7 +241,7 @@ fn section_html(
         depth + 1,
         &heading,
         &[],
-        &render_linked(&s.title, &Links::page(&content.base)),
+        &render_linked(&s.title, &prose(content, page)),
     );
     blocks_html(out, depth + 1, &s.blocks, path, page, content, numbering);
     for (i, sub) in s.sections.iter().enumerate() {
@@ -267,7 +298,7 @@ fn block(
                 &format!(
                     "{}{}",
                     anchor(num),
-                    render_linked(&u.text, &Links::page(&content.base))
+                    render_linked(&u.text, &prose(content, page))
                 ),
             );
         }
@@ -280,7 +311,7 @@ fn block(
                 depth + 1,
                 "p",
                 &[],
-                &render_linked(&u.text, &Links::page(&content.base)),
+                &render_linked(&u.text, &prose(content, page)),
             );
             close(out, depth, "blockquote");
         }
@@ -299,15 +330,12 @@ fn block(
                     depth + 1,
                     "li",
                     &item_attrs,
-                    &format!(
-                        "{head}{}",
-                        render_linked(&item.text, &Links::page(&content.base))
-                    ),
+                    &format!("{head}{}", render_linked(&item.text, &prose(content, page))),
                 );
             }
             close(out, depth, tag);
         }
-        Block::Table { rows } => table(out, depth, rows, &attrs, content, num),
+        Block::Table { rows } => table(out, depth, rows, &attrs, page, content, num),
         Block::Fence { lang, text, .. } => {
             pre_code(out, depth, &attrs, lang.as_deref(), text, num);
         }
@@ -355,7 +383,7 @@ fn block(
                 depth + 1,
                 "p",
                 &[],
-                &render_linked(&body.text, &Links::page(&content.base)),
+                &render_linked(&body.text, &prose(content, page)),
             );
             close(out, depth, "aside");
         }
@@ -363,7 +391,7 @@ fn block(
             push_unit(&mut attrs, caption);
             open(out, depth, "figure", &attrs);
             anchor_line(out, depth + 1, num);
-            let links = Links::page(&content.base);
+            let links = prose(content, page);
             // A picture must have a source, so a target this build cannot
             // place keeps the spelling the page gave it — an `img` with
             // no `src` is not an honest gap, it is a hole.
@@ -409,7 +437,7 @@ fn block(
                     depth + 1,
                     "p",
                     &[("class", "prompt-needs".to_owned())],
-                    &render_linked(needs, &Links::page(&content.base)),
+                    &render_linked(needs, &prose(content, page)),
                 );
             }
             if let Some(outcome) = outcome {
@@ -418,7 +446,7 @@ fn block(
                     depth + 1,
                     "p",
                     &[("class", "prompt-outcome".to_owned())],
-                    &render_linked(outcome, &Links::page(&content.base)),
+                    &render_linked(outcome, &prose(content, page)),
                 );
             }
             if !asserts.is_empty() {
@@ -451,10 +479,11 @@ fn table(
     depth: usize,
     rows: &[Vec<Unit>],
     attrs: &Attrs,
+    page: Option<&str>,
     content: &Content,
     num: Option<u32>,
 ) {
-    let links = Links::page(&content.base);
+    let links = prose(content, page);
     open(out, depth, "table", attrs);
     // A table may hold nothing but a caption, column groups and rows, so
     // the block's anchor rides in the caption — the one place HTML puts

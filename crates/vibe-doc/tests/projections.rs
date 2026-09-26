@@ -68,18 +68,42 @@ fn content(page: &str) -> Content {
         rules,
         derived,
         examples,
+        glossary: Some(fixture_glossary()),
         ..Content::new()
     }
 }
 
-/// The fixture package's one page: its address inside the package and its
-/// document. The address is read from the page, because it is what the
-/// two substituting backends resolve a borrowed example against.
+/// The page the projections are pinned on: its address inside the package
+/// and its document. The address is read from the page, because it is what
+/// the two substituting backends resolve a borrowed example against.
+///
+/// Named rather than taken by position: the package also carries the page it
+/// declares as its GLOSSARY, whose entries this one links
+/// (`##GLOSSARY-DECLARED`).
 fn fixture_page() -> pages::Page {
-    let package = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixture/manual");
-    let set = pages::read_package(&package).expect("the fixture package reads");
+    let set = pages::read_package(&fixture_package()).expect("the fixture package reads");
     assert!(set.unreadable.is_empty(), "{:?}", set.unreadable);
-    set.pages[0].clone()
+    set.pages
+        .iter()
+        .find(|p| p.rel == "guide/every-block.xml")
+        .expect("the projections' page")
+        .clone()
+}
+
+fn fixture_package() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixture/manual")
+}
+
+/// The glossary the fixture package declares, read the way a build reads
+/// it. The HTML projection carries a term's definition with the page; the
+/// other two do not, and the numbers stay the same in all three because the
+/// definitions are apparatus and take none.
+fn fixture_glossary() -> vibe_doc::glossary::Glossary {
+    let package = fixture_package();
+    let set = pages::read_package(&package).expect("the fixture package reads");
+    vibe_doc::glossary::read(&package, &set)
+        .expect("the manifest reads")
+        .expect("the fixture declares its glossary")
 }
 
 fn assert_golden(name: &str, got: &str) {

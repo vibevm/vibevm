@@ -66,6 +66,13 @@ const SHORT_RULE: usize = 10;
 /// values alone, and attribute values live inside tags.
 const ENTITIES: [(&str, char); 3] = [("&amp;", '&'), ("&lt;", '<'), ("&gt;", '>')];
 
+/// What opens and closes the anchor a heading wears in the Markdown
+/// dialect — `{#provenance-edit}`. It is an ADDRESS and not a word of the
+/// rule, so a line that showed it would spend the reader's eye and one of
+/// the line's few words on punctuation.
+const ANCHOR_OPEN: &str = "{#";
+const ANCHOR_CLOSE: char = '}';
+
 /// The words a description may not end on. A truncated line that stops on
 /// «of» or «the» reads as a sentence somebody dropped, and the word
 /// carries no meaning to pay for the space.
@@ -214,15 +221,85 @@ fn generic(lang: &str) -> &'static str {
 /// be as long as the rule and would hide it for no gain.
 pub(super) fn gist(text: &str) -> Option<String> {
     let html = super::inline::render(text);
-    let whole = plain(&html);
+    let whole = tidy(&plain(&html));
     if words(&whole) <= SHORT_RULE {
         return None;
     }
     let described = match lead(&html) {
-        Some((lead, rest)) => from_lead(&lead, &rest),
+        Some((lead, rest)) => from_lead(&tidy(&lead), &tidy(&rest)),
         None => first_words(&whole, FIRST_WORDS),
     };
     (!described.is_empty()).then_some(described)
+}
+
+/// The rule's words with the two marks of a HEADING taken off: the section
+/// number a numbered heading opens with, and the named anchor it may carry.
+///
+/// Both come from the same place. An anchor may name a section as well as a
+/// fact, and a section resolves to its heading
+/// (`crate::citations::anchor`), so a citation of a numbered section of a
+/// Markdown specification arrives here as `6.2 vibe.toml is the most
+/// expensive file…` or `REQ {#provenance-edit}. From the provenance view…`.
+/// Neither `6.2` nor `{#provenance-edit}` says anything to a reader
+/// deciding whether to open the quotation, and both spend one of the six
+/// words the line has.
+///
+/// It runs BEFORE the description is cut, which is the whole of the
+/// difference it makes: stripped afterwards the number would still have
+/// eaten a word, and the line would be five words long for no reason.
+/// Nothing else is touched — this is not a cleaner, it is two marks of one
+/// serialisation.
+fn tidy(text: &str) -> String {
+    let cleaned = without_anchors(strip_section_number(text.trim()));
+    match cleaned.trim() {
+        trimmed if trimmed.len() == cleaned.len() => cleaned,
+        trimmed => trimmed.to_owned(),
+    }
+}
+
+/// A heading's leading ordinal — `6.2 `, `8.1 `, `4 ` — and the space after
+/// it.
+///
+/// Digits, dots between digits and nothing else: a rule that genuinely
+/// opens on a number («72 hours after…») keeps it, because the run has to
+/// be followed by whitespace and be nothing but digits and separators to
+/// count as an ordinal, and a bare `72` is left alone only when it is not
+/// followed by a further digit group. That is the honest reading — `6.2` is
+/// a section address and `72` is a quantity — and the cases the corpus
+/// actually writes are the dotted ones.
+fn strip_section_number(text: &str) -> &str {
+    let head: String = text
+        .chars()
+        .take_while(|c| c.is_ascii_digit() || *c == '.')
+        .collect();
+    // A dotted run is an address; a single group of digits is a number the
+    // rule is about, and `1.` alone is a list marker no rule text carries.
+    if !head.contains('.') || !head.starts_with(|c: char| c.is_ascii_digit()) {
+        return text;
+    }
+    let rest = &text[head.len()..];
+    match rest.starts_with(char::is_whitespace) {
+        true => rest.trim_start(),
+        false => text,
+    }
+}
+
+/// The text without its `{#anchor}` tokens, each taken together with the
+/// single space in front of it so that `REQ {#x}. From…` reads `REQ. From…`
+/// rather than keeping a space before the full stop.
+fn without_anchors(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut rest = text;
+    while let Some(at) = rest.find(ANCHOR_OPEN) {
+        let Some(end) = rest[at..].find(ANCHOR_CLOSE) else {
+            break;
+        };
+        let head = &rest[..at];
+        out.push_str(head.strip_suffix(' ').unwrap_or(head));
+        rest = &rest[at + end + ANCHOR_CLOSE.len_utf8()..];
+    }
+    out.push_str(rest);
+    out
 }
 
 /// The description a bold lead gives.

@@ -66,6 +66,23 @@ enum Author<'a> {
     Cited(&'a str),
 }
 
+/// The glossary lens: which page is being rendered, and the glossary its
+/// documentation declared.
+///
+/// Both halves are needed and neither alone is enough. The glossary says
+/// which document defines the terms and which anchors are entries; the page
+/// address is what a RELATIVE target is read against, and this module
+/// already owns that reading ([`target_document`]). A lens without the page
+/// could only match a target by the shape of its tail, which is how
+/// `other/glossary/index.xml` would quietly become the glossary.
+#[derive(Debug, Clone, Copy)]
+struct Gloss<'a> {
+    /// The page being rendered, as its package spells it —
+    /// `start/index.xml`.
+    page: &'a str,
+    glossary: &'a crate::glossary::Glossary,
+}
+
 /// The addresses one island writes.
 #[derive(Debug, Clone, Copy)]
 pub struct Links<'a> {
@@ -74,6 +91,9 @@ pub struct Links<'a> {
     /// gets no address at all rather than a made-up one.
     base: &'a str,
     author: Author<'a>,
+    /// Set only where a card may appear: on the prose of a page that is
+    /// NOT the glossary, in a documentation that declared one.
+    gloss: Option<Gloss<'a>>,
 }
 
 impl<'a> Links<'a> {
@@ -88,6 +108,7 @@ impl<'a> Links<'a> {
         Links {
             base: "",
             author: Author::Verbatim,
+            gloss: None,
         }
     }
 
@@ -117,7 +138,72 @@ impl<'a> Links<'a> {
         Links {
             base,
             author: Author::Page,
+            gloss: None,
         }
+    }
+
+    /// The same links, able to recognise a term of the documentation's
+    /// declared glossary (PROP-057 `##READER-GLOSSARY-CARD`).
+    ///
+    /// `page` is the address of the page being rendered; `glossary` is what
+    /// its documentation declared. Nothing is recognised without both, and
+    /// nothing is recognised ON the glossary page itself: the entries are
+    /// defined there, and a card over a definition would repeat the
+    /// paragraph under the cursor.
+    ///
+    /// ```
+    /// use vibe_doc::glossary::{Entry, Glossary};
+    /// use vibe_doc::html::links::Links;
+    ///
+    /// let glossary = Glossary {
+    ///     document: "glossary/index".to_owned(),
+    ///     entries: vec![Entry {
+    ///         id: "manifest".to_owned(),
+    ///         term: "manifest".to_owned(),
+    ///         definition: "What a package says about itself.".to_owned(),
+    ///     }],
+    /// };
+    /// let links = Links::page("/doc/").glossing("start/index.xml", Some(&glossary));
+    ///
+    /// assert_eq!(links.gloss_of("../glossary/index.xml#manifest"), Some("manifest"));
+    /// // An anchor the glossary does not define is not an entry, and a
+    /// // page of the documentation that is not the glossary is not one.
+    /// assert!(links.gloss_of("../glossary/index.xml#nothing").is_none());
+    /// assert!(links.gloss_of("../model/two-trees.xml#manifest").is_none());
+    /// // And the address is unchanged either way.
+    /// assert_eq!(
+    ///     links.href("../glossary/index.xml#manifest").as_deref(),
+    ///     Some("../../glossary/index/#manifest")
+    /// );
+    /// ```
+    #[must_use]
+    pub fn glossing(
+        mut self,
+        page: &'a str,
+        glossary: Option<&'a crate::glossary::Glossary>,
+    ) -> Links<'a> {
+        self.gloss = glossary
+            .filter(|glossary| crate::pages::document_of(page) != glossary.document)
+            .map(|glossary| Gloss { page, glossary });
+        self
+    }
+
+    /// The glossary entry a link on this page names, when it names one.
+    ///
+    /// `None` for everything else, and «everything else» is most links: a
+    /// page of the documentation that is not the glossary, the glossary page
+    /// without an anchor, an anchor that is not an entry, a citation, the
+    /// web. The answer is the ENTRY's own id rather than the fragment as
+    /// written, so the attribute and the definition below it cannot disagree
+    /// about spelling.
+    pub fn gloss_of(&self, target: &str) -> Option<&'a str> {
+        let gloss = self.gloss?;
+        let (_, fragment) = split_fragment(target);
+        let anchor = fragment.strip_prefix('#')?;
+        if target_document(gloss.page, target)? != gloss.glossary.document {
+            return None;
+        }
+        gloss.glossary.entry(anchor).map(|entry| entry.id.as_str())
     }
 
     /// The links inside the text of the document at `uri`, quoted on a
@@ -142,6 +228,7 @@ impl<'a> Links<'a> {
         Links {
             base,
             author: Author::Cited(uri),
+            gloss: None,
         }
     }
 

@@ -6,4 +6,10 @@
   <section id="language" title="The language segment">
     <p p="2">The language is the segment after `/doc/`, and the source language carries no segment at all. A translation is served under the source package's coordinate, which is what lets one address become another by changing one segment.</p>
   </section>
+  <section id="island" title="island">
+    <p p="3">A page's content as finished HTML, rendered by the pipeline and inserted whole: the shell parses nothing of it. See [the language segment](/doc/com.example.docs/fixture-manual/latest/reference/addresses/#language).</p>
+  </section>
+  <section id="resolver" title="resolver">
+    <p p="4">The one address that knows what a mount carries, asked with a `spec://` citation and answering with the page it names.</p>
+  </section>
 </spec>

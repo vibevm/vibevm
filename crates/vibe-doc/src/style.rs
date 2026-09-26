@@ -65,12 +65,18 @@ pub fn check(package_dir: &Path, min_percent: u8) -> Result<Report> {
     let set = pages::read_package(package_dir)?;
     let lang = crate::manifest::language(package_dir)?;
     let list = banned::read(package_dir, &lang)?;
-    let terms = glossary::terms(&set);
+    // The terms are the entries of the glossary this documentation
+    // DECLARES, and nothing when it declares none: the term rules ask «was
+    // this word introduced», and a manual with no glossary has introduced
+    // nothing to compare against (`##GLOSSARY-DECLARED`).
+    let declared = crate::glossary::read(package_dir, &set)?;
+    let terms = glossary::terms(declared.as_ref());
 
     let mut findings: Vec<Finding> = Vec::new();
     let mut scores: Vec<PageScore> = Vec::new();
     for page in &set.pages {
-        let (found, readability) = page_findings(page, &list.entries, &terms, &lang);
+        let (found, readability) =
+            page_findings(page, &list.entries, &terms, declared.as_ref(), &lang);
         let of = |s: Severity| found.iter().filter(|f| f.severity == s).count();
         scores.push(PageScore {
             page: page.rel.clone(),
@@ -96,6 +102,7 @@ fn page_findings(
     page: &Page,
     list: &[banned::Entry],
     terms: &[glossary::Term],
+    declared: Option<&crate::glossary::Glossary>,
     lang: &str,
 ) -> (Vec<Finding>, f64) {
     let nodes = prose::nodes(&page.doc);
@@ -105,7 +112,7 @@ fn page_findings(
         out.extend(rules::length(&page.rel, node));
         out.extend(rules::signs(&page.rel, node, lang));
     }
-    out.extend(terms::check(&page.rel, &nodes, terms));
+    out.extend(terms::check(&page.rel, &nodes, terms, declared));
     out.extend(rules::headings(&page.rel, &page.doc));
     out.extend(prompts_without_asserts(&page.rel, &page.doc));
     let readability = sentence::readability(&prose::joined(&nodes));

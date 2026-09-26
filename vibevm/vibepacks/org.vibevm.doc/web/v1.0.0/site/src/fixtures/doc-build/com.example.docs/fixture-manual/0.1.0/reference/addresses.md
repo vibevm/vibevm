@@ -7,3 +7,12 @@
 ## The language segment {#language}
 
 [p02] The language is the segment after `/doc/`, and the source language carries no segment at all. A translation is served under the source package's coordinate, which is what lets one address become another by changing one segment.
+
+## island {#island}
+
+[p03] A page's content as finished HTML, rendered by the pipeline and inserted whole: the shell parses nothing of it. See [the language segment](/doc/com.example.docs/fixture-manual/latest/reference/addresses/#language).
+
+## resolver {#resolver}
+
+[p04] The one address that knows what a mount carries, asked with a `spec://` citation and answering with the page it names.
+

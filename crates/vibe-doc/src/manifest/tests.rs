@@ -390,11 +390,21 @@ fn a_source_documentation_carries_no_translation_block() {
 }
 
 /// One page, and everything about it taken from the page.
+///
+/// The fixture carries two: the page every block rides on, and the page it
+/// declares as its glossary, whose entries the first one links
+/// (`##GLOSSARY-DECLARED`). The row asserted on is named rather than taken
+/// by position, because the layer law orders `pages` and a row's place in it
+/// is not this test's subject.
 #[test]
 fn the_page_row_is_the_page() {
     let m = built().manifest;
-    assert_eq!(m.pages.len(), 1);
-    let page = &m.pages[0];
+    assert_eq!(m.pages.len(), 2);
+    let page = m
+        .pages
+        .iter()
+        .find(|row| row.path == "guide/every-block.xml")
+        .expect("the fixture's own page");
     assert_eq!(page.path, "guide/every-block.xml");
     assert_eq!(page.title, "Every block once");
     // It carries two `prompt` blocks, so it is a task page.

@@ -145,11 +145,29 @@ fn scan(text: &str, links: &Links, found: &mut Vec<String>) -> String {
 
 /// The opening tag of one inline link: an address when this build can
 /// place the target, and the spelling it was given when it cannot.
+///
+/// A link to an entry of the documentation's declared glossary takes two
+/// attributes more and nothing else changes about it: `data-gloss` names the
+/// entry, and `aria-describedby` points at the hidden definition the island
+/// carries at its end, so a screen reader hears the definition as the link's
+/// description on every device and the reader can show a card where a
+/// pointer can hover (PROP-057 `##READER-GLOSSARY-CARD`). Selecting the
+/// link still opens the glossary at the entry — the `href` is untouched.
 fn open_anchor(href: &str, links: &Links) -> String {
+    let mut out = String::from("<a");
     match links.href(href) {
-        Some(at) => format!("<a href=\"{}\">", escape_attr(&at)),
-        None => format!("<a data-address=\"{}\">", escape_attr(href)),
+        Some(at) => out.push_str(&format!(" href=\"{}\"", escape_attr(&at))),
+        None => out.push_str(&format!(" data-address=\"{}\"", escape_attr(href))),
     }
+    if let Some(entry) = links.gloss_of(href) {
+        out.push_str(&format!(
+            " data-gloss=\"{id}\" aria-describedby=\"{}{id}\"",
+            super::GLOSS_DEF_ID,
+            id = escape_attr(entry)
+        ));
+    }
+    out.push('>');
+    out
 }
 
 /// Escape one character for HTML text content.

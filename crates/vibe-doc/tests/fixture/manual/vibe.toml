@@ -25,6 +25,14 @@ What it leaves out: prose worth reading.
 [i18n]
 canonical = "en"
 
+# The page this documentation defines its terms on
+# (spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED). The
+# reference page IS the glossary here: the fixture exists to show what the
+# island renders, and a glossary is an entity a documentation declares rather
+# than a path a tool guesses.
+[glossary]
+page = "reference/addresses"
+
 [[documents]]
 package = "com.example/subject"
 version = "^1.0"

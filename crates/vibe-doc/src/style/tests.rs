@@ -28,12 +28,20 @@ struct Package {
 
 impl Package {
     fn new(lang: &str, banned: &str) -> Package {
+        Package::declaring(lang, banned, "\n[glossary]\npage = \"glossary/index\"\n")
+    }
+
+    /// The same package with the `[glossary]` table written out, so a test
+    /// can leave it off: the term rules run on the glossary a documentation
+    /// DECLARES, and a package that declares none has no terms at all
+    /// (`##GLOSSARY-DECLARED`).
+    fn declaring(lang: &str, banned: &str, glossary: &str) -> Package {
         let dir = tempfile::tempdir().expect("temp dir");
         fs::write(
             dir.path().join("vibe.toml"),
             format!(
                 "[package]\nname = \"m\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
-                 version = \"0.1.0\"\n\n[i18n]\ncanonical = \"{lang}\"\n"
+                 version = \"0.1.0\"\n\n[i18n]\ncanonical = \"{lang}\"\n{glossary}"
             ),
         )
         .expect("manifest");
@@ -143,6 +151,36 @@ fn the_law_s_own_bad_page_is_caught_on_every_pair() {
         .expect("the page was scored");
     assert!(!bad.clean(), "{bad:?}");
     assert!(!report.ok());
+}
+
+/// The same page, in a package that declares no glossary: the term rules
+/// find nothing, and the rest of the law still fires.
+///
+/// The rollback case, and the reason the declaration exists. The terms used
+/// to be looked for on a path this crate happened to know
+/// (`glossary/index.xml`), so a manual with its glossary anywhere else had
+/// none as far as the linter could tell and was told so by silence. Now the
+/// silence is the package's own statement: it declared no glossary, so it
+/// has no terms, and the rules that ask «was this word introduced» have
+/// nothing to compare against (`##GLOSSARY-DECLARED`).
+#[test]
+fn a_package_that_declares_no_glossary_is_judged_without_terms() {
+    let package = Package::declaring("en", EN, "");
+    package.glossary().page("model/bad.xml", BAD_PAGE);
+    let rules: Vec<Rule> = package.check().findings.iter().map(|f| f.rule).collect();
+
+    assert!(
+        rules.contains(&Rule::Banned),
+        "the tics still fire: {rules:?}"
+    );
+    assert!(
+        !rules.contains(&Rule::TermBeforeIntroduction),
+        "there are no terms to be used early: {rules:?}"
+    );
+    assert!(
+        !rules.contains(&Rule::TermInFirstParagraph),
+        "nor to stand in a first paragraph: {rules:?}"
+    );
 }
 
 #[test]

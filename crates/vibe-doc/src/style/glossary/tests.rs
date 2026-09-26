@@ -2,8 +2,20 @@ use super::*;
 
 use std::fs;
 
-fn package_with_glossary(entries: &str) -> tempfile::TempDir {
+use crate::glossary::Glossary;
+
+/// A package that DECLARES its glossary, read the way the linter reads
+/// it: the terms are the entries of the page the manifest names, and a
+/// package that declares none has no terms at all (`##GLOSSARY-DECLARED`).
+fn declared_glossary(entries: &str) -> Option<Glossary> {
     let dir = tempfile::tempdir().expect("temp dir");
+    fs::write(
+        dir.path().join("vibe.toml"),
+        "[glossary]
+page = \"glossary/index\"
+",
+    )
+    .expect("write");
     let pages = dir.path().join("vibevm/vibespecs/glossary");
     fs::create_dir_all(&pages).expect("page dir");
     fs::write(
@@ -15,17 +27,17 @@ fn package_with_glossary(entries: &str) -> tempfile::TempDir {
         ),
     )
     .expect("write");
-    dir
+    let set = crate::pages::read_package(dir.path()).expect("read");
+    crate::glossary::read(dir.path(), &set).expect("read")
 }
 
 #[test]
 fn the_terms_are_the_glossary_sections_longest_first() {
-    let dir = package_with_glossary(
+    let glossary = declared_glossary(
         "<fingerprint title=\"fingerprint\"><p>A hash.</p></fingerprint>\
          <freshness-fingerprint title=\"freshness fingerprint\"><p>Another.</p></freshness-fingerprint>",
     );
-    let set = crate::pages::read_package(dir.path()).expect("read");
-    let terms = terms(&set);
+    let terms = terms(glossary.as_ref());
     assert_eq!(terms[0].phrase, "freshness fingerprint");
     assert_eq!(terms[1].phrase, "fingerprint");
 }
@@ -34,11 +46,10 @@ fn the_terms_are_the_glossary_sections_longest_first() {
 /// are called an index. The words on the page are still «index».
 #[test]
 fn a_disambiguating_parenthesis_is_not_part_of_the_term() {
-    let dir = package_with_glossary(
+    let glossary = declared_glossary(
         "<index-registry title=\"index (of a registry)\"><p>A file.</p></index-registry>",
     );
-    let set = crate::pages::read_package(dir.path()).expect("read");
-    let terms = terms(&set);
+    let terms = terms(glossary.as_ref());
     assert_eq!(terms[0].phrase, "index");
     assert_eq!(terms[0].anchor, "index-registry");
 }
@@ -47,21 +58,32 @@ fn a_disambiguating_parenthesis_is_not_part_of_the_term() {
 /// say the word «package» (`##STYLE-PAGE-SKELETON`, 2026-09-12).
 #[test]
 fn the_six_ordinary_words_are_not_terms() {
-    let dir = package_with_glossary(
+    let glossary = declared_glossary(
         "<package title=\"package\"><p>A unit.</p></package>\
          <store title=\"store\"><p>A cache.</p></store>",
     );
-    let set = crate::pages::read_package(dir.path()).expect("read");
-    let found = terms(&set);
+    let found = terms(glossary.as_ref());
     let phrases: Vec<&str> = found.iter().map(|t| t.phrase.as_str()).collect();
     assert_eq!(phrases, ["store"]);
 }
 
+/// A package that declares no glossary has no terms, and the term rules
+/// then find nothing (`##GLOSSARY-DECLARED`).
 #[test]
-fn a_package_with_no_glossary_has_no_terms() {
+fn a_package_with_no_declaration_has_no_terms() {
+    assert!(terms(None).is_empty());
+    // And a declaration whose page is not there is the same answer.
     let dir = tempfile::tempdir().expect("temp dir");
+    fs::write(
+        dir.path().join("vibe.toml"),
+        "[glossary]
+page = \"glossary/index\"
+",
+    )
+    .expect("write");
     let set = crate::pages::read_package(dir.path()).expect("read");
-    assert!(terms(&set).is_empty());
+    let missing = crate::glossary::read(dir.path(), &set).expect("read");
+    assert!(terms(missing.as_ref()).is_empty());
 }
 
 #[test]

@@ -81,6 +81,7 @@ fn content(page: &str) -> Content {
         rules,
         derived,
         examples,
+        glossary: Some(fixture_glossary()),
         ..Content::new()
     }
 }
@@ -96,9 +97,30 @@ fn read_fixture_page() -> pages::Page {
         "the fixture page must parse: {:?}",
         set.unreadable
     );
-    assert_eq!(set.pages.len(), 1, "one page, so one golden");
-    assert_eq!(set.pages[0].rel, "guide/every-block.xml");
-    set.pages[0].clone()
+    // Two pages now: the one every block rides on, and the one the package
+    // declares as its GLOSSARY, whose entries the first one links. Only the
+    // first is pinned as a golden — the second is there so a term link has
+    // an entry to resolve against (`##GLOSSARY-DECLARED`).
+    assert_eq!(set.pages.len(), 2, "the page and the glossary it links");
+    let page = set
+        .pages
+        .iter()
+        .find(|p| p.rel == "guide/every-block.xml")
+        .expect("the golden's page");
+    page.clone()
+}
+
+/// The glossary the fixture package declares, read the way a build reads it.
+///
+/// Read from the package rather than written down here: the golden shows a
+/// term link carrying its entry, and an entry spelled twice would let the
+/// attribute and the definition below it disagree.
+fn fixture_glossary() -> vibe_doc::glossary::Glossary {
+    let package = fixture_package();
+    let set = pages::read_package(&package).expect("the fixture package reads");
+    vibe_doc::glossary::read(&package, &set)
+        .expect("the manifest reads")
+        .expect("the fixture declares its glossary")
 }
 
 /// The island the golden pins: the fixture page at its own address, with

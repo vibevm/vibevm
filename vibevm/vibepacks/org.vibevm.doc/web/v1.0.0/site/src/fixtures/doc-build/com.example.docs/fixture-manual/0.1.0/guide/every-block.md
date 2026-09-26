@@ -4,7 +4,7 @@
 
 [p01] @fact:LEAD This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps. @status:impl/done
 
-[p02] Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/).
+[p02] Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/). A term of the declared glossary carries its definition with it: the [island](../reference/addresses.xml#island) is served under a [language segment](../reference/addresses.xml#language), and the [island](../reference/addresses.xml#island) again names it once.
 
 ## Prose blocks {#prose}
 

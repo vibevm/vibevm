@@ -169,6 +169,65 @@ fn a_quoted_angle_bracket_survives_the_round_trip() {
     );
 }
 
+/// An anchor may name a SECTION, and a section resolves to its heading, so
+/// a numbered heading of a Markdown specification arrives with its address
+/// in front of it. The address is not a word of the rule and does not spend
+/// one of the line's six.
+#[test]
+fn a_headings_section_number_is_not_part_of_the_description() {
+    assert_eq!(
+        gist(
+            "6.2 vibe.toml is the most expensive file in the project, and every field of it \
+             is read at every session start."
+        )
+        .as_deref(),
+        Some("vibe.toml is the most expensive file…")
+    );
+    assert_eq!(
+        gist(
+            "8.1 The ABI is C + JSON, so a mechanism written in any language can answer the \
+             host without linking against it."
+        )
+        .as_deref(),
+        Some("The ABI is C + JSON…")
+    );
+    // A number the rule is ABOUT stays: an ordinal is dotted, a quantity
+    // is not.
+    assert_eq!(
+        gist(
+            "72 hours after a publication the mirror refuses the version, and nothing on the \
+             machine can bring it back."
+        )
+        .as_deref(),
+        Some("72 hours after a publication…")
+    );
+}
+
+/// The named anchor a heading wears is an address too, and it may stand
+/// anywhere in the line. It goes with the space in front of it, so the
+/// punctuation that followed it still reads as punctuation.
+#[test]
+fn a_named_anchor_is_not_part_of_the_description() {
+    assert_eq!(
+        gist(
+            "REQ {#provenance-edit}. From the provenance view an editor opens the file the \
+             fact was read from."
+        )
+        .as_deref(),
+        Some("REQ. From the provenance view…")
+    );
+    // Both marks at once, which is the shape a numbered heading with an
+    // anchor actually takes.
+    assert_eq!(
+        gist(
+            "4.3 The lock file {#lock-file} is written by the resolver and read by every \
+             consumer of the project."
+        )
+        .as_deref(),
+        Some("The lock file is written…")
+    );
+}
+
 /// The line a rule cannot describe is the EDITION's own sentence, so it is
 /// in the edition's language — and in English for a language no edition of
 /// this manual is written in yet.

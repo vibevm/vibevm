@@ -365,6 +365,46 @@ fn a_chapter_the_source_does_not_declare_is_a_problem() {
     assert_eq!(unknown_chapters(&[], &[named("start")]).len(), 1);
 }
 
+/// A translation declares the SAME glossary as the documentation it adapts:
+/// its glossary is its own mirrored page at the same path, with the terms
+/// in its language (`##GLOSSARY-TRANSLATION`).
+#[test]
+fn a_glossary_the_translation_does_not_mirror_is_a_problem() {
+    let at = |page: &str| Some(page.to_owned());
+
+    // The ordinary case: one path on both sides, and nothing to report.
+    assert!(unmirrored_glossary(at("glossary/index"), at("glossary/index")).is_empty());
+    // And a pair that declares none on either side is a pair of manuals
+    // written before the table existed.
+    assert!(unmirrored_glossary(None, None).is_empty());
+
+    let missing = unmirrored_glossary(at("glossary/index"), None);
+    assert_eq!(
+        missing,
+        vec![Problem::Glossary {
+            source: at("glossary/index"),
+            translation: None,
+        }]
+    );
+    // The problem is the manifest's, as a chapter's is.
+    assert_eq!(missing[0].page(), "vibe.toml");
+    let text = missing[0].render("org.demo/lib-docs");
+    assert!(text.contains("GLOSSARY MISSING glossary/index"), "{text}");
+    assert!(text.contains("GLOSSARY-TRANSLATION"), "{text}");
+
+    // Another page is another glossary, and the line names both.
+    let other = unmirrored_glossary(at("glossary/index"), at("terms/index"));
+    let text = other[0].render("org.demo/lib-docs");
+    assert!(text.contains("terms/index"), "{text}");
+    assert!(text.contains("glossary/index"), "{text}");
+
+    // And an adaptation that invents one decides something about the
+    // documentation it adapts, which is the same rule read backwards.
+    let invented = unmirrored_glossary(None, at("terms/index"));
+    let text = invented[0].render("org.demo/lib-docs");
+    assert!(text.contains("declares none"), "{text}");
+}
+
 /// The world that reaches the borrowed-example fixture's source: the
 /// checkout arm answers for the coordinate its adaptation adapts.
 fn borrowed_world() -> SpecSources {

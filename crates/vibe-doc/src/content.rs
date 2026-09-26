@@ -152,6 +152,19 @@ pub struct Content {
     /// project default; [`Content::edition_lang`] is where that is
     /// decided.
     pub lang: String,
+    /// The glossary this documentation declared, when it declared one
+    /// ([`crate::glossary`], PROP-057 `##GLOSSARY-DECLARED`).
+    ///
+    /// It is here for the reason the cited rules are: a `rule` names a fact
+    /// and a term link names an entry, and neither block keeps a copy of
+    /// what it points at. The island resolves the entry at build time and
+    /// carries its definition as hidden HTML, so the reader can show the
+    /// card of `##READER-GLOSSARY-CARD` beside a term without fetching or
+    /// parsing anything (`##PIPE-SHELL-PARSES-NOTHING`).
+    ///
+    /// `None` is the ordinary answer for a documentation that declares no
+    /// glossary, and then nothing about a link changes.
+    pub glossary: Option<crate::glossary::Glossary>,
 }
 
 impl Content {

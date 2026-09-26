@@ -20,9 +20,9 @@ use crate::manifest::project::{
 
 use super::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
-    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, McpServerDecl, MediaDecl,
-    NavigationDecl, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl,
-    Suggests, TranslatesDecl,
+    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, HooksDecl, McpServerDecl,
+    MediaDecl, NavigationDecl, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny,
+    SkillDecl, Suggests, TranslatesDecl,
 };
 
 /// Per-edge seepage level: how far the target travels toward consumers.
@@ -346,6 +346,8 @@ pub(crate) struct ManifestWire {
     media: Option<MediaDecl>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     navigation: Option<NavigationDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    glossary: Option<GlossaryDecl>,
     /// `[translations]` — **refused, and read only so the refusal can
     /// say why.** A source stores no list of its translations: which
     /// adaptations a manual has is computed from the `translates`
@@ -468,6 +470,7 @@ impl TryFrom<ManifestWire> for Manifest {
             translates: wire.translates,
             media: wire.media,
             navigation: wire.navigation,
+            glossary: wire.glossary,
             hooks: wire.hooks,
             extensions,
             run_commands: wire.run_commands,
@@ -550,6 +553,7 @@ impl TryFrom<Manifest> for ManifestWire {
             translates: manifest.translates,
             media: manifest.media,
             navigation: manifest.navigation,
+            glossary: manifest.glossary,
             translations: None,
             hooks: manifest.hooks,
             extensions,

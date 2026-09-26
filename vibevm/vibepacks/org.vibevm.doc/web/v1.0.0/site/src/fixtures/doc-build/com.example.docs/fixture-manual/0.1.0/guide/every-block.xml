@@ -3,7 +3,7 @@
   <title id="root">Every block once</title>
   <status stage="impl" state="done" audience="user,dev"/>
   <p p="1"><fact id="LEAD" status="impl/done">This page uses every block of the documentation genre **once**, so the island backend has a subject with no gaps.</fact></p>
-  <p p="2">Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/).</p>
+  <p p="2">Inline conventions ride inside a unit: `code`, **strong**, *emphasis* and [a link](/doc/com.example.docs/fixture-manual/latest/guide/every-block/). A term of the declared glossary carries its definition with it: the [island](../reference/addresses.xml#island) is served under a [language segment](../reference/addresses.xml#language), and the [island](../reference/addresses.xml#island) again names it once.</p>
   <section id="prose" title="Prose blocks">
     <list ordered="false" p="3">
       <item>A plain item.</item>

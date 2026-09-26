@@ -1,10 +1,19 @@
 use super::*;
 
+use crate::glossary::Glossary;
 use crate::style::glossary;
 use crate::style::prose;
 
-fn glossary_terms() -> Vec<glossary::Term> {
+/// The glossary these tests are judged against: three terms on the page the
+/// linter was TOLD about, rather than on a path it guessed
+/// (`##GLOSSARY-DECLARED`).
+fn declared() -> Glossary {
     let dir = tempfile::tempdir().expect("temp dir");
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        "[glossary]\npage = \"glossary/index\"\n",
+    )
+    .expect("write");
     let pages = dir.path().join("vibevm/vibespecs/glossary");
     std::fs::create_dir_all(&pages).expect("page dir");
     std::fs::write(
@@ -19,7 +28,13 @@ fn glossary_terms() -> Vec<glossary::Term> {
     )
     .expect("write");
     let set = crate::pages::read_package(dir.path()).expect("read");
-    glossary::terms(&set)
+    crate::glossary::read(dir.path(), &set)
+        .expect("read")
+        .expect("the glossary is declared and present")
+}
+
+fn glossary_terms() -> Vec<glossary::Term> {
+    glossary::terms(Some(&declared()))
 }
 
 fn findings(body: &str) -> Vec<Finding> {
@@ -30,7 +45,12 @@ fn findings(body: &str) -> Vec<Finding> {
     );
     let doc =
         vibe_specdoc::from_xml_with(&xml, vibe_specdoc::Vocabulary::Doc).expect("fixture parses");
-    check("model/a-page.xml", &prose::nodes(&doc), &glossary_terms())
+    check(
+        "model/a-page.xml",
+        &prose::nodes(&doc),
+        &glossary_terms(),
+        Some(&declared()),
+    )
 }
 
 fn rules_of(body: &str) -> Vec<Rule> {
@@ -127,7 +147,15 @@ fn the_glossary_page_is_not_judged_against_itself() {
                  <p>The lock file and the registry and the store.</p>\n\
                </spec>\n";
     let doc = vibe_specdoc::from_xml_with(xml, vibe_specdoc::Vocabulary::Doc).expect("parses");
-    assert!(check(GLOSSARY_PAGE, &prose::nodes(&doc), &glossary_terms()).is_empty());
+    assert!(
+        check(
+            "glossary/index.xml",
+            &prose::nodes(&doc),
+            &glossary_terms(),
+            Some(&declared()),
+        )
+        .is_empty()
+    );
 }
 
 /// A term inside a table cell is a reference table doing its job, and a

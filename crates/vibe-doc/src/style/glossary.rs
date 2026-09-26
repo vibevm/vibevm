@@ -1,9 +1,18 @@
 //! The glossary's terms, and what counts as introducing one
 //! (PROP-057 `##STYLE-CONTAINERS-AND-CORRIDORS`, `##STYLE-PAGE-SKELETON`).
 //!
-//! The terms are not a list this crate keeps: they are the sections of
-//! the package's own glossary page, read at every run. A manual that adds
-//! a term adds it in one place, and the linter knows it the same day.
+//! The terms are not a list this crate keeps: they are the entries of the
+//! glossary the package DECLARES ([`crate::glossary`]), read at every run.
+//! A manual that adds a term adds it in one place, and the linter knows it
+//! the same day.
+//!
+//! Declared, and no longer a path this module happened to know: the page
+//! used to be the constant `glossary/index.xml`, which meant the term rules
+//! worked for one documentation and silently found nothing in every other
+//! (`##GLOSSARY-DECLARED`). A package that declares no glossary has no
+//! terms, and the rules then find nothing — which is the honest answer,
+//! because they ask «was this word introduced» and a manual with no
+//! glossary has introduced nothing to compare against.
 //!
 //! ## Ordinary words do not count
 //!
@@ -28,10 +37,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-CONTAINERS
 
 use regex::Regex;
 
-use crate::pages::PageSet;
-
-/// The page a documentation package keeps its glossary on.
-pub const GLOSSARY_PAGE: &str = "glossary/index.xml";
+use crate::glossary::Glossary;
 
 /// The glossary entries the norm exempts, by anchor: used in their
 /// ordinary sense, they are not terms (`##STYLE-PAGE-SKELETON`,
@@ -68,30 +74,25 @@ impl Term {
     }
 }
 
-/// Read the terms of a package's glossary, longest first.
+/// The terms of a declared glossary, longest first.
 ///
-/// A package with no glossary page yields no terms, and the term rules
-/// then find nothing. That is the honest answer: the rules ask «was this
-/// word introduced», and a manual with no glossary has introduced
-/// nothing to compare against.
-pub fn terms(set: &PageSet) -> Vec<Term> {
-    let Some(page) = set.pages.iter().find(|p| p.rel == GLOSSARY_PAGE) else {
+/// `None` — a package that declares no glossary — yields no terms, and the
+/// term rules then find nothing.
+pub fn terms(glossary: Option<&Glossary>) -> Vec<Term> {
+    let Some(glossary) = glossary else {
         return Vec::new();
     };
     let mut out: Vec<Term> = Vec::new();
-    for section in &page.doc.sections {
-        let Some(anchor) = &section.id else {
-            continue;
-        };
-        let phrase = base_form(&section.title);
-        if phrase.is_empty() || ORDINARY.iter().any(|o| o.eq_ignore_ascii_case(anchor)) {
+    for entry in &glossary.entries {
+        let phrase = base_form(&entry.term);
+        if phrase.is_empty() || ORDINARY.iter().any(|o| o.eq_ignore_ascii_case(&entry.id)) {
             continue;
         }
         let Some(pattern) = compile(&phrase) else {
             continue;
         };
         out.push(Term {
-            anchor: anchor.clone(),
+            anchor: entry.id.clone(),
             words: phrase.split_whitespace().count(),
             phrase,
             pattern,

@@ -12,6 +12,8 @@ use crate::manifest::plane::validate_plane;
 
 use super::Manifest;
 
+#[path = "validation/glossary.rs"]
+mod glossary;
 #[path = "validation/navigation.rs"]
 mod navigation;
 
@@ -413,6 +415,14 @@ impl Manifest {
         // module, out of line per the file-length budget.
         if let Some(navigation) = &self.navigation {
             navigation::validate(navigation, is_doc, kind, self.translates.is_some())?;
+        }
+
+        // `[glossary]` — the page a documentation defines its terms on,
+        // and therefore a statement only documentation can make. The
+        // grammar is its own child module beside the navigation's, for
+        // the same reason: one table, one seam.
+        if let Some(declared) = &self.glossary {
+            glossary::validate(declared, is_doc, kind)?;
         }
 
         // `[documentation]` — the subject's pointer, legal in any kind,

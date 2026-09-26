@@ -290,6 +290,37 @@ pub struct NavigationChapterDecl {
     pub appendix: bool,
 }
 
+/// `[glossary]` — the page a documentation defines its own terms on
+/// (PROP-057 `##GLOSSARY-DECLARED`).
+///
+/// One field, and the reason it exists at all is that the path used to be
+/// a CONVENTION: the style linter looked for `glossary/index.xml` and
+/// nothing in the manifest said so. A convention is invisible to every
+/// other documentation and to every tool that did not read that one
+/// constant, so the glossary became a thing a package declares — and
+/// everything done with terms, from the style checks to the reader's
+/// cards, is done with the declared glossary or not at all
+/// (`##GLOSSARY-CARD-DECISION`).
+///
+/// The page is spelled as a pin and a chapter row spell one: a document
+/// path under the spec root, without the extension, because one document
+/// is served as three projections.
+///
+/// ```
+/// use vibe_core::manifest::GlossaryDecl;
+///
+/// let g: GlossaryDecl = toml::from_str("page = \"glossary/index\"\n").unwrap();
+/// assert_eq!(g.page, "glossary/index");
+/// // A neighbour's field is not this table's, and is refused as one.
+/// assert!(toml::from_str::<GlossaryDecl>("page = \"g/i\"\ntitle = \"Terms\"\n").is_err());
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct GlossaryDecl {
+    /// The document path of the glossary page.
+    pub page: String,
+}
+
 /// `[[navigation.section]]` — one folder of the page tree under the name
 /// a reader sees.
 ///

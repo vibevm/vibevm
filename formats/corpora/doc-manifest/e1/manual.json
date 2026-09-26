@@ -32,6 +32,23 @@
   },
   "pages": [
     {
+      "path": "reference/addresses.xml",
+      "title": "Addresses",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "ADDRESS-SHAPE",
+        "language",
+        "island",
+        "resolver"
+      ],
+      "summary": "A page address ends with a slash and the projections lie beside it as files: `…/<document>/`, `…/<document>.md`, `…/<document>.xml`.",
+      "reading_time_min": 1
+    },
+    {
       "path": "guide/every-block.xml",
       "title": "Every block once",
       "genre": "task",

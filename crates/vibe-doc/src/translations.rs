@@ -81,6 +81,13 @@ pub enum Problem {
     /// The translation names a chapter of the learning path the source
     /// does not declare.
     UnknownChapter { id: String },
+    /// The two packages do not declare the same glossary: the source
+    /// declares one and the translation does not, or the translation names
+    /// another page.
+    Glossary {
+        source: Option<String>,
+        translation: Option<String>,
+    },
     /// The two pages part at a block: a different kind at the same
     /// number, or one page running out of blocks before the other.
     Block {
@@ -109,7 +116,9 @@ impl Problem {
             | Problem::OwnExample { page, .. }
             | Problem::UnknownExampleRef { page, .. }
             | Problem::Block { page, .. } => page,
-            Problem::UnknownChapter { .. } => crate::derived::manifest::MANIFEST,
+            Problem::UnknownChapter { .. } | Problem::Glossary { .. } => {
+                crate::derived::manifest::MANIFEST
+            }
         }
     }
 
@@ -150,6 +159,28 @@ impl Problem {
                  chapters and adds none of its own\n    \
                  (spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-TRANSLATION)"
             ),
+            Problem::Glossary {
+                source,
+                translation,
+            } => match (source, translation) {
+                (Some(theirs), None) => format!(
+                    "  GLOSSARY MISSING {theirs}\n    `{adapts}` declares its glossary and this \
+                     translation declares none; a translation's glossary is its own mirrored \
+                     page at the same path, with the terms in its language\n    \
+                     (spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-TRANSLATION)"
+                ),
+                (theirs, ours) => format!(
+                    "  GLOSSARY {} {}\n    a translation declares the SAME glossary as the \
+                     documentation it adapts, and two pages are two vocabularies for one \
+                     manual\n    \
+                     (spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-TRANSLATION)",
+                    ours.as_deref().unwrap_or("none"),
+                    match theirs {
+                        Some(theirs) => format!("(`{adapts}` declares `{theirs}`)"),
+                        None => format!("(`{adapts}` declares none)"),
+                    }
+                ),
+            },
             Problem::Block {
                 page,
                 at,
@@ -332,6 +363,14 @@ pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
         &manifest::chapters(&instance.root)?,
         &manifest::chapters(package_dir)?,
     ));
+    // The glossary is a manifest's statement too, and the same shape of
+    // rule: one fact, declared on both sides, and a divergence that would
+    // give the two languages two different vocabularies
+    // (`##GLOSSARY-TRANSLATION`).
+    report.problems.extend(unmirrored_glossary(
+        crate::glossary::declared(&instance.root)?,
+        crate::glossary::declared(package_dir)?,
+    ));
     report.adapts = Some(coordinate);
     report.source = Some(instance.source);
     Ok(report)
@@ -359,6 +398,30 @@ fn unknown_chapters(
         .filter(|row| !source.iter().any(|theirs| theirs.id == row.id))
         .map(|row| Problem::UnknownChapter { id: row.id.clone() })
         .collect()
+}
+
+/// The glossary a translation declares against its source's
+/// (`##GLOSSARY-TRANSLATION`).
+///
+/// A translation declares the SAME `[glossary]` as the documentation it
+/// adapts: the page addresses mirror file for file (`##LOC-MIRROR`), so the
+/// adaptation's glossary is its own copy of that page with the terms in its
+/// language. Declaring another page would give one manual two vocabularies
+/// in two languages, and declaring none would leave the adaptation's
+/// readers without the cards and its author without the term checks.
+///
+/// A source that declares none and a translation that declares one is
+/// reported for the same reason read the other way round: the path is the
+/// source's to decide, and an adaptation inventing one is an adaptation
+/// deciding something about the documentation it adapts.
+fn unmirrored_glossary(source: Option<String>, translation: Option<String>) -> Vec<Problem> {
+    if source == translation {
+        return Vec::new();
+    }
+    vec![Problem::Glossary {
+        source,
+        translation,
+    }]
 }
 
 /// Compare two read packages. Split from [`check`] so the comparison is

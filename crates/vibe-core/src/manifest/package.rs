@@ -50,8 +50,8 @@ pub use application::{ApplicationDecl, ApplicationRuntime};
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
 pub use documentation::{
-    ABSTRACT_LIMIT, DocumentationDecl, DocumentsDecl, MediaDecl, NavigationChapterDecl,
-    NavigationDecl, NavigationSectionDecl, TranslatesDecl,
+    ABSTRACT_LIMIT, DocumentationDecl, DocumentsDecl, GlossaryDecl, MediaDecl,
+    NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, TranslatesDecl,
 };
 pub(crate) use documentation::{
     chapter_id_form_is_valid, coordinate_form_is_valid, media_path_is_inside_package,

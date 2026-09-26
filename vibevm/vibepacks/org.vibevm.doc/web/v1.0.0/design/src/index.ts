@@ -135,6 +135,7 @@ export {
   RulePanel,
   type RulePanelProps,
 } from "./components/rule-panel/index.tsx";
+export { GlossaryCard } from "./components/glossary-card/index.tsx";
 export {
   ForAgent,
   type AgentLink,

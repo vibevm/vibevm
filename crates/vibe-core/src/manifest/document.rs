@@ -49,9 +49,9 @@ use super::i18n::I18nDecl;
 use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
     ApplicationDecl, BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList,
-    DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, HooksDecl, LinkType,
-    ManifestWire, McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable, PackageMeta,
-    Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl,
+    DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, HooksDecl,
+    LinkType, ManifestWire, McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable,
+    PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl,
     VisibilityMeta,
 };
 use super::project::{
@@ -195,6 +195,14 @@ pub struct Manifest {
     /// documentation has one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub navigation: Option<NavigationDecl>,
+
+    /// `[glossary]` — the page a documentation defines its terms on
+    /// (PROP-057 `##GLOSSARY-DECLARED`). Legal only in a `doc` package,
+    /// for the reason `[navigation]` is: it names a page, and only
+    /// documentation has a page tree. A package that declares none has
+    /// no glossary, and no path means one by convention.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub glossary: Option<GlossaryDecl>,
 
     /// `[hooks]` — pre/post-install scripts this package runs in its slot
     /// (PROP-020). Universal, not bridge-only (package-role).
@@ -534,6 +542,9 @@ mod tests_extension_controls;
 #[cfg(test)]
 #[path = "document/tests_extensions.rs"]
 mod tests_extensions;
+#[cfg(test)]
+#[path = "document/tests_glossary.rs"]
+mod tests_glossary;
 #[cfg(test)]
 #[path = "document/tests_mechanism_grammar.rs"]
 mod tests_mechanism_grammar;

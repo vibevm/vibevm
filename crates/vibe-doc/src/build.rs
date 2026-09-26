@@ -193,6 +193,14 @@ pub fn content(
         // a renderer that failed here would report that defect twice and
         // the pages' own not at all.
         lang: manifest::language(package_dir).unwrap_or_default(),
+        // The glossary the package DECLARED, read from the pages already in
+        // hand: a term link resolves to an entry here, once, so the island
+        // can carry the definition and the reader show it without a request
+        // (`##GLOSSARY-DECLARED`, `##READER-GLOSSARY-CARD`). A package that
+        // declares none, or declares a page it does not carry, yields
+        // `None` and every link stays exactly as it was; the DECLARATION
+        // pointing at nothing is `vibe check`'s finding, not a render's.
+        glossary: crate::glossary::read(package_dir, &set)?,
     };
     Ok((set, content))
 }

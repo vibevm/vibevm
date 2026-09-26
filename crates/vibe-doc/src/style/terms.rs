@@ -28,7 +28,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#STYLE-CONTAINERS
 
 use std::collections::BTreeSet;
 
-use crate::style::glossary::{GLOSSARY_PAGE, Term};
+use crate::glossary::Glossary;
+use crate::style::glossary::Term;
 use crate::style::inline::CODE_MASK;
 use crate::style::prose::{Kind, Node};
 use crate::style::report::{Finding, Rule, Severity, quote};
@@ -52,10 +53,22 @@ struct Seen<'a> {
 
 /// Judge the term rules over one page's prose.
 ///
-/// `nodes` is the page in document order; `terms` is the glossary,
-/// longest first.
-pub fn check(page: &str, nodes: &[Node], terms: &[Term]) -> Vec<Finding> {
-    if page == GLOSSARY_PAGE || terms.is_empty() {
+/// `nodes` is the page in document order; `terms` is the glossary's terms,
+/// longest first; `glossary` is the glossary they came from, which is what
+/// says where a term is DEFINED: the page that must not be judged against
+/// its own entries, and the target a link has to name to count as an
+/// introduction.
+pub fn check(
+    page: &str,
+    nodes: &[Node],
+    terms: &[Term],
+    glossary: Option<&Glossary>,
+) -> Vec<Finding> {
+    let Some(glossary) = glossary.filter(|_| !terms.is_empty()) else {
+        return Vec::new();
+    };
+    let at = format!("{}.xml", glossary.document);
+    if page == at {
         // The glossary is where every term is defined. Judging its own
         // entries against «introduce before use» would ask each entry to
         // link to itself.
@@ -77,14 +90,14 @@ pub fn check(page: &str, nodes: &[Node], terms: &[Term]) -> Vec<Finding> {
                 out.push(first_paragraph_finding(page, node, seen));
                 continue;
             }
-            if introduces(node, seen) || linked_earlier(node, seen) {
+            if introduces(node, seen) || linked_earlier(&at, node, seen) {
                 continue;
             }
-            out.push(first_use_finding(page, node, seen));
+            out.push(first_use_finding(page, &at, node, seen));
         }
         for link in &node.inline.links {
             for term in terms {
-                if links_to(&link.target, &term.anchor) {
+                if links_to(&at, &link.target, &term.anchor) {
                     introduced.insert(term.anchor.as_str());
                 }
             }
@@ -166,7 +179,7 @@ fn first_paragraph_finding(page: &str, node: &Node, seen: &Seen<'_>) -> Finding 
     }
 }
 
-fn first_use_finding(page: &str, node: &Node, seen: &Seen<'_>) -> Finding {
+fn first_use_finding(page: &str, glossary: &str, node: &Node, seen: &Seen<'_>) -> Finding {
     Finding {
         page: page.to_owned(),
         block: node.block.clone(),
@@ -174,9 +187,9 @@ fn first_use_finding(page: &str, node: &Node, seen: &Seen<'_>) -> Finding {
         rule: Rule::TermBeforeIntroduction,
         severity: Severity::Error,
         message: format!(
-            "`{}` is used before it is introduced — link it to `{}#{}` or gloss it in the \
+            "`{}` is used before it is introduced — link it to `{glossary}#{}` or gloss it in the \
              same sentence",
-            seen.term.phrase, GLOSSARY_PAGE, seen.term.anchor
+            seen.term.phrase, seen.term.anchor
         ),
         text: quote(sentence_of(&node.inline.text, seen.range)),
     }
@@ -200,20 +213,20 @@ fn introduces(node: &Node, seen: &Seen<'_>) -> bool {
 
 /// A link to the term's glossary entry earlier in the same unit — the
 /// reader was sent to the entry before this use, whatever the link said.
-fn linked_earlier(node: &Node, seen: &Seen<'_>) -> bool {
+fn linked_earlier(glossary: &str, node: &Node, seen: &Seen<'_>) -> bool {
     node.inline
         .links
         .iter()
-        .any(|l| l.range.1 <= seen.range.0 && links_to(&l.target, &seen.term.anchor))
+        .any(|l| l.range.1 <= seen.range.0 && links_to(glossary, &l.target, &seen.term.anchor))
 }
 
 /// Whether a link target names the glossary entry of `anchor`: the
 /// glossary page, and exactly that fragment — `#registry` is not
 /// `#index-registry`.
-fn links_to(target: &str, anchor: &str) -> bool {
+fn links_to(glossary: &str, target: &str, anchor: &str) -> bool {
     target
         .rsplit_once('#')
-        .is_some_and(|(page, fragment)| fragment == anchor && page.ends_with(GLOSSARY_PAGE))
+        .is_some_and(|(page, fragment)| fragment == anchor && page.ends_with(glossary))
 }
 
 /// A gloss follows the term in the same sentence.
