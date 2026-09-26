@@ -30,6 +30,10 @@
     <p>A manual that declares a [learning path](../glossary/index.xml#learning-path) opens in that order. The list beside the page shows its chapters, numbered, with the reference pages last, and every page ends with links to the previous and the next page on the path. A switch above the list shows the same pages grouped by section instead, and the reader remembers your choice. A manual without a path lists its pages by section.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-READER"/>
   </reading-order>
+  <quotations title="Quotations from the specifications">
+    <p>A page quotes the rules it rests on, word for word, from the [specifications](../glossary/index.xml#specification). The reader folds each quotation to one line: a small triangle, the word `spec:` and a few words from the rule itself, or the words "quote from the specification" when the rule is too short to describe. Select the line to read the whole rule, and select it again to fold it. A printed page shows every rule in full, and the `.md` and `.xml` versions of a page carry every rule inline.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#READER-RULE-FOLDED"/>
+  </quotations>
   <private-packages title="Private packages">
     <p>The same reader shows the documentation of packages that live in a private registry or only on your machine: whatever the store holds, the reader renders. This is the intended path for proprietary documentation, and it is why the reader never contacts the public site.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#INV-LOCAL-IS-OFFLINE"/>
