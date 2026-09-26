@@ -2030,3 +2030,33 @@ structure, and it goes when the file does.
 | @fact:B181-SEVERITY **severity** | P2 — a new project's agent reads two layouts for one project, and may create a `spec/` tree the tools do not read. |
 | @fact:B181-DISPOSITION **disposition** | `open` — one sweep over the redbook's texts that rewrites every path to the current layout (package-relative paths to `vibevm/vibespecs/…`, a consumer's paths to `vibevm/vibedeps/<group>.<name>/<version>/…`), leaving `spec://` addresses alone; then republish the changed packages, which is the owner's call. |
 | @fact:B181-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), found walking the first-project tutorial, 2026-09-26. |
+
+## B-182 — `vibe list` misaligns its table and drops the group {#b-182}
+
+| field | value |
+|---|---|
+| @fact:B182-WHAT **what** | `vibe list` pads its header to the longest package name but prints each row unpadded, so the columns drift; and the `NAME` column shows `redbook` rather than `org.vibevm.world/redbook`, which is ambiguous as soon as two groups publish one name. |
+| @fact:B182-EVIDENCE **evidence** | 2026-09-26, a project with the redbook's 27 packages: the header reads `KIND  NAME                      VERSION  ROLE     BOOT SNIPPET`, the rows read `flow  redbook  1.0.0    package  —` (investigation `W1`). |
+| @fact:B182-SEVERITY **severity** | P3 — the data is right and `--json` is unaffected; the table looks broken, so the first-project tutorial shows `vibe tree --plain` instead. |
+| @fact:B182-DISPOSITION **disposition** | `open` — pad every row to the header's column widths and print the full coordinate; re-pin the manual's `vibe list` goldens. |
+| @fact:B182-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), 2026-09-26. |
+
+## B-183 — `vibe install` without a terminal fetches the whole closure before it refuses {#b-183}
+
+| field | value |
+|---|---|
+| @fact:B183-WHAT **what** | Without `--assume-yes` and without a terminal to ask on, `vibe install` resolves and fetches every package of the plan, and only then fails with `no TTY available for confirmation; re-run with --assume-yes`. It could know that before the first fetch. |
+| @fact:B183-EVIDENCE **evidence** | 2026-09-26, `vibe install org.vibevm.world/redbook` from a script on a cold store: exit 1 after 1 min 48 s and 27 fetched packages; the project was left untouched (investigation `W1`). |
+| @fact:B183-SEVERITY **severity** | P3 — nothing is damaged and the store keeps the download; a scripted first run wastes two minutes and reads as a failure. |
+| @fact:B183-DISPOSITION **disposition** | `open` — detect the missing terminal before fetching; print the resolved plan, if it can be computed without fetching, and the `--assume-yes` hint. |
+| @fact:B183-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), 2026-09-26. |
+
+## B-184 — the boot lane reads the git practices twice {#b-184}
+
+| field | value |
+|---|---|
+| @fact:B184-WHAT **what** | In a project with the redbook, the root static lane already splices the four static git practices, and `INDEX.md` also names `vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/STATIC.xml` (`STATIC.md` under the mixed target) as a static entry: a file byte-identical in size to the root lane. An agent that follows the lane reads the same rules twice at every session start. |
+| @fact:B184-EVIDENCE **evidence** | 2026-09-26, `spec_format = "xml"`: root `STATIC.xml` 37 217 B, git-practices' `STATIC.xml` 37 217 B, 75 matches of the same headings in each; the lane is 32 files and about 188 KB in all. An agent in the `W1` run named the duplicate unprompted. |
+| @fact:B184-SEVERITY **severity** | P2 — about 37 KB, some nine thousand tokens, of every session start is spent twice, in every project that installs the redbook. |
+| @fact:B184-DISPOSITION **disposition** | `open` — a normal package's own compiled lane must not enter the consumer's `INDEX.md` when its contributions are already spliced into the consumer's static lane; find which of the two the loading model intends and remove the other. |
+| @fact:B184-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), 2026-09-26. |
