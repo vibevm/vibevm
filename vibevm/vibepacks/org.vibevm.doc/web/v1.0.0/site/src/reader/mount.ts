@@ -34,6 +34,7 @@ import { isEmbedded, publishSettings, startEmbedding } from "./embedding.ts";
 import { startFallback } from "./fallback.ts";
 import { startLanguageSwitch } from "./language.ts";
 import { startPlatformSwitch } from "./platform.ts";
+import { startPrintedRules } from "./print-rules.ts";
 import { startPosition } from "./position.ts";
 import { startReadingMode } from "./reading-mode.ts";
 import { startRuleTransclusion } from "./rules.ts";
@@ -103,6 +104,7 @@ export function startReader(context: ReaderContext): () => void {
     startCitedRules(),
     startPlatformSwitch(),
     startRuleTransclusion(),
+    startPrintedRules(),
     startAnchors(),
     startLanguageSwitch(),
     startDocLanguage(context.addressLanguage),

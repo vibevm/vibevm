@@ -20,6 +20,15 @@ fn page(body: &str) -> SpecDoc {
     vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc).expect("page parses")
 }
 
+/// A bundle holding the one rule every test here cites, in the language
+/// the specification is written in.
+fn one_rule(text: &str, lang: &str) -> Content {
+    Content {
+        rules: rule_text("spec://org.demo/lib/common/PROP-001#A", text, lang),
+        ..Content::new()
+    }
+}
+
 fn rule_text(uri: &str, text: &str, lang: &str) -> BTreeMap<String, RuleText> {
     let mut map = BTreeMap::new();
     map.insert(
@@ -92,15 +101,7 @@ fn a_fact_carries_its_address_and_status() {
 #[test]
 fn a_rule_quotes_the_current_text_names_the_specs_language_and_pins_nothing() {
     let doc = page("  <rule ref=\"spec://org.demo/lib/common/PROP-001#A~r7\"/>\n");
-    let content = Content {
-        rules: rule_text(
-            "spec://org.demo/lib/common/PROP-001#A",
-            "The rule **says** a thing.",
-            "en",
-        ),
-        ..Content::new()
-    };
-    let island = to_html(&doc, &content);
+    let island = to_html(&doc, &one_rule("The rule **says** a thing.", "en"));
     assert!(
         island.contains("data-uri=\"spec://org.demo/lib/common/PROP-001#A\""),
         "{island}"
@@ -123,13 +124,120 @@ fn a_rule_quotes_the_current_text_names_the_specs_language_and_pins_nothing() {
     assert!(!island.contains("r7"), "{island}");
 }
 
+/// A cited rule is a disclosure that starts CLOSED: one line naming the
+/// rule in the rule's own words, and the whole quotation under it
+/// (`##READER-RULE-FOLDED`).
+///
+/// The shape is stated whole, because every part of it is load-bearing:
+/// `details` without `open` is what makes the page start folded with no
+/// script at all, the `summary` is the line a reader clicks, and the
+/// `blockquote` under it is the citation exactly as it was before the
+/// fold — the projections an agent reads carry that text inline and must
+/// keep agreeing with this element.
+#[test]
+fn a_cited_rule_is_a_disclosure_that_starts_closed() {
+    let doc = page("  <rule ref=\"spec://org.demo/lib/common/PROP-001#A\"/>\n");
+    let island = to_html(
+        &doc,
+        &one_rule(
+            "**Offline resolution** is computed against the lock file alone, and a registry \
+             is never consulted.",
+            "en",
+        ),
+    );
+    for shape in [
+        "<details class=\"rule-fold\">",
+        "<summary class=\"rule-fold__line\">",
+        "<span class=\"rule-fold__mark\" aria-hidden=\"true\">▶</span>",
+        "<span class=\"rule-fold__kind\">spec:</span>",
+        "<span class=\"rule-fold__gist\" lang=\"en\">Offline resolution</span>",
+        "<blockquote class=\"rule\">",
+    ] {
+        assert!(island.contains(shape), "missing `{shape}`:\n{island}");
+    }
+    // Closed, and the whole rule still in the page: the fold is for an
+    // eye, never for a reader that needs the words.
+    assert!(!island.contains("<details open"), "{island}");
+    assert!(island.contains("is never consulted."), "{island}");
+}
+
+/// The block's own data rides on the disclosure and its number stands in
+/// the line a reader sees while the rule is closed: a block whose address
+/// appeared only once it was opened would be a block nobody could cite
+/// (`##READER-NUMBERED-BLOCKS`).
+#[test]
+fn a_folded_rule_carries_the_blocks_data_and_shows_its_number() {
+    let doc = page("  <rule ref=\"spec://org.demo/lib/common/PROP-001#A\" when=\"os:linux\"/>\n");
+    let content = one_rule("A short one.", "en");
+    let island = to_html_numbered(
+        &doc,
+        "guide/one.xml",
+        &content,
+        &crate::numbering::number_blocks(&doc),
+    );
+    assert!(
+        island.contains("<details data-when=\"os:linux\" data-p=\"1\" class=\"rule-fold\">"),
+        "{island}"
+    );
+    assert!(
+        island.contains(
+            "<summary class=\"rule-fold__line\">\n      \
+             <a class=\"p-anchor\" id=\"p01\" href=\"#p01\">01</a>"
+        ),
+        "{island}"
+    );
+    // And the quotation itself takes none of it: one block, one set of
+    // attributes, on the element that IS the block.
+    assert!(island.contains("<blockquote class=\"rule\">"), "{island}");
+}
+
+/// A rule the text cannot describe — too short to summarise — shows the
+/// EDITION's words for a quotation, in the edition's language, and drops
+/// the `spec:` label with the description it introduced.
+#[test]
+fn a_rule_with_nothing_to_describe_shows_the_editions_own_words() {
+    let doc = page("  <rule ref=\"spec://org.demo/lib/common/PROP-001#A\"/>\n");
+    let russian = one_rule("A short rule, in English.", "en").with_lang("ru");
+    let island = to_html(&doc, &russian);
+    assert!(
+        island.contains(
+            "<span class=\"rule-fold__gist rule-fold__gist--generic\" lang=\"ru\">\
+             цитата из спецификации</span>"
+        ),
+        "{island}"
+    );
+    assert!(!island.contains("rule-fold__kind"), "{island}");
+    // The quotation under the line is still the specification's own, in
+    // the specification's language.
+    assert!(
+        island.contains("lang=\"en\">A short rule, in English.</a>"),
+        "{island}"
+    );
+}
+
 /// A rule this build could not resolve shows its address and says so —
-/// a blank quotation would read as a rule that says nothing.
+/// a blank quotation would read as a rule that says nothing — and the
+/// mark is on the block, which is the disclosure.
 #[test]
 fn an_unresolved_rule_shows_its_address_and_is_marked() {
     let doc = page("  <rule ref=\"spec://org.demo/lib/common/PROP-001#GONE\"/>\n");
     let island = to_html(&doc, &Content::new());
-    assert!(island.contains("data-unresolved=\"true\""), "{island}");
+    assert!(
+        island.contains("<details class=\"rule-fold\" data-unresolved=\"true\">"),
+        "{island}"
+    );
+    assert_eq!(
+        island.matches("data-unresolved=\"true\"").count(),
+        1,
+        "one gap is one mark:\n{island}"
+    );
+    assert!(
+        island.contains(
+            "<span class=\"rule-fold__gist rule-fold__gist--generic\" lang=\"en\">\
+             quote from the specification</span>"
+        ),
+        "{island}"
+    );
     assert!(
         island.contains("spec://org.demo/lib/common/PROP-001#GONE"),
         "{island}"

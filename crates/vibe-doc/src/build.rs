@@ -184,6 +184,15 @@ pub fn content(
         // is empty for it and costs a manifest read.
         examples: translations::borrowed(package_dir, sources),
         base: base.to_owned(),
+        // One package is one language (`##LOC-LANGUAGE-FIELD`), so the
+        // edition's language is read once per build and handed to the
+        // backends beside the base. A manifest this read cannot make
+        // sense of leaves the project default standing rather than
+        // stopping the build: the same file is read again, and refused by
+        // name, where a manifest is the subject ([`manifest::build`]), and
+        // a renderer that failed here would report that defect twice and
+        // the pages' own not at all.
+        lang: manifest::language(package_dir).unwrap_or_default(),
     };
     Ok((set, content))
 }

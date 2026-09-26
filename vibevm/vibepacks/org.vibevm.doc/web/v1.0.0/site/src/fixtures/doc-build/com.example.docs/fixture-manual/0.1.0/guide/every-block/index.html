@@ -45,14 +45,27 @@
   </section>
   <section id="verifiable">
     <h2>Blocks that are checked</h2>
-    <blockquote data-p="11" class="rule">
-      <a class="p-anchor" id="p11" href="#p11">11</a>
-      <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>.</a>
-    </blockquote>
-    <blockquote data-p="12" class="rule" data-unresolved="true">
-      <a class="p-anchor" id="p12" href="#p12">12</a>
-      <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
-    </blockquote>
+    <details data-p="11" class="rule-fold">
+      <summary class="rule-fold__line">
+        <a class="p-anchor" id="p11" href="#p11">11</a>
+        <span class="rule-fold__mark" aria-hidden="true">▶</span>
+        <span class="rule-fold__kind">spec:</span>
+        <span class="rule-fold__gist" lang="en">A package MUST declare its kind…</span>
+      </summary>
+      <blockquote class="rule">
+        <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>, and the kind decides which shape a build reads it as.</a>
+      </blockquote>
+    </details>
+    <details data-p="12" class="rule-fold" data-unresolved="true">
+      <summary class="rule-fold__line">
+        <a class="p-anchor" id="p12" href="#p12">12</a>
+        <span class="rule-fold__mark" aria-hidden="true">▶</span>
+        <span class="rule-fold__gist rule-fold__gist--generic" lang="en">quote from the specification</span>
+      </summary>
+      <blockquote class="rule">
+        <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
+      </blockquote>
+    </details>
     <pre data-p="13" class="derived" data-derived="cli-help" data-ref="vibe list --help"><a class="p-anchor" id="p13" href="#p13">13</a><code class="language-text">Usage: vibe list [OPTIONS]
 </code></pre>
     <div data-p="14" class="example" data-example="version" data-fixture="none">

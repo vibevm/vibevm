@@ -140,6 +140,18 @@ pub struct Content {
     /// the island then carries the address in `data-uri` and no `href`,
     /// which is what a projection with nowhere to point should do.
     pub base: String,
+    /// The language the EDITION being rendered is written in — the
+    /// package's `[i18n].canonical` (PROP-057 `##LOC-LANGUAGE-FIELD`).
+    ///
+    /// It is here beside the base because it is a property of the RENDER
+    /// and not of the document: one package is one language, and what a
+    /// page needs to know is which edition it is a page of. The island
+    /// spends it on the one sentence it writes in its own voice rather
+    /// than quoting — the line a folded rule shows when the rule's own
+    /// words cannot describe it (`##READER-RULE-FOLDED`). Empty means the
+    /// project default; [`Content::edition_lang`] is where that is
+    /// decided.
+    pub lang: String,
 }
 
 impl Content {
@@ -149,6 +161,7 @@ impl Content {
     pub fn new() -> Content {
         Content {
             base: SITE_BASE.to_owned(),
+            lang: vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE.to_owned(),
             ..Content::default()
         }
     }
@@ -158,6 +171,35 @@ impl Content {
     pub fn with_base(mut self, base: impl Into<String>) -> Content {
         self.base = base.into();
         self
+    }
+
+    /// The same bundle rendering another edition's language.
+    #[must_use]
+    pub fn with_lang(mut self, lang: impl Into<String>) -> Content {
+        self.lang = lang.into();
+        self
+    }
+
+    /// The edition's language, with the project default standing in for a
+    /// bundle that named none.
+    ///
+    /// A default rather than a refusal: an unnamed language is the common
+    /// case in a caller that wants the shape of a page and none of its
+    /// fetched text, and a renderer's job is to render (see this module's
+    /// head).
+    ///
+    /// ```
+    /// use vibe_doc::content::Content;
+    ///
+    /// assert_eq!(Content::new().edition_lang(), "en");
+    /// assert_eq!(Content::new().with_lang("ru").edition_lang(), "ru");
+    /// assert_eq!(Content::default().edition_lang(), "en");
+    /// ```
+    pub fn edition_lang(&self) -> &str {
+        match self.lang.is_empty() {
+            true => vibe_core::manifest::i18n::DEFAULT_CANONICAL_LANGUAGE,
+            false => &self.lang,
+        }
     }
 
     /// The key a `derived` block is stored under.

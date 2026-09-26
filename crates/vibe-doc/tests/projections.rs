@@ -25,6 +25,11 @@ use vibe_doc::{html, md, pages, xml};
 /// ones: the rule's text in the island and the Markdown, and the address
 /// the XML deliberately keeps instead.
 ///
+/// The rule's text runs past ten words so that the island's fold has
+/// something to describe in the rule's own words (`##READER-RULE-FOLDED`);
+/// the Markdown substitutes the same text, unfolded, which is the
+/// difference between the two projections these goldens exist to show.
+///
 /// `page` is the address the borrowed example is stored under: ids are
 /// unique per page, so a bundle is keyed by page and then by id.
 fn content(page: &str) -> Content {
@@ -35,7 +40,9 @@ fn content(page: &str) -> Content {
         RuleText {
             uri: uri.to_owned(),
             anchor: "A-RULE".to_owned(),
-            text: "A package **MUST** declare its `kind`.".to_owned(),
+            text: "A package **MUST** declare its `kind`, and the kind decides which shape \
+                   a build reads it as."
+                .to_owned(),
             lang: "en".to_owned(),
             source: Source::Checkout,
             path: PathBuf::from("common/PROP-001.xml"),

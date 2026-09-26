@@ -246,7 +246,12 @@ test("a quoted rule opens beside itself with the text already in the page", asyn
   page,
 }) => {
   await read(page);
-  await page.locator("blockquote.rule a.rule").first().click();
+  /* The quotation is inside a disclosure that arrives closed
+     (`##READER-RULE-FOLDED`), so the line is opened first: what this test
+     is about is the panel, and the fold has its own file. */
+  const fold = page.locator("details.rule-fold").first();
+  await fold.locator("summary").click();
+  await fold.locator("blockquote.rule a.rule").click();
   const panel = page.locator("[data-rule-panel]");
   await expect(panel).toBeVisible();
   await expect(panel.locator("[data-rule-uri]")).toHaveText(

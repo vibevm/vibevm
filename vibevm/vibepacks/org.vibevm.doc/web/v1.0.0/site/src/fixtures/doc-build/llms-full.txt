@@ -74,7 +74,7 @@ The caption, which is a unit like any other.
 
 ## Blocks that are checked {#verifiable}
 
-> [p11] A package **MUST** declare its `kind`.
+> [p11] A package **MUST** declare its `kind`, and the kind decides which shape a build reads it as.
 >
 > <spec://com.example/subject/common/PROP-001#A-RULE>
 

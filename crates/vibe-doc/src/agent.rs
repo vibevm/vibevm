@@ -183,6 +183,10 @@ fn fetch(
         derived: BTreeMap::new(),
         examples: BTreeMap::from([(rel, examples)]),
         base: crate::content::SITE_BASE.to_owned(),
+        // The language `locate` answered with: the edition this page
+        // belongs to is the instance that held it, and a second read of
+        // its manifest could only disagree (`##LOC-LANGUAGE-FIELD`).
+        lang: located.lang.clone(),
     };
     Ok(FetchedPage {
         address: address.to_owned(),

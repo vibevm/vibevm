@@ -347,6 +347,13 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             vibe_doc::translations::borrowed_by(&reader.package_dir, &found.rel, &reader.sources),
         )]),
         base: reader.base.clone(),
+        // The edition's language, for the one line the island writes in
+        // its own voice rather than quoting (PROP-057
+        // `##READER-RULE-FOLDED`). Read from the package this reader was
+        // opened on, so the local reader says what the site says about
+        // the same package; a manifest it cannot read leaves the project
+        // default standing, as it does in a build.
+        lang: vibe_doc::manifest::language(&reader.package_dir).unwrap_or_default(),
     };
     let body = build::render_page(found, &content, format);
     match format {

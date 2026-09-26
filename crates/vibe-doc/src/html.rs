@@ -34,7 +34,9 @@
 //!   address in `data-uri` and the language of the SPECIFICATION in
 //!   `lang` — a translated page quotes an English rule in English and
 //!   says so, and there is no `data-rev`, because a citation is live and
-//!   unpinned (`##OBS-RULE-EDGE-UNPINNED`, D-27);
+//!   unpinned (`##OBS-RULE-EDGE-UNPINNED`, D-27) — inside a disclosure
+//!   that starts closed, described in one line ([`rule`],
+//!   `##READER-RULE-FOLDED`);
 //! * an `example` is its command and the output it must produce, both
 //!   verbatim;
 //! * a `derived` block is the fence its generator built at this build.
@@ -52,6 +54,7 @@ pub mod links;
 
 mod emit;
 mod example;
+mod rule;
 
 use vibe_specdoc::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 
@@ -308,7 +311,7 @@ fn block(
         Block::Fence { lang, text, .. } => {
             pre_code(out, depth, &attrs, lang.as_deref(), text, num);
         }
-        Block::Rule { uri, .. } => rule(out, depth, uri, &attrs, content, num),
+        Block::Rule { uri, .. } => rule::fold(out, depth, uri, &attrs, content, num),
         // Through the one conversion, so an authored example and the same
         // example borrowed by a translation are the same bytes.
         Block::Example { id, fixture, .. } => example::authored(
@@ -439,50 +442,6 @@ fn block(
             close(out, depth, "div");
         }
     }
-}
-
-/// A cited rule: the fact's current text, its address, and the language
-/// the specification is written in.
-fn rule(
-    out: &mut String,
-    depth: usize,
-    uri: &str,
-    outer: &Attrs,
-    content: &Content,
-    num: Option<u32>,
-) {
-    let mut attrs = outer.clone();
-    attrs.push(("class", "rule".to_owned()));
-    let found = content.rules.get(uri);
-    if found.is_none() {
-        attrs.push(("data-unresolved", "true".to_owned()));
-    }
-    open(out, depth, "blockquote", &attrs);
-    anchor_line(out, depth + 1, num);
-
-    // The citation goes to the resolver rather than straight down the
-    // address map: the pipeline cannot know what the mount in front of it
-    // carries, and the resolver is the one address that can
-    // (`##SEO-MANIFEST-AND-RESOLVER`).
-    let links = Links::quoting(&content.base, uri);
-    let mut link_attrs: Attrs = vec![("class", "rule".to_owned())];
-    if let Some(href) = links.citation(uri) {
-        link_attrs.push(("href", href));
-    }
-    link_attrs.push(("data-uri", uri.to_owned()));
-    if let Some(found) = found {
-        link_attrs.push(("lang", found.lang.clone()));
-    }
-    // The address itself is the honest body when the text is not in
-    // hand: a reader can still follow it, and a blank quotation would
-    // read as a rule that says nothing. The links INSIDE the text belong
-    // to the document quoted, not to this page, so they are read against
-    // its address.
-    let body = found
-        .map(|f| render_linked(&f.text, &links))
-        .unwrap_or_else(|| escape(uri));
-    line(out, depth + 1, "a", &link_attrs, &body);
-    close(out, depth, "blockquote");
 }
 
 /// A table. The first row is the header when the source had one — the

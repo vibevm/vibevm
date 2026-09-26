@@ -37,6 +37,12 @@ fn golden_path(name: &str) -> PathBuf {
 /// show an unresolved citation honestly, and a golden that never
 /// contains one cannot prove it.
 ///
+/// The rule that does resolve runs past ten words on purpose. A cited
+/// rule folds to one line described in its own words, and a rule short
+/// enough to be its own summary shows the edition's generic line instead
+/// (`##READER-RULE-FOLDED`) — so a golden whose only resolved rule was
+/// short would pin the fallback twice and the derived description never.
+///
 /// `page` is the address the borrowed example is stored under: ids are
 /// unique per page, so a bundle is keyed by page and then by id.
 fn content(page: &str) -> Content {
@@ -46,7 +52,9 @@ fn content(page: &str) -> Content {
         RuleText {
             uri: "spec://com.example/subject/common/PROP-001#A-RULE".to_owned(),
             anchor: "A-RULE".to_owned(),
-            text: "A package **MUST** declare its `kind`.".to_owned(),
+            text: "A package **MUST** declare its `kind`, and the kind decides which shape \
+                   a build reads it as."
+                .to_owned(),
             lang: "en".to_owned(),
             source: Source::Checkout,
             path: PathBuf::from("common/PROP-001.xml"),

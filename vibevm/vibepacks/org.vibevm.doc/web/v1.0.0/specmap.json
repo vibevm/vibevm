@@ -646,6 +646,13 @@
     },
     {
       "crate_name": "src",
+      "file": "site/src/reader/print-rules.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "site/src/reader/print-rules.ts"
+    },
+    {
+      "crate_name": "src",
       "file": "site/src/reader/reading-mode.ts",
       "item_kind": "module",
       "line": 1,
@@ -1866,6 +1873,14 @@
       "verb": "implements"
     },
     {
+      "file": "site/src/reader/print-rules.ts",
+      "from_symbol": "site/src/reader/print-rules.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#READER-RULE-FOLDED",
+      "verb": "implements"
+    },
+    {
       "file": "site/src/reader/reading-mode.ts",
       "from_symbol": "site/src/reader/reading-mode.ts",
       "line": 1,
@@ -2973,6 +2988,12 @@
       "file": "site/src/reader/position.ts",
       "line": 1,
       "message": "edge `site/src/reader/position.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-NO-AUTOSCROLL`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "site/src/reader/print-rules.ts",
+      "line": 1,
+      "message": "edge `site/src/reader/print-rules.ts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-057#READER-RULE-FOLDED`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",

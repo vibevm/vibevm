@@ -41,12 +41,25 @@
   </section>
   <section id="verifiable">
     <h2>Blocks that are checked</h2>
-    <blockquote class="rule">
-      <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>.</a>
-    </blockquote>
-    <blockquote class="rule" data-unresolved="true">
-      <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
-    </blockquote>
+    <details class="rule-fold">
+      <summary class="rule-fold__line">
+        <span class="rule-fold__mark" aria-hidden="true">▶</span>
+        <span class="rule-fold__kind">spec:</span>
+        <span class="rule-fold__gist" lang="en">A package MUST declare its kind…</span>
+      </summary>
+      <blockquote class="rule">
+        <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23A-RULE" data-uri="spec://com.example/subject/common/PROP-001#A-RULE" lang="en">A package <strong>MUST</strong> declare its <code>kind</code>, and the kind decides which shape a build reads it as.</a>
+      </blockquote>
+    </details>
+    <details class="rule-fold" data-unresolved="true">
+      <summary class="rule-fold__line">
+        <span class="rule-fold__mark" aria-hidden="true">▶</span>
+        <span class="rule-fold__gist rule-fold__gist--generic" lang="en">quote from the specification</span>
+      </summary>
+      <blockquote class="rule">
+        <a class="rule" href="/doc/resolve/?uri=spec://com.example/subject/common/PROP-001%23UNRESOLVED" data-uri="spec://com.example/subject/common/PROP-001#UNRESOLVED">spec://com.example/subject/common/PROP-001#UNRESOLVED</a>
+      </blockquote>
+    </details>
     <pre class="derived" data-derived="cli-help" data-ref="vibe list --help"><code class="language-text">Usage: vibe list [OPTIONS]
 
 Options:

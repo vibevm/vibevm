@@ -151,9 +151,14 @@
 /* The block a fragment names. `:target` does the work with no script at
    all — which matters, because it is also what a printed page and a
    reader with no JavaScript get; the class is what the behaviour adds
-   after `replaceState`, which does not always re-evaluate `:target`. */
+   after `replaceState`, which does not always re-evaluate `:target`.
+
+   The anchor is looked for at any depth and not as a child: a list keeps
+   it inside its first item, a table inside its caption, and a folded rule
+   inside the line that opens it (`##READER-RULE-FOLDED`). Blocks do not
+   nest, so «the block holding this anchor» has one answer either way. */
 .prose [data-p]:target,
-.prose [data-p]:has(> .p-anchor:target),
+.prose [data-p]:has(.p-anchor:target),
 .prose [data-p].is-target,
 .prose .is-target {
   background: var(--accent-soft);
@@ -169,11 +174,25 @@
     text-align: left;
     line-height: 1.4;
   }
+
+  /* In a folded rule's line the number joins the row instead of standing
+     above it: the line is one line, and a number on its own above a
+     closed quotation would be taller than the thing it is numbering. */
+  .prose .rule-fold__line .p-anchor {
+    flex: none;
+  }
 }
 
 /* ---- Quoted rules --------------------------------------------------
    A rule is shown as what it is: a quotation, with its address kept in
-   `data-uri` so the «for an agent» surface can read it back out. */
+   `data-uri` so the «for an agent» surface can read it back out — inside
+   a disclosure that starts closed, because a manual quotes more than it
+   writes and unfolded the quotations outweigh the prose somebody came to
+   read (`##READER-RULE-FOLDED`).
+
+   Closed is the markup's own state and not a class this stylesheet adds:
+   the pipeline renders `details` without `open`, so the page is folded
+   before any script runs and stays folded for a reader who has none. */
 
 .prose blockquote {
   margin: 0 0 1.2rem;
@@ -202,6 +221,111 @@
 }
 
 .prose [data-unresolved="true"] {
+  border-left-style: dashed;
+  color: var(--text-3);
+}
+
+/* The fold itself: one line, and the whole rule under it.
+   ---------------------------------------------------------------------
+   The line is a flex row because its four parts have four different jobs
+   and only one of them may take the leftover space: the block's number
+   hangs in the margin, the mark turns, the `spec:` label is fixed, and
+   the description is what gets cut. */
+
+.prose details.rule-fold {
+  margin: 0 0 1.2rem;
+}
+
+.prose .rule-fold__line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.35rem 1rem;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--bg-raise);
+  color: var(--text-3);
+  font-size: 0.86em;
+  cursor: pointer;
+  /* The native marker goes: the island already carries a ▶ of its own,
+     and two of them would be the pipeline and the browser both answering
+     «is this open». */
+  list-style: none;
+}
+
+.prose .rule-fold__line::-webkit-details-marker {
+  display: none;
+}
+
+.prose .rule-fold__line:hover {
+  color: var(--text-2);
+}
+
+.prose .rule-fold__line:hover .rule-fold__mark {
+  color: var(--accent);
+}
+
+/* The ring is on the line, because the line is what a keyboard opens. */
+.prose .rule-fold__line:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.prose .rule-fold__mark {
+  flex: none;
+  font-size: 0.72em;
+  color: var(--text-3);
+  transition: transform var(--speed) ease;
+}
+
+.prose details.rule-fold[open] .rule-fold__mark {
+  transform: rotate(90deg);
+}
+
+/* A reader who asked for stillness gets the turned mark and not the
+   turning: the base stylesheet takes every transition's duration away,
+   which is a jump rather than no movement, so the property is refused
+   here instead. */
+@media (prefers-reduced-motion: reduce) {
+  .prose .rule-fold__mark {
+    transition: none;
+  }
+}
+
+/* What kind of line this is, in the face the addresses are in. */
+.prose .rule-fold__kind {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--accent);
+}
+
+/* One line, cut by the browser. A description that wrapped would make
+   the fold as tall as some of the rules it folds; `min-width` is what
+   lets a flex item shrink far enough to be cut at all. */
+.prose .rule-fold__gist {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The quotation is what it always was, under the line that opens it —
+   and the two share one frame: the line's corner opens downwards into
+   the quote instead of closing above it. */
+.prose details.rule-fold[open] .rule-fold__line {
+  border-radius: 0 var(--radius-md) 0 0;
+}
+
+.prose details.rule-fold > blockquote.rule {
+  margin: 0;
+  border-radius: 0 0 var(--radius-md) 0;
+}
+
+/* A citation this build could not fill says so in both halves, because
+   the dashed rule belongs to whichever border a reader is looking at. */
+.prose [data-unresolved="true"] > .rule-fold__line,
+.prose [data-unresolved="true"] > blockquote.rule {
   border-left-style: dashed;
   color: var(--text-3);
 }
