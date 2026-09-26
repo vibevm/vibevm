@@ -2060,3 +2060,43 @@ structure, and it goes when the file does.
 | @fact:B184-SEVERITY **severity** | P2 — about 37 KB, some nine thousand tokens, of every session start is spent twice, in every project that installs the redbook. |
 | @fact:B184-DISPOSITION **disposition** | `open` — a normal package's own compiled lane must not enter the consumer's `INDEX.md` when its contributions are already spliced into the consumer's static lane; find which of the two the loading model intends and remove the other. |
 | @fact:B184-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), 2026-09-26. |
+
+## B-185 — a documentation package cannot declare the addresses that only illustrate {#b-185}
+
+| field | value |
+|---|---|
+| @fact:B185-WHAT **what** | The citation check tells an illustrative `spec://` address from a citation by constants in `crates/vibe-doc/src/citations.rs`: the teaching group `org.acme` and, since `9a41d8d1e`, the official manual's tutorial projects `hello-vibe` and `hello-vibevm`. Any other documentation package whose tutorial shows a reader's project address has no way to say so, and its check turns red. |
+| @fact:B185-EVIDENCE **evidence** | 2026-09-26: `tutorials/ai-native-rust.xml` printed `spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero` twice and the check reported both as `names no package`; a package group may be a single dotless segment, so «no dot means a project» is not a safe rule. |
+| @fact:B185-SEVERITY **severity** | P3 — the official manual is served by the constants; another author hits the same wall. |
+| @fact:B185-DISPOSITION **disposition** | `open` — let a documentation package declare its teaching namespaces in its manifest (for example `[citations] teaching = [...]`), and move the manual's two names there. |
+| @fact:B185-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-186 — the documentation examples' sandbox inherits `VIBEVM_HOME` {#b-186}
+
+| field | value |
+|---|---|
+| @fact:B186-WHAT **what** | `VIBEVM_HOME` is not among the variables the examples sandbox clears (`crates/vibe-doc/src/examples/sandbox.rs`, `CLEARED`), so a machine that sets it turns `reference/settings-and-environment.xml#vars` red: the page's golden shows the sandbox's value, the run prints the machine's. |
+| @fact:B186-EVIDENCE **evidence** | 2026-09-26, on the owner's machine, `vibe doc check --examples` of `org.vibevm.core/vibevm-docs` (investigation `W4`). |
+| @fact:B186-SEVERITY **severity** | P3 — one example, one machine configuration; the gate is wrong, not the page. |
+| @fact:B186-DISPOSITION **disposition** | `open` — add `VIBEVM_HOME` to the cleared set, beside the other variables that point vibe at a machine's own folders. |
+| @fact:B186-FILED **filed by** | DOCS-FIRST-PROJECT (M-024), 2026-09-26. |
+
+## B-187 — AI-Native Rust tools misread a project run from an absolute path or a renamed checkout {#b-187}
+
+| field | value |
+|---|---|
+| @fact:B187-WHAT **what** | Two tools of `org.vibevm.ai-native/rust-ai-native` depend on where the project sits rather than on the project. The MCP server, registered by `vibe mcp install` with an absolute `--path`, runs the specmap engine under that path, which renames every symbol and reports the committed `specmap.json` as stale. And `conform` names a single-crate project's crate after the checkout's folder, so a clone into another folder answers «no crate directory matches it». |
+| @fact:B187-EVIDENCE **evidence** | 2026-09-26, investigation `W2` in a sandbox `hello-vibevm`: the agent never used the connected 18-tool server for that reason, and the checkout-name defect reproduced by hand. |
+| @fact:B187-SEVERITY **severity** | P2 — the server an install registers does not work on the project it was registered for, and a clone under another name breaks the gate. |
+| @fact:B187-DISPOSITION **disposition** | `open` — resolve symbols relative to the crate root whatever the working path; name a single crate from its `Cargo.toml` package name, not from the folder. |
+| @fact:B187-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-188 — installing AI-Native Rust leaves the reader three more commands and four unnamed prerequisites {#b-188}
+
+| field | value |
+|---|---|
+| @fact:B188-WHAT **what** | `vibe install org.vibevm.ai-native/rust-ai-native` copies source and stops. The tools need `vibe bin build` (142 crates, about 370 MB in two slots that share no `target/`), the server needs `vibe mcp install` (which, bare, writes into five agents at user scope), and the skills need `vibe skill install`; the install's output names none of them. The checks call `rustfmt`, `clippy`, `cargo-nextest` and, for the type oracle, `rust-analyzer`, and nothing checks for them before `floor` fails. The specmap engine's default roots also index the generated boot lane and the WAL, so 82 of 91 units in a fresh project are the redbook's text under the project's name, and its first-run warning («a bare parent directory scans nothing») is wrong for a single-crate layout. |
+| @fact:B188-EVIDENCE **evidence** | 2026-09-26, investigation `W2`: `vibe bin list` showed five tools `not built` after the install; `floor` passed only after `cargo-nextest` existed; `spec_exclude` for `boot/` and `WAL.*` was added by hand. |
+| @fact:B188-SEVERITY **severity** | P2 — every newcomer walks into each of these, and the advanced tutorial has to teach around them. |
+| @fact:B188-DISPOSITION **disposition** | `open` — print the next steps after installing a package that declares binaries, servers or skills; have `rust-ai-native init` check the toolchain it needs and say what is missing; exclude `vibevm/vibespecs/boot/**` and `WAL.*` from the default spec roots; fix the warning's condition. |
+| @fact:B188-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
