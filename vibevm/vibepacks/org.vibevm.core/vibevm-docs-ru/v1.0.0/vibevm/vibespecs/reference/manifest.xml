@@ -107,6 +107,7 @@
       <tr><td>`[documentation]`</td><td>`primary` (не больше одной координаты) и `official` (сколько угодно): документация, которую пакет называет своей</td><td>все виды</td></tr>
       <tr><td>`[translates]`</td><td>`package` и `version` документации, которую зеркалит этот перевод</td><td>`doc`</td></tr>
       <tr><td>`[navigation]`</td><td>`pinned`, пути документов, которые перечисляются первыми; строки `[[navigation.section]]` с `id` и `title` для папок дерева страниц; строки `[[navigation.chapter]]` с `id`, `title`, `pages` и необязательным `appendix` для учебного пути, которые перевод называет только через `id` и `title`</td><td>`doc`</td></tr>
+      <tr><td>`[glossary]`</td><td>`page`: путь документа страницы, которая определяет слова пакета; каждый раздел верхнего уровня этой страницы — одна статья</td><td>`doc`</td></tr>
       <tr><td>`[media]`</td><td>`icon`, `banner`, `preview`: исходные файлы изображений в пределах ограничений карточки</td><td>все виды</td></tr>
     </table>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED"/>
@@ -115,6 +116,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED"/>
   </documentation-tables>
   <example-manifest title="Полный пример">
     <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs-ru"/>

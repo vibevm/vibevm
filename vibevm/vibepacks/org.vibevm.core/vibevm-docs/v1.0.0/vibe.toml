@@ -150,3 +150,9 @@ pages = ["reference/commands", "reference/manifest", "reference/lock-file", "ref
 name = "vibevm-docs"
 path = "vibevm/vibespecs/skills/vibevm-docs"
 description = "Find the page, the rule or the prompt in the VibeVM manual that answers the user's question or performs the user's task, locally from the machine store or from vibevm.org/doc"
+
+# The page that defines this manual's words, which the style checks read
+# to know a term and the reader uses to show its definition beside a
+# link (spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED).
+[glossary]
+page = "glossary/index"

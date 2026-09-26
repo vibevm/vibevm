@@ -33,6 +33,12 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-CHECKED"/>
     <p>A translation does not repeat the path. It names the chapters in its own language with `id` and `title` rows and takes the order from the documentation it adapts.</p>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS-TRANSLATION"/>
+    <p>A manual that defines its words on one page declares that page as its glossary: `[glossary]` with `page`, the path of the page without its extension. Each top-level section of that page is one entry. The section's id is the anchor, its `title` is the word, and its first paragraph is the definition. The style checks learn the words of a manual from this declaration, and the reader shows a definition beside a link to it. A package without the declaration has neither.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED"/>
+    <p>`vibe check` refuses a glossary page that the package does not have, and an entry without a `title` or without a first paragraph.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-CHECKED"/>
+    <p>A translation declares the same glossary page as the documentation it adapts and writes the words and their definitions in its own language.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-TRANSLATION"/>
   </the-manifest>
   <the-vocabulary title="The vocabulary of a page">
     <p>Pages are written in the project's XML dialect, extended for documentation with a small vocabulary that ordinary specifications do not have. Each element is checked by a tool, which is the point of having it.</p>

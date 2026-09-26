@@ -4,6 +4,7 @@ What changed for a reader, by date. This package carries one number and is repub
 
 ## 1.0.0 — 2026-09-26
 
+- **Words explain themselves.** On a wide screen, pointing at a word that links to the glossary shows its definition in a small card beside it; on a phone the link opens the glossary, as before. The manual now declares its glossary in its manifest, and the page for authors tells how to declare one.
 - **Quotations fold.** A quotation from a specification now takes one line — a small triangle, `spec:` and a few words from the rule itself — and opens when you select it. A printed page and the `.md` and `.xml` versions of a page still carry every rule in full.
 
 ## 1.0.0 — 2026-09-25

@@ -138,3 +138,9 @@ title = "Под капотом"
 [[navigation.chapter]]
 id = "appendices"
 title = "Приложения"
+
+# The page that defines this manual's words, which the style checks read
+# to know a term and the reader uses to show its definition beside a
+# link (spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED).
+[glossary]
+page = "glossary/index"
