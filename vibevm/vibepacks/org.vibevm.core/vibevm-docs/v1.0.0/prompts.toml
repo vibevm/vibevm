@@ -162,3 +162,15 @@ page = "start/install-vibe.xml"
 id = "install-vibe"
 fixture = "empty"
 skip = "installing vibe itself changes the machine, which is the one thing the sandbox forbids"
+
+[[doc.prompts.prompt]]
+page = "tutorials/ai-native-rust.xml"
+id = "hello-build"
+fixture = "hello-vibevm-cwd"
+skip = "the build needs Rust, cargo-nextest and the AI-Native Rust tools compiled on the machine, and no fixture carries a toolchain"
+
+[[doc.prompts.prompt]]
+page = "tutorials/ai-native-rust.xml"
+id = "hello-rule-change"
+fixture = "hello-vibevm-cwd"
+skip = "the rule change starts from the built calculator of hello-build, which no fixture holds"

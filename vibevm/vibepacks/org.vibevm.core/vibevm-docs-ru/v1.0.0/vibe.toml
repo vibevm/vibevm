@@ -70,6 +70,10 @@ id = "agent"
 title = "Агент"
 
 [[navigation.section]]
+id = "tutorials"
+title = "Уроки"
+
+[[navigation.section]]
 id = "lifecycle"
 title = "Жизненный цикл"
 
@@ -114,6 +118,10 @@ title = "Повседневная работа с пакетами"
 [[navigation.chapter]]
 id = "through-your-agent"
 title = "Работа через агента"
+
+[[navigation.chapter]]
+id = "advanced-tutorial"
+title = "Продвинутый урок"
 
 [[navigation.chapter]]
 id = "build-and-ship"

@@ -236,6 +236,7 @@ git -C hello-vibevm commit -m "docs(calculator): specify Hello VibeVM"</fence>
     <p>Open `hello-vibevm/vibe.toml`: it names the project, fixes the format of installed text, and lists `org.vibevm.world/redbook` under its requirements with a version range. Open `hello-vibevm/vibe.lock`, the project's [lock file](../glossary/index.xml#lock-file): it pins all 27 packages to exact versions and content [fingerprints](../glossary/index.xml#fingerprint). The rest splits into two trees. `vibevm/vibedeps/` and the generated boot files belong to vibe, which rewrites them on every install. `vibevm/vibespecs/modules/` and your two boot files belong to you, and vibe never writes into them.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
     <p>If the agent wrote the specification, it may also have left `vibevm/vibespecs/WAL.xml`: a short record of where the work stands, which the next session reads first. One of the installed practices asks for it.</p>
+    <p>The specification is the first thing in this project that is yours alone. The advanced tutorial, [Build Hello VibeVM in AI-Native Rust](../tutorials/ai-native-rust.xml), turns it into a program. It installs Rust, asks the agent to build the calculator from these two files, and adds a discipline that keeps the code tied to them.</p>
   </what-appeared>
   <edge-cases title="Edge cases and rules">
     <p>A repeated `vibe install` with no package names installs whatever the manifest requires; that is the command after cloning an existing project.</p>

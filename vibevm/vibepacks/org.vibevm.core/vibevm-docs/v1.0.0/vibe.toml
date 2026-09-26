@@ -64,6 +64,10 @@ id = "agent"
 title = "Agent"
 
 [[navigation.section]]
+id = "tutorials"
+title = "Tutorials"
+
+[[navigation.section]]
 id = "lifecycle"
 title = "Lifecycle"
 
@@ -114,6 +118,11 @@ pages = ["howto/install-a-package", "model/lock-and-store", "model/versions", "h
 id = "through-your-agent"
 title = "Working through your agent"
 pages = ["agent/give-your-agent-the-skill", "agent/ask-your-agent", "howto/read-documentation-locally", "agent/how-agents-read-this-manual"]
+
+[[navigation.chapter]]
+id = "advanced-tutorial"
+title = "Advanced tutorial"
+pages = ["tutorials/ai-native-rust"]
 
 [[navigation.chapter]]
 id = "build-and-ship"

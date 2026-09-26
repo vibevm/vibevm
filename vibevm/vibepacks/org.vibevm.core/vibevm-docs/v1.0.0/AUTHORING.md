@@ -116,6 +116,20 @@ Two kinds of page, two skeletons. Both end without a conclusion, a summary or a 
 5. **By hand.** Numbered STE steps, only when the manual road is worth walking. Sometimes it is not; then the section is absent, not padded.
 6. **Edge cases and rules**, then **Questions**, as above.
 
+**A tutorial page** ("Create your first project", "Build Hello VibeVM in AI-Native Rust"). A tutorial is a road a newcomer walks once, in one sitting, to learn how the parts fit. A real session with an agent is a conversation, so a tutorial may hand the agent more than one request:
+
+1. **Title.** An imperative.
+2. **First paragraph.** What you have at the end and how long it takes, no terms.
+3. **What you need**, as a table: what, why, and where to get it.
+4. **The steps**, one section each, in the order you walk them. A step the agent performs carries its `prompt` block, with its own `needs`, `outcome` and `assert`. A step you perform yourself is numbered STE with `example` blocks. Each step says what you see when it worked.
+5. **What appeared**, then **Edge cases and rules**, as above.
+
+Where a step can be done by hand or by the agent, the tutorial shows both roads and brings them to the same files. Where the road forks into another subject, it names the page that covers that branch and stays on its own road.
+
+A request that makes the agent write code names what a machine cannot infer: where the program's boundaries lie and which rules must become types. A request that asks only for green checks gets code with the right form and none of the meaning (J-142).
+
+A tutorial is accepted only after a real agent has walked it end to end in a sandbox. Every number and every output on the page comes from that walk's raw record, not from memory and not from the walk's own summary (J-143).
+
 **Prompt craft.** Imperative, addressed to the agent. Name the thing and state the result. At most sixty words. No adjectives, no "please", no explanation inside the prompt — the explanation is the paragraph after it. If the task has a step that cannot be undone (publish, delete), the prompt says what the agent must confirm first. The English prompt is the source; other languages adapt it (§10), they do not translate it.
 
 A page covers one concept or one task and fits one sitting. If it needs a second concept, that is a second page, and this page keeps one sentence about it.

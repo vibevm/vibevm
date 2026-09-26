@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Build Hello VibeVM in AI-Native Rust</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>This page turns the calculator from [Create your first project](../start/first-project.xml) into a Rust program. It also ties each of the calculator's written rules to the code that keeps it and to the test that proves it. The tie comes from AI-Native Rust, a discipline you add to the project the way you added the redbook. The code stays ordinary Rust. The strictness moves around it: into types, into errors that name the rule they enforce, and into checks a machine runs. Plan for about an hour; the agent's part takes under ten minutes.</p>
+  <what-you-need title="What you need">
+    <table>
+      <tr><td>What</td><td>Why</td><td>Where to get it</td></tr>
+      <tr><td>the `hello-vibevm` project with its [specification](../glossary/index.xml#specification)</td><td>this page builds it</td><td>[Create your first project](../start/first-project.xml)</td></tr>
+      <tr><td>Rust, with `cargo-nextest`</td><td>compiles the program and runs the discipline's checks</td><td>step 1 below</td></tr>
+      <tr><td>a coding agent</td><td>writes the program with you</td><td>the one you used on the first page</td></tr>
+      <tr><td>about 3 GB of free disk</td><td>the Rust toolchain and the discipline's tools</td><td></td></tr>
+    </table>
+  </what-you-need>
+  <install-rust title="Step 1: install Rust">
+    <p>If a terminal already answers `cargo --version`, skip to the last part of this step. Otherwise install Rust with rustup, the official installer. It puts the compiler, the build tool `cargo`, the formatter and the linter in your home folder.</p>
+    <on-windows title="On Windows">
+      <p>1. Download `rustup-init.exe` from [rustup.rs](https://rustup.rs), the x64 build or the ARM64 build, and run it.</p>
+      <p>2. If it reports that the Visual Studio C++ build tools are missing, let it install them. Rust on Windows uses their linker.</p>
+      <p>3. Accept the default installation, then open a new terminal.</p>
+    </on-windows>
+    <on-macos title="On macOS">
+      <p>1. Install Apple's command-line tools, which carry the linker:</p>
+      <fence lang="shell">xcode-select --install</fence>
+      <p>2. Install Rust and accept the default installation:</p>
+      <fence lang="shell">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</fence>
+      <p>3. Open a new terminal.</p>
+    </on-macos>
+    <on-linux title="On Linux">
+      <p>1. Install a C compiler with your distribution's package manager: `sudo apt install build-essential` on Debian and Ubuntu, `sudo dnf install gcc` on Fedora.</p>
+      <p>2. Install Rust with the same command as on macOS, and accept the default installation:</p>
+      <fence lang="shell">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</fence>
+      <p>3. Open a new terminal.</p>
+    </on-linux>
+    <check-rust title="Check it, and add one tool">
+      <p>1. Check that both commands print a version:</p>
+      <fence lang="shell">rustc --version
+cargo --version</fence>
+      <p>2. Install `cargo-nextest`, the test runner the discipline's final check calls. It builds from source and takes a few minutes:</p>
+      <fence lang="shell">cargo install cargo-nextest --locked</fence>
+      <p>The formatter `rustfmt` and the linter `clippy` came with the default installation. `rustup update` updates all of it later.</p>
+    </check-rust>
+  </install-rust>
+  <add-the-discipline title="Step 2: add AI-Native Rust to the project">
+    <p>AI-Native Rust is a [family](../glossary/index.xml#family) of three packages, and it brings a fourth with it. You install the bundle, `rust-ai-native`. Its language package holds the guide to Rust under the discipline and the tools that check it. Its [MCP server](../glossary/index.xml#mcp-server) offers those tools to agents. The fourth package, `core-ai-native`, is the discipline's core, the same for every language.</p>
+    <p>Two sentences of the core explain the rest. The first says where the strictness goes: around the code, never into its syntax.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#CENTRAL-LAW"/>
+    <p>The second says what counts as strictness. A rule that could be a check, a test or a type, but is written as a sentence, does not exist yet.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PROSE-IS-A-WISH"/>
+    <p>From here on, work inside the project folder.</p>
+    <p>1. Install the family:</p>
+    <fence lang="shell">cd hello-vibevm
+vibe install org.vibevm.ai-native/rust-ai-native --assume-yes</fence>
+    <p>2. Build its tools. The packages carry source code, and vibe compiles the programs on your machine, inside the packages' own folders:</p>
+    <fence lang="shell">vibe bin build --assume-yes</fence>
+    <p>The first build takes from half a minute to a few minutes. It leaves about 370 megabytes of build output in those folders, and Git ignores it.</p>
+    <p>3. See what arrived. `vibe tree` shows the family beside the redbook. `vibe tools` lists six tools: five programs and the server. You will call one of them, `rust-ai-native`. It sets a project up, builds the [traceability map](../glossary/index.xml#traceability-map) from rules to code, and runs every check at once. Call it through vibe, which finds the build that belongs to this project: `vibe bin exec rust-ai-native -- &lt;command&gt;`.</p>
+    <p>4. Commit:</p>
+    <fence lang="shell">git add -A
+git commit -m "chore: add AI-Native Rust"</fence>
+    <p>The [boot lane](../glossary/index.xml#boot-lane) now names two more texts, and your agent reads them at every session start. They repeat the two sentences above and add the standing rules for Rust. A value that crosses a boundary gets a type of its own. Each layer has one error type, and its messages cite the rule they enforce. The program's logic does not call `unwrap`. Every public entry point carries a compiled example of its use.</p>
+  </add-the-discipline>
+  <traceable title="Step 3: make the specification traceable">
+    <p>The discipline builds its map by reading your [specification](../glossary/index.xml#specification). It needs to know two things about each rule: what kind of rule it is, and which revision is current. Both go into one short mark, a kind line. Put it on a line of its own, first under the rule's heading:</p>
+    <fence lang="markdown">## Division by zero {#division-by-zero}
+
+`req r1`
+
+Dividing by zero is an error. The program prints `error: division by zero`
+on standard error and exits with code 1.</fence>
+    <p>1. Open `vibevm/vibespecs/modules/calculator/PROP-001.md`. Under the heading of each rule, put `` `req r1` ``: input, numbers, operators, result, division by zero and bad input.</p>
+    <p>2. Under the heading of each of the two decisions, put `` `design r1` ``.</p>
+    <p>3. In `FEAT-001.md`, put `` `design r1` `` under the scope heading and `` `req r1` `` under the acceptance heading. Keep an empty line between the kind line and the table.</p>
+    <p>4. Change no [anchor](../glossary/index.xml#anchor). Once the discipline is set up in the next step, its tools will find each rule by an address. The address joins the project's name, the document's path under `vibevm/vibespecs/`, and the anchor: `spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero`.</p>
+    <p>5. Commit:</p>
+    <fence lang="shell">git add vibevm/vibespecs/modules
+git commit -m "docs(calculator): mark the rules and their revisions"</fence>
+    <p>The revision is the part you will use at the end of this page. When the meaning of a rule changes, you raise its number. Every piece of code and every test that claimed the old revision then becomes suspect, until someone looks at it again.</p>
+    <rule ref="spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#INVALIDATION-SPEC-BUMP-MAKES-EDGES-SUSPECT"/>
+  </traceable>
+  <build title="Step 4: ask the agent to build it">
+    <p>Start the agent in `hello-vibevm`, as on the first page, and give it this request:</p>
+    <prompt id="hello-build">Build Hello VibeVM from its specification as AI-Native Rust, following the guide this project installed: a library with a thin binary, the specification's rules as types, errors that cite the rule they enforce, a doctest on every public item, and the acceptance table as one declared test matrix. Tie each item to its rule, and finish with rust-ai-native floor green.
+      <needs>an agent session started in `hello-vibevm` after the AI-Native Rust install; Rust with `cargo-nextest`</needs>
+      <outcome>a library with a thin binary; `cargo run -q -- "7 / 2"` prints `3.5`; every public item carries a doctest and a tie to its rule; `rust-ai-native floor` reports every check green</outcome>
+      <assert>test "$(cargo run -q -- "7 / 2")" = "3.5"</assert>
+      <assert>cargo test --quiet</assert>
+      <assert>vibe bin exec rust-ai-native -- floor</assert>
+    </prompt>
+    <p>The request names the substance on purpose. The discipline's checks read the code's form. A small, tidy program passes them before a single rule of the specification lives in its types.</p>
+    <p>This page was first tested with a request that asked only for green checks. The agent wrote correct Rust and tied every function to its rule. But the operator stayed a string, and a number was any floating-point value. The guide forbids that, but no check enforces this rule yet:</p>
+    <rule ref="spec://org.vibevm.ai-native/rust-ai-native-lang/rust/GUIDE-AI-NATIVE-RUST#BAN-STRINGLY-TYPED-SURFACES"/>
+    <p>So the request asks for what a machine cannot infer: where the program's boundaries lie, and which rules must become types.</p>
+    <p>Expect the agent to read before it writes. In the test run its first fifty actions were all reading. It read the boot lane, the discipline's guide and three of its cards. It even read the source of the tools it was about to run.</p>
+    <p>Then it wrote the crate in one pass and set the discipline up with `rust-ai-native init`. It placed the crate under every check at once instead of exempting it. The step took about seven minutes and ended in two commits: the calculator, then the discipline's settings and the map. The agent may also build the tools again, which does no harm.</p>
+    <p>Read the agent's last message. In the test run it listed the choices it made where the specification is silent. It also named what it left to you, such as the project's license.</p>
+  </build>
+  <read-it title="Step 5: read what it built">
+    <p>Green checks say that nothing is broken. They do not say that the specification became code. Look at five things instead.</p>
+    <p>1. Run the program on the acceptance table and past it. `cargo run -q -- "7 / 2"` prints `3.5`. `cargo run -q -- "1 / 0"` prints `error: division by zero` and exits with code 1. Now try `"nan + 1"`, an input the table never mentions. It prints ``error: `nan` is not a number`` and exits with code 2, because the specification says a number is a decimal.</p>
+    <p>2. Find the types. The agent wrote five small modules around one idea: a value that breaks a rule cannot exist. A number can only be made from text that fits the specification's grammar, so `NaN` and infinity cannot get in. The operator is a type with exactly four values, so "and no others" became something the compiler checks. An expression can only be made by parsing. Even the exit codes are a type with three values, the three the specification allows.</p>
+    <p>3. Find the error type. It has two faces. For you, a short problem that the program prints after `error: `, worded as the specification words it. For an agent, a full diagnostic that names the broken rule and where to fix it:</p>
+    <fence lang="text">violates REQ spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero: division by zero; fix surface: divide by a number other than zero</fence>
+    <rule ref="spec://org.vibevm.ai-native/rust-ai-native-lang/rust/GUIDE-AI-NATIVE-RUST#ERROR-MESSAGES-ARE-AGENT-FOOD"/>
+    <p>4. Find the tests. The acceptance table of `FEAT-001.md` appears in the code once, as a list of rows run against the built program. Each public item carries a short example in its documentation, and `cargo test` compiles and runs it. The test run had 23 such examples among 33 tests.</p>
+    <p>5. Ask the map which code keeps a rule and which test proves it:</p>
+    <fence lang="shell">vibe explain "spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero"</fence>
+    <fence lang="text">spec unit spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero
+  req r1 — Division by zero (vibevm/vibespecs/modules/calculator/PROP-001.md:25)
+  hash sha256:b0c1fd84b983…
+  edges in:
+    implements ← `hello_vibevm::error::CalcError` (crates/hello-vibevm/src/error.rs:35) (pinned r1)
+    implements ← `hello_vibevm::error::CalcError::exit_status` (crates/hello-vibevm/src/error.rs:194) (pinned r1)
+    implements ← `hello_vibevm::operator::Operator::apply` (crates/hello-vibevm/src/operator.rs:55) (pinned r1)
+    verifies ← `hello_vibevm::operator::tests::dividing_by_either_zero_is_an_error` (crates/hello-vibevm/src/operator.rs:136) (pinned r1)</fence>
+    <p>Where the specification is silent, the agent chose the cautious answer and marked it `REVIEW` in the code. The test run had three such places: a leading `+`, numbers such as `.5`, and a result too large to hold. Answer them one at a time, as the first page advises. The crate came to about 1,100 lines. Most of them are the envelope: documentation, examples, ties and tests. The arithmetic itself is a dozen lines.</p>
+  </read-it>
+  <change-a-rule title="Step 6: change a rule and watch the link hold">
+    <p>1. In `PROP-001.md`, change the division-by-zero message to `error: cannot divide by zero`. Raise the rule's kind line to `` `req r2` ``.</p>
+    <p>2. In `FEAT-001.md`, change the same message in the acceptance table, and raise that kind line to `` `req r2` ``. Commit both files.</p>
+    <p>3. Ask the map what the change touched. The check fails and lists every item that claimed the old revision:</p>
+    <fence lang="shell">vibe bin exec rust-ai-native -- specmap --check</fence>
+    <fence lang="text">Error: `.\specmap.json` is out of date relative to the tree.
+  drift: revision bump: `spec://hello-vibevm/modules/calculator/FEAT-001#acceptance` r1 → r2
+  drift:   now SUSPECT: `hello_vibevm::tests::acceptance::feat_001_acceptance_table` (pinned r1) at crates/hello-vibevm/tests/acceptance.rs:88 — re-affirm after review
+  drift: revision bump: `spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero` r1 → r2
+  drift:   now SUSPECT: `hello_vibevm::error::CalcError` (pinned r1) at crates/hello-vibevm/src/error.rs:35 — re-affirm after review
+  drift:   now SUSPECT: `hello_vibevm::error::CalcError::exit_status` (pinned r1) at crates/hello-vibevm/src/error.rs:194 — re-affirm after review
+  drift:   now SUSPECT: `hello_vibevm::operator::Operator::apply` (pinned r1) at crates/hello-vibevm/src/operator.rs:55 — re-affirm after review
+  drift:   now SUSPECT: `hello_vibevm::operator::tests::dividing_by_either_zero_is_an_error` (pinned r1) at crates/hello-vibevm/src/operator.rs:136 — re-affirm after review
+Run `rust-ai-native-specmap` (or your project's wrapper), review the drift, and commit the result.</fence>
+    <p>4. Give the agent this request:</p>
+    <prompt id="hello-rule-change">The rules division-by-zero and acceptance are now at r2. Bring every item that cites them in line with the new text and re-affirm them. Finish with rust-ai-native floor green.
+      <needs>the agent session of step 4, or a new one in `hello-vibevm`</needs>
+      <outcome>the program prints the new message; the map lists no suspect item; `rust-ai-native floor` is green</outcome>
+      <assert>test "$(cargo run -q -- "1 / 0" 2>&amp;1)" = "error: cannot divide by zero"</assert>
+      <assert>vibe bin exec rust-ai-native -- floor</assert>
+    </prompt>
+    <p>In the test run the agent read the change and the list first. Then it edited eight lines in three files, in under a minute. Three lines carried the message: in the code, in the example that checks it, and in the table row. The other five were the ties, re-affirmed at `r2`. This is the loop the whole discipline exists for. You changed a sentence, and a machine, not anyone's memory, found the code and the tests that depended on it.</p>
+    <p>The map finds what is tied to the rule, and only that. In the test run one comment in another file still repeated the old words, because nothing tied it to the rule. The agent kept it, since the comment described the error and did not quote the output. Tie an item to its rule wherever a sentence would otherwise have to be remembered.</p>
+  </change-a-rule>
+  <what-appeared title="What appeared on disk">
+    <p>The project now holds a Rust workspace beside its specification. `Cargo.toml` is at the top, and the crate is in `crates/hello-vibevm/`. The calculator is in `src/lib.rs` and its modules, the thin program in `src/main.rs`, and the acceptance tests in `tests/`. The agent also added `/target/` to `.gitignore`, so Rust's build output stays out of Git.</p>
+    <p>`conform.toml` and `specmap.toml` hold the discipline's policy and the map's settings; they are yours to edit. `specmap.json` is the map itself. It is generated and committed, so a diff shows a reviewer when a rule's ties change. `conform-baseline.json` and the files in `discipline/registry/` are the checks' records. They are empty here, which says that nothing is waived.</p>
+  </what-appeared>
+  <edge-cases title="Edge cases and rules">
+    <p>Keep the expression in quotes in every shell. Unquoted, Git Bash on Windows turns a lone `/` into a path, and a shell turns `*` into file names.</p>
+    <p>Keep each kind line on a line of its own. Written in front of a list, it turns the list's first item into ordinary text.</p>
+    <p>A specification your agent wrote may cite its own rules as `spec://project/…`. That is the project's address before the discipline names it; after step 4 the addresses begin with `spec://hello-vibevm/`. Replace the old beginning in both files, or those citations lead nowhere.</p>
+    <p>After anything that moves lines in the code, formatting included, rebuild the map with `vibe bin exec rust-ai-native -- specmap` before you run `floor`. The map records line numbers, and a stale map fails the check.</p>
+    <p>When `floor` stops at the map and suggests a fresh project, the map is only out of date. `specmap --check` shows why. Moved lines need a rebuild; a raised revision needs the review of step 6.</p>
+    <p>Every map build warns about `vibevm/vibespecs/boot/STATIC.xml`. The map reads everything under `vibevm/vibespecs/`, the generated boot lane included. To keep the boot lane out, add `spec_exclude = ["vibevm/vibespecs/boot/**"]` to `specmap.toml`, above the first `[[external_specs]]` line. Then rebuild the map.</p>
+    <p>If `floor` stops at its last step and names `cargo-nextest`, the test runner is missing. Install it as step 1 shows.</p>
+  </edge-cases>
+</spec>
