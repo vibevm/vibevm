@@ -9,6 +9,7 @@ import {
   GITHUB_URL,
   GITVERSE_URL,
   type Locale,
+  PHALA_DISAMBIGUATION_EN,
   STRINGS,
   localePath,
 } from "./i18n.ts";
@@ -54,6 +55,12 @@ function absolute(locale: Locale, path = ""): string {
  * `SoftwareApplication` described in English. It is copied as it stands
  * so the parity test can say so, and so the decision to change it is
  * taken deliberately rather than absorbed into a move.
+ *
+ * One field was added since, deliberately (owner, 2026-09-26):
+ * `disambiguatingDescription`, the property schema.org keeps for exactly
+ * this — search engines had been joining this VibeVM with Phala
+ * Network's, and the graph now says in its own vocabulary that they are
+ * two things.
  */
 function siteGraph(): string {
   return JSON.stringify({
@@ -67,6 +74,7 @@ function siteGraph(): string {
         url: SITE.origin,
         description:
           "An ultimate prompt library, package manager, and agentic system for Spec-Driven Development.",
+        disambiguatingDescription: PHALA_DISAMBIGUATION_EN,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         sameAs: [GITHUB_URL, GITVERSE_URL],
       },

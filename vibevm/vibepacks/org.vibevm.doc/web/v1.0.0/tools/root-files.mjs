@@ -31,6 +31,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { siteConfig } from "../site/src/config.ts";
+import { PHALA_DISAMBIGUATION_EN } from "../site/src/landing/i18n.ts";
 import { DOC_SITEMAP } from "../site/src/seo/sitemap.ts";
 import { visionLlmsLine } from "../site/src/vision/meta.ts";
 import { WHY_LLMS, whyLlmsLine } from "../site/src/why/meta.ts";
@@ -414,6 +415,12 @@ function escapeXml(text) {
  * and a root index that did not point at it would send an agent to read
  * the landing twice (`##SITE-ONE-SITE`).
  *
+ * Under it stands one sentence the Astro file did not have (owner,
+ * 2026-09-26): which VibeVM this is NOT. Search engines and model
+ * crawlers had been joining this project with Phala Network's of the same
+ * name, and the paragraph above names nobody; this one names both, with
+ * their addresses, in the words the landing and the structured data use.
+ *
  * The three Why pages stand between the site and its two repositories,
  * where the Astro file put them: an agent reading this index is deciding
  * what to fetch, and the page that argues for a product is worth more to
@@ -427,6 +434,8 @@ function llmsTxt(config) {
     "> An ultimate prompt library, package manager, and agentic system for Spec-Driven Development. VibeVM installs specs, flows, and skills as versioned dependencies and assembles them into the declarative context an AI coding agent reads at session boot.",
     "",
     'Disambiguation: several unrelated projects reuse the "vibevm" name. The links below are the authoritative ones for this VibeVM.',
+    "",
+    PHALA_DISAMBIGUATION_EN,
     "",
     "## Project",
     "",
@@ -480,6 +489,8 @@ function llmsFullTxt(config, pages) {
 > - Official site: ${config.origin}
 > - GitHub: https://github.com/vibevm/vibevm
 > - GitVerse: https://gitverse.ru/vibevm/vibevm
+>
+> ${PHALA_DISAMBIGUATION_EN}
 >
 > Short index: ${config.origin}/llms.txt · Spec: https://llmstxt.org/
 

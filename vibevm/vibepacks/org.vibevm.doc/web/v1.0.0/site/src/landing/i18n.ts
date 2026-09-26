@@ -41,6 +41,18 @@ export type Locale = (typeof LOCALES)[number];
 export const GITHUB_URL = "https://github.com/vibevm/vibevm";
 export const GITVERSE_URL = "https://gitverse.ru/vibevm/vibevm";
 
+/**
+ * The sentence that tells this VibeVM apart from Phala Network's, in
+ * English (owner, 2026-09-26). One constant, because four places say it
+ * and a crawler that meets two wordings has two claims to reconcile: the
+ * foot of the English landing, the root `llms.txt` and `llms-full.txt`
+ * (`tools/root-files.mjs`), and `disambiguatingDescription` in the
+ * structured data (`head.ts`). The Russian landing says the same in its
+ * own words, beside the other Russian strings.
+ */
+export const PHALA_DISAMBIGUATION_EN =
+  "VibeVM at vibevm.org is not related to Phala Cloud. It is not Phala Network's VibeVM (github.com/Phala-Network/VibeVM), a development sandbox that runs in a confidential VM on Phala Cloud. The two are separate, unrelated projects that share a name.";
+
 /** One of the three capability cards under the hero. */
 export type Cap = {
   readonly label: string;
@@ -83,6 +95,16 @@ export type Strings = {
   /** What the page says back once the command is on the clipboard. */
   readonly copied: string;
   readonly caps: readonly [Cap, Cap, Cap];
+  /**
+   * The small print at the foot of the landing that tells this VibeVM
+   * apart from Phala Network's project of the same name (owner,
+   * 2026-09-26). It is written for a crawler as much as for a person:
+   * both projects are named in full, with their addresses, so that an
+   * index that has been joining the two has a sentence to split them on.
+   * The same words reach `llms.txt`, `llms-full.txt` and the structured
+   * data.
+   */
+  readonly disambiguation: string;
   readonly footerTagline: string;
   readonly copyright: string;
   /** The entry the port adds to the shared header (D-28). */
@@ -143,6 +165,7 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
         body: "Any coding agent boots from a spec-driven context assembled at the start of a session.",
       },
     ],
+    disambiguation: PHALA_DISAMBIGUATION_EN,
     footerTagline: "Spec-Driven Development, packaged.",
     copyright: "© 2026 Oleg Chirukhin",
     documentation: "Documentation",
@@ -197,6 +220,8 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
         body: "Любой кодовый агент стартует из spec-driven контекста, собранного в начале сессии.",
       },
     ],
+    disambiguation:
+      "VibeVM на vibevm.org не связан с Phala Cloud. Это не VibeVM от Phala Network (github.com/Phala-Network/VibeVM) — песочница для разработки в конфиденциальной виртуальной машине на Phala Cloud. Это два разных, никак не связанных проекта с одинаковым названием.",
     footerTagline: "Spec-Driven Development, в пакетах.",
     copyright: "© 2026 Олег Чирухин",
     documentation: "Документация",

@@ -47,6 +47,18 @@
   padding-inline: 32px;
 }
 
+/* The small print at the foot of the landing: which VibeVM this is not.
+   Quiet on purpose — it is there for the reader who arrived confused and
+   for the crawler that confused them, and it must not compete with the
+   page above it for anybody else. */
+.landing-disambiguation {
+  max-width: 68ch;
+  margin: calc(-1 * clamp(24px, 5vh, 56px)) 0 clamp(40px, 7vh, 72px);
+  color: var(--text-3);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
 /* A page that draws to the edge of the window. It still has to be a
    flex child that can shrink — without the minimum reset, a wide code
    line or an unbreakable command inside it widens the whole column and

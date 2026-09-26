@@ -95,6 +95,12 @@ export const Landing = component$<LandingProps>((props) => {
           />
         ))}
       </CapabilityRow>
+
+      {/* The small print, last on the page: which VibeVM this is not.
+          Search engines and model crawlers have been joining this project
+          with Phala Network's of the same name, and a sentence that names
+          both, with their addresses, is what an index can split them on. */}
+      <p class="landing-disambiguation">{t.disambiguation}</p>
     </>
   );
 });
