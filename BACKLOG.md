@@ -2140,3 +2140,13 @@ structure, and it goes when the file does.
 | @fact:B192-SEVERITY **severity** | P3 — the citations read as prose to a person and lead nowhere for a machine, and no check tells either of them. |
 | @fact:B192-DISPOSITION **disposition** | `open` — resolve a project's own `spec://` citations in `vibe check` and warn on the dead ones, as the host's gate does for its own addresses (`B-076`); have `rust-ai-native init` rewrite or report the `spec://project/` citations it is about to orphan. The advanced tutorial tells the reader to replace them by hand meanwhile. |
 | @fact:B192-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-193 — the map check fails on a Windows checkout of `specmap.json` and does not say why {#b-193}
+
+| field | value |
+|---|---|
+| @fact:B193-WHAT **what** | `specmap --check` compares the index it would write with `specmap.json` byte for byte. With `core.autocrlf = true`, the default of Git for Windows, any checkout of the file writes CRLF line endings, and the check fails with ``.\specmap.json` is out of date relative to the tree`` and no drift line; inside `floor` the same failure reads «fresh project?» (`B-190`). The content is identical: a rebuild writes the same index with LF, and `git status` stays clean throughout. |
+| @fact:B193-EVIDENCE **evidence** | 2026-09-26, the sandbox of investigation `W5`: after `git checkout -- specmap.json` the file held 685 CR bytes and the check failed; with `specmap.json text eol=lf` in `.gitattributes` the same checkout kept LF and the check was clean. |
+| @fact:B193-SEVERITY **severity** | P2 — on the most common Windows setup, the discipline's gate goes red after an ordinary git operation, with a message that points elsewhere. |
+| @fact:B193-DISPOSITION **disposition** | `open` — compare the parsed index, or normalise line endings before comparing; have `rust-ai-native init` add `specmap.json text eol=lf` to `.gitattributes`; name the cause when only the bytes differ. The advanced tutorial tells Windows readers to add the attribute meanwhile. |
+| @fact:B193-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
