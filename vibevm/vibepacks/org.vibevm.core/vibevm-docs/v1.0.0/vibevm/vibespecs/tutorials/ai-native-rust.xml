@@ -149,6 +149,7 @@ Run `rust-ai-native-specmap` (or your project's wrapper), review the drift, and 
     <p>A specification your agent wrote may cite its own rules as `spec://project/…`. That is the project's address before the discipline names it; after step 4 the addresses begin with `spec://hello-vibevm/`. Replace the old beginning in both files, or those citations lead nowhere.</p>
     <p>After anything that moves lines in the code, formatting included, rebuild the map with `vibe bin exec rust-ai-native -- specmap` before you run `floor`. The map records line numbers, and a stale map fails the check.</p>
     <p>When `floor` stops at the map and suggests a fresh project, the map is only out of date. `specmap --check` shows why. Moved lines need a rebuild; a raised revision needs the review of step 6.</p>
+    <p>On Windows, Git may check `specmap.json` out with CRLF line endings. The map check then fails as out of date and lists no drift. Add the line `specmap.json text eol=lf` to the project's `.gitattributes`, commit it, and rebuild the map once.</p>
     <p>Every map build warns about `vibevm/vibespecs/boot/STATIC.xml`. The map reads everything under `vibevm/vibespecs/`, the generated boot lane included. To keep the boot lane out, add `spec_exclude = ["vibevm/vibespecs/boot/**"]` to `specmap.toml`, above the first `[[external_specs]]` line. Then rebuild the map.</p>
     <p>If `floor` stops at its last step and names `cargo-nextest`, the test runner is missing. Install it as step 1 shows.</p>
   </edge-cases>
