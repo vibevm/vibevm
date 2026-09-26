@@ -200,11 +200,15 @@ pub fn synthesise(manifest: &Manifest) -> String {
 
 /// The tables a level-0 render carries across from the package it
 /// renders. Each is a statement the author made about relations,
-/// language, pictures, navigation or provenance, and each is read
-/// further down the pipeline — the card's images by `media::slots`, the
-/// relations by the manifest's officiality, the language by every
+/// language, pictures, navigation, provenance or vocabulary, and each is
+/// read further down the pipeline — the card's images by `media::slots`,
+/// the relations by the manifest's officiality, the language by every
 /// address that carries one, the navigation and the upstream authors of
-/// `[[embedded_source]]` by the page manifest the site reads.
+/// `[[embedded_source]]` by the page manifest the site reads, and the
+/// glossary by the renderer, which resolves a term link to its entry
+/// only when the package declared the page that defines its words
+/// (`##GLOSSARY-DECLARED`). A table left off this list reaches the local
+/// reader and not the site.
 const CARRIED: &[&str] = &[
     "i18n",
     "documents",
@@ -213,6 +217,7 @@ const CARRIED: &[&str] = &[
     "media",
     "navigation",
     "embedded_source",
+    "glossary",
 ];
 
 /// Emit one carried table in TOML, under its own name.

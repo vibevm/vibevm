@@ -104,6 +104,27 @@ fn a_bridge_carries_its_two_authorships_into_the_render() {
     );
 }
 
+/// The glossary is the author's statement about which page defines the
+/// documentation's words (`##GLOSSARY-DECLARED`). A level-0 render that
+/// dropped it would resolve no term link, and the site would show no
+/// definition where the local reader shows one.
+#[test]
+fn a_declared_glossary_travels_into_the_render() {
+    let card = manifest(
+        "[package]\nname = \"a\"\ngroup = \"org.example\"\nversion = \"1.0.0\"\nkind = \"doc\"\n\
+         title = \"T\"\nabstract = \"A\"\n\
+         \n[glossary]\npage = \"glossary/index\"\n",
+    );
+    let written = synthesise(&card);
+    let back: toml::Value = toml::from_str(&written).expect("it parses");
+    assert_eq!(
+        back.get("glossary")
+            .and_then(|g| g.get("page"))
+            .and_then(toml::Value::as_str),
+        Some("glossary/index")
+    );
+}
+
 #[test]
 fn a_manifest_that_names_no_coordinate_is_refused() {
     let tmp = tempfile::tempdir().expect("a temporary directory");
