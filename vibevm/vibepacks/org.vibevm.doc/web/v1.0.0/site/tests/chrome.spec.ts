@@ -53,11 +53,11 @@ const PHONE = 390;
 /** What each row of the desktop bar carries, left to right. */
 const ROWS = {
   en: [
-    ["Documentation", "GitHub", "GitVerse", "search"],
+    ["Documentation", "GitHub", "GitVerse", "News & support", "search"],
     ["Vision", "Why VibeVM", "Why Zap", "AI-Native Language", "lang", "theme"],
   ],
   ru: [
-    ["Документация", "GitHub", "GitVerse", "search"],
+    ["Документация", "GitHub", "GitVerse", "Новости и поддержка", "search"],
     [
       "Видение",
       "Почему VibeVM",
@@ -68,6 +68,13 @@ const ROWS = {
     ],
   ],
 } as const;
+
+/** A row's destinations, without the control that stands beside it. */
+const CONTROLS = ["search", "lang", "theme"];
+
+function destinations(row: readonly string[]): string[] {
+  return row.filter((name) => !CONTROLS.includes(name));
+}
 
 type Box = {
   readonly name: string;
@@ -165,20 +172,22 @@ async function scrolls(page: Page): Promise<boolean> {
  * The whole promise of the bar, at every width, in one pass.
  *
  * The desktop widths must produce the two rows the composition declares,
- * in the owner's order — the software and where its source is kept, then
- * the essay and the three arguments it is the worldview of — with the
- * brand centred against both rather than standing on either, and the
- * cluster of the two standing in the bar's middle, leaning toward the
- * brand. The phone
- * must produce a different composition rather than the same one
- * squeezed. And at every width, in both languages, nothing may overlap
- * anything, the page may not go wide, and the theme switch may not be
- * alone on its line.
+ * in the owner's order — the software, where its source is kept and where
+ * it is spoken about, then the essay and the three arguments it is the
+ * worldview of — with the brand centred against both rather than standing
+ * on either, and the cluster of the two standing in the bar's middle,
+ * leaning toward the brand. The phone must produce a different
+ * composition rather than the same one squeezed. And at every width, in
+ * both languages, nothing may overlap anything, the page may not go wide,
+ * and the theme switch may not be alone on its line.
  */
 for (const one of PAGES) {
   test(`${one.label} composes its header at every width`, async ({ page }) => {
     for (const width of [...DESKTOP, PHONE]) {
-      await page.setViewportSize({ width, height: width === PHONE ? 844 : 900 });
+      await page.setViewportSize({
+        width,
+        height: width === PHONE ? 844 : 900,
+      });
       await page.goto(one.route);
       await page.evaluate(() => document.fonts.ready);
 
@@ -198,30 +207,38 @@ for (const one of PAGES) {
       expect(themeLine, `the theme switch is not alone — ${at}`).not.toEqual([
         "theme",
       ]);
-      expect(themeLine, `the theme switch keeps the language — ${at}`).toContain(
-        "lang",
-      );
+      expect(
+        themeLine,
+        `the theme switch keeps the language — ${at}`,
+      ).toContain("lang");
 
       if (width === PHONE) {
         /* The compact bar: the preferences move up to the brand's line —
            the corner a thumb reaches first — the two nav rows take the
            width under them, and the field steps out, as it always did,
            because the manual's own header carries the same one a tap
-           away. The second row's four become two columns of two, which
-           is a shape; Russian does not fit across one phone line and
-           English barely does, and one composition for both is the
-           point. */
+           away. Each row of four becomes two columns of two, which is a
+           shape: neither row fits across one phone line in either
+           language, and one composition for both is the point. What is
+           pinned is that shape AND the order inside it — a grid fills
+           row-major, so the two lines of a row read as the row does. */
         expect(named[0], `brand keeps the preferences — ${at}`).toEqual([
           "brand",
           "lang",
           "theme",
         ]);
-        expect(named[1], `the software row is intact — ${at}`).toEqual([
-          ...ROWS[one.locale][0].filter((name) => name !== "search"),
-        ]);
-        expect(named, `four lines and no more — ${at}`).toHaveLength(4);
-        expect(named[2], `two columns — ${at}`).toHaveLength(2);
-        expect(named[3], `two columns — ${at}`).toHaveLength(2);
+        expect(named, `five lines and no more — ${at}`).toHaveLength(5);
+        for (const line of named.slice(1)) {
+          expect(line, `two columns — ${at}`).toHaveLength(2);
+        }
+        expect(
+          [...named[1], ...named[2]],
+          `the software row, in order — ${at}`,
+        ).toEqual(destinations(ROWS[one.locale][0]));
+        expect(
+          [...named[3], ...named[4]],
+          `the argument row, in order — ${at}`,
+        ).toEqual(destinations(ROWS[one.locale][1]));
         await expect(page.locator(".search-box")).toBeHidden();
         continue;
       }
@@ -257,11 +274,7 @@ for (const one of PAGES) {
          as pushed into it. What is asserted is the rule and not the
          pixel: one axis for both rows, a lean that is real but bounded,
          and clear air after the brand where the clump used to be. */
-      const links = ROWS[one.locale].map((row) =>
-        row.filter(
-          (name) => name !== "search" && name !== "lang" && name !== "theme",
-        ),
-      );
+      const links = ROWS[one.locale].map((row) => destinations(row));
       const span = (line: readonly Box[], names: readonly string[]) => {
         const own = line.filter((box) => names.includes(box.name));
         return { x: own[0].x, right: own[own.length - 1].right };
@@ -315,9 +328,10 @@ test("the manual keeps its single-row header", async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     const lines = rows(await headerBoxes(page));
-    expect(lines.map((line) => line.map((box) => box.name)), at).toEqual([
-      ["brand", "search", "lang", "theme"],
-    ]);
+    expect(
+      lines.map((line) => line.map((box) => box.name)),
+      at,
+    ).toEqual([["brand", "search", "lang", "theme"]]);
 
     const height = await page.evaluate(
       () =>
@@ -335,8 +349,8 @@ test("the manual keeps its single-row header", async ({ page }) => {
  * Which is NOT the order the eye takes, and the difference is deliberate
  * and worth stating. The field is lifted into the first row because that
  * row is the documentation and this field searches it, so a reader
- * tabbing through the bar reaches it after the seventh link rather than
- * after the third. Geometry and sequence can both be had only by putting
+ * tabbing through the bar reaches it after the eighth link rather than
+ * after the fourth. Geometry and sequence can both be had only by putting
  * each control inside the row it stands on — and that is the same move
  * that would push the theme switch to the foot of a five-line bar on a
  * phone instead of the corner beside the brand, which is the one thing
@@ -369,13 +383,14 @@ test("the bar is tabbed by kind, and marks where the reader stands", async ({
     ].map((element) => (element.textContent ?? "").trim() || element.tagName);
   });
 
-  /* The brand, then the seven destinations in the two rows' own order —
-     the first row's three, then the second row's four. */
-  expect(order.slice(0, 8)).toEqual([
+  /* The brand, then the eight destinations in the two rows' own order —
+     the first row's four, then the second row's four. */
+  expect(order.slice(0, 9)).toEqual([
     "VibeVM",
     "Documentation",
     "GitHub",
     "GitVerse",
+    "News & support",
     "Vision",
     "Why VibeVM",
     "Why Zap",
@@ -383,7 +398,7 @@ test("the bar is tabbed by kind, and marks where the reader stands", async ({
   ]);
   /* Then the field, the two letters and the three themes — the tail the
      documentation's header ends with, in the same sequence. */
-  expect(order.slice(8)).toEqual([
+  expect(order.slice(9)).toEqual([
     "INPUT",
     "EN",
     "RU",

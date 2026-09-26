@@ -76,6 +76,13 @@ export type Strings = {
    * link leads in one word.
    */
   readonly navVision: string;
+  /**
+   * The channels page's entry in the header. Also a pointer's label: the
+   * page heads itself «News & support» / «Новости и поддержка» and the
+   * menu says the same, because here the page's name IS where the link
+   * leads — there is no shorter true word for «news, and also help».
+   */
+  readonly navNews: string;
   readonly eyebrow: string;
   /** The small status pill beside the install block. */
   readonly badge: string;
@@ -133,6 +140,7 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     navWhyZap: "Why Zap",
     navWhyAiNative: "AI-Native Language",
     navVision: "Vision",
+    navNews: "News & support",
     eyebrow: "Open source · Spec-driven development",
     badge: "Early Access",
     headlineHtml: "Install the <em>context</em> your agents run on.",
@@ -188,6 +196,7 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     navWhyZap: "Почему Zap",
     navWhyAiNative: "AI-Native Языки",
     navVision: "Видение",
+    navNews: "Новости и поддержка",
     eyebrow: "Открытый код · Spec-Driven Development",
     badge: "Ранний доступ",
     headlineHtml: "Установите <em>контекст</em> для вашего агента",

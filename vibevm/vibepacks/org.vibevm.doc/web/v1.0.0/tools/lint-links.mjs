@@ -51,12 +51,23 @@ const SITE_ROOT = join(PACKAGE_ROOT, "site");
  * against the Astro build it replaced: two source mirrors, two
  * vocabularies that are identifiers rather than resources, the address
  * of the `llms.txt` specification, and one string inside a framework
- * chunk that nobody requests (X-020). A host that is not here is a
+ * chunk that nobody requests (X-020). Beside them stand the three hosts
+ * the channels page names — the project's own places to read it, ask
+ * about it and talk about it — which are the site's own writing and not
+ * a citation inside somebody's prose: a channel address that stopped
+ * being ours is a defect of this site, so it is named here rather than
+ * counted among the outbound links below. A host that is not here is a
  * finding, whether or not anything is fetched from it.
  */
 const ALLOWED_HOSTS = new Map([
   ["github.com", "the canonical source repository, linked by the landing"],
   ["gitverse.ru", "the source mirror, linked by the landing"],
+  [
+    "t.me",
+    "the project's Telegram channel and its two chats, linked by /news-and-support/",
+  ],
+  ["x.com", "the author's account, linked by /news-and-support/"],
+  ["www.reddit.com", "the project's subreddit, linked by /news-and-support/"],
   [
     "schema.org",
     "the JSON-LD @context: a vocabulary identifier, never fetched",

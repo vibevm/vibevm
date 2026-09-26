@@ -11,6 +11,7 @@ import {
 
 import { href } from "../lib/href.ts";
 import { SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
+import { isNewsPath, newsHref } from "../news/paths.ts";
 import { findInDocumentation } from "../reader/search.ts";
 import { rememberSiteLanguage } from "../reader/site-language.ts";
 import { startThemeSwitch } from "../reader/theme.ts";
@@ -109,13 +110,13 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
             is 64px tall and therefore did not even contain it. Nothing
             chose that. This does.
 
-            The first row is the software and where it is kept; the
-            second is the argument for it. Each row is an element, so
-            what stands on which line is a fact about the markup rather
-            than about how wide the reader's window happened to be — and
-            each row is paired with the control that belongs beside it,
-            which is what keeps the pairing true at every width instead
-            of only at the one that was measured. */}
+            The first row is the software, where it is kept and where it
+            is spoken about; the second is the argument for it. Each row
+            is an element, so what stands on which line is a fact about
+            the markup rather than about how wide the reader's window
+            happened to be — and each row is paired with the control that
+            belongs beside it, which is what keeps the pairing true at
+            every width instead of only at the one that was measured. */}
         <nav class="landing-nav">
           <div class="landing-nav__row landing-nav__row--tools">
             <a class="landing-nav__link" href={href("doc/")}>
@@ -126,6 +127,19 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
             </a>
             <a class="landing-nav__link" href={GITVERSE_URL} rel="noopener">
               GitVerse
+            </a>
+            {/* And, at the end of the row, where the project is spoken.
+                It stands last because it is the only entry of this row
+                that leads back into the site rather than out of it —
+                after the manual and the two mirrors, the place to ask
+                about them. A reader who has run out of things to read is
+                exactly the reader who needs it. */}
+            <a
+              class="landing-nav__link"
+              href={newsHref(locale)}
+              {...(isNewsPath(here) ? { "aria-current": "page" as const } : {})}
+            >
+              {t.navNews}
             </a>
           </div>
           <div class="landing-nav__row landing-nav__row--story">
@@ -157,9 +171,9 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
           </div>
         </nav>
 
-        {/* The search stands over the first row, because that row is the
-            documentation and the two mirrors of its source, and this
-            field searches exactly that. */}
+        {/* The search stands over the first row, because that row opens
+            with the documentation and the two mirrors of its source, and
+            this field searches exactly that. */}
         <span class="landing-nav__search">
           <SearchBox
             label={t.search}

@@ -70,7 +70,7 @@
 
 /* The landing's header: a two-row composition, declared.
    ---------------------------------------------------------------------
-   The bar carries more than a bar's width of things — seven
+   The bar carries more than a bar's width of things — eight
    destinations, a search field, two languages and three themes — and it
    used to carry them as one wrapping list. A wrapping list does not
    compose; it overflows and then reports where the overflow landed. What
@@ -80,7 +80,7 @@
    So the bar is a grid of two rows and three columns, and every part of
    it is placed by name:
 
-       brand │    Documentation GitHub GitVerse     │ [ search   Ctrl K ]
+       brand │ Documentation GitHub GitVerse News…  │ [ search   Ctrl K ]
        brand │ Vision  Why VibeVM  Why Zap  AI-N…   │       EN RU  ☀ ☾ ▣
 
    The brand spans both rows and is centred against them, so it stands
@@ -103,7 +103,7 @@
    centred rather than measure centred; a narrower window shrinks both
    flanks and the lean with them, and below 760px the compact bar takes
    over as before. Within the cluster the two rows centre on one axis,
-   the short line of three symmetric over the long line of four: one
+   four over four, the shorter of the two symmetric over the longer: one
    composition, not two lists.
 
    The row heights are written down rather than inferred, and that is
@@ -177,8 +177,8 @@
 .landing-nav__row {
   display: flex;
   align-items: center;
-  /* On the cluster's own axis, not against its edge: the short row
-     stands symmetric over the long one, which is what makes the two
+  /* On the cluster's own axis, not against its edge: the shorter row
+     stands symmetric over the longer one, which is what makes the two
      rows one composition. The compact bar sets them back against the
      margin, where a list is what a thumb scans. */
   justify-content: center;
@@ -312,12 +312,27 @@
   }
 }
 
-/* A phone. The four destinations of the second row are 374px of Russian
-   at 13px, and a 390px phone offers 350 — so that row is given two
-   columns and two lines, which is a shape, where `flex-wrap` would have
-   given the same two lines as an accident and a different two on the
-   next translation. The first row's three entries fit across even the
-   narrowest phone sold and keep their line. */
+/* A phone. Both rows of four are wider than a phone is, so both are
+   given two columns and two lines — which is a shape, where `flex-wrap`
+   would have given the same two lines as an accident and a different two
+   on the next translation.
+   ---------------------------------------------------------------------
+   Measured at 13px, with 40px of the window going to the header's own
+   padding: the second row is 374px of Russian, the first is 372px of it
+   and 329px of English, and a 390px phone offers 350 — a 320px phone,
+   280. So neither row fits across any phone sold, in either language,
+   and the first row stopped fitting the day it gained a fourth entry:
+   «Новости и поддержка» is 140px on its own. In two columns the widest
+   of them is 249px of Russian, which fits the narrowest phone with room
+   to spare.
+
+   It costs a line. The bar on a phone is five lines and 170px rather
+   than four and 142px, and it is sticky, so that is 28px of every screen
+   a reader scrolls — the price of the fourth destination, paid where it
+   is cheapest. The alternative was the row wrapping 3+1 in Russian and
+   4 across in English at the same width: two compositions, neither
+   chosen, and a bar whose shape depended on which language it was
+   read in. */
 @media (max-width: 600px) {
   .landing-nav {
     font-size: 13px;
@@ -325,19 +340,13 @@
 
   /* Two columns as wide as their words, not as wide as half the window:
      a pair of 280px tracks holding «Видение» would read as a table with
-     a column missing rather than as a list of four places. */
-  .landing-nav__row--story {
+     a column missing rather than as a list of four places. Both rows
+     take the same shape from the same rule; the column widths are each
+     row's own, because they are two lists and not one table. */
+  .landing-nav__row {
     display: grid;
     grid-template-columns: repeat(2, max-content);
     column-gap: var(--nav-gap);
-    row-gap: 0.4rem;
-  }
-
-  /* Not the mechanism, a floor: nothing in this row wraps at any width a
-     phone actually has, and below them a wrapped row is better than a
-     row that pushes the page sideways. */
-  .landing-nav__row--tools {
-    flex-wrap: wrap;
     row-gap: 0.4rem;
   }
 }
@@ -349,7 +358,7 @@
 
   /* The last thing to go is the search box, and it is the one that is
      still a tap away: the documentation's own header carries the same
-     field. What stays is what only this bar offers — the seven pages,
+     field. What stays is what only this bar offers — the eight pages,
      the language and the theme. Its column goes with it and needs no
      second template to say so: the middle track is the flexible one, so
      with nothing in it the preferences simply take the corner. */

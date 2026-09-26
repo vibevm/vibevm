@@ -26,9 +26,38 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { STRINGS as LANDING } from "../site/src/landing/i18n.ts";
+import { STRINGS as NEWS, shownAddress } from "../site/src/news/i18n.ts";
 import { isBuilderState } from "./out-dir.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+/**
+ * Every text fragment the channels page and its menu entry put on the
+ * domain, read off the copy tables the pages render from.
+ *
+ * Computed rather than written out, because the alternative is a second
+ * copy of the owner's words inside a gate — and two copies of a text
+ * disagree the first time one of them is edited. What the gate needs to
+ * know is «is this fragment one of the ones that arrived with this page»,
+ * and the page's own table is the only honest answer to that.
+ */
+const NEWS_FRAGMENTS = new Set([
+  ...Object.values(LANDING).map((strings) => strings.navNews),
+  ...Object.values(NEWS).flatMap((strings) => [
+    strings.title,
+    strings.lede,
+    ...strings.groups.flatMap((group) => [
+      group.head,
+      ...group.channels.flatMap((channel) => [
+        channel.name,
+        channel.platform,
+        channel.body,
+        shownAddress(channel.href),
+      ]),
+    ]),
+  ]),
+]);
 
 /**
  * The differences that are decisions, each with the decision behind it.
@@ -238,6 +267,28 @@ const DIFFERENCES = [
     reason:
       "One line added under «## Project», pointing at `/vision/`: the agent index that names the three product arguments now names the worldview essay they are pieces of.",
     matches: (link) => link.includes("/vision/"),
+  },
+  {
+    id: "D-37",
+    where: "addresses",
+    reason:
+      "`/news-and-support/` and `/ru/news-and-support/` are new: the owner's channels page, commissioned 2026-09-26 — where the project posts its news, where a reader asks for help or reports a bug, and where everything else is talked about. The Astro site linked none of those places from anywhere, so the pair exists only in this build.",
+    matches: (address) =>
+      address === "/news-and-support/" || address === "/ru/news-and-support/",
+  },
+  {
+    id: "D-38",
+    where: "text",
+    reason:
+      "The channels page's own words, and its entry in the header: the heading, the one line under it, the three group names, and for each of the five channels its name, the platform as a word, the line about it and the address it leads to. Every fragment is the owner's, or — for the addresses — derived from an address the owner gave; none of it replaces any of the owner's existing copy. The set is computed from the page's own copy table rather than listed here, so a card the owner adds tomorrow cannot arrive as an unexplained difference and cannot arrive unnoticed either: it is named in one file, which is where the words are.",
+    matches: (fragment) => NEWS_FRAGMENTS.has(fragment),
+  },
+  {
+    id: "D-39",
+    where: "sitemap",
+    reason:
+      "The sitemap gains the channels page's pair of addresses, weighted by the same address-derived rule every landing page is (D-31): 0.8 for the English page, 0.7 for the Russian one, monthly.",
+    matches: (path) => path.includes("/news-and-support/"),
   },
 ];
 
