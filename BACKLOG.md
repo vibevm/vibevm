@@ -2100,3 +2100,43 @@ structure, and it goes when the file does.
 | @fact:B188-SEVERITY **severity** | P2 — every newcomer walks into each of these, and the advanced tutorial has to teach around them. |
 | @fact:B188-DISPOSITION **disposition** | `open` — print the next steps after installing a package that declares binaries, servers or skills; have `rust-ai-native init` check the toolchain it needs and say what is missing; exclude `vibevm/vibespecs/boot/**` and `WAL.*` from the default spec roots; fix the warning's condition. |
 | @fact:B188-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-189 — the manual's `package` example no longer matches `vibe package` {#b-189}
+
+| field | value |
+|---|---|
+| @fact:B189-WHAT **what** | `lifecycle/build-package-deploy.xml#package` in `org.vibevm.core/vibevm-docs` expects `→ build: no-op` and `→ verify: no-op`. In the `hello-deploy` fixture, `vibe package --path hello-deploy --assume-yes` now prints `→ build: ok` and `→ verify: ok`: the fixture's declared `build:cargo` artifact is built during `package`. The golden dates from `7c56a0037` (2026-09-14). |
+| @fact:B189-EVIDENCE **evidence** | 2026-09-26, `vibe doc check --examples` of the manual: one example differs. It differs the same way with `VIBEVM_HOME` unset and in a clean worktree at `78415ee85`, so it predates the tutorial work that found it. |
+| @fact:B189-SEVERITY **severity** | P3 — the examples gate runs by hand before a release, and until then it reads red on `main`. |
+| @fact:B189-DISPOSITION **disposition** | `open` — find the change that made `package` build the declared artifact; if that behaviour is intended, re-bless the golden with the reason, otherwise repair the product. |
+| @fact:B189-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-190 — `rust-ai-native floor` reports specification drift as a fresh project {#b-190}
+
+| field | value |
+|---|---|
+| @fact:B190-WHAT **what** | When the map check inside `floor` fails, `floor` prints only ``floor: `specmap` failed (fresh project? run `rust-ai-native specmap` once to mint the index)``. After a revision bump the index exists and is committed; the real cause is drift, which `specmap --check` run alone prints line by line, naming every suspect item. The hint sends the reader to the wrong problem at the moment the link between rule and code matters most. |
+| @fact:B190-EVIDENCE **evidence** | 2026-09-26, investigation `W5`, step 6 of the advanced tutorial: two revision bumps, five suspects, and the `floor` message above. |
+| @fact:B190-SEVERITY **severity** | P2 — the one diagnostic the discipline's central loop depends on is misleading. |
+| @fact:B190-DISPOSITION **disposition** | `open` — carry the drift lines of `specmap --check` through `floor`, and offer the fresh-project hint only when no index exists. The tutorial teaches `specmap --check` meanwhile. |
+| @fact:B190-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-191 — the AI-Native boot texts name paths from before the tree moved into `vibevm/` {#b-191}
+
+| field | value |
+|---|---|
+| @fact:B191-WHAT **what** | The boot snippets of `org.vibevm.ai-native/core-ai-native` and `org.vibevm.ai-native/rust-ai-native-lang`, which every session of an installing project reads, send the agent to `spec/00-MANIFESTO.xml`, `spec/rust/GUIDE-AI-NATIVE-RUST.xml`, `spec/cards/INDEX.xml` and similar. The packages keep those files under `vibevm/vibespecs/`. The same defect in the redbook is `B-181`. |
+| @fact:B191-EVIDENCE **evidence** | 2026-09-26, the two boot files of a sandbox project after `vibe install org.vibevm.ai-native/rust-ai-native` (investigation `W5`). The agent there found the files by searching; a weaker reader follows the path and finds nothing. |
+| @fact:B191-SEVERITY **severity** | P3 — a strong agent recovers, and the cost is turns. |
+| @fact:B191-DISPOSITION **disposition** | `open` — rewrite the paths in both boot snippets, and sweep the family's other texts for the old layout in the same change. |
+| @fact:B191-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
+
+## B-192 — a project's specifications may cite addresses that resolve nowhere, and nothing says so {#b-192}
+
+| field | value |
+|---|---|
+| @fact:B192-WHAT **what** | `vibe check` passes a project whose specifications cite `spec://…` addresses that no unit carries. Two ways lead there. An agent guesses the namespace: in a walk of the first-project tutorial, Codex wrote every cross-reference as `spec://hello-vibevm/PROP-001#…`, while the project's index minted `spec://project/modules/hello-vibevm/PROP-001#…`. And the namespace moves under the citations: without a `specmap.toml` the map engine mints `spec://project/…` (`core-ai-native-specmap/src/config.rs`, the default `namespace = "project"`), and `rust-ai-native init` writes `namespace = "<project name>"`, so every citation written before the discipline was set up dies at that moment. |
+| @fact:B192-EVIDENCE **evidence** | 2026-09-26, investigation `W1`, step 5 (Codex 0.152.1, `gpt-5.6-sol`): `vibe explain "spec://hello-vibevm/PROP-001#invocation"` → `no spec unit with URI … in the index`, and `vibe check` clean. The namespace move: the default in `config.rs` against the `specmap.toml` that `rust-ai-native init` wrote in investigation `W5`. |
+| @fact:B192-SEVERITY **severity** | P3 — the citations read as prose to a person and lead nowhere for a machine, and no check tells either of them. |
+| @fact:B192-DISPOSITION **disposition** | `open` — resolve a project's own `spec://` citations in `vibe check` and warn on the dead ones, as the host's gate does for its own addresses (`B-076`); have `rust-ai-native init` rewrite or report the `spec://project/` citations it is about to orphan. The advanced tutorial tells the reader to replace them by hand meanwhile. |
+| @fact:B192-FILED **filed by** | DOCS-AI-NATIVE-TUTORIAL (M-025), 2026-09-26. |
