@@ -59,6 +59,15 @@ use scan::{prose_uris, rule_lines};
 /// own pages settled on `org.acme`).
 pub const TEACHING_GROUP: &str = "org.acme";
 
+/// The projects the official manual's tutorials create. A project that
+/// adopts a traceability map mints addresses under its own name,
+/// `spec://hello-vibevm/modules/calculator/PROP-001#…`, and those exist
+/// only in the reader's copy of the tutorial's project, never in a
+/// package anyone could resolve. A page that shows the reader the exact
+/// address to type is illustrating, not citing, exactly as an address
+/// under [`TEACHING_GROUP`] is.
+pub const TEACHING_PROJECTS: &[&str] = &["hello-vibe", "hello-vibevm"];
+
 /// What an address found in a documentation package IS.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Classification {
@@ -68,7 +77,8 @@ pub enum Classification {
     /// An address written with an ellipsis or an `<…>` placeholder — the
     /// manual showing the SHAPE of an address, not using one.
     Placeholder,
-    /// An address in the reserved teaching group [`TEACHING_GROUP`].
+    /// An address in the reserved teaching group [`TEACHING_GROUP`], or
+    /// under the name of a tutorial's project [`TEACHING_PROJECTS`].
     Teaching,
     /// The manual addressing its own pages. It resolves inside the
     /// documentation package's tree, not against a specification.
@@ -272,6 +282,12 @@ pub fn classify(uri: &str, self_coordinate: &str) -> Classification {
         return Classification::Placeholder;
     };
     if body.starts_with(&format!("{TEACHING_GROUP}/")) {
+        return Classification::Teaching;
+    }
+    if TEACHING_PROJECTS
+        .iter()
+        .any(|project| body.starts_with(&format!("{project}/")))
+    {
         return Classification::Teaching;
     }
     if body.starts_with(&format!("{self_coordinate}/")) {

@@ -173,6 +173,23 @@ fn the_three_prose_forms_are_classified_apart_from_citations() {
     );
 }
 
+/// A tutorial shows the reader the exact address their own project mints,
+/// and no package can resolve it; a look-alike name is still a citation.
+#[test]
+fn a_tutorial_project_address_is_teaching_and_a_look_alike_is_not() {
+    assert_eq!(
+        classify(
+            "spec://hello-vibevm/modules/calculator/PROP-001#division-by-zero",
+            SELF
+        ),
+        Classification::Teaching
+    );
+    assert_eq!(
+        classify("spec://hello-vibevmx/modules/calculator/PROP-001#x", SELF),
+        Classification::Citation
+    );
+}
+
 /// A placeholder BEATS the teaching group: `spec://org.acme/…/X` cannot
 /// be resolved because of its ellipsis, and reporting it as a teaching
 /// address would name the wrong reason.
