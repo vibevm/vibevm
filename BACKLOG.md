@@ -1989,3 +1989,13 @@ structure, and it goes when the file does.
 | @fact:B177-SEVERITY **severity** | P3 — every kind of gap is gated by a check and counted by the build; what is missing is a red at the site's own build. |
 | @fact:B177-DISPOSITION **disposition** | `open` — an owner decision, because the change is to CI: build and publish `vibevm-doc` in a job of its own, then let `vibe doc build-site` exit non-zero when a host documentation has a gap. The host renders from the checkout with every input in hand, so a gap there is a defect; a registry package's gap stays the page `##SITE-RENDER-IDEMPOTENT` asks for. |
 | @fact:B177-FILED **filed by** | the B-176 fix, 2026-09-26. |
+
+## B-178 — the site's level-0 manifest keeps only the tables a hand-kept list names {#b-178}
+
+| field | value |
+|---|---|
+| @fact:B178-WHAT **what** | `vibe doc build-site` renders every package through a level-0 copy whose `vibe.toml` it writes itself (`crates/vibe-doc/src/site/level0/card.rs`, `synthesise`), and that copy keeps only the tables named in `CARRIED`. `[glossary]` was not on the list, so vibevm.org resolved no glossary link and carried no definition, while `vibe doc build` and the local reader showed both (fixed in `d954a09f4`). Nothing ties the list to the manifest grammar: the next table the pipeline reads will reach the local reader and not the site, and no test will fail. |
+| @fact:B178-EVIDENCE **evidence** | 2026-09-26: the candidate image built from `384e4e87e` served `start/what-vibevm-is` of the manual with no `data-gloss` link and no definitions block, and the rollout's smoke check stopped before the switch. A host-only `vibe doc build-site --no-web` at `d954a09f4` renders 12 glossary links and one definitions block on that page in both editions. |
+| @fact:B178-SEVERITY **severity** | P3 — the one known instance is fixed and the rollout's smoke check now looks for glossary links; the list can drift again with the next table. |
+| @fact:B178-DISPOSITION **disposition** | `open` — derive the check from the grammar: a test that walks every table `vibe-core` accepts in a documentation manifest and requires each to be on `CARRIED` or on a named list of tables the level-0 view drops on purpose, each with its reason. |
+| @fact:B178-FILED **filed by** | DOCS-PUBLISH-2 (M-023), found by the rollout's smoke check, 2026-09-26. |
