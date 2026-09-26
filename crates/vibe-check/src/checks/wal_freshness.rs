@@ -1,4 +1,5 @@
-//! Check 5 — `spec/WAL.md` modification time is less than
+//! Check 5 — the WAL's (`vibevm/vibespecs/WAL.xml` or `WAL.md`)
+//! modification time is less than
 //! `wal_max_age_hours` (default 24); older → warning.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");

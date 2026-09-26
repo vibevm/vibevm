@@ -10,19 +10,22 @@ _TODO: one paragraph describing what `{project_name}` is and who it is for._
 
 Every AI session starts here. In order:
 1. Read every file in `vibevm/vibespecs/boot/` in filename order.
-2. Read `spec/WAL.md` — current project state (checkpoint, not history log).
+2. Read `vibevm/vibespecs/WAL.xml` — current project state (checkpoint, not
+   history log).
 3. Read the relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and
    `vibevm/vibespecs/modules/` for the task at hand.
 4. Only then begin work.
 
-If `spec/WAL.md` is older than 24 hours, verify the state with the user before
-doing destructive work.
+If `vibevm/vibespecs/WAL.xml` is older than 24 hours, verify the state with the
+user before doing destructive work.
 
 ## Memory layers
 
 - **Head** (human): persistent but private.
-- **WAL** (`spec/WAL.md`): volatile, rewritten each session, current state only.
-- **Spec** (other files under `spec/`): stable decisions, addressable via
+- **WAL** (`vibevm/vibespecs/WAL.xml`, or `WAL.md` beside it in a
+  Markdown-lane project): volatile, rewritten each session, current state only.
+- **Spec** (the other files under `vibevm/vibespecs/` — `common/` and
+  `modules/`): stable decisions, addressable via
   `spec://<module>/<doc>#<section>` URIs.
 - **Code** (`src/`, `tests/`): artefacts, regenerable.
 

@@ -1,6 +1,7 @@
 //! Check 6 — WAL has the canonical sections (Current Phase,
 //! Constraints, Done, Next, Issues). The WAL is a spec source and lives
-//! in either PROP-045 serialisation — `spec/WAL.md` or `vibevm/vibespecs/WAL.xml` —
+//! in either PROP-045 serialisation — `vibevm/vibespecs/WAL.xml` or
+//! `vibevm/vibespecs/WAL.md` —
 //! one document, one form; an XML WAL is read through its canonical
 //! Markdown projection, so the heading scan is form-blind.
 
@@ -164,7 +165,7 @@ mod tests {
     fn wal_missing_is_not_an_error() {
         // Regression guard: WAL discipline is a project convention,
         // not part of the package manager's contract. A fresh
-        // `vibe init`-ed project does NOT carry `spec/WAL.md`, and
+        // `vibe init`-ed project does NOT carry a WAL at all, and
         // `vibe check` against such a project must NOT produce a
         // WalWellformed finding. Past versions of this check
         // emitted `WAL is missing — every project carries one`,

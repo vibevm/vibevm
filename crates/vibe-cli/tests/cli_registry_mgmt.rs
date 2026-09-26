@@ -240,7 +240,7 @@ fn show_effective_emits_boot_files_with_provenance() {
         .assert()
         .success();
     let stdout = String::from_utf8_lossy(&assertion.get_output().stdout);
-    // 00-core and 90-user boot files. spec/WAL.md is NOT created by
+    // 00-core and 90-user boot files. The WAL is NOT created by
     // default `vibe init` — it's a project convention, not part of
     // the package manager's contract — so `show effective` should
     // simply skip it when absent, not blow up.
@@ -261,7 +261,7 @@ fn show_effective_emits_boot_files_with_provenance() {
 
 #[test]
 fn show_effective_includes_wal_when_present() {
-    // When the operator (or `org.vibevm/wal` install) put `spec/WAL.md` in
+    // When the operator (or `org.vibevm/wal` install) put the WAL in
     // place, `show effective` includes it with `(wal)` provenance.
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

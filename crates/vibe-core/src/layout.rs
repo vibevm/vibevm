@@ -202,7 +202,8 @@ pub fn current_wal_xml() -> PathBuf {
     current_specs_root().join(WAL_XML)
 }
 
-/// The WAL stem, Markdown form, of the live layout (`spec/WAL.md` today).
+/// The WAL stem, Markdown form, of the live layout
+/// (`vibevm/vibespecs/WAL.md` today).
 pub fn current_wal_md() -> PathBuf {
     current_specs_root().join(WAL_MD)
 }

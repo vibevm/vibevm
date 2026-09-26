@@ -13,8 +13,9 @@
 //!
 //! 1. [`CheckId::ManifestValidity`] — `vibe.toml` parses and matches
 //!    schema; `vibe.lock` (if present) parses and matches schema.
-//! 5. [`CheckId::WalFreshness`] — `spec/WAL.md` modification time is
-//!    less than `wal_max_age_hours` (default 24); older → warning.
+//! 5. [`CheckId::WalFreshness`] — the WAL's (`vibevm/vibespecs/WAL.xml`
+//!    or `WAL.md`) modification time is less than `wal_max_age_hours`
+//!    (default 24); older → warning.
 //! 6. [`CheckId::WalWellformed`] — WAL has the canonical sections
 //!    (Current Phase, Constraints, Done, Next, Issues).
 //! 7. [`CheckId::BootDirectory`] — the boot directory

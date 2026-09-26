@@ -73,7 +73,8 @@ pub fn index_rel() -> String {
     vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
 }
 
-/// The live Markdown WAL path as a `PathBuf` (`spec/WAL.md` today).
+/// The live Markdown WAL path as a `PathBuf`
+/// (`vibevm/vibespecs/WAL.md` today).
 pub fn wal_md() -> PathBuf {
     vibe_core::layout::current_wal_md()
 }
