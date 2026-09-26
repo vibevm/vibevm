@@ -60,6 +60,30 @@ const NEWS_FRAGMENTS = new Set([
 ]);
 
 /**
+ * Every text fragment the map at the foot of the landing puts on the
+ * page, read off the same copy table the map renders from — for the
+ * reason `NEWS_FRAGMENTS` is: the words are in one file, and a plate the
+ * owner changes tomorrow cannot arrive as an unexplained difference.
+ *
+ * The plates' NAMES are not here on purpose. They are the header's own
+ * labels, printed a second time by the same list (`landing/menu.ts`),
+ * and each of them is already explained where it first arrived — D-10 for
+ * «Documentation», D-34 for «Vision», D-38 for the channels page, and the
+ * three Why labels with the pages they lead to. A set of fragments does
+ * not count a word twice, so the second printing adds nothing to compare.
+ * The drawings' descriptions are attributes, never text, and never here.
+ */
+const MAP_FRAGMENTS = new Set(
+  Object.values(LANDING).flatMap((strings) => [
+    strings.mapK,
+    strings.mapTitle,
+    strings.mapLede,
+    ...Object.values(strings.mapRows),
+    ...Object.values(strings.mapPlates).map((plate) => plate.body),
+  ]),
+);
+
+/**
  * The differences that are decisions, each with the decision behind it.
  *
  * `where` says which check may cite the rule; `matches` decides whether
@@ -289,6 +313,13 @@ const DIFFERENCES = [
     reason:
       "The sitemap gains the channels page's pair of addresses, weighted by the same address-derived rule every landing page is (D-31): 0.8 for the English page, 0.7 for the Russian one, monthly.",
     matches: (path) => path.includes("/news-and-support/"),
+  },
+  {
+    id: "D-40",
+    where: "text",
+    reason:
+      "The landing gains the map under its content (owner, 2026-09-26): the header's eight destinations drawn large, for the reader who does not read a menu. Its words are the kicker, the title, one line under it, the two rows' names and one line per destination — the port's own, in both languages, computed from the landing's copy table rather than listed here. The names on the plates are the header's labels printed again by the same list and are explained where they first arrived. None of it replaces any of the owner's copy, which stays above the map in its place.",
+    matches: (fragment) => MAP_FRAGMENTS.has(fragment),
   },
 ];
 

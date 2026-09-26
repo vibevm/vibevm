@@ -11,22 +11,20 @@ import {
 
 import { href } from "../lib/href.ts";
 import { SITE_LANGUAGE_LABEL } from "../lib/site-language.ts";
-import { isNewsPath, newsHref } from "../news/paths.ts";
 import { findInDocumentation } from "../reader/search.ts";
 import { rememberSiteLanguage } from "../reader/site-language.ts";
 import { startThemeSwitch } from "../reader/theme.ts";
-import { isVisionPath, visionHref } from "../vision/paths.ts";
-import { type WhyPage, whyHref, whyPageOf, whyPath } from "../why/paths.ts";
+import { isVisionPath } from "../vision/paths.ts";
+import { WHY_PAGES, whyPageOf } from "../why/paths.ts";
 import styles from "./chrome.css?inline";
 import {
-  GITHUB_URL,
-  GITVERSE_URL,
   LOCALES,
   type Locale,
   STRINGS,
   localePath,
   otherLocale,
 } from "./i18n.ts";
+import { landingMenu } from "./menu.ts";
 
 export type LandingChromeProps = {
   /** Which language's page this is; the chrome speaks it too. */
@@ -72,14 +70,21 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
   const locale = props.locale;
   const here = props.path;
 
-  /* The three Why pages, as the header and the footer both list them —
-     one array rather than two lists that would drift the first time a
-     fourth product joins the family. The label travels with the slug so
-     that adding a page is one entry and not three edits. */
-  const why: readonly { page: WhyPage; label: string }[] = [
-    { page: "vibevm", label: t.navWhyVibevm },
-    { page: "zap", label: t.navWhyZap },
-    { page: "ai-native", label: t.navWhyAiNative },
+  /* The destinations, as the header, the footer and the map at the foot
+     of the landing all list them — one list (`menu.ts`) rather than
+     three that would drift the first time a fourth product joins the
+     family. It is asked against THIS page, so the entry that is the page
+     a reader is standing on can say so. */
+  const menu = landingMenu(locale, here);
+
+  /* What the footer lists, in the footer's own order: the three product
+     arguments, the essay, the two mirrors. The header leads with the
+     essay; the footer is the older list and keeps its order. */
+  const footerLinks = [
+    ...WHY_PAGES.map((page) => menu.entries[`why-${page}`]),
+    menu.entries.vision,
+    menu.entries.github,
+    menu.entries.gitverse,
   ];
 
   /* The two behaviours the landing has. A documentation page starts the
@@ -116,59 +121,35 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
             the markup rather than about how wide the reader's window
             happened to be — and each row is paired with the control that
             belongs beside it, which is what keeps the pairing true at
-            every width instead of only at the one that was measured. */}
+            every width instead of only at the one that was measured.
+
+            What stands on each row, and in which order, is the list's
+            business (`menu.ts`): the first row ends with the channels
+            page because it is the only entry of that row that leads back
+            into the site rather than out of it — after the manual and
+            the two mirrors, the place to ask about them; the second row
+            opens with the essay because it is the worldview the three
+            product arguments after it are pieces of. The same list, in
+            the same order, is drawn large at the foot of the landing. */}
         <nav class="landing-nav">
-          <div class="landing-nav__row landing-nav__row--tools">
-            <a class="landing-nav__link" href={href("doc/")}>
-              {t.documentation}
-            </a>
-            <a class="landing-nav__link" href={GITHUB_URL} rel="noopener">
-              GitHub
-            </a>
-            <a class="landing-nav__link" href={GITVERSE_URL} rel="noopener">
-              GitVerse
-            </a>
-            {/* And, at the end of the row, where the project is spoken.
-                It stands last because it is the only entry of this row
-                that leads back into the site rather than out of it —
-                after the manual and the two mirrors, the place to ask
-                about them. A reader who has run out of things to read is
-                exactly the reader who needs it. */}
-            <a
-              class="landing-nav__link"
-              href={newsHref(locale)}
-              {...(isNewsPath(here) ? { "aria-current": "page" as const } : {})}
+          {menu.rows.map((row) => (
+            <div
+              key={row.id}
+              class={`landing-nav__row landing-nav__row--${row.id}`}
             >
-              {t.navNews}
-            </a>
-          </div>
-          <div class="landing-nav__row landing-nav__row--story">
-            {/* The essay stands first and the three product arguments
-                after it: it is the worldview they are pieces of, and a
-                reader who wants the whole picture should not have to
-                find it through one of the parts. */}
-            <a
-              class="landing-nav__link"
-              href={visionHref(locale)}
-              {...(isVisionPath(here)
-                ? { "aria-current": "page" as const }
-                : {})}
-            >
-              {t.navVision}
-            </a>
-            {why.map((one) => (
-              <a
-                key={one.page}
-                class="landing-nav__link"
-                href={whyHref(one.page, locale)}
-                {...(here === whyPath(one.page)
-                  ? { "aria-current": "page" as const }
-                  : {})}
-              >
-                {one.label}
-              </a>
-            ))}
-          </div>
+              {row.entries.map((one) => (
+                <a
+                  key={one.id}
+                  class="landing-nav__link"
+                  href={one.href}
+                  {...(one.offSite ? { rel: "noopener" } : {})}
+                  {...(one.current ? { "aria-current": "page" as const } : {})}
+                >
+                  {one.label}
+                </a>
+              ))}
+            </div>
+          ))}
         </nav>
 
         {/* The search stands over the first row, because that row opens
@@ -243,18 +224,15 @@ export const LandingChrome = component$<LandingChromeProps>((props) => {
       <Footer copyright={t.copyright}>
         <div class="landing-footer__brand">VibeVM — {t.footerTagline}</div>
         <div class="landing-footer__links">
-          {why.map((one) => (
-            <a key={one.page} href={whyHref(one.page, locale)}>
+          {footerLinks.map((one) => (
+            <a
+              key={one.id}
+              href={one.href}
+              {...(one.offSite ? { rel: "noopener" } : {})}
+            >
               {one.label}
             </a>
           ))}
-          <a href={visionHref(locale)}>{t.navVision}</a>
-          <a href={GITHUB_URL} rel="noopener">
-            GitHub
-          </a>
-          <a href={GITVERSE_URL} rel="noopener">
-            GitVerse
-          </a>
           <a href={href(`${localePath(other)}${here}`)}>
             {other.toUpperCase()}
           </a>

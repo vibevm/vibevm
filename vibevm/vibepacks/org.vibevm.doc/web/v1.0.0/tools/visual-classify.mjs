@@ -86,6 +86,18 @@ const LAYERS = [
     css: `.an-vision-entry { display: none !important; }`,
   },
   {
+    /* The landing's ground and its map (parity rule D-40, owner
+       2026-09-26): four faint planes laid behind the whole page, one of
+       them behind the hero's constellation inside this very frame, and
+       the section of plates under the owner's content. Neither has a
+       counterpart in the reference and both are decisions; the planes
+       alone would count a fifth of the hero's pixels as different, for
+       a colour moved by a few units under everything. Hidden here, so the
+       residual is about the hero the reference also drew. */
+    id: "map",
+    css: `.landing-field, .landing-map { display: none !important; }`,
+  },
+  {
     id: "type",
     css: `body { font-size: 16px !important; line-height: 1.6 !important; }`,
   },
@@ -369,11 +381,11 @@ async function main() {
     `- this build: \`${portRoot}\``,
     `- a pixel differs when any channel moves by more than ${TOLERANCE}/255`,
     "",
-    "| page | raw | offset | aligned | − entry | + type | + tones | below the header |",
-    "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    "| page | raw | offset | aligned | − entry | − map | + type | + tones | below the header |",
+    "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ...rows.map(
       (row) =>
-        `| \`${row.route}\` | ${pct(row.atZero)} | ${row.offset > 0 ? "+" : ""}${row.offset}px | ${pct(row.raw)} | ${pct(row.entry)} | ${pct(row.type)} | ${pct(row.tones)} | ${pct(row.tonesBelowHeader)} |`,
+        `| \`${row.route}\` | ${pct(row.atZero)} | ${row.offset > 0 ? "+" : ""}${row.offset}px | ${pct(row.raw)} | ${pct(row.entry)} | ${pct(row.map)} | ${pct(row.type)} | ${pct(row.tones)} | ${pct(row.tonesBelowHeader)} |`,
     ),
     "",
     "The last column is the residual: with the pages aligned, the reference's",
@@ -389,6 +401,11 @@ async function main() {
     "  AI-Native hero gained after the reference was frozen (D-34). One",
     "  block, hidden for the measurement, so its height stops shifting",
     "  everything below it on that one page.",
+    "- **− map** — the landing's ground and its map (D-40): four faint",
+    "  planes behind the whole page, one of them inside this frame behind",
+    "  the constellation, and the section of plates under the owner's",
+    "  content. Both are decisions the reference predates; hidden, so the",
+    "  residual is about the hero the reference also drew.",
     "- **offset** — this build wears the documentation's header, which is",
     "  seventeen pixels shorter than the landing's own bar, so every element",
     "  below it starts seventeen pixels higher. A constant shift makes every",

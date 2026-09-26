@@ -33,7 +33,16 @@
  * which the Astro site drew without one. They are marked rather than
  * mixed in, so that «every other value is the owner's, byte for byte»
  * stays a claim a reader can check.
+ *
+ * The map at the foot of the landing (owner, 2026-09-26) adds one more
+ * such group, marked the same way: the `map*` entries below are the
+ * words the map says over the header's own labels — a kicker, a title, a
+ * line, the two rows' names, and for each destination a line about it
+ * and its drawing in words. The English is written for the page; the
+ * Russian is an adaptation of it and not a gloss.
  */
+
+import type { MenuId, MenuRowId } from "./menu.ts";
 
 export const LOCALES = ["en", "ru"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -58,6 +67,19 @@ export type Cap = {
   readonly label: string;
   readonly head: string;
   readonly body: string;
+};
+
+/**
+ * One plate of the map: what a reader finds behind the destination, and
+ * what its drawing shows, for a reader who cannot see it. The name is
+ * not here — it is the header's own label, read off the same list the
+ * header prints (`menu.ts`), so the two can never say different things.
+ */
+export type MapPlate = {
+  /** One or two lines: what is there. */
+  readonly body: string;
+  /** The drawing, in words — the plate's `aria-label`. */
+  readonly alt: string;
 };
 
 export type Strings = {
@@ -127,6 +149,17 @@ export type Strings = {
   readonly search: string;
   readonly searchPlaceholder: string;
   readonly searchEmpty: string;
+  /**
+   * The map under the landing's content: the header's destinations drawn
+   * large, for the reader who does not read a menu (owner, 2026-09-26).
+   * The port's own words, marked as such — a kicker, a title, the line
+   * under it, the two rows' names, and one plate per destination.
+   */
+  readonly mapK: string;
+  readonly mapTitle: string;
+  readonly mapLede: string;
+  readonly mapRows: Readonly<Record<MenuRowId, string>>;
+  readonly mapPlates: Readonly<Record<MenuId, MapPlate>>;
 };
 
 export const STRINGS: Readonly<Record<Locale, Strings>> = {
@@ -185,6 +218,44 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     search: "Search the documentation",
     searchPlaceholder: "Search",
     searchEmpty: "Nothing here carries that word.",
+    mapK: "Where to go",
+    mapTitle: "Everything here, on one plane.",
+    mapLede: "Every place the menu at the top leads to, drawn large. Pick one.",
+    mapRows: { tools: "The software", story: "The argument" },
+    mapPlates: {
+      documentation: {
+        body: "The manual for vibe and the packages it installs — read online, page by page, in English and in Russian.",
+        alt: "A page as a tall dark plane: short pale lines of text, a terracotta block number over its corner, a second page behind it, and one thin diagonal — the line a reader follows.",
+      },
+      github: {
+        body: "The canonical repository: the code, the issues, the releases.",
+        alt: "A commit graph as planes: a dark trunk with three pinned nodes, one terracotta branch leaving to the right and merging back, and a solid dark square standing for the source.",
+      },
+      gitverse: {
+        body: "The same source, mirrored on GitVerse.",
+        alt: "The same commit graph, mirrored: the branch leaves to the left, and the square standing for the source is hollow — a copy.",
+      },
+      news: {
+        body: "Release news on Telegram, a chat for questions and bug reports, the community on Reddit — and the creator on X.",
+        alt: "A broadcast: a terracotta circle sends three dashed arcs up and to the right, two small dark planes receive them, and one thin line runs back to the circle.",
+      },
+      vision: {
+        body: "The essay behind everything on this site: two sources of intention, an expensive probabilistic layer over a cheap deterministic one, and traceable edges between them.",
+        alt: "The essay's two sources of intention: a terracotta circle and a tilted cobalt square joined by a gold arc, each dropping an edge to one floor, with smaller nodes traced between them.",
+      },
+      "why-vibevm": {
+        body: "The product thesis: discipline you can install. Specs, flows and skills as versioned, pinned packages — and the context an agent boots from, computed from them.",
+        alt: "A terracotta wedge entering a field of scattered tilted rectangles and, past it, a lattice of squares pinned in place.",
+      },
+      "why-zap": {
+        body: "Announced for October 2026: a local workspace that puts coding agents, their questions and their worktrees on one map. A declaration of intent, not a release.",
+        alt: "An orbital map in green: a core with dashed rings around it, work nodes on the rings, one terracotta node for the project, and a trajectory leaving toward the edge.",
+      },
+      "why-ai-native": {
+        body: "One discipline over Rust, TypeScript and Go: the code stays ordinary, and the strictness lives around it — in gates a machine runs.",
+        alt: "A gold core square projecting three rays onto an oxide square, a slate circle and a teal triangle, each clamped by gold brackets, all standing on one floor with a single gate notch.",
+      },
+    },
   },
   ru: {
     htmlLang: "ru",
@@ -242,6 +313,44 @@ export const STRINGS: Readonly<Record<Locale, Strings>> = {
     search: "Искать в документации",
     searchPlaceholder: "Поиск",
     searchEmpty: "Здесь нет ничего с этим словом.",
+    mapK: "Куда дальше",
+    mapTitle: "Весь сайт на одной плоскости.",
+    mapLede: "Всё, куда ведёт меню наверху, — крупно и в картинках. Выбирайте.",
+    mapRows: { tools: "Софт", story: "Смысл" },
+    mapPlates: {
+      documentation: {
+        body: "Руководство по vibe и пакетам, которые он ставит: страница за страницей, на русском и английском.",
+        alt: "Страница как высокая тёмная плоскость: короткие светлые строки текста, терракотовый номер блока поверх угла, вторая страница позади и одна тонкая диагональ — линия, по которой идёт читатель.",
+      },
+      github: {
+        body: "Основной репозиторий: код, issues, релизы.",
+        alt: "Граф коммитов из плоскостей: тёмный ствол с тремя пришпиленными узлами, терракотовая ветка уходит вправо и вливается обратно, рядом стоит сплошной тёмный квадрат — исходник.",
+      },
+      gitverse: {
+        body: "Тот же исходный код — зеркало на GitVerse.",
+        alt: "Тот же граф коммитов, отражённый: ветка уходит влево, а квадрат-исходник полый — это копия.",
+      },
+      news: {
+        body: "Новости релизов в Telegram, чат для вопросов и багов, сообщество на Reddit — и создатель в X.",
+        alt: "Вещание: терракотовый круг посылает три пунктирные дуги вверх и вправо, две маленькие тёмные плоскости их принимают, и одна тонкая линия возвращается к кругу.",
+      },
+      vision: {
+        body: "Эссе, из которого выросло всё на этом сайте: два источника намерения, дорогой вероятностный слой над дешёвым детерминированным — и трассируемые рёбра между ними.",
+        alt: "Два источника намерения из эссе: терракотовый круг и наклонённый кобальтовый квадрат, соединённые золотой дугой; каждый опускает ребро на общий пол, между ними — узлы поменьше.",
+      },
+      "why-vibevm": {
+        body: "Тезис продукта: дисциплина, которую можно установить. Спеки, флоу и навыки — версионируемые, закреплённые пакеты, а из них вычисляется контекст, с которого стартует агент.",
+        alt: "Терракотовый клин входит в поле разбросанных наклонённых прямоугольников, а за ним — решётка квадратов, закреплённых на своих местах.",
+      },
+      "why-zap": {
+        body: "Анонс на октябрь 2026 года: локальное рабочее пространство, где кодовые агенты, их вопросы и worktree — на одной карте. Заявление о намерениях, а не релиз.",
+        alt: "Орбитальная карта в зелёном: ядро с пунктирными кольцами, узлы работы на кольцах, один терракотовый узел — проект, и траектория, уходящая к краю.",
+      },
+      "why-ai-native": {
+        body: "Одна дисциплина поверх Rust, TypeScript и Go: код остаётся обычным, а строгость живёт вокруг него — в гейтах, которые запускает машина.",
+        alt: "Золотой квадрат-ядро проецирует три луча на оксидный квадрат, сланцевый круг и бирюзовый треугольник; каждый зажат золотыми скобками, все стоят на одном полу с единственной насечкой-выходом.",
+      },
+    },
   },
 };
 

@@ -15,7 +15,8 @@
 // So this compares the things the design IS, at each width it was drawn
 // for:
 //
-//   · the sections, in order, by the heading each carries;
+//   · the sections, in order, by the heading each carries, and each one's
+//     share of the height of the sections compared;
 //   · how many things stand across a row inside each of them — which is
 //     what a breakpoint actually does;
 //   · where each drawing sits, how wide it is relative to its section,
@@ -42,8 +43,20 @@ import { fileURLToPath } from "node:url";
 
 import { chromium } from "@playwright/test";
 
+import { STRINGS as LANDING } from "../site/src/landing/i18n.ts";
+
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PORTS = { reference: 47331, port: 47332 };
+
+/**
+ * The title the landing's map carries in either language, read off the
+ * copy table the map renders from — the one fact by which a section the
+ * reference never had is recognised as the map and not as a page that
+ * grew a section nobody decided on (L-11).
+ */
+const MAP_TITLES = new Set(
+  Object.values(LANDING).map((strings) => strings.mapTitle),
+);
 
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
@@ -97,6 +110,13 @@ const DIFFERENCES = [
       "The install panel gained a copy button beside each command line, and the line became a scrolling box inside the chip so that the button stays put while the command scrolls. Both are the landing port's own addition — its string table marks `copyCommand` and `copied` as the port's rather than the owner's — and each adds one laid-out box the reference has no counterpart for. The rule fires only when the reference's sequence of boxes is still there in order, with boxes added and none lost or reordered.",
     where: "row shapes",
     matches: (observation) => observation.added && observation.subsequence,
+  },
+  {
+    id: "L-11",
+    reason:
+      "The landing gained one section under the owner's content: the map of the header's destinations, drawn large (owner, 2026-09-26; textual rule D-40). It stands after every section the reference has, so the reference's sections are still compared one to one against the first ones here, and what the map adds is measured against nothing, because the reference drew nothing there. The rule fires only for a section that comes after the last one the reference has and carries the map's own title in either language; a section anywhere else, or under any other heading, is still a finding.",
+    where: "sections",
+    matches: (section) => MAP_TITLES.has(section.heading),
   },
 ];
 
@@ -252,9 +272,12 @@ const skeletonInPage = () => {
 
     return {
       heading: (heading?.textContent ?? "").replace(/\s+/g, " ").trim(),
-      /* The fraction of the whole page this section occupies: a band
-         that stopped being a band shows up here and nowhere else. */
-      height: box.height / main.getBoundingClientRect().height,
+      /* The section's own height. The comparison reads it as a share of
+         the sections that are compared, so a band that stopped being a
+         band shows up there and nowhere else — and a section added after
+         the last one the reference has (L-11) does not shrink every other
+         section's share of the page by its own height. */
+      px: box.height,
       ground: family(getComputedStyle(section).backgroundColor),
       accent: family(getComputedStyle(eyebrow ?? section).color),
       layouts,
@@ -301,12 +324,47 @@ function compare(pair, viewport, a, b, findings, explained) {
     );
   }
 
-  if (a.sections.length !== b.sections.length) {
-    note(
-      `${a.sections.length} section(s) in the reference, ${b.sections.length} here`,
+  /* The sections are matched one to one, in order. A build with MORE
+     sections than the reference is still the same composition when every
+     extra one stands after the reference's last and is a decision a rule
+     names (L-11); a build with fewer, or with an extra section a rule
+     does not cover, is a different composition and is said to be. */
+  const matched = a.sections.length;
+  if (b.sections.length > matched) {
+    const extra = b.sections.slice(matched);
+    const rules = extra.map(
+      (section) =>
+        DIFFERENCES.find(
+          (candidate) =>
+            candidate.where === "sections" && candidate.matches(section),
+        ) ?? null,
     );
+    if (rules.some((rule) => rule === null)) {
+      note(`${matched} section(s) in the reference, ${b.sections.length} here`);
+      return;
+    }
+    extra.forEach((section, index) => {
+      explained.push({
+        id: rules[index].id,
+        where,
+        text: `section ${matched + index + 1} «${section.heading.slice(0, 40)}» stands after the reference's ${matched}`,
+      });
+    });
+  } else if (b.sections.length !== matched) {
+    note(`${matched} section(s) in the reference, ${b.sections.length} here`);
     return;
   }
+
+  /* Each section's share of the sections compared — the same fraction on
+     both sides, so the shares are about proportion and not about what
+     else the page carries. */
+  const shares = (sections) => {
+    const compared = sections.slice(0, matched);
+    const total = compared.reduce((sum, section) => sum + section.px, 0);
+    return compared.map((section) => (total === 0 ? 0 : section.px / total));
+  };
+  const sharesA = shares(a.sections);
+  const sharesB = shares(b.sections);
 
   a.sections.forEach((left, index) => {
     const right = b.sections[index];
@@ -325,9 +383,9 @@ function compare(pair, viewport, a, b, findings, explained) {
         `${at}: accent is ${left.accent} in the reference, ${right.accent} here`,
       );
     }
-    if (Math.abs(left.height - right.height) > TOLERANCE) {
+    if (Math.abs(sharesA[index] - sharesB[index]) > TOLERANCE) {
       note(
-        `${at}: takes ${(left.height * 100).toFixed(1)}% of the page in the reference, ${(right.height * 100).toFixed(1)}% here`,
+        `${at}: takes ${(sharesA[index] * 100).toFixed(1)}% of the compared sections in the reference, ${(sharesB[index] * 100).toFixed(1)}% here`,
       );
     }
 

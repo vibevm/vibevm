@@ -1,0 +1,933 @@
+/* The map under the landing: the header's destinations, drawn large.
+   ---------------------------------------------------------------------
+   Two bands, one per header row, each a composition of planes of unequal
+   size on twelve columns. The plates are placed by the grid from the size
+   each entry declares (`menu.ts`) and never by name: `grid-auto-flow:
+   dense` packs a tower two rows high, two small squares and one wide
+   plate into the first band, and one band across the row with three
+   thirds under it into the second — and it will pack a ninth entry too,
+   at whatever size that entry declares, without a rule being written for
+   it here.
+
+   Every colour is a semantic token (PROP-057 `##STACK-DESIGN-FLOOR`), and
+   the drawings are coloured through the family's own vocabulary — the
+   essay's terracotta circle and cobalt square, the AI-Native gold and its
+   three language marks, the Zap green, plain ink for the deterministic
+   thing — so no new hue was minted for the map: the plates are the pages'
+   own signatures, and a signature in a new colour is a forgery.
+
+   Motion is CSS over markup the server wrote, twice over. Where the
+   browser can drive an animation from scrolling, each drawing draws
+   itself as its plate enters the window — the reader arrives at the map
+   and watches it appear, which is what a picture at the bottom of a page
+   never gets from an animation that ran at load. Where it cannot, the
+   same keyframes run once at load with the same choreography as delays.
+   Each element carries `--at`, its place in that choreography, and the
+   two mappings of it stand side by side below. A reader who asked for
+   stillness gets every drawing finished and still. */
+
+.landing-map {
+  position: relative;
+  margin-bottom: clamp(56px, 10vh, 104px);
+  padding-top: clamp(40px, 7vh, 72px);
+  border-top: 1px solid var(--line);
+  counter-reset: lm-band;
+}
+
+/* --- The head ----------------------------------------------------------- */
+
+.landing-map__head {
+  max-width: 44rem;
+}
+
+/* The family's three masses, as the essay pauses between sections. */
+.landing-map__mark {
+  display: block;
+  width: 76px;
+  height: 16px;
+  margin-bottom: 26px;
+}
+
+.landing-map__mark-human {
+  fill: var(--accent);
+}
+
+.landing-map__mark-spec {
+  fill: var(--accent-gold);
+}
+
+.landing-map__mark-machine {
+  fill: var(--intent-machine);
+}
+
+.landing-map__k {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.landing-map__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(30px, 4.2vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.landing-map__lede {
+  margin: 16px 0 0;
+  max-width: 34rem;
+  font-size: 16.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+/* --- A band --------------------------------------------------------------- */
+
+.landing-map__band {
+  margin-top: clamp(36px, 6vh, 60px);
+  counter-increment: lm-band;
+}
+
+/* The row's name, numbered by the stylesheet and followed by a rule to
+   the edge of the column: a boundary, not a headline. */
+.landing-map__row-k {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.landing-map__row-k::before {
+  content: counter(lm-band, decimal-leading-zero);
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.landing-map__row-k::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--line);
+}
+
+/* --- The grid --------------------------------------------------------------- */
+
+.landing-map__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 14px;
+}
+
+.landing-map__cell {
+  display: grid;
+  min-width: 0;
+}
+
+.landing-map__cell--tall {
+  grid-column: span 6;
+  grid-row: span 2;
+}
+
+.landing-map__cell--small {
+  grid-column: span 3;
+}
+
+.landing-map__cell--wide {
+  grid-column: span 6;
+}
+
+.landing-map__cell--third {
+  grid-column: span 4;
+}
+
+.landing-map__cell--band {
+  grid-column: 1 / -1;
+}
+
+/* --- A plate ------------------------------------------------------------------ */
+
+/* The whole plate is the link. It is a shade translucent so the planes on
+   the page's ground show through it faintly — the plates float over the
+   ground rather than sitting on it — at a mix that moves no text role
+   measurably off the ground the audit measured it on. */
+.landing-map__plate {
+  --plate-accent: var(--accent);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-raise) 90%, transparent);
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.landing-map__plate:hover {
+  border-color: color-mix(in srgb, var(--plate-accent) 45%, var(--line));
+  transform: translateY(-2px);
+}
+
+/* The ring follows the plate's own corner rather than the global 3px. */
+.landing-map__plate:focus-visible {
+  border-radius: var(--radius-md);
+}
+
+.landing-map__plate--vision,
+.landing-map__plate--why-ai-native {
+  --plate-accent: var(--accent-gold);
+}
+
+.landing-map__plate--why-zap {
+  --plate-accent: var(--accent-zap);
+}
+
+/* The drawing's ground: the canvases' sink with one pool of the plate's
+   accent in a corner, as every hero canvas of the family is lit. */
+.landing-map__art {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(
+      60% 90% at 18% 0%,
+      color-mix(in srgb, var(--plate-accent) 9%, transparent),
+      transparent 62%
+    ),
+    color-mix(in srgb, var(--bg-sink) 90%, transparent);
+}
+
+.landing-map__art > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.landing-map__plate--tall .landing-map__art {
+  flex: 1 1 auto;
+  min-height: 260px;
+}
+
+.landing-map__plate--small .landing-map__art {
+  aspect-ratio: 4 / 3;
+}
+
+.landing-map__plate--third .landing-map__art {
+  aspect-ratio: 300 / 190;
+}
+
+/* The two horizontal plates: words to the left, the drawing to the
+   right, one rule between them. */
+.landing-map__plate--wide,
+.landing-map__plate--band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.landing-map__plate--band {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.landing-map__plate--wide .landing-map__art,
+.landing-map__plate--band .landing-map__art {
+  order: 2;
+  border-bottom: 0;
+  border-left: 1px solid var(--line);
+}
+
+.landing-map__plate--wide .landing-map__text,
+.landing-map__plate--band .landing-map__text {
+  order: 1;
+  justify-content: center;
+}
+
+.landing-map__plate--wide .landing-map__art {
+  min-height: 220px;
+}
+
+.landing-map__plate--band .landing-map__art {
+  min-height: 200px;
+}
+
+.landing-map__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px 22px 20px;
+}
+
+.landing-map__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+  text-wrap: balance;
+  transition: color 0.2s ease;
+}
+
+/* The arrow is drawn, not written, so the name a screen reader gets is
+   the destination's name and nothing else. */
+.landing-map__name::after {
+  content: "→" / "";
+  display: inline-block;
+  margin-left: 0.35em;
+  font-weight: 400;
+  color: var(--plate-accent);
+  transition: transform var(--speed) ease;
+}
+
+.landing-map__plate:hover .landing-map__name {
+  color: var(--plate-accent);
+}
+
+.landing-map__plate:hover .landing-map__name::after {
+  transform: translateX(4px);
+}
+
+.landing-map__body {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.landing-map__plate--tall .landing-map__name,
+.landing-map__plate--band .landing-map__name {
+  font-size: clamp(22px, 2.2vw, 26px);
+}
+
+.landing-map__plate--tall .landing-map__body,
+.landing-map__plate--band .landing-map__body {
+  font-size: 15px;
+}
+
+.landing-map__plate--small .landing-map__name {
+  font-size: 19px;
+}
+
+.landing-map__plate--small .landing-map__body {
+  font-size: 13.5px;
+}
+
+/* --- The drawings' air ------------------------------------------------------------ */
+
+.lm-cross path {
+  stroke: var(--text);
+  opacity: 0.09;
+}
+
+.lm-tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+/* --- Documentation: the page ------------------------------------------------------- */
+
+.lm-doc__line {
+  stroke: var(--text);
+  stroke-width: 1.2;
+  opacity: 0.3;
+}
+
+.lm-doc__ghost {
+  fill: color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.lm-doc__page {
+  fill: var(--text);
+}
+
+/* Lines of text are the page's own ground showing through the plane. */
+.lm-doc__text rect {
+  fill: var(--bg);
+}
+
+.lm-doc__number {
+  fill: var(--accent);
+}
+
+/* --- GitHub and GitVerse: the repository ---------------------------------------------- */
+
+.lm-repo__floor {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.lm-repo__trunk {
+  stroke: var(--text);
+  stroke-width: 2;
+  opacity: 0.6;
+}
+
+.lm-repo__branch {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.lm-repo__pin {
+  fill: var(--bg-raise);
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.lm-repo__head {
+  fill: var(--accent);
+}
+
+.lm-repo__source {
+  fill: var(--text);
+}
+
+.lm-repo__source--hollow {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+/* --- News & support: the broadcast ----------------------------------------------------- */
+
+.lm-news__floor {
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.lm-news__tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+.lm-news__arc {
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  opacity: 0.85;
+}
+
+.lm-news__arc:nth-of-type(2) {
+  opacity: 0.65;
+}
+
+.lm-news__arc:nth-of-type(3) {
+  opacity: 0.45;
+}
+
+.lm-news__reply {
+  stroke: var(--text);
+  stroke-width: 1.2;
+  opacity: 0.4;
+}
+
+.lm-news__halo {
+  stroke: color-mix(in srgb, var(--accent) 34%, transparent);
+  stroke-width: 1.4;
+}
+
+.lm-news__voice {
+  fill: var(--accent);
+}
+
+.lm-news__plane {
+  fill: var(--text);
+}
+
+.lm-news__plane--hollow {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+/* --- Vision: two sources of intention ---------------------------------------------------- */
+
+.lm-vision__floor {
+  stroke: var(--text-2);
+  stroke-width: 1.5;
+  opacity: 0.7;
+}
+
+.lm-vision__arc {
+  stroke: var(--accent-gold);
+  stroke-width: 1.6;
+  opacity: 0.85;
+}
+
+.lm-vision__halo {
+  stroke: color-mix(in srgb, var(--accent) 34%, transparent);
+  stroke-width: 1.4;
+}
+
+.lm-vision__human {
+  fill: var(--accent);
+}
+
+.lm-vision__machine {
+  fill: var(--intent-machine);
+}
+
+.lm-vision__hair {
+  stroke: var(--text);
+  opacity: 0.16;
+}
+
+.lm-vision__edges path {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.55;
+}
+
+.lm-vision__node-m {
+  fill: var(--intent-machine);
+}
+
+.lm-vision__node-h {
+  fill: var(--accent);
+}
+
+/* --- Why VibeVM: the wedge and the lattice ----------------------------------------------- */
+
+.lm-vv__chaos rect {
+  fill: var(--text-3);
+  opacity: 0.45;
+}
+
+.lm-vv__chaos .lm-vv__bright {
+  fill: var(--text);
+  opacity: 0.4;
+}
+
+.lm-vv__wedge {
+  fill: var(--accent);
+}
+
+.lm-vv__bar {
+  fill: var(--text);
+  opacity: 0.2;
+}
+
+.lm-vv__edges line {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0.45;
+}
+
+.lm-vv__root {
+  fill: var(--accent);
+}
+
+.lm-vv__sq {
+  fill: var(--bg-raise);
+  stroke: var(--accent);
+  stroke-width: 1.4;
+}
+
+.lm-vv__pin {
+  fill: var(--bg-raise);
+  stroke: var(--text);
+  stroke-width: 1.3;
+}
+
+.lm-vv__pin--faint {
+  stroke: var(--text-3);
+}
+
+/* --- Why Zap: the orbital map -------------------------------------------------------------- */
+
+.lm-zap__stars circle {
+  fill: var(--zap-star);
+}
+
+.lm-zap__ring {
+  stroke: color-mix(in srgb, var(--accent-zap) 28%, transparent);
+  stroke-width: 1.1;
+  stroke-dasharray: 1.5 9;
+  stroke-linecap: round;
+}
+
+.lm-zap__ring--far {
+  stroke: color-mix(in srgb, var(--accent-zap) 18%, transparent);
+  stroke-dasharray: 2 12;
+}
+
+/* The one endless motion on the map: the rings turn once in four
+   minutes, as they do on the page they come from. */
+.lm-zap__orbits {
+  transform-origin: 120px 100px;
+  animation: lm-orbit 240s linear infinite;
+}
+
+.lm-zap__path {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+}
+
+.lm-zap__arrow {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lm-zap__halo {
+  fill: color-mix(in srgb, var(--accent-zap) 13%, transparent);
+}
+
+.lm-zap__core-ring {
+  stroke: var(--accent-zap);
+  stroke-width: 1.2;
+  opacity: 0.65;
+}
+
+.lm-zap__core {
+  fill: var(--accent-zap);
+}
+
+.lm-zap__node {
+  fill: var(--bg-raise);
+  stroke: var(--accent-zap);
+  stroke-width: 1.4;
+}
+
+.lm-zap__node--fill {
+  fill: var(--accent-zap);
+}
+
+.lm-zap__node--project {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+/* --- AI-Native Language: the projection ----------------------------------------------------- */
+
+.lm-an__floor {
+  stroke: var(--accent-gold);
+  stroke-width: 1.5;
+  opacity: 0.55;
+}
+
+.lm-an__exit {
+  stroke: var(--accent-gold);
+  stroke-width: 2;
+}
+
+.lm-an__drops path {
+  stroke: var(--text);
+  opacity: 0.12;
+  stroke-dasharray: 2 6;
+}
+
+.lm-an__halo {
+  stroke: color-mix(in srgb, var(--accent-gold) 40%, transparent);
+  stroke-width: 1.4;
+}
+
+.lm-an__core {
+  fill: var(--accent-gold);
+}
+
+.lm-an__hair {
+  stroke: var(--text);
+  opacity: 0.16;
+}
+
+.lm-an__rays line {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.5;
+}
+
+.lm-an__rust {
+  fill: var(--mark-rust);
+}
+
+.lm-an__ts {
+  fill: var(--bg-raise);
+  stroke: var(--mark-ts);
+  stroke-width: 2.25;
+}
+
+.lm-an__go {
+  fill: color-mix(in srgb, var(--mark-go) 22%, transparent);
+  stroke: var(--mark-go);
+  stroke-width: 2;
+}
+
+.lm-an__brackets path {
+  stroke: var(--accent-gold);
+  stroke-width: 2.25;
+}
+
+/* --- The choreography ----------------------------------------------------------------------- */
+
+/* `pathLength="1"` on every drawn stroke makes one dash pattern draw them
+   all; `--at` is the element's place in the sequence. Without a scroll
+   timeline it is a delay of that many × 50ms from load. */
+.lm-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: lm-draw 0.8s ease forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.lm-pop {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lm-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.lm-enter {
+  transform: translate(40px, -30px);
+  animation: lm-enter 0.9s cubic-bezier(0.2, 0.8, 0.25, 1) forwards 0.1s;
+}
+
+/* With a scroll timeline, the same `--at` is a percentage of the plate's
+   own entry into the window: an element begins at that point of the entry
+   and is done fifty points later, so the last of them is finished before
+   the plate has fully arrived. `entry` and not `cover`, because the tail
+   of a page cannot scroll past its own footer: a range that ran on into
+   the plate's exit would leave the last row's drawings half-drawn on a
+   tall window. */
+@supports (animation-timeline: view()) {
+  .landing-map__plate {
+    view-timeline: --lm-plate block;
+  }
+
+  .lm-draw,
+  .lm-pop,
+  .lm-enter {
+    animation-timeline: --lm-plate;
+    animation-range: entry calc(var(--at, 0) * 1%) entry
+      calc(var(--at, 0) * 1% + 50%);
+    animation-delay: 0s;
+    animation-fill-mode: both;
+  }
+
+  .lm-enter {
+    animation-range: entry 0% entry 45%;
+  }
+}
+
+@keyframes lm-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes lm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes lm-enter {
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes lm-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Responsive ------------------------------------------------------------------------------ */
+
+/* A tablet: the first band is re-declared rather than squeezed — the
+   manual becomes one wide plate with its drawing at the left, the two
+   mirrors keep their pair, the channels keep theirs at the right; the
+   second band keeps its shape at six columns. */
+@media (max-width: 900px) {
+  .landing-map__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .landing-map__cell--tall {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .landing-map__cell--small {
+    grid-column: span 3;
+  }
+
+  .landing-map__cell--wide {
+    grid-column: 1 / -1;
+  }
+
+  .landing-map__cell--third {
+    grid-column: span 2;
+  }
+
+  .landing-map__plate--tall {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .landing-map__plate--tall .landing-map__art {
+    aspect-ratio: 400 / 360;
+    min-height: 0;
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .landing-map__plate--tall .landing-map__text {
+    justify-content: center;
+  }
+}
+
+/* A phone: one column, and still a composition — the manual tall with
+   its drawing on top, the two mirrors side by side, the channels and the
+   three products as horizontal plates whose drawings alternate sides,
+   the essay wide with its drawing over the words. */
+@media (max-width: 600px) {
+  .landing-map__cell--third {
+    grid-column: 1 / -1;
+  }
+
+  .landing-map__plate--tall {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .landing-map__plate--tall .landing-map__art {
+    aspect-ratio: 4 / 3;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Words take the wider column on a phone: a plate is read before it
+     is looked at when both have to fit in three hundred and fifty
+     pixels, and a name that wraps three times reads as a paragraph. */
+  .landing-map__plate--wide {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+
+  .landing-map__plate--wide .landing-map__art {
+    min-height: 200px;
+  }
+
+  .landing-map__plate--band {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .landing-map__plate--band .landing-map__art {
+    order: 0;
+    aspect-ratio: 2 / 1;
+    min-height: 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .landing-map__plate--band .landing-map__text {
+    order: 1;
+    justify-content: flex-start;
+  }
+
+  .landing-map__plate--third {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+
+  .landing-map__plate--third .landing-map__art {
+    aspect-ratio: auto;
+    min-height: 150px;
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .landing-map__plate--third .landing-map__text {
+    justify-content: center;
+  }
+
+  /* Every second product plate puts its drawing on the other side. */
+  .landing-map__cell--third:nth-child(odd) .landing-map__art {
+    order: 2;
+    border-right: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .landing-map__cell--third:nth-child(odd) .landing-map__text {
+    order: 1;
+  }
+
+  .landing-map__plate--tall .landing-map__name,
+  .landing-map__plate--band .landing-map__name {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .landing-map__name {
+    font-size: 18px;
+  }
+
+  .landing-map__plate--small .landing-map__name {
+    font-size: 17px;
+  }
+
+  .landing-map__body,
+  .landing-map__plate--tall .landing-map__body,
+  .landing-map__plate--band .landing-map__body {
+    font-size: 13.5px;
+  }
+
+  .landing-map__text {
+    padding: 16px 18px 18px;
+  }
+}
+
+/* --- Motion safety --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lm-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .lm-pop {
+    animation: none;
+    opacity: 1;
+  }
+  .lm-enter {
+    animation: none;
+    transform: none;
+  }
+  .lm-zap__orbits {
+    animation: none;
+  }
+  .landing-map__plate:hover {
+    transform: none;
+  }
+  .landing-map__plate:hover .landing-map__name::after {
+    transform: none;
+  }
+}
