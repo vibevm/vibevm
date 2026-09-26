@@ -225,6 +225,7 @@ fn plain_render_carries_the_provenance_suffix() {
         roots: vec!["org.x/api".to_string()],
         packages: vec![chained, plain_root_edge],
         boot: Boot {
+            static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
             static_md: None,
             index_md: IndexLane {
                 present: false,
@@ -277,4 +278,56 @@ fn fixture_package(id: &str) -> Package {
         dependencies: Vec::new(),
         provenance_suffix: String::new(),
     }
+}
+
+/// Write a bare consumer project — a `vibe.toml` and an empty boot directory,
+/// no lockfile — with the given `[project] spec_format` line (or none).
+fn bare_project(spec_format: Option<&str>) -> tempfile::TempDir {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    std::fs::create_dir_all(tmp.path().join(vibe_core::layout::current_boot_dir()))
+        .expect("mkdir boot");
+    let pin = spec_format
+        .map(|value| format!("spec_format = \"{value}\"\n"))
+        .unwrap_or_default();
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        format!("[project]\nname = \"lane\"\nversion = \"0.1.0\"\n{pin}"),
+    )
+    .expect("write vibe.toml");
+    tmp
+}
+
+/// PROP-045 ##STATIC-FOLLOWS-THE-TARGET: an XML-target project's generated
+/// static lane is `STATIC.xml`, so the model names that file even before the
+/// first install has produced it — the case every text surface renders as
+/// `STATIC.xml: (none)`. An unpinned project keeps the Markdown spelling, so
+/// no existing output moves.
+#[test]
+fn the_lane_name_follows_the_projects_spec_target_when_no_lane_exists() {
+    let xml = bare_project(Some("xml"));
+    let tree = build_tree(xml.path()).expect("build xml tree");
+    assert_eq!(tree.boot.static_lane_name, vibe_core::layout::STATIC_XML);
+    assert!(tree.boot.static_md.is_none(), "no lane is committed yet");
+
+    let unpinned = bare_project(None);
+    let tree = build_tree(unpinned.path()).expect("build default tree");
+    assert_eq!(tree.boot.static_lane_name, vibe_core::layout::STATIC_MD);
+}
+
+/// Artifacts win over the manifest pin (PROP-036 §2.3 — the effective lane is
+/// what an agent actually reads): a project carrying a committed `STATIC.xml`
+/// is named by that file even with no `spec_format` line to infer it from.
+#[test]
+fn a_committed_lane_names_itself_whatever_the_manifest_says() {
+    let project = bare_project(None);
+    std::fs::write(
+        project
+            .path()
+            .join(vibe_core::layout::current_boot_static_xml()),
+        "<spec xmlns=\"https://vibevm.org/spec/1\"/>\n",
+    )
+    .expect("write STATIC.xml");
+    let tree = build_tree(project.path()).expect("build tree");
+    assert_eq!(tree.boot.static_lane_name, vibe_core::layout::STATIC_XML);
+    assert!(tree.boot.static_md.is_some(), "the lane was read");
 }

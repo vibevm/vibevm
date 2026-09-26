@@ -203,6 +203,21 @@ mod tests {
         assert_text_golden("narrow-width", &got);
     }
 
+    /// The status line names the lane file THIS project uses: an XML-target
+    /// project's generated lane is `STATIC.xml` (PROP-045
+    /// ##STATIC-FOLLOWS-THE-TARGET), so the status line must say so instead of
+    /// a hard-coded Markdown spelling. The Markdown case is the committed
+    /// goldens above, byte for byte.
+    #[test]
+    fn the_status_line_names_an_xml_projects_static_lane() {
+        let mut tree = fixture_tree();
+        tree.boot.static_lane_name = vibe_core::layout::STATIC_XML.to_string();
+        let got = snapshot_headless(tree, 74, 22, "", false).expect("render");
+        let status = got.lines().next().expect("the status line");
+        assert!(status.contains("STATIC.xml 0b / 0L"), "{status:?}");
+        assert!(!status.contains("STATIC.md"), "{status:?}");
+    }
+
     /// The `cells` format is well-formed JSON with `{cols, rows, grid[rows]}`.
     #[test]
     fn cells_snapshot_is_structured() {

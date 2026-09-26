@@ -381,6 +381,7 @@ pub(super) mod test_support {
             roots: vec!["g/a".to_string()],
             packages: vec![pkg],
             boot: Boot {
+                static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
                 static_md: None,
                 index_md: IndexLane {
                     present: false,

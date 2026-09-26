@@ -52,6 +52,23 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         let name = path.file_name().unwrap_or(path.as_os_str());
         vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join(name))
     });
+    // The lane file this project actually uses, for every text surface that
+    // names it. Artifacts first (PROP-036 §2.3 — what an agent really reads):
+    // the committed lane's own basename. With no lane committed yet there is
+    // no artifact to read, so the name falls back to the one the project's
+    // effective spec target generates (PROP-045 ##STATIC-FOLLOWS-THE-TARGET) —
+    // an XML project is told `STATIC.xml` before its first install, and an
+    // unpinned project keeps the Markdown spelling it has always printed.
+    let static_lane_name = static_path
+        .as_deref()
+        .and_then(Path::file_name)
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_else(|| {
+            boot_artifacts::static_file(crate::commands::install::resolve_spec_format(
+                &manifest, None,
+            ))
+            .to_string()
+        });
     let index_text = read_opt(&root.join(vibe_core::layout::current_boot_index()));
     let static_contribs = static_text
         .as_deref()
@@ -158,6 +175,7 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     let boot_files: Vec<String> = boot_file_set.into_iter().collect();
 
     let boot = Boot {
+        static_lane_name,
         static_md: static_text
             .as_deref()
             .zip(static_wire.clone())

@@ -449,6 +449,7 @@ mod tests {
             roots: roots.iter().map(|s| s.to_string()).collect(),
             packages,
             boot: Boot {
+                static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
                 static_md: None,
                 index_md: IndexLane {
                     present: false,

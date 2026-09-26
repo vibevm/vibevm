@@ -189,6 +189,17 @@ impl Condition {
 /// `boot` — the two committed boot lanes and their sizes.
 #[derive(Debug, Serialize)]
 pub struct Boot {
+    /// The generated static lane's own file name for THIS project:
+    /// `STATIC.xml` under an XML spec target, `STATIC.md` otherwise
+    /// (PROP-045 ##STATIC-FOLLOWS-THE-TARGET). It lives on `boot` rather
+    /// than on [`StaticLane`] because the text surfaces must name the lane
+    /// even when none is committed yet (`STATIC.xml: (none)`), so the name
+    /// cannot ride the optional lane itself. Never serialised: the v1
+    /// `boot` object is closed (`additionalProperties: false` in
+    /// `package-tree.schema.v1.json`), so this is a render-only fact like
+    /// [`Package::provenance_suffix`].
+    #[serde(skip)]
+    pub static_lane_name: String,
     pub static_md: Option<StaticLane>,
     pub index_md: IndexLane,
 }

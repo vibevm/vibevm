@@ -159,26 +159,31 @@ fn load_label(load: LoadType) -> &'static str {
     }
 }
 
-/// The status header: the column key and the `STATIC.md` size indicator
-/// (PROP-036 §2.6).
+/// The status header: the column key and the static-lane size indicator
+/// (PROP-036 §2.6). The lane is named by the file this project actually uses —
+/// `STATIC.xml` on an XML spec target, `STATIC.md` otherwise — which the model
+/// carries (`boot.static_lane_name`); the renderer never re-derives it.
 fn header(tree: &PackageTree, out: &mut String) {
+    let lane_name = tree.boot.static_lane_name.as_str();
     out.push_str(&format!("project: {}\n", tree.project.root));
     if let Some(lane) = &tree.boot.static_md {
         out.push_str(&format!(
-            "STATIC.md: {} bytes, {} lines, {} contribution(s)\n",
+            "{lane_name}: {} bytes, {} lines, {} contribution(s)\n",
             lane.bytes,
             lane.lines,
             lane.contributions.len()
         ));
     } else {
-        out.push_str("STATIC.md: (none)\n");
+        out.push_str(&format!("{lane_name}: (none)\n"));
     }
     out.push_str(&format!(
         "packages: {}   roots: {}\n",
         tree.packages.len(),
         tree.roots.len()
     ));
-    out.push_str("columns: load  T=transitive  C=condition  S=in STATIC.md\n\n");
+    out.push_str(&format!(
+        "columns: load  T=transitive  C=condition  S=in {lane_name}\n\n"
+    ));
 }
 
 /// Format the collected rows with an aligned name column.
@@ -262,6 +267,7 @@ mod tests {
             roots: roots.iter().map(|s| s.to_string()).collect(),
             packages,
             boot: Boot {
+                static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
                 static_md: None,
                 index_md: IndexLane {
                     present: false,
@@ -336,5 +342,86 @@ mod tests {
         assert!(!line.contains('├') && !line.contains('└'), "{line:?}");
         assert!(!line.contains("g/a"), "{line:?}");
         assert!(!line.contains("columns:"), "{line:?}");
+    }
+
+    /// The header lines of a render, up to and including the blank separator —
+    /// the part the lane name governs.
+    fn header_of(out: &str) -> String {
+        let mut header = String::new();
+        for line in out.lines() {
+            header.push_str(line);
+            header.push('\n');
+            if line.is_empty() {
+                break;
+            }
+        }
+        header
+    }
+
+    /// A Markdown-lane project's header is what it has always been, byte for
+    /// byte: the lane-name threading must not move a single character of the
+    /// default case (every committed golden depends on it).
+    #[test]
+    fn a_markdown_lane_header_is_byte_identical_to_the_legacy_text() {
+        let out = render(&tree(
+            vec![pkg("g/a", LoadType::None, false, false, &[])],
+            &["g/a"],
+        ));
+        assert_eq!(
+            header_of(&out),
+            "project: /tmp/x\n\
+             STATIC.md: (none)\n\
+             packages: 1   roots: 1\n\
+             columns: load  T=transitive  C=condition  S=in STATIC.md\n\n"
+        );
+    }
+
+    /// An XML-target project generates `STATIC.xml`, so both places the header
+    /// names the lane — the size line and the column legend — say `STATIC.xml`
+    /// (PROP-045 ##STATIC-FOLLOWS-THE-TARGET). Nothing else in the header moves.
+    #[test]
+    fn an_xml_lane_is_named_in_the_size_line_and_the_legend() {
+        let mut t = tree(
+            vec![pkg("g/a", LoadType::None, false, false, &[])],
+            &["g/a"],
+        );
+        t.boot.static_lane_name = vibe_core::layout::STATIC_XML.to_string();
+        let out = render(&t);
+        assert_eq!(
+            header_of(&out),
+            "project: /tmp/x\n\
+             STATIC.xml: (none)\n\
+             packages: 1   roots: 1\n\
+             columns: load  T=transitive  C=condition  S=in STATIC.xml\n\n"
+        );
+        assert!(
+            !out.contains("STATIC.md"),
+            "the Markdown spelling must not survive anywhere:\n{out}"
+        );
+    }
+
+    /// The observed defect: a committed `STATIC.xml` was reported under the
+    /// Markdown name together with its real byte/line/contribution counts. The
+    /// counts stay; only the name follows the file.
+    #[test]
+    fn a_present_xml_lane_reports_its_size_under_its_own_name() {
+        let mut t = tree(
+            vec![pkg("g/a", LoadType::Static, false, true, &[])],
+            &["g/a"],
+        );
+        t.boot.static_lane_name = vibe_core::layout::STATIC_XML.to_string();
+        t.boot.static_md = Some(StaticLane {
+            present: true,
+            path: vibe_core::machine_json_path(&vibe_core::layout::current_boot_static_xml()),
+            bytes: 37217,
+            lines: 300,
+            contributions: Vec::new(),
+        });
+        let out = render(&t);
+        assert!(
+            out.contains("STATIC.xml: 37217 bytes, 300 lines, 0 contribution(s)\n"),
+            "{out}"
+        );
+        assert!(!out.contains("STATIC.md"), "{out}");
     }
 }

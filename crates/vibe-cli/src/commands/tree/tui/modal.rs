@@ -58,14 +58,18 @@ pub(super) fn detail_card(app: &App) -> Option<Card> {
             .tree
             .packages
             .get(i)
-            .map(|p| package_card(p, &app.theme)),
+            .map(|p| package_card(p, &app.theme, &app.tree.boot.static_lane_name)),
     }
 }
 
 /// The full package detail, one labelled field per PROP-036 §2.11 entry. The
 /// package id is the card's border title (the prominent heading); the labelled
 /// rows below carry the rest of the field set.
-fn package_card(p: &Package, theme: &Theme) -> Card {
+///
+/// `static_lane` is the lane file this project actually uses
+/// (`boot.static_lane_name`), so the `in …` flag names the real file rather
+/// than one hard-coded spelling.
+fn package_card(p: &Package, theme: &Theme, static_lane: &str) -> Card {
     let mut card = Card::new(Line::styled(format!(" {} ", p.id), theme.title()));
     card.push("group", &p.group);
     card.push("name", &p.name);
@@ -92,7 +96,7 @@ fn package_card(p: &Package, theme: &Theme) -> Card {
         ),
     );
     card.push("condition", condition_value(&p.condition));
-    card.push("in STATIC.md", p.load.in_static_md);
+    card.push(&format!("in {static_lane}"), p.load.in_static_md);
     card.push("in INDEX.md", p.load.in_index_md);
     card.push("source", source_value(p.source.as_ref()));
     card.push(
@@ -277,7 +281,7 @@ mod tests {
     #[test]
     fn package_card_carries_the_expected_field_set() {
         let theme = Theme::default();
-        let card = package_card(&fixture_pkg(), &theme);
+        let card = package_card(&fixture_pkg(), &theme, vibe_core::layout::STATIC_MD);
         let headers: Vec<&str> = card.rows().iter().map(|r| r.header.as_str()).collect();
         for expected in [
             "group",
@@ -307,7 +311,7 @@ mod tests {
     #[test]
     fn package_card_folds_source_and_dependencies_values() {
         let theme = Theme::default();
-        let card = package_card(&fixture_pkg(), &theme);
+        let card = package_card(&fixture_pkg(), &theme, vibe_core::layout::STATIC_MD);
         let rows: std::collections::HashMap<&str, &str> = card
             .rows()
             .iter()
@@ -347,7 +351,7 @@ mod tests {
                 license_file_sha256: "sha256:license".to_string(),
             }],
         });
-        let card = package_card(&package, &theme);
+        let card = package_card(&package, &theme, vibe_core::layout::STATIC_MD);
         let rows: std::collections::HashMap<&str, &str> = card
             .rows()
             .iter()

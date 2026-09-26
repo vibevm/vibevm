@@ -69,9 +69,11 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     }
 }
 
-/// The status line: ordering · display mode · the `STATIC.md` size · the package
-/// count · the in-place `@spec` count · a non-fatal diagnostics indicator
-/// (shown only when something drifted).
+/// The status line: ordering · display mode · the static lane's size under the
+/// name this project's lane actually carries (`STATIC.xml` on an XML spec
+/// target, else `STATIC.md` — `boot.static_lane_name`) · the package count ·
+/// the in-place `@spec` count · a non-fatal diagnostics indicator (shown only
+/// when something drifted).
 fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
     if area.width == 0 {
         return;
@@ -87,7 +89,7 @@ fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
         Span::styled(app.ordering.label(), value),
         Span::styled("   mode ", label),
         Span::styled(app.display_mode.label(), value),
-        Span::styled("   STATIC.md ", label),
+        Span::styled(format!("   {} ", app.tree.boot.static_lane_name), label),
         Span::styled(format!("{bytes}b / {lines}L"), value),
         Span::styled("   packages ", label),
         Span::styled(app.tree.packages.len().to_string(), value),
