@@ -25,7 +25,7 @@
 // every other function still rejects unsafe code.
 #![deny(unsafe_code)]
 
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION");
 
 mod component;
 mod file;

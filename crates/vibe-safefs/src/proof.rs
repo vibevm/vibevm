@@ -25,7 +25,7 @@
 //! window is one syscall wide and unplantable from a test; the seconds-wide
 //! one is gone. Both are stated here rather than in a comment nobody reads.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION");
 
 use std::path::{Path, PathBuf};
 
@@ -59,8 +59,19 @@ use crate::project::{Pinned, Project};
 /// project.remove_file_proved_in(&archive, "spent.log", &proof).unwrap();
 /// ```
 #[derive(Clone, Copy, PartialEq, Eq)]
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
 pub struct EntryProof(FileIdentity);
+
+impl EntryProof {
+    /// Derive ownership only from an already-open originating file handle.
+    pub(crate) fn from_handle(file: &std::fs::File, display: &Path) -> Result<Self> {
+        Ok(Self(file_identity(file, display)?))
+    }
+
+    pub(crate) fn matches_snapshot(&self, snapshot: &crate::StableFileSnapshot) -> bool {
+        self.0 == snapshot.identity
+    }
+}
 
 impl std::fmt::Debug for EntryProof {
     /// Reports that a proof exists, never what it is. A volume serial and a
@@ -77,7 +88,7 @@ impl std::fmt::Debug for EntryProof {
 /// object the caller judged, so the caller's decision does not apply to what
 /// is there — and what is there was left exactly as it was.
 #[derive(Debug)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
 pub enum ProofRefusal {
     /// The entry is gone, is a different object, or is no longer an ordinary
     /// owned file/directory. Nothing was removed.
@@ -144,7 +155,7 @@ impl Project {
     /// or a file sharing its inode with another name is an error, not a
     /// length: an archive entry that is any of those is not an entry this
     /// crate is entitled to judge.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
     pub fn inspect_file_in(
         &self,
         directory: &Pinned,
@@ -177,7 +188,7 @@ impl Project {
     /// There is no by-name fallback and no "close enough": a name that now
     /// holds anything else — including an ordinary file with the same bytes —
     /// is [`ProofRefusal::Changed`] and survives untouched.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
     pub fn remove_file_proved_in(
         &self,
         directory: &Pinned,
@@ -218,7 +229,7 @@ impl Project {
     /// the check that licenses the removal must also release what it opened.
     /// A caller holding its own capability to the same directory must drop it
     /// before calling — that is why the proof, not the handle, is what travels.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
     pub fn remove_dir_proved_in(
         &self,
         parent: &Pinned,
@@ -278,7 +289,7 @@ impl Pinned {
     /// The opaque identity of THIS pinned directory — taken from the
     /// capability itself, so it names the object the walk actually reached
     /// rather than whatever the path spells now.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
     pub fn proof(&self) -> Result<EntryProof> {
         let handle = self
             .dir

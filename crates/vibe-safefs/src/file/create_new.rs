@@ -36,7 +36,11 @@
 use std::io::Write;
 
 use anyhow::{Result, bail};
+use specmark::spec;
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION");
+
+use crate::EntryProof;
 use crate::component::ensure_safe_component;
 use crate::project::{Pinned, Project};
 use crate::publish::PublishError;
@@ -66,6 +70,36 @@ impl Project {
         name: &str,
         bytes: &[u8],
     ) -> Result<(), PublishError> {
+        self.publish_new_proved_in(directory, name, bytes)
+            .map(|_| ())
+    }
+
+    /// Publish a fresh file and return proof from the originating stage handle.
+    ///
+    /// The visible bounded snapshot must identify that exact created object,
+    /// even when a replacement has identical bytes. A failure after publication
+    /// returns no ownership proof; callers retain and report possible residue.
+    ///
+    /// ```
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let scope = tempfile::tempdir()?;
+    /// let project = vibe_safefs::Project::open(scope.path())?;
+    /// let directory = project.root_dir()?;
+    /// let proof = project.publish_new_proved_in(&directory, "draft.md", b"draft")?;
+    /// let snapshot = project.read_file_snapshot_bounded_in(&directory, "draft.md", 5)?;
+    /// assert_eq!(snapshot.map(|s| s.bytes), Some(b"draft".to_vec()));
+    /// project.remove_file_proved_in(&directory, "draft.md", &proof)?;
+    /// assert!(project.inspect_file_in(&directory, "draft.md")?.is_none());
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION")]
+    pub fn publish_new_proved_in(
+        &self,
+        directory: &Pinned,
+        name: &str,
+        bytes: &[u8],
+    ) -> Result<EntryProof, PublishError> {
         let before = |error: anyhow::Error| PublishError::before(Vec::new(), error);
         ensure_safe_component(name).map_err(&before)?;
         // Cheap, honest early refusal with a legible diagnostic. It is NOT
@@ -75,12 +109,20 @@ impl Project {
 
         let (staged_name, staged_file) = create_unique_stage(directory).map_err(&before)?;
         let mut std_file = staged_file.into_std();
+        let proof = match EntryProof::from_handle(&std_file, &directory.join(&staged_name)) {
+            Ok(proof) => proof,
+            Err(error) => {
+                drop(std_file);
+                let _ = directory.dir.remove_file(&staged_name);
+                return Err(before(error));
+            }
+        };
         let written = std_file
             .write_all(bytes)
             .and_then(|()| std_file.flush())
             .and_then(|()| std_file.sync_all());
-        drop(std_file);
         if let Err(error) = written {
+            drop(std_file);
             let _ = directory.dir.remove_file(&staged_name);
             return Err(before(anyhow::Error::new(error).context(format!(
                 "writing staged `{}`",
@@ -88,6 +130,7 @@ impl Project {
             ))));
         }
         if let Some(injected) = injected_pre_publication_failure(name) {
+            drop(std_file);
             let _ = directory.dir.remove_file(&staged_name);
             return Err(before(injected));
         }
@@ -98,6 +141,7 @@ impl Project {
         crate::race_hook::before_link(directory, name);
 
         if let Err(error) = directory.dir.hard_link(&staged_name, &directory.dir, name) {
+            drop(std_file);
             // Our own stage, claimed with `create_new`: removing it removes
             // nothing anyone else owns, and a failed link leaves `name`
             // exactly as it was.
@@ -136,10 +180,17 @@ impl Project {
         // on its own metadata, spending nothing past `cap + 1`, rather than
         // being read whole to be told it mismatches.
         match self
-            .read_file_bounded_in(directory, name, bytes.len())
+            .read_file_snapshot_bounded_in(directory, name, bytes.len())
             .map_err(&possibly)?
         {
-            Some(visible) if visible.as_slice() == bytes => {}
+            Some(visible)
+                if visible.bytes.as_slice() == bytes && proof.matches_snapshot(&visible) => {}
+            Some(visible) if visible.bytes.as_slice() == bytes => {
+                return Err(possibly(anyhow::anyhow!(
+                    "published file `{}` no longer identifies the originating staging object; identical bytes do not prove ownership",
+                    directory.join(name).display()
+                )));
+            }
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
                     "published bytes of `{}` do not match the staged bytes",
@@ -161,7 +212,8 @@ impl Project {
         if let Some(injected) = super::injected_post_publication_failure(name) {
             return Err(possibly(injected));
         }
-        Ok(())
+        drop(std_file);
+        Ok(proof)
     }
 }
 
