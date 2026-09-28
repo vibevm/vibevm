@@ -62,8 +62,10 @@ curl -L https://github.com/jsontypedef/json-typedef-codegen/releases/download/v0
 @fact:INSTALL-LINUX One command: @status:impl/done
 
 ```sh
-curl -L https://github.com/jsontypedef/json-typedef-codegen/releases/download/v0.4.1/x86_64-unknown-linux-gnu.tar.gz \
-  | tar -xz -C tools/jtd-codegen
+curl -fLO https://github.com/jsontypedef/json-typedef-codegen/releases/download/v0.4.1/x86_64-unknown-linux-gnu.zip
+unzip -d tools/jtd-codegen x86_64-unknown-linux-gnu.zip
+chmod +x tools/jtd-codegen/jtd-codegen
+rm x86_64-unknown-linux-gnu.zip
 ```
 
 ### Verify {#verify}
