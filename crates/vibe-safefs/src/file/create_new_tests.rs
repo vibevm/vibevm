@@ -6,6 +6,8 @@ use std::path::Path;
 
 use crate::{Project, PublishStage};
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION");
+
 fn project() -> (tempfile::TempDir, Project) {
     let dir = tempfile::tempdir().unwrap();
     let project = Project::open(dir.path()).unwrap();
@@ -386,4 +388,79 @@ fn an_injected_pre_publication_fault_also_covers_the_replacing_writer() {
         "the previous whole file is still the only claim",
     );
     assert!(stages_in(&dir.path().join("holder")).is_empty());
+}
+
+#[test]
+fn proved_publication_returns_originating_identity_for_removal() {
+    let (_dir, project) = project();
+    let archive = project.dir(&["archive"], true).unwrap();
+    let proof = project
+        .publish_new_proved_in(&archive, "proved.md", b"owned")
+        .unwrap();
+    let (named, length) = project
+        .inspect_file_in(&archive, "proved.md")
+        .unwrap()
+        .unwrap();
+    assert_eq!(proof, named);
+    assert_eq!(length, 5);
+    project
+        .remove_file_proved_in(&archive, "proved.md", &proof)
+        .unwrap();
+    assert!(
+        project
+            .inspect_file_in(&archive, "proved.md")
+            .unwrap()
+            .is_none()
+    );
+}
+
+#[test]
+fn originating_proof_cannot_remove_same_bytes_replacement() {
+    let (dir, project) = project();
+    let archive = project.dir(&["archive"], true).unwrap();
+    let proof = project
+        .publish_new_proved_in(&archive, "proved.md", b"same")
+        .unwrap();
+    let path = dir.path().join("archive/proved.md");
+    fs::rename(&path, dir.path().join("archive/original-held.md")).unwrap();
+    fs::write(&path, b"same").unwrap();
+    let error = project
+        .remove_file_proved_in(&archive, "proved.md", &proof)
+        .unwrap_err();
+    assert!(error.changed());
+    assert_eq!(fs::read(&path).unwrap(), b"same");
+}
+
+#[test]
+fn identical_bytes_replacement_during_verify_refuses_proved_and_legacy_seams() {
+    for proved in [true, false] {
+        let (dir, project) = project();
+        let archive = project.dir(&["archive"], true).unwrap();
+        let root = dir.path().to_path_buf();
+        crate::arm_before_publish_verify(Some(Box::new(move |_, name| {
+            let path = root.join("archive").join(name);
+            fs::rename(&path, root.join("archive/original-held.md")).unwrap();
+            fs::write(&path, b"identical").unwrap();
+        })));
+        let outcome = if proved {
+            project
+                .publish_new_proved_in(&archive, "same.md", b"identical")
+                .map(|_| ())
+        } else {
+            project.publish_new_in(&archive, "same.md", b"identical")
+        };
+        crate::arm_before_publish_verify(None);
+        let error = outcome.unwrap_err();
+        assert_eq!(error.stage, PublishStage::PossiblyPublished);
+        assert!(
+            error
+                .to_string()
+                .contains("identical bytes do not prove ownership")
+        );
+        assert_eq!(
+            fs::read(dir.path().join("archive/same.md")).unwrap(),
+            b"identical"
+        );
+        assert!(stages_in(&dir.path().join("archive")).is_empty());
+    }
 }
