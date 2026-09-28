@@ -36,6 +36,11 @@ pub struct Transition {
     /// alone does not establish its proof.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub captures: Option<Vec<CaptureRef>>,
+
+    /// Exact before/after capture and record-byte bindings for a selected
+    /// contribution scope; binding alone is not acceptance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub contribution_scope: Option<ContributionScope>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -50,6 +55,16 @@ pub struct CaptureRef {
     pub git_tree_sha1: String,
 
     pub source: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ContributionScope {
+    pub after_capture_id: String,
+
+    pub before_capture_id: String,
+
+    pub record_digests: Vec<RecordDigest>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -154,4 +169,17 @@ pub struct ProofState {
     pub final_product_panel_passed: bool,
 
     pub migration_rehearsed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RecordDigest {
+    pub change_id: String,
+
+    pub sha256: String,
+
+    /// Explicit proof claims required for this selected contribution;
+    /// historical attempts remain outside this admission selection.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub required_claim_ids: Option<Vec<String>>,
 }

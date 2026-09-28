@@ -33,6 +33,19 @@
     },
     "acceptance": { "ref": "acceptance" }
   },
+  "optionalProperties": {
+    "affected_paths": {
+      "elements": { "type": "string" },
+      "metadata": {
+        "x-default": null,
+        "x-empty": "preserve",
+        "description": "Selected implementation paths; absence remains distinct from an explicitly empty binding.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF"
+        }
+      }
+    }
+  },
   "definitions": {
     "implementation_subject": {
       "properties": {
@@ -72,6 +85,12 @@
         "subject_id": { "type": "string" },
         "source": { "type": "string" },
         "verdict": { "enum": ["passed", "failed", "unavailable", "unverified"], "metadata": { "x-vocabulary": "closed" } }
+      },
+      "optionalProperties": {
+        "sha256": {
+          "type": "string",
+          "metadata": { "x-default": null }
+        }
       }
     },
     "relation": {
