@@ -29,6 +29,11 @@ pub struct ReleaseImpact {
     pub schema: u32,
 
     pub user_impact: UserDisposition,
+
+    /// Selected implementation paths; absence remains distinct from an
+    /// explicitly empty binding.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub affected_paths: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -156,6 +161,9 @@ pub struct EvidenceRef {
     pub subject_id: String,
 
     pub verdict: EvidenceRefVerdict,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sha256: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

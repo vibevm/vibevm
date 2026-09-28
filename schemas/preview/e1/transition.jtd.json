@@ -48,6 +48,16 @@
     }
   },
   "optionalProperties": {
+    "contribution_scope": {
+      "ref": "contribution_scope",
+      "metadata": {
+        "x-default": null,
+        "description": "Exact before/after capture and record-byte bindings for a selected contribution scope; binding alone is not acceptance.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF"
+        }
+      }
+    },
     "captures": {
       "elements": {
         "ref": "capture_ref"
@@ -63,6 +73,32 @@
     }
   },
   "definitions": {
+    "contribution_scope": {
+      "properties": {
+        "before_capture_id": { "type": "string" },
+        "after_capture_id": { "type": "string" },
+        "record_digests": {
+          "elements": { "ref": "record_digest" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "record_digest": {
+      "properties": {
+        "change_id": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "optionalProperties": {
+        "required_claim_ids": {
+          "elements": { "type": "string" },
+          "metadata": {
+            "x-default": null,
+            "x-empty": "preserve",
+            "description": "Explicit proof claims required for this selected contribution; historical attempts remain outside this admission selection."
+          }
+        }
+      }
+    },
     "capture_ref": {
       "properties": {
         "capture_id": {
