@@ -531,7 +531,12 @@ def check(manifest, context):
             "execution_hold": nodes["NEXT-EXECUTION-AUTHORITY"]["state"],
             "preview_change_records_verified": False,
             "verification_bindings_executed": False,
-            "open_owner_decisions": [d["id"] for d in manifest["decisions"] if d["owner_state"] == "open"]}
+            "open_owner_decisions": [d["id"] for d in manifest["decisions"]
+                                     if d["owner_state"] == "open" and not any(
+                                         node["state"] == "accepted"
+                                         and node["id"].startswith("NEXT-DECISION-")
+                                         and d["id"] in node.get("mandates", [])
+                                         for node in nodes.values())]}
 
 
 def ready_nodes(plan):
