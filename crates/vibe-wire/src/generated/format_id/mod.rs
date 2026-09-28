@@ -116,6 +116,7 @@ pub enum FormatId {
     PreviewCapture,
     PreviewCheckReport,
     PreviewCheckRequest,
+    PreviewDocumentationCapture,
     PreviewDocumentationMap,
     PreviewTransition,
     ReleaseImpact,

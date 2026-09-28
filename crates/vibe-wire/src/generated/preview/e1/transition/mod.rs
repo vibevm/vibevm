@@ -41,6 +41,16 @@ pub struct Transition {
     /// contribution scope; binding alone is not acceptance.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub contribution_scope: Option<ContributionScope>,
+
+    /// Exact retained optional documentation base; retrieval does not grant
+    /// write ownership or acceptance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub documentation_base: Option<DocumentationCaptureRef>,
+
+    /// Exact retained documentation map source and digest; registration does
+    /// not adopt an input source.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub documentation_map: Option<SourceDigestRef>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -65,6 +75,16 @@ pub struct ContributionScope {
     pub before_capture_id: String,
 
     pub record_digests: Vec<RecordDigest>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocumentationCaptureRef {
+    pub capture_file_sha256: String,
+
+    pub capture_id: String,
+
+    pub source: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -182,4 +202,12 @@ pub struct RecordDigest {
     /// historical attempts remain outside this admission selection.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub required_claim_ids: Option<Vec<String>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SourceDigestRef {
+    pub sha256: String,
+
+    pub source: String,
 }
