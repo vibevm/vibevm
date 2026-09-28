@@ -17,14 +17,14 @@ fn fault(field: &'static str, reason: &'static str) -> PreviewCaptureError {
     PreviewCaptureError { field, reason }
 }
 
-fn digest(value: &str, width: usize) -> bool {
+pub(super) fn digest(value: &str, width: usize) -> bool {
     value.len() == width
         && value
             .bytes()
             .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
 }
 
-fn safe_relative_path(value: &str) -> bool {
+pub(super) fn safe_relative_path(value: &str) -> bool {
     !value.is_empty()
         && !value.starts_with('/')
         && !value.contains('\\')

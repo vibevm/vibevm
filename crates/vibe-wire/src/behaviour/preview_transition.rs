@@ -180,6 +180,27 @@ impl Transition {
             return Err(fault("schema_status", "empty status"));
         }
         self.capture_references()?;
+        if let Some(base) = &self.documentation_base
+            && (base.capture_id.trim().is_empty()
+                || !super::preview_capture::safe_relative_path(&base.source)
+                || base.source.contains('\0')
+                || !digest(&base.capture_file_sha256, 64))
+        {
+            return Err(fault(
+                "documentation_base",
+                "invalid documentation base identity or reference",
+            ));
+        }
+        if let Some(map) = &self.documentation_map
+            && (!super::preview_capture::safe_relative_path(&map.source)
+                || map.source.contains('\0')
+                || !digest(&map.sha256, 64))
+        {
+            return Err(fault(
+                "documentation_map",
+                "invalid documentation map reference",
+            ));
+        }
         if self.change_records.iter().any(|id| !identifier(id)) {
             return Err(fault("change_records", "unsafe change ID"));
         }

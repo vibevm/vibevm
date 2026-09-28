@@ -10,6 +10,77 @@ fn captured() -> Transition {
 }
 
 #[test]
+fn documentation_reference_wire_retains_absence_and_supplied_bindings_without_adoption() {
+    let missing = captured();
+    assert!(missing.documentation_base.is_none());
+    assert!(missing.documentation_map.is_none());
+    missing.validate_preview().unwrap();
+    let transition: Transition = serde_json::from_str(include_str!(
+        "../../../../../formats/corpora/preview-transition/e1/valid/with-documentation-inputs.json"
+    ))
+    .unwrap();
+    transition.validate_preview().unwrap();
+    assert_eq!(
+        transition,
+        serde_json::from_str(&serde_json::to_string(&transition).unwrap()).unwrap()
+    );
+    assert!(matches!(
+        transition.documentation.state,
+        PendingDocumentationState::PendingOwnerBinding
+    ));
+    assert!(!transition.proof.documentation_verified);
+    assert!(serde_json::from_str::<Transition>(include_str!("../../../../../formats/corpora/preview-transition/e1/invalid/wrong-documentation-map-type.json")).is_err());
+}
+
+#[test]
+fn provided_documentation_references_require_opaque_identity_safe_source_and_digest() {
+    let supplied: Transition = serde_json::from_str(include_str!(
+        "../../../../../formats/corpora/preview-transition/e1/valid/with-documentation-inputs.json"
+    ))
+    .unwrap();
+    let mut transition = supplied.clone();
+    transition.documentation_base.as_mut().unwrap().capture_id = " ../opaque:\nα ".into();
+    let before = transition.clone();
+    transition.validate_preview().unwrap();
+    assert_eq!(transition, before);
+    transition.documentation_base.as_mut().unwrap().capture_id = " \n".into();
+    assert_eq!(
+        transition.validate_preview().unwrap_err().field,
+        "documentation_base"
+    );
+    for source in ["../outside.json", "C:/outside.json", "a\\b", "x\0y"] {
+        let mut transition = supplied.clone();
+        transition.documentation_base.as_mut().unwrap().source = source.into();
+        assert_eq!(
+            transition.validate_preview().unwrap_err().field,
+            "documentation_base"
+        );
+        let mut transition = supplied.clone();
+        transition.documentation_map.as_mut().unwrap().source = source.into();
+        assert_eq!(
+            transition.validate_preview().unwrap_err().field,
+            "documentation_map"
+        );
+    }
+    let mut transition = supplied.clone();
+    transition
+        .documentation_base
+        .as_mut()
+        .unwrap()
+        .capture_file_sha256 = "A".repeat(64);
+    assert_eq!(
+        transition.validate_preview().unwrap_err().field,
+        "documentation_base"
+    );
+    let mut transition = supplied;
+    transition.documentation_map.as_mut().unwrap().sha256 = "bad".into();
+    assert_eq!(
+        transition.validate_preview().unwrap_err().field,
+        "documentation_map"
+    );
+}
+
+#[test]
 fn contribution_wire_preserves_absent_scope_and_refuses_wrong_shape() {
     assert!(captured().contribution_scope.is_none());
     let transition: Transition = serde_json::from_str(include_str!(

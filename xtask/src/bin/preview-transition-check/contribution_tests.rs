@@ -127,6 +127,7 @@ impl Fixture {
             schema: 1,
             transition: path.to_str().unwrap().into(),
             mode: CheckRequestMode::Contribution,
+            repository_roots: None,
             stage: None,
             format: vibe_wire::generated::preview::e1::check_request::CheckRequestFormat::Json,
         })
