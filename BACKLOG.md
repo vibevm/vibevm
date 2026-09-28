@@ -2342,3 +2342,13 @@ structure, and it goes when the file does.
 | @fact:B212-SEVERITY **severity** | P3 — a normative text that trails the product. |
 | @fact:B212-DISPOSITION **disposition** | `open` — reconcile PROP-035 with PROP-045 by the owner's hand, and add the agreement check. |
 | @fact:B212-FILED **filed by** | DOCS-MD-XML-TUTORIAL (M-052), 2026-09-27. |
+
+## B-213 — source-installed applications retain old generations without GC {#b-213}
+
+| field | value |
+|---|---|
+| @fact:B213-WHAT **what** | The source-installed Zap under `~/.vibe/opt/apps/zap/target/zap-source-install/generations/` retained 107 immutable generation directories, about 64 GiB, while `prepared.json` and deployed launchers name one current generation. The application index's management entry names a second generation. Historical lifecycle temporary replies mention many older IDs; they are not a safe live-retention test. |
+| @fact:B213-EVIDENCE **evidence** | 2026-09-28 local inventory of the generation directory, `prepared.json`, launchers and `~/.vibe/applications/index.json`; `vibe self gc --build` and `--prune-others` manage only VibeVM's own instances and build cache. No source-application generation GC command was found on the installed CLI. |
+| @fact:B213-SEVERITY **severity** | P2 — unbounded disk growth, with no product-owned way to distinguish removable copies from runtime or management references. |
+| @fact:B213-DISPOSITION **disposition** | `open` — add a read-only candidate report and bounded GC for source-installed application generations, protecting current launchers, the management entry, running binaries and recovery state; keep it separate from shared package caches. Reconcile the two distinct current-generation references before pruning. |
+| @fact:B213-FILED **filed by** | local `.vibe` cleanup, 2026-09-28. |
