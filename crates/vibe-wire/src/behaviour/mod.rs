@@ -30,6 +30,7 @@ pub mod native_deploy;
 pub mod native_mechanism;
 pub mod native_package;
 pub mod preview_capture;
+pub mod preview_check;
 pub mod preview_transition;
 pub mod projections;
 pub mod records;
