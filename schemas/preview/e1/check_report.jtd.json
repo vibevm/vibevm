@@ -10,7 +10,7 @@
   },
   "properties": {
     "schema": { "type": "uint32" },
-    "mode": { "enum": ["capture", "contribution", "bindings", "documentation", "release", "retired"], "metadata": { "x-vocabulary": "closed" } },
+    "mode": { "enum": ["invalid-request", "capture", "contribution", "bindings", "documentation", "release", "retired"], "metadata": { "x-vocabulary": "closed" } },
     "verdict": { "enum": ["passed", "failed", "pending"], "metadata": { "x-vocabulary": "closed" } },
     "subject_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
     "checked_claims": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },

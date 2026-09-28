@@ -16,6 +16,9 @@ pub enum CheckReportMode {
     #[serde(rename = "documentation")]
     Documentation,
 
+    #[serde(rename = "invalid-request")]
+    InvalidRequest,
+
     #[serde(rename = "release")]
     Release,
 
