@@ -142,7 +142,7 @@ fn decode_base64(value: &str) -> Result<Vec<u8>, BackendReplyError> {
         return Err(BackendReplyError::DecodedCap);
     }
     let mut output = Vec::with_capacity(decoded_len);
-    for (index, chunk) in bytes.chunks_exact(4).enumerate() {
+    for (index, chunk) in bytes.as_chunks::<4>().0.iter().enumerate() {
         let last = index + 1 == bytes.len() / 4;
         let a = digit(chunk[0])?;
         let b = digit(chunk[1])?;
