@@ -1,5 +1,7 @@
 //! Generated-wire conversion, archive parsing, and semantic validation helpers.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#distribution");
+
 use super::*;
 use crate::commands::application::model::PackageIdentity;
 
