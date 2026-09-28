@@ -184,8 +184,9 @@ impl Transition {
             return Err(fault("change_records", "unsafe change ID"));
         }
         if let Some(scope) = &self.contribution_scope {
-            if !identifier(&scope.before_capture_id) || !identifier(&scope.after_capture_id) {
-                return Err(fault("contribution_scope", "unsafe capture ID"));
+            if scope.before_capture_id.trim().is_empty() || scope.after_capture_id.trim().is_empty()
+            {
+                return Err(fault("contribution_scope", "blank capture ID"));
             }
             if scope
                 .record_digests

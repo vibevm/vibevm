@@ -52,10 +52,10 @@ impl ReleaseImpact {
                 "paths must be safe, unique and sorted",
             ));
         }
-        if !identifier(&self.before_capture_id) || !identifier(&self.after_capture_id) {
+        if self.before_capture_id.trim().is_empty() || self.after_capture_id.trim().is_empty() {
             return Err(fault(
                 "captures",
-                "safe before and after identities are required",
+                "nonblank before and after identities are required",
             ));
         }
         if self.implementation_subjects.is_empty() {
@@ -227,6 +227,58 @@ mod tests {
             "../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json"
         ))
         .expect("registered release-impact corpus must parse")
+    }
+
+    #[test]
+    fn opaque_capture_ids_preserve_exact_data_without_becoming_paths() {
+        for id in [
+            "../outside.json",
+            "caps://сервер/снимок:α",
+            "  ID\\\n## injected\t\0Каптура  ",
+        ] {
+            let mut record = internal_refactor();
+            let change_id = record.change_id.clone();
+            let source = record.evidence[0].source.clone();
+            record.before_capture_id = id.into();
+            record.after_capture_id = id.into();
+            record.validate_release_impact().unwrap();
+            assert_eq!(record.change_id, change_id);
+            assert_eq!(record.evidence[0].source, source);
+            let roundtrip: ReleaseImpact =
+                serde_json::from_str(&serde_json::to_string(&record).unwrap()).unwrap();
+            assert_eq!(roundtrip.before_capture_id, id);
+            assert_eq!(roundtrip.after_capture_id, id);
+            assert_eq!(roundtrip, record);
+            record.evidence[0].source = "../outside.json".into();
+            assert_eq!(
+                record.validate_release_impact().unwrap_err().field,
+                "evidence"
+            );
+        }
+    }
+
+    #[test]
+    fn blank_capture_ids_refuse_and_change_ids_keep_directory_grammar() {
+        for blank in ["", " \n\t\r", "\u{2003}"] {
+            for before in [false, true] {
+                let mut record = internal_refactor();
+                if before {
+                    record.before_capture_id = blank.into();
+                } else {
+                    record.after_capture_id = blank.into();
+                }
+                assert_eq!(
+                    record.validate_release_impact().unwrap_err().field,
+                    "captures"
+                );
+            }
+        }
+        let mut record = internal_refactor();
+        record.change_id = "../unsafe-change".into();
+        assert_eq!(
+            record.validate_release_impact().unwrap_err().field,
+            "change_id"
+        );
     }
 
     #[test]

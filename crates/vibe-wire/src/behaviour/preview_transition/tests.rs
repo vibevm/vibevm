@@ -105,10 +105,72 @@ fn supplied_scope_requires_safe_exact_sorted_digest_bindings() {
         .contribution_scope
         .as_mut()
         .unwrap()
-        .before_capture_id = "../unsafe".into();
+        .before_capture_id = " \n\t".into();
     assert_eq!(
         transition.validate_preview().unwrap_err().field,
         "contribution_scope"
+    );
+}
+
+#[test]
+fn opaque_scope_capture_ids_preserve_exact_data_with_separate_source_paths() {
+    use crate::generated::preview::e1::transition::ContributionScope;
+    for id in [
+        "../outside.json",
+        "caps://сервер/снимок:α",
+        "  ID\\\n## injected\t\0Каптура  ",
+    ] {
+        let mut transition = captured();
+        let source = transition.dp1.source.clone();
+        transition.dp1.capture_id = id.into();
+        transition.contribution_scope = Some(ContributionScope {
+            before_capture_id: id.into(),
+            after_capture_id: id.into(),
+            record_digests: vec![],
+        });
+        transition.validate_preview().unwrap();
+        assert_eq!(transition.capture_references().unwrap()[0].capture_id, id);
+        assert_eq!(transition.dp1.source, source);
+        let roundtrip: Transition =
+            serde_json::from_str(&serde_json::to_string(&transition).unwrap()).unwrap();
+        assert_eq!(roundtrip, transition);
+        let scope = roundtrip.contribution_scope.unwrap();
+        assert_eq!(scope.before_capture_id, id);
+        assert_eq!(scope.after_capture_id, id);
+        transition.dp1.source = "../outside.json".into();
+        assert_eq!(
+            transition.validate_preview().unwrap_err().field,
+            "dp1.source"
+        );
+    }
+}
+
+#[test]
+fn blank_scope_capture_ids_refuse_and_change_ids_keep_directory_grammar() {
+    use crate::generated::preview::e1::transition::ContributionScope;
+    for blank in ["", " \n\t\r", "\u{2003}"] {
+        for before in [false, true] {
+            let mut transition = captured();
+            transition.contribution_scope = Some(ContributionScope {
+                before_capture_id: if before {
+                    blank.into()
+                } else {
+                    "before".into()
+                },
+                after_capture_id: if before { "after".into() } else { blank.into() },
+                record_digests: vec![],
+            });
+            assert_eq!(
+                transition.validate_preview().unwrap_err().field,
+                "contribution_scope"
+            );
+        }
+    }
+    let mut transition = captured();
+    transition.change_records = vec!["../unsafe-change".into()];
+    assert_eq!(
+        transition.validate_preview().unwrap_err().field,
+        "change_records"
     );
 }
 
