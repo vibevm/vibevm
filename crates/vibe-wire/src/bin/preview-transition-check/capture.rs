@@ -1,12 +1,12 @@
-//! Exact Git and file witnesses for the captured Developer Preview 1 subject.
+//! Exact Git and file witnesses for both captured Developer Preview subjects.
 
-use std::fs;
 use std::path::Path;
 use std::process::Command;
 
 use sha2::{Digest, Sha256};
+use vibe_safefs::Project;
 use vibe_wire::generated::preview::e1::capture::Capture;
-use vibe_wire::generated::preview::e1::transition::Transition;
+use vibe_wire::generated::preview::e1::transition::{CaptureRef, PendingCaptureState, Transition};
 
 use super::CheckFailure;
 
@@ -48,46 +48,151 @@ pub(super) fn verify(
     transition: &Transition,
 ) -> Result<Vec<String>, CheckFailure> {
     let release_dir = transition_path.parent().unwrap_or(Path::new("."));
-    let captured = fs::read(release_dir.join(&transition.dp1.source)).map_err(|_| {
+    let absolute = std::path::absolute(release_dir).map_err(|_| {
         CheckFailure::new(
-            "capture-read",
-            "dp1",
-            "Registered capture file is unavailable",
+            "release-root",
+            "preview-transition",
+            "Release root could not be resolved",
         )
     })?;
-    if sha256(&captured) != transition.dp1.capture_file_sha256 {
+    let project = Project::open(&absolute).map_err(|_| {
+        CheckFailure::new(
+            "release-root",
+            "preview-transition",
+            "Release root could not be opened without following links",
+        )
+    })?;
+    let references = transition
+        .capture_references()
+        .map_err(|error| CheckFailure::new("capture-meaning", error.field, error.reason))?;
+    let mut claims = verify_ref(release_dir, &project, &transition.dp1, "dp1")?;
+    if !matches!(transition.dp2.state, PendingCaptureState::Pending) {
+        let Some(reference) = references.iter().find(|reference| {
+            Some(reference.capture_id.as_str()) == transition.dp2.capture_id.as_deref()
+                && Some(reference.source.as_str()) == transition.dp2.source.as_deref()
+        }) else {
+            return Err(CheckFailure::new(
+                "capture-binding",
+                "dp2",
+                "Capture identity is incomplete",
+            ));
+        };
+        claims.extend(verify_ref(release_dir, &project, reference, "dp2")?);
+    }
+    for reference in &references {
+        let endpoint = reference == &transition.dp1
+            || (Some(reference.capture_id.as_str()) == transition.dp2.capture_id.as_deref()
+                && Some(reference.source.as_str()) == transition.dp2.source.as_deref());
+        if !endpoint {
+            claims.extend(verify_ref(
+                release_dir,
+                &project,
+                reference,
+                &format!("catalogue:{}", reference.capture_id),
+            )?);
+        }
+    }
+    Ok(claims)
+}
+
+fn read_within(
+    project: &Project,
+    relative: &str,
+    subject: &str,
+    code: &'static str,
+) -> Result<Vec<u8>, CheckFailure> {
+    let unavailable = || CheckFailure::new(code, subject, "Retained evidence file is unavailable");
+    let refused = || {
+        CheckFailure::new(
+            "evidence-read-refused",
+            subject,
+            "Evidence must be a stable regular single-link file below the no-follow release root",
+        )
+    };
+    let components: Vec<&str> = relative.split('/').collect();
+    let Some((name, parents)) = components.split_last() else {
+        return Err(unavailable());
+    };
+    let directory = project.dir(parents, false).map_err(|_| refused())?;
+    let Some((_, observed_len)) = project
+        .inspect_file_in(&directory, name)
+        .map_err(|_| refused())?
+    else {
+        return Err(unavailable());
+    };
+    let limit = usize::try_from(observed_len).map_err(|_| refused())?;
+    project
+        .read_file_snapshot_bounded_in(&directory, name, limit)
+        .map_err(|_| refused())?
+        .map(|snapshot| snapshot.bytes)
+        .ok_or_else(unavailable)
+}
+
+fn verify_ref(
+    release_dir: &Path,
+    project: &Project,
+    reference: &CaptureRef,
+    subject: &str,
+) -> Result<Vec<String>, CheckFailure> {
+    let captured = read_within(project, &reference.source, subject, "capture-read")?;
+    if sha256(&captured) != reference.capture_file_sha256 {
         return Err(CheckFailure::new(
             "capture-digest",
-            "dp1",
+            subject,
             "Capture bytes differ from the transition index",
         ));
     }
-    let capture: Capture = serde_json::from_slice(&captured)
-        .map_err(|error| CheckFailure::new("capture-shape", "dp1", error.to_string()))?;
-    capture
-        .validate_preview()
-        .map_err(|error| CheckFailure::new("capture-meaning", error.field, error.reason))?;
-    if capture.capture_id != transition.dp1.capture_id
-        || capture.repository_commit_sha1 != transition.dp1.commit_sha1
-        || capture.repository_tree_sha1 != transition.dp1.git_tree_sha1
+    let capture: Capture = serde_json::from_slice(&captured).map_err(|_| {
+        CheckFailure::new(
+            "capture-shape",
+            subject,
+            "Capture does not match the registered shape",
+        )
+    })?;
+    capture.validate_preview().map_err(|error| {
+        CheckFailure::new(
+            "capture-meaning",
+            format!("{subject}.{}", error.field),
+            error.reason,
+        )
+    })?;
+    if capture.capture_id != reference.capture_id
+        || capture.repository_commit_sha1 != reference.commit_sha1
+        || capture.repository_tree_sha1 != reference.git_tree_sha1
     {
         return Err(CheckFailure::new(
             "capture-binding",
-            "dp1",
+            subject,
             "Capture identity differs from the transition index",
         ));
     }
-    let raw = fs::read(release_dir.join(&capture.source_record)).map_err(|_| {
-        CheckFailure::new(
+    let components: Vec<&str> = capture.source_record.split('/').collect();
+    let Some((name, parents)) = components.split_last() else {
+        return Err(CheckFailure::new(
             "raw-capture-read",
-            "dp1",
-            "Original capture observation is unavailable",
+            subject,
+            "Original observation reference is missing",
+        ));
+    };
+    let directory = project.dir(parents, false).map_err(|_| {
+        CheckFailure::new(
+            "evidence-read-refused",
+            subject,
+            "Original observation directory must remain below the no-follow release root",
         )
     })?;
-    if sha256(&raw) != capture.source_record_sha256 {
+    let raw = project.digest_file_in(&directory, name)
+        .map_err(|_| CheckFailure::new("evidence-read-refused", subject, "Original observation must be a stable regular single-link file below the no-follow release root"))?
+        .ok_or_else(|| CheckFailure::new("raw-capture-read", subject, "Original observation is unavailable"))?;
+    let raw_digest: String = raw
+        .sha256
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    if raw_digest != capture.source_record_sha256 {
         return Err(CheckFailure::new(
             "raw-capture-digest",
-            "dp1",
+            subject,
             "Original observation bytes changed",
         ));
     }
@@ -100,7 +205,7 @@ pub(super) fn verify(
     if git_oid(root, &format!("{commit}^{{tree}}"))? != capture.repository_tree_sha1 {
         return Err(CheckFailure::new(
             "repository-tree",
-            "dp1",
+            subject,
             "Commit tree differs from captured identity",
         ));
     }
@@ -108,7 +213,7 @@ pub(super) fn verify(
         if git_oid(root, &format!("{commit}:{}", package.slot))? != package.git_tree_sha1 {
             return Err(CheckFailure::new(
                 "package-tree",
-                &package.coordinate,
+                format!("{subject}:{}", package.coordinate),
                 "Package subtree differs from captured identity",
             ));
         }
@@ -116,7 +221,7 @@ pub(super) fn verify(
         if sha256(&manifest) != package.manifest_sha256 {
             return Err(CheckFailure::new(
                 "package-manifest",
-                &package.coordinate,
+                format!("{subject}:{}", package.coordinate),
                 "Package manifest bytes differ",
             ));
         }
@@ -125,24 +230,27 @@ pub(super) fn verify(
         if git_oid(root, &format!("{commit}:{}", file.path))? != file.git_blob_sha1 {
             return Err(CheckFailure::new(
                 "source-blob",
-                &file.path,
+                format!("{subject}:{}", file.path),
                 "Source blob differs from captured identity",
             ));
         }
         if sha256(&git_blob(root, &format!("{commit}:{}", file.path))?) != file.sha256 {
             return Err(CheckFailure::new(
                 "source-bytes",
-                &file.path,
+                format!("{subject}:{}", file.path),
                 "Source bytes differ from captured hash",
             ));
         }
     }
-    Ok(vec![
-        "capture-shape-and-meaning".into(),
-        "original-observation-digest".into(),
-        "repository-tree".into(),
-        "package-subtree-and-manifest-identities".into(),
-        "source-blob-and-byte-identities".into(),
-        "source-declared-surface-linkage".into(),
-    ])
+    Ok([
+        "capture-shape-and-meaning",
+        "original-observation-digest",
+        "repository-tree",
+        "package-subtree-and-manifest-identities",
+        "source-blob-and-byte-identities",
+        "source-declared-surface-linkage",
+    ]
+    .into_iter()
+    .map(|claim| format!("{subject}:{claim}"))
+    .collect())
 }

@@ -25,6 +25,15 @@ fn identifier(value: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
 }
 
+fn safe_relative_path(value: &str) -> bool {
+    !value.trim().is_empty()
+        && !value.starts_with('/')
+        && !value.contains(['\\', ':', '\0'])
+        && value
+            .split('/')
+            .all(|part| !part.is_empty() && part != "." && part != "..")
+}
+
 impl ReleaseImpact {
     /// Validate meaning the JTD shape cannot express before accepting a record.
     pub fn validate_release_impact(&self) -> Result<(), ReleaseImpactError> {
@@ -133,6 +142,23 @@ impl ReleaseImpact {
             _ => {}
         }
 
+        let mut evidence = BTreeSet::new();
+        for entry in &self.evidence {
+            if entry.claim_id.trim().is_empty()
+                || entry.subject_id.trim().is_empty()
+                || !safe_relative_path(&entry.source)
+                || !evidence.insert((
+                    entry.claim_id.as_str(),
+                    entry.subject_id.as_str(),
+                    entry.source.as_str(),
+                ))
+            {
+                return Err(fault(
+                    "evidence",
+                    "blank, unsafe or repeated evidence identity",
+                ));
+            }
+        }
         let mut related = BTreeSet::new();
         for relation in &self.relations {
             if relation.change_id == self.change_id
@@ -154,10 +180,12 @@ impl ReleaseImpact {
             {
                 return Err(fault("acceptance", "impact disposition is pending"));
             }
-            if self.acceptance.review_subject.trim().is_empty()
-                || self.acceptance.review_evidence.trim().is_empty()
+            if !subjects.contains(self.acceptance.review_subject.as_str())
+                || !safe_relative_path(&self.acceptance.review_evidence)
                 || !self.evidence.iter().any(|e| {
-                    matches!(
+                    e.subject_id == self.acceptance.review_subject
+                        && e.source == self.acceptance.review_evidence
+                        && matches!(
                         e.verdict,
                         crate::generated::preview::e1::release_impact::EvidenceRefVerdict::Passed
                     )
@@ -165,7 +193,7 @@ impl ReleaseImpact {
             {
                 return Err(fault(
                     "acceptance",
-                    "review subject and passing evidence are required",
+                    "review must bind an implementation subject and its matching passing evidence",
                 ));
             }
         }
@@ -187,6 +215,85 @@ mod tests {
     #[test]
     fn distinct_no_impact_reasons_can_be_reviewed() {
         internal_refactor().validate_release_impact().unwrap();
+        let mut record = internal_refactor();
+        record.acceptance.state = AcceptanceState::Accepted;
+        record.documentation_impact.state = DocumentationDispositionState::Impact;
+        record.documentation_impact.documentation_action =
+            DocumentationDispositionDocumentationAction::Update;
+        record.documentation_impact.reason =
+            "Explain the internal implementation guarantee.".into();
+        record.validate_release_impact().unwrap();
+    }
+
+    #[test]
+    fn accepted_review_binds_implementation_subject_and_exact_passing_source() {
+        let mut record = internal_refactor();
+        record.acceptance.state = AcceptanceState::Accepted;
+        record.validate_release_impact().unwrap();
+        for mismatch in [
+            "review-subject",
+            "evidence-subject",
+            "evidence-source",
+            "verdict",
+        ] {
+            let mut invalid = record.clone();
+            match mismatch {
+                "review-subject" => invalid.acceptance.review_subject = "unrelated".into(),
+                "evidence-subject" => invalid.evidence[0].subject_id = "unrelated".into(),
+                "evidence-source" => invalid.evidence[0].source = "review/unrelated.json".into(),
+                _ => invalid.evidence[0].verdict =
+                    crate::generated::preview::e1::release_impact::EvidenceRefVerdict::Unavailable,
+            }
+            assert_eq!(
+                invalid.validate_release_impact().unwrap_err().field,
+                "acceptance",
+                "{mismatch}"
+            );
+        }
+    }
+
+    #[test]
+    fn evidence_refuses_blank_unsafe_and_duplicate_identities() {
+        for field in ["claim", "subject", "source"] {
+            let mut record = internal_refactor();
+            match field {
+                "claim" => record.evidence[0].claim_id = " ".into(),
+                "subject" => record.evidence[0].subject_id = " ".into(),
+                _ => record.evidence[0].source = " ".into(),
+            }
+            assert_eq!(
+                record.validate_release_impact().unwrap_err().field,
+                "evidence"
+            );
+        }
+        for source in [
+            "/outside.json",
+            "../outside.json",
+            "review/../outside.json",
+            "C:/outside.json",
+            "review\\outside.json",
+            "review//outside.json",
+            "review/./outside.json",
+            "review/\0.json",
+        ] {
+            let mut record = internal_refactor();
+            record.evidence[0].source = source.into();
+            assert_eq!(
+                record.validate_release_impact().unwrap_err().field,
+                "evidence",
+                "{source:?}"
+            );
+        }
+        let mut record = internal_refactor();
+        record.evidence.push(record.evidence[0].clone());
+        assert_eq!(
+            record.validate_release_impact().unwrap_err().field,
+            "evidence"
+        );
+        let mut record = internal_refactor();
+        record.evidence[0].verdict =
+            crate::generated::preview::e1::release_impact::EvidenceRefVerdict::Unavailable;
+        record.validate_release_impact().unwrap();
     }
 
     #[test]

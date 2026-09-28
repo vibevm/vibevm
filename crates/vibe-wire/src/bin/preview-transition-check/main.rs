@@ -2,6 +2,9 @@
 
 mod capture;
 
+#[cfg(test)]
+mod tests;
+
 use std::fs;
 use std::io::{self, Read};
 use std::path::Path;
@@ -97,10 +100,14 @@ fn run(request: &CheckRequest) -> CheckReport {
     };
     let transition: Transition = match serde_json::from_slice(&bytes) {
         Ok(transition) => transition,
-        Err(error) => {
+        Err(_) => {
             fail(
                 &mut report,
-                CheckFailure::new("transition-shape", "transition", error.to_string()),
+                CheckFailure::new(
+                    "transition-shape",
+                    "transition",
+                    "Transition does not match the registered shape",
+                ),
             );
             return report;
         }
@@ -113,27 +120,33 @@ fn run(request: &CheckRequest) -> CheckReport {
         return report;
     }
     report.subject_ids.push(transition.dp1.capture_id.clone());
+    if let Some(capture_id) = &transition.dp2.capture_id {
+        report.subject_ids.push(capture_id.clone());
+    }
+    if let Some(captures) = &transition.captures {
+        report
+            .subject_ids
+            .extend(captures.iter().map(|capture| capture.capture_id.clone()));
+    }
+    report.subject_ids.sort();
+    report.subject_ids.dedup();
     match request.mode {
         CheckRequestMode::Capture => match capture::verify(transition_path, &transition) {
             Ok(claims) => {
                 report.verdict = CheckReportVerdict::Passed;
                 report.checked_claims = claims;
-                if !transition.proof.documentation_verified {
-                    report.findings.push(Finding {
-                        code: "documentation-proof-later".into(),
-                        subject: "documentation".into(),
-                        reason: "Documentation proof belongs to a later stage.".into(),
-                        state: FindingState::Pending,
-                    });
-                }
-                if !transition.proof.final_product_panel_passed {
-                    report.findings.push(Finding {
-                        code: "final-product-proof-later".into(),
-                        subject: "dp2".into(),
-                        reason: "The final product panel has not run for this candidate.".into(),
-                        state: FindingState::Pending,
-                    });
-                }
+                report.findings.push(Finding {
+                    code: "documentation-proof-later".into(),
+                    subject: "documentation".into(),
+                    reason: "Capture mode does not verify documentation proof.".into(),
+                    state: FindingState::Pending,
+                });
+                report.findings.push(Finding {
+                    code: "final-product-proof-later".into(),
+                    subject: "dp2".into(),
+                    reason: "Capture mode does not verify the final product panel.".into(),
+                    state: FindingState::Pending,
+                });
             }
             Err(error) => fail(&mut report, error),
         },
@@ -174,10 +187,14 @@ fn main() {
     }
     let request: CheckRequest = match serde_json::from_str(&input) {
         Ok(request) => request,
-        Err(error) => {
+        Err(_) => {
             fail(
                 &mut invalid,
-                CheckFailure::new("request-shape", "request", error.to_string()),
+                CheckFailure::new(
+                    "request-shape",
+                    "request",
+                    "Request does not match the registered shape",
+                ),
             );
             emit(invalid);
             return;
