@@ -10,17 +10,21 @@ use vibe_wire::generated::preview::e1::transition::{CaptureRef, PendingCaptureSt
 
 use super::CheckFailure;
 
-fn sha256(bytes: &[u8]) -> String {
+pub(super) fn sha256(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
 
-fn git(dir: &Path, args: &[&str]) -> Result<Vec<u8>, CheckFailure> {
-    let output = Command::new("git")
+pub(super) fn git_output(dir: &Path, args: &[&str]) -> Result<std::process::Output, CheckFailure> {
+    Command::new("git")
         .arg("-C")
         .arg(dir)
         .args(args)
         .output()
-        .map_err(|_| CheckFailure::new("git-unavailable", "git", "Git could not be started"))?;
+        .map_err(|_| CheckFailure::new("git-unavailable", "git", "Git could not be started"))
+}
+
+pub(super) fn git(dir: &Path, args: &[&str]) -> Result<Vec<u8>, CheckFailure> {
+    let output = git_output(dir, args)?;
     if !output.status.success() {
         return Err(CheckFailure::new(
             "git-object-missing",
@@ -48,24 +52,11 @@ pub(super) fn verify(
     transition: &Transition,
 ) -> Result<Vec<String>, CheckFailure> {
     let release_dir = transition_path.parent().unwrap_or(Path::new("."));
-    let absolute = std::path::absolute(release_dir).map_err(|_| {
-        CheckFailure::new(
-            "release-root",
-            "preview-transition",
-            "Release root could not be resolved",
-        )
-    })?;
-    let project = Project::open(&absolute).map_err(|_| {
-        CheckFailure::new(
-            "release-root",
-            "preview-transition",
-            "Release root could not be opened without following links",
-        )
-    })?;
+    let project = open_project(release_dir)?;
     let references = transition
         .capture_references()
         .map_err(|error| CheckFailure::new("capture-meaning", error.field, error.reason))?;
-    let mut claims = verify_ref(release_dir, &project, &transition.dp1, "dp1")?;
+    let mut claims = verify_ref(release_dir, &project, &transition.dp1, "dp1")?.claims;
     if !matches!(transition.dp2.state, PendingCaptureState::Pending) {
         let Some(reference) = references.iter().find(|reference| {
             Some(reference.capture_id.as_str()) == transition.dp2.capture_id.as_deref()
@@ -77,25 +68,45 @@ pub(super) fn verify(
                 "Capture identity is incomplete",
             ));
         };
-        claims.extend(verify_ref(release_dir, &project, reference, "dp2")?);
+        claims.extend(verify_ref(release_dir, &project, reference, "dp2")?.claims);
     }
     for reference in &references {
         let endpoint = reference == &transition.dp1
             || (Some(reference.capture_id.as_str()) == transition.dp2.capture_id.as_deref()
                 && Some(reference.source.as_str()) == transition.dp2.source.as_deref());
         if !endpoint {
-            claims.extend(verify_ref(
-                release_dir,
-                &project,
-                reference,
-                &format!("catalogue:{}", reference.capture_id),
-            )?);
+            claims.extend(
+                verify_ref(
+                    release_dir,
+                    &project,
+                    reference,
+                    &format!("catalogue:{}", reference.capture_id),
+                )?
+                .claims,
+            );
         }
     }
     Ok(claims)
 }
 
-fn read_within(
+pub(super) fn open_project(directory: &Path) -> Result<Project, CheckFailure> {
+    let absolute = std::path::absolute(directory).map_err(|_| {
+        CheckFailure::new(
+            "release-root",
+            "preview-transition",
+            "Release root could not be resolved",
+        )
+    })?;
+    Project::open(&absolute).map_err(|_| {
+        CheckFailure::new(
+            "release-root",
+            "preview-transition",
+            "Release root could not be opened without following links",
+        )
+    })
+}
+
+pub(super) fn read_within(
     project: &Project,
     relative: &str,
     subject: &str,
@@ -113,7 +124,9 @@ fn read_within(
     let Some((name, parents)) = components.split_last() else {
         return Err(unavailable());
     };
-    let directory = project.dir(parents, false).map_err(|_| refused())?;
+    let Some(directory) = project.dir_if_present(parents).map_err(|_| refused())? else {
+        return Err(unavailable());
+    };
     let Some((_, observed_len)) = project
         .inspect_file_in(&directory, name)
         .map_err(|_| refused())?
@@ -128,12 +141,50 @@ fn read_within(
         .ok_or_else(unavailable)
 }
 
-fn verify_ref(
+pub(super) fn digest_within(
+    project: &Project,
+    relative: &str,
+    subject: &str,
+    missing: &'static str,
+) -> Result<String, CheckFailure> {
+    let unavailable =
+        || CheckFailure::new(missing, subject, "Retained evidence file is unavailable");
+    let refused = || {
+        CheckFailure::new(
+            "evidence-read-refused",
+            subject,
+            "Evidence must be a stable regular single-link file below its no-follow root",
+        )
+    };
+    let components: Vec<&str> = relative.split('/').collect();
+    let Some((name, parents)) = components.split_last() else {
+        return Err(unavailable());
+    };
+    let Some(directory) = project.dir_if_present(parents).map_err(|_| refused())? else {
+        return Err(unavailable());
+    };
+    let digest = project
+        .digest_file_in(&directory, name)
+        .map_err(|_| refused())?
+        .ok_or_else(unavailable)?;
+    Ok(digest
+        .sha256
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect())
+}
+
+pub(super) struct VerifiedCapture {
+    pub capture: Capture,
+    pub claims: Vec<String>,
+}
+
+pub(super) fn verify_ref(
     release_dir: &Path,
     project: &Project,
     reference: &CaptureRef,
     subject: &str,
-) -> Result<Vec<String>, CheckFailure> {
+) -> Result<VerifiedCapture, CheckFailure> {
     let captured = read_within(project, &reference.source, subject, "capture-read")?;
     if sha256(&captured) != reference.capture_file_sha256 {
         return Err(CheckFailure::new(
@@ -166,29 +217,7 @@ fn verify_ref(
             "Capture identity differs from the transition index",
         ));
     }
-    let components: Vec<&str> = capture.source_record.split('/').collect();
-    let Some((name, parents)) = components.split_last() else {
-        return Err(CheckFailure::new(
-            "raw-capture-read",
-            subject,
-            "Original observation reference is missing",
-        ));
-    };
-    let directory = project.dir(parents, false).map_err(|_| {
-        CheckFailure::new(
-            "evidence-read-refused",
-            subject,
-            "Original observation directory must remain below the no-follow release root",
-        )
-    })?;
-    let raw = project.digest_file_in(&directory, name)
-        .map_err(|_| CheckFailure::new("evidence-read-refused", subject, "Original observation must be a stable regular single-link file below the no-follow release root"))?
-        .ok_or_else(|| CheckFailure::new("raw-capture-read", subject, "Original observation is unavailable"))?;
-    let raw_digest: String = raw
-        .sha256
-        .iter()
-        .map(|byte| format!("{byte:02x}"))
-        .collect();
+    let raw_digest = digest_within(project, &capture.source_record, subject, "raw-capture-read")?;
     if raw_digest != capture.source_record_sha256 {
         return Err(CheckFailure::new(
             "raw-capture-digest",
@@ -242,7 +271,7 @@ fn verify_ref(
             ));
         }
     }
-    Ok([
+    let claims = [
         "capture-shape-and-meaning",
         "original-observation-digest",
         "repository-tree",
@@ -252,5 +281,6 @@ fn verify_ref(
     ]
     .into_iter()
     .map(|claim| format!("{subject}:{claim}"))
-    .collect())
+    .collect();
+    Ok(VerifiedCapture { capture, claims })
 }

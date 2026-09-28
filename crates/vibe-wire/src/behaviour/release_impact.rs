@@ -43,10 +43,19 @@ impl ReleaseImpact {
         if !identifier(&self.change_id) {
             return Err(fault("change_id", "invalid immutable ID"));
         }
-        if self.before_capture_id.trim().is_empty() || self.after_capture_id.trim().is_empty() {
+        if let Some(paths) = &self.affected_paths
+            && (paths.iter().any(|path| !safe_relative_path(path))
+                || paths.windows(2).any(|pair| pair[0] >= pair[1]))
+        {
+            return Err(fault(
+                "affected_paths",
+                "paths must be safe, unique and sorted",
+            ));
+        }
+        if !identifier(&self.before_capture_id) || !identifier(&self.after_capture_id) {
             return Err(fault(
                 "captures",
-                "before and after identities are required",
+                "safe before and after identities are required",
             ));
         }
         if self.implementation_subjects.is_empty() {
@@ -144,6 +153,14 @@ impl ReleaseImpact {
 
         let mut evidence = BTreeSet::new();
         for entry in &self.evidence {
+            if entry.sha256.as_ref().is_some_and(|value| {
+                value.len() != 64
+                    || !value
+                        .bytes()
+                        .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+            }) {
+                return Err(fault("evidence.sha256", "invalid SHA-256 identity"));
+            }
             if entry.claim_id.trim().is_empty()
                 || entry.subject_id.trim().is_empty()
                 || !safe_relative_path(&entry.source)
@@ -210,6 +227,50 @@ mod tests {
             "../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json"
         ))
         .expect("registered release-impact corpus must parse")
+    }
+
+    #[test]
+    fn path_evidence_wire_preserves_absence_and_roundtrips_supplied_fields() {
+        assert!(internal_refactor().affected_paths.is_none());
+        assert!(internal_refactor().evidence[0].sha256.is_none());
+        let record: ReleaseImpact = serde_json::from_str(include_str!(
+            "../../../../formats/corpora/release-impact/e1/valid/with-path-evidence.json"
+        ))
+        .unwrap();
+        record.validate_release_impact().unwrap();
+        assert_eq!(
+            record,
+            serde_json::from_str(&serde_json::to_string(&record).unwrap()).unwrap()
+        );
+        assert!(serde_json::from_str::<ReleaseImpact>(include_str!("../../../../formats/corpora/release-impact/e1/invalid/wrong-affected-paths-type.json")).is_err());
+    }
+
+    #[test]
+    fn optional_paths_and_digests_are_checked_only_when_supplied() {
+        let mut record = internal_refactor();
+        record.affected_paths = Some(vec![]);
+        record.validate_release_impact().unwrap();
+        for paths in [
+            vec!["../bad".into()],
+            vec!["z".into(), "a".into()],
+            vec!["a".into(), "a".into()],
+        ] {
+            record.affected_paths = Some(paths);
+            assert_eq!(
+                record.validate_release_impact().unwrap_err().field,
+                "affected_paths"
+            );
+        }
+        record.affected_paths = Some(vec!["a".into()]);
+        for digest in ["bad".into(), "A".repeat(64)] {
+            record.evidence[0].sha256 = Some(digest);
+            assert_eq!(
+                record.validate_release_impact().unwrap_err().field,
+                "evidence.sha256"
+            );
+        }
+        record.evidence[0].sha256 = Some("a".repeat(64));
+        record.validate_release_impact().unwrap();
     }
 
     #[test]

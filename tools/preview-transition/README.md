@@ -13,7 +13,31 @@ readers. Exit `0` means the selected stage passed; `1` means a failed request
 or claim; `2` means the selected stage remains pending. A passing capture
 still reports later documentation and final-product proof as pending.
 
-The request grammar also names `contribution`, `bindings` (`roles` or `linked`),
+Contribution mode selects an explicit `contribution_scope`: verified before/after
+captures and sorted SHA-256 bindings for exactly the selected change records.
+It reads records under the layout's specification root, checks retained record
+and explicitly required evidence bytes through no-follow capabilities, and reconciles every
+local commit and first-parent changed path in the selected range. Captured
+source exclusions and exact selected-record-only maintenance commits are the
+only exclusions. Matching local implementation subjects and sorted affected
+paths must cover actual product paths; invented coverage refuses. Intermediate
+captures and alternate supplied locations are verified on their exact bytes.
+One immutable record may retain historical implementation commits inside its
+own capture bounds. Their actual raw paths remain valid declared-path membership,
+while only current-range commits participate in current product coverage.
+Each record binding selects sorted nonempty `required_claim_ids`; absent selection
+remains pending. Required claims resolve uniquely and bind current implementation
+or selected-scope capture subjects. Historical attempts and future-platform
+evidence stay recorded and are not automatically required or admitted as current
+proof. Required failed, unavailable or unverified results keep their distinctions.
+Missing prerequisites and unavailable evidence remain pending; external/content
+subject authority remains unsupported and cannot hide local coverage failures.
+Candidate records can establish this bounded proof without becoming accepted.
+The report keeps central semantic review and complete interface/topic/native
+linkage pending; byte hashes do not authenticate an evidence producer or infer
+net delivered impact from commits or reverts.
+
+The request grammar also names `bindings` (`roles` or `linked`),
 `documentation` (`intake`, `updated`, or `verified`), `release` (`reviewed` or
 `verified`), and `retired`. Their domain checks remain pending until the
 corresponding implementation work lands; the checker never promotes a

@@ -13,10 +13,10 @@ use super::*;
 
 static NEXT_SCRATCH: AtomicUsize = AtomicUsize::new(0);
 
-struct Fixture {
-    root: PathBuf,
-    release: PathBuf,
-    transition: Transition,
+pub(super) struct Fixture {
+    pub(super) root: PathBuf,
+    pub(super) release: PathBuf,
+    pub(super) transition: Transition,
 }
 
 impl Drop for Fixture {
@@ -30,7 +30,7 @@ fn sha256(bytes: &[u8]) -> String {
 }
 
 impl Fixture {
-    fn git(&self, args: &[&str]) -> String {
+    pub(super) fn git(&self, args: &[&str]) -> String {
         let output = Command::new("git")
             .arg("-C")
             .arg(&self.root)
@@ -53,7 +53,7 @@ impl Fixture {
         String::from_utf8(output.stdout).unwrap().trim().into()
     }
 
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let root = std::env::temp_dir().join(format!(
             "preview-proof-{}-{}",
             std::process::id(),
@@ -115,7 +115,7 @@ impl Fixture {
         fixture
     }
 
-    fn write_capture(&self, capture: &Capture, source: &str) -> CaptureRef {
+    pub(super) fn write_capture(&self, capture: &Capture, source: &str) -> CaptureRef {
         let bytes = serde_json::to_vec(capture).unwrap();
         fs::write(self.release.join(source), &bytes).unwrap();
         CaptureRef {
