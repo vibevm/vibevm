@@ -15,7 +15,37 @@ pub(super) fn sha256(bytes: &[u8]) -> String {
 }
 
 pub(super) fn git_output(dir: &Path, args: &[&str]) -> Result<std::process::Output, CheckFailure> {
-    Command::new("git")
+    let mut command = Command::new("git");
+    command.env_clear();
+    if let Some(path) = std::env::var_os("PATH") {
+        command.env("PATH", path);
+    }
+    #[cfg(windows)]
+    for name in ["SystemRoot", "WINDIR"] {
+        if let Some(value) = std::env::var_os(name) {
+            command.env(name, value);
+        }
+    }
+    let null = if cfg!(windows) { "NUL" } else { "/dev/null" };
+    command.envs([
+        ("LC_ALL", "C"),
+        ("LANG", "C"),
+        ("GIT_NO_LAZY_FETCH", "1"),
+        ("GIT_NO_REPLACE_OBJECTS", "1"),
+        ("GIT_OPTIONAL_LOCKS", "0"),
+        ("GIT_TERMINAL_PROMPT", "0"),
+        ("GIT_CONFIG_NOSYSTEM", "1"),
+        ("GIT_CONFIG_GLOBAL", null),
+        ("GIT_CONFIG_SYSTEM", null),
+        ("GIT_GRAFT_FILE", null),
+    ]);
+    command
+        .args([
+            "--no-replace-objects",
+            "--literal-pathspecs",
+            "-c",
+            "protocol.allow=never",
+        ])
         .arg("-C")
         .arg(dir)
         .args(args)

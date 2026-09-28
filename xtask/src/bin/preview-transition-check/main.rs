@@ -4,6 +4,8 @@ mod capture;
 mod contribution;
 
 #[cfg(test)]
+mod captured_git_tests;
+#[cfg(test)]
 mod contribution_git_tests;
 #[cfg(test)]
 mod contribution_history_tests;
