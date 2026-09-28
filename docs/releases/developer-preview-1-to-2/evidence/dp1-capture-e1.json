@@ -1,0 +1,524 @@
+{
+  "artifact_state": "unavailable",
+  "capture_id": "dp1-30d217bfce47bca",
+  "documentation_input_state": "pending-owner-binding",
+  "excluded_from_product_delta": [
+    {
+      "path": "campaigns/next/",
+      "reason": "temporary planning and execution scaffold; retained inside raw Git tree"
+    },
+    {
+      "path": "vibevm/vibespecs/terraforms/next/",
+      "reason": "temporary staged requirements; retained inside raw Git tree"
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/",
+      "reason": "new capture/output itself; not present in captured Git commit"
+    },
+    {
+      "path": "vibevm/vibedeps/",
+      "reason": "derived installed materialization; lock and canonical vibepacks capture authority"
+    },
+    {
+      "path": "target/",
+      "reason": "Cargo build output, absent from tracked source snapshot"
+    }
+  ],
+  "files": [
+    {
+      "git_blob_sha1": "a7957f9e36774975562852440f46b96a8149f834",
+      "path": "Cargo.lock",
+      "sha256": "bd4fd1b98c410bf708df7b44ad82132b13a4f51999f42828766dd70375488598"
+    },
+    {
+      "git_blob_sha1": "2e845db351ddd6e6f3f8b3a83d3ce050776e4f97",
+      "path": "Cargo.toml",
+      "sha256": "aff484cca92364fabc512a72033521061785e70b94d9ac8191321cb01ceb4ce6"
+    },
+    {
+      "git_blob_sha1": "2e7cda5a1906b7d52d8c4798c13659d2a9d05ea1",
+      "path": "crates/vibe-cli/src/cli.rs",
+      "sha256": "a1d09a81affcaeb2b43a3a9b8c96f83e4b46d895d298cf296f881a7c793e6a95"
+    },
+    {
+      "git_blob_sha1": "5c7f29046f0bf4b6a341b2e6b4c72dedf87048ef",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3"
+    },
+    {
+      "git_blob_sha1": "cf946793ff695cda67da3d775b1b8a5b7b3e0b34",
+      "path": "formats/EPOCHS.toml",
+      "sha256": "d9dbf026f3a8628f141d04d073c340566864dc6e05975b774bfb8f4071e9ee44"
+    },
+    {
+      "git_blob_sha1": "ecb24c0f1f78538043935e6d6d3ed049e3db60ba",
+      "path": "formats/REGISTRY.toml",
+      "sha256": "74e5e43c98fcdc37dbc6badf2b5efe6d64f039f55051b792a8c921d2c2804fee"
+    },
+    {
+      "git_blob_sha1": "d3ce98deb7afb5c3d2ae1685093a0f937178e0ab",
+      "path": "vibe.lock",
+      "sha256": "cd8023b0ad43b51658fae8d9cba0400f21b8017986b61e63af9d7c65b93808a6"
+    },
+    {
+      "git_blob_sha1": "ed14d9f3d24373b5e01f994dc194997613f0a65c",
+      "path": "vibe.toml",
+      "sha256": "2c680f587ec25ce40959251b965d9e2692c0f6748b4e718bd933f4c3c89d38b4"
+    },
+    {
+      "git_blob_sha1": "39d3dab10f598e3db6edca60ae8f7d4316a14194",
+      "path": "vibevm/vibespecs/boot/INDEX.md",
+      "sha256": "1b2edaa8cf419590fc32066a8dc8fbc8443317ffc46cb96125364643bb1d4e1a"
+    },
+    {
+      "git_blob_sha1": "6bd69e0f3c78872a3b51550188a42573f3e66f7e",
+      "path": "vibevm/vibespecs/boot/STATIC.xml",
+      "sha256": "0763e6ddd7addd0a4263d487db6cd500c2fcdbe768813a37bf0c9c168b23e12c"
+    }
+  ],
+  "packages": [
+    {
+      "coordinate": "org.vibevm.ai-native/core-ai-native@1.0.0",
+      "git_tree_sha1": "cf68607f834610f7c7624ed2f2c33e48cf60e775",
+      "kind": "flow",
+      "manifest_sha256": "229cd7ed09e2582d9a580e7bb46d4de9ac9fc7d4c54bcd8e55434a0a2905a25d",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native-lang@1.0.0",
+      "git_tree_sha1": "82f18ea2d2b2005352a2781df7206160403edb3c",
+      "kind": "lang",
+      "manifest_sha256": "f627f0a27e138b330aadebb4f824e144e7450d0794422ce260bcf740bdb6ca3b",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native-mcp@1.0.0",
+      "git_tree_sha1": "97b49f58d1f91b0c8e877214787160b673328014",
+      "kind": "mcp",
+      "manifest_sha256": "351dc8d05718f72c9aacb6e5d425bd44f52eabe223cea38b48dd299893d4f1e5",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native@1.0.0",
+      "git_tree_sha1": "1efdc7e3ff8bd40e26ff86078ce973b2652ce1f7",
+      "kind": "stack",
+      "manifest_sha256": "fd2dc9f65674c1acc150c1510ef4e45fabef4875f21107567b64e9a84b171c7b",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/jtd-codegen@1.0.0",
+      "git_tree_sha1": "02d72ce21481f4b36ffa548bb738176e696b53d7",
+      "kind": "tool",
+      "manifest_sha256": "10e7801f379647cce582f90f7558e30ebf3325f7d8607c5b562c51562eef9cf4",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native-lang@1.0.0",
+      "git_tree_sha1": "1cc9bed47c1bd7fb714988a4b9a3a0ba1a232fb1",
+      "kind": "lang",
+      "manifest_sha256": "f5658add3678829076f69f6800931c98d14635ecf2d6b0bd832ef6e4c91b7817",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native-mcp@1.0.0",
+      "git_tree_sha1": "b5d3aa4c347fbe8ee74b75d6bfe34cb4e2380323",
+      "kind": "mcp",
+      "manifest_sha256": "79c94195dd89c832aa9fffcc251a2e89d4d01fda0f817d9fd19d4f912da9efac",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native@1.0.0",
+      "git_tree_sha1": "4b842609f1aab1428780e1d76e420abb569b3666",
+      "kind": "stack",
+      "manifest_sha256": "d040e4624579359c851634245b9f59f078279d3049a2c19411020af3b443343c",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native-lang@1.0.0",
+      "git_tree_sha1": "6f18eba25f256d406a0e968688488d50ad6ebada",
+      "kind": "lang",
+      "manifest_sha256": "840af5cca47e35b81cfe5aa28428d7fdebf0ad13974369573aecb989a8a05af0",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native-mcp@1.0.0",
+      "git_tree_sha1": "338b74d1486b4c7c18f4514d357e86933aadb6f1",
+      "kind": "mcp",
+      "manifest_sha256": "54c489da81aa219f38375da859bd5b24be4348199e7f50649534070bf8a9b01b",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native@1.0.0",
+      "git_tree_sha1": "b8da1531bb203e282d03ed05b9b185e982384ecf",
+      "kind": "stack",
+      "manifest_sha256": "fca7c49edc0fabd5777ceb349a95d298f934f2cd02d30debe6abc0b6ecdbc58f",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.core/vibevm-docs-ru@1.0.0",
+      "git_tree_sha1": "0a908e5c205f606c4a72c7466a55512333738588",
+      "kind": "doc",
+      "manifest_sha256": "e88015d54a1760c80c07e2e305cbff43ec6a6c01aa3ab177b19875afc8cdc3a1",
+      "slot": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.core/vibevm-docs@1.0.0",
+      "git_tree_sha1": "56fbadaf656038dc87225ccc83c1e5cfdc42035d",
+      "kind": "doc",
+      "manifest_sha256": "420d73ac766c6667c787c6b5e6d4fada43d104b6a04142c90886e2568edca19b",
+      "slot": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.doc/web@1.0.0",
+      "git_tree_sha1": "9be7e3ed3c181cae638a1f52b03d459d0e64f010",
+      "kind": "app",
+      "manifest_sha256": "bf0962e44c906a0e762c77114744f51fcad51f2ba946413e48541caab35720c4",
+      "slot": "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/delegation-first@1.0.0",
+      "git_tree_sha1": "4b3e6b5dd6e341282080c609dcc987cbfd97ec1f",
+      "kind": "flow",
+      "manifest_sha256": "c00c91d14e877b97a607ae540a4e1fbe20a18b42694ec390eb09421d4affda3c",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/delegation-first/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/delegation-rules@1.0.0",
+      "git_tree_sha1": "0851dac5b5bb549f5979d9f6f113555a00698dcf",
+      "kind": "flow",
+      "manifest_sha256": "4523445170310e85c63a7db2c9fe0373355a03e43ccf951077cd2afeb75fa641",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/fractality@1.0.0",
+      "git_tree_sha1": "daf18036149290f5ca0fc9be2094c3fea982d693",
+      "kind": "tool",
+      "manifest_sha256": "c26785fb9c279e59817906d3e085a60f12233d9049246d45ffd1fe03a6eef22e",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/addressable-specs@1.0.0",
+      "git_tree_sha1": "1df809884ca7d3a208b73f6eab4c30c58885729e",
+      "kind": "flow",
+      "manifest_sha256": "5d76d926c576966980438bfa3d4cefaa6dbf092dcaf96acd970233deb6c461b4",
+      "slot": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/campaign-plans@1.0.0",
+      "git_tree_sha1": "0c1f9507cc74e18d8cd1765cb17eabc370237409",
+      "kind": "flow",
+      "manifest_sha256": "0c8cbab2d55f1d9b724308b8ced6ad8b0ba727892c02c2d133f87c50c0cf3f1e",
+      "slot": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/comparative-research@1.0.0",
+      "git_tree_sha1": "65512b1b7a5fcb269d7658d58c94634e6ccba6a7",
+      "kind": "flow",
+      "manifest_sha256": "30272103179fb829e527a88ab07ef8f6d9ffe79adecace0ac8e46515c1a1ac28",
+      "slot": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/conflict-protocol@1.0.0",
+      "git_tree_sha1": "1f1f6de49ee08cb56ffc6d3174eff5c4d8a4e3a8",
+      "kind": "flow",
+      "manifest_sha256": "47b66de192fa61bf8f30389857c43f937be1a1f96caf5f3f1bec24536167d1df",
+      "slot": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/decision-records@1.0.0",
+      "git_tree_sha1": "220054e14feb7e87f353d584d90e451903125d8f",
+      "kind": "flow",
+      "manifest_sha256": "0dfe72163b6feee2735b94ca4bda62e273ad52ed3f89faf1d64284f964c06bdb",
+      "slot": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/dev-runtime-docs@1.0.0",
+      "git_tree_sha1": "532d19e433a4919a34b6231398ad38f1f6c7f11d",
+      "kind": "flow",
+      "manifest_sha256": "9a78686c3046abe9e0a56e18a6fb2786931c82db82bff04ca3582fea2747a06f",
+      "slot": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/discovery-prompt@1.0.0",
+      "git_tree_sha1": "cc0ca75bb881cb477a8225b77e9b17d37ddfb834",
+      "kind": "flow",
+      "manifest_sha256": "ef053032958814291074d8c79e3a47e4f03dd6c2cf022c10a44e88d4bcfd1be6",
+      "slot": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-atomic-commits@1.0.0",
+      "git_tree_sha1": "26e8bddc7e3075dc21aa2f022f20349d33f0605a",
+      "kind": "flow",
+      "manifest_sha256": "86feac27d85ae42c8ca65834a02d9dd095614c6c3bf8b3d25a5a47b32cec7dd0",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-attribution-policy@1.0.0",
+      "git_tree_sha1": "8da8d57541b5eaa56c196cdecd6fdf7d4e2ac216",
+      "kind": "flow",
+      "manifest_sha256": "42d5ef646ad62e5c46c517e15bdd683869076353c8af7f56a4a8a87cbad1f730",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-autonomy@1.0.0",
+      "git_tree_sha1": "eb2ea237e9a81fd81f536f783304ec27ce655aff",
+      "kind": "flow",
+      "manifest_sha256": "2d2c1f531ce1d4c1eee47417a5afff6061f233c0b612442de134262aac2a5a19",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-conventional-commits@1.0.0",
+      "git_tree_sha1": "706e916b6bb83a41c033302b0c688368dc4afd13",
+      "kind": "flow",
+      "manifest_sha256": "881b9467d99223379a780e7583df68cac5101d1ff2105cc5ab9702818170731f",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-practices@1.0.0",
+      "git_tree_sha1": "e3a75f84fdef5ff0a152a993995bef8486dc34f5",
+      "kind": "flow",
+      "manifest_sha256": "ac8bb8c95299cbc66fd203b10c492e9e07644ece09b5116a7126b2ffb0bde7c0",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-practices/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/health-audit@1.0.0",
+      "git_tree_sha1": "bf7f3d42b34d42a68e28987f1207be175acba778",
+      "kind": "flow",
+      "manifest_sha256": "1f3e1f93fd3121fd1b441bf45493034d3ec19503f63c3c42e67bcd1f8ca3c69b",
+      "slot": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/licensing@1.0.0",
+      "git_tree_sha1": "972cf3cda8b580aecfc293db08a68fbc31af10ae",
+      "kind": "flow",
+      "manifest_sha256": "f7d6a6b774bd761bdcf3f4cf72f41d6bfd0e9d85b1bc882e384a06b97025e561",
+      "slot": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/managed-blocks@1.0.0",
+      "git_tree_sha1": "bff06b1ec1396af17e93f2dd3bc1afbe662b40ad",
+      "kind": "flow",
+      "manifest_sha256": "cc6e22d7db4f6d8d90ab3a2ea77971bc59310dea0b3c3dfcfad0427c93d68a56",
+      "slot": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/manual-tests@1.0.0",
+      "git_tree_sha1": "cf40e992cdff91f2a00d91536d1e47742edbc5db",
+      "kind": "flow",
+      "manifest_sha256": "daf77be39ae49360fc436dddbcfd535c1b888350d75b15cd3f0ff7709af7a39d",
+      "slot": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/multi-user-planning@1.0.0",
+      "git_tree_sha1": "507221dbe57c6fe090c3ee7cf9c90fa1a1982d77",
+      "kind": "flow",
+      "manifest_sha256": "360c1ac6f8f59ed478e12670de64affeb8b7648d5bd145f69926c35f89fcece7",
+      "slot": "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/omnichannel@1.0.0",
+      "git_tree_sha1": "31b0087a209859adad4cc4f53265dd078f3005ad",
+      "kind": "flow",
+      "manifest_sha256": "596aa7f5bdfafdd69e9aa13714adb33e23b3f9b0943e7d45e634c6b318a0e142",
+      "slot": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/operating-modes@1.0.0",
+      "git_tree_sha1": "3c94e701fb553446317b6cc4b186db9218ab6ffc",
+      "kind": "flow",
+      "manifest_sha256": "d78795bb4bc5c480749825d9829e706cfa29a1ccce3120a0361eba66fcc2f661",
+      "slot": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/qualified-naming@1.0.0",
+      "git_tree_sha1": "22719497a0132952b30a14edc6334205df10bdb8",
+      "kind": "flow",
+      "manifest_sha256": "f68dbaf1844a153949910e504c3d01dad77864edd76f0c116c8884c62dd5b147",
+      "slot": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/redbook@1.0.0",
+      "git_tree_sha1": "00012b52490cfd8edf4892da9bff8dbbd9cbf2f1",
+      "kind": "flow",
+      "manifest_sha256": "6f873587fb9958e0fc57257cbd61da6b1ae5c699e6759695b56c734715654b46",
+      "slot": "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/secrets-hygiene@1.0.0",
+      "git_tree_sha1": "b9c6e7c7e171e077e6d2db597cadc8fd67df457c",
+      "kind": "flow",
+      "manifest_sha256": "714859eb412e146094425942ab6e366bdf081d6a49c44d27a17dfdf06b66bce5",
+      "slot": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/source-mirrors@1.0.0",
+      "git_tree_sha1": "f093ba6f0f09bbdda46c951e7fa608d1dd8f691a",
+      "kind": "flow",
+      "manifest_sha256": "fac36afd078a3c932146e9862963700226a5c2897be6c655ed716abea9578f4b",
+      "slot": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/spec-genres@1.0.0",
+      "git_tree_sha1": "e017399a57aa2e3bf303bd3d715255cf761ecba2",
+      "kind": "flow",
+      "manifest_sha256": "8af4ca50ebd3abc4d55c69be3cdbaebb2fca4a04b44b3367e2282545afa40048",
+      "slot": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/sync-from-code@1.0.0",
+      "git_tree_sha1": "28a2c922e70839ffceb4f312fdaedf2f8e6c6eea",
+      "kind": "flow",
+      "manifest_sha256": "1df4d97290f2f9efd57d8ffa3c22e4f2395474d9601ad51c127fbde2df22377c",
+      "slot": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/tool-design-lessons@1.0.0",
+      "git_tree_sha1": "5089ca9fa5897a07327d5a35f95e3e6faee9e84f",
+      "kind": "flow",
+      "manifest_sha256": "215d80734fe8151d5b4921e98d2b3ea08c528a8fa5a7ab350494a6a5d1c75f97",
+      "slot": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/two-process-model@1.0.0",
+      "git_tree_sha1": "f0532ff6f09a01a8098543060e1a5dbe6962d272",
+      "kind": "flow",
+      "manifest_sha256": "ae362fa19d0bdb30b4e8b4a2500268e2a4d39304e9ee3bd2c287d38d8a871a32",
+      "slot": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/wal-specspaces@1.0.0",
+      "git_tree_sha1": "e47223516ea3d8fc47e2a297a9751eb4e8040c5f",
+      "kind": "flow",
+      "manifest_sha256": "11ad0bf5ac3277622638c12b8de212725572558f19f52daba8bcdbe390c97dae",
+      "slot": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/wal@1.0.0",
+      "git_tree_sha1": "53dad94779c306fb81b46dfaf10c93fbd801a333",
+      "kind": "flow",
+      "manifest_sha256": "201175700822cddf6f53fea3c51ded6da94d9cc0864f687e149287d3a5aebad1",
+      "slot": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/zai-glm-claude@1.0.0",
+      "git_tree_sha1": "4e14e45ded49fd7717e812a91197e5c03c9a00c1",
+      "kind": "tool",
+      "manifest_sha256": "9e105240f9ddd8a15153587daa3ad0c09b01aa897bae0de694915b98cb81a17e",
+      "slot": "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0"
+    },
+    {
+      "coordinate": "org.vibevm.zap/zap@1.0.0",
+      "git_tree_sha1": "5f0fa15bdf34cf4e676b8ef8b1d664cd75b7f8fc",
+      "kind": "flow",
+      "manifest_sha256": "6ee4f4c86580a6adce0ead8d34c1247d62f738d8c0e499e14f71be5014641341",
+      "slot": "vibevm/vibepacks/org.vibevm.zap/zap/v1.0.0"
+    }
+  ],
+  "repository_commit_sha1": "30d217bfce47bcaccadabd9468f00e315dbcfead",
+  "repository_tree_sha1": "0f4a5ddeddae677a487f49fbc4493eb0b4eb5b95",
+  "schema": 1,
+  "scope": "tracked-commit",
+  "source_record": "evidence/dp1-source-capture.json",
+  "source_record_sha256": "70278066d23a73173819ee00d8984e832860da4e266c6491711f54f4de231ebd",
+  "surfaces": [
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "Init",
+        "List",
+        "Extensions",
+        "Validate",
+        "Install",
+        "Generate",
+        "Build",
+        "Test",
+        "Run",
+        "Create",
+        "Verify",
+        "Package",
+        "Deploy",
+        "Undeploy",
+        "Deployments",
+        "Clean",
+        "Scrape",
+        "Outdated",
+        "Search",
+        "Mcp",
+        "Aiui",
+        "Term",
+        "Frame",
+        "Skill",
+        "Agentic",
+        "Drain",
+        "Uninstall",
+        "Update",
+        "Reinstall",
+        "Check",
+        "Doc",
+        "Facts",
+        "Requirements",
+        "Why",
+        "Refactor",
+        "Friends",
+        "Show",
+        "Prefs",
+        "Tree",
+        "Registry",
+        "Cache",
+        "Workspace",
+        "Vvm",
+        "Tools",
+        "Bin",
+        "Explain",
+        "Query",
+        "Select",
+        "Specmap",
+        "Trace",
+        "Vars",
+        "Progress",
+        "Version"
+      ],
+      "kind": "cli",
+      "source": "crates/vibe-cli/src/cli.rs",
+      "source_sha256": "a1d09a81affcaeb2b43a3a9b8c96f83e4b46d895d298cf296f881a7c793e6a95"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "QueryPackageMcpTool",
+        "ReadSubskillMcpTool",
+        "MaterialiseSubskillMcpTool",
+        "AgenticExplainMcpTool",
+        "ExplainMcpTool",
+        "QueryMcpTool",
+        "SelectMcpTool",
+        "ListToolsMcpTool",
+        "LifecycleTasksMcpTool",
+        "LifecycleRunMcpTool",
+        "RequirementsQueryMcpTool",
+        "ReadDocMcpTool"
+      ],
+      "kind": "mcp",
+      "source": "crates/vibe-mcp/src/tools.rs",
+      "source_sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3"
+    }
+  ],
+  "toolchains": [
+    {
+      "name": "rustc",
+      "version": "rustc 1.93.1 (01f6ddf75 2026-02-11)"
+    },
+    {
+      "name": "cargo",
+      "version": "cargo 1.93.1 (083ac5135 2025-12-15)"
+    },
+    {
+      "name": "git",
+      "version": "git version 2.52.0.windows.1"
+    },
+    {
+      "name": "node",
+      "version": "v24.18.0"
+    }
+  ]
+}

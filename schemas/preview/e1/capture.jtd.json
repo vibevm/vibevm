@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "description": "Normalized exact product capture with a hash link to the original raw observation. The product tree is identified by Git object IDs; no runtime claim is inferred from source declarations.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-BEFORE-EDIT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::capture"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "capture_id": { "type": "string" },
+    "repository_commit_sha1": { "type": "string" },
+    "repository_tree_sha1": { "type": "string" },
+    "source_record": { "type": "string" },
+    "source_record_sha256": { "type": "string" },
+    "scope": { "enum": ["tracked-commit"], "metadata": { "x-vocabulary": "closed" } },
+    "packages": { "elements": { "ref": "package_capture" }, "metadata": { "x-empty": "emit" } },
+    "files": { "elements": { "ref": "file_capture" }, "metadata": { "x-empty": "emit" } },
+    "surfaces": { "elements": { "ref": "surface_capture" }, "metadata": { "x-empty": "emit" } },
+    "excluded_from_product_delta": { "elements": { "ref": "scope_exclusion" }, "metadata": { "x-empty": "emit" } },
+    "toolchains": { "elements": { "ref": "toolchain" }, "metadata": { "x-empty": "emit" } },
+    "artifact_state": { "enum": ["unavailable", "partial", "measured"], "metadata": { "x-vocabulary": "closed" } },
+    "documentation_input_state": { "enum": ["pending-owner-binding", "captured"], "metadata": { "x-vocabulary": "closed" } }
+  },
+  "definitions": {
+    "package_capture": {
+      "properties": {
+        "coordinate": { "type": "string" },
+        "kind": { "type": "string" },
+        "slot": { "type": "string" },
+        "git_tree_sha1": { "type": "string" },
+        "manifest_sha256": { "type": "string" }
+      }
+    },
+    "file_capture": {
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "git_blob_sha1": { "type": "string" }
+      }
+    },
+    "surface_capture": {
+      "properties": {
+        "kind": { "enum": ["cli", "mcp"], "metadata": { "x-vocabulary": "closed" } },
+        "source": { "type": "string" },
+        "source_sha256": { "type": "string" },
+        "evidence_level": { "enum": ["source-declared", "runtime-measured"], "metadata": { "x-vocabulary": "closed" } },
+        "identifiers": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "scope_exclusion": {
+      "properties": {
+        "path": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    },
+    "toolchain": {
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    }
+  }
+}
