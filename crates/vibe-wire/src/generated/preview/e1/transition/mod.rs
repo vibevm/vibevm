@@ -31,6 +31,11 @@ pub struct Transition {
     pub schema: u32,
 
     pub schema_status: String,
+
+    /// Additional exact intermediate capture references; retaining a reference
+    /// alone does not establish its proof.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub captures: Option<Vec<CaptureRef>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

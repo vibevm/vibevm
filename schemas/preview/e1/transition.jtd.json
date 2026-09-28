@@ -47,6 +47,21 @@
       "ref": "proof_state"
     }
   },
+  "optionalProperties": {
+    "captures": {
+      "elements": {
+        "ref": "capture_ref"
+      },
+      "metadata": {
+        "x-default": null,
+        "x-empty": "preserve",
+        "description": "Additional exact intermediate capture references; retaining a reference alone does not establish its proof.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-CATALOGUE"
+        }
+      }
+    }
+  },
   "definitions": {
     "capture_ref": {
       "properties": {
