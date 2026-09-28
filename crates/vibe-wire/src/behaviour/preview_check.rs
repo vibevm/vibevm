@@ -24,6 +24,13 @@ fn ordered_unique(values: &[String]) -> bool {
     values.windows(2).all(|pair| pair[0] < pair[1])
 }
 
+fn nonblank_unique(values: &[String]) -> bool {
+    let mut seen = BTreeSet::new();
+    values
+        .iter()
+        .all(|value| !value.trim().is_empty() && seen.insert(value.as_str()))
+}
+
 impl CheckRequest {
     /// A stage is accepted only for its owning mode; no default stage is guessed.
     pub fn validate_preview(&self) -> Result<(), PreviewCheckError> {
@@ -116,12 +123,23 @@ impl DocumentationMap {
             {
                 return Err(fault("topics.target_page", "destination page is required"));
             }
+            if !nonblank_unique(&topic.proof.evidence) || !nonblank_unique(&topic.proof.subject_ids)
+            {
+                return Err(fault("topics.proof", "blank or repeated proof reference"));
+            }
             if matches!(topic.proof.state, TopicProofState::Checked)
-                && (topic.proof.evidence.is_empty() || topic.proof.subject_ids.is_empty())
+                && (matches!(topic.source_kind, TopicSourceKind::Unbound)
+                    || matches!(topic.disposition, TopicDisposition::Pending)
+                    || topic.proof.evidence.is_empty()
+                    || !topic.proof.subject_ids.contains(&self.product_capture_id)
+                    || !topic
+                        .proof
+                        .subject_ids
+                        .contains(&self.documentation_capture_id))
             {
                 return Err(fault(
                     "topics.proof",
-                    "checked topic needs subject and evidence",
+                    "checked topic needs bound disposition, both exact captures and evidence",
                 ));
             }
             if matches!(topic.proof.state, TopicProofState::Unavailable)
@@ -188,5 +206,55 @@ mod tests {
         );
         map.topics[0].source_page = Some("howto/install.xml".into());
         assert_eq!(map.validate_preview().unwrap_err().field, "topics.proof");
+    }
+
+    fn checked_map() -> DocumentationMap {
+        serde_json::from_value(serde_json::json!({
+            "schema": 1, "product_capture_id": "product-exact", "documentation_capture_id": "docs-exact",
+            "topics": [{"topic_id": "install", "change_ids": [], "claim_anchors": [],
+                "disposition": "existing", "source_kind": "authored", "source_page": "install.xml",
+                "proof": {"state": "checked", "reason": "", "subject_ids": ["product-exact", "docs-exact"], "evidence": ["proof/install.json"]}}]
+        })).unwrap()
+    }
+
+    #[test]
+    fn checked_topic_binds_both_capture_subjects_and_a_resolved_disposition() {
+        checked_map().validate_preview().unwrap();
+        for missing in ["product-exact", "docs-exact"] {
+            let mut map = checked_map();
+            map.topics[0].proof.subject_ids.retain(|id| id != missing);
+            map.topics[0].proof.subject_ids.push("wrong-capture".into());
+            assert_eq!(map.validate_preview().unwrap_err().field, "topics.proof");
+        }
+        let mut map = checked_map();
+        map.topics[0].disposition = TopicDisposition::Pending;
+        assert_eq!(map.validate_preview().unwrap_err().field, "topics.proof");
+        map.topics[0].source_kind = TopicSourceKind::Unbound;
+        map.topics[0].source_page = None;
+        assert_eq!(map.validate_preview().unwrap_err().field, "topics.proof");
+        map.topics[0].proof.state = TopicProofState::Pending;
+        map.validate_preview().unwrap();
+        map.topics.clear();
+        map.validate_preview().unwrap();
+    }
+
+    #[test]
+    fn topic_proof_references_refuse_blank_and_duplicate_values() {
+        for subjects in [false, true] {
+            for value in [" ", "duplicate"] {
+                let mut map = checked_map();
+                let values = if subjects {
+                    &mut map.topics[0].proof.subject_ids
+                } else {
+                    &mut map.topics[0].proof.evidence
+                };
+                if value == "duplicate" {
+                    values.push(values[0].clone());
+                } else {
+                    values.push(value.into());
+                }
+                assert_eq!(map.validate_preview().unwrap_err().field, "topics.proof");
+            }
+        }
     }
 }

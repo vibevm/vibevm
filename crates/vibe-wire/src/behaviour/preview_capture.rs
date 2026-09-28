@@ -2,7 +2,9 @@
 
 use std::collections::BTreeSet;
 
-use crate::generated::preview::e1::capture::Capture;
+use crate::generated::preview::e1::capture::{
+    Capture, CaptureArtifactState, SurfaceCaptureEvidenceLevel,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[error("preview capture {field}: {reason}")]
@@ -37,6 +39,12 @@ impl Capture {
     pub fn validate_preview(&self) -> Result<(), PreviewCaptureError> {
         if self.schema != 1 {
             return Err(fault("schema", "unsupported epoch"));
+        }
+        if !matches!(self.artifact_state, CaptureArtifactState::Unavailable) {
+            return Err(fault(
+                "artifact_state",
+                "this epoch cannot verify artifact witnesses",
+            ));
         }
         if self.capture_id.trim().is_empty() {
             return Err(fault("capture_id", "empty identity"));
@@ -75,6 +83,15 @@ impl Capture {
         }
         let mut surfaces = BTreeSet::new();
         for surface in &self.surfaces {
+            if !matches!(
+                surface.evidence_level,
+                SurfaceCaptureEvidenceLevel::SourceDeclared
+            ) {
+                return Err(fault(
+                    "surfaces.evidence_level",
+                    "this epoch cannot verify runtime witnesses",
+                ));
+            }
             if !safe_relative_path(&surface.source)
                 || !digest(&surface.source_sha256, 64)
                 || !files.contains(surface.source.as_str())
@@ -197,5 +214,26 @@ mod tests {
         let mut capture = dp1();
         capture.schema = 2;
         assert_eq!(capture.validate_preview().unwrap_err().field, "schema");
+    }
+
+    #[test]
+    fn measured_runtime_and_artifacts_are_refused_without_representable_witnesses() {
+        let mut capture = dp1();
+        capture.surfaces[0].evidence_level = SurfaceCaptureEvidenceLevel::RuntimeMeasured;
+        assert_eq!(
+            capture.validate_preview().unwrap_err().field,
+            "surfaces.evidence_level"
+        );
+        for state in [
+            CaptureArtifactState::Partial,
+            CaptureArtifactState::Measured,
+        ] {
+            let mut capture = dp1();
+            capture.artifact_state = state;
+            assert_eq!(
+                capture.validate_preview().unwrap_err().field,
+                "artifact_state"
+            );
+        }
     }
 }

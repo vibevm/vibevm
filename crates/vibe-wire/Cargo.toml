@@ -29,3 +29,7 @@ toml.workspace = true
 # than trusting the shape.
 sha2.workspace = true
 vibe-core.workspace = true
+vibe-safefs.workspace = true
+
+[dev-dependencies]
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
