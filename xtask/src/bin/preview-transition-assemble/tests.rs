@@ -5,9 +5,9 @@ use std::{
 };
 
 const TRANSITION: &str =
-    include_str!("../../../../../formats/corpora/preview-transition/e1/valid/captured.json");
+    include_str!("../../../../formats/corpora/preview-transition/e1/valid/captured.json");
 const RECORD: &str =
-    include_str!("../../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json");
+    include_str!("../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json");
 
 struct Scratch(PathBuf);
 impl Scratch {
