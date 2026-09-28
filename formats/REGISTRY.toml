@@ -1140,3 +1140,25 @@ recoverable = true
 foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
+
+# Developer Preview transition index. The index includes reviewed evidence
+# state and cannot be reconstructed from product bytes alone.
+[format.preview-transition]
+epoch = 1
+schema = "schemas/preview/e1/transition.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/preview-transition/e1"
+sunset = "none"
+
+# Authored, immutable-ID contribution disposition. It is not reconstructed
+# from the source diff because semantic user/documentation impact is reviewed.
+[format.release-impact]
+epoch = 1
+schema = "schemas/preview/e1/release_impact.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/release-impact/e1"
+sunset = "none"

@@ -25,5 +25,6 @@
   },
   "record_kind": "preview-transition",
   "schema": 1,
-  "schema_status": "registered shape; stage-dependent evidence pending"
+  "schema_status": "registered shape; stage-dependent evidence pending",
+  "unregistered_claim": true
 }

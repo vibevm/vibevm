@@ -1,0 +1,37 @@
+{
+  "acceptance": {
+    "review_evidence": "review/example.json",
+    "review_subject": "0123456789abcdef0123456789abcdef01234567",
+    "state": "candidate"
+  },
+  "after_capture_id": "candidate-example",
+  "before_capture_id": "dp1-example",
+  "change_id": "change-example-refactor",
+  "documentation_impact": {
+    "documentation_action": "none",
+    "reason": "No documented claim changed.",
+    "state": "no-impact"
+  },
+  "effects": [],
+  "evidence": [
+    {
+      "claim_id": "source-diff-reviewed",
+      "source": "review/example.json",
+      "subject_id": "0123456789abcdef0123456789abcdef01234567",
+      "verdict": "passed"
+    }
+  ],
+  "implementation_subjects": [
+    {
+      "identity": "0123456789abcdef0123456789abcdef01234567",
+      "kind": "commit"
+    }
+  ],
+  "relations": [],
+  "schema": 1,
+  "user_impact": {
+    "migration_action": "none",
+    "reason": "Only an internal implementation path changed.",
+    "state": "guess"
+  }
+}

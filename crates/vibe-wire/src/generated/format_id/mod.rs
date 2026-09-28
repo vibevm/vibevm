@@ -113,6 +113,8 @@ pub enum FormatId {
     NativePackageRequest,
     NativeReply,
     PackageSkillReceipt,
+    PreviewTransition,
+    ReleaseImpact,
     RequirementsReport,
     ScrapeHealthResult,
     ScrapePlan,

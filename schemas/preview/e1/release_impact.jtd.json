@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "description": "Permanent authored impact record for one immutable change identity. Shape follows PROP-081#RECORD-MEANING; semantic references and evidence are checked separately.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::release_impact"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "change_id": { "type": "string" },
+    "before_capture_id": { "type": "string" },
+    "after_capture_id": { "type": "string" },
+    "implementation_subjects": {
+      "elements": { "ref": "implementation_subject" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "effects": {
+      "elements": { "ref": "effect" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "user_impact": { "ref": "user_disposition" },
+    "documentation_impact": { "ref": "documentation_disposition" },
+    "evidence": {
+      "elements": { "ref": "evidence_ref" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "relations": {
+      "elements": { "ref": "relation" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "acceptance": { "ref": "acceptance" }
+  },
+  "definitions": {
+    "implementation_subject": {
+      "properties": {
+        "kind": { "enum": ["commit", "content", "external-commit"], "metadata": { "x-vocabulary": "closed" } },
+        "identity": { "type": "string" }
+      }
+    },
+    "effect": {
+      "properties": {
+        "kind": { "enum": ["introduced", "changed", "removed", "fixed", "unchanged"], "metadata": { "x-vocabulary": "closed" } },
+        "interface_id": { "type": "string" },
+        "capability_id": { "type": "string" },
+        "audience": { "type": "string" },
+        "platform": { "type": "string" },
+        "before": { "type": "string" },
+        "after": { "type": "string" },
+        "contract_anchors": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "user_disposition": {
+      "properties": {
+        "state": { "enum": ["pending", "impact", "no-impact"], "metadata": { "x-vocabulary": "closed" } },
+        "reason": { "type": "string" },
+        "migration_action": { "enum": ["none", "manual", "automated", "rebuild", "unsupported"], "metadata": { "x-vocabulary": "closed" } }
+      }
+    },
+    "documentation_disposition": {
+      "properties": {
+        "state": { "enum": ["pending", "impact", "no-impact"], "metadata": { "x-vocabulary": "closed" } },
+        "reason": { "type": "string" },
+        "documentation_action": { "enum": ["none", "update", "create", "retire", "redirect"], "metadata": { "x-vocabulary": "closed" } }
+      }
+    },
+    "evidence_ref": {
+      "properties": {
+        "claim_id": { "type": "string" },
+        "subject_id": { "type": "string" },
+        "source": { "type": "string" },
+        "verdict": { "enum": ["passed", "failed", "unavailable", "unverified"], "metadata": { "x-vocabulary": "closed" } }
+      }
+    },
+    "relation": {
+      "properties": {
+        "kind": { "enum": ["reverts", "supersedes", "continues"], "metadata": { "x-vocabulary": "closed" } },
+        "change_id": { "type": "string" }
+      }
+    },
+    "acceptance": {
+      "properties": {
+        "state": { "enum": ["candidate", "accepted", "rejected"], "metadata": { "x-vocabulary": "closed" } },
+        "review_subject": { "type": "string" },
+        "review_evidence": { "type": "string" }
+      }
+    }
+  }
+}

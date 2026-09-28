@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "description": "Developer Preview transition index (PROP-081#TRANSITION-INDEX). Shape is generated; stage-dependent evidence is checked by the preview transition validator.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#TRANSITION-INDEX"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::transition"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "record_kind": {
+      "enum": [
+        "preview-transition"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "schema_status": {
+      "type": "string"
+    },
+    "dp1": {
+      "ref": "capture_ref"
+    },
+    "dp2": {
+      "ref": "pending_capture"
+    },
+    "documentation": {
+      "ref": "pending_documentation"
+    },
+    "change_records": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "migration_guide": {
+      "ref": "pending_guide"
+    },
+    "proof": {
+      "ref": "proof_state"
+    }
+  },
+  "definitions": {
+    "capture_ref": {
+      "properties": {
+        "capture_id": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "capture_file_sha256": {
+          "type": "string"
+        },
+        "commit_sha1": {
+          "type": "string"
+        },
+        "git_tree_sha1": {
+          "type": "string"
+        }
+      }
+    },
+    "pending_capture": {
+      "properties": {
+        "state": {
+          "enum": [
+            "pending",
+            "candidate",
+            "sealed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "capture_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "source": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "capture_file_sha256": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "commit_sha1": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "git_tree_sha1": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "pending_documentation": {
+      "properties": {
+        "state": {
+          "enum": [
+            "pending-owner-binding",
+            "captured",
+            "updated",
+            "verified"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "capture_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "source": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "capture_file_sha256": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "pending_guide": {
+      "properties": {
+        "state": {
+          "enum": [
+            "pending",
+            "draft",
+            "reviewed",
+            "verified"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "source": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "source_sha256": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "proof_state": {
+      "properties": {
+        "capture_validated": {
+          "type": "boolean"
+        },
+        "contributions_verified": {
+          "type": "boolean"
+        },
+        "documentation_verified": {
+          "type": "boolean"
+        },
+        "migration_rehearsed": {
+          "type": "boolean"
+        },
+        "final_product_panel_passed": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,6 @@
     "migration_rehearsed": false
   },
   "record_kind": "preview-transition",
-  "schema": 1,
+  "schema": "1",
   "schema_status": "registered shape; stage-dependent evidence pending"
 }
