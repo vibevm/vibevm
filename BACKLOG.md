@@ -2352,3 +2352,13 @@ structure, and it goes when the file does.
 | @fact:B213-SEVERITY **severity** | P2 — unbounded disk growth, with no product-owned way to distinguish removable copies from runtime or management references. |
 | @fact:B213-DISPOSITION **disposition** | `open` — add a read-only candidate report and bounded GC for source-installed application generations, protecting current launchers, the management entry, running binaries and recovery state; keep it separate from shared package caches. Reconcile the two distinct current-generation references before pruning. |
 | @fact:B213-FILED **filed by** | local `.vibe` cleanup, 2026-09-28. |
+
+## B-214 — conform accepts an empty filepath prefix as a green crate check {#b-214}
+
+| field | value |
+|---|---|
+| @fact:B214-WHAT **what** | The Rust conform CLI describes `--scope` as a crate name, but the shared `check` function keeps findings only when `finding.file.starts_with(scope)`. `--scope vibe-safefs` matches no `crates/vibe-safefs/` paths and returns a zero-finding success. There is no selected-prefix match guard, so a misspelled or empty selection can look like verification. |
+| @fact:B214-EVIDENCE **evidence** | 2026-09-28: `cargo xtask conform check --scope vibe-safefs` exited 0 with zero findings; the corrected `--scope crates/vibe-safefs/` exited 0 with 11 existing unsafe-gate findings and zero new findings. The implementation is `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates/vendor/core-ai-native-conform/src/finding.rs`, function `check`; the misleading help is the sibling `rust-ai-native-conform/src/main.rs`. No production mutation was needed to establish the mismatch. |
+| @fact:B214-SEVERITY **severity** | P1 — a false-green verification surface can hide new failures under an advertised ordinary invocation. |
+| @fact:B214-DISPOSITION **disposition** | `open` — decide and expose one scope vocabulary, reject zero matched source selections and test wrong/empty scopes. Until repaired, bind the actual repository-relative filepath prefix and inspect the selected denominator; do not credit crate-name-only runs as gates. This finding does not certify or invalidate unrelated historical full-panel evidence. |
+| @fact:B214-FILED **filed by** | preview accounting bootstrap verification, 2026-09-28. |
