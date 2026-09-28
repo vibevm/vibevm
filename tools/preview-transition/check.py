@@ -19,6 +19,7 @@ def main() -> int:
     parser.add_argument("--mode", required=True)
     parser.add_argument("--stage")
     parser.add_argument("--format", default="json")
+    parser.add_argument("--repository-root", action="append", metavar="KEY=PATH")
     args = parser.parse_args()
 
     request = {
@@ -29,6 +30,16 @@ def main() -> int:
     }
     if args.stage is not None:
         request["stage"] = args.stage
+    if args.repository_root is not None:
+        roots = {}
+        for binding in args.repository_root:
+            key, separator, value = binding.partition("=")
+            if not separator:
+                parser.error("--repository-root requires KEY=PATH")
+            if key in roots:
+                parser.error("duplicate --repository-root key")
+            roots[key] = value
+        request["repository_roots"] = roots
 
     command = [
         "cargo",
