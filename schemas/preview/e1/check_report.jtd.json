@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "description": "Deterministic machine report from one exact preview check request. Pending and unavailable obligations are never converted into passed claims.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::check_report"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "mode": { "enum": ["capture", "contribution", "bindings", "documentation", "release", "retired"], "metadata": { "x-vocabulary": "closed" } },
+    "verdict": { "enum": ["passed", "failed", "pending"], "metadata": { "x-vocabulary": "closed" } },
+    "subject_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "checked_claims": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "findings": { "elements": { "ref": "finding" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "stage": { "enum": ["roles", "linked", "intake", "updated", "verified", "reviewed"], "metadata": { "x-default": null, "x-vocabulary": "closed" } }
+  },
+  "definitions": {
+    "finding": {
+      "properties": {
+        "code": { "type": "string" },
+        "subject": { "type": "string" },
+        "reason": { "type": "string" },
+        "state": { "enum": ["failed", "pending", "unavailable", "unsupported"], "metadata": { "x-vocabulary": "closed" } }
+      }
+    }
+  }
+}

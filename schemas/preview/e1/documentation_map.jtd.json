@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "description": "Reviewed mapping from accepted product changes and topic claims to independently authored documentation sources.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-MAP"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::documentation_map"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "product_capture_id": { "type": "string" },
+    "documentation_capture_id": { "type": "string" },
+    "topics": { "elements": { "ref": "topic" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "topic": {
+      "properties": {
+        "topic_id": { "type": "string" },
+        "change_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "disposition": { "enum": ["pending", "existing", "create", "retire", "redirect"], "metadata": { "x-vocabulary": "closed" } },
+        "source_kind": { "enum": ["authored", "generated", "unbound"], "metadata": { "x-vocabulary": "closed" } },
+        "claim_anchors": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "proof": { "ref": "topic_proof" }
+      },
+      "optionalProperties": {
+        "source_page": { "type": "string", "metadata": { "x-default": null } },
+        "target_page": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "topic_proof": {
+      "properties": {
+        "state": { "enum": ["pending", "checked", "unavailable"], "metadata": { "x-vocabulary": "closed" } },
+        "reason": { "type": "string" },
+        "subject_ids": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "evidence": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

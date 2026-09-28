@@ -1173,3 +1173,32 @@ foreign_parsers = "ours"
 unknown_fields = "deny"
 corpus = "formats/corpora/preview-capture/e1"
 sunset = "none"
+
+# The documentation map is reviewed authored evidence, not a generated page.
+[format.preview-documentation-map]
+epoch = 1
+schema = "schemas/preview/e1/documentation_map.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/preview-documentation-map/e1"
+sunset = "none"
+
+# Checker requests and reports are transient machine exchanges. The report
+# remains in retained evidence only when a caller deliberately saves it.
+[format.preview-check-request]
+epoch = 1
+schema = "schemas/preview/e1/check_request.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/preview-check-request/e1"
+sunset = "none"
+
+[format.preview-check-report]
+epoch = 1
+schema = "schemas/preview/e1/check_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/preview-check-report/e1"
+sunset = "none"

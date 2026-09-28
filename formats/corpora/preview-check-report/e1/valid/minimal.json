@@ -1,0 +1,19 @@
+{
+  "checked_claims": [
+    "capture-shape"
+  ],
+  "findings": [
+    {
+      "code": "runtime-unmeasured",
+      "reason": "No measured executable artifact is retained.",
+      "state": "pending",
+      "subject": "dp1-example"
+    }
+  ],
+  "mode": "capture",
+  "schema": 1,
+  "subject_ids": [
+    "dp1-example"
+  ],
+  "verdict": "pending"
+}

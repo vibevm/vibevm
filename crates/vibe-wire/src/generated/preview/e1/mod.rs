@@ -5,5 +5,8 @@
 // this file by hand will be overwritten on the next codegen run.
 
 pub mod capture;
+pub mod check_report;
+pub mod check_request;
+pub mod documentation_map;
 pub mod release_impact;
 pub mod transition;
