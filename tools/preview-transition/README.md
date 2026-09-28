@@ -39,9 +39,31 @@ net delivered impact from commits or reverts.
 
 The request grammar also names `bindings` (`roles` or `linked`),
 `documentation` (`intake`, `updated`, or `verified`), `release` (`reviewed` or
-`verified`), and `retired`. Their domain checks remain pending until the
+`verified`), and `retired`. Other domain checks remain pending until the
 corresponding implementation work lands; the checker never promotes a
 currently unimplemented stage to passed.
+
+Documentation `--mode documentation --stage intake` checks explicitly retained
+capture/raw/map bytes, an immutable local Git source tree and complete file census,
+regular build-input bytes, and the exact `urn:vibevm:doc:xml` profile through the
+existing documentation XML reader and named-anchor fold. Source pages and reasoned
+exclusions use source-root-relative paths; build inputs use repository-relative
+paths. Mutable worktree pages do not replace captured blobs. Symlinks, gitlinks,
+foreign profiles and content recipes without an existing owner remain unsupported.
+
+Repeat `--repository-root KEY=PATH` for explicit retrieval bindings, for example
+`--repository-root documentation=/absolute/owned/repository`. The thin transport
+preserves the text after the first `=` and refuses missing separators or duplicate
+keys. Rust requires absolute roots and rejects the reserved `product` override;
+missing keys have no directory, environment or parent-repository fallback.
+The declaration of repository identity does not authenticate a repository.
+
+Intake remains pending even with verified bytes, authored checked flags or no
+topics: an independent complete product/topic denominator and typed documentation
+anchor bindings are still missing. Product claim anchors are not interpreted as
+documentation anchors. Declared page membership does not establish editorial,
+three-way update, build, link, example or runtime proof. Missing product references
+remain pending while DP2 is pending and fail once its catalogue is final.
 
 `python3 -B tools/preview-transition/assemble.py --transition
 docs/releases/developer-preview-1-to-2/transition.json --output-dir <owned-path>`

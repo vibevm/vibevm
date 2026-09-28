@@ -33528,6 +33528,51 @@
       "symbol": "xtask::bin::preview-transition-check::contribution_tests",
       "end_line": 12,
       "fingerprint": "tok1:dc86fdded0d3da43f3604be5e094814979ac4c961b7a1363c749fb1b5a7bc21c"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/documentation.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "xtask::bin::preview-transition-check::documentation",
+      "end_line": 20,
+      "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/documentation/artifacts.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "xtask::bin::preview-transition-check::documentation::artifacts",
+      "end_line": 10,
+      "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/documentation/git.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "xtask::bin::preview-transition-check::documentation::git",
+      "end_line": 10,
+      "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/documentation/tests.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "xtask::bin::preview-transition-check::documentation::tests",
+      "end_line": 9,
+      "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/documentation/xml.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "xtask::bin::preview-transition-check::documentation::xml",
+      "end_line": 7,
+      "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
     }
   ],
   "edges": [
@@ -59638,6 +59683,46 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
       "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/documentation.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::documentation",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/documentation/artifacts.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::documentation::artifacts",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/documentation/git.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::documentation::git",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/documentation/tests.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::documentation::tests",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/documentation/xml.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::documentation::xml",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
     }
   ],
   "schema": 3,
@@ -83747,7 +83832,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:69085ab796bbb27d50fb44bb294fe59166e7fd1580f4a627a2b9988513988fd2",
+      "content_hash": "sha256:0b70d4f228ab441dc353c54166747636d9fa62e4b970e1ce3ce32a7d55b2bda2",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "PROP-081 — Preview change accounting and migration evidence",
@@ -83900,7 +83985,7 @@
     },
     {
       "anchor": "migration",
-      "content_hash": "sha256:1397e5a86298c9d102c0ef41be603b91a9f447cc420aeb5d0b2e756129819003",
+      "content_hash": "sha256:17215c6c77475c74d908eb19806d5c63ea4a2d6340cf951c440c9cc977be597f",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "4. Migration and documentation",
@@ -83908,12 +83993,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#migration"
     },
     {
+      "anchor": "DOCUMENTATION-INPUT-CHECK",
+      "content_hash": "sha256:fdb024761e22342d26ffbb433ed3e8634a1ba6ba3ff4ff9807c203ffe5c461b0",
+      "doc_path": "common/PROP-081",
+      "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "heading": "Selected documentation capture, base, map and raw observation bytes are read through retained no-follow capabilities and compared with their exact digest/identity bindings. Files, pages and exclusions are source-root-relative; build inputs and generated-from links are repository-relative. Supported Git subjects reconcile the complete captured subtree and regular blob identities at the immutable commit, independently of mutable worktree pages. The explicit profile `urn:vibevm:doc:xml` uses the existing documentation vocabulary reader and canonical named-anchor fold on those verified bytes, without executing builds or re-reading ambient paths. Other unavailable profiles or content recipes remain unsupported. Declared map page/provenance membership is a limited subclaim: product claim anchors are not document anchor references, and declared topics are not an independent complete product/topic denominator. Until that due scope and typed document anchors are independently bound, overall intake remains pending even when all byte/page subclaims succeed. Actual supplied documentation input and later editorial/build/link/example/runtime proof remain separate requirements. @status:spec/plan",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK"
+    },
+    {
       "anchor": "DOCUMENTATION-CAPTURE-MODEL",
       "content_hash": "sha256:47a579d0e32534cbdd757ddfe0b8f7a6195378ce2839544dc393a72d627f405f",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "A registered documentation capture retains a non-blank opaque identity, the raw observation reference and digest, an exact Git commit/tree or a content-tree identity with its owned recipe, source-root components, complete file identities, page membership, declared authored/generated source authority, captured build inputs and toolchain declarations. Its explicitly named source profile selects an existing authoritative reader; an unknown profile or unavailable content recipe remains unsupported, never a guessed framework. A declared product-baseline capture reference does not prove that the prose accurately describes that product. Source ownership and generator links remain supplied provenance requiring review, not facts inferred from a parser's projection source kind. Capture bytes, references and census are distinct from editorial, build, link, example and runtime proof. @status:spec/plan",
-      "line": 31,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-CAPTURE-MODEL"
     },
     {
@@ -83922,7 +84016,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Documentation capture subjects use stable repository keys; machine-local retrieval roots belong to the explicit checker request and never to the immutable capture's identity. The product key denotes only the repository selected by the transition entrypoint and cannot be overridden; other keys require supplied roots without fallback discovery, cloning or fetching. Missing bindings remain pending. The transition selects its documentation map and an optional distinct documentation base by exact retained source/digest references. Resolving those references grants bounded reads, not write ownership or semantic acceptance. Independently supplied documentation input remains required before actual intake; field registration alone does not adopt a source. @status:spec/plan",
-      "line": 32,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-RETRIEVAL-BINDINGS"
     },
     {
@@ -83931,7 +84025,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "For every affected audience and platform, classify action as none, manual, automated, rebuild or unsupported, with a reason. A recipe names exact source/target captures, prerequisites, ordered steps, expected result, verification, repeat behavior and recovery after partial failure. Name user-owned inputs, derived outputs, preservation, backup boundaries and possible loss. Rebuild projections from retained authority; use the supported document-preserving mechanism for authored edits. An unimplemented command cannot be used as a checked instruction. Isolated rehearsals and a guide do not activate public codemods or support obligations. @status:spec/plan",
-      "line": 33,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#MIGRATION-CLAIM"
     },
     {
@@ -83940,7 +84034,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Independently authored documentation enters through an exact repository/root and commit or content capture with source-page inventory, generated/source ownership, build inputs and declared product-baseline relationship. Until bound, topic mappings remain unresolved; no filename or write authority is invented. Preserve concurrent edits and classify pre-existing inaccuracies separately from campaign changes by a three-way comparison. @status:spec/plan",
-      "line": 34,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT"
     },
     {
@@ -83949,16 +84043,16 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Map every changed capability and user claim to an existing source page/anchor or a page-to-create obligation, including features absent from current documentation. Record edit, editorial review, build/link/example proof and current claim status. Retire or redirect obsolete prose at its owned source; regenerate generated pages from their source. A later product or documentation input change invalidates only affected mapping and proof, not unrelated checked work. @status:spec/plan",
-      "line": 35,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-MAP"
     },
     {
       "anchor": "index",
-      "content_hash": "sha256:208fe536a3dedfab9f793b471954a63f307955398b043d620b8100e6275818ec",
+      "content_hash": "sha256:259d8ce7bc2fcfd981ce4ce0f313d066dbad09fb25925f9fd9efd393631ec6ce",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "5. Deterministic transition index and stages",
-      "line": 38,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#index"
     },
     {
@@ -83967,7 +84061,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "The permanent preview checker and draft assembler are tooling consumers, hosted by the existing xtask package. Generated wire records and pure record invariants remain in vibe-wire. Tooling may depend on the documentation, reference and other existing read-only inspection owners; those owners and the wire library never depend on preview tooling. Reuse their authoritative decoders and computations instead of adding a second parser or a change/migration engine. A missing future native inspection seam remains explicitly unresolved, not a producer flag or an inferred stage pass. Python entrypoints remain thin transports to the two named Rust binaries and do not carry domain semantics. @status:spec/plan",
-      "line": 39,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#TOOL-DEPENDENCY-DIRECTION"
     },
     {
@@ -83976,7 +84070,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "The versioned transition.json beside the guide identifies both product captures, documentation captures, permanent change records, net dispositions, migration recipes, documentation mappings and retained evidence. Strict generated readers and stable ordering distinguish missing, unsupported and unverified states. A deterministic assembler may draft guidance and a work list, but generated text is never semantic acceptance and cannot overwrite reviewed prose without an explicit owned output. @status:spec/plan",
-      "line": 40,
+      "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#TRANSITION-INDEX"
     },
     {
@@ -83985,7 +84079,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Draft assembly validates all selected records before output publication. The explicitly selected output directory is reached through retained no-follow filesystem capabilities; each output claims a fresh name and never replaces an existing file, link or directory. A failed multi-output write rolls back only files whose identity proof was obtained from the handle this invocation created. A rebound name is preserved and reported as residue. Static pathname checks, matching bytes or an identity inspected after publication cannot establish that ownership. The owning filesystem contract is `spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION`. @status:spec/plan",
-      "line": 41,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DRAFT-OUTPUT-OWNERSHIP"
     },
     {
@@ -83994,8 +84088,17 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "A read-only checker exposes capture, contribution, bindings, documentation, release and retired modes. Bindings has roles and linked stages; documentation has intake, updated and verified; release has reviewed and verified. Other modes reject a stage. Each stage verifies only obligations already due and reports later proof as pending. Intake cannot imply verified documentation; reviewed guidance cannot imply a completed rehearsal or sealed final preview. @status:spec/plan",
-      "line": 42,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+    },
+    {
+      "anchor": "BOOTSTRAP-STAGE-READINESS",
+      "content_hash": "sha256:dc65601207a8b14b3fe334ddd609cfc93af3473881597c08525944e573a542a6",
+      "doc_path": "common/PROP-081",
+      "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "heading": "Bootstrap readiness supplies registered consumed inputs, independently usable capture/contribution/draft tools and tested stage-specific prerequisite diagnostics; it does not require an observed pass from a future domain owner. Roles requires authoritative native role discovery and meaningful identity preservation; linked additionally requires complete canonical capability and migration joins. Documentation updated requires exact base/current subjects and reviewed three-way topic delta; verified additionally requires current build/link/example/claim results. Release reviewed requires exact candidate captures, independent complete net reconciliation and reviewed guidance; verified additionally requires actual subject-bound rehearsal, repeat and recovery results. Retired requires the scaffold-free candidate, permanent-reference and final-product proof, with later narrow attestation distinguished from candidate eligibility. Missing selected inputs are pending; unavailable authoritative inspection is explicitly unsupported. A selected binding is still unverified until its owning predicate runs; producer states, equal declared hashes and completion flags cannot discharge a prerequisite. Contradictory supplied bootstrap inputs refuse through their existing owning validators. Later domain/documentation/release tasks register and connect their actual owned inputs before I/O and obtain these complete due predicates; readiness never reduces them. Tests exercise specific missing prerequisites and false producer completion while preserving earlier independently established proof. @status:spec/plan",
+      "line": 44,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#BOOTSTRAP-STAGE-READINESS"
     },
     {
       "anchor": "AFFECTED-VERIFICATION",
@@ -84003,7 +84106,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Check ordinary positive, negative and recovery cases on their exact captured subjects. Reuse matching affected evidence and run failed, invalidated or unrun steps; retain unavailable platform results as unavailable. Counterfactual source mutation is a single narrow diagnostic only after a concrete suspicious green signal and an economy comparison under the installed multi-user-planning verification rule. No per-contribution mutation ritual or whole-suite mutation loop is part of preview acceptance. @status:spec/plan",
-      "line": 43,
+      "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-VERIFICATION"
     },
     {
@@ -84012,7 +84115,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "6. Final subject and independent proof",
-      "line": 46,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#closure"
     },
     {
@@ -84021,7 +84124,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Promote all lasting law, captures, records, guide, mappings, format machinery and meaningful proof to permanent homes before removing a temporary campaign scaffold. Then run permanent reference, format and product checks on the tree with temporary files absent. A product/documentation commit C contains the final product, guide, documentation and scaffold removal. A later narrow evidence/index attestation identifies C and relevant content hashes without self-reference or any product, documentation-claim or migration-recipe delta. A later such delta creates a new candidate and reopens affected proof. Permanent consumers reconstruct both previews and both outputs without temporary tasks, private plans or campaign scripts. @status:spec/plan",
-      "line": 47,
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#FINAL-SCAFFOLD-ABSENCE"
     },
     {
@@ -84030,7 +84133,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Missing documentation input, native or Docker resources, required evidence or an unexercised migration case remains an explicit blocker for the affected gate. A source similarity, rendered draft, skipped check, empty test selection or incomplete final panel cannot be reported as accepted transition proof. @status:spec/plan",
-      "line": 48,
+      "line": 50,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#UNMET-PROOF-STAYS-OPEN"
     },
     {

@@ -2,6 +2,7 @@
 
 mod capture;
 mod contribution;
+mod documentation;
 
 #[cfg(test)]
 mod captured_git_tests;
@@ -11,6 +12,9 @@ mod contribution_git_tests;
 mod contribution_history_tests;
 #[cfg(test)]
 mod contribution_tests;
+#[cfg(test)]
+#[path = "documentation/tests.rs"]
+mod documentation_tests;
 #[cfg(test)]
 mod tests;
 
@@ -161,6 +165,13 @@ fn run(request: &CheckRequest) -> CheckReport {
         },
         CheckRequestMode::Contribution => {
             if let Err(error) = contribution::check(transition_path, &transition, &mut report) {
+                fail(&mut report, error);
+            }
+        }
+        CheckRequestMode::Documentation
+            if matches!(request.stage.as_ref(), Some(CheckRequestStage::Intake)) =>
+        {
+            if let Err(error) = documentation::check(request, &transition, &mut report) {
                 fail(&mut report, error);
             }
         }
