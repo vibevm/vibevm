@@ -68,7 +68,7 @@ impl Fixture {
         let release = root.join("release");
         fs::create_dir(&release).unwrap();
         let transition: Transition = serde_json::from_str(include_str!(
-            "../../../../../formats/corpora/preview-transition/e1/valid/captured.json"
+            "../../../../formats/corpora/preview-transition/e1/valid/captured.json"
         ))
         .unwrap();
         let mut fixture = Self {

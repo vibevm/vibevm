@@ -5075,7 +5075,6 @@ dependencies = [
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
- "vibe-safefs",
 ]
 
 [[package]]
@@ -5865,6 +5864,7 @@ dependencies = [
  "clap",
  "core-ai-native-conform",
  "core-ai-native-specmap",
+ "core-ai-native-specmark",
  "rust-ai-native-cli",
  "rust-ai-native-conform",
  "rust-ai-native-conform-frontend",
@@ -5880,6 +5880,8 @@ dependencies = [
  "vibe-index",
  "vibe-publish",
  "vibe-registry",
+ "vibe-safefs",
+ "vibe-wire",
  "walkdir",
  "zip",
 ]

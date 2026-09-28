@@ -16,7 +16,7 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     return subprocess.run(
-        ["cargo", "run", "--quiet", "-p", "vibe-wire", "--bin",
+        ["cargo", "run", "--quiet", "-p", "xtask", "--bin",
          "preview-transition-assemble", "--", str(Path(args.transition).absolute()),
          str(Path(args.output_dir).absolute())],
         cwd=ROOT, check=False,

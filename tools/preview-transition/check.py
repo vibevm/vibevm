@@ -35,7 +35,7 @@ def main() -> int:
         "run",
         "--quiet",
         "-p",
-        "vibe-wire",
+        "xtask",
         "--bin",
         "preview-transition-check",
     ]

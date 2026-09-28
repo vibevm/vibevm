@@ -69,7 +69,7 @@ impl Fixture {
         paths: &[&str],
     ) -> ReleaseImpact {
         let mut record: ReleaseImpact = serde_json::from_str(include_str!(
-            "../../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json"
+            "../../../../formats/corpora/release-impact/e1/valid/internal-refactor.json"
         ))
         .unwrap();
         record.change_id = id.into();

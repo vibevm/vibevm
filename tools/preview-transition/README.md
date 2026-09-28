@@ -8,9 +8,9 @@ and source-file identity. It reads the selected repository and writes only a
 machine report to stdout.
 
 The Python entrypoint only parses CLI arguments and sends a versioned request
-to `preview-transition-check`, a `vibe-wire` binary that uses generated JTD
-readers. Exit `0` means the selected stage passed; `1` means a failed request
-or claim; `2` means the selected stage remains pending. A passing capture
+to `preview-transition-check`, an `xtask` binary that uses generated JTD
+readers from `vibe-wire`. Exit `0` means the selected stage passed; `1` means
+a failed request or claim; `2` means the selected stage remains pending. A passing capture
 still reports later documentation and final-product proof as pending.
 
 Contribution mode selects an explicit `contribution_scope`: verified before/after
@@ -46,8 +46,8 @@ currently unimplemented stage to passed.
 `python3 -B tools/preview-transition/assemble.py --transition
 docs/releases/developer-preview-1-to-2/transition.json --output-dir <owned-path>`
 creates `MIGRATION-DRAFT.md` and `WORKLIST-DRAFT.md`. Python transports paths
-to the Cargo binary `preview-transition-assemble`; generated Rust readers and
-the existing semantic validators own transition and release-impact parsing.
+to the `xtask` Cargo binary `preview-transition-assemble`; generated Rust
+readers and the existing semantic validators own transition and release-impact parsing.
 The enclosing `vibe.toml` identifies the project, and the project layout API
 resolves its specification root. Sorted immutable IDs select
 `changes/<id>/release-impact.json` beneath that root.
@@ -81,7 +81,12 @@ residue. Refusal reports retained residue instead of deleting unproved data.
 Successful assembly exits `0`; refused input or output exits `1`. Retrying
 after completed rollback produces the same bytes. No input source is modified.
 
-Run the focused tests with `cargo test -p vibe-wire --bin
+Both binaries are tooling consumers in `xtask`. Generated wire records and
+pure record invariants remain in `vibe-wire`; inspection owners never depend
+on preview tooling. Python entrypoints only transport arguments and results.
+
+Run the focused tests with `cargo test -p xtask --bin preview-transition-check`,
+`cargo test -p xtask --bin
 preview-transition-assemble` and `python3 -B -m unittest discover -s
 tools/preview-transition/tests -p 'test_*.py'`. The Python integration suite
 builds its binary once, or reuses `PREVIEW_TRANSITION_ASSEMBLER_BIN` when supplied.

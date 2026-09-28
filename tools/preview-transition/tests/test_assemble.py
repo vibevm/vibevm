@@ -25,7 +25,7 @@ class AssembleTests(unittest.TestCase):
         if os.environ.get("PREVIEW_TRANSITION_ASSEMBLER_BIN"):
             cls.binary = Path(os.environ["PREVIEW_TRANSITION_ASSEMBLER_BIN"])
         else:
-            subprocess.run(["cargo", "build", "-p", "vibe-wire", "--bin", "preview-transition-assemble"], cwd=ROOT, check=True)
+            subprocess.run(["cargo", "build", "-p", "xtask", "--bin", "preview-transition-assemble"], cwd=ROOT, check=True)
         cls.base = json.loads((ROOT / "formats/corpora/preview-transition/e1/valid/captured.json").read_text())
         cls.example = json.loads((ROOT / "formats/corpora/release-impact/e1/valid/internal-refactor.json").read_text())
 

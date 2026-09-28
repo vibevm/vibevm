@@ -1,5 +1,6 @@
 [package]
 name = "xtask"
+default-run = "xtask"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -29,6 +30,9 @@ vibe-publish.workspace = true
 zip.workspace = true
 sha2.workspace = true
 vibe-core.workspace = true
+specmark.workspace = true
+vibe-wire.workspace = true
+vibe-safefs.workspace = true
 vibe-registry.workspace = true
 # `embed-doc-shell` writes the shell's index and its pin, and the digest
 # in both is measured by the crate that will re-measure it later — one
@@ -39,5 +43,6 @@ vibe-doc-shell.workspace = true
 tempfile.workspace = true
 
 [dev-dependencies]
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
 # Test fixtures stamp journal records; DateTime is named, not inferred.
 chrono.workspace = true
