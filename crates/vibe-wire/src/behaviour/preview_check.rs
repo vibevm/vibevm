@@ -40,6 +40,17 @@ impl CheckRequest {
         if self.transition.trim().is_empty() || self.transition.contains('\0') {
             return Err(fault("transition", "missing or invalid path"));
         }
+        if let Some(roots) = &self.repository_roots
+            && (roots.contains_key("product")
+                || roots.iter().any(|(key, value)| {
+                    key.trim().is_empty() || value.trim().is_empty() || value.contains('\0')
+                }))
+        {
+            return Err(fault(
+                "repository_roots",
+                "reserved product override or blank/NUL retrieval binding",
+            ));
+        }
         let valid = matches!(
             (&self.mode, &self.stage),
             (
@@ -161,6 +172,58 @@ mod tests {
             "../../../../formats/corpora/preview-check-request/e1/valid/minimal.json"
         ))
         .unwrap()
+    }
+
+    #[test]
+    fn repository_root_wire_retains_absent_empty_and_supplied_dictionaries() {
+        use std::collections::BTreeMap;
+        let mut request = request();
+        assert!(request.repository_roots.is_none());
+        request.repository_roots = Some(BTreeMap::new());
+        request.validate_preview().unwrap();
+        let roundtrip: CheckRequest =
+            serde_json::from_str(&serde_json::to_string(&request).unwrap()).unwrap();
+        assert_eq!(roundtrip.repository_roots, Some(BTreeMap::new()));
+        let supplied: CheckRequest = serde_json::from_str(include_str!(
+            "../../../../formats/corpora/preview-check-request/e1/valid/with-repository-roots.json"
+        ))
+        .unwrap();
+        supplied.validate_preview().unwrap();
+        assert_eq!(
+            supplied,
+            serde_json::from_str(&serde_json::to_string(&supplied).unwrap()).unwrap()
+        );
+        assert!(serde_json::from_str::<CheckRequest>(include_str!("../../../../formats/corpora/preview-check-request/e1/invalid/wrong-repository-roots-type.json")).is_err());
+    }
+
+    #[test]
+    fn retrieval_bindings_refuse_product_override_blank_and_nul_but_preserve_spelling() {
+        use std::collections::BTreeMap;
+        for (key, value) in [
+            ("product", "selected-elsewhere"),
+            (" ", "root"),
+            ("documentation", " \n"),
+            ("documentation", "a\0b"),
+        ] {
+            let mut request = request();
+            request.repository_roots = Some(BTreeMap::from([(key.into(), value.into())]));
+            assert_eq!(
+                request.validate_preview().unwrap_err().field,
+                "repository_roots"
+            );
+        }
+        for value in [
+            "../relative/root",
+            "C:\\machine\\docs",
+            " opaque retrieval:\nα ",
+        ] {
+            let mut request = request();
+            request.repository_roots =
+                Some(BTreeMap::from([(" documentation ".into(), value.into())]));
+            let before = request.clone();
+            request.validate_preview().unwrap();
+            assert_eq!(request, before);
+        }
     }
 
     #[test]

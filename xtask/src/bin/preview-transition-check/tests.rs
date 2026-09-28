@@ -149,6 +149,7 @@ impl Fixture {
             schema: 1,
             transition: path.to_str().unwrap().into(),
             mode: CheckRequestMode::Capture,
+            repository_roots: None,
             stage: None,
             format: CheckRequestFormat::Json,
         })
@@ -318,6 +319,7 @@ fn malformed_transition_report_does_not_echo_input_value() {
         schema: 1,
         transition: path.to_str().unwrap().into(),
         mode: CheckRequestMode::Capture,
+        repository_roots: None,
         stage: None,
         format: CheckRequestFormat::Json,
     });
