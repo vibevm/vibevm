@@ -1,0 +1,28 @@
+{
+  "change_records": [],
+  "documentation": {
+    "state": "pending-owner-binding"
+  },
+  "dp1": {
+    "capture_file_sha256": "70278066d23a73173819ee00d8984e832860da4e266c6491711f54f4de231ebd",
+    "capture_id": "dp1-30d217bfce47bca",
+    "commit_sha1": "30d217bfce47bcaccadabd9468f00e315dbcfead",
+    "git_tree_sha1": "0f4a5ddeddae677a487f49fbc4493eb0b4eb5b95",
+    "source": "evidence/dp1-source-capture.json"
+  },
+  "dp2": {
+    "state": "pending"
+  },
+  "migration_guide": {
+    "state": "pending"
+  },
+  "proof": {
+    "capture_validated": false,
+    "contributions_verified": false,
+    "documentation_verified": false,
+    "final_product_panel_passed": false,
+    "migration_rehearsed": false
+  },
+  "record_kind": "provisional-preview-transition",
+  "schema_status": "provisional; BASE.2 defines and validates the registered schema"
+}
