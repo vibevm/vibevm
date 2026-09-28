@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "capture_id": "shape-only documentation content capture",
+  "source_record": "observations/documentation-content.json",
+  "source_record_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "source_subject": {
+    "kind": "content",
+    "repository_key": "documentation",
+    "repository_identity": "urn:example:documentation-content",
+    "tree_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "recipe_id": "urn:example:unimplemented-content-tree-recipe"
+  },
+  "source_root_components": [],
+  "source_profile": "urn:example:foreign-documentation-profile",
+  "product_baseline_capture_id": "shape-only product baseline",
+  "files": [
+    {
+      "path": "guide.xml",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "pages": [
+    {
+      "path": "guide.xml",
+      "source_kind": "authored",
+      "generated_from": []
+    }
+  ],
+  "exclusions": [],
+  "build_inputs": [
+    {
+      "purpose": "recipe",
+      "path": "documentation-build.toml",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "toolchains": [
+    {
+      "name": "declared-documentation-reader",
+      "version": "1.0.0"
+    }
+  ]
+}

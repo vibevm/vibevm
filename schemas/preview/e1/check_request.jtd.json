@@ -15,6 +15,19 @@
     "format": { "enum": ["json"], "metadata": { "x-vocabulary": "closed" } }
   },
   "optionalProperties": {
-    "stage": { "enum": ["roles", "linked", "intake", "updated", "verified", "reviewed"], "metadata": { "x-default": null, "x-vocabulary": "closed" } }
+    "stage": { "enum": ["roles", "linked", "intake", "updated", "verified", "reviewed"], "metadata": { "x-default": null, "x-vocabulary": "closed" } },
+    "repository_roots": {
+      "values": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-default": null,
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-RETRIEVAL-BINDINGS"
+        },
+        "x-empty": "preserve",
+        "description": "Ephemeral machine-local retrieval roots, never subject identity. The reserved product key cannot be overridden; missing keys have no fallback."
+      }
+    }
   }
 }

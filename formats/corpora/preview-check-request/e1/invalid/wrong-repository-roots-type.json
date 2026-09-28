@@ -1,0 +1,9 @@
+{
+  "format": "json",
+  "mode": "capture",
+  "schema": 1,
+  "transition": "docs/releases/developer-preview-1-to-2/transition.json",
+  "repository_roots": [
+    "/machine-local/shape-only/documentation"
+  ]
+}

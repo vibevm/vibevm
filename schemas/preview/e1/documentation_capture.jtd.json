@@ -1,0 +1,213 @@
+{
+  "metadata": {
+    "description": "Retained documentation source declarations and byte identities; neither acceptance nor source/framework authority is inferred.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-CAPTURE-MODEL"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::documentation_capture"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "capture_id": {
+      "type": "string"
+    },
+    "source_record": {
+      "type": "string"
+    },
+    "source_record_sha256": {
+      "type": "string"
+    },
+    "source_subject": {
+      "ref": "source_subject"
+    },
+    "source_root_components": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "source_profile": {
+      "type": "string"
+    },
+    "product_baseline_capture_id": {
+      "type": "string"
+    },
+    "files": {
+      "elements": {
+        "ref": "file_identity"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "pages": {
+      "elements": {
+        "ref": "page"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "exclusions": {
+      "elements": {
+        "ref": "exclusion"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "build_inputs": {
+      "elements": {
+        "ref": "build_input"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "toolchains": {
+      "elements": {
+        "ref": "toolchain"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "source_subject": {
+      "discriminator": "kind",
+      "mapping": {
+        "git": {
+          "properties": {
+            "repository_key": {
+              "type": "string"
+            },
+            "repository_identity": {
+              "type": "string"
+            },
+            "commit_sha1": {
+              "type": "string"
+            },
+            "tree_sha1": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "properties": {
+            "repository_key": {
+              "type": "string"
+            },
+            "repository_identity": {
+              "type": "string"
+            },
+            "tree_sha256": {
+              "type": "string"
+            },
+            "recipe_id": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "file_identity": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "git_blob_sha1": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "page": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "source_kind": {
+          "ref": "source_kind"
+        },
+        "generated_from": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "source_kind": {
+      "type": "string",
+      "metadata": {
+        "x-rust-type": "crate::generated::preview::e1::documentation_map::TopicSourceKind",
+        "description": "Uses the existing documentation-map owner's closed source-kind codec; this definition introduces no separate vocabulary."
+      }
+    },
+    "exclusion": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "build_input": {
+      "properties": {
+        "purpose": {
+          "enum": [
+            "recipe",
+            "lock",
+            "generator",
+            "configuration"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "git_blob_sha1": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "toolchain": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

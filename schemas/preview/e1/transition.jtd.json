@@ -70,6 +70,26 @@
           "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-CATALOGUE"
         }
       }
+    },
+    "documentation_base": {
+      "ref": "documentation_capture_ref",
+      "metadata": {
+        "x-default": null,
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-RETRIEVAL-BINDINGS"
+        },
+        "description": "Exact retained optional documentation base; retrieval does not grant write ownership or acceptance."
+      }
+    },
+    "documentation_map": {
+      "ref": "source_digest_ref",
+      "metadata": {
+        "x-default": null,
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-RETRIEVAL-BINDINGS"
+        },
+        "description": "Exact retained documentation map source and digest; registration does not adopt an input source."
+      }
     }
   },
   "definitions": {
@@ -244,6 +264,29 @@
         },
         "final_product_panel_passed": {
           "type": "boolean"
+        }
+      }
+    },
+    "documentation_capture_ref": {
+      "properties": {
+        "capture_id": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "capture_file_sha256": {
+          "type": "string"
+        }
+      }
+    },
+    "source_digest_ref": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
         }
       }
     }

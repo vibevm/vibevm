@@ -1174,6 +1174,16 @@ unknown_fields = "deny"
 corpus = "formats/corpora/preview-capture/e1"
 sunset = "none"
 
+# Retained documentation input declarations and exact source byte identities.
+[format.preview-documentation-capture]
+epoch = 1
+schema = "schemas/preview/e1/documentation_capture.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/preview-documentation-capture/e1"
+sunset = "none"
+
 # The documentation map is reviewed authored evidence, not a generated page.
 [format.preview-documentation-map]
 epoch = 1
