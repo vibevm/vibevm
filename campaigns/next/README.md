@@ -1,6 +1,6 @@
 # VibeVM next implementation campaign
 
-The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml). This is an implementation plan, not implemented product behavior. The owner's current instruction is planning only: Phase 0 and implementation are unstarted. NEXT-EXECUTION-AUTHORITY must remain blocked until a later explicit instruction starts execution; a generated GOAL is not authorization.
+The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs/terraforms/NEXT-IMPLEMENTATION-CAMPAIGN.xml). It describes required implementation, not implemented product behavior. The shared seed preserves the planning baseline; the exact user-local plan records later owner instructions, accepted evidence and the current execution frontier. NEXT-EXECUTION-AUTHORITY opens only on an explicit owner instruction; a generated GOAL is not authorization. Do not infer a current execution hold or completed work from the seed or this README.
 
 Pending research: [fractal planning, lowering and staged delivery](../../vibevm/vibespecs/design/fractal-planning-and-staged-delivery.xml) preserves the owner's concept and this discussion. It is a non-normative design idea, not an activated exception to existing rules or a change to this campaign's task graph.
 
@@ -71,7 +71,7 @@ No migration tool, release capture or updated documentation is claimed by this p
 
 ## Authority and resource boundaries
 
-D-022 remains open. Generic architecture proceeds; Arch backend implementation waits for the owner's A/B ruling. B requires additional compatibility decomposition.
+The shared seed leaves D-022 (the initial Arch backend policy) open. Resolve its current owner ruling and accepted gate in the exact local plan before Arch backend implementation. Generic architecture may proceed while that gate is open; selecting B (full replacement) requires additional compatibility decomposition.
 
 Native smoke targets, Docker and isolated external bridge checkouts have explicit resource gates. All new external bridge writes use bound isolated checkouts, not the live sibling repositories. CI installation waits for its concrete prepared authorization. M-12-C is demand-optional; M-12-D.2 and its public-approval horizon are deferred actual execution under D-015. Publication implementation, isolated tests and exact ready-to-approve evidence remain required. Pending publication is never reported as published; an owner may reactivate its stable task before campaign close, or its retained prepared action moves into a permanent operator workflow.
 
