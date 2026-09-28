@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS");
+
 /// Arguments for `vibe run <command> [-- <args>...]`.
 #[derive(Debug, Clone, clap::Args)]
 pub struct RunArgs {
