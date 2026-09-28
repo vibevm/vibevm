@@ -4324,63 +4324,63 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "release_impact",
-      "end_line": 91
+      "end_line": 110
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 83,
+      "line": 102,
       "symbol": "release_impact::acceptance",
-      "end_line": 89
+      "end_line": 108
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 62,
+      "line": 75,
       "symbol": "release_impact::documentation_disposition",
-      "end_line": 68
+      "end_line": 81
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 43,
+      "line": 56,
       "symbol": "release_impact::effect",
-      "end_line": 54
+      "end_line": 67
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 69,
+      "line": 82,
       "symbol": "release_impact::evidence_ref",
-      "end_line": 76
+      "end_line": 95
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 37,
+      "line": 50,
       "symbol": "release_impact::implementation_subject",
-      "end_line": 42
+      "end_line": 55
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 77,
+      "line": 96,
       "symbol": "release_impact::relation",
-      "end_line": 82
+      "end_line": 101
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/release_impact.jtd.json",
       "item_kind": "schema-def",
-      "line": 55,
+      "line": 68,
       "symbol": "release_impact::user_disposition",
-      "end_line": 61
+      "end_line": 74
     },
     {
       "crate_name": "<schema>",
@@ -5148,47 +5148,63 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "transition",
-      "end_line": 215
+      "end_line": 251
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/transition.jtd.json",
       "item_kind": "schema-def",
-      "line": 66,
+      "line": 102,
       "symbol": "transition::capture_ref",
-      "end_line": 84
+      "end_line": 120
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/transition.jtd.json",
       "item_kind": "schema-def",
-      "line": 85,
+      "line": 76,
+      "symbol": "transition::contribution_scope",
+      "end_line": 85
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/preview/e1/transition.jtd.json",
+      "item_kind": "schema-def",
+      "line": 121,
       "symbol": "transition::pending_capture",
-      "end_line": 130
+      "end_line": 166
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/transition.jtd.json",
       "item_kind": "schema-def",
-      "line": 131,
+      "line": 167,
       "symbol": "transition::pending_documentation",
-      "end_line": 165
+      "end_line": 201
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/transition.jtd.json",
       "item_kind": "schema-def",
-      "line": 166,
+      "line": 202,
       "symbol": "transition::pending_guide",
-      "end_line": 194
+      "end_line": 230
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/preview/e1/transition.jtd.json",
       "item_kind": "schema-def",
-      "line": 195,
+      "line": 231,
       "symbol": "transition::proof_state",
-      "end_line": 213
+      "end_line": 249
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/preview/e1/transition.jtd.json",
+      "item_kind": "schema-def",
+      "line": 86,
+      "symbol": "transition::record_digest",
+      "end_line": 101
     },
     {
       "crate_name": "<schema>",
@@ -31142,10 +31158,19 @@
       "crate_name": "vibe-wire",
       "file": "crates/vibe-wire/src/behaviour/preview_transition.rs",
       "item_kind": "fn",
-      "line": 76,
+      "line": 83,
       "symbol": "vibe_wire::behaviour::preview_transition::Transition::capture_references",
-      "end_line": 165,
+      "end_line": 172,
       "fingerprint": "tok1:0c0ce782e2bf47dbdcab2e6360d03498a60121d16e83b43fd830463f0a545a6b"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_wire::behaviour::preview_transition::tests",
+      "end_line": 1,
+      "fingerprint": "tok1:e6f8d20fdaf9349f2c60068763c69a413fb5582fc947f4e46e8fcc3ac5d74d5f"
     },
     {
       "crate_name": "vibe-wire",
@@ -31191,6 +31216,51 @@
       "symbol": "vibe_wire::bin::preview-transition-assemble::output",
       "end_line": 3,
       "fingerprint": "tok1:ad9c1bf84b06cf846fe48c2a41619882952d3e21bc4f8d0ebfdebc1403570b16"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_wire::bin::preview-transition-check::contribution",
+      "end_line": 15,
+      "fingerprint": "tok1:dc86fdded0d3da43f3604be5e094814979ac4c961b7a1363c749fb1b5a7bc21c"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_evidence.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_wire::bin::preview-transition-check::contribution_evidence",
+      "end_line": 11,
+      "fingerprint": "tok1:e6f8d20fdaf9349f2c60068763c69a413fb5582fc947f4e46e8fcc3ac5d74d5f"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_git_tests.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_wire::bin::preview-transition-check::contribution_git_tests",
+      "end_line": 9,
+      "fingerprint": "tok1:dc86fdded0d3da43f3604be5e094814979ac4c961b7a1363c749fb1b5a7bc21c"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_history_tests.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_wire::bin::preview-transition-check::contribution_history_tests",
+      "end_line": 9,
+      "fingerprint": "tok1:e6f8d20fdaf9349f2c60068763c69a413fb5582fc947f4e46e8fcc3ac5d74d5f"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_tests.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_wire::bin::preview-transition-check::contribution_tests",
+      "end_line": 12,
+      "fingerprint": "tok1:dc86fdded0d3da43f3604be5e094814979ac4c961b7a1363c749fb1b5a7bc21c"
     },
     {
       "crate_name": "vibe-workspace",
@@ -57456,9 +57526,17 @@
     {
       "file": "crates/vibe-wire/src/behaviour/preview_transition.rs",
       "from_symbol": "vibe_wire::behaviour::preview_transition::Transition::capture_references",
-      "line": 97,
+      "line": 104,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-CATALOGUE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::preview_transition::tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-HISTORY-SELECTION",
       "verb": "implements"
     },
     {
@@ -57499,6 +57577,46 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DRAFT-OUTPUT-OWNERSHIP",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution.rs",
+      "from_symbol": "vibe_wire::bin::preview-transition-check::contribution",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_evidence.rs",
+      "from_symbol": "vibe_wire::bin::preview-transition-check::contribution_evidence",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-HISTORY-SELECTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_git_tests.rs",
+      "from_symbol": "vibe_wire::bin::preview-transition-check::contribution_git_tests",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_history_tests.rs",
+      "from_symbol": "vibe_wire::bin::preview-transition-check::contribution_history_tests",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-HISTORY-SELECTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/bin/preview-transition-check/contribution_tests.rs",
+      "from_symbol": "vibe_wire::bin::preview-transition-check::contribution_tests",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
       "verb": "implements"
     },
     {
@@ -83490,7 +83608,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6cc81249431ae5ecb884e398fc63cf9d3dd4ff7b027fdd2926f6706b18bff635",
+      "content_hash": "sha256:47e0dabd23070c3943ce04150c9b7b6ea506a524b79758838c8586b50be25ace",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "PROP-081 — Preview change accounting and migration evidence",
@@ -83553,7 +83671,7 @@
     },
     {
       "anchor": "records",
-      "content_hash": "sha256:cd0602a3f2794aa1dc92f672b633487ad7d9445347a2deaed33991787980b817",
+      "content_hash": "sha256:d43714117750ba356ef35488f623d32d92318976564d0b62875359188bb01922",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "3. Permanent contribution records",
@@ -83579,12 +83697,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-EVERY-CONTRIBUTION"
     },
     {
+      "anchor": "CONTRIBUTION-SCOPE-PROOF",
+      "content_hash": "sha256:21a69a5cc07eafc46a862240fe737a0fc4383a5950b6b1322197bf8fb2f029c3",
+      "doc_path": "common/PROP-081",
+      "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "heading": "Contribution checking selects exact before/after capture IDs and a sorted digest binding for every selected impact record. Both scope endpoints and every record's before/after subject resolve through the capture catalogue. The checker reconciles actual Git commits and their changed paths with the records' implementation subjects and sorted affected paths. A record-only maintenance commit may be excluded only when every changed path is an enumerated selected impact record; temporary/non-product exclusions come from the already captured source scope, never an arbitrary new ignore list. Unknown or unexercised external/content subject handling stays explicitly unsupported or pending. Supplied passing evidence binds non-empty claim/subject/source and a retained SHA-256; a missing digest or unavailable proof is not a pass. This stage proves exact selected byte/delta coverage and reports later interface/topic/native linkage as pending; it does not authenticate a producer from a digest, decide semantic impact, confer review authority or accept a contribution. Central semantic review and the later complete interface census remain required. @status:spec/plan",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF"
+    },
+    {
       "anchor": "RECORD-MEANING",
       "content_hash": "sha256:906124b1e0dcba25ae564c24c6f876374b972b7ae47cb898aaa5a41781dac98f",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "A record states immutable change ID, affected interface, audience, platform and capability, observed before/after behavior, permanent contract anchors, implementation subjects, independently retained proof, migration and documentation dispositions, and links for introduced, reverted or superseded changes. A source edit alone does not establish user impact. Reuse of an ID for a different meaning is forbidden; amend with retained history. Final conclusions use the net before-to-after effect, not a concatenation of intermediate edits. @status:spec/plan",
-      "line": 19,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING"
     },
     {
@@ -83593,8 +83720,26 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Contribution before/after subjects may be intermediate captured states; they are not required to equal the two final preview endpoints. The transition may retain a sorted unique catalogue of additional exact capture references using the same reference shape as DP1. DP1, a present DP2 and this catalogue form one identity lookup. Reusing a capture ID for a different capture digest, commit or tree is refused; an equivalent retrieval location does not change content identity. Every selected contribution's before and after IDs resolve through that lookup, or remain explicitly unresolved while DP2 is pending. Assembly never invents an intermediate capture or infers net delivery from a matching endpoint. Capture checking verifies each supplied reference's actual retained bytes and Git subject; cataloguing a reference alone establishes no runtime or final-proof claim. @status:spec/plan",
-      "line": 20,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-CATALOGUE"
+    },
+    {
+      "anchor": "contribution-selection",
+      "content_hash": "sha256:228c48fc020a15366015648584fe5ca52d145e62a624e87b3c7c335ec5f6c1f5",
+      "doc_path": "common/PROP-081",
+      "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "heading": "3.1 Selected admission and retained history",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#contribution-selection"
+    },
+    {
+      "anchor": "CONTRIBUTION-HISTORY-SELECTION",
+      "content_hash": "sha256:6c9acb0a3547974336db2e47d0ee179d23d682c38d8917b0c503e241615f47bf",
+      "doc_path": "common/PROP-081",
+      "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "heading": "One immutable change record may retain implementation subjects and affected paths from several contributions. Selected-scope coverage uses only commits in that scope's before-to-after range. Historical local subjects reachable from the before endpoint remain valid record history when they fall inside the record's own captured before/after bounds; future or unrelated subjects are refused. Declared path membership is checked against actual raw paths of the record's verified implementation commits, while required coverage is checked against the current product delta. Each scope record binding explicitly selects a sorted non-empty set of required evidence claim IDs. Required claims resolve uniquely, bind current implementation or selected-scope capture subjects, and retain exact byte digests and result distinctions. Historical or future-platform evidence is not silently deleted, nor automatically counted as current proof. Missing claim selection remains pending; omitted or failed required claims cannot be hidden by an unrelated passing entry. This selection does not authorize acceptance or replace central verification selection and semantic review. @status:spec/plan",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-HISTORY-SELECTION"
     },
     {
       "anchor": "migration",
@@ -83602,7 +83747,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "4. Migration and documentation",
-      "line": 23,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#migration"
     },
     {
@@ -83611,7 +83756,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "For every affected audience and platform, classify action as none, manual, automated, rebuild or unsupported, with a reason. A recipe names exact source/target captures, prerequisites, ordered steps, expected result, verification, repeat behavior and recovery after partial failure. Name user-owned inputs, derived outputs, preservation, backup boundaries and possible loss. Rebuild projections from retained authority; use the supported document-preserving mechanism for authored edits. An unimplemented command cannot be used as a checked instruction. Isolated rehearsals and a guide do not activate public codemods or support obligations. @status:spec/plan",
-      "line": 24,
+      "line": 29,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#MIGRATION-CLAIM"
     },
     {
@@ -83620,7 +83765,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Independently authored documentation enters through an exact repository/root and commit or content capture with source-page inventory, generated/source ownership, build inputs and declared product-baseline relationship. Until bound, topic mappings remain unresolved; no filename or write authority is invented. Preserve concurrent edits and classify pre-existing inaccuracies separately from campaign changes by a three-way comparison. @status:spec/plan",
-      "line": 25,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT"
     },
     {
@@ -83629,7 +83774,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Map every changed capability and user claim to an existing source page/anchor or a page-to-create obligation, including features absent from current documentation. Record edit, editorial review, build/link/example proof and current claim status. Retire or redirect obsolete prose at its owned source; regenerate generated pages from their source. A later product or documentation input change invalidates only affected mapping and proof, not unrelated checked work. @status:spec/plan",
-      "line": 26,
+      "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-MAP"
     },
     {
@@ -83638,7 +83783,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "5. Deterministic transition index and stages",
-      "line": 29,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#index"
     },
     {
@@ -83647,7 +83792,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "The versioned transition.json beside the guide identifies both product captures, documentation captures, permanent change records, net dispositions, migration recipes, documentation mappings and retained evidence. Strict generated readers and stable ordering distinguish missing, unsupported and unverified states. A deterministic assembler may draft guidance and a work list, but generated text is never semantic acceptance and cannot overwrite reviewed prose without an explicit owned output. @status:spec/plan",
-      "line": 30,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#TRANSITION-INDEX"
     },
     {
@@ -83656,7 +83801,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Draft assembly validates all selected records before output publication. The explicitly selected output directory is reached through retained no-follow filesystem capabilities; each output claims a fresh name and never replaces an existing file, link or directory. A failed multi-output write rolls back only files whose identity proof was obtained from the handle this invocation created. A rebound name is preserved and reported as residue. Static pathname checks, matching bytes or an identity inspected after publication cannot establish that ownership. The owning filesystem contract is `spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION`. @status:spec/plan",
-      "line": 31,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DRAFT-OUTPUT-OWNERSHIP"
     },
     {
@@ -83665,7 +83810,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "A read-only checker exposes capture, contribution, bindings, documentation, release and retired modes. Bindings has roles and linked stages; documentation has intake, updated and verified; release has reviewed and verified. Other modes reject a stage. Each stage verifies only obligations already due and reports later proof as pending. Intake cannot imply verified documentation; reviewed guidance cannot imply a completed rehearsal or sealed final preview. @status:spec/plan",
-      "line": 32,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
     },
     {
@@ -83674,7 +83819,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Check ordinary positive, negative and recovery cases on their exact captured subjects. Reuse matching affected evidence and run failed, invalidated or unrun steps; retain unavailable platform results as unavailable. Counterfactual source mutation is a single narrow diagnostic only after a concrete suspicious green signal and an economy comparison under the installed multi-user-planning verification rule. No per-contribution mutation ritual or whole-suite mutation loop is part of preview acceptance. @status:spec/plan",
-      "line": 33,
+      "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-VERIFICATION"
     },
     {
@@ -83683,7 +83828,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "6. Final subject and independent proof",
-      "line": 36,
+      "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#closure"
     },
     {
@@ -83692,7 +83837,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Promote all lasting law, captures, records, guide, mappings, format machinery and meaningful proof to permanent homes before removing a temporary campaign scaffold. Then run permanent reference, format and product checks on the tree with temporary files absent. A product/documentation commit C contains the final product, guide, documentation and scaffold removal. A later narrow evidence/index attestation identifies C and relevant content hashes without self-reference or any product, documentation-claim or migration-recipe delta. A later such delta creates a new candidate and reopens affected proof. Permanent consumers reconstruct both previews and both outputs without temporary tasks, private plans or campaign scripts. @status:spec/plan",
-      "line": 37,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#FINAL-SCAFFOLD-ABSENCE"
     },
     {
@@ -83701,7 +83846,7 @@
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
       "heading": "Missing documentation input, native or Docker resources, required evidence or an unexercised migration case remains an explicit blocker for the affected gate. A source similarity, rendered draft, skipped check, empty test selection or incomplete final panel cannot be reported as accepted transition proof. @status:spec/plan",
-      "line": 38,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#UNMET-PROOF-STAYS-OPEN"
     },
     {

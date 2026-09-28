@@ -1,7 +1,14 @@
 //! Read-only checker for the permanent Developer Preview transition records.
 
 mod capture;
+mod contribution;
 
+#[cfg(test)]
+mod contribution_git_tests;
+#[cfg(test)]
+mod contribution_history_tests;
+#[cfg(test)]
+mod contribution_tests;
 #[cfg(test)]
 mod tests;
 
@@ -150,6 +157,11 @@ fn run(request: &CheckRequest) -> CheckReport {
             }
             Err(error) => fail(&mut report, error),
         },
+        CheckRequestMode::Contribution => {
+            if let Err(error) = contribution::check(transition_path, &transition, &mut report) {
+                fail(&mut report, error);
+            }
+        }
         _ => {
             report.verdict = CheckReportVerdict::Pending;
             report.findings.push(Finding {
@@ -160,9 +172,14 @@ fn run(request: &CheckRequest) -> CheckReport {
             });
         }
     }
+    report.subject_ids.sort();
+    report.subject_ids.dedup();
+    report.checked_claims.sort();
+    report.checked_claims.dedup();
     report
         .findings
-        .sort_by(|a, b| (&a.code, &a.subject).cmp(&(&b.code, &b.subject)));
+        .sort_by(|a, b| (&a.code, &a.subject, &a.reason).cmp(&(&b.code, &b.subject, &b.reason)));
+    report.findings.dedup();
     report
 }
 
