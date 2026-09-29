@@ -9,6 +9,7 @@ mod paging;
 mod resource_uri;
 mod snapshot;
 mod snapshot_wire;
+mod source_location_uri;
 
 pub use page_session::*;
 pub use page_wire::*;
@@ -16,6 +17,7 @@ pub use paging::*;
 pub use resource_uri::*;
 pub use snapshot::*;
 pub use snapshot_wire::*;
+pub use source_location_uri::*;
 
 #[cfg(test)]
 mod adapter_tests;
