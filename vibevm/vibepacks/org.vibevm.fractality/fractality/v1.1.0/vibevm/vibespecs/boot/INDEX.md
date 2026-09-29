@@ -17,121 +17,121 @@ path = "vibevm/vibespecs/boot/75-tool-fractality.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.1.0/vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.1.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.addressable-specs/1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
+path = "vibevm/vibedeps/org.vibevm.world.addressable-specs/1.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.campaign-plans/1.0.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
+path = "vibevm/vibedeps/org.vibevm.world.campaign-plans/1.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.comparative-research/1.0.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml"
+path = "vibevm/vibedeps/org.vibevm.world.comparative-research/1.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.0.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
+path = "vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.1.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.0.0/vibevm/vibespecs/boot/35a-wal-binding.xml"
+path = "vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.1.0/vibevm/vibespecs/boot/35a-wal-binding.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml"
+path = "vibevm/vibedeps/org.vibevm.world.decision-records/1.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.dev-runtime-docs/1.0.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
+path = "vibevm/vibedeps/org.vibevm.world.dev-runtime-docs/1.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.discovery-prompt/1.0.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
+path = "vibevm/vibedeps/org.vibevm.world.discovery-prompt/1.1.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/STATIC.md"
+path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.1.0/vibevm/vibespecs/boot/STATIC.md"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.health-audit/1.0.0/vibevm/vibespecs/boot/42-flow-health-audit.xml"
+path = "vibevm/vibedeps/org.vibevm.world.health-audit/1.1.0/vibevm/vibespecs/boot/42-flow-health-audit.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.health-audit/1.0.0/vibevm/vibespecs/boot/42a-wal-binding.xml"
+path = "vibevm/vibedeps/org.vibevm.world.health-audit/1.1.0/vibevm/vibespecs/boot/42a-wal-binding.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.licensing/1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml"
+path = "vibevm/vibedeps/org.vibevm.world.licensing/1.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.managed-blocks/1.0.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml"
+path = "vibevm/vibedeps/org.vibevm.world.managed-blocks/1.1.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.manual-tests/1.0.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml"
+path = "vibevm/vibedeps/org.vibevm.world.manual-tests/1.1.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.operating-modes/1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml"
+path = "vibevm/vibedeps/org.vibevm.world.operating-modes/1.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.qualified-naming/1.0.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+path = "vibevm/vibedeps/org.vibevm.world.qualified-naming/1.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.secrets-hygiene/1.0.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+path = "vibevm/vibedeps/org.vibevm.world.secrets-hygiene/1.1.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.source-mirrors/1.0.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
+path = "vibevm/vibedeps/org.vibevm.world.source-mirrors/1.1.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.spec-genres/1.0.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml"
+path = "vibevm/vibedeps/org.vibevm.world.spec-genres/1.1.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.sync-from-code/1.0.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+path = "vibevm/vibedeps/org.vibevm.world.sync-from-code/1.1.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.sync-from-code/1.0.0/vibevm/vibespecs/boot/20a-wal-binding.xml"
+path = "vibevm/vibedeps/org.vibevm.world.sync-from-code/1.1.0/vibevm/vibespecs/boot/20a-wal-binding.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml"
+path = "vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.1.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.two-process-model/1.0.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml"
+path = "vibevm/vibedeps/org.vibevm.world.two-process-model/1.1.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.wal/1.0.0/vibevm/vibespecs/boot/10-flow-wal.xml"
+path = "vibevm/vibedeps/org.vibevm.world.wal/1.1.0/vibevm/vibespecs/boot/10-flow-wal.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.wal-specspaces/1.0.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml"
+path = "vibevm/vibedeps/org.vibevm.world.wal-specspaces/1.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml"
+path = "vibevm/vibedeps/org.vibevm.world.redbook/1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03a-member-wal.xml"
+path = "vibevm/vibedeps/org.vibevm.world.redbook/1.1.0/vibevm/vibespecs/boot/03a-member-wal.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml"
+path = "vibevm/vibedeps/org.vibevm.world.redbook/1.1.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml"
 kind = "static"

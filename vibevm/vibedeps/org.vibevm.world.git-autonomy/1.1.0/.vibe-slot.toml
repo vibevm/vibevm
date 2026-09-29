@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:63e273d9d7e3625d517523cce5f8eaccf8ed537f245b1ae2a602e92102a98f29"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:50d7772529b9c695136442c942ae3d8da359370a79aa8b9f0d7d403391f9b30e"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "4517cb38ac669a0fd77f3b0df2f51ac5fa61ef68f5e272310410a8db5cdffb3d"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "59c67b7e0b86121cbff0bececc3012740ad14fee099101f33402cecea5c40b82"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/32-flow-autonomy.xml"
+sha256 = "384b77e7b4c32df7cdd54ca12e294893ce7c6de3eaa23b8acdf34104b217a44a"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/32-flow-autonomy.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml"
+sha256 = "8ccd7cd0b773941dca53a43644c23c99bc6306fb47861b7a76d2dbafe5851ff3"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml"

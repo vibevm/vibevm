@@ -1,0 +1,23 @@
+schema = 1
+source_hash = "sha256:238b0954f41ff902d9b22595cf30306a147cb87f88153588f3ac609d0e1a2780"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+
+[[file]]
+path = "README.md"
+sha256 = "aed8511fa0345b23149114d7ce828fd7f19236f0e7defedf84f681a18c27c0dd"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "1e1a5021ef884d54f011c6edb4c9f5a1b2c87e0f023a273e6da63823cb02c3c5"
+
+[[file]]
+path = "vibevm/vibespecs/boot/31-flow-conventional-commits.xml"
+sha256 = "2e16de3b2ad9f268324faf2bb14c56a2b87b41d25020f6ea92d15548475a55c1"
+
+[[file]]
+path = "vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml"
+sha256 = "59b11500c8c12ad76bbb31ff96fe1f65dc8394bc3c7e88d1b3d2de541b7daee1"
