@@ -1,0 +1,1836 @@
+{
+  "schema": 1,
+  "review_id": "strict migration machine finite source review candidate",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "source_record": "evidence/migration-machine-source-review.md",
+  "source_record_sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7",
+  "paths": [
+    {
+      "path": "crates/vibe-cli/src/command_progress.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:plan-migration"
+      ],
+      "before": {
+        "git_blob_sha1": "02bbbb8d2655ad1d5fa869f79394f0771086545d",
+        "sha256": "6d1c10e1096c182d52a50a6285506edee5777e4f2ba7e48ce37d1c86b43cb898"
+      },
+      "after": {
+        "git_blob_sha1": "c6f831aa36de04c6700118c2fc7e0f1e662b4f47",
+        "sha256": "672366b718cc91d32c9cdfbc04ed8fbc2c74a91060b7797793b7632ff9688e9d"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:plan-migration"
+      ],
+      "after": {
+        "git_blob_sha1": "fa58f04934ccd6bc0a097713bf411de1f3739b16",
+        "sha256": "45f3dada918da9f832e45828aa85a8830534faeb9d61105cf3662414227beb1c"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:plan-migration"
+      ],
+      "before": {
+        "git_blob_sha1": "eb3b26956b07e72c9b3b7761fa7cd7a8d61ab39c",
+        "sha256": "699a7aa0d3ab055583dd71dc97945c4a9dec0d1974cd4d10c5f84a8a1a9dfa60"
+      },
+      "after": {
+        "git_blob_sha1": "54419160b3322dda8c7f5aba133e40a4d50ebf33",
+        "sha256": "2a1b7b0a0173c52c7594b69baf7f988dfca12e54e7d5fcb4f4e78bf000051681"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:plan-migration"
+      ],
+      "before": {
+        "git_blob_sha1": "f8bbcba5f330d37a19403626f57f4d18d5cee008",
+        "sha256": "650651d0c117f5a9a8e12675a132257ba21b929fe5e65c80cf4bf8c05d03a0c7"
+      },
+      "after": {
+        "git_blob_sha1": "2cae8976cdfb6dc068c3f732117141af128be7e5",
+        "sha256": "302ac6a2628e701311f8efa0119692ba354fb8c37dd20f76a2c82288770aaeea"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/tests/migration_plan.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:plan-migration"
+      ],
+      "after": {
+        "git_blob_sha1": "7178452e155c19c2a020bda80fb08b211700d4ec",
+        "sha256": "a9d7c88ab6d1fbafd98fe0597ae0f3e958737fb0e290051fc59903a69ee3dded"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:manifest_migration_profile_epoch"
+      ],
+      "before": {
+        "git_blob_sha1": "58ee173797ec662056665ba336234295ce378586",
+        "sha256": "3eec4d86bf5e514aea8c94b00f3d9d2ccb94fcc3405d46867f772bdbd531afca"
+      },
+      "after": {
+        "git_blob_sha1": "698b85da164d0dc9263ed0d5b8423cf2bf3bb544",
+        "sha256": "cc0863105ee7d6a9bad222ccbb8f6a54b5fa457179e1c75c35a6719d9f01cf4e"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:manifest_migration_profile_epoch"
+      ],
+      "before": {
+        "git_blob_sha1": "72adfd1cf8817316cff616f7e0802535024d5858",
+        "sha256": "cf398b2c6839ba4458bd3fcd9748d946d8b2336786827151eb9d594b63c077fa"
+      },
+      "after": {
+        "git_blob_sha1": "6ff8565654bb42f1d6e25c3fa15ea9b28e16ca5a",
+        "sha256": "ec4c1a2ed2c07dec56c315fe90e45a72763bfb665c706650958d4a2ab90070e1"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:manifest_migration_profile_epoch"
+      ],
+      "before": {
+        "git_blob_sha1": "e3edabe5a0a6e31d87a02a050cdf92bb1061f55a",
+        "sha256": "d81a2e928c620641d7e786a0a32fbde0636e67028a31e3d1bfad3720fbd358cd"
+      },
+      "after": {
+        "git_blob_sha1": "74eaae820d5277e1dfbe763201caeed09a2cc93e",
+        "sha256": "441ea96e73544c07579e144614cec06a84093336c4f552ad2be73bdbf76dfa1f"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/lib.rs",
+      "interface_ids": [
+        "mcp:plan_manifest_migration"
+      ],
+      "before": {
+        "git_blob_sha1": "9a595219ac332ed995bf601cfa7cd7cf4889ebf2",
+        "sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e"
+      },
+      "after": {
+        "git_blob_sha1": "aab99659628ae5ff9a3e8d72cff2d03f5ae8e313",
+        "sha256": "21cd952c707517216cf2c8585bc93fd4fb6994292c0e35332b3a0d6f2c4788f3"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "interface_ids": [
+        "mcp:plan_manifest_migration"
+      ],
+      "before": {
+        "git_blob_sha1": "5c7f29046f0bf4b6a341b2e6b4c72dedf87048ef",
+        "sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3"
+      },
+      "after": {
+        "git_blob_sha1": "1dabc7cc71766df4d33c0db7783d5b6cbace8e5f",
+        "sha256": "b86221bcaf700956e4f6c64ed1f037b2febd4701595ee34fc83df72887af0808"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/migration_plan.rs",
+      "interface_ids": [
+        "mcp:plan_manifest_migration"
+      ],
+      "after": {
+        "git_blob_sha1": "f823a39ce35b03a71b0f743c2bb2580ca8a0fbdb",
+        "sha256": "5845a87b9d53eb7a4421099e98e2b522638e8c1e79c1aae3f570bcffe19ac3b3"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/migration_plan/tests.rs",
+      "interface_ids": [
+        "mcp:plan_manifest_migration"
+      ],
+      "after": {
+        "git_blob_sha1": "c1dccddda71859297efd87289b74b3d6a7f22640",
+        "sha256": "57b4f68105a0fb1957691d16b1b7b38573ff0ba360ed83f40c4f34113066f8d3"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/output.rs",
+      "interface_ids": [
+        "mcp:plan_manifest_migration"
+      ],
+      "before": {
+        "git_blob_sha1": "2da794c3c47a7636877b888a1003b67f70469373",
+        "sha256": "0085dfbca5a0094a446fe2e02b8f4e7c091fbecbea671fee8a634c355835cab2"
+      },
+      "after": {
+        "git_blob_sha1": "9d1bb7468907873caeeb25b8bed52440cee04ab8",
+        "sha256": "294f5f81fd2280217b56d5e66a35420726d71b79704401e13f57b4cd6c996400"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "828ae10d19272cf5c4394e954d5a0268505ac58e",
+        "sha256": "f74bc43a9dd58a8acb6669b48a800fab138bfc85200f6bab6dd026ce1c92fea4"
+      },
+      "after": {
+        "git_blob_sha1": "b0b7bf5ebd7171fe157cfd9f57ee60b89a089ed4",
+        "sha256": "b50e65db6a7189bed0b351f12abfd02cd858da7ec6576a8910b642ef5755a2ce"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "c35f9508a6d79ff699413b9822eb57372bf64517",
+        "sha256": "63b9d07892eb3c319eee559fd9e8a84699321b54c14936c693b0a7a38d1f09a7"
+      },
+      "after": {
+        "git_blob_sha1": "5b951cd3e512165b0eabdf64692cc2172950579d",
+        "sha256": "f7ce240b734f82e704cad514b10f36c317f8c2c1bbebe1945b00de4923aa5edb"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "001adf8182d662040a55301deb651383d77494b0",
+        "sha256": "e46c4003132dc2201f9f7d21aaa1b49a8d3fa7a06181c85d258925c8902ebefb"
+      },
+      "after": {
+        "git_blob_sha1": "24c814ec9d4f260ce4308bd699830bd9b27392f5",
+        "sha256": "b65262657f2d8ea3cce51f84a724147dbb49fc2a4986913191e0a00b29f3222b"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "2f948c50cbff6305b22eedac35f88353bbb25547",
+        "sha256": "6167f514c1c6999168edc1aec543ee99928bfc192d22421bfcda947c93715598"
+      },
+      "after": {
+        "git_blob_sha1": "fd8e9e717791527a4984b90c5bb2b23c49367ebd",
+        "sha256": "279ff3eccf37831c8e8cdbe9aa77cb97c20addfb70e7ce4722570f3dce4a01a5"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "ef6a127b212a6da9e76b1d4c277e4fe3a7e2ad6a",
+        "sha256": "8d43ebc715abd0d751a46e4b98d39f7bc0067f18ded4ecd408cd42154da14431"
+      },
+      "after": {
+        "git_blob_sha1": "43d95e3d411feba12f13299f11d4ebec6911662f",
+        "sha256": "f387329132e27f5d72a65ee4f04ee60abf4f5b03478b276f78ca0d14485608b3"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "8b6d52125ead28c3c5b8073897998384dbea56f4",
+        "sha256": "b1b01db4eb9d854767cf791d01eb0bc8000c9c2eb48059b9fc6a862ec28b4ec7"
+      },
+      "after": {
+        "git_blob_sha1": "04ad6c212e66a24fcaefcc25e5fb7b1a92ec8d0f",
+        "sha256": "e02ee6ec49eafe48907b2ffd5e6b3cf629bfcd40dcdcf32cc1d714e33d7befa1"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "bdebc3a3ef7882cdd32935ad30019165a04d20e3",
+        "sha256": "f58fe653793a12963d51bc4492dc2270d51b26a5ce0275368639c2cc486cb576"
+      },
+      "after": {
+        "git_blob_sha1": "99f83578985a09e3f6698929e3db27b825aa1703",
+        "sha256": "0294c0fe36414b08589fd792b8855907121d5bd43b1fc965e37f556eb2d27dba"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "177e641a4fdca4edc4e858ca46566a5c7fe63126",
+        "sha256": "6448c27b2218f8de625b0ef275f81df4e1af4d233a177bc52e43949245bce17c"
+      },
+      "after": {
+        "git_blob_sha1": "0043d64035b46628dc6c34fd2d324c13e834821b",
+        "sha256": "0c11a044d1da4c31850d0427d0b7222dae8a790f1604e4c0e5c72f5c6c3fa08a"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "cb854fbe4517d9fb65302cbe911c315858912c7b",
+        "sha256": "4b0540df3a88320f138a70a49496ab4e8092cc2b11969b960d417c186d078ce9"
+      },
+      "after": {
+        "git_blob_sha1": "83233a693146b19c7639211dc57df11aaef31b16",
+        "sha256": "1e02c074835eed9e76eb012d17706e5fc4c573e6d2fb2c923d56c97dd3beaee9"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "adaad69c09b60c3531430b907b6bd018f40372e0",
+        "sha256": "8108b8f74ad1af4c443016a10c248ee9968841744312430fbea35717ebb926df"
+      },
+      "after": {
+        "git_blob_sha1": "47e60a6264c8be456150a45247dc06a42873a092",
+        "sha256": "0e738283229175b308c454f4e46f65cf1ab0f8e1b5694048f4568619a25021a8"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b4b0995b4089afbd1c9b72444051e550f3a103cf",
+        "sha256": "fd247503bcc81815c4c1bf247dfcaaca150bef53a1c531212f740c4056226c37"
+      },
+      "after": {
+        "git_blob_sha1": "7df7e26b797972e8eb9a7d8b2a910e31d7dd2a27",
+        "sha256": "3f090ff749b7c82c8172fde14b10f03bd4c14b1c6d62fac7d5736c566d15ac15"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "309c68ad79bdf2cffa846458cf94be9128cc3fc6",
+        "sha256": "ef2b06e1c7db199877348ee858410e4257943d10b2a3dc3927112a609eb74331"
+      },
+      "after": {
+        "git_blob_sha1": "00ffb680b80f619131f1775b919e6c28b8af8d24",
+        "sha256": "60064a02354568ca044999542e691d78592ec8bf97faf3b9f61b2924aa9dd175"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "7e49432927fe8931447b7254d80a11a63277f591",
+        "sha256": "1d688e95ef4e37cd6605267a31ea70846aba76155fe3a5407e53f797b994f3d0"
+      },
+      "after": {
+        "git_blob_sha1": "072d5b9df4ff89d30365dd39151c79b7ef9b247a",
+        "sha256": "b8e70123f20581cd9936cfe62d493631a26398066af0103eaba65f61b5e02c1f"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "c1b948f1dae7db7ecb217af099eca30908bb2979",
+        "sha256": "03298ce3cbe2b2959028e2481893c4eebc6948d9cefa97221910b2099bd20772"
+      },
+      "after": {
+        "git_blob_sha1": "de6b80d9f5058e4a1ee094332bcc486307c42d5a",
+        "sha256": "10d93a406d06d8a480ab2e8552e65d0c817ea6422d4237c686a5fdbd0a2d4e46"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e8c747bab8d8dab4a047b3d4863b311b7a75f1ae",
+        "sha256": "8764949532584bf03e5c9c51260bdaa55e651c13ff7273e8d28e8fef5c6d0146"
+      },
+      "after": {
+        "git_blob_sha1": "e83d361b29418e1aabd5f038739947f15bd4fe22",
+        "sha256": "8caa60b0842005340ec4afb0b116f5a932b80dacfca9d19e715bb9f1f148102d"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "49c2f063f2e4fcf1d78a298a915d561ebfe95cf1",
+        "sha256": "d14946c85ff415c547082c95f6f6fc041787ce912f91203fada9298318f15e4a"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/plan_error/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "ecd8172cbbf6224282c4069914ccfb0f06047264",
+        "sha256": "7f92e50ad047bb39b9ab71b2b571914cca2caece84f889a6a3c88fc6ee7dffac"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e356d6d6c5a0bf58f178b9b64150ff3ee63884b7",
+        "sha256": "d9bac294e20b037f8eeea680502e6c3743d0bbe7f62e7cb05b6a4a6ed344e39c"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "cad8ed671c080c77b1f845c959a7c897c893f38b",
+        "sha256": "66dbd93a30dc0c1aeb955e88282bb803cef61f029f4cbe254ce184e60acd80c4"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "b8d5d4b8dfea9c24433f3faad36669efd5c8078e",
+        "sha256": "b9d99a478b3c5763d6289fd0d5633fce610dd053dd5809d5835ff0d9e101dc7e"
+      },
+      "after": {
+        "git_blob_sha1": "5db9d30ceeef32dc31389aa23bbe44a07fa33886",
+        "sha256": "8e8fc16f4595a6c5201480942e5b7ec98f570728124fa338daf0084f4c9d5ab9"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "c7fff42b790a380ad7ff602aae78c3f9eebff330",
+        "sha256": "3ce5f86ec5f21aa55341d3eace249c8c7bb35b9539c70a617e8826ca2d33ea69"
+      },
+      "after": {
+        "git_blob_sha1": "226b6ef0b5709c671f859d2e63141a4e827e9fe6",
+        "sha256": "80c195597d5bc6d6dea0bcb9cdd00951e0f189a02924da8f1d0e0d6c4ad22965"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "8d6564411b95724dba7ea9d9a38646a192d2d7b6",
+        "sha256": "f1eacd9ad263b1f49b6a2ed76a787d3540f1e63415d0b0ec82d8c4fec3ad1b40"
+      },
+      "after": {
+        "git_blob_sha1": "a8ab22f7509d567e0bc6e37b7359dc162caa2592",
+        "sha256": "c445976138a94dcace8574520133d8db7b3be0cd66f13b567207bdfe2b4823e1"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "after": {
+        "git_blob_sha1": "5ab1008c1615a2b8b25d37d38674296e27897c68",
+        "sha256": "501b56487b3e0ecde63aa9ffbebf0023d79cee10935bd1c13a8178453304557e"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "8d12ae31b6af8d5fbbd62d5289a22a67bfc8c40f",
+        "sha256": "6de5cbbbacb0404b8a94b9eae1e1fedd1bb341531b90dbfee5df14b179f4902a"
+      },
+      "after": {
+        "git_blob_sha1": "feec48276f9fdc98da00fa1e534a5a899275a6f1",
+        "sha256": "47374d9842674989b161f2994744c8c417ae57f20148af1236b91b4daa7e883b"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "1ecf82c03c3d125a4b1bf3a8a633501b95e59657",
+        "sha256": "b1bffdeb2b5e2971cd13a51f0f07e8d2df6e8275eb9b8ccebf9ee3cc91e3108d"
+      },
+      "after": {
+        "git_blob_sha1": "cf6886a337a739b98ea1aca51fc76eeedc8e2256",
+        "sha256": "2df208b55549595162f3039f4f9f8ff15ea44844d18950ceda3e0da5ddb1089b"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "ebc73e7fda7b918c425871ad3f5320d56089703e",
+        "sha256": "8ec2bbf87526851864d937dfacc53b1caa566076f9ab8944738dbd20df9c686b"
+      },
+      "after": {
+        "git_blob_sha1": "ebde13426d06b8d69e29792e602c1d4bf962e98c",
+        "sha256": "facd261ddda2fb0a19ecdd6067f14924660f86357925c90b95305144b78d96b4"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "c333ad67189c8ff267c66d5d79d3fce555f89de5",
+        "sha256": "9dc32da52494a84259252cf29e16e489072bef063c197fe34e613e5c9f97a8c0"
+      },
+      "after": {
+        "git_blob_sha1": "9903b5de37c11cbc8992f0a4edd36a129308b65a",
+        "sha256": "b35e3f5fdb06018742588909d79320c9081329c79391300e7dc8b9a823d1139b"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/shared/mod.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "fbe20259592efae0865c448cc63d63773bcfcb44",
+        "sha256": "fc2d1671e7d523305f8a2f7e14854d757b17736369a7ae17109d09812a94c406"
+      },
+      "after": {
+        "git_blob_sha1": "f1f4212ae3a117828c8c0d2929ccfbe58b902c06",
+        "sha256": "d9d201c11740a7308013ce6fb43ecb94352000753c01ea52b5facf710aa275b9"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/tests/migration_wire_corpus.rs",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d00b1ef9113c76806191dc1a90c627c1c74543fe",
+        "sha256": "3175128e513b77157efe7e50bdce5a7d5684707606a85b284ec17835379406cb"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_planning"
+      ],
+      "before": {
+        "git_blob_sha1": "8296ed48091810abb39ce44b0e6d319fda02dae4",
+        "sha256": "168c1f17050a2ed43762a9735071296786ed07233224f7aad7d323875ce49830"
+      },
+      "after": {
+        "git_blob_sha1": "0df178279f22152bb75b72c1373157022f397539",
+        "sha256": "330de50187872fb37153fc35a30b5f0d5b16f6034acda09c42c322ce427d19c8"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_planning"
+      ],
+      "after": {
+        "git_blob_sha1": "311b7e70403ac0b742666d364b5c37db8ef824a8",
+        "sha256": "bc10bcb79e05dcaaff91430523c5a6b7098995827d0aafaec532cdb93976c3ff"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_planning/tests.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_planning"
+      ],
+      "after": {
+        "git_blob_sha1": "44e1a65b24fdb28265bd8fcdb35ddbe91419af6a",
+        "sha256": "a32910f201945685b1c46bad34b0a700bd71fa3698c703ed6c50000e10bab380"
+      }
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "d809c149e1569d3cd0028066ab0727e179aec956",
+        "sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776"
+      },
+      "after": {
+        "git_blob_sha1": "99189e53365075cddb173944cb089770ae1c816f",
+        "sha256": "ddf880d3271fd55f65258f70a44983e4a720427f9dbe7749187a367b413460e1"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/semantic-invalid/planner-code-in-preflight.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "395a83aafc5f219a63f997464581d3ee99b6e067",
+        "sha256": "6e8e76a13565d181f6459b36d49ed52206c1954ef53a6f06062b179347aee110"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/structural-invalid/schema-string.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "ad0b2691477df934a8e42add8b6577e91577641c",
+        "sha256": "e2a816a09e805cc33bb280f028384a3430886557aaf6150549b8487d58d0b19e"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/structural-invalid/shared-extra-field.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "46fd4b1daa122ab93b55c1c709c78d3fdfbc0bc3",
+        "sha256": "051b4bd53c76a750ef855a95cf2ce2508599bcfe000d78e30310cf8359584c11"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/structural-invalid/shared-unknown-code.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "752491bbfd7c67408b5a3e435ffb7ef245831f53",
+        "sha256": "587a750dfc2daae65ba3a8d8db1f4aa849a2842962dc8bfb57aef13aa0cf8e77"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "80bf04232609d1588206557c69a0df8cee06b9ac",
+        "sha256": "83ab5e0de004a2f0149c4ed7fc58ddf2e1432780cea53c0dc3a7fdaa1cf35cba"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-stage.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a2478908793b314522c38694074bc8484ef3a448",
+        "sha256": "2531d8195d0d9d5a341c760ece330229051e0b9c2f285842eba96e0ebd3d254b"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/valid/input-read.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "66984e7b473e6ed64140dc7181537d26555d383f",
+        "sha256": "7ba47c7f48bd16d17c25d93bdb422e6deae6d2dd2992f4ca54a426242d2d66b0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/valid/invalid-request.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "2e289017089c9adf2799e14a8c6acc757a046b38",
+        "sha256": "51cb57c2f34ccbc56bab3cbe612b58000b9d59795eb456045d349c6946752e58"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-error/e1/valid/unsupported-schema.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "fb30901ca641eb7d989c549e7e9d81c717044bbe",
+        "sha256": "97f8728f8795827a6194a646f86e4198f631119e56289a3570f32347ba791e96"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/semantic-invalid/noncanonical-offset.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "01821ab881d7691ec31221c5389d17ded3e3ec84",
+        "sha256": "7c392e467e17fc6a090a5f0911e06a2590c9f14358ee33fb5c6a61146ba402fe"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/semantic-invalid/offset-out-of-bounds.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "74eb4d6fa0211b52e3d134ef2de071597f9afc71",
+        "sha256": "165728fb8db27f12383ff70c8c9d77db0848e89dbb434a31e447efaba2e877dd"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/semantic-invalid/preflight-code-in-planner.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "8fe721d5c46e9bd59a4c755a06cf190b0bca2c9c",
+        "sha256": "13584f50a8683d79254c97adc7126da57e184b434ce79f7b3353a4cd68d4a1cc"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/semantic-invalid/profile-epoch-mismatch.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "38672e7a83334667fabc0620793047a5e4ecc7c7",
+        "sha256": "aee1107dfea4411540359a4ae1f7d0cdc442c39d03361c7d7dfa7793a7927b2b"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f7e9da3864e32a1b0644681f23f1e1c00e23c0ca",
+        "sha256": "e83114281748ef61e61f0bc7134f2e8edb264f1fa1929a31354c350d8d7d75cf"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/absent-extra.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "52a9e17b08c054c63af38ee8c406bab94f09b2d9",
+        "sha256": "09f90154e6140a7ff04b23f2cb997a6a23d9d8bb82bdeb76e40874fe85e16e48"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/before-end-number.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "588e606d00fe82523eff71861bafea9a433ad79b",
+        "sha256": "6ff6eb2f3649b8cbbffb5ea7fa85e5f968986193beb5deaf019cd6b811c73e2d"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/before-start-number.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e3d8f9c2152a953f29dcd61f77e3a13c8a65b4f5",
+        "sha256": "438ce4b665056a1b6cb08904c79d931fa1aca8b50ca88e11a2f48aeec07d57e2"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/epoch-one-extra.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d83b0b50aae1357f66f41dfee53114082922cacb",
+        "sha256": "f24e65521e2fef25f00474092521037b0638789daab23b88297154edf75a9f16"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/question-choices-number.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d4f43bceefb05f1c9f8338edc88e4fbcfa1bb497",
+        "sha256": "3b8f3aa0b52446c365f88445228cf8bbac27bf9f3c3f05fe0952c2e49409e196"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/question-extra.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "20da758eca1ba090e626bc73f9e4a17c249b6c83",
+        "sha256": "13d7878e3a4c6b577fc003538546844bbac097e998054bc3ab869359e642bb4f"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/question-unknown-field.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a7987e3d95af4e5055db6b61b326d0c80b423404",
+        "sha256": "1470955e2cf50294beac575a7ba11bfc39fe31d81b1f1a61cb6dc4ef31a6e833"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/schema-string.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "bde3cd0f3f7742e6f175f26aa742486212497e97",
+        "sha256": "d8872b94ea0d63076a7a1ff41a418e8e48ce77571651cb67c77d07b3f8531144"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/shared-extra-field.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "2432c91d1cbc16aa75a1903e2cb93813f058a9d3",
+        "sha256": "eb94aa81b6593508c9ceeeaf3ad4b335a305058ab1a20fd1513df0e89c20055a"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/shared-unknown-code.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "b3ab6274f55f0c5ea5bf54f2b0ceaa6815b24f7b",
+        "sha256": "3d34687422adf164059a3a52a5c64f9c475b3233ff3da22a6ea3c65d42efff13"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-edit-field.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "1070628b70b7443de66d23685e5beddc07df243e",
+        "sha256": "46e1ac51c7e61fec6ae571da924913bb88941268726e71cc0f416d56952004e5"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-outcome.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "6a2616691b148fdfae66fd6e4ea80388b71ca3e0",
+        "sha256": "dab8f886b74d898f49670b95e7b4f2795b8fbeb94f8ab4a00ea8b0df78bd48f0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-plan-field.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f85c68c7c4a8492f7fb91916b61978360c17e934",
+        "sha256": "21bc22d6ef4eb0590883612ae9bf01f7f52b40a3d6d7da95a0f5f1b052b6bbfc"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "31c101ba93bad371de0f9d6da3bca39acd3a2c85",
+        "sha256": "be3ea93020b7a1028d4858e8b88f698f53e05ccfa183e5d565ca63e8cd3cfd50"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-stage.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "56e023aee8640b860a0a3143ba5c63c4439f39d6",
+        "sha256": "f3df19f4b5cd83a96f3bfb16ff9b8e68884db4668ac07d60f248f046d9b635ec"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-branch-payload.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "7cb38166c1895bcac07ef4868dab763e982d4de7",
+        "sha256": "c7b0f243b5a359634270b7942ad30b3af9146514533836e4ffc8ec1bd57de8ba"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-epoch-tag.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "94d439740a7b1672a7c05a9f50ffcff605f4b509",
+        "sha256": "41348270e7ef797f944ff687bc33d9449c12c3988abdeaf4edea0447b80a66a9"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/valid/needs-input.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0caebe47f4eb6cf838b7833933fa983467575124",
+        "sha256": "1e7e1c18feb11714e2f003a9a69154db414f39b9752260c2e9cb2f9056b1c0b8"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/valid/no-op-epoch-one.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "6b3154c3dc3e568b3d3d91dc9ec92005630ff3cd",
+        "sha256": "bc36dabba3ee3a7a96211109e392a3addbcf72545641689804f4951e4175f40c"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/valid/planned-golden.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "814f594a7af3e4b1fac6f5d68685e1985f8c9c75",
+        "sha256": "7ec59ca727c5df108ea5ed0066a59d66c4d71484e9052452e20c179a0b3f78f0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-report/e1/valid/refused.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "54ebd76491af2602bab63fb2d3062df425c1c771",
+        "sha256": "2d46e8a160755f7f7730e23b5c84c796d1efcd4b46a38f0b7d41e22ad380721c"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/presence-invalid/recipe-null.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "82686280317fbbd76c6cef241f8506b8ca786b69",
+        "sha256": "800b8103c7398ba1f62bfa9ba576559489148a59fbea9e63ea96289b3e12f308"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/presence-invalid/source-profile-null.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a23f9868e450a9f47a82b89fa9401890c0f588a1",
+        "sha256": "f9ed93032c41d022e7510b33c18836f7b146b4cee9fac34434240c544d123c49"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/presence-invalid/target-profile-null.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a2bef24c0536848fbc9e521ed588b8b4fa7cbe57",
+        "sha256": "374c0c3f5e65d63c19d9d6038d105c881a889c11d4a27dbc4920833b5e8b0779"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "9f9e6626ce8d108de59692867417a7495e996c9e",
+        "sha256": "7a239b2fcbfa7b48fb37e3b45c916dcfae5c4a21a777ce670580dfde8282ac40"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/structural-invalid/profile-number.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "27fde9c73981843baf64e25a401af95c2b705574",
+        "sha256": "647e9a21e705b096a8cf4d8a6df32ceb7e33338e0615530e2d0ddec2b5d5acee"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/structural-invalid/schema-string.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "b071468d5f20080196182fcc5d18b02d1bee3fd7",
+        "sha256": "bf1fd3bd554963d416c564c76e7d64c4e148f3151b4bea00c4af4c6d0da28abe"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/structural-invalid/source-text-number.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0847712df181151962698838077ab500ef103e30",
+        "sha256": "08a38acbb39d26254e0e418ebe499a2ec9b99f061c6baf3db1be9b549093c016"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "bb303a932d075238cc2431c95c28118424836f4e",
+        "sha256": "2da6f1d25ab9b271d1814af1d0fe7eb18965fc65d87c6cf6222c65869ce8f5b9"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/valid/current-epoch-one.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f9ac5aef0fb27521bced94efa27a460a4d103158",
+        "sha256": "a6d3c89c3436ca7e536a3b0f905d4348b2af3aa9820373260fe885aaab83e180"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/valid/legacy-selection.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "77adf3a60228cf1dc2fab9c169377120f585e659",
+        "sha256": "da5e49665af023ae516550e00941ba0c0b47a487e10eb8de503f3b8f8830593b"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-plan-request/e1/valid/missing-selection.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "30d7818a3c371c0e470ccf8106d2fb1a93dc5b64",
+        "sha256": "b558306c0e21778762b85f32b9fe74b456c1b816567b45d3e69b8708f59b6e99"
+      }
+    },
+    {
+      "path": "formats/vocabularies.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "b48a3826c1bd84c021a81c28fd06db1d0222fc87",
+        "sha256": "827c2dacf68da2d7bccbce68b907a3274c610d66418d0bd4a1c72e1a0a7e372e"
+      },
+      "after": {
+        "git_blob_sha1": "1c3e5d0d9ca6767dc63209fe7b1d4ca4ec6891f8",
+        "sha256": "e2260b453b8e1de9224575fb022296b4ab6a66da8abb7422b1f92b33edcad7e1"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/plan_error.jtd.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e6eec792f03d339d2be5324bb314e35bf0d85e16",
+        "sha256": "05b7daa74cbd7f9fab9e6d83671cdfe84b6bc408b82bb282b5895799a4c2a8f3"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/plan_report.jtd.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "768ce3279b0597b2a2de5e134fe29f688e28f814",
+        "sha256": "e918333e70b8431b9e19c2b10b4e5af441383e8d023b91c47cac51a44279db1a"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/plan_request.jtd.json",
+      "interface_ids": [
+        "format:migration-planning-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "9483d2716b6ca3a1ff1690a664cd797ca94842b7",
+        "sha256": "ff759aeb37890d0131ae068ea2cf20820d2eaae280af4e35101f208fe91fba86"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "bd5b4699e4e698ffa4e7d5dbf66bbf6cfe0e5c32",
+        "sha256": "5f6e5bc38f3d372a8ab7cb4b759ff64c3a496ea626cd230daa04de455feb8c50"
+      },
+      "after": {
+        "git_blob_sha1": "a3646e795cd5e1517db09c6ffe1678926b183497",
+        "sha256": "10d61561c831b165376c6b96e8e11b2050ab7a74cc99c85aef0efc81774e9ee1"
+      },
+      "user_no_impact_reason": "Derived trace-index regeneration only; no executable operation is introduced by this path.",
+      "documentation_no_impact_reason": "Index metadata is not a user guide; positive source/runtime guidance is accounted separately."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "b641111d46fbc9613c347ff308eb36d50b8f41a6",
+        "sha256": "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+      },
+      "after": {
+        "git_blob_sha1": "eb1d263410c257840d5fded04362a3f15aea8fb0",
+        "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+      },
+      "user_no_impact_reason": "Root-reviewed generated source-home provenance comment only; no executable declaration/body or serialized codec meaning changes on this path.",
+      "documentation_no_impact_reason": "Generated internal provenance comment is not a user guide or workflow change; positive generator/type guidance is separately accounted."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "interface_ids": [
+        "spec:manifest:strict-migration-transport"
+      ],
+      "before": {
+        "git_blob_sha1": "a31a1198db459d3321b7e68f0a0b407d8d59ceb9",
+        "sha256": "216dca7839f7cfee11655a16d1674d1cd9cb7188e4bc57cacf1a3444735e310f"
+      },
+      "after": {
+        "git_blob_sha1": "78ba0fd65df908f4f5571e3e1c220cc4c6db716d",
+        "sha256": "f137ac315d7b98567af2dfa8dd2843c8898248a3d239b86ff20571fdfab763cb"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "interface_ids": [
+        "spec:manifest:strict-migration-transport"
+      ],
+      "before": {
+        "git_blob_sha1": "1fa9b93b269be34dcc8cc5cede8432e58fe3f6c5",
+        "sha256": "d2d83b5e6842c54960ab6411e1439af2568c89fbe60543eae53cd2b7fbfca506"
+      },
+      "after": {
+        "git_blob_sha1": "b8d93a1b50fbdd7302811bb89c124b2921b99941",
+        "sha256": "401156c9a9868213b8d9525533fee61ab0840a781d25bd261e3e7be562f4a453"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/format_id.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "b32dc84faa0206e42c18d1080d5517ea232a83c8",
+        "sha256": "fc4274cf09221a63566ec30e165d7a17a139c0dc4280d7439c5777e39d099698"
+      },
+      "after": {
+        "git_blob_sha1": "bcc2d43ffab544b34918c8e16d849c56b42573ff",
+        "sha256": "b1cd6e621321c753e8e4c7ce90a1c6a4f02eaa6cafd53a600fe3b67ce4717a29"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/layout.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "b7f74b18a94fc2e5cb1666395a0bd53fee085ff3",
+        "sha256": "37825262099956e26a61c166c601ba4aa97fd1fe6914f7022fcdd7dd4ac36e70"
+      },
+      "after": {
+        "git_blob_sha1": "d1fbea1b96329e520d524c31d33a922354baed20",
+        "sha256": "3b2bc29b5d470bed78dfc77757515458b49d500aec7ebd99738be5c4f0807e1e"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/mod.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "f90e4785bebc4ab1a8f6b56fb70ce2f4445f2d14",
+        "sha256": "608a80b5b9ecd9f2c69c25f32c530cc8c060f89231f3424acfbf87e8e3cfdb26"
+      },
+      "after": {
+        "git_blob_sha1": "3f0dc9b8c175b65ad8cbeae09881ccf08b172cca",
+        "sha256": "7735dd1f120ec38b461e32eb32e86a0d94e5ded603e038c8a6c1f665c3e63017"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/shared_module.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "9bc4d9eadf859de5adf10ca03f717c61dd60132d",
+        "sha256": "ec427cbeb5bd8965e2d3e27d93f199f95019a5d77a42b7174faae1cf3f575547"
+      },
+      "after": {
+        "git_blob_sha1": "ae203517b0821766c6a0fc6331457f2cca0da4fa",
+        "sha256": "a6b2ec4a3160f07e211b11d061084ef7d3243cc711eda35c4d1343c153b96c8c"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/shared_module/policy_tests.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "after": {
+        "git_blob_sha1": "ce8955215674ddc42d5fc759483375ccbbe8f9a5",
+        "sha256": "b21aa6013966b9bc6bbd0289e7b089f69275387cc0ff7d8d4441c1af01e31d24"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/shared_module/tests.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "5fa969433f1ec9aa9e6b19fa3b5bb578954a237e",
+        "sha256": "1faf64e39da38121206424c96f268dee0aa6f9961bfa567c0470b84f5c0908de"
+      },
+      "after": {
+        "git_blob_sha1": "8c5ceaf973a5bf0a55512d2dcc07c727a0de3857",
+        "sha256": "01094e68401925404b847684b93d4aa473839658ae2ab942e4669638a1af1892"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/strictness.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "194912a68aac3a09e104f11b3334d2b070572320",
+        "sha256": "fe205f1ae8330d983c820e077d4a06514e92c996db879f9698640cd7bd898e2d"
+      },
+      "after": {
+        "git_blob_sha1": "9e2e979940beef9ee53a34a9d7ee5adb52a54a7e",
+        "sha256": "7fe2011507c8ac27430ec74760c8716e5adcff24c1b7f297d1ccaaefb2db7b9a"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/strictness/tests.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "47858106e19ec227aa3be1ceb46057ca4a21d953",
+        "sha256": "8e744d77f108bb0d6a71e1865fedb8bf7f550592f39d078a3e52eacfeb85026f"
+      },
+      "after": {
+        "git_blob_sha1": "a3afc569798c5edb0a558b4a89ce91bf80711820",
+        "sha256": "752457419772ec415159125d9f7962bb709d8dd5543a6acf723fc293171d9441"
+      }
+    },
+    {
+      "path": "xtask/src/codegen/typescript.rs",
+      "interface_ids": [
+        "tool:xtask:effective-reader-policy"
+      ],
+      "before": {
+        "git_blob_sha1": "4d7c7b7de5be9a65aff0cffd63915c69f0180851",
+        "sha256": "756d5034316d4efb410684edb2468ad4cdd8961d91718b2c521d6712d8deacc2"
+      },
+      "after": {
+        "git_blob_sha1": "ff449615e456e218d69db6cbff5dc911ae69055e",
+        "sha256": "d948ce037e81746e3b457d18103102c79f505629c077f916dadff15c7d03fbc1"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "cli:vibe:refactor:plan-migration",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Refactor declared only three conversion variants; no pre-initialization JSON planning leaf.",
+      "after": "Nested plan-migration stdin/literal entry emits one exact registered JSON root with existing exit categories before config/tracing/VVM/context/registry; source/runtime proof is bounded GNU/Linux.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ],
+      "source_paths": [
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/migration_plan.rs"
+      ],
+      "topic_ids": [
+        "cli-pure-migration-planning-guidance"
+      ]
+    },
+    {
+      "interface_id": "format:migration-planning-e1",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "No registered migration-plan-request/report/error frame trio or shared planning-error object.",
+      "after": "Epoch1 request/report/error codecs, one shared nine-code error, strict nested/empty payloads and registered FormatId/corpora carry exact source data; owned semantic guards remain distinct from derived shape.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ],
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/plan_error/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs",
+        "crates/vibe-wire/src/generated/migration/mod.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/shared/mod.rs",
+        "crates/vibe-wire/tests/migration_wire_corpus.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-plan-error/e1/semantic-invalid/planner-code-in-preflight.json",
+        "formats/corpora/migration-plan-error/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-plan-error/e1/structural-invalid/shared-extra-field.json",
+        "formats/corpora/migration-plan-error/e1/structural-invalid/shared-unknown-code.json",
+        "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-stage.json",
+        "formats/corpora/migration-plan-error/e1/valid/input-read.json",
+        "formats/corpora/migration-plan-error/e1/valid/invalid-request.json",
+        "formats/corpora/migration-plan-error/e1/valid/unsupported-schema.json",
+        "formats/corpora/migration-plan-report/e1/semantic-invalid/noncanonical-offset.json",
+        "formats/corpora/migration-plan-report/e1/semantic-invalid/offset-out-of-bounds.json",
+        "formats/corpora/migration-plan-report/e1/semantic-invalid/preflight-code-in-planner.json",
+        "formats/corpora/migration-plan-report/e1/semantic-invalid/profile-epoch-mismatch.json",
+        "formats/corpora/migration-plan-report/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/absent-extra.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/before-end-number.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/before-start-number.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/epoch-one-extra.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/question-choices-number.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/question-extra.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/question-unknown-field.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/shared-extra-field.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/shared-unknown-code.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-edit-field.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-outcome.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-plan-field.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-stage.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-branch-payload.json",
+        "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-epoch-tag.json",
+        "formats/corpora/migration-plan-report/e1/valid/needs-input.json",
+        "formats/corpora/migration-plan-report/e1/valid/no-op-epoch-one.json",
+        "formats/corpora/migration-plan-report/e1/valid/planned-golden.json",
+        "formats/corpora/migration-plan-report/e1/valid/refused.json",
+        "formats/corpora/migration-plan-request/e1/presence-invalid/recipe-null.json",
+        "formats/corpora/migration-plan-request/e1/presence-invalid/source-profile-null.json",
+        "formats/corpora/migration-plan-request/e1/presence-invalid/target-profile-null.json",
+        "formats/corpora/migration-plan-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-plan-request/e1/structural-invalid/profile-number.json",
+        "formats/corpora/migration-plan-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-plan-request/e1/structural-invalid/source-text-number.json",
+        "formats/corpora/migration-plan-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-plan-request/e1/valid/current-epoch-one.json",
+        "formats/corpora/migration-plan-request/e1/valid/legacy-selection.json",
+        "formats/corpora/migration-plan-request/e1/valid/missing-selection.json",
+        "formats/vocabularies.json",
+        "schemas/migration/e1/plan_error.jtd.json",
+        "schemas/migration/e1/plan_report.jtd.json",
+        "schemas/migration/e1/plan_request.jtd.json"
+      ],
+      "topic_ids": [
+        "migration-planning-wire-types-guidance"
+      ]
+    },
+    {
+      "interface_id": "mcp:plan_manifest_migration",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Twelve MCP declarations; no text-only migration-planning tool or generic owning structured-preflight error carrier.",
+      "after": "One new MCP cell gives exact generated structured reports/questions/refusals and generic typed preflight while ignoring ServerContext; ordinary legacy errors stay text-only.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT"
+      ],
+      "source_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_plan.rs",
+        "crates/vibe-mcp/src/tools/migration_plan/tests.rs",
+        "crates/vibe-mcp/src/tools/output.rs"
+      ],
+      "topic_ids": [
+        "mcp-pure-migration-planning-guidance"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-core:manifest:manifest_migration_profile_epoch",
+      "capability_id": "authored-profile-epoch-provenance",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "No exported core lookup for the transport projection of frozen-profile epoch provenance.",
+      "after": "The pure core lookup exposes exactly three profile epoch meanings and unknown=None, retaining absent versus epoch1 without product-version inference.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ],
+      "source_paths": [
+        "crates/vibe-core/src/manifest/migration.rs",
+        "crates/vibe-core/src/manifest/migration/tests.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "topic_ids": [
+        "migration-profile-epoch-metadata-guidance"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-workspace:migration_planning",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "No common presence-aware text-only machine adapter or exact request-bound projected report validator.",
+      "after": "Pure JSON/Value/typed entrypoints project existing core values, reject explicit null/schema/stage/code/offset contradictions and validate full DTOs by core replay without duplicate grammar/hash or context effects.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN"
+      ],
+      "source_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_planning.rs",
+        "crates/vibe-workspace/src/migration_planning/tests.rs"
+      ],
+      "topic_ids": [
+        "pure-migration-transport-adapter-guidance"
+      ]
+    },
+    {
+      "interface_id": "spec:manifest:strict-migration-transport",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Source law lacked the explicit strict text-only transport and generic typed-preflight extension.",
+      "after": "Source contracts require strict registered roots, explicit presence/stage/code/epoch/offset semantics, context-free CLI/MCP entry and generic preflight carriage; old MCP scope is historical.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT"
+      ],
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ],
+      "topic_ids": [
+        "strict-migration-transport-source-guidance"
+      ]
+    },
+    {
+      "interface_id": "tool:xtask:effective-reader-policy",
+      "capability_id": "registry-owned-generated-reader-policy",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Some generator paths used old1.0 slots and shared/consumer policy could ignore effective explicit deny or malformed policy.",
+      "after": "Active1.1 codegen paths and one existing registry policy loader govern shared/consumer strictness; malformed explicit values and conflicting policies refuse.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ],
+      "source_paths": [
+        "xtask/src/codegen/format_id.rs",
+        "xtask/src/codegen/layout.rs",
+        "xtask/src/codegen/mod.rs",
+        "xtask/src/codegen/shared_module.rs",
+        "xtask/src/codegen/shared_module/policy_tests.rs",
+        "xtask/src/codegen/shared_module/tests.rs",
+        "xtask/src/codegen/strictness.rs",
+        "xtask/src/codegen/strictness/tests.rs",
+        "xtask/src/codegen/typescript.rs"
+      ],
+      "topic_ids": [
+        "migration-reader-generation-policy-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "cli-pure-migration-planning-guidance",
+      "obligation": "Pending final developer/guide documentation for cli:vibe:refactor:plan-migration: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "mcp-pure-migration-planning-guidance",
+      "obligation": "Pending final developer/guide documentation for mcp:plan_manifest_migration: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "migration-planning-wire-types-guidance",
+      "obligation": "Pending final developer/guide documentation for format:migration-planning-e1: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "migration-profile-epoch-metadata-guidance",
+      "obligation": "Pending final developer/guide documentation for rust:vibe-core:manifest:manifest_migration_profile_epoch: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "migration-reader-generation-policy-guidance",
+      "obligation": "Pending final developer/guide documentation for tool:xtask:effective-reader-policy: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "pure-migration-transport-adapter-guidance",
+      "obligation": "Pending final developer/guide documentation for rust:vibe-workspace:migration_planning: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    },
+    {
+      "topic_id": "strict-migration-transport-source-guidance",
+      "obligation": "Pending final developer/guide documentation for spec:manifest:strict-migration-transport: exact scope, explicit selection/presence, safe diagnostics and structural/semantic/effect distinctions; canonical page/build/example proof remains due."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "git_blob_sha1": "78ba0fd65df908f4f5571e3e1c220cc4c6db716d",
+          "sha256": "f137ac315d7b98567af2dfa8dd2843c8898248a3d239b86ff20571fdfab763cb"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+          "git_blob_sha1": "b8d93a1b50fbdd7302811bb89c124b2921b99941",
+          "sha256": "401156c9a9868213b8d9525533fee61ab0840a781d25bd261e3e7be562f4a453"
+        }
+      ]
+    }
+  ]
+}

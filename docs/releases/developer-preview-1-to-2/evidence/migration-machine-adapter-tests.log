@@ -1,0 +1,97 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+ Downloading crates ...
+  Downloaded rusty-fork v0.3.1
+  Downloaded rand_xorshift v0.4.0
+  Downloaded unarray v0.1.4
+  Downloaded quick-error v1.2.3
+  Downloaded proptest v1.11.0
+   Compiling num-traits v0.2.19
+   Compiling core-ai-native-specmark-grammar v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar)
+   Compiling getrandom v0.3.4
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_core v0.9.5
+   Compiling core-ai-native-specmark v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark)
+   Compiling quick-error v1.2.3
+   Compiling bit-vec v0.8.0
+   Compiling rusty-fork v0.3.1
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling bit-set v0.8.0
+   Compiling rand_xorshift v0.4.0
+   Compiling rand v0.9.4
+   Compiling rand_chacha v0.9.0
+   Compiling chrono v0.4.44
+   Compiling unarray v0.1.4
+   Compiling proptest v1.11.0
+   Compiling progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+   Compiling vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.47s
+     Running unittests src/lib.rs (target/debug/deps/vibe_workspace-991f9eaf05d0dcce)
+
+running 9 tests
+test migration_planning::tests::preflight_roots_keep_three_codes_and_serialize_only_inner_document ... ok
+test migration_planning::tests::domain_refusal_remains_planner_stage_and_fixed_diagnosis ... ok
+test migration_planning::tests::malformed_unknown_wrong_types_and_null_are_preflight ... ok
+test migration_planning::tests::omitted_choices_preserve_ordered_questions_without_defaults ... ok
+test migration_planning::tests::utf8_crlf_and_source_immutability_survive_projection ... ok
+test migration_planning::tests::no_op_and_epoch_one_preserve_separate_profile_provenance ... ok
+test migration_planning::tests::golden_projection_preserves_c1_text_spans_and_identities ... ok
+test migration_planning::tests::externally_tampered_reports_are_refused_without_second_hash_recipe ... ok
+test migration_planning::tests::valid_json_value_typed_and_external_replay_agree ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 536 filtered out; finished in 0.00s
+

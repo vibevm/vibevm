@@ -1,0 +1,84 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+   Compiling vibe-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-registry)
+   Compiling vibe-native-loader v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader)
+   Compiling vibe-resolver v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-resolver)
+   Compiling vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+   Compiling vibe-agent-projection v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-agent-projection)
+   Compiling vibe-requirements v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-requirements)
+   Compiling vibe-doc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc)
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+   Compiling vibe-trace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-trace)
+   Compiling vibe-install v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-install)
+   Compiling vibe-orchestrator v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator)
+   Compiling vibe-test-support v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-test-support)
+   Compiling vibe-package-source v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-package-source)
+   Compiling vibe-mcp v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-mcp)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 38.55s
+     Running unittests src/lib.rs (target/debug/deps/vibe_mcp-9e84a28723030e9c)
+
+running 5 tests
+test tools::migration_plan::tests::generic_preflight_and_ordinary_errors_remain_distinct ... ok
+test tools::migration_plan::tests::epoch_and_utf8_crlf_source_are_carried_losslessly ... ok
+test tools::migration_plan::tests::registered_descriptor_is_strict_without_context_files ... ok
+test tools::migration_plan::tests::planner_outcomes_match_pure_adapter_and_correct_channels ... ok
+test tools::migration_plan::tests::malformed_null_unknown_fields_and_schema_are_structured_preflight ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 67 filtered out; finished in 0.01s
+

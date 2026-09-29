@@ -1,0 +1,7 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+error: failed to download `proptest v1.11.0`
+
+Caused by:
+  attempting to make an HTTP request, but --offline was specified

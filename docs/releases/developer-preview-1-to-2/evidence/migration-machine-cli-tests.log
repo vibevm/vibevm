@@ -1,0 +1,90 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-doc-shell v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc-shell)
+warning: unused variable: `error`
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    |
+help: `error` is captured in macro and introduced a unused variable
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+    = note: this warning originates in the macro `system_transaction_store_inherent_methods` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: `vibe-scrape` (lib) generated 1 warning
+   Compiling vibe-doc-server v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc-server)
+   Compiling vibe-cli v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.30s
+     Running tests/migration_plan.rs (target/debug/deps/migration_plan-6f9052c7b1169b1f)
+
+running 5 tests
+test failed_utf8_stdin_read_is_typed_input_read_exit_one ... ok
+test early_entry_bypasses_poisoned_configuration_and_preserves_all_state ... ok
+test stdin_and_literal_match_shared_golden_plan_without_state ... ok
+test utf8_crlf_and_epoch_one_no_op_keep_exact_owned_identities ... ok
+test typed_questions_domain_and_preflight_have_exact_roots_and_exits ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
