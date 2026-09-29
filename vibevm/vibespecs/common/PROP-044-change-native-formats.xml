@@ -354,6 +354,35 @@ git-organisation registry has that Maven Central structurally lacks. Runtime
 compatibility shims are forbidden; the only exception is frozen per-epoch
 *readers* of old manifests inside the indexer — readers, not shims: they branch
 no logic and are never edited after freezing.</MIGRATION-TAXONOMY></p>
+    <p><MANIFEST-MIGRATION-PLAN fact="true" status="spec/done">**Pure authored-manifest migration planning.** A planner consumes exact
+in-memory source text and explicitly selected source profile, target profile
+and recipe. A missing selection produces typed input requirements with named
+alternatives; an unknown profile or revision, incompatible edge, malformed
+syntax or unrecognized shape produces a typed refusal. Neither the package's
+product version nor an absent epoch selects a grammar. Absence remains the
+distinct pre-epoch state; a recipe never inserts an epoch or changes an
+unrelated authored selection as a convenience.
+
+Recognized grammars are finite, immutable named revisions, checked over the
+owning TOML syntax tree. Their exact field sets, primitive shapes and value
+vocabularies are frozen independently of the evolving current Manifest
+decoder. A new shape needs a new profile revision. The initial bounded recipe
+is the documented materialization `snapshot` to `copy` rename, rehearsed on
+retained historical authored bytes with immutable provenance; it does not
+claim to implement the complete historical manifest language. Current
+pre-epoch and explicit epoch-1 identity profiles remain distinct. SourceDescriptor,
+feature-specific converters and effectful application are separate atoms.
+
+A successful plan carries exact before and after text, ordered token edits,
+source/target/recipe identities, deterministic domain-framed content and diff
+identities, and an output checked by the current Manifest owner. That final
+checker validates the result; it does not define the frozen input grammar.
+All bytes outside selected token spans, including comments, order, quote style
+and owner values, survive unchanged. An unprovable edit refuses instead of
+serializing a struct or falling back. Identity plans are byte-identical with
+no edits. Repeating exact input and selection reproduces exact output and
+identities. Planning performs no filesystem, cache, lock, provider, LLM,
+publication or implicit application operation.</MANIFEST-MIGRATION-PLAN></p>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
@@ -379,7 +408,8 @@ system** — authored, unrecoverable, resident in foreign repositories, and an
 external surface *de facto* because agents read files, not APIs. It is the one
 place we honestly pay the stability tax: an **epoch marker in the file,
 introduced before first publication** (absence ≠ "assume 1"; absence is the
-distinct pre-epoch state, interpreted by a heuristic exactly once in history);
+distinct pre-epoch state, interpreted through an explicitly selected frozen
+profile; missing profile selection requires input rather than a heuristic);
 strictness with did-you-mean hints in our namespace (in a hand-written file an
 unknown key is a typo and the author is present — the asymmetry with the
 machine-written catalog is principled, not inconsistent); a named reserve
