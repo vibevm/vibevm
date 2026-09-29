@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "scope": "Pure selected-world projection of typed authored extension schema references and explicit missing-schema observations, without native load or file I/O.",
+  "governing_source": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE:req-r1",
+  "product_code_sha256": {
+    "crates/vibe-workspace/src/extension_world.rs": "c202cf6152efe84c8a33ad863e390f4543094fde4efadb96fc6a93220c34c5a0",
+    "crates/vibe-workspace/src/extension_world/machine_schema.rs": "22bacb60402645269d763288404e61a4b92efc328460a11dfe04a80560ba0301",
+    "crates/vibe-workspace/src/extension_world/machine_schema/tests.rs": "478c70c2f24324e0c84f5bc7d71828f9af1db22f86d8bce34426dde6fcabfd07"
+  },
+  "selected_results": {
+    "first_four_case_family": {
+      "exit_code": 0,
+      "passed": 4
+    },
+    "corrected_five_case_family": {
+      "exit_code": 0,
+      "passed": 5,
+      "failed": 0,
+      "filtered": 570
+    },
+    "rustfmt_three_exact_owners": {
+      "exit_code": 0
+    }
+  },
+  "remaining_limits": [
+    "LockBound/HostRetained are selected logical metadata, not authenticated physical manifest bytes or unrestricted CAS.",
+    "SourceObserved descriptors are noncallable; selected-world-to-neutral-service and full catalogue joins remain open.",
+    "Real macOS/Windows native behavior and complete SDK/release proof are not established."
+  ],
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-checks/absence-final.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/absence-final.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-checks/absence-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/absence-final.log",
+      "sha256": "46b3fe5bcff81b187853ebea739006c306a09fdbed54ef90385956d9101d289e",
+      "bytes": 2763
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-checks/initial.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/initial.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-checks/initial.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/initial.log",
+      "sha256": "4b313422b99830da075754e96de2a3b9d844efdc7412c2bd28c439c4b71f2c96",
+      "bytes": 3152
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-final-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/vibevm-next-M16-B1-extension-world-final-review.md",
+      "sha256": "265a3a89547e465a0fc4b4cab372beee8406a4112ed7be9bf912bc43a22287f1",
+      "bytes": 2307
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/vibevm-next-M16-B1-extension-world-fmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-world-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-world-raw/vibevm-next-M16-B1-extension-world-review.md",
+      "sha256": "2fa10ac356d8dfefb25c2cbb553c43c175c44c97586af2bfab506d6024b4944e",
+      "bytes": 3560
+    }
+  ]
+}

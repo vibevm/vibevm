@@ -44,6 +44,7 @@ use crate::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 mod epoch;
 mod errors;
+pub mod machine_schema;
 mod native_facts;
 mod pending;
 mod runtime;
