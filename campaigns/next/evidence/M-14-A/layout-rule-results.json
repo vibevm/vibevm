@@ -1,0 +1,30 @@
+[
+  {
+    "anchor": "ENVIRONMENT-LAYOUT",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-LAYOUT-DEFAULTS",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-RESOURCE-IDENTITY",
+    "exit": 0
+  },
+  {
+    "anchor": "TARGET-PATH-POLICY",
+    "exit": 0
+  },
+  {
+    "anchor": "PAYLOAD-PREFIX-COMPATIBILITY",
+    "exit": 0
+  },
+  {
+    "anchor": "RESERVED-ENVIRONMENT-RESOURCES",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY",
+    "exit": 0
+  }
+]
