@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "change_id": "bootstrap-accounting-record-maintenance",
+  "before_capture_id": "bootstrap-4cec12cd3",
+  "after_capture_id": "bootstrap-0adc39a38",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "0adc39a38d05cd8bffceeceadbb27c1e2b980b61"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+    "vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+    "vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+    "vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Adds retained accounting records of prior bootstrap contributions only; no executable command/API/wire registration, runtime/default behavior or migration is delivered by these metadata files. Governed by spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "Adds accounting metadata rather than user guidance or product claims; no guide/page/example/editorial correction is delivered, and original documentation obligations remain separate.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "candidate-metadata-accounting-source-review",
+      "subject_id": "0adc39a38d05cd8bffceeceadbb27c1e2b980b61",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-accounting-record-maintenance-review.md",
+      "verdict": "unverified",
+      "sha256": "d16e3aaacb41d485a8909e157b83e49c47c83ed7f76f1c571002202c3e5c9967"
+    },
+    {
+      "claim_id": "central-accounting-record-publication-review",
+      "subject_id": "0adc39a38d05cd8bffceeceadbb27c1e2b980b61",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-accounting-record-maintenance-central-review.md",
+      "verdict": "passed",
+      "sha256": "753a35f94efa221a29c7b09d06da1fc4bcb9905edbada011384ed675b94cdc89"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "0adc39a38d05cd8bffceeceadbb27c1e2b980b61",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-accounting-record-maintenance-central-review.md"
+  }
+}
