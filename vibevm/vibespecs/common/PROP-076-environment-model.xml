@@ -174,9 +174,24 @@
     </IDENTITY-OWNER-REUSE>
   </construction>
   <proof title="10. Desired contract versus observed implementation">
+    <p><PURE-ROLE-FOUNDATION-OBSERVED fact="true" status="impl/done">The pure
+    role foundation is implemented in `vibe-core::environment`, code subject
+    `40ef38d10b969082bab028c6b49621af11289946`. Five producer-labelled role
+    references and checked composition/closure joins remain supplied claims,
+    not authenticated content or physical authority. The local compatibility
+    result covers source projection only: unknown ABI/libc is allowed when
+    unrequired, while explicit missing/mismatching requirements refuse. Target
+    launcher-family descriptions and executor-native facts remain separate;
+    user/rootfs/live operations are unsupported. Eight selected GNU/Linux cases
+    passed; the independent export-namespace correction repeated only its one
+    exact case. Tool and service names are checked within their separate
+    collections. No ambient HOME/PATH, filesystem probing, Docker, provider
+    execution, new hash/wire format or existing consumer adoption was added.
+    This does not prove native deployment or the later layout/payload/service
+    programme.</PURE-ROLE-FOUNDATION-OBSERVED></p>
     <ENVIRONMENT-PROOF-BOUNDARY title="Environment proof boundary">
       <p><req-environment-proof-boundary fact="true" status="spec/plan">`req r1`</req-environment-proof-boundary></p>
-      <p><ENVIRONMENT-PROOF-BOUNDARY-LAW fact="true" status="spec/plan">The observed
+      <p><ENVIRONMENT-PROOF-BOUNDARY-LAW fact="true" status="spec/plan">The pre-foundation
     baseline has pure OS applicability values, Cargo binary-to-artifact lowering,
     current-process native platform selection and injected deployment roots.
     That is not evidence that these five environment objects, target ABI checks,
