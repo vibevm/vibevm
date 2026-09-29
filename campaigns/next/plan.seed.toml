@@ -1,9 +1,9 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 4
+revision = 5
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-09-29T06:29:50Z"
+updated_at = "2026-09-29T08:42:49Z"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
@@ -740,7 +740,7 @@ mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
 acceptance = ["Meet baseline work-package scope: Versioned deterministic migration engine + request/report format: parse preserved syntax tree, plan in memory, validate, diff, typed NeedsInput, no LLM","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-C.json"
-contract_sha256 = "9f2fa095ae697c0ab7adea06050121e2b606757ef9b23c75d51da6c04d87b1db"
+contract_sha256 = "b9a2d694fbc366d410b9dd2293c8f6758d36b2b6e35dee0951c8a2125d14b53b"
 
 [[node]]
 id = "M-13-C.1"
@@ -755,7 +755,7 @@ mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-13-C.json#M-13-C.1","Repeated planning over exact input gives identical output/diff identity.","Fixture coverage demonstrates genuine transforms and no-op/ambiguity cases."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-C.json#M-13-C.1"
-contract_sha256 = "9f2fa095ae697c0ab7adea06050121e2b606757ef9b23c75d51da6c04d87b1db"
+contract_sha256 = "b9a2d694fbc366d410b9dd2293c8f6758d36b2b6e35dee0951c8a2125d14b53b"
 
 [[node]]
 id = "M-13-C.2"
@@ -770,7 +770,7 @@ mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-13-C.json#M-13-C.2","Plan/report contract has generated validation and usable examples.","No dependency on completed M-16-B is introduced; later facade adapts these owned domain contracts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-C.json#M-13-C.2"
-contract_sha256 = "9f2fa095ae697c0ab7adea06050121e2b606757ef9b23c75d51da6c04d87b1db"
+contract_sha256 = "b9a2d694fbc366d410b9dd2293c8f6758d36b2b6e35dee0951c8a2125d14b53b"
 
 [[node]]
 id = "M-13-D"

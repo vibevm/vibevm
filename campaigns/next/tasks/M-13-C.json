@@ -88,7 +88,19 @@
         "crates/vibe-cli/Cargo.toml",
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "xtask/src/codegen/layout.rs",
+        "xtask/src/codegen/typescript.rs",
+        "xtask/src/codegen/mod.rs",
+        "xtask/src/codegen/shared_module.rs",
+        "xtask/src/codegen/shared_module/tests.rs",
+        "crates/vibe-cli/src/main.rs",
+        "xtask/src/codegen/format_id.rs",
+        "formats/vocabularies.json",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/exit_code.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/context.rs"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -107,7 +119,14 @@
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-cli/src/commands/refactor/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "xtask/src/codegen/layout.rs",
+        "xtask/src/codegen/typescript.rs",
+        "xtask/src/codegen/mod.rs",
+        "xtask/src/codegen/shared_module.rs",
+        "xtask/src/codegen/shared_module/tests.rs",
+        "crates/vibe-cli/src/main.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
       ],
       "steps": [
         "Register migration request/report/error schemas, exact source/target epochs, diff/preconditions and typed input questions.",
@@ -144,7 +163,10 @@
       "commit_subject": "feat(migrate): expose typed plans and ambiguity reports",
       "notes": [
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Bounded prerequisites before schema emission: repair only the three verified owned-slot references in codegen layout/typescript/diagnostic paths from removed1.0 to active1.1; no product increment, epoch change or publication authority follows.",
+        "Strict shared DTO prerequisites: derive shared-fragment policy from the existing format registry effective unknown_fields policy, exactly as consumer generation does; retain mixed-policy refusal. Change only shared_module.rs and its targeted test owner, without a second registry parser or general generator redesign.",
+        "Text-only CLI planning may add one early main.rs dispatch before configuration/tracing/context/registry startup. The pure plan surface may read supplied JSON stdin/literal and write its structured response, but cannot discover arbitrary paths, initialize state or invoke providers. Permanent transport/source law belongs to PROP-044 before implementation."
       ]
     }
   ]
