@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded windows_x86_64_gnu v0.48.5
+windows_x86_64_gnu
+Import lib for Windows
+version: 0.48.5 (latest 0.53.1)
+license: MIT OR Apache-2.0
+rust-version: unknown
+documentation: https://docs.rs/windows_x86_64_gnu/0.48.5
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows_x86_64_gnu/0.48.5
+note: to see how you depend on windows_x86_64_gnu, run `cargo tree --invert windows_x86_64_gnu@0.48.5`

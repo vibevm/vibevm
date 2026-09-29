@@ -1,0 +1,14 @@
+ Downloading crates ...
+  Downloaded windows-core v0.62.2
+windows-core
+Core type support for COM and Windows
+version: 0.62.2 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.82
+documentation: https://docs.rs/windows-core/0.62.2
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-core/0.62.2
+features:
+ +default = [std]
+  std     = [windows-result/std, windows-strings/std]
+note: to see how you depend on windows-core, run `cargo tree --invert windows-core@0.62.2`

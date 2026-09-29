@@ -1,0 +1,378 @@
+{
+  "kind": "bounded-cross-target-library-check-evidence",
+  "compiler": {
+    "version": "rustc1.98.0",
+    "commit": "88d9e12ae178fab0fb5cc050a94da85685d449ea",
+    "host": "x86_64-unknown-linux-gnu",
+    "llvm": "22.1.8",
+    "raw_version_log": "/tmp/vibevm-next-M13-D1-cross-target-checks/rustc-version.log"
+  },
+  "cargo": {
+    "version": "cargo1.98.0 (797e8a9bc2026-08-05)",
+    "raw_version_log": "/tmp/vibevm-next-M13-D1-cross-target-checks/cargo-version.log"
+  },
+  "subject": {
+    "mode": "current named manifest/lock/config/lib byte snapshot",
+    "input_bytes": [
+      {
+        "path": "Cargo.toml",
+        "sha256": "28ad2c511997d92a05965a4cfd13de6c437644a85f3558bdf655421186a1c5df",
+        "bytes": 14834
+      },
+      {
+        "path": "Cargo.lock",
+        "sha256": "b0dae5db669e1a8166121fb4049c32dbf4d3117a376bcfc78add4772d35a4780",
+        "bytes": 145662
+      },
+      {
+        "path": ".cargo/config.toml",
+        "sha256": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "bytes": 371
+      },
+      {
+        "path": "crates/vibe-safefs/Cargo.toml",
+        "sha256": "619ede8f9c2fca016723f9136f7fc39755d7feecb3e87fa5c0164757b4026a4c",
+        "bytes": 1227
+      },
+      {
+        "path": "crates/vibe-workspace/Cargo.toml",
+        "sha256": "dd3b3bebd7f47d13b8adee7d9c7f5da80aea39f763c0159351b4dbff02fa0a61",
+        "bytes": 2364
+      },
+      {
+        "path": "crates/vibe-safefs/src/lib.rs",
+        "sha256": "c3d8f10ed9441233794baffe45f4d5e8fa49934626783890b7a9993d0897e2e3",
+        "bytes": 3833
+      },
+      {
+        "path": "crates/vibe-workspace/src/lib.rs",
+        "sha256": "f7c0c27c89fb8de7cc285f30159f5649b109dfabb68a7fb9c3d04b73115c4580",
+        "bytes": 14407
+      }
+    ],
+    "whole_checkout_commit": "unbound in this packet; no Git query ran",
+    "root_bound_historical_migration_runtime_subject": "d69a88b3afc8157d63ce32f7005313682f0e7c94",
+    "claim": "cache failures never compiled that body"
+  },
+  "checks": [
+    {
+      "target": "aarch64-apple-darwin",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/aarch64-apple-darwin.log",
+      "raw_log_sha256": "8b899530a3ffad0e40385713832d3a23a33ae26005f31bc419f6d681bc3cff9f",
+      "blocker": "offline cache lacks core-foundation-sys v0.8.7",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "initial"
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu.log",
+      "raw_log_sha256": "0b27fcc3b91cbc4052b2f1d9dee497701188ba9f0c33478070062f4e12912d3a",
+      "blocker": "offline cache lacks winapi-util v0.1.11",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "initial"
+    },
+    {
+      "target": "aarch64-apple-darwin",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 0,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/aarch64-apple-darwin-retry1.log",
+      "raw_log_sha256": "46d760407a95b5e8dc7831f15d1ed3bedf87f86937dd7fbb751266a9b5fac9e6",
+      "blocker": null,
+      "source_compilation_reached": true,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry1",
+      "checked_packages": [
+        "vibe-safefs",
+        "vibe-workspace"
+      ],
+      "check_completion": "Finished dev profile29.12s"
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry1.log",
+      "raw_log_sha256": "8bda6c39bc1435f56c0aa3a08198e0f6b034fe6b2d194ff423c9ea9ef4ef2d20",
+      "blocker": "offline cache lacks windows-core v0.62.2",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry1",
+      "checked_packages": [],
+      "check_completion": null
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry2.log",
+      "raw_log_sha256": "87fe73a910e9b1a6cbcf24cf122641bd33d5553fa2a8eaea45c1e0239a30cc79",
+      "blocker": "offline cache lacks windows-implement v0.60.2",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry2",
+      "checked_packages": [],
+      "check_completion": null
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry3.log",
+      "raw_log_sha256": "507015579ae4017cd1a6a82b2fe924e8463dfc9fc657a8ad9ad9de053c88a1f8",
+      "blocker": "offline cache lacks windows-sys v0.59.0",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry3",
+      "checked_packages": [],
+      "check_completion": null
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry4.log",
+      "raw_log_sha256": "8800e6d989b3937b1cd48c4aa5a26a0e359d72c6f19095f76986bbe2512607e8",
+      "blocker": "offline cache lacks windows-sys v0.60.2",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry4",
+      "checked_packages": [],
+      "check_completion": null
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 101,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry5.log",
+      "raw_log_sha256": "7ef4b9e3b3cb5197c2419e92044400eab14ec67815a8777a1f9c0e42d7dc2465",
+      "blocker": "offline cache lacks winx v0.36.4",
+      "source_compilation_reached": false,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry5",
+      "checked_packages": [],
+      "check_completion": null
+    },
+    {
+      "target": "x86_64-pc-windows-gnu",
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "--target",
+        "x86_64-pc-windows-gnu"
+      ],
+      "environment_overrides": {
+        "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target",
+        "CARGO_BUILD_JOBS": "4",
+        "CARGO_NET_OFFLINE": "true"
+      },
+      "cwd": "/home/olegchir/git/v/vibevm-next",
+      "exit": 0,
+      "raw_combined_stdout_stderr": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry6.log",
+      "raw_log_sha256": "757d928894bbb028b47e5a12327cf0e69a8b2d40fd4bc58dfb3f1f0120af5031",
+      "blocker": null,
+      "source_compilation_reached": true,
+      "source_diagnostic_path_line": null,
+      "SDK_requirement_measured": false,
+      "native_execution": false,
+      "attempt": "retry6",
+      "checked_packages": [
+        "vibe-safefs",
+        "vibe-workspace"
+      ],
+      "check_completion": "Finished dev profile23.99s"
+    }
+  ],
+  "network_fetch": false,
+  "new_targets_installed": false,
+  "source_changes": false,
+  "tests": false,
+  "native_proof": false,
+  "task_acceptance": false,
+  "root_prerequisite_observation": "Root reported exact cargo info cache acquisition core-foundation-sys0.8.7 and winapi-util0.1.11 exit0; worker did not fetch/read outside bound inputs.",
+  "latest_target_state": {
+    "aarch64-apple-darwin": "cross-target library check exit0, no native/link/durability proof",
+    "x86_64-pc-windows-gnu": "retry6 cross-target library check EXIT0 after source compilation; no link/native/runtime proof"
+  },
+  "root_cache_acquisitions": [
+    "windows-core0.62.2 root-reported exit0 before authorized retry2",
+    "Root reported exit0 for windows-implement0.60.2/windows-interface0.59.3/windows-link0.2.1/windows-result0.4.1/windows-strings0.5.1 before authorized retry3",
+    "Root reported exit0 for windows-sys0.59.0/windows-targets0.52.6/windows_x86_64_gnu0.52.6 before authorized retry4",
+    "Root reported eight exit0 cargo info acquisitions for locked Windows sys/targets/GNU families before retry5; windows-link0.1.3 already cached",
+    "Root reported winx0.36.4 cargo info exit0 before authorized retry6"
+  ],
+  "aggregate": {
+    "attempts": 9,
+    "terminal_successes": 2,
+    "terminal_failures_before_compilation": 7,
+    "latest_targets_pass": true,
+    "native_platform_execution": false
+  },
+  "postcheck_named_inputs": {
+    "identities_match_initial": true,
+    "changed": []
+  }
+}

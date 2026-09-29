@@ -1,0 +1,12 @@
+ Downloading crates ...
+  Downloaded winapi-util v0.1.11
+winapi-util #windows #windows-sys #util #win
+A dumping ground for high level safe wrappers over windows-sys.
+version: 0.1.11
+license: Unlicense OR MIT
+rust-version: unknown
+documentation: https://docs.rs/winapi-util
+homepage: https://github.com/BurntSushi/winapi-util
+repository: https://github.com/BurntSushi/winapi-util
+crates.io: https://crates.io/crates/winapi-util/0.1.11
+note: to see how you depend on winapi-util, run `cargo tree --invert winapi-util@0.1.11`

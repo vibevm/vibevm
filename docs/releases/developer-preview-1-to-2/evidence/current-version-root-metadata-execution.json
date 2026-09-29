@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "argv": [
+    "cargo",
+    "metadata",
+    "--locked",
+    "--offline",
+    "--no-deps",
+    "--format-version",
+    "1"
+  ],
+  "environment_overrides": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true"
+  },
+  "cwd": "/home/olegchir/git/v/vibevm-next",
+  "exit_code": 0,
+  "workspace_members": 41,
+  "active_owned_1_1_0": 35,
+  "preserved_fixture_1_0_0": 6,
+  "resolve": null,
+  "limits": "Current declaration roster only, not a resolved dependency graph or full canonical native proof. Eight canonical declaration receipts reused solely for matching source subjects.",
+  "artifacts": [
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/current-version-root-metadata.json",
+      "sha256": "a3b0b625c2ced11ddd48c3bd39b282288f05fbe29fa8304a829a00ce45d18ee3"
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/current-version-root-metadata.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

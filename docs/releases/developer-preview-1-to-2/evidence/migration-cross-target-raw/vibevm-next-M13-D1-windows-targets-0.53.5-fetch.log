@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded windows-targets v0.53.5
+windows-targets
+Import libs for Windows
+version: 0.53.5
+license: MIT OR Apache-2.0
+rust-version: 1.60
+documentation: https://docs.rs/windows-targets/0.53.5
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-targets/0.53.5
+note: to see how you depend on windows-targets, run `cargo tree --invert windows-targets@0.53.5`

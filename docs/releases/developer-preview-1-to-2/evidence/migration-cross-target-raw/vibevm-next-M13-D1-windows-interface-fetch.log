@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded windows-interface v0.59.3
+windows-interface
+The interface macro for the Windows crates
+version: 0.59.3 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.74
+documentation: https://docs.rs/windows-interface/0.59.3
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-interface/0.59.3
+note: to see how you depend on windows-interface, run `cargo tree --invert windows-interface@0.59.3`

@@ -1,0 +1,94 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Checking windows-link v0.2.1
+   Compiling serde_core v1.0.228
+   Compiling typenum v1.19.0
+   Compiling generic-array v0.14.7
+    Checking windows-sys v0.61.2
+    Checking winnow v1.0.1
+    Checking hashbrown v0.17.0
+    Checking equivalent v1.0.2
+    Checking cfg-if v1.0.4
+    Checking toml_parser v1.1.2+spec-1.1.0
+    Checking crypto-common v0.1.7
+    Checking block-buffer v0.10.4
+   Compiling serde v1.0.228
+    Checking winnow v0.7.15
+   Compiling windows_x86_64_gnu v0.52.6
+    Checking toml_writer v1.1.1+spec-1.1.0
+   Compiling anyhow v1.0.102
+   Compiling thiserror v2.0.18
+    Checking digest v0.10.7
+   Compiling windows_x86_64_gnu v0.53.1
+    Checking cpufeatures v0.2.17
+    Checking once_cell v1.21.4
+    Checking indexmap v2.14.0
+    Checking toml_datetime v0.7.5+spec-1.1.0
+    Checking serde_spanned v1.1.1
+    Checking sha2 v0.10.9
+   Compiling zmij v1.0.21
+    Checking zerofrom v0.1.7
+    Checking windows-targets v0.52.6
+   Compiling num-traits v0.2.19
+    Checking tracing-core v0.1.36
+    Checking winapi-util v0.1.11
+    Checking memchr v2.8.0
+    Checking toml v0.9.12+spec-1.1.0
+    Checking stable_deref_trait v1.2.1
+    Checking pin-project-lite v0.2.17
+   Compiling serde_json v1.0.151
+   Compiling io-lifetimes v3.0.1
+   Compiling io-lifetimes v2.0.4
+    Checking yoke v0.8.2
+    Checking tracing v0.1.44
+    Checking toml_edit v0.23.10+spec-1.0.0
+    Checking windows-targets v0.53.5
+    Checking windows-sys v0.59.0
+    Checking semver v1.0.28
+    Checking itoa v1.0.18
+    Checking chrono v0.4.44
+    Checking vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling io-extras v0.19.0
+    Checking zerovec v0.11.6
+    Checking windows-sys v0.60.2
+    Checking same-file v1.0.6
+    Checking glob v0.3.3
+    Checking bitflags v2.13.0
+   Compiling cap-primitives v4.0.3
+    Checking winx v0.36.4
+    Checking walkdir v2.5.0
+    Checking fs-set-times v0.20.3
+    Checking tinystr v0.8.3
+    Checking ambient-authority v0.0.2
+    Checking ipnet v2.12.0
+    Checking litemap v0.8.2
+    Checking writeable v0.6.3
+    Checking maybe-owned v0.3.4
+   Compiling cap-std v4.0.3
+    Checking icu_locale_core v2.2.0
+   Compiling icu_normalizer_data v2.2.0
+    Checking progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+    Checking potential_utf v0.1.5
+    Checking quick-xml v0.41.0
+    Checking zerotrie v0.2.4
+    Checking utf8_iter v1.0.4
+   Compiling cap-fs-ext v4.0.3
+   Compiling libc v0.2.185
+   Compiling getrandom v0.4.2
+    Checking icu_collections v2.2.0
+    Checking icu_provider v2.2.0
+    Checking smallvec v1.15.1
+    Checking base64 v0.22.1
+    Checking icu_normalizer v2.2.0
+    Checking unicode-casefold v0.2.0
+    Checking fastrand v2.4.1
+    Checking vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+    Checking tempfile v3.27.0
+    Checking vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Checking vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+    Checking vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+    Checking vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+    Checking vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+    Checking vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 23.99s

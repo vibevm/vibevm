@@ -1,0 +1,14 @@
+ Downloading crates ...
+  Downloaded windows-strings v0.5.1
+windows-strings
+Windows string types
+version: 0.5.1 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.82
+documentation: https://docs.rs/windows-strings/0.5.1
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-strings/0.5.1
+features:
+ +default = [std]
+  std     = []
+note: to see how you depend on windows-strings, run `cargo tree --invert windows-strings@0.5.1`

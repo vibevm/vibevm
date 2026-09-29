@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded windows-implement v0.60.2
+windows-implement
+The implement macro for the Windows crates
+version: 0.60.2 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.74
+documentation: https://docs.rs/windows-implement/0.60.2
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-implement/0.60.2
+note: to see how you depend on windows-implement, run `cargo tree --invert windows-implement@0.60.2`
