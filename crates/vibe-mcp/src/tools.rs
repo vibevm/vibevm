@@ -19,6 +19,9 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 pub mod output;
 pub use output::ToolOutput;
 
+pub mod migration_plan;
+pub use migration_plan::PlanManifestMigrationMcpTool;
+
 /// The documentation page reader (PROP-057 `##OBS-AUDIENCE-AGENT`),
 /// split out beside `explain`, `query` and `select` for the same reason
 /// they are: this registry file sits at its size ceiling.
@@ -49,9 +52,9 @@ pub trait McpTool {
     /// `Ok(ToolOutput)` means the operation **executed** — ordinary
     /// success, or an executed structured failure whose report survives
     /// in `structuredContent` under `isError: true`. `Err(ToolError)`
-    /// is the preflight / tool-failure channel: the operation never
-    /// ran, so the dispatcher renders text only, with no structured
-    /// content. See [`ToolOutput`] for the full distinction.
+    /// is the preflight / tool-failure channel: the operation never ran.
+    /// StructuredPreflight retains its owning typed report; ordinary errors
+    /// remain text-only. See [`ToolOutput`] for the executed distinction.
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError>;
 }
 
@@ -71,6 +74,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(LifecycleRunMcpTool),
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
+        Box::new(PlanManifestMigrationMcpTool),
     ]
 }
 

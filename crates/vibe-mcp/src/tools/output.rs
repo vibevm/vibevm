@@ -22,9 +22,10 @@ use specmark::spec;
 /// - **Preflight / tool failure** — `Err(ToolError)`. The operation did
 ///   not execute: arguments failed validation, the target was not
 ///   found, or an I/O / internal error struck before any work happened.
-///   There is no structured report to carry, so the dispatcher renders
-///   `isError: true` with the error's text and **no** `structuredContent`.
-///   That arm is unchanged by this type.
+///   Ordinary variants render `isError: true` with text only. The separate
+///   ToolError::StructuredPreflight variant may retain an owning typed report
+///   in structuredContent without pretending the domain executed. It does not
+///   construct ToolOutput or use its executed_failure channel.
 /// - **Executed** — `Ok(ToolOutput)`. The operation ran and produced a
 ///   structured report plus its human text projection. Within this
 ///   channel there are three shapes, and the axis that separates them
