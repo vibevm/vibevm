@@ -207,7 +207,7 @@ pub struct McpUpgradeArgs {
 #[derive(Debug, clap::Args)]
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
+    r = 2
 )]
 pub struct McpServeArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.

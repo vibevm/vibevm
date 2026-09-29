@@ -103,7 +103,7 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
 
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
+    r = 2
 )]
 fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // `vibe mcp serve` is the one place where path is *required*: the
