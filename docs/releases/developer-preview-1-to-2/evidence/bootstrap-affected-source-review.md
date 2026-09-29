@@ -73,3 +73,7 @@ or reviewer. A passing structural bridge or selected source-byte report cannot
 replace central adequacy review. Native role adoption, complete canonical joins,
 actual independently supplied documentation, migration rehearsal, scaffold
 removal and final product proof remain open in their owning plan nodes.
+
+The existing `publish_new_in` failure boundary is accounted as a separate fixed
+interface alongside the introduced proved method; delegation changes its
+observable failure behavior even though the signature remains unit-returning.
