@@ -1,28 +1,28 @@
 [project]
 name = "vibevm"
 group = "org.vibevm.core"
-version = "1.0.0"
+version = "1.1.0"
 # PROP-045: материализация спек зависимостей — XML (слово владельца 2026-08-22,
 # догфуд сценария №0: исходники MD, слоты XML).
 spec_format = "xml"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"flow:org.vibevm.world/omnichannel" = "^1.0.0"
-"org.vibevm.doc/web" = "^1.0.0"
-"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
-"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.0"
+"flow:org.vibevm.world/omnichannel" = "^1.1.0"
+"org.vibevm.doc/web" = "^1.1.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^1.1.0"
+"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.1.0"
 
 [requires.packages."flow:org.vibevm.fractality/delegation-first"]
-version = "^1.0.0"
+version = "^1.1.0"
 link = "dynamic"
 
 [requires.packages."flow:org.vibevm.world/multi-user-planning"]
-version = "^1.0.0"
+version = "^1.1.0"
 link = "static-transitive"
 
 [requires.packages."org.vibevm.world/redbook"]
-version = "^1.0.0"
+version = "^1.1.0"
 link = "static-transitive"
 exclude = [
   "org.vibevm.world/wal",
@@ -53,7 +53,7 @@ name = "vibespecs-gitverse"
 url = "https://gitverse.ru/vibespecs"
 naming = "name"
 
-# redbook@1 is immutable and its dormant wal-specspaces member fragment names
+# The mutable next Redbook line's dormant wal-specspaces member fragment names
 # the WAL concept. This consumer deliberately excludes that whole continuity
 # family in favour of multi-user-planning, so silence only that known legacy
 # concept warning at the root; no package bytes or edition roster are rewritten.
@@ -66,7 +66,7 @@ ignore-concept-warnings = ["WAL"]
 [[command]]
 id = "vibevm-doc"
 description = "Incrementally build and serve the complete VibeVM site"
-handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/serve" }
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tooling/site-build/serve" }
 
 # The repository owns the domain and every package whose documentation it
 # publishes, so its ordinary build lifecycle owns their composition too. This
@@ -75,7 +75,7 @@ handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/
 [[extension]]
 id = "build-documentation-site"
 point = "phase:build"
-handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/build" }
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tooling/site-build/build" }
 inputs = [
   "vibe.toml",
   "VIBEVM-SPEC.md",
@@ -83,14 +83,14 @@ inputs = [
   "vibevm/vibepacks/**/vibe.toml",
   "vibevm/vibepacks/**/README.md",
   "vibevm/vibepacks/**/vibevm/vibespecs/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/package.json",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-lock.yaml",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-workspace.yaml",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/package.json",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/adapters/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/src/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/vite.config.ts",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tools/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/tooling/site-build/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/pnpm-lock.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/pnpm-workspace.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/design/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/adapters/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/src/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/vite.config.ts",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tools/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tooling/site-build/**",
 ]
