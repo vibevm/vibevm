@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "task": "M-14-A.2",
+  "before_task_sha256": "a517bc4bd180a6aa79f08380b4665aad082d31d8dc7a726c78a51a42123c3110",
+  "after_task_sha256": "4c5f8336d2086c1cb75856a67adef7afdd5650f9a83ff8febeb084e77e56901a",
+  "added_reads": [
+    "crates/vibe-core/src/manifest/declarant_path.rs",
+    "crates/vibe-core/src/settings.rs",
+    "crates/vibe-lifecycle/src/mechanism/vibebin/tests.rs"
+  ],
+  "added_writes": [
+    "crates/vibe-core/src/settings.rs",
+    "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/model.rs"
+  ],
+  "A1_body_unchanged": true,
+  "scope": "Only pure settings suffix helpers and three legacy constant aliases; no path/provider behavior relocation. Exact new environment leaves remain Root packet bound.",
+  "graph_states_unchanged": true,
+  "actual_code_claim": false
+}
