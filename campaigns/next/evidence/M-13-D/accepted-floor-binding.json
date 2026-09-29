@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "purpose": "Root-bound exact historical B1 numeric and slot execution inputs for readonly D2 reconciliation. Original candidate/status fields are retained as historical production metadata, not rewritten into acceptance.",
+  "authority": [
+    "docs/releases/developer-preview-1-to-2/evidence/next-version-central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/next-version-source-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/next-version-accepted-contribution-check.json"
+  ],
+  "accepted_source_interval": {
+    "before": "aaf0fb563d0f1116f8901e15f21f01a054707c3d",
+    "after": "2786c49bf5e0d151d8dd1a3a7bbc1f53fe636574"
+  },
+  "execution_inputs": [
+    {
+      "path": "campaigns/next/evidence/M-13-D/accepted-floor-execution-perimeter.json",
+      "sha256": "dedc7493e1681ede385c33a73d9effbd298de50b1088ce0a8efba770216131ab"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/accepted-floor-slot-map.json",
+      "sha256": "609b7494b13f8de56c5dceb74f30d21f836d4d5a7698f286fd598f29af53430e"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/accepted-floor-source-edit-report.json",
+      "sha256": "30d1b3330716e4ecd78da17045fa5471b2918e4dd04e2356c868c5c13c044756"
+    }
+  ],
+  "scope": "151 exact numeric fields /61 documents,48 explicit slot moves,95 inheritance guards; no subtree write grant. Current lookup uses only exact mapped paths. D1 predecessor and actual current comparison are separate judgments.",
+  "source_report_limit": "Historical edit-report root vibe.toml after hash was refreshed separately by root; raw report retains its historical witness and independent review explains the difference.",
+  "public_operations": false
+}
