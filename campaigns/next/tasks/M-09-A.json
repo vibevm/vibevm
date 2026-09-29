@@ -44,7 +44,9 @@
       "commit_subject": "test(bridges): capture pinned Spec Kit resource requirements",
       "notes": [
         "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
-        "fixtures/next/bridges is a proposed test subtree. This audit does not authorize script execution."
+        "fixtures/next/bridges is a proposed test subtree. This audit does not authorize script execution.",
+        "Current active-owned repository package/wrapper identities target mutable 1.1.0 after the bounded M-13-B.1 floor. Upstream versions, external kind/coordinates, historical source locators and exact native resource captures remain independent; no blind version or path replacement.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ]
     },
     {
@@ -90,7 +92,9 @@
       "safe_stop": "Audited expansion is ready; no scripts or external install effects run.",
       "commit_subject": "docs(bridges): map procedure resources and admitted effects",
       "notes": [
-        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here."
+        "External logical roots are unbound authoring metadata. Before execution, the root must provide isolated checkouts for external:org.speckit.speckit and/or external:skills-bridge-to-select and verify their exact captures. Never write the currently existing sibling source trees. External package checks are taken from that checkout's own declared commands; no unverified command is claimed here.",
+        "Current active-owned repository package/wrapper identities target mutable 1.1.0 after the bounded M-13-B.1 floor. Upstream versions, external kind/coordinates, historical source locators and exact native resource captures remain independent; no blind version or path replacement.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ]
     }
   ]

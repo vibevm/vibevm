@@ -3,33 +3,45 @@
   "tasks": [
     {
       "id": "M-13-B.1",
-      "title": "Reconcile version, prototype and Redbook source policies",
+      "title": "Reconcile source policy and apply the bounded active-owned 1.1.0 floor",
       "goal": "Make the accepted owner policy authoritative without rewriting historical or foreign identities.",
       "read_paths": [
         "vibevm/vibespecs/common/PROP-000.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
-        "VIBEVM-SPEC.md"
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
+        "VIBEVM-SPEC.md",
+        "Cargo.toml",
+        "vibe.toml",
+        "crates/",
+        "vibevm/vibepacks/"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-000.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-        "VIBEVM-SPEC.md"
+        "VIBEVM-SPEC.md",
+        "Cargo.toml",
+        "vibe.toml",
+        "crates/",
+        "vibevm/vibepacks/"
       ],
       "steps": [
         "After M-16-A, map old source assertions to accepted D-004/D-005/D-013/D-019 decisions and the exact M-13-A census.",
-        "Replace mandatory Redbook roster bump/global WAL-MUP conflict with current keep-1.0.0, future keep/new-version offer, Redbook-only exclusivity and retained capture semantics.",
-        "Document owner-only prototype graduation and distinguish product version, schema epoch and frozen/source capture; preserve generic non-Redbook freeze law and foreign versions."
+        "Reconcile the historical current-1.0.0/no-users assumptions with released DP1 users and the current mutable 1.1.0 owner amendment; preserve owner-controlled choices outside the already-selected mutable 1.1.0 lane; routine updates inside it need no bump or renewed offer, Redbook-only continuity exclusivity and exact retained captures.",
+        "Document owner-only prototype graduation and distinguish product version, schema epoch and frozen/source capture; preserve generic non-Redbook freeze law and foreign versions.",
+        "After governing permanent source law is reviewed, execute the immediate owner-directed version metadata/path subatom inside this task, before further product development. Require a refreshed root-approved exact active-owned per-file/constraint/path census; apply 1.1.0 once without waiting for M-13-D.1 or inventing a migration engine.",
+        "Treat Cargo.toml, vibe.toml, crates/ and vibevm/vibepacks/ as outer candidate envelopes only: the actual worker packet must enumerate approved authored originals, before identities and any allowed current-slot move. Preserve historical/foreign/fixture/epoch and true workspace-inheritance identities; never use an arbitrary subtree replacement.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ],
       "positive_cases": [
-        "Current Redbook variants use accepted 1.0.0 without another version question.",
+        "The next active-owned cohort reaches mutable 1.1.0 once under the exact approved census; historical DP1/1.0.0 captures and independent scoped continuity use remain.",
         "Independent WAL/MUP coexistence is permitted outside the Redbook continuity group."
       ],
       "negative_cases": [
         "No public release or version number implies graduation.",
-        "No rule grants blanket authority to rewrite frozen/foreign captures or historical evidence."
+        "No rule grants blanket authority to rewrite frozen/foreign captures or historical evidence.",
+        "An unknown/foreign/history/fixture/epoch/inherited value or unapproved path cannot be renumbered or moved; public writes stay held and later reconciliation cannot increment again."
       ],
       "checks": [
         "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
@@ -39,12 +51,19 @@
       ],
       "acceptance": [
         "Permanent source anchors state each accepted policy and its exact scope.",
-        "No generated STATIC/INDEX or instruction mirror is manually edited."
+        "No generated STATIC/INDEX or standing-rule semantics is manually edited. Root may correct only verified operational slot paths in instruction mirrors, kept byte-identical across AGENTS/CLAUDE/GEMINI.",
+        "The separately bounded 1.1.0 metadata/path subatom has exact before/after and exclusion evidence under full parent accountability; no migration engine, graduation or public activation is inferred.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ],
-      "safe_stop": "Canonical policy diff is ready for independent root review before derived regeneration.",
+      "safe_stop": "Stop after independently reviewed source law and the exact bounded 1.1.0 subatom; root controls derived regeneration and all publication remains held.",
       "commit_subject": "docs(policy): reconcile prototype and Redbook version decisions",
       "notes": [
-        "Run the existing facts/spec validation commands supplied by the root after source edits. This task does not modify AGENTS.md/CLAUDE.md/GEMINI.md or publish anything."
+        "Run the existing facts/spec validation commands supplied by the root after source edits. Workers do not modify instruction mirrors. Root alone may maintain verified operational paths for the authorized slot move, preserving all standing rules and three-mirror byte equality; no publication occurs.",
+        "Current owner amendment: released Developer Preview 1 already has users; the next active-owned product and repository-package cohort is mutable 1.1.0 in one increment. Preserve unknown ownership, foreign/upstream/history/captures/fixtures, machine epochs and literal workspace inheritance; exact per-file source/path authority remains root-bound.",
+        "The accepted M-13-A census and its former no-op 1.0.0 perimeter remain historical evidence, not a current edit grant. Refresh only relevant ownership/field/path bindings before this subatom; do not modify that accepted task contract.",
+        "All original DAG/predecessor guards remain: M-13-D.2 still follows M-13-D.1 and later performs final current reconciliation, reusing matching evidence without a second increment.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required.",
+        "Metadata subatom read/write roots are envelopes only; its actual quiet packet must bind every read and write manifest/constraint/path from the refreshed accepted census before execution. No recursive product-tree scan or unbound helper read is authorized by this outer list."
       ]
     },
     {

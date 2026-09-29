@@ -93,12 +93,12 @@
     },
     {
       "id": "M-13-D.2",
-      "title": "Reconcile active own 1.0.0 metadata within the accepted census",
+      "title": "Reconcile current active-owned 1.1.0 metadata within the refreshed census",
       "goal": "Apply only the exact active-owned manifest/constraint changes identified by M-13-A.",
       "read_paths": [
         "Cargo.toml",
         "vibe.toml",
-        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
         "vibevm/vibespecs/common/PROP-000.xml",
         "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
         "tools/self-check.sh"
@@ -106,17 +106,17 @@
       "write_paths": [
         "Cargo.toml",
         "vibe.toml",
-        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
         "crates/",
         "vibevm/vibepacks/"
       ],
       "steps": [
         "Require the root-approved exact per-file M-13-A active-owned edit list before touching any nested manifest; narrow this subtree envelope to that list in the execution packet.",
-        "Update only active own product/package versions and own constraints/docs that the census proves must be 1.0.0; preserve foreign dependencies, upstream pins, historical slots/receipts, fixtures and machine epochs.",
+        "After M-13-D.1, finally reconcile only exact active-owned product/package metadata and own constraints/docs required by the refreshed census against mutable 1.1.0. Reuse matching evidence from the earlier bounded M-13-B.1 owner-directed subatom; report conforming items as no-op and do not perform a second increment. Preserve unknown/foreign/upstream/history/fixtures, machine epochs and true workspace-inheritance values.",
         "Run the preservation/version fixtures and current workspace metadata checks; report no-op items honestly and regenerate derived state only after the owning authored source is committed under root control."
       ],
       "positive_cases": [
-        "All in-scope active own products/packages are 1.0.0 and their owned constraints agree.",
+        "All in-scope active own products/packages are 1.1.0 and their owned constraints agree.",
         "Already-correct files remain unchanged."
       ],
       "negative_cases": [
@@ -134,12 +134,15 @@
         "Foreign/history/fixture/epoch exclusion checks show no collateral version edits."
       ],
       "safe_stop": "Active-own metadata reconciliation is complete within the accepted exact list.",
-      "commit_subject": "chore(version): reconcile active owned metadata at 1.0.0",
+      "commit_subject": "chore(version): reconcile active owned metadata at 1.1.0",
       "notes": [
         "The listed crates/ and vibepacks/ are outer closed envelopes only: execution MUST receive the exact accepted manifest/constraint file list from M-13-A; never use the subtree as permission for arbitrary edits.",
         "This is the only intentionally inventory-derived file perimeter in this authoring slice; root must bind/narrow it before dispatch. No automatic Redbook bump, release or graduation.",
         "Dispatch binding is mandatory: attach the accepted per-file active-owned census from M-13-A; neither broad subtree is an executable write grant. If no such binding exists, the task is not dispatch-ready.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "The original current-1.0.0 reconciliation assumption is historical and superseded for the next active cohort by the owner 1.1.0 amendment. The earlier bounded B.1 subatom does not complete this task or remove its D.1 predecessor.",
+        "Current owner amendment: released Developer Preview 1 already has users; the next active-owned product and repository-package cohort is mutable 1.1.0 in one increment. Preserve unknown ownership, foreign/upstream/history/captures/fixtures, machine epochs and literal workspace inheritance; exact per-file source/path authority remains root-bound.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ]
     }
   ]

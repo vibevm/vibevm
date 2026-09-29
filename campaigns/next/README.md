@@ -131,3 +131,34 @@ The surviving result is ordinary VibeVM specifications, tests, code and user/ope
 ## Repository integration amendment (2026-09-17)
 
 The owner-authorized repository cleanup removes the former external skills component. Its replacement upstream remains unbound; the existing external-resource gate requires explicit selection before implementation. Planned specification filenames move from PROP-057–068 to PROP-070–081 to avoid numbers already used by integrated documentation and global applications. Stable task and mandate IDs, dependency edges, node states and acceptance evidence are retained. Frozen-input, task, XML-unit and clause witnesses were recomputed for these reviewed changes. The baseline fingerprint is SHA-256 of the baseline_files array encoded as UTF-8 compact JSON with sorted object keys. This is plan preservation, not execution or acceptance of the NEXT campaign.
+
+
+## Effective owner amendment: mutable next cohort1.1.0 and public hold
+
+Developer Preview1 has been released and already has users. Historical DP1/1.0.0
+captures, original planning inputs and prior decision clauses remain historical
+identities. The next active-owned product/repository-package cohort targets
+mutable1.1.0 in one increment; publication/users/version alone do not declare
+prototype exit or freeze a capture.
+
+M-13-B.1 first establishes governing source law, then carries an immediate,
+explicitly owner-directed metadata/path subatom before further product development.
+Its actual packet must name the refreshed accepted active-owned files/constraints,
+before identities and any permitted current-slot moves; Cargo/vibe/crates/vibepacks
+outer roots are not arbitrary write authority. Unknown/foreign/upstream/history,
+fixture/epoch and literal workspace inheritance values are preserved. The accepted
+M-13-A task/census remains historical and is not rewritten as today's edit grant.
+
+All425 nodeIDs,212 taskIDs and DAG/predecessor guards remain. M-13-D.2 still follows
+M-13-D.1 and finally reconciles current1.1.0, reusing matching B.1 evidence without
+another increment. Earlier statements that a planning addition left task contracts
+byte-identical describe that historical addition, not this explicit owner amendment.
+Root refreshes complete local witnesses and preserves accepted histories; the seed
+is not a replacement for personal execution state.
+
+No public Git push, mirror fan-out, PR creation, release or package publication
+until a fresh explicit owner grant. This current hold supersedes any earlier public
+permission or routine push autonomy. Mandatory local implementation, isolated proof,
+complete prepared batches and readiness remain required; held publication is not
+published or waived. No current task/template grants a public action merely from
+terminal/deferred readiness or a historical approval.
