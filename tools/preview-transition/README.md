@@ -37,6 +37,15 @@ The report keeps central semantic review and complete interface/topic/native
 linkage pending; byte hashes do not authenticate an evidence producer or infer
 net delivered impact from commits or reverts.
 
+The temporary campaign `bridge-check` command validates only routing references
+against supplied capture and record IDs, which remain unverified declarations.
+It does not run this permanent checker or certify its results. Before central
+acceptance, run the separate capture and contribution modes against the actual
+retained subjects and required proof, then review semantic adequacy and independent
+affected capability/topic/contract membership, including every new registration.
+Neither bridge success nor byte/delta coverage grants central acceptance or the
+later complete canonical native/capability/migration proof.
+
 The request grammar also names `bindings` (`roles` or `linked`),
 `documentation` (`intake`, `updated`, or `verified`), `release` (`reviewed` or
 `verified`), and `retired`. The later stages emit deterministic prerequisite

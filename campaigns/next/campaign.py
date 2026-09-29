@@ -679,19 +679,36 @@ def retirement_check(manifest, context, unit_id):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["check", "frontier", "parallel-frontier", "task", "retirement-check"])
+    parser.add_argument("command", choices=["check", "frontier", "parallel-frontier", "task", "retirement-check", "bridge-check"])
     parser.add_argument("task_id", nargs="?")
     parser.add_argument("--context", type=Path)
     parser.add_argument("--unit")
     parser.add_argument("--bindings", type=Path, help="optional plan-bound exact perimeters/resources for parallel-frontier")
+    parser.add_argument("--bridge", type=Path)
+    parser.add_argument("--before-capture-id")
+    parser.add_argument("--after-capture-id")
+    parser.add_argument("--record-id", action="append")
     args = parser.parse_args()
     try:
         manifest = read_json(HOME / "manifest.json")
         need(args.bindings is None or args.command == "parallel-frontier",
              "--bindings applies only to parallel-frontier")
-        if args.command not in {"check", "parallel-frontier"}:
+        need(args.command == "bridge-check" or all(value is None for value in
+             (args.bridge, args.before_capture_id, args.after_capture_id, args.record_id)),
+             "bridge arguments apply only to bridge-check")
+        if args.command not in {"check", "parallel-frontier", "bridge-check"}:
             validate_coverage(manifest, load_tasks(manifest), load_plan(args.context))
-        if args.command == "check":
+        if args.command == "bridge-check":
+            need(args.context is None and args.unit is None and args.task_id is None,
+                 "bridge-check does not accept context, unit or task arguments")
+            need(all(value is not None for value in
+                 (args.bridge, args.before_capture_id, args.after_capture_id, args.record_id)),
+                 "bridge-check requires bridge, before/after capture IDs and record IDs")
+            bridge = runpy.run_path(str(HOME / "change_coverage.py"))
+            result = bridge["validate_change_coverage"](
+                bridge["read_bridge"](args.bridge), load_tasks(manifest),
+                args.before_capture_id, args.after_capture_id, args.record_id)
+        elif args.command == "check":
             result = check(manifest, args.context)
         elif args.command == "frontier":
             result = {"ok": True, "ready": [{"id": n["id"], "title": n["title"]} for n in ready_nodes(load_plan(args.context))]}
