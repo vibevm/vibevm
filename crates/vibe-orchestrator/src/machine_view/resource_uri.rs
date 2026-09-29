@@ -17,6 +17,7 @@ pub struct ResourceUriDeclaration {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ResourceUriMapError {
+    InvalidScope(String),
     InvalidToken(String),
     DuplicateResourceRevision,
     DuplicateToken(String),
@@ -68,7 +69,7 @@ pub struct OwnerResourceUriMap {
     tokens: BTreeMap<(Vec<u8>, String), String>,
 }
 
-fn safe_token(value: &str) -> bool {
+pub(super) fn safe_token(value: &str) -> bool {
     let bytes = value.as_bytes();
     bytes.first().is_some_and(u8::is_ascii_alphanumeric)
         && bytes
@@ -87,6 +88,11 @@ impl OwnerResourceUriMap {
         authorized_scope: OpaqueText,
         declarations: Vec<ResourceUriDeclaration>,
     ) -> Result<Self, ResourceUriMapError> {
+        if !safe_token(authorized_scope.as_str()) {
+            return Err(ResourceUriMapError::InvalidScope(
+                authorized_scope.as_str().to_owned(),
+            ));
+        }
         let mut tokens = BTreeMap::new();
         let mut used = BTreeSet::new();
         for declaration in declarations {
