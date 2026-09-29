@@ -24882,10 +24882,19 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
       "item_kind": "fn",
-      "line": 114,
+      "line": 161,
       "symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::from_coverage",
-      "end_line": 190,
-      "fingerprint": "tok1:0c685503fce6e615eebf953be808b8458d266bd39945a07d4a1a8d11c897bcad"
+      "end_line": 243,
+      "fingerprint": "tok1:fc7b4f4406b73da98e6326a3b3eedc6b2b268e2cbe0d51b2be706d838b13839d"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "item_kind": "fn",
+      "line": 255,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::reviewed_planner_binding",
+      "end_line": 319,
+      "fingerprint": "tok1:ca6c242af036b6a47e99c74413ae293eecf651f8ff86406edff25c40b7f9222b"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -24895,6 +24904,24 @@
       "symbol": "vibe_orchestrator::machine_operation::coverage::tests::current_catalogue_projects_all_declared_operations_and_models_as_gaps",
       "end_line": 48,
       "fingerprint": "tok1:a2ae0ad96068ce8cf80b30d7ce38f0970fc7f27703cc752f83f4fa977a775065"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "item_kind": "fn",
+      "line": 100,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::tests::only_reviewed_mcp_planner_row_binds_with_separate_service_admission",
+      "end_line": 157,
+      "fingerprint": "tok1:b72bf59988179ba78dd8dffd5f69656dee95fe53e3a99ab19ed88c8a153302f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "item_kind": "fn",
+      "line": 159,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::tests::reviewed_mapping_mismatch_refuses_without_fallback",
+      "end_line": 197,
+      "fingerprint": "tok1:eb2e3d9948eb1cfd1b3668b71fa035c7af451437fe25ee544d234624038130e5"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -54089,7 +54116,16 @@
     {
       "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
       "from_symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::from_coverage",
-      "line": 117,
+      "line": 164,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::reviewed_planner_binding",
+      "line": 258,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
       "verb": "implements",
@@ -54099,6 +54135,24 @@
       "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
       "from_symbol": "vibe_orchestrator::machine_operation::coverage::tests::current_catalogue_projects_all_declared_operations_and_models_as_gaps",
       "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::tests::only_reviewed_mcp_planner_row_binds_with_separate_service_admission",
+      "line": 101,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::tests::reviewed_mapping_mismatch_refuses_without_fallback",
+      "line": 160,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
       "verb": "verifies",
@@ -65280,12 +65334,21 @@
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#decode-identifiers-inline"
     },
     {
+      "anchor": "campaign-status-broad-first",
+      "content_hash": "sha256:0d5a18344fb37b8b1238cc07d19554c6d442932f4f849a8eadf49b209abe3053",
+      "doc_path": "boot/90-user",
+      "file": "vibevm/vibespecs/boot/90-user.xml",
+      "heading": "**Ответ на «статус?» и анализ продвижения в кампании next (владелец, 2026-09-29).** Печатай вертикальный план списком: сначала кратко вся кампания крупными разделами, секциями или подкампаниями и проверенное число принятых задач из общего числа задач; затем текущий большой пункт и продвижение внутри него; только после этого текущий локальный атом и ближайшее действие. У текущего места плана ставь отдельную строку `<--- мы находимся здесь` — ровно так, чтобы направление было видно с первого взгляда. Не начинай такой ответ с локального минимума. Счёт задач бери из актуального полного плана и 212 task ID в `campaigns/next/tasks/*.json`, не из всех служебных узлов плана; сохранённые в памяти числа не считай текущим статусом. @status:impl/done",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#campaign-status-broad-first"
+    },
+    {
       "anchor": "REPO-SPLIT-HOST-POSTURE",
       "content_hash": "sha256:c73e9d6ec63f520e3d592289a39e8098177f576440783e3ce8c3304b74e5516a",
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Source mirrors + registry split-host (updated 2026-06-14).** The vibevm *source* is multi-homed — mirrored across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), both public and canonical for reading (US↔GitHub, RU↔GitVerse), kept in sync by `cargo xtask mirror` under the benevolent-dictator / hub-and-spoke model ([PROP-016](../common/PROP-016-source-mirrors.xml): mainline is the maintainer's single-writer local `main`; each host is a downstream read-replica). Separately, the *package registry* org lives on GitHub (`vibespecs`) — the deliberate split there is for publishing ([PROP-000 §7](../common/PROP-000.xml#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish): GitVerse's public API does not expose org-scoped repo creation; GitHub's does). **Source mirroring and the package registry are orthogonal** — different GitHub orgs (`vibevm` vs `vibespecs`), different auth (SSH keys vs the publish token). @status:impl/done",
-      "line": 10,
+      "line": 11,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#REPO-SPLIT-HOST-POSTURE"
     },
     {
@@ -65294,7 +65357,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**vibevm source repo (this repository) — multi-homed:** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. Roll a change out to both with `cargo xtask mirror` (the target list is `mirrors.toml`), NOT `git push origin` (which only hits GitVerse). See [PROP-016](../common/PROP-016-source-mirrors.xml). @status:impl/done",
-      "line": 12,
+      "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#SRC-MULTI-HOMED"
     },
     {
@@ -65303,7 +65366,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<group>.<name>` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.xml#repo-naming) — e.g. `org.vibevm.world.wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v1.0.0+ packages goes through GitHub. @status:impl/done",
-      "line": 13,
+      "line": 14,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#REGISTRY-VIBESPECS"
     },
     {
@@ -65312,7 +65375,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Legacy package registry (read-only transition):** `git@gitverse.ru:anarchic/vibespecs.git` — three v0.1.0 flows in monorepo form, HEAD `2203239`, 2026-04-23. No new publishes here; kept readable for projects still on schema-v1 lockfiles. @status:impl/done",
-      "line": 14,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#LEGACY-REGISTRY"
     },
     {
@@ -65321,7 +65384,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Local fixtures.** `fixtures/registry/` (M0 monorepo shape, hermetic) — used by `cargo test`, never goes near a real registry. @status:impl/done",
-      "line": 15,
+      "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#LOCAL-FIXTURES"
     },
     {
@@ -65330,7 +65393,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**SSH and HTTPS auth on this machine:** @status:impl/done",
-      "line": 17,
+      "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#ssh-auth-lead"
     },
     {
@@ -65339,7 +65402,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**GitVerse SSH:** ключ настроен в Git Bash на этой машине под именем `olegchir@UNIT-2040`. `ssh -T git@gitverse.ru` подтверждает auth без shell-доступа (ожидаемо). @status:impl/done",
-      "line": 19,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITVERSE-SSH"
     },
     {
@@ -65348,7 +65411,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**GitHub SSH (source / dev):** на этой машине есть SSH-ключ с полным доступом к GitHub от имени `olegchir` (`ssh -T git@github.com` → \"Hi olegchir! … successfully authenticated\"). Он используется для **dev-операций с исходниками** — `cargo xtask mirror` / push / fetch в `vibevm/vibevm` по **SSH-урлам**, не HTTPS. @status:impl/done",
-      "line": 20,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITHUB-SSH"
     },
     {
@@ -65357,7 +65420,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**GitHub token (publish and release):** `~/.vibe/github.publish.token` (1 line, file-scoped) служит двум делам. **Публикация пакетов:** публишер (`vibe registry publish`) внедряет его в push URL как `https://x-access-token:<TOKEN>@github.com/vibespecs/<repo>.git` на момент `git push`, после чего URL исчезает вместе с temp-веткой. **Выпуски:** им же входит GitHub CLI (`gh auth login --with-token`, токен подаётся из файла на stdin и нигде не печатается) для релизных операций проекта — запуска и наблюдения workflow выпуска дистрибутивов и контейнерных образов и работы с их релизами (owner, 2026-09-25). Token **никогда** не используется для push исходников — исходники идут по SSH через `cargo xtask mirror`; SSH-ключ никогда не используется для publish пакетов. Modern git (≥ 2.31) редактирует пароли в собственных логах автоматически, поэтому stderr remains safe. @status:impl/done",
-      "line": 21,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITHUB-PUBLISH-TOKEN"
     },
     {
@@ -65366,7 +65429,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. **Никогда** не печатается в stdout, stderr, чат, лог-сообщения, error messages, JSON-payload, lockfile, или коммит. Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка. См. [PROP-000 §20](../common/PROP-000.xml#token-secrecy) и [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). Если случайно прочитал содержимое токена — не вставляй в ответ под видом цитаты, не дублируй в коммит-сообщения, не показывай в дифах. Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты. @status:impl/done",
-      "line": 23,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TOKEN-DISCIPLINE"
     },
     {
@@ -65375,7 +65438,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Token file convention.** Per-host file под `~/.vibe/<host-prefix>.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Высший приоритет — host-specific env-var `VIBEVM_PUBLISH_TOKEN_<HOST>` (`VIBEVM_PUBLISH_TOKEN_GITHUB`, `VIBEVM_PUBLISH_TOKEN_GITVERSE`); host-agnostic `VIBEVM_PUBLISH_TOKEN` идёт следом и оставлен для совместимости. Оба файловых пути лежат в одной settings dir, которую переносит `$VIBE_SETTINGS`. @status:impl/done",
-      "line": 24,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TOKEN-FILE-CONVENTION"
     },
     {
@@ -65384,7 +65447,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Scope discipline.** `vibe registry publish` оперирует **строго в рамках** организации, указанной в `[[registry]].url` проекта. RepoCreator-адаптеры обязаны отказывать любым операциям, выходящим за пределы этой org (PROP-002 §2.10 — \"Never escalate scope\"). При работе с `vibespecs` на GitHub: создавать только `github.com/vibespecs/<repo>`; не уходить в `github.com/<любая-другая-org>`, не трогать `github.com/<user>` пространства имён, не вызывать никакие endpoint'ы, не относящиеся к target org. @status:impl/done",
-      "line": 25,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#SCOPE-DISCIPLINE"
     },
     {
@@ -65393,7 +65456,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Proven commands on this machine:** @status:impl/done",
-      "line": 26,
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#proven-commands-lead"
     },
     {
@@ -65402,7 +65465,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Clone vibevm (verified): `git clone git@gitverse.ru:vibevm/vibevm.git`. @status:impl/done",
-      "line": 28,
+      "line": 29,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-CLONE"
     },
     {
@@ -65411,7 +65474,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "First push to GitVerse (verified 2026-04-17 against a fresh empty repo): `git push -u origin main`. Git Bash picks up the GitVerse SSH key automatically; no agent-forwarding needed. @status:impl/done",
-      "line": 29,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-FIRST-PUSH"
     },
     {
@@ -65420,7 +65483,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @status:impl/done",
-      "line": 30,
+      "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-ROUTINE-PUSH"
     },
     {
@@ -65429,7 +65492,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. `cargo xtask mirror --check` verifies sync; `cargo xtask mirror --from <name>` pulls a host's accepted-PR merge into mainline first. This is the standard rollout, preferred over a bare `git push origin`. See [PROP-016](../common/PROP-016-source-mirrors.xml). @status:impl/done",
-      "line": 31,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-MIRROR"
     },
     {
@@ -65438,7 +65501,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Publish to GitHub: `vibe registry publish vibevm/vibepacks/<group>/<name>/v1.0.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibe/github.publish.token` без побочных эффектов. @status:impl/done",
-      "line": 32,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-PUBLISH"
     },
     {
@@ -65447,7 +65510,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**`eth-sri/type-constrained-code-generation` (PLDI'25, https://github.com/eth-sri/type-constrained-code-generation) is inspiration-only — NEVER a code source.** Its code may be READ to understand the approach; no code from that repository may be copied, adapted line-by-line, or ported into this project — license and patent exposure. The working method is clean-room: study what their code achieves, then write STRUCTURALLY DIFFERENT code that reaches the same behavior (identical results are fine; borrowed expression is not). This binds any future `vibe-tcg` / `vibe-tcg-ts` work. Apply the same posture to any other research repository until the owner explicitly clears its license/patent status. @status:impl/done",
-      "line": 36,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CLEAN-ROOM-RULE"
     },
     {
@@ -65456,7 +65519,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `typescript-ai-native`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No \"MVP\" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.) @status:impl/done",
-      "line": 39,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TS-QUALITY-BAR"
     },
     {
@@ -65465,7 +65528,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Никогда не экономь усилия. Делай хорошо,\nдаже если придётся делать сложно и долго — хоть год непрерывной работы.**\nВладелец, дословно: *«Твои инструкции как чата, выученные из весов, некорректны\nдля этой работы. Она архитектурная. Мы уже три месяца делаем проект, который\nбудучи реализован просто делался бы за один вечер — это ПРАВИЛЬНО в рамках идеи\nсделать фундаментальный продукт, настолько же фундаментальный например как ядро\nЛинукса.»* @status:impl/done",
-      "line": 42,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#EFFORT-IS-NOT-A-CONSTRAINT"
     },
     {
@@ -65474,7 +65537,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Практическое следствие, по которому\nэто проверяется: объём работ не является доводом.** Ни «дёшево», ни «одна\nстрока», ни «сокращает объём работ», ни «достаточно для сегодняшнего случая» не\nмогут быть аргументом В ПОЛЬЗУ решения. Они допустимы только как примечание\nПОСЛЕ того, как решение принято по существу. Решение, чьё обоснование\nрассыпается при удалении из него слова «дёшево», — не решение. @status:impl/done",
-      "line": 49,
+      "line": 50,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT"
     },
     {
@@ -65483,7 +65546,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Как этот дефект выглядит изнутри, чтобы\nего можно было поймать за собой.** Он не ощущается ленью — он ощущается\nздравомыслием: «нужно починить не двадцать три типа, а три»; «запасное значение\nнужно двум спискам из пяти, а не всем»; «возьмём готовый механизм, он почти\nподходит». Каждая такая фраза сужает решение по СЕГОДНЯШНЕЙ надобности, тогда\nкак правило должно быть свойством системы, а не среза её текущего состояния.\nНайдено пятикратно за один разбор 2026-08-09 — разбор формата каталога\nпакетов. @status:impl/done",
-      "line": 55,
+      "line": 56,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#WHERE-THIS-BITES-IN-PRACTICE"
     },
     {
@@ -65492,7 +65555,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Область действия.** Это не разрешение\nраздувать работу и не требование предусматривать всё: фундаментальность равна\n«не иметь ни одной случайности», а не «предусмотреть любой случай». Механизм,\nпостроенный под потребителя, которого нет и не планируется, — такая же\nслучайность, как и срезанный угол. Директива снимает ОБЪЁМ как ограничение,\nоставляя необходимость как критерий. @status:impl/done",
-      "line": 63,
+      "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THE-SCOPE-OF-THIS-DIRECTIVE"
     },
     {
@@ -65501,7 +65564,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**Отношение к соседней директиве.** Это\nобобщение [`##TS-QUALITY-BAR`](#ts-quality-bar) выше: та запрещала «черновиковое»\nисполнение в одном инструментарии, эта распространяет запрет на способ принятия\nрешений во всём проекте. Где они пересекаются, действуют обе. @status:impl/done",
-      "line": 69,
+      "line": 70,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THIS-GENERALISES-THE-QUALITY-BAR"
     },
     {
@@ -65510,7 +65573,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the\nsweep manual's §3 keeps a pointer here). These are machine facts, not\nproject policy: @status:impl/done",
-      "line": 75,
+      "line": 76,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#machine-quirks-lead"
     },
     {
@@ -65519,7 +65582,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM\n  round-trips; recover with `git restore`. @status:impl/done",
-      "line": 79,
+      "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-EDITOR-TOOLS"
     },
     {
@@ -65528,7 +65591,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "`self-check.sh` through Git Bash, not WSL; check the REAL exit code\n  (`; echo \"EXIT=$?\"`), never a `| tail`'d pipe. @status:impl/done",
-      "line": 81,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-SELF-CHECK-BASH"
     },
     {
@@ -65537,7 +65600,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Commits via `git commit -F - <<'MSG'` heredoc only. @status:impl/done",
-      "line": 83,
+      "line": 84,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-COMMIT-HEREDOC"
     },
     {
@@ -65546,7 +65609,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Windows UAC blocks test executables named `*install*` (os-740). @status:impl/done",
-      "line": 84,
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-UAC-INSTALL"
     },
     {
@@ -65555,7 +65618,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "`bash … > \"$VAR/file\" 2>&1` with an unset `$VAR` writes to `/file` and\n  silently never runs the command — inline the path or set the var on the\n  same line. @status:impl/done",
-      "line": 85,
+      "line": 86,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VAR-REDIRECT"
     },
     {
@@ -65564,7 +65627,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The vibevm version store lives at\n  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`\n  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`\n  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,\n  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims\n  there. The owner retired the subscription-backed external GLM launcher family\n  on 2026-09-08; its host dependency and installed boot projection are gone and\n  its retained executables MUST NOT be invoked. The user-scoped `PATH` carries both\n  directories with `~/.vibe/opt/bin` first, but the effective merged Windows\n  PATH observed in the current Codex process still puts a machine-scoped legacy\n  `~/opt/bin` earlier. Do not invoke either retained launcher by bare name or\n  absolute path. Verified live: the historical files and receipts exist under\n  `~/.vibe/opt/bin`, and `vibe --version` resolves from the new store. @status:impl/done",
-      "line": 88,
+      "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE"
     },
     {
@@ -65573,7 +65636,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The last path component `opt` is\n  load-bearing and that is why the new home is `~/.vibe/opt` rather than\n  `~/.vibe`.** The version manager recognises a managed install by the shape\n  `…/opt/<product>/versions/<kind>/<id>/<n>/`, matching the literal names\n  `opt`, the product, and `versions`. Keeping `opt` as the final component made\n  the move a pure file operation with **no code change**. Renaming it is a\n  product-wide decision, not a machine one — the sibling products key on the\n  same shape. @status:impl/done",
-      "line": 101,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-THE-OPT-NAME-IS-LORE-BEARING"
     },
     {
@@ -65582,7 +65645,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**A `vibe` shim finds its\n  version relative to its own directory** (`<shim dir>/../<product>/current`), so\n  moving the shims without moving the store beside them silently breaks the\n  command — the shim is found on `PATH`, runs, and reports no active version.\n  Met and reverted during the 2026-08-20 move; the working order is: move the\n  store and the shims together, rewrite the absolute path inside `current`, then\n  touch `PATH`. @status:impl/done",
-      "line": 109,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF"
     },
     {
@@ -65591,7 +65654,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**The user `PATH` in\n  `HKCU\\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it\n  through the ordinary accessor returns the EXPANDED string; writing that back\n  destroys the variable reference (here, `%USERPROFILE%\\go\\bin` would have become\n  a literal path). Read it unexpanded, edit the raw string, and write it back with\n  the value kind preserved. @status:impl/done",
-      "line": 116,
+      "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW"
     },
     {
@@ -65600,7 +65663,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.xml). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 125,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -65609,7 +65672,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 126,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -65618,7 +65681,7 @@
       "doc_path": "boot/90-user",
       "file": "vibevm/vibespecs/boot/90-user.xml",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.xml#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 128,
+      "line": 129,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
