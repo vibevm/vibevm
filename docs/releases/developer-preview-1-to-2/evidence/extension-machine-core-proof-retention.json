@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "scope": "Optional typed extension schema declaration in core plus exact previous-literal compatibility and direct fingerprint classification; selected-world registered format/source admission is NOT implemented or accepted here.",
+  "governing_source": "spec://org.vibevm.core/vibevm/common/PROP-054#EXTENSION-OPERATION-SCHEMA:req-r1",
+  "product_code_sha256": {
+    "crates/vibe-core/src/manifest/document/tests_extensions.rs": "9f9ffc2dbd304dce31a09b735d0abf6e4d8f434f393955438f32295fd545f9b6",
+    "crates/vibe-core/src/manifest/extension.rs": "c5a04c3d9365c609752a729e91272687fa58ce27ff8529d45bfb9ffb986b695b",
+    "crates/vibe-core/src/manifest/extension/tests.rs": "1822f99354ddba78162773af92f269db456d5ceb6c41254157c85acefb9a2452",
+    "crates/vibe-core/src/manifest/extension/wire.rs": "1b5feb7f3a40eba37e918eb823cbeb556bdf7d9444d2cc022d02816b94857f45",
+    "crates/vibe-core/src/manifest/mod.rs": "3d92f1844872e1f7fc1867f086500d6adf3b9c2d73b37aaf0538324c4761a756",
+    "crates/vibe-extension-registry/src/tests/support.rs": "c4245e2120bdd19c895b65c30ff54b1a6c9c392978efd655956498d2d8580b6b",
+    "crates/vibe-install/src/lifecycle/plan.rs": "216af4b6e8677a3ddd87acfb33bdd191bf851a394a65e6c9814135a6b3447022",
+    "crates/vibe-lifecycle/src/agent/tests/support.rs": "09e91e6e4adfb5cb34726bbde842c2aa26c4ffc03e4b52e50469524deb86d758",
+    "crates/vibe-lifecycle/src/execution/tests.rs": "78b5ec7c3c548b6a87ee223d55af1fa64d0f9d4d0eb582cdd509f74112fdf446",
+    "crates/vibe-lifecycle/src/handlers/native_tests.rs": "1c3d88fc82b02cda4f0344eb4e19ba267115c7883c591f727c742b2d1952664c",
+    "crates/vibe-lifecycle/src/handlers/tests.rs": "db9eb4831209af57f7143aaaa4f470e3bb47551a9d76ee9e1b019f066e79a8d4",
+    "crates/vibe-lifecycle/src/lib.rs": "3408677d653ad699b60079500cab1705251ebd471ac0cdbfefcfbdc92501c7cc",
+    "crates/vibe-lifecycle/src/native/compiler_tests.rs": "09e151328066cc6bc2bb63f6fee329a6726a55ab7c71911f5bdc10c9541b2bd5",
+    "crates/vibe-lifecycle/src/native/tests.rs": "18264cd5fe256574ec415b19c59c9cbe46f60890ccfa57f0dd08561eb597c1d7",
+    "crates/vibe-lifecycle/src/state/fingerprint/declaration.rs": "77454f40d4fa42745d6610d27218829c5d875154763f5bd5fa0531460770de9b",
+    "crates/vibe-lifecycle/src/state/tests.rs": "cb379e167b14d0c031cf4948f2f244cbf2dada537e1573100488a4022cf95e95",
+    "crates/vibe-lifecycle/src/state/tests/declaration.rs": "dfac057e49a2e9950c04983083a141d2d07f1b5b8c9a98799c5c3fb06b787ae2",
+    "crates/vibe-lifecycle/src/state/tests/support.rs": "fb2ea039a991211a08a8991f90749f4fdab2cc241229075dc6801a6c25d4e44c",
+    "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs": "5414e511202653593fdf68564235c7971f537c226c423b990c274abfe6b7358c",
+    "crates/vibe-orchestrator/src/world/package_skill.rs": "dfe1b7de8d55f8ee2b7c49c937fe66e55bc45df63d0481111eb60f38f34251e1",
+    "crates/vibe-spec/src/compiler/pass_tier/backend_execution_tests.rs": "ecd67b194836d188106c2f55140c6f6439297214436d404a61153264d28bc656",
+    "crates/vibe-spec/src/compiler/pass_tier/catalog_tests.rs": "4710dceed3143d7c05b90284cb85dca33940a9d0e20c0b57268918aa0bc0ecd5",
+    "crates/vibe-spec/src/compiler/pass_tier/execution_tests.rs": "f10357513d1026cfe764d63841cc3ea3738f1e2c65155e6805ab649ece26f574",
+    "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs": "a084da033a3fcdffe56fd7ba0da0f6a39204a42b67817275ff39fb7dd7b8635d",
+    "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs": "fe44132230017d3f47c764a0453707093898c5f22e7382860dd4c2c43871a854",
+    "crates/vibe-spec/src/compiler/pass_tier/tests.rs": "53f513328455bf982392fde55ccab8b5f17048ce97ea7f5b4055424df04026c1",
+    "crates/vibe-spec/src/compiler/transform/lowering_worlds.rs": "cd14feb8f534207490f7823abd485bb92511bab7ed3123ebcd77fcbfeefbda38",
+    "crates/vibe-spec/src/compiler/transform/plan_test_support.rs": "f7db5e6e199e0651aa326ba9c7b250d4d6084d774bfffead6557f1fa990ff2bf",
+    "crates/vibe-core/src/manifest/extension/machine_schema.rs": "ed14cc8b5988f2e7baf2fd70e8af8e6d5613ebe34a59443e739501911d7e5687",
+    "crates/vibe-core/src/manifest/extension/machine_schema_tests.rs": "44ff993b9ee11ab730705c7aaf07bebe07323b51615b43346ece77a3151af434",
+    "crates/vibe-lifecycle/src/state/tests/discovery_schema.rs": "ee155e4e7991ea4124e923ed88aa0299641b1460139d1a4cca44fb4f7e1c31af"
+  },
+  "selected_results": {
+    "core_machine_schema_family": {
+      "exit_code": 0,
+      "passed": 4
+    },
+    "lifecycle_fingerprint_exact": {
+      "exit_code": 0,
+      "passed": 1
+    },
+    "extension_registry_exact": {
+      "exit_code": 0,
+      "passed": 1
+    },
+    "spec_compiler_exact": {
+      "exit_code": 0,
+      "passed": 1
+    },
+    "orchestrator_exact": {
+      "exit_code": 0,
+      "passed": 1
+    },
+    "rustfmt_31_exact_owners": {
+      "exit_code": 0
+    }
+  },
+  "limits": [
+    "Core validates syntax/local duplicates only; registered FormatId/epoch and cross-provider joins remain selected-world work.",
+    "Direct fingerprint field excluded; existing provider content pin may change indirectly.",
+    "No native library/provider invoked.",
+    "No package version increment or public Git publication."
+  ],
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-31-owner-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-31-owner-fmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-core-checks/report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/report.md",
+      "sha256": "872f61ffb629d441a254a38ed2014047933215184cb816ec073ae3ac0c22600c",
+      "bytes": 2511
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-core-checks/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/result.json",
+      "sha256": "e8087278df7c4e6404a40c88373208db3788e12d017ad3d9d015a5f3229c0181",
+      "bytes": 2666
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-core-checks/run1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/run1.log",
+      "sha256": "be04130d49db7a0651812d5581eec23ac01f61005f1d86df7fd73bf1c63af230",
+      "bytes": 991
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-core-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-core-review.md",
+      "sha256": "6f07d88f13a1ad1c518a66838f4507b8b2cd53698a111ac5c148817d4a331361",
+      "bytes": 3292
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-fingerprint-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-fingerprint-exact.log",
+      "sha256": "71d841c816851d67f7ca286d2ae76d2f30fc56c536999e0df5ff1b20b017527d",
+      "bytes": 3450
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-fingerprint-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-fingerprint-fmt-check.log",
+      "sha256": "1a936ac6617610ca49b754ae27890781ee862de8eab607945dd87adbc9670aea",
+      "bytes": 287
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-fingerprint-fmt-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-fingerprint-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-literal-rustfmt.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-literal-rustfmt.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-literal-rustfmt.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-literal-rustfmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-orchestrator-bound.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-orchestrator-bound.log",
+      "sha256": "fee94c892b3448fd1e21afd17a5114fe351eb20981f1584d09b62577feefaa14",
+      "bytes": 3819
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-registry-bound.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-registry-bound.log",
+      "sha256": "0a9582675b0b98a19a66806aee18505725d99dd321126c3eb28b204ee5179ae8",
+      "bytes": 1399
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-schema-design.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-schema-design.md",
+      "sha256": "af990e6ab277604679a4517cb68dcc1d79d7542287464249b3e8191794a9e04f",
+      "bytes": 6367
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-spec-bound.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-core-raw/vibevm-next-M16-B1-extension-spec-bound.log",
+      "sha256": "87a96e086a6c730e2d6dabe312eccb87dd77eec01df7f74197bec1dc0578c4c8",
+      "bytes": 1008
+    }
+  ]
+}

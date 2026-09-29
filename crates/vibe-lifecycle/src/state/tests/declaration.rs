@@ -19,7 +19,7 @@ use crate::{
     SelectorSubject, collect_extensions,
 };
 
-fn project() -> tempfile::TempDir {
+pub(super) fn project() -> tempfile::TempDir {
     let dir = tempfile::tempdir().unwrap();
     fs::write(
         dir.path().join("vibe.toml"),
@@ -31,7 +31,7 @@ fn project() -> tempfile::TempDir {
     dir
 }
 
-fn base_decl(point: &str) -> ExtensionDecl {
+pub(super) fn base_decl(point: &str) -> ExtensionDecl {
     ExtensionDecl {
         id: "announce".into(),
         point: point.parse().unwrap(),
@@ -43,10 +43,11 @@ fn base_decl(point: &str) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     }
 }
 
-fn host_row(declaration: ExtensionDecl) -> ExtensionRegistryRow {
+pub(super) fn host_row(declaration: ExtensionDecl) -> ExtensionRegistryRow {
     host_row_with_content(declaration, None)
 }
 
@@ -75,7 +76,7 @@ fn host_row_with_content(
     registry.plan(point, SelectorSubject::unscoped())[0].clone()
 }
 
-fn prepared(root: &Path, row: &ExtensionRegistryRow) -> String {
+pub(super) fn prepared(root: &Path, row: &ExtensionRegistryRow) -> String {
     let ctx = context(root, row.effective_config().unwrap());
     prepare_handler_execution_with(&HandlerExecution::from_row(row), &ctx, None)
         .unwrap()
@@ -93,9 +94,8 @@ fn present(hash: &mut Sha256, label: &str, is_present: bool) {
     frame(hash, label, if is_present { b"1" } else { b"0" });
 }
 
-/// The longhand digest of the standard fixture row: everything AFTER the
-/// optional slot coordinate is shared by both vectors, so the tail lives
-/// here exactly once.
+/// The standard fixture digest tail follows the optional slot coordinate
+/// and is shared by both vectors.
 fn longhand_standard_tail(hash: &mut Sha256) {
     frame(hash, "handler_kind", b"builtin");
     frame(hash, "handler_name", b"log");

@@ -1,0 +1,8 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/declaration.rs:83:
+         .declaration_fingerprint
+ }
+ 
+-
+ fn frame(hash: &mut Sha256, label: &str, value: &[u8]) {
+     hash.update((label.len() as u64).to_be_bytes());
+     hash.update(label.as_bytes());

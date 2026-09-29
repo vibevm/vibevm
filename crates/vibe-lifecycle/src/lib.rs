@@ -59,6 +59,7 @@
 //!     handler: ExtensionHandler::Builtin { name: "log".into() },
 //!     config: None, auto: None, inputs: None, applies_to: None,
 //!     compiler_internals: None, pass: None, when: None,
+//!     machine_operation_schema: None,
 //! };
 //! let world = ExtensionWorld {
 //!     installed: vec![DependencyExtensionSource {

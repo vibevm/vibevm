@@ -1,0 +1,17 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling chrono v0.4.44
+   Compiling vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+   Compiling progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+   Compiling vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.48s
+     Running unittests src/lib.rs (target/debug/deps/vibe_spec-c89deea1f10af10b)
+
+running 1 test
+test compiler::pass_tier::tests::one_walk_partitions_without_reordering_effective_ordinals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 961 filtered out; finished in 0.00s
+

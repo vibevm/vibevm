@@ -176,6 +176,7 @@ pub(super) fn declaration(id: &str, point: &str) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     }
 }
 

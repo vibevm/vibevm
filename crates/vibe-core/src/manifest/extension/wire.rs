@@ -11,6 +11,7 @@ use specmark::spec;
 use super::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
+    MachineOperationSchemaDecl,
 };
 use crate::lifecycle::ExtensionPoint;
 
@@ -36,6 +37,60 @@ pub(crate) struct ExtensionDeclWire {
     pass: Option<ExtensionPassWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     when: Option<toml::Table>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    machine_operation_schema: Option<MachineOperationSchemaDeclWire>,
+}
+
+/// Only the authored local shape. Host format membership and retained-source
+/// authentication belong to the selected-world projection owner.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct MachineOperationSchemaDeclWire {
+    schema_epoch: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    operation_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    model_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    input_format_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    result_format_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    error_format_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    event_format_id: Option<String>,
+}
+
+impl TryFrom<MachineOperationSchemaDeclWire> for MachineOperationSchemaDecl {
+    type Error = String;
+
+    fn try_from(wire: MachineOperationSchemaDeclWire) -> Result<Self, Self::Error> {
+        let declaration = Self {
+            schema_epoch: wire.schema_epoch,
+            operation_id: wire.operation_id,
+            model_id: wire.model_id,
+            input_format_id: wire.input_format_id,
+            result_format_id: wire.result_format_id,
+            error_format_id: wire.error_format_id,
+            event_format_id: wire.event_format_id,
+        };
+        declaration.validate()?;
+        Ok(declaration)
+    }
+}
+
+impl From<MachineOperationSchemaDecl> for MachineOperationSchemaDeclWire {
+    fn from(declaration: MachineOperationSchemaDecl) -> Self {
+        Self {
+            schema_epoch: declaration.schema_epoch,
+            operation_id: declaration.operation_id,
+            model_id: declaration.model_id,
+            input_format_id: declaration.input_format_id,
+            result_format_id: declaration.result_format_id,
+            error_format_id: declaration.error_format_id,
+            event_format_id: declaration.event_format_id,
+        }
+    }
 }
 
 /// Strict wire shape for the plural consumer-side `[extensions]` namespace.
@@ -158,6 +213,10 @@ impl TryFrom<ExtensionDeclWire> for ExtensionDecl {
             compiler_internals: wire.compiler_internals,
             pass: wire.pass.map(Into::into),
             when: wire.when.map(ExtensionWhen::from_table),
+            machine_operation_schema: wire
+                .machine_operation_schema
+                .map(TryInto::try_into)
+                .transpose()?,
         };
         Ok(extension)
     }
@@ -179,6 +238,7 @@ impl TryFrom<ExtensionDecl> for ExtensionDeclWire {
             compiler_internals: extension.compiler_internals,
             pass: extension.pass.map(Into::into),
             when: extension.when.map(ExtensionWhen::into_table),
+            machine_operation_schema: extension.machine_operation_schema.map(Into::into),
         })
     }
 }

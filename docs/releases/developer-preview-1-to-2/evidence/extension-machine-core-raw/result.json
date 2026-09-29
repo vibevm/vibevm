@@ -1,0 +1,75 @@
+{
+  "kind": "M16-B1-core-authored-extension-schema",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-core",
+    "--lib",
+    "manifest::extension::machine_schema_tests::",
+    "--",
+    "--nocapture"
+  ],
+  "environment": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "exit": 0,
+  "passed": 4,
+  "failed": 0,
+  "ignored": 0,
+  "filtered": 549,
+  "cases": [
+    "authored_operation_and_model_tables_roundtrip_without_authentication",
+    "absent_table_stays_absent_and_handler_config_cannot_promote_it",
+    "unknown_type_epoch_missing_ids_and_whitespace_refuse_locally",
+    "duplicate_machine_identity_and_programmatic_invalid_values_refuse"
+  ],
+  "raw_log": "/tmp/vibevm-next-M16-B1-extension-core-checks/run1.log",
+  "raw_log_sha256": "be04130d49db7a0651812d5581eec23ac01f61005f1d86df7fd73bf1c63af230",
+  "files": [
+    {
+      "path": "crates/vibe-core/src/manifest/extension.rs",
+      "lines": 505,
+      "sha256": "c5a04c3d9365c609752a729e91272687fa58ce27ff8529d45bfb9ffb986b695b"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/extension/wire.rs",
+      "lines": 416,
+      "sha256": "1b5feb7f3a40eba37e918eb823cbeb556bdf7d9444d2cc022d02816b94857f45"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "lines": 600,
+      "sha256": "1822f99354ddba78162773af92f269db456d5ceb6c41254157c85acefb9a2452"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "lines": 599,
+      "sha256": "9f9ffc2dbd304dce31a09b735d0abf6e4d8f434f393955438f32295fd545f9b6"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "lines": 553,
+      "sha256": "3d92f1844872e1f7fc1867f086500d6adf3b9c2d73b37aaf0538324c4761a756"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/extension/machine_schema.rs",
+      "lines": 93,
+      "sha256": "ed14cc8b5988f2e7baf2fd70e8af8e6d5613ebe34a59443e739501911d7e5687"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/extension/machine_schema_tests.rs",
+      "lines": 189,
+      "sha256": "44ff993b9ee11ab730705c7aaf07bebe07323b51615b43346ece77a3151af434"
+    }
+  ],
+  "limits": [
+    "manifest-local syntax and duplicate identities only; registered FormatId/epoch and selected provider/source authentication are later owners",
+    "absence preserves old semantic/serialization shape through skip_none and exact canonical roundtrip, not a separate before-Git-byte oracle",
+    "no native handler, registry projection, complete extension discovery, overall B1/account acceptance"
+  ]
+}
