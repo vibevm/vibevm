@@ -14,6 +14,7 @@
     "observation": "observation-one"
   },
   "occurrence": {
+    "occurrence_id": "occ-gap",
     "observed": {
       "projection": "projection-one",
       "observation": "observation-one"

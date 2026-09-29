@@ -63,6 +63,10 @@ fn four_roots_roundtrip_exact_shapes_and_non_utf8_octets() {
         reader_valid("entity-reference", "repeated-logical-distinct-occurrence");
     assert_eq!(first.logical, repeated.logical);
     assert_eq!(first.captured, repeated.captured);
+    assert_ne!(
+        first.occurrence.occurrence_id,
+        repeated.occurrence.occurrence_id
+    );
     assert_ne!(first.occurrence, repeated.occurrence);
     let _: EntityReference = reader_valid("entity-reference", "missing-owner-gap");
     let _: CompositeSnapshot = reader_valid("composite-snapshot", "single-owner");
@@ -94,7 +98,11 @@ fn four_roots_roundtrip_exact_shapes_and_non_utf8_octets() {
     r = 1
 )]
 fn strict_structural_cases_refuse_unknown_missing_and_wrong_primitive() {
-    for name in ["unknown-root", "wrong-ordinal-type"] {
+    for name in [
+        "unknown-root",
+        "wrong-ordinal-type",
+        "missing-occurrence-id",
+    ] {
         reader_refuses::<EntityReference>("entity-reference", name);
     }
     for name in ["unknown-witness-field", "missing-required-nullable"] {

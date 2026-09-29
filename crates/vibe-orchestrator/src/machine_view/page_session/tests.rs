@@ -42,6 +42,7 @@ fn entity(id: &str, ordinal: usize) -> EntityReference {
         observed: observed.clone(),
         occurrence: entity::Occurrence {
             observed,
+            occurrence_id: format!("occ-{ordinal}"),
             contribution: format!("include-{ordinal}"),
             ordinal: ordinal.to_string(),
         },

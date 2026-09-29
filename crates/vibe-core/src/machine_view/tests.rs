@@ -30,19 +30,21 @@ fn repeated_inclusion_shares_owner_address_but_not_occurrence() {
         logical.clone(),
         captured.clone(),
         observed.clone(),
-        ContributionOccurrenceRef::supplied(observed.clone(), r("include-a"), 0),
+        ContributionOccurrenceRef::supplied(observed.clone(), r("occ-a"), r("include-a"), 0),
     )
     .unwrap();
     let b = EntityReference::new(
         logical,
         captured,
         observed.clone(),
-        ContributionOccurrenceRef::supplied(observed, r("include-b"), 1),
+        ContributionOccurrenceRef::supplied(observed, r("occ-b"), r("include-b"), 1),
     )
     .unwrap();
     assert_eq!(a.logical(), b.logical());
     assert_eq!(a.captured(), b.captured());
     assert_eq!(a.observed(), b.observed());
+    assert_eq!(a.occurrence().occurrence_id().as_str(), "occ-a");
+    assert_eq!(b.occurrence().occurrence_id().as_str(), "occ-b");
     assert_ne!(a.occurrence(), b.occurrence());
     assert_ne!(a, b);
 }
@@ -61,6 +63,7 @@ fn missing_owner_and_foreign_occurrence_are_typed_not_minted() {
     let observed = ObservationRef::supplied(r("projection"), r("observation"));
     let wrong = ContributionOccurrenceRef::supplied(
         ObservationRef::supplied(r("projection"), r("other-observation")),
+        r("occ-a"),
         r("include"),
         0,
     );
@@ -69,6 +72,7 @@ fn missing_owner_and_foreign_occurrence_are_typed_not_minted() {
     );
     let wrong_projection = ContributionOccurrenceRef::supplied(
         ObservationRef::supplied(r("other-projection"), r("observation")),
+        r("occ-a"),
         r("include"),
         0,
     );
@@ -85,7 +89,7 @@ fn missing_owner_and_foreign_occurrence_are_typed_not_minted() {
         logical,
         captured,
         observed.clone(),
-        ContributionOccurrenceRef::supplied(observed, r("include"), 0),
+        ContributionOccurrenceRef::supplied(observed, r("occ-a"), r("include"), 0),
     )
     .unwrap();
     assert!(matches!(

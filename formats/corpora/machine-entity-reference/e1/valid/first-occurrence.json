@@ -15,6 +15,7 @@
     "observation": "observation-one"
   },
   "occurrence": {
+    "occurrence_id": "occ-a",
     "observed": {
       "projection": "projection-one",
       "observation": "observation-one"
