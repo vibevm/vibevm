@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "source_text": 42,
+  "source_profile": "materialization-legacy-absent-r1",
+  "target_profile": "materialization-current-absent-r1",
+  "recipe": "snapshot-to-copy-r1"
+}

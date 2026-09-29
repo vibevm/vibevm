@@ -1,0 +1,4 @@
+{
+  "schema": 1,
+  "source_text": "# café\r\n[package]\r\nname=\"demo\"\r\ngroup=\"org.example\"\r\nkind=\"flow\"\r\nversion=\"1.1.0\"\r\nmaterialization=\"copy\"\r\n"
+}

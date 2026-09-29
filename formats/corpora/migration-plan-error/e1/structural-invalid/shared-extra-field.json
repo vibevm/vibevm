@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "stage": "preflight",
+  "error": {
+    "code": "invalid_request",
+    "field": "request",
+    "reason": "request is structurally invalid",
+    "phase": "planner"
+  }
+}
