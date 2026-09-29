@@ -27,7 +27,8 @@
 //! [`tools::default_tools`], and the dispatcher routes by each tool's
 //! declared name. Results come back as [`tools::ToolOutput`] — the
 //! executed channel (ordinary success, or an executed structured failure
-//! that keeps its report under `isError: true`) — while [`ToolError`]
+//! that keeps its report under `isError: true`, or explicit diagnostic-only
+//! failure without a valid report) — while [`ToolError`]
 //! stays the preflight / tool-failure channel. Ordinary variants are text-only;
 //! StructuredPreflight retains an owning report without domain execution.
 
@@ -184,6 +185,10 @@ impl From<vibe_lifecycle::LifecycleTasksError> for ToolError {
 /// // Construct over an in-memory transport (production uses stdio).
 /// let _server = Server::new(MemoryTransport::with_input(""), ServerContext::new("."));
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
+    r = 3
+)]
 pub struct Server<T: Transport> {
     transport: T,
     context: ServerContext,
@@ -310,14 +315,17 @@ impl<T: Transport> Server<T> {
                 // dispatcher only assembles the result, moving the
                 // structured value in via `into_parts` rather than
                 // cloning it out.
+                let has_structured = output.has_structured();
                 let (structured, text, is_error) = output.into_parts();
-                let result = serde_json::json!({
+                let mut result = serde_json::json!({
                     "content": [
                         { "type": "text", "text": text }
                     ],
                     "isError": is_error,
-                    "structuredContent": structured,
                 });
+                if has_structured {
+                    result["structuredContent"] = structured;
+                }
                 JsonRpcResponse::ok(req.id, result)
             }
             Err(e) => {
