@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "inventory_id": "capability-source-coverage-candidate-e830ee297",
+  "inventory_id": "capability-source-coverage-candidate-c3d852805",
   "baseline_capture_id": "capability-baseline-4a3f80a34",
-  "observation_capture_id": "machine-operation-observed-e830ee297",
+  "observation_capture_id": "machine-operation-observed-c3d852805",
   "sources": [
     {
       "source_id": "source:campaigns/next/manifest.json",
@@ -762,7 +762,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools/machine_operation.rs",
       "path": "crates/vibe-mcp/src/tools/machine_operation.rs",
-      "sha256": "d1434dce0002eb04c0baac3009b7609f9644aa59b03dad445b2aa2a7acb06cb3"
+      "sha256": "4c3f9fed8bed7775e4bdd97a6c08f284e6d34d63eb806e4065ed4348ae1137bc"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/migration_operation.rs",
@@ -800,9 +800,24 @@
       "sha256": "573946f9cbef4542b4986cd000c7130b2eb79a0e05e01e736b0f910881a1db25"
     },
     {
+      "source_id": "source:crates/vibe-orchestrator/Cargo.toml",
+      "path": "crates/vibe-orchestrator/Cargo.toml",
+      "sha256": "696710798c2775f0c11303d8ddd4ea50ac7802dc2b5988d9cbd40a899f26e946"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/lib.rs",
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "sha256": "83aaff25515979a193eadcb828fcb6daaebb4a450d3eaf4803e42025326b7aa6"
+    },
+    {
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation.rs",
       "path": "crates/vibe-orchestrator/src/machine_operation.rs",
-      "sha256": "438dc1cef6f71d2ae3e5d219ca6279d3a9f7e45a8dadf0f7791e4cbbb680f8dc"
+      "sha256": "1a186d63bd41d1e741f97f55d9b7028e1527d2c1468638fff36e04edd977b2f7"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "sha256": "983c7094d10f55552614d56af4ddc00f0f109aa069f0b01fb86710ed16dac550"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation/discovery.rs",
@@ -813,6 +828,11 @@
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
       "path": "crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
       "sha256": "bfb58927468afd59677a9185bcabe9a1f9f19d1dc54a806cf8171d359898d3f6"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "sha256": "020c9a1d88f2f839582e0a43e3f47e70a2fe966ea146e506bbfc5d4033fa0366"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/values.rs",
@@ -8586,7 +8606,8 @@
         "source:schemas/capability/e1/coverage.jtd.json",
         "source:crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
         "source:crates/vibe-wire/src/behaviour/capability_coverage.rs",
-        "source:crates/vibe-wire/src/behaviour/capability_coverage/tests.rs"
+        "source:crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/coverage.rs"
       ]
     },
     {
@@ -9044,7 +9065,10 @@
         "source:crates/vibe-orchestrator/src/machine_operation.rs",
         "source:crates/vibe-mcp/src/tools/machine_operation.rs",
         "source:schemas/machine/e1/operation_envelope.jtd.json",
-        "source:crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs"
+        "source:crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
+        "source:crates/vibe-orchestrator/Cargo.toml",
+        "source:crates/vibe-orchestrator/src/lib.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/publication.rs"
       ],
       "conformance_cases": [
         "proposed:owning-source-and-shape",
