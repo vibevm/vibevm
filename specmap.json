@@ -11698,6 +11698,114 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::layout",
+      "end_line": 2,
+      "fingerprint": "tok1:551e98d350f6099facc4439e853c27f9a5932b01219564cdf416994af9a970dc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "item_kind": "fn",
+      "line": 130,
+      "symbol": "vibe_core::environment::layout::EnvironmentLayout::explicit",
+      "end_line": 179,
+      "fingerprint": "tok1:052d274a5858c4a71aab2ad1f941183b5c7f1fd11185df914bf1fec3f64815ca"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "item_kind": "fn",
+      "line": 180,
+      "symbol": "vibe_core::environment::layout::EnvironmentLayout::settings_anchored",
+      "end_line": 254,
+      "fingerprint": "tok1:6539e4d16491c44d3a537a428ae0593af1dd4a17c1270f9902e7ea2452f74b9f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::environment::layout_tests",
+      "end_line": 1,
+      "fingerprint": "tok1:551e98d350f6099facc4439e853c27f9a5932b01219564cdf416994af9a970dc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 525,
+      "symbol": "vibe_core::environment::layout_tests::configuration_cache_and_reserved_resources_never_claim_physical_or_effect_authority",
+      "end_line": 575,
+      "fingerprint": "tok1:abbf1841680f0eb37e3053ce2c3b51b566e2c4045feb0188dccaae351260fc96"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 334,
+      "symbol": "vibe_core::environment::layout_tests::distinct_instances_share_immutable_content_without_sharing_resource_identity",
+      "end_line": 422,
+      "fingerprint": "tok1:74e990bd6810a9439de5712a5e44616a05299b208b652d1d6068fcd9833bd279"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_core::environment::layout_tests::explicit_profile_cache_and_home_bindings_do_not_fall_back",
+      "end_line": 215,
+      "fingerprint": "tok1:01804e9a39d8aa09881196d1ecd66ae5a73076399ca28dbab9e65dbac0358d80"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 424,
+      "symbol": "vibe_core::environment::layout_tests::lexical_collision_ascii_limits_and_unknown_policy_are_explicit",
+      "end_line": 465,
+      "fingerprint": "tok1:7e9ca96c98277c768ab27ea3aa5ed5da12cc4ebbf08a773e3f36a7f09d4dcb8a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_core::environment::layout_tests::linux_non_utf8_components_survive_windows_control_plane",
+      "end_line": 255,
+      "fingerprint": "tok1:afcac98fe65acf74470ffe7c710bbe6fd0ccecac8ec8e7a7fc0014764faad251"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 467,
+      "symbol": "vibe_core::environment::layout_tests::prefix_bound_or_missing_relocation_evidence_refuses_relocation_claim",
+      "end_line": 523,
+      "fingerprint": "tok1:b155188679a8265620dea55f4a70c939c150a4e2c5cbabf26a5dcd271127e394"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_core::environment::layout_tests::settings_table_missing_s_keeps_required_roots_unresolved",
+      "end_line": 125,
+      "fingerprint": "tok1:d99cb7ee883b388c61576071285aa89bd82aeddd737afbdf203700fd58c5c8a5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "item_kind": "fn",
+      "line": 257,
+      "symbol": "vibe_core::environment::layout_tests::traversal_and_windows_reserved_rules_use_only_target_policy",
+      "end_line": 332,
+      "fingerprint": "tok1:2e0c1659c28d21651f1941626c68b1a0f80332182359db70181219bb3dbb3cea"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/environment/platform.rs",
       "item_kind": "mod",
       "line": 2,
@@ -11722,6 +11830,51 @@
       "symbol": "vibe_core::environment::platform::ToolchainPlatforms::new",
       "end_line": 178,
       "fingerprint": "tok1:629a8c10a22a8e2aa93ca18f55c2d882ff646f90b861b10e1c5e85d46c0aa104"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/prefix.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::prefix",
+      "end_line": 2,
+      "fingerprint": "tok1:7ffb7a9b3a41f04cb516973b75fd3b6f9a37fc33100254bd84ca19b82515d100"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/prefix.rs",
+      "item_kind": "fn",
+      "line": 28,
+      "symbol": "vibe_core::environment::prefix::PrefixCompatibility::assess",
+      "end_line": 81,
+      "fingerprint": "tok1:21430f499680951b2e2eb099326fcdd9d701ee01a68da5ee94f48d354ce5459f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::resource",
+      "end_line": 2,
+      "fingerprint": "tok1:02a969ecc8b86d360136fdfb071c7911bb4afd88c4738c8a5b93666df58fafd4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "item_kind": "fn",
+      "line": 123,
+      "symbol": "vibe_core::environment::resource::ReservedEnvironmentResource::operation_support",
+      "end_line": 129,
+      "fingerprint": "tok1:6082b861416390f0d6dd6cacfcbd764841ae96fd175a5a2c907472421c14771f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "item_kind": "fn",
+      "line": 22,
+      "symbol": "vibe_core::environment::resource::ResourceIdentity::new",
+      "end_line": 58,
+      "fingerprint": "tok1:61b7b4bd0f7976a8baf88c38cb2d7e7308b47ff6fb791edf354a904fba0fd4d3"
     },
     {
       "crate_name": "vibe-core",
@@ -11776,6 +11929,33 @@
       "symbol": "vibe_core::environment::roles::TargetBinding::new",
       "end_line": 440,
       "fingerprint": "tok1:f21f71255be38a450b48633b44b7d98523762e65c19d71a268e6c8288288b442"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::target_path",
+      "end_line": 2,
+      "fingerprint": "tok1:3a5ae5a8f9eb428e61bda45df863c338bcf3404b9025ad785dea2d3c9a5209df"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_core::environment::target_path::AbsoluteTargetPath::new",
+      "end_line": 151,
+      "fingerprint": "tok1:3db4504284d7fd4c2f9e3b35775ac2d55b7a856b84d17ea427558953c0ee6762"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "item_kind": "fn",
+      "line": 22,
+      "symbol": "vibe_core::environment::target_path::TargetComponent::new",
+      "end_line": 53,
+      "fingerprint": "tok1:fe7cdcbfcac7f8bb626ebdd9150595ea1df59119c28fc3b25a60b43a02cebbf2"
     },
     {
       "crate_name": "vibe-core",
@@ -14085,9 +14265,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/settings.rs",
       "item_kind": "fn",
-      "line": 138,
+      "line": 164,
       "symbol": "vibe_core::settings::tests::override_wins_verbatim_over_home",
-      "end_line": 150,
+      "end_line": 176,
       "fingerprint": "tok1:fa9d1257aca543b768046ddeaab9f67c659bdc4b7aad023176fd5a9108bfc0ff"
     },
     {
@@ -41269,6 +41449,121 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "from_symbol": "vibe_core::environment::layout",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "from_symbol": "vibe_core::environment::layout::EnvironmentLayout::explicit",
+      "line": 130,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout.rs",
+      "from_symbol": "vibe_core::environment::layout::EnvironmentLayout::settings_anchored",
+      "line": 182,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::configuration_cache_and_reserved_resources_never_claim_physical_or_effect_authority",
+      "line": 526,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::configuration_cache_and_reserved_resources_never_claim_physical_or_effect_authority",
+      "line": 530,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#RESERVED-ENVIRONMENT-RESOURCES",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::distinct_instances_share_immutable_content_without_sharing_resource_identity",
+      "line": 335,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::explicit_profile_cache_and_home_bindings_do_not_fall_back",
+      "line": 128,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::lexical_collision_ascii_limits_and_unknown_policy_are_explicit",
+      "line": 425,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::linux_non_utf8_components_survive_windows_control_plane",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::prefix_bound_or_missing_relocation_evidence_refuses_relocation_claim",
+      "line": 468,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::settings_table_missing_s_keeps_required_roots_unresolved",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/layout_tests.rs",
+      "from_symbol": "vibe_core::environment::layout_tests::traversal_and_windows_reserved_rules_use_only_target_policy",
+      "line": 258,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-core/src/environment/platform.rs",
       "from_symbol": "vibe_core::environment::platform",
       "line": 2,
@@ -41291,6 +41586,49 @@
       "line": 164,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/prefix.rs",
+      "from_symbol": "vibe_core::environment::prefix",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/prefix.rs",
+      "from_symbol": "vibe_core::environment::prefix::PrefixCompatibility::assess",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "from_symbol": "vibe_core::environment::resource",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "from_symbol": "vibe_core::environment::resource::ReservedEnvironmentResource::operation_support",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#RESERVED-ENVIRONMENT-RESOURCES",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/resource.rs",
+      "from_symbol": "vibe_core::environment::resource::ResourceIdentity::new",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -41344,6 +41682,32 @@
       "line": 401,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "from_symbol": "vibe_core::environment::target_path",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "from_symbol": "vibe_core::environment::target_path::AbsoluteTargetPath::new",
+      "line": 120,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/target_path.rs",
+      "from_symbol": "vibe_core::environment::target_path::TargetComponent::new",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -43479,7 +43843,7 @@
     {
       "file": "crates/vibe-core/src/settings.rs",
       "from_symbol": "vibe_core::settings::tests::override_wins_verbatim_over_home",
-      "line": 139,
+      "line": 165,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "verifies"
@@ -87128,7 +87492,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:129e5846012a1b1c76c00cc8abcb86253b7237e5897c9ac2706251ca5be045f2",
+      "content_hash": "sha256:72caaeb71e095415d3f1406c6e6e4ba56b0adc870eda914cf712d825ab5e3022",
       "doc_path": "common/PROP-076",
       "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
       "heading": "PROP-076 — Environment roles and explicit target binding",
@@ -87668,6 +88032,155 @@
       "heading": "The pre-foundation\n    baseline has pure OS applicability values, Cargo binary-to-artifact lowering,\n    current-process native platform selection and injected deployment roots.\n    That is not evidence that these five environment objects, target ABI checks,\n    cross-target launcher selection or HOME/rootfs/live operations are implemented.\n    Later executable constructors and compatibility tests must cite these anchors;\n    consumer migration and native execution proofs remain separate claims. @status:spec/plan",
       "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PROOF-BOUNDARY-LAW"
+    },
+    {
+      "anchor": "environment-layout-policy",
+      "content_hash": "sha256:9f9db37bd37192684c50d3257194a1a637f08e81e787a4af6c8769c355598de8",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "11. Injected environment layout and target resource policy",
+      "line": 203,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#environment-layout-policy"
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT",
+      "content_hash": "sha256:679ca2880d8a5e0edd651a00e4d9d03876f62a957a848d1f4ed082cd00f5b794",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Five injected roots",
+      "line": 204,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT-LAW",
+      "content_hash": "sha256:a250f9d6bd493bc1a1c6aa58602292f16ac29e4544f390e749fd6746f498a970",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "EnvironmentLayout names configuration, immutable store, profile, mutable state and disposable cache bindings. Each is supplied, explicitly derived, inapplicable or missing-required; absence never discovers HOME/PATH. Supplied target home remains independent of settings. Constructors create nothing. @status:spec/plan",
+      "line": 206,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-LAW"
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT-DEFAULTS",
+      "content_hash": "sha256:319bad78cc9d3a961a2910daff29f41a5faf27e0651afbe04e0607982cff69a9",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "One pure defaults table",
+      "line": 208,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT-DEFAULTS-LAW",
+      "content_hash": "sha256:f1f6c218aeadcef37693d64e6a16c18bc372e90c53e1ffb2c7902db6be9cc0b2",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Only explicit selection of the settings-anchored defaults table derives from injected target settings binding S: configuration S; immutable store S/store; mutable state S/state. These three bindings are required by this selected table; missing S leaves them missing-required/unresolved and cannot mark them inapplicable. Other explicit layout selections must state their required versus inapplicable root roles; a missing required binding never becomes inapplicable. Profile has no observed legacy directory default: workspace profile is inapplicable, otherwise require explicit binding. Disposable cache requires explicit binding when requested, otherwise is inapplicable; independent registry/search caches retain S/registries and S/search-cache. Config files remain S/config.toml, S/settings.toml and S/registry.toml; explicit config-file override stays separate. Store reuses the existing binary-CAS spelling; state is a proposed environment anchor, not migration of deployments. No raw instance/producer/reference becomes a directory component, hash or encoding. Partition names are separately target-policy checked. @status:spec/plan",
+      "line": 210,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS-LAW"
+    },
+    {
+      "anchor": "ENVIRONMENT-RESOURCE-IDENTITY",
+      "content_hash": "sha256:5489a0e324ed9c34608bd041cfcace9e500272990ff23c781bc98c6e14700122",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Root-relative resource identity",
+      "line": 212,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "ENVIRONMENT-RESOURCE-IDENTITY-LAW",
+      "content_hash": "sha256:514c0711d39cfe5ee9fe2936532eada362ae4a76b148cad197d26325fac59613",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "ResourceIdentity includes environment instance, root-role/binding reference, principal, explicit target path/case policy and validated component sequence. Equal pathname text never transfers receipts between bindings. A1 physical_evidence references remain unverified supplied data; physical aliases, containment and effect admission belong to the storage owner. @status:spec/plan",
+      "line": 214,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY-LAW"
+    },
+    {
+      "anchor": "TARGET-PATH-POLICY",
+      "content_hash": "sha256:1cb32891a21294372581425ad1b548cc274a7de127c4afe0e3af97567f7fd0cd",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Target grammar independent of executor",
+      "line": 216,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "TARGET-PATH-POLICY-LAW",
+      "content_hash": "sha256:8245a186fe97e63544277fb8345e1238ffc504997918a9f41975bce96bf44ce6",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Linux components reject empty, dot, dotdot, NUL and embedded slash; colon, backslash, device-like names and other valid literal bytes remain legal under Windows control. Windows portable-Win32 policy alone adds drive/UNC structure, reserved characters/names including COM/LPT superscript digits, trailing-dot/space restrictions. Case/collision comparison is explicitly selected lexical policy, not OS-inferred native behavior; unknown comparison is unresolved/unsupported. Generic Unicode lowercase is not an NTFS guarantee. Never apply source-portable RelPath to Linux payloads. @status:spec/plan",
+      "line": 218,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY-LAW"
+    },
+    {
+      "anchor": "PAYLOAD-PREFIX-COMPATIBILITY",
+      "content_hash": "sha256:8c2790f670778bfab72c1f8e6c088e423ddff7658af228845399a1a117ebad0a",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Declarative prefix constraints",
+      "line": 220,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "PAYLOAD-PREFIX-COMPATIBILITY-LAW",
+      "content_hash": "sha256:2efe33d082c114464a35958d3c34e5d867d94e56e3c1ada462a3ff57fb97831d",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Describe relocatable payloads with producer evidence references and conditions, prefix-bound payloads with exact target-prefix constraints, or unsupported payloads with reason. Declarative matching does not verify evidence or authorize effects. Unknown relocatability cannot become relocatable because destination is HOME; changed prefix refuses prefix-bound payloads. No binary rewriting occurs. @status:spec/plan",
+      "line": 222,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY-LAW"
+    },
+    {
+      "anchor": "RESERVED-ENVIRONMENT-RESOURCES",
+      "content_hash": "sha256:2cfad7bc0c170ab948468fc4d5e7670c0a07a32e5094f012c907cd8079ef75fc",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Future resource statuses",
+      "line": 224,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#RESERVED-ENVIRONMENT-RESOURCES",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "RESERVED-ENVIRONMENT-RESOURCES-LAW",
+      "content_hash": "sha256:ebe6ebd8a4653c173b8f4d984c54c928b17b34fe3d08d70c2dfb3fbcdc5718ce",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Account, service, mount and boot roles remain describable with explicit unsupported-operation status. Missing required bindings are unresolved; unneeded roots are inapplicable. No account provisioning, service activation, mount, privilege broker or live-system operation is implemented by layout metadata. @status:spec/plan",
+      "line": 226,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#RESERVED-ENVIRONMENT-RESOURCES-LAW"
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY",
+      "content_hash": "sha256:900d490a307c6c67bbb39f2eb4d1dbaff90c50843b4d18f8e832d2ee60e92aa5",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Existing consumers unchanged",
+      "line": 228,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY-LAW",
+      "content_hash": "sha256:ba43ec7ad69dda049f32a906b37311cf11ff5bbb3a9e9e5fd2e9e3523e94f1c4",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Project vibevm roots and root vibe.toml remain under PROP-052. Existing vibe-bin store/bin and deployment state/deployments consumers retain their paths. New layout descriptions neither move them nor establish target operations. Consumer adoption requires separately bound amendments and proof. @status:spec/plan",
+      "line": 230,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY-LAW"
     },
     {
       "anchor": "root",
