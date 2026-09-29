@@ -488,3 +488,7 @@ pub enum BinCmd {
 #[cfg(test)]
 #[path = "cli/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "cli/capability_coverage_tests.rs"]
+mod capability_coverage_tests;

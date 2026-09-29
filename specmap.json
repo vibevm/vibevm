@@ -810,6 +810,78 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "coverage",
+      "end_line": 296
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 284,
+      "symbol": "coverage::disposition",
+      "end_line": 294
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 273,
+      "symbol": "coverage::external_access",
+      "end_line": 283
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 263,
+      "symbol": "coverage::implementation",
+      "end_line": 272
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 166,
+      "symbol": "coverage::model",
+      "end_line": 226
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 227,
+      "symbol": "coverage::planned_family",
+      "end_line": 250
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "coverage::source",
+      "end_line": 70
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 71,
+      "symbol": "coverage::surface",
+      "end_line": 165
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "item_kind": "schema-def",
+      "line": 251,
+      "symbol": "coverage::surface_kind",
+      "end_line": 262
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/deploy_checkpoints.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -6730,6 +6802,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::cli::capability_coverage_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:17c9a526f94cd957dc6108acfb3789f7840a450e232caee45afbedab90886220"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/doc.rs",
       "item_kind": "mod",
       "line": 6,
@@ -9238,6 +9319,15 @@
       "symbol": "vibe_cli::commands::tree::tui::search::catalogue",
       "end_line": 11,
       "fingerprint": "tok1:f3447ba6c86aefd94381ba47110aae394ec38291676d7286cd32a146ad9ab1dc"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+      "item_kind": "fn",
+      "line": 296,
+      "symbol": "vibe_cli::commands::tree::tui::search::catalogue::tests::matches_native_tree_inventory",
+      "end_line": 336,
+      "fingerprint": "tok1:0925dd8f9832e6a8f24f5b967d51b3592429ed1f9e97a98a76ee24333d5d3bd6"
     },
     {
       "crate_name": "vibe-cli",
@@ -22356,18 +22446,18 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 331,
+      "line": 334,
       "symbol": "vibe_mcp::ServerError",
-      "end_line": 356,
+      "end_line": 359,
       "fingerprint": "tok1:c391eeaf135e87c17945b45ae95430ec58e1df93c51caf0b62d0b153b9a2600f"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 92,
+      "line": 95,
       "symbol": "vibe_mcp::ToolError",
-      "end_line": 158,
+      "end_line": 161,
       "fingerprint": "tok1:3312d8b9b9faeca81bfde6a8c672ac41f33eb6f8d3ab6788617d2e955e64e251"
     },
     {
@@ -22531,6 +22621,15 @@
       "symbol": "vibe_mcp::agentic::tests::relay_backend_delegates",
       "end_line": 506,
       "fingerprint": "tok1:5801054738014f7200f90ce17767ea3f063069f668884b93389dc441b4d3cce1"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_mcp::capability_coverage_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:17c9a526f94cd957dc6108acfb3789f7840a450e232caee45afbedab90886220"
     },
     {
       "crate_name": "vibe-mcp",
@@ -31291,6 +31390,33 @@
     },
     {
       "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_wire::behaviour::capability_coverage",
+      "end_line": 7,
+      "fingerprint": "tok1:59328bee6260adcdd1d26291849e4a19976bf855942f0c86152b944d951d9cf2"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "item_kind": "fn",
+      "line": 211,
+      "symbol": "vibe_wire::behaviour::capability_coverage::Coverage::validate_capability_coverage",
+      "end_line": 342,
+      "fingerprint": "tok1:802ec78087fb95c99410627a62a31ef83b7975406aa4abb26c61c565f7625954"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_wire::behaviour::capability_coverage::tests",
+      "end_line": 7,
+      "fingerprint": "tok1:59328bee6260adcdd1d26291849e4a19976bf855942f0c86152b944d951d9cf2"
+    },
+    {
+      "crate_name": "vibe-wire",
       "file": "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
       "item_kind": "mod",
       "line": 8,
@@ -33372,162 +33498,171 @@
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 198,
       "symbol": "xtask batch-review",
-      "end_line": 226,
+      "end_line": 234,
       "fingerprint": "tok1:00e684f2005ecb848847cf6e1ee7ea1e19253177e110afb38bc835bb1f258d90"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 79,
+      "line": 87,
       "symbol": "xtask bridge",
-      "end_line": 83,
+      "end_line": 91,
       "fingerprint": "tok1:8cfd10eaeceaf70f40a6e5dba5fc8c30b368cda1a5e1d58ad4caa88661af3b58"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 89,
+      "line": 80,
+      "symbol": "xtask capability-coverage",
+      "end_line": 85,
+      "fingerprint": "tok1:0371bce672316e06cebae35f73fe5c2e441cbf7e95961ee03b52344aff278228"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/main.rs",
+      "item_kind": "command",
+      "line": 97,
       "symbol": "xtask check-codegen",
-      "end_line": 92,
+      "end_line": 100,
       "fingerprint": "tok1:d800278ef3f770088e10b0ea59143b537c12f916ad3a33cde8b02198dd24b41a"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 85,
+      "line": 93,
       "symbol": "xtask codegen",
-      "end_line": 87,
+      "end_line": 95,
       "fingerprint": "tok1:a8c95198f3d9ea255bd2445ac9b73c21871ea614c1549947e7686f72d174d3ad"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 140,
+      "line": 148,
       "symbol": "xtask codemod",
-      "end_line": 149,
+      "end_line": 157,
       "fingerprint": "tok1:c1502dc23893f8e35cd27740aad23873066ac2bf0effdb366d5aec16cfb076cf"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 133,
+      "line": 141,
       "symbol": "xtask conform",
-      "end_line": 138,
+      "end_line": 146,
       "fingerprint": "tok1:4e941408f9f69f15e7ebc1f9bb5686d4398bcefe20f7885aa90afdc7dc9195ff"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 254,
+      "line": 262,
       "symbol": "xtask dist",
-      "end_line": 258,
+      "end_line": 266,
       "fingerprint": "tok1:fadd4445179ea33d8127982a992ee12d36fb406c36b36c6ad8da4552d38eebee"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 240,
+      "line": 248,
       "symbol": "xtask embed-doc-shell",
-      "end_line": 252,
+      "end_line": 260,
       "fingerprint": "tok1:3db3ce106ed2c87ee9d916b94af6dc3fd0b7256ccdc16ee7b682e945c35b3e42"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 151,
+      "line": 159,
       "symbol": "xtask fast-loop",
-      "end_line": 169,
+      "end_line": 177,
       "fingerprint": "tok1:b683101ef149ce33aab0fd679cbafad95404e35085f5c1d668f81309c85a1360"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 171,
+      "line": 179,
       "symbol": "xtask health",
-      "end_line": 188,
+      "end_line": 196,
       "fingerprint": "tok1:3f9b61e475369cfd2cd41ee7d7d3df8bcd011e8a62192aaf1d70b28f4cf12db6"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 260,
+      "line": 268,
       "symbol": "xtask mirror",
-      "end_line": 287,
+      "end_line": 295,
       "fingerprint": "tok1:86fb03587718c4a12872fc3e2c02b427bcf673c6b3f49176d4f9e4631659e6e7"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 289,
+      "line": 297,
       "symbol": "xtask rebuild",
-      "end_line": 308,
+      "end_line": 316,
       "fingerprint": "tok1:5cfb41e1b381215fe1ee383ec7e302eb7f30b1f30aac00dcf8703cf4e6d75472"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 94,
+      "line": 102,
       "symbol": "xtask specmap",
-      "end_line": 101,
+      "end_line": 109,
       "fingerprint": "tok1:fbe6c584e566b7fd87173656bdef1b872922db27e427c512494a9ea4afb78535"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 228,
+      "line": 236,
       "symbol": "xtask sync-engines",
-      "end_line": 238,
+      "end_line": 246,
       "fingerprint": "tok1:c547faf34c7c53c98f0e817d328ba77a2e332e79699bd15623d21d15caed4255"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 103,
+      "line": 111,
       "symbol": "xtask test-gate",
-      "end_line": 110,
+      "end_line": 118,
       "fingerprint": "tok1:9085bdbdfb85320e9fdf4f484410b364700d00459cbaacef9094732519989d36"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 126,
+      "line": 134,
       "symbol": "xtask trace",
-      "end_line": 131,
+      "end_line": 139,
       "fingerprint": "tok1:de63ddcbaf0c10f572c2be2b59c2f0c9381f0a17f23163b8d82191812116fc58"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 112,
+      "line": 120,
       "symbol": "xtask tripwire",
-      "end_line": 124,
+      "end_line": 132,
       "fingerprint": "tok1:8c04426dd6b299c86bb9889ab642fdac03057111c350768e8b110d4d07aff898"
     },
     {
       "crate_name": "xtask",
       "file": "xtask/src/main.rs",
       "item_kind": "command",
-      "line": 310,
+      "line": 318,
       "symbol": "xtask wire-diff",
-      "end_line": 328,
+      "end_line": 336,
       "fingerprint": "tok1:33e27340871ff436017c9a6166b256a5a5cb70a6cf12c6f5e66bd4f6c78d9de1"
     },
     {
@@ -33736,6 +33871,15 @@
       "symbol": "xtask::bin::preview-transition-check::readiness_tests",
       "end_line": 3,
       "fingerprint": "tok1:908bc10eaba69694788459d4abeb63631242b46fe1a1656d31304c0600c12fd4"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/capability_coverage.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::capability_coverage",
+      "end_line": 3,
+      "fingerprint": "tok1:caaae222710d45f73bfd9cd66b9589fec244a57f21f9236569586cc9cf923cf5"
     }
   ],
   "edges": [
@@ -33849,6 +33993,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#context",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/capability/e1/coverage.jtd.json",
+      "from_symbol": "coverage",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY",
       "verb": "implements"
     },
     {
@@ -35326,6 +35478,14 @@
       "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "from_symbol": "vibe_cli::cli::capability_coverage_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION",
       "verb": "implements"
     },
     {
@@ -37561,6 +37721,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-catalogue",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::search::catalogue::tests::matches_native_tree_inventory",
+      "line": 297,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/search/providers.rs",
@@ -49670,7 +49838,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 341,
+      "line": 344,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -49678,7 +49846,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 103,
+      "line": 106,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -49831,6 +49999,14 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#pluggable-backend",
       "verb": "verifies",
       "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "from_symbol": "vibe_mcp::capability_coverage_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-mcp/src/context.rs",
@@ -57847,6 +58023,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "from_symbol": "vibe_wire::behaviour::capability_coverage",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "from_symbol": "vibe_wire::behaviour::capability_coverage::Coverage::validate_capability_coverage",
+      "line": 217,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::capability_coverage::tests",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
       "from_symbol": "vibe_wire::behaviour::preview_affected_source_review",
       "line": 8,
@@ -59981,6 +60181,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#BOOTSTRAP-STAGE-READINESS",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/capability_coverage.rs",
+      "from_symbol": "xtask::capability_coverage",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-VERIFICATION",
       "verb": "implements"
     }
   ],
