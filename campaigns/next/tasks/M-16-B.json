@@ -160,6 +160,7 @@
         "crates/vibe-core/src/",
         "crates/vibe-orchestrator/src/",
         "crates/vibe-wire/src/",
+        "crates/vibe-wire/tests/",
         "formats/",
         "crates/vibe-core/Cargo.toml",
         "crates/vibe-core/src/lib.rs",
