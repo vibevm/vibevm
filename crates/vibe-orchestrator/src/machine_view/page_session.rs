@@ -28,6 +28,11 @@ pub enum PageSessionError {
     UnknownEntity(String),
     EntityProjectionMismatch(String),
     EntitySnapshotMismatch(String),
+    DuplicateSourceCaptureBinding(String),
+    ConflictingSourceCaptureBinding(String),
+    BindingSnapshotMismatch(String),
+    OccurrenceMismatch(String),
+    ReusedEntityReference(String),
     DuplicateOccurrence(String),
     ParentNotPrior(String),
     MixedProjection,
@@ -58,6 +63,16 @@ pub struct SessionPage {
     pub value: wire::BoundPage,
     pub cursor_status: SessionCursorStatus,
     pub source_bytes_authenticated: bool,
+}
+
+/// An owner-declared join from captured source identity to one selected axis.
+/// Matching these opaque values does not authenticate the source bytes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceCaptureBinding {
+    pub content_or_source: OpaqueText,
+    pub revision: OpaqueText,
+    pub observation: OpaqueText,
+    pub selected_capture: OpaqueText,
 }
 
 /// One immutable row set and finite validated entity catalogue. The parent
@@ -145,11 +160,37 @@ impl PageSession {
         authorized_scope: OpaqueText,
         rows: Vec<wire::Row>,
         catalogue: Vec<EntityReference>,
+        source_bindings: Vec<SourceCaptureBinding>,
         extent: ProjectionExtent,
     ) -> Result<Self, PageSessionError> {
         let session_id = NEXT_SESSION
             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
             .map_err(|_| PageSessionError::SessionIdsExhausted)?;
+        let mut bindings = BTreeMap::new();
+        for binding in source_bindings {
+            if !snapshot.stamps().iter().any(|stamp| {
+                stamp.capture == binding.selected_capture
+                    && stamp.revision == binding.revision
+                    && stamp.observation == binding.observation
+            }) {
+                return Err(PageSessionError::BindingSnapshotMismatch(
+                    binding.content_or_source.as_str().to_owned(),
+                ));
+            }
+            let key = (
+                binding.content_or_source.as_str().to_owned(),
+                binding.revision.as_str().to_owned(),
+                binding.observation.as_str().to_owned(),
+            );
+            if let Some(prior) = bindings.insert(key, binding.selected_capture.clone()) {
+                let source = binding.content_or_source.as_str().to_owned();
+                return Err(if prior == binding.selected_capture {
+                    PageSessionError::DuplicateSourceCaptureBinding(source)
+                } else {
+                    PageSessionError::ConflictingSourceCaptureBinding(source)
+                });
+            }
+        }
         let mut entities = BTreeMap::new();
         for entity in catalogue {
             entity
@@ -164,11 +205,11 @@ impl PageSession {
                     entity.reference_id,
                 ));
             }
-            if !snapshot.stamps().iter().any(|stamp| {
-                stamp.capture.as_str() == entity.captured.content_or_source
-                    && stamp.revision.as_str() == entity.captured.revision
-                    && stamp.observation.as_str() == entity.observed.observation
-            }) {
+            if !bindings.contains_key(&(
+                entity.captured.content_or_source.clone(),
+                entity.captured.revision.clone(),
+                entity.observed.observation.clone(),
+            )) {
                 return Err(PageSessionError::EntitySnapshotMismatch(
                     entity.reference_id,
                 ));
@@ -179,10 +220,24 @@ impl PageSession {
             }
         }
         let mut seen = BTreeSet::new();
+        let mut used_entities = BTreeSet::new();
         let mut incomplete_children = false;
         for row in &rows {
-            if !entities.contains_key(&row.entity_reference_id) {
-                return Err(PageSessionError::UnknownEntity(
+            if seen.contains(row.occurrence_id.as_str()) {
+                return Err(PageSessionError::DuplicateOccurrence(
+                    row.occurrence_id.clone(),
+                ));
+            }
+            let entity = entities
+                .get(&row.entity_reference_id)
+                .ok_or_else(|| PageSessionError::UnknownEntity(row.entity_reference_id.clone()))?;
+            if !used_entities.insert(row.entity_reference_id.as_str()) {
+                return Err(PageSessionError::ReusedEntityReference(
+                    row.entity_reference_id.clone(),
+                ));
+            }
+            if row.occurrence_id != entity.occurrence.occurrence_id {
+                return Err(PageSessionError::OccurrenceMismatch(
                     row.entity_reference_id.clone(),
                 ));
             }
@@ -193,11 +248,7 @@ impl PageSession {
             {
                 return Err(PageSessionError::ParentNotPrior(row.occurrence_id.clone()));
             }
-            if !seen.insert(row.occurrence_id.as_str()) {
-                return Err(PageSessionError::DuplicateOccurrence(
-                    row.occurrence_id.clone(),
-                ));
-            }
+            seen.insert(row.occurrence_id.as_str());
             incomplete_children |= !matches!(&row.child_state, wire::ChildState::Complete(_));
         }
         let extent = if incomplete_children && extent == ProjectionExtent::DeclaredComplete {
