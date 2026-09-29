@@ -25,7 +25,12 @@
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
         "crates/vibe-mcp/src/lib.rs",
-        "campaigns/next/owner-rulings/2026-09-29-portable-migration.md"
+        "campaigns/next/owner-rulings/2026-09-29-portable-migration.md",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -47,7 +52,11 @@
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-cli/src/commands/refactor/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs"
       ],
       "steps": [
         "Implement explicit apply for .C plans: verify input/target epoch and exact source bytes/digest under the declared participating-client barrier, retain before-images and durable intent, then publish through portable safe filesystem/journal primitives. Do not claim unconditional content-CAS against uncooperating writers.",
@@ -92,7 +101,8 @@
         "Do not make this early foundation depend on completed M-16 editing services. Preserve an explicit adapter seam; M-16 later adds participating-buffer barriers to these same domain operations.",
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "Owner ruling 2026-09-29 accepts weaker platform concurrency guarantees where necessary, requires Linux/macOS/Windows usability and truthful documentation/warnings. See campaigns/next/owner-rulings/2026-09-29-portable-migration.md. This supersedes the unrestricted exact-CAS assumption without waiving preservation, durable recovery or owned-path authority."
+        "Owner ruling 2026-09-29 accepts weaker platform concurrency guarantees where necessary, requires Linux/macOS/Windows usability and truthful documentation/warnings. See campaigns/next/owner-rulings/2026-09-29-portable-migration.md. This supersedes the unrestricted exact-CAS assumption without waiving preservation, durable recovery or owned-path authority.",
+        "Bounded surface registration amendment: the four additional CLI owners are only for the early migration machine entry and explicit MCP server migration-store/file grants. Reuse existing generic dispatcher channels. Follow PROP-044#MANIFEST-MIGRATION-SURFACES; do not modify unrelated command, lifecycle, configuration or package-manager behavior."
       ]
     },
     {
