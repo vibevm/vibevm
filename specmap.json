@@ -23910,19 +23910,19 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation.rs",
       "item_kind": "struct",
-      "line": 34,
+      "line": 30,
       "symbol": "vibe_mcp::tools::machine_operation::PlanManifestMigrationEnvelopeMcpTool",
-      "end_line": 39,
+      "end_line": 35,
       "fingerprint": "tok1:ed34a8b1f7fc33aa1dd172c6aa082d37f0c0ceb80cf016e9133ad57bed7718ed"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation.rs",
       "item_kind": "fn",
-      "line": 251,
+      "line": 183,
       "symbol": "vibe_mcp::tools::machine_operation::PlanManifestMigrationEnvelopeMcpTool::run",
-      "end_line": 374,
-      "fingerprint": "tok1:59ba1aad50917e42fc01e09d73d1c0563cc4a1e62fabdf1b32db12b58278b688"
+      "end_line": 306,
+      "fingerprint": "tok1:5a944844da45ae909073cefc46fd383284e1e758b9767865aa829a7d1b354ca9"
     },
     {
       "crate_name": "vibe-mcp",
@@ -23937,45 +23937,63 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "item_kind": "fn",
-      "line": 177,
+      "line": 182,
       "symbol": "vibe_mcp::tools::machine_operation::tests::forged_owner_and_effect_are_diagnostic_not_published_as_reports",
-      "end_line": 218,
-      "fingerprint": "tok1:40c0e8e55af490255f9764ed6b792b90396a619ab97150617c314fcb4ab62984"
+      "end_line": 239,
+      "fingerprint": "tok1:46cdc72e0641e9549a91c5c89afe8d077bf079bb769554d4746cb72ee4c69ae1"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "item_kind": "fn",
-      "line": 220,
+      "line": 318,
+      "symbol": "vibe_mcp::tools::machine_operation::tests::input_arm_unknown_field_and_missing_nullable_refuse_over_dispatch",
+      "end_line": 349,
+      "fingerprint": "tok1:78a01f565d93648d8ca100f63fdbf1e5674d720d4e55cc31f0eb42a3bf7dab18"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 241,
       "symbol": "vibe_mcp::tools::machine_operation::tests::invalid_owning_preflight_retains_original_as_diagnostic_only",
-      "end_line": 241,
+      "end_line": 262,
       "fingerprint": "tok1:50580842e46b057981960db815469264f4c26bd8f8835f4ab7a1da76eb46eb9b"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "item_kind": "fn",
-      "line": 97,
+      "line": 102,
       "symbol": "vibe_mcp::tools::machine_operation::tests::malformed_outer_and_embedded_optional_null_refuse_before_service",
-      "end_line": 175,
+      "end_line": 180,
       "fingerprint": "tok1:9edf3b9c2d63b95457557835be621d7188a3263c4442f1b0fccc68670bfa24bc"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 351,
+      "symbol": "vibe_mcp::tools::machine_operation::tests::malformed_result_and_unowned_event_remain_diagnostic_only",
+      "end_line": 381,
+      "fingerprint": "tok1:17707280b6c1ea1d17e63544d457353d649211ac1c75585f9cc597c3dbcee369"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 69,
       "symbol": "vibe_mcp::tools::machine_operation::tests::pure_planner_envelope_matches_owner_over_real_dispatch_without_state",
-      "end_line": 95,
+      "end_line": 100,
       "fingerprint": "tok1:3bd87ec3ce7d1e1ddbd7ae727b0a900f096abd3f99892a1c489faf471281e0cc"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "item_kind": "fn",
-      "line": 243,
+      "line": 264,
       "symbol": "vibe_mcp::tools::machine_operation::tests::real_questions_and_refusal_keep_owner_result_and_channel",
-      "end_line": 295,
+      "end_line": 316,
       "fingerprint": "tok1:0cd0c418522c52bbcbc44df8a8aa75239acf4a469b44329a15bd452e9519f371"
     },
     {
@@ -24853,6 +24871,42 @@
     },
     {
       "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_operation::coverage",
+      "end_line": 4,
+      "fingerprint": "tok1:c78746cfd57b9c71dfeb5ece249856cf3fa902cf42fc660bc182477aecec1b08"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "item_kind": "fn",
+      "line": 114,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::from_coverage",
+      "end_line": 190,
+      "fingerprint": "tok1:0c685503fce6e615eebf953be808b8458d266bd39945a07d4a1a8d11c897bcad"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "item_kind": "fn",
+      "line": 11,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::tests::current_catalogue_projects_all_declared_operations_and_models_as_gaps",
+      "end_line": 48,
+      "fingerprint": "tok1:a2ae0ad96068ce8cf80b30d7ce38f0970fc7f27703cc752f83f4fa977a775065"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "vibe_orchestrator::machine_operation::coverage::tests::shared_surface_mapping_stays_unbound_and_cross_kind_collision_refuses",
+      "end_line": 98,
+      "fingerprint": "tok1:62aa38c9b1522ba6b76791523db3ba40a6cf76343c3e452680586c292df0e3b3"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_operation/discovery.rs",
       "item_kind": "mod",
       "line": 4,
@@ -24886,6 +24940,51 @@
       "symbol": "vibe_orchestrator::machine_operation::discovery::tests::selected_world_exposes_declared_and_absent_sources_without_a_callable_route",
       "end_line": 111,
       "fingerprint": "tok1:47069ebf8c88c7ab064a733801d48fa7795c080a4962e6386d0601df84581c29"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_operation::publication",
+      "end_line": 4,
+      "fingerprint": "tok1:9067453a12a784c7c9223e4a8189c2f492db694a76e0bbe67be0577fef4f6b45"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "item_kind": "fn",
+      "line": 43,
+      "symbol": "vibe_orchestrator::machine_operation::publication::MachineOperationService::validate_pure_planner_publication",
+      "end_line": 62,
+      "fingerprint": "tok1:cacfaa3b9846ec8891b02ac54e28bcf70a1f1febaf296b564f5035914e1e2f4a"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "item_kind": "fn",
+      "line": 51,
+      "symbol": "vibe_orchestrator::machine_operation::publication::tests::admitted_planner_result_replays_before_publication",
+      "end_line": 103,
+      "fingerprint": "tok1:3fd4d855434e5075900566888c2828432972126aa62b212b398ea5d08fcd4918"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_orchestrator::machine_operation::publication::tests::domain_refusal_and_preflight_error_keep_distinct_owner_roots",
+      "end_line": 165,
+      "fingerprint": "tok1:7be5dd99048ffc8783fdeb900c109f89e33ddb194713f627366cba444d9cc6d9"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "item_kind": "fn",
+      "line": 167,
+      "symbol": "vibe_orchestrator::machine_operation::publication::tests::forged_payload_effect_identity_and_nonresult_stage_retain_original",
+      "end_line": 212,
+      "fingerprint": "tok1:d7d86b800d9332b8ebfabafe62f9dcaa9e37552154a9987c8337110e413d51e1"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -53101,7 +53200,7 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::PlanManifestMigrationEnvelopeMcpTool",
-      "line": 35,
+      "line": 31,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
       "verb": "implements",
@@ -53110,7 +53209,7 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::PlanManifestMigrationEnvelopeMcpTool::run",
-      "line": 251,
+      "line": 183,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "implements",
@@ -53127,7 +53226,16 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::tests::forged_owner_and_effect_are_diagnostic_not_published_as_reports",
-      "line": 178,
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::machine_operation::tests::input_arm_unknown_field_and_missing_nullable_refuse_over_dispatch",
+      "line": 319,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "verifies",
@@ -53136,7 +53244,7 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::tests::invalid_owning_preflight_retains_original_as_diagnostic_only",
-      "line": 221,
+      "line": 242,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "verifies",
@@ -53145,7 +53253,16 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::tests::malformed_outer_and_embedded_optional_null_refuse_before_service",
-      "line": 98,
+      "line": 103,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::machine_operation::tests::malformed_result_and_unowned_event_remain_diagnostic_only",
+      "line": 352,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "verifies",
@@ -53154,7 +53271,7 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::tests::pure_planner_envelope_matches_owner_over_real_dispatch_without_state",
-      "line": 65,
+      "line": 70,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
       "verb": "verifies",
@@ -53163,7 +53280,7 @@
     {
       "file": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
       "from_symbol": "vibe_mcp::tools::machine_operation::tests::real_questions_and_refusal_keep_owner_result_and_channel",
-      "line": 244,
+      "line": 265,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "verifies",
@@ -53962,6 +54079,41 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::MachineCoverageRegistry::from_coverage",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::tests::current_catalogue_projects_all_declared_operations_and_models_as_gaps",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::coverage::tests::shared_surface_mapping_stays_unbound_and_cross_kind_collision_refuses",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-orchestrator/src/machine_operation/discovery.rs",
       "from_symbol": "vibe_orchestrator::machine_operation::discovery",
       "line": 4,
@@ -53993,6 +54145,50 @@
       "line": 52,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::publication",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::publication::MachineOperationService::validate_pure_planner_publication",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::publication::tests::admitted_planner_result_replays_before_publication",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::publication::tests::domain_refusal_and_preflight_error_keep_distinct_owner_roots",
+      "line": 106,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::publication::tests::forged_payload_effect_identity_and_nonresult_stage_retain_original",
+      "line": 168,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
       "verb": "verifies",
       "pinned_r": 1
     },
