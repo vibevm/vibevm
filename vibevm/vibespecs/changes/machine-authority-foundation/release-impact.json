@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "before_capture_id": "authority-baseline-e95aa1c36",
+  "after_capture_id": "authority-after-fe0e04eba",
+  "evidence": [
+    {
+      "claim_id": "reviewed-authority-source-delta",
+      "subject_id": "authority-after-fe0e04eba",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-source-review.md",
+      "verdict": "passed",
+      "sha256": "848cad49e7323f9d7eabbb15ba1163d46de20d4c54430d6416d20e6e2eacd01a"
+    },
+    {
+      "claim_id": "selected-authority-verification",
+      "subject_id": "authority-after-fe0e04eba",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-verification.md",
+      "verdict": "passed",
+      "sha256": "2c99453f80b8f001920bb176fd9ccbdb0f45a896015a50f884f6582d2378dcee"
+    },
+    {
+      "claim_id": "central-authority-contribution-review",
+      "subject_id": "fe0e04eba6a7595def8804e940df68b9b542db7d",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-central-review.md",
+      "verdict": "passed",
+      "sha256": "a8a31a68c28d7a4b7b9d609e617671fbaca1821ec306a12537ac4c44f5d490d8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "fe0e04eba6a7595def8804e940df68b9b542db7d",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/authority-central-review.md"
+  },
+  "change_id": "machine-authority-foundation",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "bd5f645278852197bd715346cb22539f490add2a"
+    },
+    {
+      "kind": "commit",
+      "identity": "5833917c7454a2059537f5ff3eac7287a88ca745"
+    },
+    {
+      "kind": "commit",
+      "identity": "fe0e04eba6a7595def8804e940df68b9b542db7d"
+    }
+  ],
+  "affected_paths": [
+    "docs/machine-api/README.md",
+    "docs/machine-api/authority-map.md",
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+    "xtask/src/bin/authority-map-check/main.rs",
+    "xtask/src/bin/authority-map-check/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:PROP-080:domain-authority",
+      "capability_id": "machine-authority-design",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Inventory and registration source obligations only; these six future architecture laws are absent at the selected baseline.",
+      "after": "Six future domain authority, observability/ETO, semantic/debug epoch, independent-axis, transport-owner seam and finite authority-map laws; no implemented runtime facade or acceptance claim.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#VIEW-CONTRACT-EPOCHS",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVATION-AXES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#TRANSPORT-OWNER-SEAMS",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
+      ]
+    },
+    {
+      "interface_id": "tool:authority-map-check",
+      "capability_id": "authority-map-reference-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Standalone authority-map-check developer binary absent at the selected baseline.",
+      "after": "Read-only generated Coverage reader plus pure validator and canonical Markdown AST joins for the retained 21 models, 15 planned families and proposed conformance references; no live source, semantic, runtime or authorization acceptance.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
+      ]
+    },
+    {
+      "interface_id": "docs:machine-api:authority-map",
+      "capability_id": "domain-authority-guidance",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Machine API authority-map design and checker README absent at the selected baseline.",
+      "after": "Retained owner/input/projection/extraction-gap design for 21 models and 15 planned families, 36 PROPOSED UNRUN obligations and README finite-check grammar; no claim that proposed domain conformance or documentation completion has passed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#VIEW-CONTRACT-EPOCHS"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Source-declared developer architecture obligations, standalone finite consistency tooling and guidance; runtime facade implementation and authorization remain separate.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Create developer guidance on authority/observability boundaries and finite checker usage; proposed obligations are unrun and later canonical documentation closure remains due.",
+    "documentation_action": "create"
+  }
+}
