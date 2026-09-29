@@ -16,7 +16,9 @@ fn project() -> (tempfile::TempDir, Project) {
 }
 
 include!("tests/external.rs");
+include!("tests/external_sync.rs");
 external_tests!();
+external_sync_tests!();
 include!("tests/native.rs");
 native_tests!();
 include!("tests/publication.rs");
