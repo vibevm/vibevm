@@ -35,7 +35,7 @@ close that loop:</close-the-loop></p>
     </facts>
     <facts ordered="false">
       <PRODUCT-SCOPE fact="true" status="impl/done">Both are product scope (`VIBEVM-SPEC.md` §5).</PRODUCT-SCOPE>
-      <READ-MOSTLY fact="true" status="impl/done">Neither changes wire
+      <READ-MOSTLY fact="true" status="impl/done">The original M1.7 integration surfaces did not change wire
   formats, the lockfile schema, or install behaviour — they are read-mostly
   surfaces over state the rest of vibevm already owns.</READ-MOSTLY>
     </facts>
@@ -71,7 +71,7 @@ against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
         <TOOL-CELL-BOUNDARY fact="true" status="impl/done">The seam is the cell boundary — a
   new tool is a new cell, not an edit to the dispatcher.</TOOL-CELL-BOUNDARY>
       </facts>
-      <p><TOOLS-IO-CONVENTION fact="true" status="impl/done">The shipped tools (all group-qualified `&lt;group&gt;/&lt;name&gt;` pkgrefs in;
+      <p><TOOLS-IO-CONVENTION fact="true" status="impl/done">The original three lockfile-derived tools (group-qualified `&lt;group&gt;/&lt;name&gt;` pkgrefs in;
 structured JSON + a text rendering out):</TOOLS-IO-CONVENTION></p>
       <facts ordered="false">
         <TOOL-QUERY-PACKAGE fact="true" status="impl/done" action="continue" actionstage="doc" audience="agent">**`query_package`** — the full lockfile entry for an installed package
