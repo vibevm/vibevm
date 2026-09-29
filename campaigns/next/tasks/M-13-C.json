@@ -106,7 +106,15 @@
         "xtask/src/codegen/strictness.rs",
         "xtask/src/codegen/strictness/tests.rs",
         "xtask/src/codegen/shared_module/policy_tests.rs",
-        "crates/vibe-cli/src/command_progress.rs"
+        "crates/vibe-cli/src/command_progress.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "sync-engines.toml",
+        "xtask/src/sync_engines.rs"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -139,7 +147,13 @@
         "xtask/src/codegen/strictness/tests.rs",
         "xtask/src/codegen/shared_module/policy_tests.rs",
         "xtask/src/codegen/format_id.rs",
-        "crates/vibe-cli/src/command_progress.rs"
+        "crates/vibe-cli/src/command_progress.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
       ],
       "steps": [
         "Register migration request/report/error schemas, exact source/target epochs, diff/preconditions and typed input questions.",
@@ -183,7 +197,8 @@
         "Structured preflight transport uses the existing ToolError channel with an optional typed report carried to structuredContent; it must not pretend the planner executed. Source ownership belongs to PROP-015 before dispatcher/type changes. Real CLI binary integration tests live at the exact migration_plan.rs test owner and use isolated child-process homes, not a global environment change.",
         "Effective-policy prerequisite also covers the existing consumer Strictness map, so explicit none+allow and ours/many+deny agree with shared generation; duplicate-schema policy conflicts still refuse. Only strictness.rs and its targeted test owner may change, with large new shared-policy tests split into the exact policy_tests.rs owner to respect600lines. No general generator redesign or registry-parser fork.",
         "Owning registry-loader prerequisite: explicitly present non-string unknown_fields must refuse; only absent fields take the historical default. Fix the existing format_id.rs loader and add one real-loader regression case in the already bound shared policy_tests.rs owner, without a second parser or weakened refusal.",
-        "CLI exhaustive-policy prerequisite: add only PlanMigration => SilentMetadata to command_progress.rs. The pure early branch still bypasses this policy at runtime; preserve all existing command classifications and re-run only the new CLI integration target after the observed E0004 compilation failure."
+        "CLI exhaustive-policy prerequisite: add only PlanMigration => SilentMetadata to command_progress.rs. The pure early branch still bypasses this policy at runtime; preserve all existing command classifications and re-run only the new CLI integration target after the observed E0004 compilation failure.",
+        "Derived copy prerequisite after canonical codegen: owner sync-engines --check observed exactly six vendored specmap generated/mod.rs header drifts. Regenerate through cargo xtask sync-engines, never edit generated/vendor copies by hand; verify actual diff is limited to those six path-only headers, then repeat the matching source-copy oracle. No frozen slots, package version increment or unrelated tree edit is authorized."
       ]
     }
   ]
