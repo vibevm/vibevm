@@ -1,0 +1,976 @@
+{
+  "schema": 1,
+  "review_id": "capability inventory finite source review candidate",
+  "before_capture_id": "capability-baseline-4a3f80a34",
+  "after_capture_id": "capability-after-2c35eed03",
+  "source_record": "evidence/capability-source-review.md",
+  "source_record_sha256": "05fcd6ce509c75a2429c50732bb8878d52889c7979c962d89f95b749a27d3dd6",
+  "paths": [
+    {
+      "path": "BACKLOG.md",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "c891bfad41b6bd45d53ee37895c407584d3c0f13",
+        "sha256": "bbc6a353cbec0154de42f673ab214202a3aad552ed4295bbe455329d501c7066"
+      },
+      "after": {
+        "git_blob_sha1": "34e60d9db194cb34e49d1f1cc906beef4684d821",
+        "sha256": "fcaa12bad6a8b91ee7e7b361b3dee82e7be02ffd6017435a36c828b862efef0e"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-cli/src/cli.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "2e7cda5a1906b7d52d8c4798c13659d2a9d05ea1",
+        "sha256": "a1d09a81affcaeb2b43a3a9b8c96f83e4b46d895d298cf296f881a7c793e6a95"
+      },
+      "after": {
+        "git_blob_sha1": "a1f151c775b001c6da6a5a6ed9440c5f5b8e5cff",
+        "sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "2ed3c1d32d16bb862e1a38e4270e29edbe7c84c6",
+        "sha256": "b97e47923f76d441226f665ae79cf5eca81847933c36c347b230520cd148ab5f"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "790e0f9e72e04c8011c1fa60bb79e5eb59c2d650",
+        "sha256": "cdc6470050c5024461a457bfa4d05ce41d96ae27d470e4efd7b38770f9b143a0"
+      },
+      "after": {
+        "git_blob_sha1": "2d394915d72713d19a15a2c9c67130fe99b73319",
+        "sha256": "e1cac60d0c0a03c4a6abce0ae71212e1ca9033a748fdbea2f809cd879eb5c676"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/vvm/source.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "014837875a526398d2452fc58c6e7786951754fb",
+        "sha256": "9a5c6eb48ab95a45eaa1959adb2e9f7e34d1834dd1ae187042eb5d6e57e33e51"
+      },
+      "after": {
+        "git_blob_sha1": "ccd36a02ba41baacaf43398934ef2316f5574e70",
+        "sha256": "dc4eec47c63d09f320b1825162483bea5b98f8efe85d85272a3c1cef28a3e845"
+      },
+      "user_no_impact_reason": "CANDIDATE: the selected source delta only replaces unwrap_err in the existing mirror-symlink refusal test with an explicit Err match; production VVM source behavior is unchanged.",
+      "documentation_no_impact_reason": "CANDIDATE: the refusal assertion remains unchanged and no product workflow or documented command behavior is edited by this test-only correction."
+    },
+    {
+      "path": "crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "2bd5269739dd08af153a6fb7c1c9ded15beaa53e",
+        "sha256": "faab3a0f66d4441400c3c78b74cb46bf7b8e2cf387c490ce2d5430c2226871d2"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/lib.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "62ca295f42a3d733f96b28db34b76999790c2651",
+        "sha256": "e15d13d408a921729b706b501bc71970a96d9236f840598f9d8b6028cf5acd98"
+      },
+      "after": {
+        "git_blob_sha1": "9a595219ac332ed995bf601cfa7cd7cf4889ebf2",
+        "sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "interface_ids": [
+        "rust:vibe-wire:Coverage::validate_capability_coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "6e3a4c6179711d04ebd40c1aeb333c483e16fd07",
+        "sha256": "9cb1d137afb3bf17c0bf98d49be74f0cacff4c2113fd39f18f3cb5551f6de5e3"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "interface_ids": [
+        "rust:vibe-wire:Coverage::validate_capability_coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "1ba5504a239e4af79ce0ea0387e3e56432936366",
+        "sha256": "2dcf6cdc47b7609bd2f1f177417fa27512d37dcb670920d5a2420b74cba476a9"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/mod.rs",
+      "interface_ids": [
+        "rust:vibe-wire:Coverage::validate_capability_coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "a6dd0e20eae5b49d78d45e131561c4f56ed72a06",
+        "sha256": "e6121498f8c64d867596e8b8bf59e2e68510ae4b26b6930fde2a1cf0a7e31df9"
+      },
+      "after": {
+        "git_blob_sha1": "d1eec4bded49553a3a4c6f20f7cd9f16cd9618ef",
+        "sha256": "87af099103ec1a2be79ccd45552edb106d838f439d3acbae55809d741dcac047"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "4cea811d2d43e04a192cd867cf3850519739b3eb",
+        "sha256": "94fdc2dd850217d17d0eb4203be9609916e07976f6ffe97d9972ba7b490e80f4"
+      },
+      "after": {
+        "git_blob_sha1": "828ae10d19272cf5c4394e954d5a0268505ac58e",
+        "sha256": "f74bc43a9dd58a8acb6669b48a800fab138bfc85200f6bab6dd026ce1c92fea4"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "1add587912c56dce7c6691c6f6937fea0a23761a",
+        "sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "c35f9508a6d79ff699413b9822eb57372bf64517",
+        "sha256": "63b9d07892eb3c319eee559fd9e8a84699321b54c14936c693b0a7a38d1f09a7"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "627f6e9d900dbe09a2ff160fbc3658ce597e0323",
+        "sha256": "cb4a3f74cc93b3ec46f1bad210b956b38dcd0cb0d410d20dda052383c90d2e9f"
+      },
+      "after": {
+        "git_blob_sha1": "001adf8182d662040a55301deb651383d77494b0",
+        "sha256": "e46c4003132dc2201f9f7d21aaa1b49a8d3fa7a06181c85d258925c8902ebefb"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "ff9a71e4d836da78d5e4064c69d1e9e601ca5c0d",
+        "sha256": "3e00e5c3aa55f6f11910cb6d572b5456ae5f48f6a2b1f7bb6950b04485313a81"
+      },
+      "after": {
+        "git_blob_sha1": "2f948c50cbff6305b22eedac35f88353bbb25547",
+        "sha256": "6167f514c1c6999168edc1aec543ee99928bfc192d22421bfcda947c93715598"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "87635968272d99b355c3bb8a2e1030df91fb9983",
+        "sha256": "0a12fc7e53073fcd62c95dca4aef3b096c93e9bff03b1c304836fd40b33d64cd"
+      },
+      "after": {
+        "git_blob_sha1": "ef6a127b212a6da9e76b1d4c277e4fe3a7e2ad6a",
+        "sha256": "8d43ebc715abd0d751a46e4b98d39f7bc0067f18ded4ecd408cd42154da14431"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "5155f4242fbb316fadbee759c4a80e47e97f17df",
+        "sha256": "13e10718fe7839de41b4de36b5590633970192931ed0a9fcdb68887bebda1085"
+      },
+      "after": {
+        "git_blob_sha1": "8b6d52125ead28c3c5b8073897998384dbea56f4",
+        "sha256": "b1b01db4eb9d854767cf791d01eb0bc8000c9c2eb48059b9fc6a862ec28b4ec7"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "29f14666727b0bb3b6eb78219c26acdd864512be",
+        "sha256": "73c2d729cf5aeb3e980f077fde5c5ee791f5e4961cf965c4a76a48eadc295c75"
+      },
+      "after": {
+        "git_blob_sha1": "bdebc3a3ef7882cdd32935ad30019165a04d20e3",
+        "sha256": "f58fe653793a12963d51bc4492dc2270d51b26a5ce0275368639c2cc486cb576"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e0f2f98dc290df0a5ec8da78e2d2ab3519c9120f",
+        "sha256": "001337fc18a5e414fbac1c6c658e111a989df2d8214333c778b77207449a5346"
+      },
+      "after": {
+        "git_blob_sha1": "177e641a4fdca4edc4e858ca46566a5c7fe63126",
+        "sha256": "6448c27b2218f8de625b0ef275f81df4e1af4d233a177bc52e43949245bce17c"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "0033d373cb5e599315a9c90d75204da2f1b06db7",
+        "sha256": "eddf60cf7b869930b8517ecbc77e01090385bdc8c0e8dd6f755a1d07acc6ebf1"
+      },
+      "after": {
+        "git_blob_sha1": "cb854fbe4517d9fb65302cbe911c315858912c7b",
+        "sha256": "4b0540df3a88320f138a70a49496ab4e8092cc2b11969b960d417c186d078ce9"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "1304dd65ad4427e8f3a57b9b10b9bee82b0b05e3",
+        "sha256": "1610ebdec60e9ff417eb4eae1e9c58ebd4c7b7adec234e27a0f9e0741eef88d0"
+      },
+      "after": {
+        "git_blob_sha1": "adaad69c09b60c3531430b907b6bd018f40372e0",
+        "sha256": "8108b8f74ad1af4c443016a10c248ee9968841744312430fbea35717ebb926df"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "8d9da5729d1a6785b6ad7929f7792f64d474e03d",
+        "sha256": "09cd1c633d9eeb49a7416d64cc65de2808ede21a0ff9b280df1cdd03d4d0897b"
+      },
+      "after": {
+        "git_blob_sha1": "b4b0995b4089afbd1c9b72444051e550f3a103cf",
+        "sha256": "fd247503bcc81815c4c1bf247dfcaaca150bef53a1c531212f740c4056226c37"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "d53ca18df6496d2d0435d202d0eda84330aacbb2",
+        "sha256": "337cb660c86b7aff1579366606597444bb80cb37a15045419b27a38720de4110"
+      },
+      "after": {
+        "git_blob_sha1": "309c68ad79bdf2cffa846458cf94be9128cc3fc6",
+        "sha256": "ef2b06e1c7db199877348ee858410e4257943d10b2a3dc3927112a609eb74331"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "43017101b8dfb2031767486403fa5ba2663faa8b",
+        "sha256": "8efaf5f6935487e27d48636f6b2874671114f04c7945e053be8e01950f0a8b5d"
+      },
+      "after": {
+        "git_blob_sha1": "7e49432927fe8931447b7254d80a11a63277f591",
+        "sha256": "1d688e95ef4e37cd6605267a31ea70846aba76155fe3a5407e53f797b994f3d0"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "7eb36f278ae93765ccd1224452ab1404909c0f5b",
+        "sha256": "66384bd7cda45cefa4a697e374f5317987fe858dd991f27703c8e66064c354d4"
+      },
+      "after": {
+        "git_blob_sha1": "c1b948f1dae7db7ecb217af099eca30908bb2979",
+        "sha256": "03298ce3cbe2b2959028e2481893c4eebc6948d9cefa97221910b2099bd20772"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "1bdbe9ba26c300446e16f5f94d9bd7586660da82",
+        "sha256": "efa9169f81bb8fecab04571c3c668c6916dff85418fe184d3863cdce68c29848"
+      },
+      "after": {
+        "git_blob_sha1": "e8c747bab8d8dab4a047b3d4863b311b7a75f1ae",
+        "sha256": "8764949532584bf03e5c9c51260bdaa55e651c13ff7273e8d28e8fef5c6d0146"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "3bde923e4b5d6feb7aa99587660872fffe04d2e0",
+        "sha256": "e2f152a33c2aa130b5cc7a7bfc7a46634bd2ba62200bc85c448199a20e51ea1c"
+      },
+      "after": {
+        "git_blob_sha1": "b8d5d4b8dfea9c24433f3faad36669efd5c8078e",
+        "sha256": "b9d99a478b3c5763d6289fd0d5633fce610dd053dd5809d5835ff0d9e101dc7e"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "4a1bd0821d9a45267ee0b3aec9ed148947a273db",
+        "sha256": "e7f6bd6d15dc3f38a91add4bdc5cc0257523552a19ddbabd64ada0d2d87bca5a"
+      },
+      "after": {
+        "git_blob_sha1": "c7fff42b790a380ad7ff602aae78c3f9eebff330",
+        "sha256": "3ce5f86ec5f21aa55341d3eace249c8c7bb35b9539c70a617e8826ca2d33ea69"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "5a0726c73aef59ac8907c4aeea75c0e265af2416",
+        "sha256": "61ca6b730fd739d541da1ede4be129ea8230042e170dff696bb9c9f9fe436c08"
+      },
+      "after": {
+        "git_blob_sha1": "8d6564411b95724dba7ea9d9a38646a192d2d7b6",
+        "sha256": "f1eacd9ad263b1f49b6a2ed76a787d3540f1e63415d0b0ec82d8c4fec3ad1b40"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "after": {
+        "git_blob_sha1": "e29f69fd9c31c1067e2346c2b7e17476da0e81ca",
+        "sha256": "f354f9626d59ed4ac9f7468b659f02fd83388b7d88a374f4eb3207185b3caa86"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "f5df8acc0dabc9e2266563861d8dcbb4fe695a21",
+        "sha256": "753daa1b602c3014cbf43e627f6d002956743c5f6aced0e1193ad441206d7ade"
+      },
+      "after": {
+        "git_blob_sha1": "8d12ae31b6af8d5fbbd62d5289a22a67bfc8c40f",
+        "sha256": "6de5cbbbacb0404b8a94b9eae1e1fedd1bb341531b90dbfee5df14b179f4902a"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "8fd41be5f6825775a12553f26d2f79411768265c",
+        "sha256": "ff09505b458da196a1558dcf4aa9eb750615f5a96081a81c93c2ea2872e6c5b0"
+      },
+      "after": {
+        "git_blob_sha1": "1ecf82c03c3d125a4b1bf3a8a633501b95e59657",
+        "sha256": "b1bffdeb2b5e2971cd13a51f0f07e8d2df6e8275eb9b8ccebf9ee3cc91e3108d"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "a31464c7af2fdda2fe97cc08be7742759b5b678c",
+        "sha256": "805e2c0a3565f30ea01c6deae2566e2c9bc1fe119e0fb3d7f6015aaf383a8504"
+      },
+      "after": {
+        "git_blob_sha1": "ebc73e7fda7b918c425871ad3f5320d56089703e",
+        "sha256": "8ec2bbf87526851864d937dfacc53b1caa566076f9ab8944738dbd20df9c686b"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "1f08af0545b89450e463d35375acd0b11faff059",
+        "sha256": "c515756ab86805c402828aa28250d035f461622f22f7979f85549497c422fae1"
+      },
+      "after": {
+        "git_blob_sha1": "c333ad67189c8ff267c66d5d79d3fce555f89de5",
+        "sha256": "9dc32da52494a84259252cf29e16e489072bef063c197fe34e613e5c9f97a8c0"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "8215f202b59e2d7395e453d9d6cca6054ca1387a",
+        "sha256": "e42ef4badc058c16a4775b022488593a08d989379b64ef89eb857a7c5b7173f8"
+      },
+      "after": {
+        "git_blob_sha1": "d809c149e1569d3cd0028066ab0727e179aec956",
+        "sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776"
+      }
+    },
+    {
+      "path": "formats/capability-coverage/README.md",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "1d728b884929b56c71e1b5c32923bee9d592c506",
+        "sha256": "f8248c8f9f5bf8c52705b00a1783faf94956f1406290e508165ddd788f2526c2"
+      }
+    },
+    {
+      "path": "formats/capability-coverage/coverage-e1.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "63699504ce5c3c165106b24537afe18559466d13",
+        "sha256": "790a3f7db527054c3a3c12c5bfbdc8f9437ee6594ba5bdeceb6b532c5c7bc660"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/missing-model-schema-ref.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "3f92355aad6f00bd6528ecbef8b7f7c59f747d42",
+        "sha256": "654ae13f6cd2bc8f562eb13b30cd75d09c3b22c9e6f15590bd64b9557a0331ba"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/schema-out-of-range.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "437e37c558197167605fc1546acab7851c79ca2f",
+        "sha256": "6ed0f96a6b6cfa6a6a66e09eef31c1b9700cdc11b41e71893c46994c8dbf256f"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/unknown-disposition.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "46ebbf039b1504a0ce6897b0a5e824fefd1f1b6e",
+        "sha256": "6614aca582709e57e933e2ca3b53cc4946ee5e0b9b2c37d0f11f40d97ae9f692"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/unknown-external-access.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "39f2821458567990783d89ebaab8b1ecb157324b",
+        "sha256": "bc7da0d3aefe4b6f3dd0509f40761c28301d6957edd52224e5de20323509e0d3"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/unknown-field.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "f1143c588e2fd4ec237dfdd6ab2985327e38aa9d",
+        "sha256": "ea8c3f94874290c6da8ddb36336924ca4f85dd0ce16edef834389b422bb4cee0"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/unknown-implementation.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "fbe5f65f3678930353881ccd70c176bd39e9b221",
+        "sha256": "3608c8c3b2ce8a0b6e8f86e5165933e66440a3a93aec17a423b0898c3c9dba57"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/unknown-surface-kind.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "82a213fddc4250358f15987812dddb5be3b3d215",
+        "sha256": "bb74e23fdcb17c41b88fc499a6e9b6e2496e49a93238c9a7783c8dfb9c2b393b"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/wrong-model-effects-type.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "57375bd1fec93b56f03c3a20d7cc35fa2745d26c",
+        "sha256": "4116fd9f84421f3c034868a7e2e854aa2084593aa5ec642f8147be32b96cc55c"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/wrong-registered-type.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "d9288ba51021da38e62a7d937993c0a170fff8c3",
+        "sha256": "9dd2f29f1d26aef2b2d469af0920c7da6c1c18b9d5f021392c97f6e2c0f3e5fa"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/invalid/wrong-schema-type.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "90f34c136b58b62248777dd5f07541afd0698bce",
+        "sha256": "a8a4f641aa33a272ee88ae2d1943aa3fabd8c404f14b8180a1566db8b69b2448"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/valid/empty.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "27bc89cdb0d2f94e740ad69862c1fca79c6474ad",
+        "sha256": "92b75ff4546029d9c07d0d3d90b015afb9bdd01db25d12bebcb3b133c7992971"
+      }
+    },
+    {
+      "path": "formats/corpora/capability-coverage/e1/valid/mapped.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "0890bd72444089d40bddc5ace574edc5f7336cda",
+        "sha256": "26d80a0688fefa5e738634187b39e7011b3a2656bac893cbd9b885562c7c3f62"
+      }
+    },
+    {
+      "path": "schemas/capability/e1/coverage.jtd.json",
+      "interface_ids": [
+        "format:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "c772452277c460aa114564a00468550fb8beebc3",
+        "sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "1775d43d8fb080740d4b886a6e466ef674df612a",
+        "sha256": "b2f4b975dc6a5fcffc0a2152d1452e155fe1bd5b06570340789f76b2ecbd3255"
+      },
+      "after": {
+        "git_blob_sha1": "5645fe7cbf1a17c80c584810d5483368dd3fd91b",
+        "sha256": "92638134f3a4cfd02d596ccdb641347ef668ca608f5f746aaac7d78a2b045e83"
+      },
+      "user_no_impact_reason": "CANDIDATE: only B215 backlog/index maintenance or generated namespace-wrapper comment changes; meaningful generated root export is separately accounted in capability-inventory-foundation.",
+      "documentation_no_impact_reason": "CANDIDATE: deferred finding/index/generator comments do not deliver a new product workflow or change a published claim; independent review still required."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "interface_ids": [
+        "format:capability-coverage",
+        "rust:vibe-wire:Coverage::validate_capability_coverage",
+        "tool:xtask:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "63b80509239f062d14eb02f7d53a25caef711f9a",
+        "sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d"
+      }
+    },
+    {
+      "path": "xtask/src/capability_coverage.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "after": {
+        "git_blob_sha1": "c471fd248b72dce818a03a74754583b099cf636a",
+        "sha256": "1748e9d705527e9aa65bf4eb3a565fc22bda7858d375445a1e125f61009560c3"
+      }
+    },
+    {
+      "path": "xtask/src/main.rs",
+      "interface_ids": [
+        "tool:xtask:capability-coverage"
+      ],
+      "before": {
+        "git_blob_sha1": "901fb3e98765fad0bf4ec08d6b83ace18e69814d",
+        "sha256": "3bdc8354f9cf521dbb0b98000b0909e81443c717aa16d7a472a3065f72d6c07e"
+      },
+      "after": {
+        "git_blob_sha1": "3c1d39878904cd5a796807c6a0a077581793d7b1",
+        "sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "format:capability-coverage",
+      "capability_id": "capability-source-inventory",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No capability-coverage registered schema/owned reader at the selected baseline.",
+      "after": "Source introduces epoch1 source-bound inventory with an explicit registration flag, distinct baseline/observation references, models and planned families; source observation and data publication remain separately identified.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+        "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/capability/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/capability-coverage/README.md",
+        "formats/capability-coverage/coverage-e1.json",
+        "formats/corpora/capability-coverage/e1/invalid/missing-model-schema-ref.json",
+        "formats/corpora/capability-coverage/e1/invalid/schema-out-of-range.json",
+        "formats/corpora/capability-coverage/e1/invalid/unknown-disposition.json",
+        "formats/corpora/capability-coverage/e1/invalid/unknown-external-access.json",
+        "formats/corpora/capability-coverage/e1/invalid/unknown-field.json",
+        "formats/corpora/capability-coverage/e1/invalid/unknown-implementation.json",
+        "formats/corpora/capability-coverage/e1/invalid/unknown-surface-kind.json",
+        "formats/corpora/capability-coverage/e1/invalid/wrong-model-effects-type.json",
+        "formats/corpora/capability-coverage/e1/invalid/wrong-registered-type.json",
+        "formats/corpora/capability-coverage/e1/invalid/wrong-schema-type.json",
+        "formats/corpora/capability-coverage/e1/valid/empty.json",
+        "formats/corpora/capability-coverage/e1/valid/mapped.json",
+        "schemas/capability/e1/coverage.jtd.json",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY"
+      ],
+      "topic_ids": [
+        "capability-coverage-format"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-wire:Coverage::validate_capability_coverage",
+      "capability_id": "capability-declaration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No capability coverage validator declaration at selected baseline.",
+      "after": "Source introduces pure local/reference consistency checks without actual source/registration/runtime/authorization or semantic acceptance.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+        "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-VERIFICATION"
+      ],
+      "topic_ids": [
+        "capability-coverage-validation"
+      ]
+    },
+    {
+      "interface_id": "tool:xtask:capability-coverage",
+      "capability_id": "native-registration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No xtask capability-coverage command or its native owner observation tests at selected baseline.",
+      "after": "Source introduces selected inventory/native command-tree/default MCP/TUI registration comparison and exact owning selected case checks; handler effects and all-feature delivery remain separate.",
+      "source_paths": [
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+        "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+        "crates/vibe-mcp/src/capability_coverage_tests.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "xtask/src/capability_coverage.rs",
+        "xtask/src/main.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION"
+      ],
+      "topic_ids": [
+        "capability-registration-observation"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "capability-coverage-format",
+      "obligation": "CANDIDATE: document capability-coverage-format from accepted exact source facts, with explicit source-only/native metadata limitations; actual page/build/runtime evidence is not bound."
+    },
+    {
+      "topic_id": "capability-coverage-validation",
+      "obligation": "CANDIDATE: document capability-coverage-validation from accepted exact source facts, with explicit source-only/native metadata limitations; actual page/build/runtime evidence is not bound."
+    },
+    {
+      "topic_id": "capability-registration-observation",
+      "obligation": "CANDIDATE: document capability-registration-observation from accepted exact source facts, with explicit source-only/native metadata limitations; actual page/build/runtime evidence is not bound."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "2c680f587ec25ce40959251b965d9e2692c0f6748b4e718bd933f4c3c89d38b4",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "git_blob_sha1": "63b80509239f062d14eb02f7d53a25caef711f9a",
+          "sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d"
+        }
+      ]
+    }
+  ]
+}

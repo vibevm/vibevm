@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "mode": "temporary-bridge-structure",
+  "bridge_references_validated": true,
+  "scope": {
+    "before_capture_id": "capability-baseline-4a3f80a34",
+    "after_capture_id": "capability-after-2c35eed03"
+  },
+  "record_ids": [
+    "capability-inventory-foundation",
+    "capability-traceability-maintenance",
+    "vvm-mirror-refusal-test-maintenance"
+  ],
+  "task_ids": [
+    "M-16-A.1"
+  ],
+  "unplanned_contribution_ids": [
+    "capability-traceability-maintenance",
+    "vvm-test-compilation-repair"
+  ],
+  "task_rows": 1,
+  "bound_task_rows": 1,
+  "unplanned_rows": 2,
+  "selected_record_count": 3,
+  "product_gates_executed": false,
+  "preview_change_records_verified": false,
+  "central_acceptance": false,
+  "supplied_scope_and_record_ids_verified": false
+}
