@@ -1,0 +1,288 @@
+{
+  "schema": 1,
+  "review_id": "architecture source law finite review candidate",
+  "before_capture_id": "architecture-baseline-2145ec8d1",
+  "after_capture_id": "architecture-after-3ffb13b29",
+  "source_record": "evidence/architecture-source-review.md",
+  "source_record_sha256": "1454a38e90d3503e973a30fbd4084f0531fb521afabb022c3f6c5c81faa23682",
+  "paths": [
+    {
+      "path": "VIBEVM-SPEC.md",
+      "interface_ids": [
+        "spec:boot:diagnostic-cost",
+        "spec:lifecycle:invocation-role",
+        "spec:model:domain-authority",
+        "spec:source:classification"
+      ],
+      "before": {
+        "git_blob_sha1": "4753dbe8f285a10471817bc5156c2c4967014b96",
+        "sha256": "ee7d54dedbb2125f7e8a20f037473509db766e2463a042db6c0732a8a9f8250f"
+      },
+      "after": {
+        "git_blob_sha1": "2f6393f4a418ead9b155701433c53e8796a62fe6",
+        "sha256": "d223a691a191520b6a8f78a9c10e77ffb7d1d0b603fd165dd318786cfe6281a5"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/agentic.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "212eaa17f84c57c902a0ee66c8e89a68c83498e8",
+        "sha256": "1bb7a2660a83341f63251d16fd092b44a3459f09f9c8812894feec9726836b10"
+      },
+      "after": {
+        "git_blob_sha1": "547e542ac2fe1ad12b94830cc2f4ca4456cca49c",
+        "sha256": "2913bd9ae633e8d124f4fffeab1aaf5687cfd7a128995484fa718d854cf52a26"
+      },
+      "user_no_impact_reason": "Mailbox test proof address alone changes from relay to the existing directory contract; assertions and production behavior remain unchanged.",
+      "documentation_no_impact_reason": "Proof annotation attribution does not deliver or change a user guide or workflow."
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "65e7f679dd4170d6f3e62248b848b3422d524e3e",
+        "sha256": "8cba5bdee1cba0559b2b1cfd148f52333926020b8b2a2b31a63b5065c3d8c10f"
+      },
+      "after": {
+        "git_blob_sha1": "d5ac76a612c6ad9c2515456716408828f502c2a4",
+        "sha256": "78d77b42b1bbc8ec5e9c181566e54f4f2768f42b307d62a07477815a9d4d0b48"
+      },
+      "user_no_impact_reason": "Source-index regeneration only; no executable operation or runtime behavior changes.",
+      "documentation_no_impact_reason": "Source index metadata does not deliver a guide or change user documentation; source-law guidance is accounted separately."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+      "interface_ids": [
+        "spec:lifecycle:invocation-role"
+      ],
+      "before": {
+        "git_blob_sha1": "1c97449696899d10fee41c90eb3e47779393f2fc",
+        "sha256": "a80f9a466946263f9c8de5026ada9ce83ceeb5459677092e8bc507b0829146de"
+      },
+      "after": {
+        "git_blob_sha1": "87fce0b299483b56de6747e574ee21318811f809",
+        "sha256": "5bca2761639399ffc13ea976a5dd4c2361b1bf6986a503004c05db75788cf53f"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+      "interface_ids": [
+        "spec:model:domain-authority"
+      ],
+      "before": {
+        "git_blob_sha1": "c45bf607860eba7f9d43a365428ff47d6538d179",
+        "sha256": "ce185e63b6cb015101dd926e02853758bcca80b824dd28f4fd761c7f1ef5da5f"
+      },
+      "after": {
+        "git_blob_sha1": "4ec1399788f210ad91fc9fae7549f6ebba9e77f9",
+        "sha256": "e9a663cf547bd0a71bf75f5a46c77a0b452c52a3f3c2f8460c9a859dc6d6cb42"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+      "interface_ids": [
+        "spec:model:domain-authority"
+      ],
+      "before": {
+        "git_blob_sha1": "162f359fc77003491ff77fec0fc1cf8f8234b2c0",
+        "sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2"
+      },
+      "after": {
+        "git_blob_sha1": "4213516a247d7110b7c69be6b843eae98f63fb5e",
+        "sha256": "13f54146ed4885a7244954b9160bec2e4c07ca760ac99a65d318676e9fb80c4f"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "interface_ids": [
+        "spec:source:classification"
+      ],
+      "before": {
+        "git_blob_sha1": "7bad7c75a76ed08dc99c27cfd9a33302b8ce0246",
+        "sha256": "31b12a7d48bb76fbd5f909fbb7a5169dec83c29b0773281b6707bc1b391960d7"
+      },
+      "after": {
+        "git_blob_sha1": "6135e9066b4d46d1d66c886a029701511822db4c",
+        "sha256": "d5d419c97b3a1217c3dfc466075f03642a4ee8c79a77c6b3aa8b97290ad91ab6"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
+      "interface_ids": [
+        "spec:boot:diagnostic-cost"
+      ],
+      "before": {
+        "git_blob_sha1": "3bc559c548f3f3ee144d5e73a1502f16ed2c591e",
+        "sha256": "0a27c6b55ede754a28d42f342787c991f22690a648cb0087f2d1c9d7c6970647"
+      },
+      "after": {
+        "git_blob_sha1": "9e1141fb96afaef4cee4c5e0f7737028e3f510c1",
+        "sha256": "42406cef94342a8ed9c8e894a44092ef1951e503385ad487396cc1787f7796ec"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "interface_ids": [
+        "spec:lifecycle:invocation-role"
+      ],
+      "before": {
+        "git_blob_sha1": "67e088a9087c7f27404e971872e445a83b3e82e0",
+        "sha256": "43bb21af5f61a7e4c691df60abc98e2a1b1e3502880b3ac3bcd708adbe1d690e"
+      },
+      "after": {
+        "git_blob_sha1": "c45b25c5596c32c79ff2deba4d203d3eb584a48f",
+        "sha256": "dfb00aadebd50e8811e2522c81b1158310a40d2db1c62bea7f05bcc706562bfd"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "spec:lifecycle:invocation-role",
+      "capability_id": "causal-role-separation",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior lifecycle/agent text retained inclusive role and relay/revision ambiguities.",
+      "after": "Required policy separates admitted create, deterministic build and ordinary/scoped verify, with separately explicit full composition checking exact produced source and causal evidence. Predecessors, credentials and phase order grant no producer authority; historical dispatcher guard implementation is not claimed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#INVOCATION-ROLE-LAW"
+      ],
+      "source_paths": [
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "topic_ids": [
+        "causal-role-source-guidance"
+      ]
+    },
+    {
+      "interface_id": "spec:source:classification",
+      "capability_id": "classified-native-ordinary-source",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior native-source text lacked the new explicit classification-before-dispatch law.",
+      "after": "Desired policy distinguishes native Vibe, structured ordinary CommonMark, ordinary XML data and opaque foreign contents, canonical parser reuse and source/projection/refusal provenance. No caller-wide runtime classification implementation or schema change is claimed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-045#SOURCE-CLASSIFICATION-LAW"
+      ],
+      "source_paths": [
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml"
+      ],
+      "topic_ids": [
+        "classified-source-guidance"
+      ]
+    },
+    {
+      "interface_id": "spec:boot:diagnostic-cost",
+      "capability_id": "boot-calculator-without-admission",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior boot/token text lacked the new no-admission-quota/calculator obligation.",
+      "after": "Desired policy forbids boot size/token admission ceilings while requiring diagnostic costs with measured/estimated basis, provenance, omissions, incompleteness and pre-install marginal what-if. No implemented calculator/runtime quota guard or worker-budget change is asserted.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-048#BOOT-NO-ADMISSION-QUOTAS"
+      ],
+      "source_paths": [
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-048-tokenomics.xml"
+      ],
+      "topic_ids": [
+        "boot-diagnostic-cost-guidance"
+      ]
+    },
+    {
+      "interface_id": "spec:model:domain-authority",
+      "capability_id": "typed-external-eto-domain-boundaries",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Model/refactoring/agentic source proposals lacked the explicit reconciled domain-authority/observability boundary.",
+      "after": "Desired law retains existing domain owners, pure inspection versus effectful preparation and typed external/ETO explanations with independent privacy/authorization/observation axes; private ABI/secret dumping, duplicate universal engine, scheduler and IDE/plugin/MVP remain excluded. Source proposals do not prove runtime/API delivery.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE"
+      ],
+      "source_paths": [
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+      ],
+      "topic_ids": [
+        "typed-domain-eto-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "causal-role-source-guidance",
+      "obligation": "CANDIDATE DRAFT: update causal-role-source-guidance from reviewed source law with explicit desired-policy/runtime distinction; actual canonical page/build/link/example/conformance proof remains pending."
+    },
+    {
+      "topic_id": "classified-source-guidance",
+      "obligation": "CANDIDATE DRAFT: update classified-source-guidance from reviewed source law with explicit desired-policy/runtime distinction; actual canonical page/build/link/example/conformance proof remains pending."
+    },
+    {
+      "topic_id": "boot-diagnostic-cost-guidance",
+      "obligation": "CANDIDATE DRAFT: update boot-diagnostic-cost-guidance from reviewed source law with explicit desired-policy/runtime distinction; actual canonical page/build/link/example/conformance proof remains pending."
+    },
+    {
+      "topic_id": "typed-domain-eto-guidance",
+      "obligation": "CANDIDATE DRAFT: update typed-domain-eto-guidance from reviewed source law with explicit desired-policy/runtime distinction; actual canonical page/build/link/example/conformance proof remains pending."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+          "git_blob_sha1": "87fce0b299483b56de6747e574ee21318811f809",
+          "sha256": "5bca2761639399ffc13ea976a5dd4c2361b1bf6986a503004c05db75788cf53f"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+          "git_blob_sha1": "4ec1399788f210ad91fc9fae7549f6ebba9e77f9",
+          "sha256": "e9a663cf547bd0a71bf75f5a46c77a0b452c52a3f3c2f8460c9a859dc6d6cb42"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+          "git_blob_sha1": "4213516a247d7110b7c69be6b843eae98f63fb5e",
+          "sha256": "13f54146ed4885a7244954b9160bec2e4c07ca760ac99a65d318676e9fb80c4f"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+          "git_blob_sha1": "6135e9066b4d46d1d66c886a029701511822db4c",
+          "sha256": "d5d419c97b3a1217c3dfc466075f03642a4ee8c79a77c6b3aa8b97290ad91ab6"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
+          "git_blob_sha1": "9e1141fb96afaef4cee4c5e0f7737028e3f510c1",
+          "sha256": "42406cef94342a8ed9c8e894a44092ef1951e503385ad487396cc1787f7796ec"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "git_blob_sha1": "c45b25c5596c32c79ff2deba4d203d3eb584a48f",
+          "sha256": "dfb00aadebd50e8811e2522c81b1158310a40d2db1c62bea7f05bcc706562bfd"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "git_blob_sha1": "dd42c50583545e40d661fba7b782a8ba314c3dbb",
+          "sha256": "32a88dc9a49dd027ed9ef7e2a73018f21a776e9890ff1f3ae969924f543689a2"
+        }
+      ]
+    }
+  ]
+}
