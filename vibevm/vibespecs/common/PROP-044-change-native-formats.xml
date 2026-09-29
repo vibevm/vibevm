@@ -495,6 +495,67 @@ selected profile/epoch/identity preservation must be verified on these surfaces;
 the final facade, mutation/apply, broad historical corpus and public
 publication remain separate obligations.</MIGRATION-TRANSPORT-LAW></p>
     </MANIFEST-MIGRATION-TRANSPORT>
+    <MANIFEST-MIGRATION-APPLY title="Portable guarded application and recovery">
+      <p>`req r1`</p>
+      <p><MIGRATION-APPLY-LAW fact="true" status="spec/plan">**Portable application with declared guarantees.** Applying a validated
+manifest migration is an explicit effectful operation, separate from pure
+planning. Linux, macOS and Windows each require a usable implementation.
+Missing unrestricted content-CAS alone does not disable a platform. The
+initial portable contract serializes participating migration clients through
+a common project barrier, revalidates the selected frozen profiles, epochs,
+recipe and exact approved source bytes under that barrier, and publishes the
+validated after bytes. The existing planner owns the text transformation and
+its domain-framed identities; filesystem snapshots retain their separate raw
+byte identity recipe. A caller cannot supply an unchecked after document.
+
+The barrier scope is explicit. Advisory locks and comparison followed by
+rename do not provide unconditional content-CAS against processes that ignore
+the protocol, including previously opened writable handles or mappings.
+An external writer can race the final comparison and publication. A matching
+observation does not prove that no intervening edit occurred. Document these
+limits, expose the achieved concurrency and durability guarantees in the
+registered result, and emit typed actionable warnings when an operation
+observes conflict, uncertain publication, reduced durability or unresolved
+residue. Do not promise detection of every uncooperating race. Participation
+by editor buffers is a later adapter obligation, not an implicit prerequisite
+or an already implemented exclusion mechanism.
+
+Before any target mutation, durably retain exact approved before bytes and
+relevant preservation metadata, the validated plan, bounded target authority
+and operation intent in an explicitly selected recovery store. The store is
+physically disjoint from the target; publication stages stay on the target
+filesystem when required by the owning primitive. Retained approved images
+are distinct from mutable or potentially foreign project entries. Planning,
+a path spelling, package version 1.1.0 and a journal identifier alone grant no
+authority to update a path. The authorized operation is limited to its
+selected owned authored file; frozen published coordinates, historical
+captures, fixtures and upstream data are not inferred write targets.
+
+Journal each durable boundary so interruption immediately before or after
+any write can be inspected after process exit. Reports distinguish completed,
+pending and uncertain effects; an error is not evidence of no mutation.
+Observation of approved before bytes, validated after bytes, absence and an
+unknown third state have distinct meanings. Recovery revalidates its retained
+intent and actual target state under the same participating-client barrier.
+An exact completed replay is idempotent. Recovery may complete or restore
+only a supported, proved prefix; it preserves unknown occupants and retained
+residue, refuses ambiguous automatic action, and reports what remains.
+Successful rollback is claimed only after its resulting state is verified.
+Do not silently overwrite a detected third state or discard the sole retained
+source image while recovering.
+
+Actual platform and filesystem primitives own namespace anchoring, no-follow
+checks, publication and synchronization. Describe achieved durability and
+uncertain effects honestly when a primitive cannot confirm them. A genuine
+filesystem, authority or synchronization failure may refuse with its precise
+reason; it is not a blanket operating-system exclusion. Implemented platform
+paths and native-platform test evidence are separate claims. Verify the
+bounded migration's preservation, approved-byte conflict checks, repeat
+behavior and each interruption boundary; measure actual native platform
+behavior before claiming that platform's proof complete. Product version,
+authored format epoch, wire epoch and journal protocol revision remain
+independent.</MIGRATION-APPLY-LAW></p>
+    </MANIFEST-MIGRATION-APPLY>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
