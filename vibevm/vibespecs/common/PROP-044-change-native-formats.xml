@@ -368,10 +368,31 @@ owning TOML syntax tree. Their exact field sets, primitive shapes and value
 vocabularies are frozen independently of the evolving current Manifest
 decoder. A new shape needs a new profile revision. The initial bounded recipe
 is the documented materialization `snapshot` to `copy` rename, rehearsed on
-retained historical authored bytes with immutable provenance; it does not
-claim to implement the complete historical manifest language. Current
+retained historical fixture bytes with immutable provenance. A retained test
+fixture proves its recognized case, not a real-file corpus; that broader
+rehearsal remains required before claiming broad migration support. This
+recipe does not implement the complete historical manifest language. Current
 pre-epoch and explicit epoch-1 identity profiles remain distinct. SourceDescriptor,
 feature-specific converters and effectful application are separate atoms.
+
+The first registry entries are `materialization-legacy-absent-r1`,
+`materialization-current-absent-r1` and `materialization-current-epoch1-r1`.
+Their bounded package-role grammar admits only root `package` and optional
+`requires`; package requires string `name`, `group`, `kind`, `version`, with
+kind in `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`. Optional strings are
+`materialization`, `license`, `description`, `homepage`; optional string arrays
+are `authors`, `keywords`; optional booleans are `bridge`, `frozen`. Epoch is
+absent in the two absent profiles and integer 1 in the epoch-1 profile.
+Requires admits only `packages`, whose owner-qualified keys map to string
+constraints or tables with required string `version` and optional string
+`link`, one of `static`, `dynamic`, `static-transitive`, `static-hard`.
+Normal and inline TOML tables are equivalent shapes. Every other key, shape
+or vocabulary is refused. Legacy materialization is required and exactly
+`snapshot`; current materialization is absent or `copy`, `hardlink`,
+`in-place`. The only nonidentity edge is `snapshot-to-copy-r1`, from legacy
+absent to current absent; `identity-r1` covers the two current profiles each
+to itself. No edge adds an epoch. Current semantic validation may refuse an
+otherwise recognized shape; that never widens this frozen grammar.
 
 A successful plan carries exact before and after text, ordered token edits,
 source/target/recipe identities, deterministic domain-framed content and diff
