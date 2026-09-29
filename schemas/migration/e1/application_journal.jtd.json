@@ -3,7 +3,7 @@
     "description": "Authoritative epoch-1 migration recovery checkpoint. Required nullable unix_mode distinguishes explicit null from omission through the existing required-nullable generation pass; actual emitted attributes and reader refusal remain to be confirmed. Schema/protocol exactly1, phases, immutable intent, identities, canonical decimals and capabilities require owner validation.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
-      "r": 2
+      "r": 3
     },
     "rustOptions": {
       "package": "vibe_wire::migration::e1::application_journal"
