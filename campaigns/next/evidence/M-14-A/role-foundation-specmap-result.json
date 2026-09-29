@@ -1,0 +1,13 @@
+{
+  "exit": 0,
+  "subject": "1568af9f3542f791d77246d5b5b8c9214e06dde2",
+  "units": 8785,
+  "tagged_items": 3990,
+  "edges": 3402,
+  "suspects": 0,
+  "gated_orphans": 0,
+  "unresolved_host_edges": 0,
+  "existing_warnings": 34,
+  "outside_jurisdiction_edges": 35,
+  "raw_sha256": "b2a927c0f30363b188f7e77d900a1850c1f18ddf42cae185e1c0e375c69b5f07"
+}
