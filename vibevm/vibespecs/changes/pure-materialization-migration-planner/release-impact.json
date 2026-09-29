@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "change_id": "pure-materialization-migration-planner",
+  "before_capture_id": "migration-plan-baseline-62161a91c",
+  "after_capture_id": "migration-plan-after-5b0ffde00",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "5f930872367f19e0e0c798f2a511b00260c8afd9"
+    },
+    {
+      "kind": "commit",
+      "identity": "640ed8e3340971713044eb8616636968360a53f5"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-core/src/manifest/migration.rs",
+    "crates/vibe-core/src/manifest/migration/tests.rs",
+    "crates/vibe-core/src/manifest/mod.rs"
+  ],
+  "effects": [
+    {
+      "capability_id": "explicit-profile-materialization-plan",
+      "audience": "developer / repository maintainer",
+      "platform": "bounded pure Rust feature and GNU/Linux proof; no new CLI/MCP/native ABI, apply or all-platform claim",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN"
+      ],
+      "interface_id": "rust:vibe-core:manifest:plan_manifest_migration",
+      "kind": "introduced",
+      "before": "No bounded C1 pure migration planner exposed from manifest.",
+      "after": "Public Rust source API plans exact text/token edits and identities with typed outcomes; no effectful application, public transport, complete historical reader or real-file corpus claim."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Developer source/internal Rust contract effect; no CLI/MCP declaration delta or public distribution grant.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Bounded developer source/API guidance requires update; no final guide acceptance.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-plan-contribution-review",
+      "subject_id": "640ed8e3340971713044eb8616636968360a53f5",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-central-review.md",
+      "verdict": "passed",
+      "sha256": "3d6670c8448e5c1d20921df4efc8af45b003633e1c9de94663d513f12c4d3e1e"
+    },
+    {
+      "claim_id": "reviewed-migration-plan-source-delta",
+      "subject_id": "migration-plan-after-5b0ffde00",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-source-review.md",
+      "verdict": "passed",
+      "sha256": "5b72627060ccc5a2e3fb08568874af29e8d9feee6d6dd2d305b0587e8b882756"
+    },
+    {
+      "claim_id": "selected-migration-plan-verification",
+      "subject_id": "migration-plan-after-5b0ffde00",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-verification.md",
+      "verdict": "passed",
+      "sha256": "bee062fc99122824f850a2a00b99d93df77fba61f368638fe7e9a792472b9f7f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "640ed8e3340971713044eb8616636968360a53f5",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-central-review.md"
+  }
+}

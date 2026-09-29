@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "change_id": "explicit-manifest-migration-profile-law",
+  "before_capture_id": "migration-plan-baseline-62161a91c",
+  "after_capture_id": "migration-plan-after-5b0ffde00",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "cc4d9b0ff469c449a7bf4d8467b023a653c95537"
+    },
+    {
+      "kind": "commit",
+      "identity": "ca94c0a946c994518850fb41c775e2e0935c2bb4"
+    },
+    {
+      "kind": "commit",
+      "identity": "7216ef99a66745f4756136a31e393e022035dfe8"
+    },
+    {
+      "kind": "commit",
+      "identity": "af74b641dfa5c145c3e540ce4dc2ff8c44a63b8b"
+    },
+    {
+      "kind": "commit",
+      "identity": "d882b9bdffe31f566986d4cf58ef918fb9c1c156"
+    },
+    {
+      "kind": "commit",
+      "identity": "73ef9545c30eac0b1ecc69819896cfd2017688f1"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+  ],
+  "effects": [
+    {
+      "capability_id": "explicit-profile-materialization-plan",
+      "audience": "developer / repository maintainer",
+      "platform": "bounded pure Rust feature and GNU/Linux proof; no new CLI/MCP/native ABI, apply or all-platform claim",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN"
+      ],
+      "interface_id": "spec:manifest:explicit-migration-profile",
+      "kind": "changed",
+      "before": "Historical rename recipe lacked the explicit finite-profile pure-plan contract.",
+      "after": "Explicit immutable profiles, ABSENT handling, typed selection/refusal and syntax-preserving in-memory planning law; broad historical corpus support remains unproved."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Developer source/internal Rust contract effect; no CLI/MCP declaration delta or public distribution grant.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Bounded developer source/API guidance requires update; no final guide acceptance.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-plan-contribution-review",
+      "subject_id": "73ef9545c30eac0b1ecc69819896cfd2017688f1",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-central-review.md",
+      "verdict": "passed",
+      "sha256": "3d6670c8448e5c1d20921df4efc8af45b003633e1c9de94663d513f12c4d3e1e"
+    },
+    {
+      "claim_id": "reviewed-migration-plan-source-delta",
+      "subject_id": "migration-plan-after-5b0ffde00",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-source-review.md",
+      "verdict": "passed",
+      "sha256": "5b72627060ccc5a2e3fb08568874af29e8d9feee6d6dd2d305b0587e8b882756"
+    },
+    {
+      "claim_id": "selected-migration-plan-verification",
+      "subject_id": "migration-plan-after-5b0ffde00",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-verification.md",
+      "verdict": "passed",
+      "sha256": "bee062fc99122824f850a2a00b99d93df77fba61f368638fe7e9a792472b9f7f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "73ef9545c30eac0b1ecc69819896cfd2017688f1",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-plan-central-review.md"
+  }
+}
