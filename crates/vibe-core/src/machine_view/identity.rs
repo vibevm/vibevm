@@ -136,7 +136,7 @@ pub struct EntityReference {
 impl EntityReference {
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-        r = 1
+        r = 2
     )]
     pub fn new(
         logical: LogicalIdentity,

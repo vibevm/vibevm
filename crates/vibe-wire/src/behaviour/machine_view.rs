@@ -95,7 +95,7 @@ impl EntityReference {
     /// `reference_id` remains a projection-local lookup key on this DTO.
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-        r = 1
+        r = 2
     )]
     pub fn validate_machine_entity_reference(&self) -> Validated<CoreEntityReference> {
         if self.schema != 1 {

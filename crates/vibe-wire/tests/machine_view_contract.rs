@@ -43,7 +43,7 @@ fn semantic_only<T: DeserializeOwned>(family: &str, name: &str) {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
