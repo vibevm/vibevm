@@ -294,6 +294,48 @@ mod tests {
     }
 
     #[test]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION")]
+    fn matches_native_tree_inventory() {
+        use std::collections::BTreeSet;
+        use vibe_wire::generated::capability::e1::coverage::{Coverage, SurfaceKind};
+        let path = std::env::var_os("VIBE_CAPABILITY_COVERAGE")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| {
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../../formats/capability-coverage/coverage-e1.json")
+            });
+        let coverage: Coverage =
+            serde_json::from_slice(&std::fs::read(path).expect("selected coverage bytes"))
+                .expect("generated Coverage reader");
+        coverage
+            .validate_capability_coverage()
+            .expect("own pure coverage invariants");
+        let native: BTreeSet<_> = TREE_ACTIONS.iter().map(|row| row.addr.to_owned()).collect();
+        assert!(
+            !TREE_ACTIONS.is_empty(),
+            "native catalogue denominator is nonzero"
+        );
+        assert_eq!(native.len(), TREE_ACTIONS.len(), "unique native addresses");
+        let declared: Vec<_> = coverage
+            .surfaces
+            .iter()
+            .filter(|row| row.kind == SurfaceKind::Tui && row.registered)
+            .map(|row| row.name.clone())
+            .collect();
+        let names: BTreeSet<_> = declared.iter().cloned().collect();
+        assert!(!names.is_empty(), "registered TUI denominator is nonzero");
+        assert_eq!(
+            names.len(),
+            declared.len(),
+            "duplicate inventory TUI address"
+        );
+        assert_eq!(
+            names, native,
+            "all native addresses, including any inventory-false row, remain required"
+        );
+    }
+
+    #[test]
     fn every_action_has_a_nonempty_name_and_description() {
         for a in TREE_ACTIONS {
             assert!(!a.name.trim().is_empty(), "{} has a name", a.addr);

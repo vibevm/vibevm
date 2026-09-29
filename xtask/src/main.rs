@@ -41,6 +41,7 @@ use clap::{Parser, Subcommand};
 
 mod batch_review;
 mod bridge;
+mod capability_coverage;
 mod codegen;
 mod conform;
 mod dist;
@@ -76,6 +77,13 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Cmd {
+    /// Compare source inventory with native registration metadata in owning targets.
+    CapabilityCoverage {
+        /// Selected registered coverage inventory; defaults to the permanent dataset.
+        #[arg(long)]
+        inventory: Option<PathBuf>,
+    },
+
     /// Author and verify zero-copy reference-backed bridge package inputs.
     Bridge {
         #[command(subcommand)]
@@ -420,6 +428,9 @@ enum TraceCmd {
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
+        Cmd::CapabilityCoverage { inventory } => {
+            capability_coverage::run(&repo_root()?, inventory.as_deref())
+        }
         Cmd::Bridge { command } => run_bridge(command),
         Cmd::Codegen => run_codegen(),
         Cmd::CheckCodegen => run_check_codegen(),

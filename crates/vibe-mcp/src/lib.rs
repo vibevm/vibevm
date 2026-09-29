@@ -52,6 +52,9 @@ pub mod pkgskill;
 pub mod tools;
 pub mod transport;
 
+#[cfg(test)]
+mod capability_coverage_tests;
+
 pub use agents::{Agent, ConfigFormat, ConfigPayload, SKILL_NAME, Scope, What, detect_agents};
 pub use context::ServerContext;
 pub use jsonrpc::{JsonRpcError, JsonRpcMessage, JsonRpcRequest, JsonRpcResponse};
