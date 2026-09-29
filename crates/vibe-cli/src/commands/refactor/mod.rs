@@ -11,6 +11,8 @@ use vibe_specdoc::Direction;
 use crate::output;
 
 mod convert_source;
+pub(crate) mod machine_entry;
+mod migration_operation;
 pub(crate) mod migration_plan;
 
 use convert_source::{ConversionTarget, run_conversion};
@@ -28,6 +30,9 @@ pub struct RefactorArgs {
 pub(crate) enum RefactorCommand {
     /// Plan an authored-manifest migration from JSON stdin or a literal request.
     PlanMigration(PlanMigrationArgs),
+
+    /// Apply, inspect or recover an explicitly owned authored manifest.
+    MigrationOperation(PlanMigrationArgs),
 
     /// Convert selected authored spec sources through the vibe-specdoc pivot.
     #[command(visible_alias = "convert-src")]
@@ -164,8 +169,8 @@ fn resolve_formats(
 /// Run one refactoring-family command.
 pub fn run(ctx: &output::Context, args: RefactorArgs) -> Result<()> {
     match args.command {
-        RefactorCommand::PlanMigration(_) => {
-            bail!("migration planning requires its text-only entry")
+        RefactorCommand::PlanMigration(_) | RefactorCommand::MigrationOperation(_) => {
+            bail!("migration machine commands require their early entry")
         }
         RefactorCommand::ConvertSource(args) => run_convert_source(ctx, args),
         RefactorCommand::ConvertPackageSrc(args) => run_convert_package_src(ctx, args),

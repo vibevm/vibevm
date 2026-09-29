@@ -224,7 +224,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Requirements(_) => FiniteFallback("Command requirements"),
         Command::Why(_) => FiniteFallback("Command why"),
         Command::Refactor(args) => match &args.command {
-            RefactorCommand::PlanMigration(_) => SilentMetadata,
+            RefactorCommand::PlanMigration(_) | RefactorCommand::MigrationOperation(_) => {
+                SilentMetadata
+            }
             RefactorCommand::ConvertSource(_)
             | RefactorCommand::ConvertPackageSrc(_)
             | RefactorCommand::ConvertSpecSrc(_) => FiniteFallback("Command refactor"),
