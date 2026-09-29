@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "before_capture_id": "authority-baseline-e95aa1c36",
+  "after_capture_id": "authority-after-fe0e04eba",
+  "evidence": [
+    {
+      "claim_id": "reviewed-authority-source-delta",
+      "subject_id": "authority-after-fe0e04eba",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-source-review.md",
+      "verdict": "passed",
+      "sha256": "848cad49e7323f9d7eabbb15ba1163d46de20d4c54430d6416d20e6e2eacd01a"
+    },
+    {
+      "claim_id": "selected-authority-verification",
+      "subject_id": "authority-after-fe0e04eba",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-verification.md",
+      "verdict": "passed",
+      "sha256": "2c99453f80b8f001920bb176fd9ccbdb0f45a896015a50f884f6582d2378dcee"
+    },
+    {
+      "claim_id": "central-authority-contribution-review",
+      "subject_id": "ec0a33f8a6cba91c65256b1a4ba83a75a635a71c",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/authority-central-review.md",
+      "verdict": "passed",
+      "sha256": "a8a31a68c28d7a4b7b9d609e617671fbaca1821ec306a12537ac4c44f5d490d8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "ec0a33f8a6cba91c65256b1a4ba83a75a635a71c",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/authority-central-review.md"
+  },
+  "change_id": "machine-authority-traceability",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "92e041333ce8ecd2c90123fc13568aac43fccead"
+    },
+    {
+      "kind": "commit",
+      "identity": "ec0a33f8a6cba91c65256b1a4ba83a75a635a71c"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Only regenerates native source traceability index entries for source laws and the checker marker; no command handler, public operation, format or runtime effect changes.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "Index metadata does not deliver a guide, change a documented user workflow or establish conformance; authority guidance files are accounted separately in foundation.",
+    "documentation_action": "none"
+  }
+}
