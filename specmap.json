@@ -33559,6 +33559,51 @@
     },
     {
       "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/affected_review.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::affected_review",
+      "end_line": 3,
+      "fingerprint": "tok1:7d0491b30c161ba241fa1f69352b5d744b38dd929a0473db9f16afb90b24319a"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/affected_review/contracts.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::affected_review::contracts",
+      "end_line": 3,
+      "fingerprint": "tok1:7d0491b30c161ba241fa1f69352b5d744b38dd929a0473db9f16afb90b24319a"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/affected_review/membership.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::affected_review::membership",
+      "end_line": 3,
+      "fingerprint": "tok1:7d0491b30c161ba241fa1f69352b5d744b38dd929a0473db9f16afb90b24319a"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/affected_review/paths.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::affected_review::paths",
+      "end_line": 3,
+      "fingerprint": "tok1:7d0491b30c161ba241fa1f69352b5d744b38dd929a0473db9f16afb90b24319a"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/affected_review/tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "xtask::bin::preview-transition-check::affected_review::tests",
+      "end_line": 2,
+      "fingerprint": "tok1:7d0491b30c161ba241fa1f69352b5d744b38dd929a0473db9f16afb90b24319a"
+    },
+    {
+      "crate_name": "xtask",
       "file": "xtask/src/bin/preview-transition-check/captured_git_tests.rs",
       "item_kind": "mod",
       "line": 9,
@@ -33655,6 +33700,15 @@
       "symbol": "xtask::bin::preview-transition-check::documentation::xml",
       "end_line": 7,
       "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/git_entry.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::git_entry",
+      "end_line": 3,
+      "fingerprint": "tok1:0a17ea5435cebfafba8e4959d625c2817863b40fc57cf4303ed7be9ad1e981ce"
     },
     {
       "crate_name": "xtask",
@@ -59770,6 +59824,46 @@
       "verb": "implements"
     },
     {
+      "file": "xtask/src/bin/preview-transition-check/affected_review.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::affected_review",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/affected_review/contracts.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::affected_review::contracts",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/affected_review/membership.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::affected_review::membership",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/affected_review/paths.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::affected_review::paths",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/affected_review/tests.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::affected_review::tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW",
+      "verb": "implements"
+    },
+    {
       "file": "xtask/src/bin/preview-transition-check/captured_git_tests.rs",
       "from_symbol": "xtask::bin::preview-transition-check::captured_git_tests",
       "line": 9,
@@ -59855,6 +59949,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/git_entry.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::git_entry",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-GIT-READ-BOUNDARY",
       "verb": "implements"
     },
     {

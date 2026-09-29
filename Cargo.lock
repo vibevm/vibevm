@@ -5882,6 +5882,7 @@ dependencies = [
  "vibe-publish",
  "vibe-registry",
  "vibe-safefs",
+ "vibe-spec",
  "vibe-specdoc",
  "vibe-wire",
  "walkdir",
