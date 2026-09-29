@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "inventory_id": "capability-source-coverage-candidate-4a3f80a34",
+  "inventory_id": "capability-source-coverage-candidate-e830ee297",
   "baseline_capture_id": "capability-baseline-4a3f80a34",
-  "observation_capture_id": "capability-after-dd7d05e4c",
+  "observation_capture_id": "machine-operation-observed-e830ee297",
   "sources": [
     {
       "source_id": "source:campaigns/next/manifest.json",
       "path": "campaigns/next/manifest.json",
-      "sha256": "e3c39a4688e992e7156dac55c2b0b655d7b7a46a231ae9b73fd8c09f994568dc"
+      "sha256": "99e557b032e8f97bb042614d06ade87f6db8bd179afbabee4ac5f231866c636c"
     },
     {
       "source_id": "source:crates/vibe-actions/src/action.rs",
@@ -87,7 +87,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli/mcp.rs",
       "path": "crates/vibe-cli/src/cli/mcp.rs",
-      "sha256": "ab27ffea116d396b9ee5b4d932eaa26c7b639ec5ad4e5ee67087345fa1d39de3"
+      "sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/pkg.rs",
@@ -172,7 +172,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/command_progress.rs",
       "path": "crates/vibe-cli/src/command_progress.rs",
-      "sha256": "6d1c10e1096c182d52a50a6285506edee5777e4f2ba7e48ce37d1c86b43cb898"
+      "sha256": "19f1784e0e662945ac0a2b973a21466dc1067e4e70e7857f517c68136c958f2c"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/agentic/mod.rs",
@@ -292,7 +292,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/mcp/mod.rs",
       "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
-      "sha256": "ff2cc09d8c57651f842237b1076d3fe996d203622b8573b7c9ff41663b2415e5"
+      "sha256": "005066f44379094d86716537d022f54e5f6e5a087308d83966390369aea786a4"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
@@ -335,9 +335,19 @@
       "sha256": "a74fde188f79adcc463d37cd4efff21983e8fd85c91de3f8f265c2b91ec5010f"
     },
     {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "sha256": "96a5a46ee6499022d2de7aa7e9a6936a708c942b55308c3dc659433530aac337"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "sha256": "45f3dada918da9f832e45828aa85a8830534faeb9d61105cf3662414227beb1c"
+    },
+    {
       "source_id": "source:crates/vibe-cli/src/commands/refactor/mod.rs",
       "path": "crates/vibe-cli/src/commands/refactor/mod.rs",
-      "sha256": "699a7aa0d3ab055583dd71dc97945c4a9dec0d1974cd4d10c5f84a8a1a9dfa60"
+      "sha256": "0473cb57809c4723c6290e26250833b2b5fc2420a359bb96dd2e51790eab93e2"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/registry/mod.rs",
@@ -602,12 +612,47 @@
     {
       "source_id": "source:crates/vibe-cli/src/main.rs",
       "path": "crates/vibe-cli/src/main.rs",
-      "sha256": "650651d0c117f5a9a8e12675a132257ba21b929fe5e65c80cf4bf8c05d03a0c7"
+      "sha256": "2e7d84ff34f9e89b757944f5ad8999357ecb847f284360cbcf038bcba201a0cb"
     },
     {
       "source_id": "source:crates/vibe-cli/src/output.rs",
       "path": "crates/vibe-cli/src/output.rs",
       "sha256": "d4acab4694cff477b0044cc3557e3f3813ffdb832335cedcc607d4e811fdc1c8"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/environment/layout.rs",
+      "path": "crates/vibe-core/src/environment/layout.rs",
+      "sha256": "40659ac92a30fa639bc82d2c8850c370f77732d035086541e87fec2f4180a811"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/environment/mod.rs",
+      "path": "crates/vibe-core/src/environment/mod.rs",
+      "sha256": "cc9633f5a1ab9062ad1ecc20da1631f2f9858e1a921ceeaea5bd32b236c9c11b"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/environment/prefix.rs",
+      "path": "crates/vibe-core/src/environment/prefix.rs",
+      "sha256": "3b48d2bc32758c1eba21fe4faf3df050a36a9d79f7f5f850ae0055fd2f465131"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/environment/resource.rs",
+      "path": "crates/vibe-core/src/environment/resource.rs",
+      "sha256": "1bbc258583cce1c558107736c38f55a690ebc3d3b26a47c5628ab54855f61723"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/environment/target_path.rs",
+      "path": "crates/vibe-core/src/environment/target_path.rs",
+      "sha256": "aa455d0c8463ffb8c5b7de0710617f2f783928dbc2fe78bc4351796d51d79847"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/manifest/extension.rs",
+      "path": "crates/vibe-core/src/manifest/extension.rs",
+      "sha256": "c5a04c3d9365c609752a729e91272687fa58ce27ff8529d45bfb9ffb986b695b"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/manifest/extension/machine_schema.rs",
+      "path": "crates/vibe-core/src/manifest/extension/machine_schema.rs",
+      "sha256": "ed14cc8b5988f2e7baf2fd70e8af8e6d5613ebe34a59443e739501911d7e5687"
     },
     {
       "source_id": "source:crates/vibe-core/src/visibility/effective.rs",
@@ -652,7 +697,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/agentic.rs",
       "path": "crates/vibe-mcp/src/agentic.rs",
-      "sha256": "1bb7a2660a83341f63251d16fd092b44a3459f09f9c8812894feec9726836b10"
+      "sha256": "2913bd9ae633e8d124f4fffeab1aaf5687cfd7a128995484fa718d854cf52a26"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/agents.rs",
@@ -667,7 +712,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/context.rs",
       "path": "crates/vibe-mcp/src/context.rs",
-      "sha256": "2a337c5a9099d1be8b15ffe412625644bce17241c3372e76c83a5380e637f401"
+      "sha256": "e9939013224e37ca652ed75f6d4d919033904fa670967af6790e9158f9d26f09"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/install.rs",
@@ -677,7 +722,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/lib.rs",
       "path": "crates/vibe-mcp/src/lib.rs",
-      "sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e"
+      "sha256": "c8126d25179794c9eb6a73d7efb8c123cb0fb9a4a161616c3cff085fa3b3179c"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/pkg_servers.rs",
@@ -692,7 +737,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools.rs",
       "path": "crates/vibe-mcp/src/tools.rs",
-      "sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3"
+      "sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
@@ -715,14 +760,29 @@
       "sha256": "25f5aefa2069fd3f05b14a299434adec55ac3f835975dc32129b32ebf2ace1b9"
     },
     {
+      "source_id": "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/machine_operation.rs",
+      "sha256": "d1434dce0002eb04c0baac3009b7609f9644aa59b03dad445b2aa2a7acb06cb3"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/migration_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "sha256": "1a60a4d221c838373e496d04de723d01c826ef35b2c3aa05a33a83b30ccb228c"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+      "path": "crates/vibe-mcp/src/tools/migration_plan.rs",
+      "sha256": "5845a87b9d53eb7a4421099e98e2b522638e8c1e79c1aae3f570bcffe19ac3b3"
+    },
+    {
       "source_id": "source:crates/vibe-mcp/src/tools/output.rs",
       "path": "crates/vibe-mcp/src/tools/output.rs",
-      "sha256": "0085dfbca5a0094a446fe2e02b8f4e7c091fbecbea671fee8a634c355835cab2"
+      "sha256": "d3edabb042e76190c415f9ba11577a66657e1a0022f43e32200b73aaacc688f4"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/query.rs",
       "path": "crates/vibe-mcp/src/tools/query.rs",
-      "sha256": "47dc7846b94e96e73a1274dcdbf7967a761a8b43c0b1308a577a46fda3406eeb"
+      "sha256": "3af3be32a8cb4194d841efc4eb7e67d0b02d744408f03251db396e760bbfc7f5"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/read_doc.rs",
@@ -738,6 +798,21 @@
       "source_id": "source:crates/vibe-mcp/src/tools/select.rs",
       "path": "crates/vibe-mcp/src/tools/select.rs",
       "sha256": "573946f9cbef4542b4986cd000c7130b2eb79a0e05e01e736b0f910881a1db25"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "sha256": "438dc1cef6f71d2ae3e5d219ca6279d3a9f7e45a8dadf0f7791e4cbbb680f8dc"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/discovery.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/discovery.rs",
+      "sha256": "9ec8999aa54b0484c058c4a3efb6c4f58f768acc0753cde50b056b07f23093a7"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
+      "sha256": "bfb58927468afd59677a9185bcabe9a1f9f19d1dc54a806cf8171d359898d3f6"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/values.rs",
@@ -800,6 +875,16 @@
       "sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d"
     },
     {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+      "sha256": "ba00c8146447b342c766bfc3f4c9d75800f871941bb75f15f786db83bf45b4e7"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
+      "sha256": "d04eac0685ec1be524c2d197660d9fddcbf2a824238abfa4860d24331f057aa0"
+    },
+    {
       "source_id": "source:crates/vibe-workspace/src/bins.rs",
       "path": "crates/vibe-workspace/src/bins.rs",
       "sha256": "f8e503081594cd73f987e0a1d2db1ab1c2fa1adfcd3c3b63c75646f66964a896"
@@ -810,6 +895,26 @@
       "sha256": "6a9e8dc6877a943f3b00500c6eaa2cd8b952bdda163b8d51b7b2946599d27712"
     },
     {
+      "source_id": "source:crates/vibe-workspace/src/extension_world.rs",
+      "path": "crates/vibe-workspace/src/extension_world.rs",
+      "sha256": "c202cf6152efe84c8a33ad863e390f4543094fde4efadb96fc6a93220c34c5a0"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/extension_world/machine_schema.rs",
+      "path": "crates/vibe-workspace/src/extension_world/machine_schema.rs",
+      "sha256": "22bacb60402645269d763288404e61a4b92efc328460a11dfe04a80560ba0301"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/migration_application.rs",
+      "path": "crates/vibe-workspace/src/migration_application.rs",
+      "sha256": "97ec9f1b4b600ad2a9a10575a38cc049db4abfd7912e924ce3f746994ceb8f45"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/migration_planning.rs",
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "sha256": "bc10bcb79e05dcaaff91430523c5a6b7098995827d0aafaec532cdb93976c3ff"
+    },
+    {
       "source_id": "source:crates/vibe-workspace/src/tools.rs",
       "path": "crates/vibe-workspace/src/tools.rs",
       "sha256": "a8e71d6587e08b31109269d78b6a83c8e6db676d8ecadde76adc26e5d75bfb90"
@@ -817,7 +922,7 @@
     {
       "source_id": "source:formats/REGISTRY.toml",
       "path": "formats/REGISTRY.toml",
-      "sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776"
+      "sha256": "3763be171144eed80866e9b216390d9cc4e936eac4f76f2adf03cfad10f497ac"
     },
     {
       "source_id": "source:schemas/capability/e1/coverage.jtd.json",
@@ -825,14 +930,34 @@
       "sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60"
     },
     {
+      "source_id": "source:schemas/machine/e1/operation_descriptor.jtd.json",
+      "path": "schemas/machine/e1/operation_descriptor.jtd.json",
+      "sha256": "85143a01da42f0012ed2b2c21bcd3c062844f8837b4fe12e0cb5bd81ae071679"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/operation_envelope.jtd.json",
+      "path": "schemas/machine/e1/operation_envelope.jtd.json",
+      "sha256": "e8a4b8a53643f65803adaa75e9e607a492540cf3fa528bc6f0189379d56b30bf"
+    },
+    {
       "source_id": "source:vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
       "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
-      "sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2"
+      "sha256": "13f54146ed4885a7244954b9160bec2e4c07ca760ac99a65d318676e9fb80c4f"
+    },
+    {
+      "source_id": "source:vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "sha256": "f69790bc6430b3e917bf03b074c8a9c0e62b8c61ed4854a5097ec77eb511c550"
+    },
+    {
+      "source_id": "source:vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "path": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "sha256": "248abf99631a083ec38fe13d9e893cda59f44a6e6a55ca59f496ed03556eecae"
     },
     {
       "source_id": "source:vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
-      "sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d"
+      "sha256": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b"
     },
     {
       "source_id": "source:xtask/Cargo.toml",
@@ -1935,13 +2060,13 @@
       "kind": "cli",
       "name": "refactor",
       "aliases": [],
-      "owner": "Actual source adapter crates/vibe-cli/src/commands/refactor/mod.rs #source-owned adapter; actual dispatch commands::refactor::run",
+      "owner": "Current refactor group: crates/vibe-cli/src/commands/refactor/mod.rs; conversion and two early migration leaves have distinct owners.",
       "target": "CLI route vibe refactor; argument-selected project/target remains unexercised",
       "effects": [
-        "Observed conversion-target/write_conversion path and text/count summary; structured result gap explicitly retained"
+        "Conversion route remains source-observed legacy; plan-migration is pure, migration-operation has explicit owned one-file effects under separate leaf authority."
       ],
       "authority": "unverified authorization: source observation is neither caller permission nor target-root/principal proof",
-      "carrier": "Source-observed CLI convert_source run_conversion/write_conversion/print_summary: text/counts; JSON context suppresses prompts, structured conversion-result gap remains",
+      "carrier": "Group is mixed: legacy conversion text/counts and separately registered structured migration JSON leaves; no group-level uniform result schema.",
       "schema_ref": "unbound schema: no exact owned exchange epoch is established for this row",
       "implementation": "gap",
       "external_access": "legacy",
@@ -1955,10 +2080,12 @@
         "source:crates/vibe-cli/src/cli.rs",
         "source:crates/vibe-cli/src/commands/refactor/convert_source.rs",
         "source:crates/vibe-cli/src/commands/refactor/mod.rs",
-        "source:crates/vibe-cli/src/main.rs"
+        "source:crates/vibe-cli/src/main.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_operation.rs"
       ],
       "disposition": "group",
-      "reason": "FINAL census joined: adapter bound in earlier packets; deeper library internals unverified. Actual local adapter, delegated references and inspected family/carrier definitions have separate dispositions; family-level evidence is not exact subroute runtime/transport proof. No helper/native handler/case executed. API/schema/runtime authorization and completeness gaps remain explicit. Registration DataRole is supplied original registry-set membership, not execution/authorization or a hide-missing flag. CLI/MCP name is local; parent_surface_id carries hierarchy.",
+      "reason": "Registered grouping metadata, not a callable semantic operation. Its legacy conversion gap remains while the two new child routes have separate current owner rows.",
       "registered": true
     },
     {
@@ -3891,11 +4018,12 @@
       "name": "serve",
       "aliases": [],
       "owner": "Actual source adapter crates/vibe-cli/src/commands/mcp/mod.rs: 94 #run; observed delegated reference edges vibe_core::machine_json_path, vibe_core::manifest::Manifest, vibe_core::user_config::UserConfig, vibe_mcp::agent_config::, vibe_mcp::agents::, vibe_mcp::install::, vibe_orchestrator::InstallPolicy, vibe_workspace::bins::collect_mcp_servers, vibe_mcp::pkg_servers::mark_managed (import/reference is not inspected delegated implementation)",
-      "target": "CLI route vibe mcp serve; contextual path/platform/availability unexercised",
+      "target": "CLI route vibe mcp serve; now accepts explicit migration recovery-store/member selections in its owning grammar.",
       "effects": [
-        "Observed adapter owner references: vibe_core::machine_json_path at crates/vibe-cli/src/commands/mcp/mod.rs:59; vibe_core::manifest::Manifest at crates/vibe-cli/src/commands/mcp/mod.rs:60; vibe_core::user_config::UserConfig at crates/vibe-cli/src/commands/mcp/mod.rs:61; vibe_mcp::agent_config:: at crates/vibe-cli/src/commands/mcp/mod.rs:62; vibe_mcp::agents:: at crates/vibe-cli/src/commands/mcp/mod.rs:65; vibe_mcp::install:: at crates/vibe-cli/src/commands/mcp/mod.rs:66; vibe_orchestrator::InstallPolicy at crates/vibe-cli/src/commands/mcp/mod.rs:111; vibe_workspace::bins::collect_mcp_servers at crates/vibe-cli/src/commands/mcp/mod.rs:167; vibe_mcp::pkg_servers::mark_managed at crates/vibe-cli/src/commands/mcp/mod.rs:470; reference edges are not complete semantic effect bodies"
+        "Observed adapter owner references: vibe_core::machine_json_path at crates/vibe-cli/src/commands/mcp/mod.rs:59; vibe_core::manifest::Manifest at crates/vibe-cli/src/commands/mcp/mod.rs:60; vibe_core::user_config::UserConfig at crates/vibe-cli/src/commands/mcp/mod.rs:61; vibe_mcp::agent_config:: at crates/vibe-cli/src/commands/mcp/mod.rs:62; vibe_mcp::agents:: at crates/vibe-cli/src/commands/mcp/mod.rs:65; vibe_mcp::install:: at crates/vibe-cli/src/commands/mcp/mod.rs:66; vibe_orchestrator::InstallPolicy at crates/vibe-cli/src/commands/mcp/mod.rs:111; vibe_workspace::bins::collect_mcp_servers at crates/vibe-cli/src/commands/mcp/mod.rs:167; vibe_mcp::pkg_servers::mark_managed at crates/vibe-cli/src/commands/mcp/mod.rs:470; reference edges are not complete semantic effect bodies",
+        "Accepted D1 interface cli:vibe:refactor:migration-operation adds explicit MCP serve migration authority flags; ordinary serve effects remain separately scoped."
       ],
-      "authority": "unverified authorization: source observation is neither caller permission nor target-root/principal proof",
+      "authority": "Explicit CLI store/file selections are passed to the existing trusted MCP context authority builder; the catalogue grants no project/file/store authority.",
       "carrier": "AgentInstallReport/SkillInstallReport: serde admin/skill result with path/status/note; user/project skill writes when not dry run | ConfigPayload/Agent: owner reexport, authoritative implementation unbound; pkgskill also reexports neutral projection at10 | Managed MCP config entry: JSON/TOML in-memory config transformations; external publish writer not bound | Observed adapter carriage/emission source snippets: crates/vibe-cli/src/commands/mcp/mod.rs:66 use vibe_mcp::install::{AgentInstallReport, SkillInstallReport, install_skill};; crates/vibe-cli/src/commands/mcp/mod.rs:131 struct StatusReport {; crates/vibe-cli/src/commands/mcp/mod.rs:138 results: Vec<AgentInstallReport>,; crates/vibe-cli/src/commands/mcp/mod.rs:143 skill_results: Vec<SkillInstallReport>,; crates/vibe-cli/src/commands/mcp/mod.rs:206 let mut results: Vec<AgentInstallReport> = Vec::new();; crates/vibe-cli/src/commands/mcp/mod.rs:207 let mut skill_results: Vec<SkillInstallReport> = Vec::new();; crates/vibe-cli/src/commands/mcp/mod.rs:230 let report = StatusReport {; crates/vibe-cli/src/commands/mcp/mod.rs:240 ctx.emit_json(&report)?;",
       "schema_ref": "unbound schema: no exact owned exchange epoch is established for this row",
       "implementation": "source-observed",
@@ -3913,7 +4041,7 @@
         "source:crates/vibe-mcp/src/pkg_servers.rs"
       ],
       "disposition": "operation",
-      "reason": "FINAL census joined: declared route + owning adapter edge inspected; delegated library/runtime behavior unverified; carrier gaps stay explicit. Actual local adapter, delegated references and inspected family/carrier definitions have separate dispositions; family-level evidence is not exact subroute runtime/transport proof. Resolved carrier evidence: crates/vibe-mcp/src/install.rs:43, crates/vibe-mcp/src/agents.rs:8, crates/vibe-mcp/src/pkg_servers.rs:82. No helper/native handler/case executed. API/schema/runtime authorization and completeness gaps remain explicit. Registration DataRole is supplied original registry-set membership, not execution/authorization or a hide-missing flag. CLI/MCP name is local; parent_surface_id carries hierarchy.",
+      "reason": "FINAL census joined: declared route + owning adapter edge inspected; delegated library/runtime behavior unverified; carrier gaps stay explicit. Actual local adapter, delegated references and inspected family/carrier definitions have separate dispositions; family-level evidence is not exact subroute runtime/transport proof. Resolved carrier evidence: crates/vibe-mcp/src/install.rs:43, crates/vibe-mcp/src/agents.rs:8, crates/vibe-mcp/src/pkg_servers.rs:82. No helper/native handler/case executed. API/schema/runtime authorization and completeness gaps remain explicit. Registration DataRole is supplied original registry-set membership, not execution/authorization or a hide-missing flag. CLI/MCP name is local; parent_surface_id carries hierarchy. D1 amended existing serve arguments; no additional command node was introduced.",
       "parent_surface_id": "surface.cli.vibe.mcp",
       "operation_id": "operation.cli.vibe.mcp.serve",
       "registered": true
@@ -8143,6 +8271,164 @@
       "disposition": "operation",
       "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
       "operation_id": "operation.developer.xtask.wire-diff"
+    },
+    {
+      "surface_id": "surface.cli.vibe.refactor.plan-migration",
+      "kind": "cli",
+      "registered": true,
+      "name": "plan-migration",
+      "aliases": [],
+      "owner": "Current registered cli adapter: crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "target": "Registered cli local route plan-migration; contextual admission is separate.",
+      "effects": [
+        "cli:vibe:refactor:plan-migration; capability strict-text-only-migration-planning"
+      ],
+      "authority": "Explicit text request with pure planning owner; no file/store grant.",
+      "carrier": "Generated migration-plan report/error JSON through the early CLI route.",
+      "schema_ref": "generated migration e1 request/report/error owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Current source registration and finite accepted owner route; catalogue row does not prove whole-product coverage, native platform reach or authorization.",
+      "retention": "Outcome retention is owned by the named route and domain report; no fresh runtime execution is claimed by this inventory.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-cli/src/commands/refactor/mod.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "source:crates/vibe-workspace/src/migration_planning.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
+      "operation_id": "operation.cli.vibe.refactor.plan-migration",
+      "parent_surface_id": "surface.cli.vibe.refactor"
+    },
+    {
+      "surface_id": "surface.cli.vibe.refactor.migration-operation",
+      "kind": "cli",
+      "registered": true,
+      "name": "migration-operation",
+      "aliases": [],
+      "owner": "Current registered cli adapter: crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "target": "Registered cli local route migration-operation; contextual admission is separate.",
+      "effects": [
+        "cli:vibe:refactor:migration-operation; capability owned-authored-manifest-migration"
+      ],
+      "authority": "Caller selects explicit owned file/store authority; shared actor validates the grant. Catalogue data grants nothing.",
+      "carrier": "Generated operation report for ordinary outcomes; internal invariant fault remains diagnostic-only.",
+      "schema_ref": "generated migration e1 operation request/report/journal owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Current source registration and finite accepted owner route; catalogue row does not prove whole-product coverage, native platform reach or authorization.",
+      "retention": "Outcome retention is owned by the named route and domain report; no fresh runtime execution is claimed by this inventory.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-cli/src/commands/refactor/mod.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "source:crates/vibe-workspace/src/migration_application.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
+      "operation_id": "operation.cli.vibe.refactor.migration-operation",
+      "parent_surface_id": "surface.cli.vibe.refactor"
+    },
+    {
+      "surface_id": "surface.mcp.plan_manifest_migration",
+      "kind": "mcp",
+      "registered": true,
+      "name": "plan_manifest_migration",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/migration_plan.rs",
+      "target": "Registered mcp local route plan_manifest_migration; contextual admission is separate.",
+      "effects": [
+        "mcp:plan_manifest_migration; capability strict-text-only-migration-planning"
+      ],
+      "authority": "Pure text request ignores ServerContext; no root/store grant.",
+      "carrier": "Owning structured preflight and executed generated plan report/error.",
+      "schema_ref": "generated migration e1 request/report/error owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Current source registration and finite accepted owner route; catalogue row does not prove whole-product coverage, native platform reach or authorization.",
+      "retention": "Outcome retention is owned by the named route and domain report; no fresh runtime execution is claimed by this inventory.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+        "source:crates/vibe-workspace/src/migration_planning.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
+      "operation_id": "operation.mcp.plan_manifest_migration"
+    },
+    {
+      "surface_id": "surface.mcp.manifest_migration_operation",
+      "kind": "mcp",
+      "registered": true,
+      "name": "manifest_migration_operation",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/migration_operation.rs",
+      "target": "Registered mcp local route manifest_migration_operation; contextual admission is separate.",
+      "effects": [
+        "mcp:manifest_migration_operation; capability owned-authored-manifest-migration"
+      ],
+      "authority": "Finite project/file/store selection comes from trusted ServerContext, never tool payload.",
+      "carrier": "Structured operation report retains effects; internal invariant fault is diagnostic-only.",
+      "schema_ref": "generated migration e1 operation request/report/journal owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Current source registration and finite accepted owner route; catalogue row does not prove whole-product coverage, native platform reach or authorization.",
+      "retention": "Outcome retention is owned by the named route and domain report; no fresh runtime execution is claimed by this inventory.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/migration_operation.rs",
+        "source:crates/vibe-workspace/src/migration_application.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
+      "operation_id": "operation.mcp.manifest_migration_operation"
+    },
+    {
+      "surface_id": "surface.mcp.plan_manifest_migration_envelope",
+      "kind": "mcp",
+      "registered": true,
+      "name": "plan_manifest_migration_envelope",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/machine_operation.rs",
+      "target": "Registered mcp local route plan_manifest_migration_envelope; contextual admission is separate.",
+      "effects": [
+        "specific pure-planner machine envelope route; distinct from accepted interface IDs and general service"
+      ],
+      "authority": "Explicit admitted pure planner only; descriptor data and envelope input do not grant a general handler.",
+      "carrier": "Generated machine-envelope Result/Error for the one validated text planner; no provider or filesystem effect.",
+      "schema_ref": "schemas/machine/e1/operation_envelope.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Current source registration and finite accepted owner route; catalogue row does not prove whole-product coverage, native platform reach or authorization.",
+      "retention": "Outcome retention is owned by the named route and domain report; no fresh runtime execution is claimed by this inventory.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation.rs",
+        "source:schemas/machine/e1/operation_envelope.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
+      "operation_id": "operation.mcp.plan_manifest_migration_envelope"
     }
   ],
   "models": [
@@ -8612,6 +8898,212 @@
       ],
       "implementation": "source-observed",
       "external_access": "legacy"
+    },
+    {
+      "model_id": "model.manifest-migration-plan",
+      "name": "Manifest migration plan",
+      "owner": "crates/vibe-workspace/src/migration_planning.rs",
+      "carrier": "generated migration/e1 plan request/report/error roots",
+      "schema_ref": "generated migration/e1 plan request/report/error roots",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Pure text-only migration decisions and exact generated report/question/error carriage, not file execution."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/migration_planning.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.manifest-migration-application",
+      "name": "Manifest migration application",
+      "owner": "crates/vibe-workspace/src/migration_application.rs",
+      "carrier": "generated migration/e1 operation request/report/application journal roots",
+      "schema_ref": "generated migration/e1 operation request/report/application journal roots",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Owned one-file apply/inspect/recover report and journal; bounded selected Linux proof does not establish full platform or unrestricted CAS."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/migration_application.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "source:crates/vibe-mcp/src/tools/migration_operation.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.environment-role",
+      "name": "Injected environment role",
+      "owner": "crates/vibe-core/src/environment/mod.rs",
+      "carrier": "public pure Rust environment role/reference types",
+      "schema_ref": "public pure Rust environment role/reference types",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Injected role/reference facts only; no authenticated roots, physical proof or effect admission."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-core/src/environment/mod.rs",
+        "source:vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.environment-layout",
+      "name": "Injected environment layout",
+      "owner": "crates/vibe-core/src/environment/layout.rs",
+      "carrier": "public pure Rust EnvironmentLayout and target-path/resource/prefix types",
+      "schema_ref": "public pure Rust EnvironmentLayout and target-path/resource/prefix types",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Five injected root slots, target lexical policy and declarative identities; no external schema or physical/native authority."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-core/src/environment/mod.rs",
+        "source:crates/vibe-core/src/environment/layout.rs",
+        "source:crates/vibe-core/src/environment/target_path.rs",
+        "source:crates/vibe-core/src/environment/resource.rs",
+        "source:crates/vibe-core/src/environment/prefix.rs",
+        "source:vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.machine-operation-descriptor",
+      "name": "Machine operation descriptor",
+      "owner": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "carrier": "schemas/machine/e1/operation_descriptor.jtd.json",
+      "schema_ref": "schemas/machine/e1/operation_descriptor.jtd.json",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Typed descriptor data distinguishes operation/model, source/capability, implementation/availability/authorization; descriptor alone grants no invocation."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_operation.rs",
+        "source:schemas/machine/e1/operation_descriptor.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/discovery.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.machine-operation-envelope",
+      "name": "Machine operation envelope",
+      "owner": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "carrier": "schemas/machine/e1/operation_envelope.jtd.json",
+      "schema_ref": "schemas/machine/e1/operation_envelope.jtd.json",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Typed prepared/input/admission/result/error/event frame; current external route handles only the admitted pure migration planner."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_operation.rs",
+        "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+        "source:schemas/machine/e1/operation_envelope.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.extension-operation-schema-declaration",
+      "name": "Authored extension operation schema",
+      "owner": "crates/vibe-core/src/manifest/extension/machine_schema.rs",
+      "carrier": "strict optional [extension.machine_operation_schema] TOML under [[extension]]",
+      "schema_ref": "strict optional [extension.machine_operation_schema] TOML under [[extension]]",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Optional authored schema/format references; local syntax is not registered-format, selected-source or service authority."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-core/src/manifest/extension.rs",
+        "source:crates/vibe-core/src/manifest/extension/machine_schema.rs",
+        "source:vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.retained-extension-schema-observation",
+      "name": "Selected-world extension schema observation",
+      "owner": "crates/vibe-workspace/src/extension_world/machine_schema.rs",
+      "carrier": "typed MachineSchemaObservation and generated OperationDescriptor projection",
+      "schema_ref": "typed MachineSchemaObservation and generated OperationDescriptor projection",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Selected retained declaration/content pin and format epoch checked; source authenticity and handler invocation remain unverified/unavailable."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Observed owner/shape and finite accepted subclaims only; no complete public family or full platform proof.",
+      "retention": "Retained source bytes bound by Git subject; runtime outcomes/evidence are separate owner obligations.",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/extension_world.rs",
+        "source:crates/vibe-workspace/src/extension_world/machine_schema.rs",
+        "source:crates/vibe-core/src/manifest/extension/machine_schema.rs",
+        "source:schemas/machine/e1/operation_descriptor.jtd.json",
+        "source:crates/vibe-orchestrator/src/machine_operation/discovery.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
     }
   ],
   "planned_families": [
@@ -8730,7 +9222,7 @@
       "source_ids": [
         "source:campaigns/next/manifest.json"
       ],
-      "reason": "Planned family only; no delivered registration, operation or runtime evidence. Source object M-13 is provenance, not product identity. planned family; public semantics/implementation/gate evidence not established by this census Goal: ** Перенести принятые решения в contracts и исполняемые migration/policy primitives. Scope: ** Truth contradictions, Redbook/prototype/version policy, command meanings, source classification contract, executable format migration. Non-scope: ** Live public writes/autonomy activation/graduation, переписывание history/upstream versions."
+      "reason": "Partially delivered bounded source policy, migration planning/application owners and explicit CLI/MCP registrations. Wider foundation family remains planned: no full SDK, historical corpus, native macOS/Windows execution, graduation or public release proof. Source object M-13 is provenance, not product identity."
     },
     {
       "family_id": "family.early-package-manager-architecture-seams",

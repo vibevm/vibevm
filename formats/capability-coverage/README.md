@@ -1,21 +1,31 @@
 # Source coverage inventory
 
 `coverage-e1.json` uses the registered capability-coverage epoch 1 reader. Its
-baseline identifies `capability-baseline-4a3f80a34`; its source observation is
-`capability-after-dd7d05e4c`. Changed source hashes and the new inventory/observer
-owners are rebound to that immutable subject. Later source edits require affected
-rebinding; the inventory's own data publication is a separate contribution.
+baseline is `capability-baseline-4a3f80a34`; its selected source observation is
+`machine-operation-observed-e830ee297`, bound to Git subject
+`e830ee29712c8ffa234fdf96ae66ba9b21079010`. The earlier
+`capability-after-dd7d05e4c` and `machine-operation-observed-19f200392`
+observations remain historical evidence.
 
-The current candidate accounts for 172 CLI command forms, 12 default MCP tools,
-nine registered TUI actions, 12 direct TUI effect routes and one dynamic MCP
-registration seam, plus 30 observed developer-tool command nodes. Twenty model
-families, the new coverage model and 15 planned families are separate.
+This candidate names 194 source files, 174 CLI command forms, 15 default MCP
+tools, nine registered TUI actions, 12 direct TUI effect routes, one dynamic MCP
+registration seam, and 30 developer-tool command nodes. Its 29 model families
+include migration, environment and machine-operation shapes; its 15 planned
+families remain planned.
 `registered` distinguishes native registrations from other meaningful routes.
 Command names and aliases are local tokens; parent identities define hierarchy.
 
-The generated reader and pure validator checked this candidate's declarations.
-Native CLI/MCP/TUI and developer registration comparison has passed on the
-selected inputs. Complete semantic/API coverage, runtime effects, source
-observation rebinding and central acceptance remain due. Unknown carrier, schema, effect or authority
-claims retain explicit reasons; proposed conformance cases are unexecuted.
-The registration check compares native owners without running their handlers.
+The selected observation contains 3,932 product files and six finite
+`SourceDeclared` rows. It directly covers 26 of the former 169 source paths and
+all 25 newly cited paths. Former paths outside that selection are bound by
+the Git tree comparison and current source hashes. Its MCP declaration subset records 14 identifiers,
+while the complete default native inventory has 15 tools; native registration
+checks, rather than that subset, establish the current CLI/MCP denominator.
+
+Source-observed metadata is not implementation admission. In particular, an
+extension operation-schema declaration and selected-world projection can be
+discovered without loading a handler, but do not authenticate physical source
+bytes or grant a callable service. Unknown carrier, effect or authority claims
+retain explicit reasons. Proposed conformance cases are unexecuted unless
+separately bound to a retained test receipt. This inventory is a bounded current
+source and registration account, not complete semantic/API coverage.
