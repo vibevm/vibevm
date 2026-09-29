@@ -27,7 +27,8 @@ attribute schema natively; the markup language does not change». This PROP
 builds that frontend and widens it from elements to whole documents.</FOUNDATION-ALREADY-RECORDED></p>
   </mandate>
   <shape title="2. The shape — one pivot, two frontends, two backends">
-    <p><PIVOT-MODEL fact="true" status="spec/work">**Decision (ADR-part).** There is ONE internal document
+    <p><SOURCE-CLASSIFICATION-LAW fact="true" status="spec/done">**Classification precedes format dispatch.** Explicit source/context binding distinguishes native Vibe specs, structured ordinary CommonMark, ordinary XML data and opaque foreign contents. A filename suffix alone never admits Vibe spec semantics. Structured ordinary Markdown is required; ordinary XML may remain data. Foreign bridge contents default to no Vibe interpretation, minted facts or spec addresses. The native dialect, vocabulary and conversions below apply only to classified native sources; ordinary and opaque sources retain their own meaning and byte identity. Reuse canonical parser owners rather than duplicate XML/Markdown parsers. Every projection or refusal retains classification, selected source identity, transformation/projection provenance and explicit unsupported or incomplete observation. This is required source policy, not proof that all existing dispatch callers implement classification.</SOURCE-CLASSIFICATION-LAW></p>
+    <p><PIVOT-MODEL fact="true" status="spec/work">**Decision (ADR-part).** For classified native Vibe sources (`##SOURCE-CLASSIFICATION-LAW`), there is ONE internal document
 model — the pivot — and every format is a frontend (parse into it) or a
 backend (emit from it). The pivot is the progress-markup semantic tree the
 tree already owns: document → nested sections (the heading hierarchy with
@@ -243,18 +244,18 @@ barred from this key by PROP-040's own boundary (app prefs never extend
 vibe.toml). **`mixed` is the built-in default** — for an all-MD world
 byte-for-byte today's behaviour; the flip of the default to XML is the
 owner's word, never silent.</SETTING></p>
-    <p><TARGET-MD fact="true" status="spec/work">**`markdown` target:** XML sources emit as Markdown through
+    <p><TARGET-MD fact="true" status="spec/work">**`markdown` target:** Classified native XML sources emit as Markdown through
 the pivot (nested sections → heading levels, facts → anchored units,
-fences/tables/quotes → their MD forms); MD sources copy verbatim. This
+fences/tables/quotes → their MD forms); classified native MD sources copy verbatim. This
 target exists for tooling that cannot read XML or mixed trees — named in
 the mandate as load-bearing, and it stays supported for as long as this
 PROP stands.</TARGET-MD></p>
-    <p><TARGET-XML fact="true" status="spec/work">**`xml` target:** every source — including Markdown —
+    <p><TARGET-XML fact="true" status="spec/work">**`xml` target:** every classified native source — including native Markdown —
 emits as dialect XML through the pivot. Mixed input translating into
 CLEAN XML (never mixed output) is this target's acceptance bar, because
 it is the future primary.</TARGET-XML></p>
     <p><TARGET-MIXED fact="true" status="spec/work">**`mixed` target:** copy-through; each file keeps its
-authored format.</TARGET-MIXED></p>
+authored format. Classification remains independent of copy-through: preserved foreign bytes do not acquire Vibe semantics.</TARGET-MIXED></p>
     <p><STATIC-FOLLOWS-THE-TARGET fact="true" status="impl/done">**STATIC obeys the same materialisation
 rules as everything else (owner ruling 2026-08-22, chat, near-verbatim:
 «при рематериализации у нас STATIC.md в формате Markdown вне зависимости
@@ -321,7 +322,7 @@ is green over the result. This is the polygon's primary run; the three
 mixed-input runs of §5 ride beside it.</SCENARIO-ZERO></p>
   </materialisation>
   <loaders title="4. Loaders and scanners read all three">
-    <p><LOADER-LAW fact="true" status="spec/work">Every consumer of spec sources — the progress scanner and
+    <p><LOADER-LAW fact="true" status="spec/work">Every consumer of classified native spec sources (`##SOURCE-CLASSIFICATION-LAW`) — the progress scanner and
 `vibe progress check», the specmap unit parser, `vibe check`, the tree/
 boot readers, mirror views — accepts `.md` and `.xml` spec files and a
 tree mixing both. XML goes through the XML frontend into the same pivot
@@ -334,7 +335,7 @@ on either source. *Построй по замеру: точный список �
 canonical Markdown projection — one dispatch layer above the parser, no
 dependency cycle.** `vibe-specdoc` depends on `progress-core` (its MD
 frontend is the adapter), so progress-core cannot itself call specdoc.
-The consumers dispatch instead: a `.xml` spec entering any scanner
+The consumers dispatch instead: a classified native `.xml` spec entering any scanner
 (progress, check, specmap-host, show) is first projected
 `from_xml → to_markdown` — deterministic and canonical by S1's emitter —
 and the projection feeds the existing MD machinery; units, facts,
@@ -347,7 +348,7 @@ DEGRADATION, honest: a diagnostic for an XML source cites
 projection-relative line numbers, and v1 marks such diagnostics with
 the projection notice rather than pretending; native source positions
 are follow-up work riding the specmap-engine slice (S4b).</PROJECTION-READ></p>
-    <p><ADDRESSING-UNCHANGED fact="true" status="spec/work">`spec://` addressing is format-blind: anchors
+    <p><ADDRESSING-UNCHANGED fact="true" status="spec/work">Within classified native sources, `spec://` addressing is format-blind: anchors
 are `id` attributes in XML and `{#…}`/first-token anchors in MD, minted
 into the same address space; a document's address does not change when
 its serialisation does.</ADDRESSING-UNCHANGED></p>

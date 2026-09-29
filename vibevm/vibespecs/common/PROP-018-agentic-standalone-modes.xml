@@ -26,10 +26,7 @@ provider layer — the standalone built-in inference backend §2.2 names),
   <motivation title="1. Motivation">
     <problem title="1.1 The problem">
       <facts ordered="false">
-        <commands-split fact="true" status="spec/done">vibevm has commands that are pure algorithm (`install`, `check`, `list`)
-  and commands that genuinely need reasoning (explain, build, review). The
-  algorithmic ones already run from a bare terminal with no LLM
-  (`VIBEVM-SPEC.md` §3.2).</commands-split>
+        <commands-split fact="true" status="spec/done">vibevm has deterministic algorithmic commands (`install`, `build`, `check`, `list`) and explicitly admitted reasoning workloads (explain, create, review). `build` assembles admitted inputs; authored-code production belongs to create. Ordinary/scoped verify checks its selected subject without new production (`PROP-054 ##INVOCATION-ROLE-LAW`). Algorithmic commands require no LLM; provider presence grants no reasoning or effect authority.</commands-split>
         <reasoning-question fact="true" status="spec/done">The reasoning ones raise a question of *who does
   the reasoning, and how*.</reasoning-question>
       </facts>
@@ -263,13 +260,8 @@ needs no LLM, so it works today, agent-present or not.</ONLY-STANDALONE-V1></p>
       <p><two-step-lead fact="true" status="spec/done">Two properties make the two-step (produce → `vibe command`) worth its
 seam rather than just printing the intent from the producer:</two-step-lead></p>
       <facts ordered="true">
-        <SEAM-UNIFORMITY fact="true" status="spec/done">**Uniformity.** *Any* vibevm command that discovers mid-run it needs
-   reasoning parks an intent the same way — not only `vibe agentic …`
-   commands. The agent learns one drain verb, not per-command stdout
-   parsing.</SEAM-UNIFORMITY>
-        <SEAM-DECOUPLING fact="true" status="spec/done">**Decoupling.** Producer and consumer need not be the same invocation,
-   which is what lets a future deterministic command (`vibe build`) park a
-   reasoning step and exit, the agent draining it afterward.</SEAM-DECOUPLING>
+        <SEAM-UNIFORMITY fact="true" status="spec/done">**Uniformity within admitted purpose.** An operation explicitly admitted to perform reasoning parks an intent through the same seam. Discovery of a reasoning need alone grants no new purpose or effect authority; build, ordinary/scoped verify and pure inspection must not enter code production through relay. They report a typed prerequisite need for separately admitted work.</SEAM-UNIFORMITY>
+        <SEAM-DECOUPLING fact="true" status="spec/done">**Decoupling.** Producer and consumer need not be the same invocation. An explicitly admitted production/reasoning workload may park and exit; its external agent drains it later. Deterministic build or verification cannot silently become a producer by parking reasoning. Existing relay mechanics do not prove that these invocation-role guards are implemented.</SEAM-DECOUPLING>
       </facts>
       <facts ordered="false">
         <NO-WRITE-BACK fact="true" status="spec/done" action="continue" actionstage="doc" audience="agent">**MVP carries no write-back** (`req r4`): the relay is fire-and-forget.</NO-WRITE-BACK>

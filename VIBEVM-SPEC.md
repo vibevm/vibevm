@@ -53,7 +53,7 @@ Concretely, a developer can:
 2. Install a stack (`vibe install stack:rust-cli`).
 3. Install one or more features (`vibe install feat:welcome-page`, `vibe install feat:auth-email`).
 4. Install process disciplines (`vibe install flow:wal`).
-5. Generate working code from the installed blocks (`vibe build feat:welcome-page`).
+5. Explicitly admit authored-code production from the installed blocks through the `create` role, then deterministically build admitted inputs and verify the selected current subject. A full production/build/verification pass requires separately explicit composition; no new command spelling is specified here.
 6. Modify code or specs and have the system reconcile drift (`vibe sync`).
 
 The same `feat:welcome-page` produces different code depending on which stack is active. This is the core value proposition: features are abstract descriptions of intent; stacks are the concrete mappings into a particular technology context; vibevm orchestrates the assembly.
@@ -141,7 +141,7 @@ Read what each of these does. Note their gaps.
 
 4. **CLI-first, agent-agnostic execution.** vibevm uses the user's API key to invoke whichever LLM is configured (Anthropic, OpenAI, OpenRouter, Ollama). It does not require any specific agent product to be installed. It can be run from a bare terminal in CI.
 
-5. **Separation of deterministic and probabilistic work.** vibevm's CLI performs resolution, fetching, file management, validation and algorithmic build/test without LLM calls. An LLM is an explicitly enabled advanced enhancement, or an explicitly declared agent workload at `create`; provider/credential presence activates nothing. Every enhanceable core subsystem retains an `off` algorithmic mode (PROP-054 `##LLM-IS-AN-ENHANCEMENT`). This is cheaper, faster, more debuggable, and fits the book's philosophy of cognitive load distribution.
+5. **Separation of deterministic and probabilistic work.** vibevm's CLI performs resolution, fetching, file management, validation and algorithmic build/test without LLM calls. Authored-code production belongs to explicitly admitted `create`, realized by an agent or another declared producer. `build` deterministically assembles admitted inputs and derived output. Ordinary/scoped `verify` checks exact current subjects/evidence without new producer work or implicit missing-tool builds. Full production/build/verification requires separately explicit composition under [INVOCATION-ROLE-LAW](vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml#INVOCATION-ROLE-LAW); these are desired source rules, not proof that historical dispatch guards implement them. An LLM is an explicitly enabled advanced enhancement or declared agent workload; provider/credential presence activates nothing. Every enhanceable core subsystem retains an `off` algorithmic mode (PROP-054 `##LLM-IS-AN-ENHANCEMENT`). This is cheaper, faster, more debuggable, and fits the book's philosophy of cognitive load distribution.
 
 ### 3.3 What vibevm explicitly avoids {#what-vibevm-explicitly-avoids}
 
@@ -449,48 +449,19 @@ Each named node is a built-in. `install:user-confirm` is a `prompt` node that pa
 
 **Implementation note.** The `install` workflow is implemented procedurally in `vibe-cli` rather than executed through a formal graph runner. The node names above reflect the logical shape. `install:review` is elided (no LLM censor yet); when M2 introduces one it lands as a new stage between `install:fetch` and `install:plan`. The graph-runner sophistication described here is a v2 deliverable — v1 ships the same semantics executed procedurally so the type-system and testability benefits hold without the runner's infrastructure cost.
 
-### 5.7 The `build` workflow in detail (v1.5 scope; document for forward compatibility) {#build-workflow-in-detail}
+### 5.7 Proposed production composition and deterministic build (forward design) {#build-workflow-in-detail}
 
-When the user invokes `vibe build feat:welcome-page --stack rust-cli`, the subgraph:
+The historical LLM `build` example is reclassified as explicitly admitted `create` production under [PROP-054 INVOCATION-ROLE-LAW](vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml#INVOCATION-ROLE-LAW). An external orchestrator may select specs, request a bounded declared producer, inspect its retained result, separately request deterministic build, and then ordinary/scoped verification of exact current inputs and evidence. This example remains proposed composition, not an implemented task graph or automatic workflow.
 
-```
-load:project-toml
-        │
-        ▼
-load:active-flows       (loads all installed flows' content)
-        │
-load:active-stack       (loads stack:rust-cli content)
-        │
-load:feat               (loads feat:welcome-page content)
-        │
-load:wal
-        │
-        ▼
-load:effective-spec     (merges all of the above)
-        │
-        ▼
-build:plan              (LLM: produce structured BuildPlan from EffectiveSpec)
-        │
-        ▼
-build:user-confirm      (interactive: show plan, await approval)
-        │
-        ▼
-build:compile           (LLM: tool-use loop; reads spec, writes code; produces CodeFiles)
-        │
-        ▼
-build:write-files       (write CodeFiles to disk)
-        │
-        ▼
-build:test              (shell: run stack-defined tests)
-        │
-        ▼
-build:complete          (barrier)
-        │
-        ▼
-build:report            (Report)
+```text
+selected source/context → explicitly admitted create producer → retained authored output
+retained admitted inputs → deterministic build → derived artifacts/evidence
+selected current subject/evidence → ordinary/scoped verify → typed observation/refusal
 ```
 
-Note: in v1.5, flows that want to participate in build (e.g., `wal:checkpoint`) will need the plugin contribution model extended. v1 does not need this.
+Code planning, reasoning and file production belong to admitted create work; deterministic build does not silently relay production. Missing or stale verification prerequisites are reported for the external orchestrator to resolve. A full production/build/verification pass requires a separately explicit composition. Phase order alone grants no producer permission, and no new command name, phase, scheduler, wire or native ABI is defined here. Package-supplied mechanisms remain passive framework contributions; they do not create a built-in coding agent or repair loop.
+
+Classified native Vibe specs, ordinary structured CommonMark, ordinary XML data and opaque foreign contents retain distinct semantics before format dispatch ([SOURCE-CLASSIFICATION-LAW](vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml#SOURCE-CLASSIFICATION-LAW)). Boot calculators explain provenance, incomplete costs and pre-install marginal what-if without size/token admission quotas ([BOOT-NO-ADMISSION-QUOTAS](vibevm/vibespecs/common/PROP-048-tokenomics.xml#BOOT-NO-ADMISSION-QUOTAS)). All meaningful supported operations/models owe owned typed external access and ETO, preserving independent authority/privacy/observation axes; architecture precedes client work without an IDE/plugin/MVP project ([PROP-080](vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml#DOMAIN-AUTHORITY)). Pure inspection is separate from effectful preparation. Existing 1.1.0/public-hold and schema-epoch rules remain unchanged.
 
 ---
 

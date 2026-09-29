@@ -20,6 +20,7 @@ session and per agent? A cheaper-by-construction design beats a
 cheaper-by-discipline one (a law the machinery enforces beats a convention a
 session remembers). This PROP is the roof; the mechanisms of §4 are the rooms
 already built under it.</TOKENOMICS-IS-A-DESIGN-PRESSURE></p>
+    <p><BOOT-NO-ADMISSION-QUOTAS fact="true" status="spec/done">**Boot cost is diagnostic, never admission authority.** No boot-size or token limit, quota, budget ceiling or admission threshold may reject, truncate or otherwise deny a boot contribution. Calculators and diagnostics expose measured versus estimated basis, tokenizer/model and source provenance, omissions and explicit incompleteness. They support pre-install what-if comparison and marginal static/dynamic contribution without installation. Worker read/output budgets remain independently scoped execution constraints, not boot admission rules. This desired policy does not assert that the calculator is implemented.</BOOT-NO-ADMISSION-QUOTAS></p>
     <p><COST-MODEL fact="true" status="spec/done">**The cost model the law reasons with.** Provider prompt
 caching keys on the *byte-identical prefix* of the context: a cache hit reads
 an order of magnitude cheaper than fresh input and cuts latency; a cache write
@@ -130,10 +131,7 @@ they share:</mechanisms-lead></p>
     <p><directions-lead fact="true" status="spec/done">Open, deliberately unscheduled; each becomes real work
 only by the owner's word:</directions-lead></p>
     <facts ordered="false">
-      <DIR-BOOT-COST-METER fact="true" status="spec/plan">**A boot-cost meter** — measure a session's boot
-  in tokens (prefix / dynamic / on-demand classes) so the economy is a number
-  the gates can watch, not a belief; the §5a stand already knows how to drive
-  live agents for measurements.</DIR-BOOT-COST-METER>
+      <DIR-BOOT-COST-METER fact="true" status="spec/plan">**A boot-cost calculator and diagnostic view** — report prefix/static, dynamic and on-demand costs with measured or estimated basis, source and tokenizer/model provenance and explicit incompleteness. Compare actual and hypothetical selections, including marginal static/dynamic contribution before installation. These values inform decisions without boot quotas or admission thresholds (`##BOOT-NO-ADMISSION-QUOTAS`); the live-agent stand is measurement evidence, not implementation proof of this planned calculator.</DIR-BOOT-COST-METER>
       <DIR-CACHE-AWARE-ORDERING fact="true" status="spec/plan">**Cache-aware ordering everywhere the
   generator decides an order** (##THE-LAYER-LAW applied to generated text):
   inside STATIC, sort contributions by their packages' mutation frequency
