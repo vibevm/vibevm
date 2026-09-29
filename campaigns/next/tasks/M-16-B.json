@@ -216,6 +216,11 @@
         "crates/vibe-mcp/src/lib.rs",
         "crates/vibe-mcp/src/context.rs",
         "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/machine_operation.rs",
+        "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+        "crates/vibe-orchestrator/src/machine_operation.rs",
+        "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+        "crates/vibe-workspace/src/migration_planning.rs",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
@@ -235,6 +240,8 @@
         "crates/vibe-mcp/src/transport.rs",
         "crates/vibe-mcp/src/lib.rs",
         "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/tools/machine_operation.rs",
+        "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
         "crates/vibe-orchestrator/src/",
         "formats/",
         "crates/vibe-mcp/Cargo.toml",
@@ -271,6 +278,7 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Use a separate byte-oriented machine-session adapter and registered epoch-one frame value; do not retrofit MCP's line Transport or fixed initialize. A bounded four-byte big-endian length with a finite maximum precedes UTF-8 JSON decode. Advertise only implemented capabilities; a test fake does not make production streaming/replay/control available. Context/target IDs come only from a trusted composing surface and never from request paths or manifest fields.",
+        "The first pure planner frame exchange must reuse one neutral machine-operation request/result/error publisher owned by vibe-orchestrator, with the existing MCP envelope tool becoming a thin channel adapter. Do not duplicate workspace migration decoding, planning or result replay in the framed session, and do not expose a generic eval/shell route.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
