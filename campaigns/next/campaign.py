@@ -22,9 +22,9 @@ TERMINAL = {"accepted", "deferred", "dropped", "superseded"}
 TASK_FIELDS = {"id", "title", "goal", "read_paths", "write_paths", "steps",
                "positive_cases", "negative_cases", "checks", "acceptance",
                "safe_stop", "commit_subject", "notes"}
-RENDERER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/"
+RENDERER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.1.0/"
                    "vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py")
-PARALLEL_ANALYZER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/"
+PARALLEL_ANALYZER = ROOT / ("vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.1.0/"
                           "vibevm/vibespecs/skills/steward-parallel/scripts/parallel_frontier.py")
 PARALLEL_SPEC = ("spec://org.vibevm.world/multi-user-planning/flows/"
                  "multi-user-planning/parallel-execution#root")
