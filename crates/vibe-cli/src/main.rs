@@ -1,20 +1,15 @@
 //! The `vibe` CLI entry point. Keeps this file thin: parse args, dispatch.
 //!
 //! Spec: `VIBEVM-SPEC.md` §9.
-
 #![deny(unsafe_code)]
-
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
-
+use clap::Parser;
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::OnceLock;
-
-use clap::Parser;
 use vibe_core::user_config::UserConfig;
-
 mod cli;
 mod command_progress;
 mod commands;
@@ -51,6 +46,11 @@ fn main() -> ExitCode {
         }
     };
 
+    if let Command::Refactor(args) = &cli.command
+        && let commands::refactor::RefactorCommand::PlanMigration(args) = &args.command
+    {
+        return commands::refactor::migration_plan::run(args.request_json.as_deref());
+    }
     promote_user_config_env();
     init_tracing();
 
