@@ -11,7 +11,7 @@
     "MACHINE-OPERATION-DISCOVERY"
   ],
   "reader_exit0": true,
-  "independent_source_review": "no concrete blocker in finite desired-law scope",
+  "independent_source_review": "Preliminary copy taken before the reviewer finished. Its no-blocker verdict was wrong for this source revision; the final gap review found an eval/generic-shell omission.",
   "implementation_task_accepted": false,
   "schema_codegen_or_runtime_evidence": false,
   "artifacts": [
@@ -65,9 +65,18 @@
     },
     {
       "source": "/tmp/vibevm-next-M16-B1-source-independent-review.md",
-      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-independent-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-preliminary-review.md",
       "sha256": "beb98258887808a5259409ea9aa3531e3b21559e540969d4579d3e5332307cbc",
       "bytes": 3708
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-independent-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-gap-review.md",
+      "sha256": "41804fa284ec28fb2914aa3fa6045ac3094e526d7757a37a1ed54066da085b95",
+      "bytes": 4352
     }
-  ]
+  ],
+  "source_state": "First source revision, superseded by the corrected SERVICE law. The original source reader receipts remain exact and are not relabelled as final.",
+  "correction_ref": "operation-contract-source-correction-proof-retention.json",
+  "preliminary_review_provenance": "The /tmp review path was still being written when Root copied the preliminary bytes and later changed to the final gap review. The retained preliminary Git blob/sha is the copied checkpoint; source is a historical producer path, not a claim of current /tmp byte equality."
 }

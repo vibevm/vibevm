@@ -1,0 +1,28 @@
+{
+  "source": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+  "source_sha256": "210c966878dc883cce94c98a6dc519fc8bfab35b11a48343cb5de0af3e1535b7",
+  "scope": "Corrected SERVICE body; one exact req r1 unit and canonical SpecDoc projection. Other five anchors unchanged.",
+  "checks": [
+    {
+      "name": "service-unit",
+      "argv": [
+        "/tmp/vibevm-next-M13-C1-unit-reader/read",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "MACHINE-OPERATION-SERVICE"
+      ],
+      "exit": 0,
+      "sha256": "d9187d4c9771c7be78c8a2eeddbeaf2ff9f763deb0b7ebcff15cc1e55eb1648f",
+      "path": "/tmp/vibevm-next-M16-B1-source-correction-proof/service-unit.log"
+    },
+    {
+      "name": "specdoc",
+      "argv": [
+        "/tmp/vibevm-next-M16-A2-source-reader/read",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "exit": 0,
+      "sha256": "30cdf9639f64516d02fe19354271b4841b2affd7e31ba43baef225233b55b918",
+      "path": "/tmp/vibevm-next-M16-B1-source-correction-proof/specdoc.log"
+    }
+  ]
+}
