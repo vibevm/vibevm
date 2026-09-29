@@ -2362,3 +2362,13 @@ structure, and it goes when the file does.
 | @fact:B214-SEVERITY **severity** | P1 — a false-green verification surface can hide new failures under an advertised ordinary invocation. |
 | @fact:B214-DISPOSITION **disposition** | `open` — decide and expose one scope vocabulary, reject zero matched source selections and test wrong/empty scopes. Until repaired, bind the actual repository-relative filepath prefix and inspect the selected denominator; do not credit crate-name-only runs as gates. This finding does not certify or invalidate unrelated historical full-panel evidence. |
 | @fact:B214-FILED **filed by** | preview accounting bootstrap verification, 2026-09-28. |
+
+## B-215 — Rust 1.98 strict lint rejects unchanged tooling sources {#b-215}
+
+| field | value |
+|---|---|
+| @fact:B215-WHAT **what** | Strict owning-xtask Clippy encounters existing diagnostics outside the capability-coverage change: `progress-core` anchor parsing has two `question_mark` diagnostics; after `--no-deps`, `xtask/src/codegen/vocabulary.rs:193` has `useless_conversion` and `xtask/src/dist/build.rs:167` has `match_like_matches_macro`. The new helper has no reported diagnostic, but neither strict command passed. |
+| @fact:B215-EVIDENCE **evidence** | 2026-09-29, Rust 1.98.0: `cargo clippy -p xtask --bin xtask -- -D warnings` and the same owning target with `--no-deps` both exited 101. Native helper unit tests and actual CLI/MCP/TUI registration cases passed separately. Cargo.lock stayed unchanged. |
+| @fact:B215-SEVERITY **severity** | P3 — existing lint debt prevents an owning-target green result; it is not evidence of a runtime or new-helper failure. |
+| @fact:B215-DISPOSITION **disposition** | `open` — make bounded idiomatic repairs in the owning sources when that tooling work is selected. Keep the failed strict lint verdict explicit; do not suppress those lint families globally or broaden unrelated edits to manufacture a pass. |
+| @fact:B215-FILED **filed by** | capability inventory verification, 2026-09-29. |
