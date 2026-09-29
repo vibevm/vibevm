@@ -439,7 +439,10 @@ the planner. There are no path, provider, apply, project or authority fields.
 A report has `schema = 1`, stage `planner`, and a discriminated outcome:
 `planned`, `no_op`, `needs_input` or `refused`. Planned and no-op outcomes
 carry selected profiles/recipe, exact before/after text, ordered byte-span
-token edits and the three existing identities. Their source and target epoch
+token edits and the three existing identities. Wire edit offsets are canonical
+unsigned decimal strings: ASCII digits, no leading zero except `0`, checked
+against the original UTF-8 byte bounds. JTD has no uint64; an offset is never
+narrowed to uint32 or carried through a lossy float. Their source and target epoch
 markers are explicit `absent` or `epoch_1` discriminators with empty payloads,
 derived from the selected frozen profiles by the core owner; absent is never
 numeric zero or an inferred epoch 1. Questions carry their selected field and
