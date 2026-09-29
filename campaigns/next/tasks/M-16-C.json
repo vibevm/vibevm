@@ -16,7 +16,8 @@
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
-        "crates/vibe-lifecycle/src/state/mod.rs"
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "write_paths": [
         "crates/vibe-orchestrator/src/",
@@ -27,7 +28,8 @@
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
-        "crates/vibe-lifecycle/src/state/mod.rs"
+        "crates/vibe-lifecycle/src/state/mod.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "steps": [
         "Add host-issued context/target/principal-scoped submission namespaces with epoch/expiry and atomic idempotency-key/request/plan reservations before effects.",
@@ -58,7 +60,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Root owns the PROP-080 submission-reservation law amendment before implementation acceptance; the delegated worker edits only the code/test perimeter."
       ]
     },
     {
