@@ -76,7 +76,7 @@ impl OwnedManifestMigrationFile {
     /// no global/environment-derived policy. Admission and rechecks create nothing.
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-        r = 1
+        r = 2
     )]
     pub fn with_protected_machine_cache_root(
         mut self,
@@ -93,7 +93,7 @@ impl OwnedManifestMigrationFile {
     /// exclusion; filesystem capabilities and the runtime own actual writes.
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-        r = 1
+        r = 2
     )]
     pub fn validate_recovery_store_policy(&self) -> Result<(), ApplicationValidationError> {
         let Some(cache) = &self.protected_machine_cache else {

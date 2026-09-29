@@ -23,7 +23,7 @@ fn serve(argv: &[&str]) -> mcp_args::McpServeArgs {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
+    r = 2
 )]
 fn absent_migration_flags_preserve_compatibility() {
     let args = serve(&["probe", "serve"]);
@@ -35,7 +35,7 @@ fn absent_migration_flags_preserve_compatibility() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
+    r = 2
 )]
 fn explicit_store_preserves_repeatable_member_selection() {
     let args = serve(&[
@@ -63,7 +63,7 @@ fn explicit_store_preserves_repeatable_member_selection() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
+    r = 2
 )]
 fn migration_files_require_store_and_unknown_grammar_is_refused() {
     let error =
