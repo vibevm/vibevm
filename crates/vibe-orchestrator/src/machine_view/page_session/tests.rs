@@ -36,7 +36,7 @@ fn entity(id: &str, ordinal: usize) -> EntityReference {
             address: "spec://org.example/a#rule".to_owned(),
         })),
         captured: entity::Captured {
-            content_or_source: "capture-a".to_owned(),
+            content_or_source: "source-a".to_owned(),
             revision: "rev-a".to_owned(),
         },
         observed: observed.clone(),
@@ -68,6 +68,14 @@ fn rows() -> Vec<wire::Row> {
 fn catalog() -> Vec<EntityReference> {
     (0..5).map(|i| entity(&format!("row-{i}"), i)).collect()
 }
+fn source_binding() -> SourceCaptureBinding {
+    SourceCaptureBinding {
+        content_or_source: r("source-a"),
+        revision: r("rev-a"),
+        observation: r("obs-a"),
+        selected_capture: r("capture-a"),
+    }
+}
 fn session(
     rows: Vec<wire::Row>,
     extent: ProjectionExtent,
@@ -79,6 +87,7 @@ fn session(
         r("scope-owned"),
         rows,
         catalog(),
+        vec![source_binding()],
         extent,
     )
 }
@@ -101,6 +110,10 @@ fn request(token: Option<String>, stamps: Vec<AxisStamp>) -> PageSessionRequest 
 fn owner_session_pages_reconstruct_retained_rows_and_parent_order() {
     let original = rows();
     let mut owner = session(original.clone(), ProjectionExtent::DeclaredComplete).unwrap();
+    assert_ne!(
+        owner.entity("row-0").unwrap().captured.content_or_source,
+        "capture-a"
+    );
     assert_eq!(
         owner.entity("row-3").unwrap().logical,
         owner.entity("row-0").unwrap().logical
@@ -191,7 +204,7 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
     assert!(matches!(
         PageSession::new(
             &snapshot(), r("projection-a"), r("filter-all"), r("scope-owned"),
-            rows(), foreign_revision, ProjectionExtent::DeclaredComplete,
+            rows(), foreign_revision, vec![source_binding()], ProjectionExtent::DeclaredComplete,
         ),
         Err(PageSessionError::EntitySnapshotMismatch(id)) if id == "row-4"
     ));
@@ -201,7 +214,7 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
     assert!(matches!(
         PageSession::new(
             &snapshot(), r("projection-a"), r("filter-all"), r("scope-owned"),
-            rows(), foreign_observation, ProjectionExtent::DeclaredComplete,
+            rows(), foreign_observation, vec![source_binding()], ProjectionExtent::DeclaredComplete,
         ),
         Err(PageSessionError::EntitySnapshotMismatch(id)) if id == "row-4"
     ));
@@ -223,6 +236,11 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
         AxisParticipation::NotParticipating,
     ])
     .unwrap();
+    let mut multi_catalogue = catalog();
+    multi_catalogue[4].captured.content_or_source = "world-source".to_owned();
+    multi_catalogue[4].captured.revision = "world-rev".to_owned();
+    multi_catalogue[4].observed.observation = "world-observation".to_owned();
+    multi_catalogue[4].occurrence.observed.observation = "world-observation".to_owned();
     assert!(
         PageSession::new(
             &multi,
@@ -230,7 +248,16 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
             r("filter-all"),
             r("scope-owned"),
             rows(),
-            catalog(),
+            multi_catalogue,
+            vec![
+                source_binding(),
+                SourceCaptureBinding {
+                    content_or_source: r("world-source"),
+                    revision: r("world-rev"),
+                    observation: r("world-observation"),
+                    selected_capture: r("world-capture"),
+                }
+            ],
             ProjectionExtent::DeclaredComplete,
         )
         .is_ok(),
@@ -287,4 +314,108 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
         .next_page(request(p2.value.next_cursor_id, stamps))
         .unwrap();
     assert!(matches!(p3.value.end, wire::PageEnd::Incomplete(_)));
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+    r = 1
+)]
+fn selected_capture_bindings_and_single_occurrence_joins_refuse_invention() {
+    assert_eq!(
+        PageSession::new(
+            &snapshot(),
+            r("projection-a"),
+            r("filter-all"),
+            r("scope-owned"),
+            rows(),
+            catalog(),
+            vec![],
+            ProjectionExtent::DeclaredComplete,
+        )
+        .err(),
+        Some(PageSessionError::EntitySnapshotMismatch("row-0".to_owned()))
+    );
+    let mut foreign = source_binding();
+    foreign.selected_capture = r("foreign-capture");
+    assert_eq!(
+        PageSession::new(
+            &snapshot(),
+            r("projection-a"),
+            r("filter-all"),
+            r("scope-owned"),
+            rows(),
+            catalog(),
+            vec![foreign],
+            ProjectionExtent::DeclaredComplete,
+        )
+        .err(),
+        Some(PageSessionError::BindingSnapshotMismatch(
+            "source-a".to_owned()
+        ))
+    );
+    assert_eq!(
+        PageSession::new(
+            &snapshot(),
+            r("projection-a"),
+            r("filter-all"),
+            r("scope-owned"),
+            rows(),
+            catalog(),
+            vec![source_binding(), source_binding()],
+            ProjectionExtent::DeclaredComplete,
+        )
+        .err(),
+        Some(PageSessionError::DuplicateSourceCaptureBinding(
+            "source-a".to_owned()
+        ))
+    );
+    let two_captures = CompositeSnapshot::compose([
+        snapshot()
+            .axis(crate::machine_view::SnapshotAxis::Source)
+            .clone(),
+        AxisParticipation::Required(Some(AxisWitness {
+            owner: r("world-owner"),
+            capture: r("capture-b"),
+            revision: r("rev-a"),
+            observation: r("obs-a"),
+            compatibility_claim: Some(r("join-a")),
+            expected_revisions: Vec::new(),
+            freshness: AxisFreshness::DeclaredCurrent,
+            completeness: AxisCompleteness::DeclaredComplete,
+        })),
+        AxisParticipation::NotParticipating,
+        AxisParticipation::NotParticipating,
+    ])
+    .unwrap();
+    let mut conflicting = source_binding();
+    conflicting.selected_capture = r("capture-b");
+    assert_eq!(
+        PageSession::new(
+            &two_captures,
+            r("projection-a"),
+            r("filter-all"),
+            r("scope-owned"),
+            rows(),
+            catalog(),
+            vec![source_binding(), conflicting],
+            ProjectionExtent::DeclaredComplete,
+        )
+        .err(),
+        Some(PageSessionError::ConflictingSourceCaptureBinding(
+            "source-a".to_owned()
+        ))
+    );
+    let mut wrong_occurrence = rows();
+    wrong_occurrence[2].occurrence_id = "foreign-occurrence".to_owned();
+    assert_eq!(
+        session(wrong_occurrence, ProjectionExtent::DeclaredComplete).err(),
+        Some(PageSessionError::OccurrenceMismatch("row-2".to_owned()))
+    );
+    let mut reused = rows();
+    reused[2].entity_reference_id = "row-1".to_owned();
+    assert_eq!(
+        session(reused, ProjectionExtent::DeclaredComplete).err(),
+        Some(PageSessionError::ReusedEntityReference("row-1".to_owned()))
+    );
 }
