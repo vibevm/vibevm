@@ -114,6 +114,7 @@ impl Fixture {
             .map(|record| record.change_id.clone())
             .collect();
         self.transition.contribution_scope = Some(ContributionScope {
+            affected_source_review: None,
             before_capture_id: self.transition.dp1.capture_id.clone(),
             after_capture_id: self.transition.dp2.capture_id.clone().unwrap(),
             record_digests: bindings,

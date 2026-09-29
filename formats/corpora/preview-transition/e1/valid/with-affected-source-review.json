@@ -1,5 +1,7 @@
 {
-  "change_records": [],
+  "change_records": [
+    "change-example-refactor"
+  ],
   "documentation": {
     "state": "pending-owner-binding"
   },

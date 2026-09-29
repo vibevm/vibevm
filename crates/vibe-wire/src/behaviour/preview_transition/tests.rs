@@ -10,6 +10,58 @@ fn captured() -> Transition {
 }
 
 #[test]
+fn affected_source_review_reference_retains_absence_and_requires_safe_digest_binding() {
+    let mut supplied: Transition = serde_json::from_str(include_str!(
+        "../../../../../formats/corpora/preview-transition/e1/valid/with-affected-source-review.json"
+    ))
+    .unwrap();
+    supplied.validate_preview().unwrap();
+    let original = supplied.clone();
+    assert_eq!(
+        supplied,
+        serde_json::from_str(&serde_json::to_string(&supplied).unwrap()).unwrap()
+    );
+    for source in ["../outside.json", "/outside.json", "a\\b", "x\0y"] {
+        let mut changed = original.clone();
+        changed
+            .contribution_scope
+            .as_mut()
+            .unwrap()
+            .affected_source_review
+            .as_mut()
+            .unwrap()
+            .source = source.into();
+        assert_eq!(
+            changed.validate_preview().unwrap_err().field,
+            "contribution_scope.affected_source_review"
+        );
+    }
+    let mut changed = original;
+    changed
+        .contribution_scope
+        .as_mut()
+        .unwrap()
+        .affected_source_review
+        .as_mut()
+        .unwrap()
+        .sha256 = "A".repeat(64);
+    assert_eq!(
+        changed.validate_preview().unwrap_err().field,
+        "contribution_scope.affected_source_review"
+    );
+    supplied
+        .contribution_scope
+        .as_mut()
+        .unwrap()
+        .affected_source_review = None;
+    supplied.validate_preview().unwrap();
+    assert!(!supplied.proof.contributions_verified);
+    assert!(serde_json::from_str::<Transition>(include_str!(
+        "../../../../../formats/corpora/preview-transition/e1/invalid/wrong-affected-source-review-type.json"
+    )).is_err());
+}
+
+#[test]
 fn documentation_reference_wire_retains_absence_and_supplied_bindings_without_adoption() {
     let missing = captured();
     assert!(missing.documentation_base.is_none());
@@ -141,6 +193,7 @@ fn supplied_scope_requires_safe_exact_sorted_digest_bindings() {
     use crate::generated::preview::e1::transition::{ContributionScope, RecordDigest};
     let mut transition = captured();
     transition.contribution_scope = Some(ContributionScope {
+        affected_source_review: None,
         before_capture_id: "before".into(),
         after_capture_id: "after".into(),
         record_digests: vec![],
@@ -195,6 +248,7 @@ fn opaque_scope_capture_ids_preserve_exact_data_with_separate_source_paths() {
         let source = transition.dp1.source.clone();
         transition.dp1.capture_id = id.into();
         transition.contribution_scope = Some(ContributionScope {
+            affected_source_review: None,
             before_capture_id: id.into(),
             after_capture_id: id.into(),
             record_digests: vec![],
@@ -223,6 +277,7 @@ fn blank_scope_capture_ids_refuse_and_change_ids_keep_directory_grammar() {
         for before in [false, true] {
             let mut transition = captured();
             transition.contribution_scope = Some(ContributionScope {
+                affected_source_review: None,
                 before_capture_id: if before {
                     blank.into()
                 } else {

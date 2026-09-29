@@ -205,6 +205,16 @@ impl Transition {
             return Err(fault("change_records", "unsafe change ID"));
         }
         if let Some(scope) = &self.contribution_scope {
+            if let Some(review) = &scope.affected_source_review
+                && (!super::preview_capture::safe_relative_path(&review.source)
+                    || review.source.contains('\0')
+                    || !digest(&review.sha256, 64))
+            {
+                return Err(fault(
+                    "contribution_scope.affected_source_review",
+                    "invalid affected-source review reference",
+                ));
+            }
             if scope.before_capture_id.trim().is_empty() || scope.after_capture_id.trim().is_empty()
             {
                 return Err(fault("contribution_scope", "blank capture ID"));
