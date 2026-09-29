@@ -314,6 +314,62 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "bound_page",
+      "end_line": 170
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "bound_page::axis",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 84,
+      "symbol": "bound_page::child_state",
+      "end_line": 112
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 130,
+      "symbol": "bound_page::incomplete_reason",
+      "end_line": 150
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 151,
+      "symbol": "bound_page::page_end",
+      "end_line": 168
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 113,
+      "symbol": "bound_page::row",
+      "end_line": 129
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "item_kind": "schema-def",
+      "line": 65,
+      "symbol": "bound_page::stamp",
+      "end_line": 83
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/native/e1/build_reply.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -767,6 +823,78 @@
       "line": 1,
       "symbol": "compile_request",
       "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "composite_snapshot",
+      "end_line": 226
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "composite_snapshot::axis",
+      "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "composite_snapshot::completeness",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 44,
+      "symbol": "composite_snapshot::expectation",
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 151,
+      "symbol": "composite_snapshot::issue",
+      "end_line": 189
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 190,
+      "symbol": "composite_snapshot::outcome",
+      "end_line": 224
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 116,
+      "symbol": "composite_snapshot::participation",
+      "end_line": 131
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 132,
+      "symbol": "composite_snapshot::stamp",
+      "end_line": 150
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "item_kind": "schema-def",
+      "line": 76,
+      "symbol": "composite_snapshot::witness",
+      "end_line": 115
     },
     {
       "crate_name": "<schema>",
@@ -1727,6 +1855,46 @@
       "line": 32,
       "symbol": "documentation_map::topic_proof",
       "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "entity_reference",
+      "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "item_kind": "schema-def",
+      "line": 55,
+      "symbol": "entity_reference::captured",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "entity_reference::logical",
+      "end_line": 54
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "item_kind": "schema-def",
+      "line": 65,
+      "symbol": "entity_reference::observation",
+      "end_line": 74
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "item_kind": "schema-def",
+      "line": 75,
+      "symbol": "entity_reference::occurrence",
+      "end_line": 90
     },
     {
       "crate_name": "<schema>",
@@ -5149,6 +5317,46 @@
       "line": 55,
       "symbol": "slot_record::slot_file",
       "end_line": 79
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "source_location",
+      "end_line": 127
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "source_location::location",
+      "end_line": 125
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "item_kind": "schema-def",
+      "line": 69,
+      "symbol": "source_location::reason",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "item_kind": "schema-def",
+      "line": 50,
+      "symbol": "source_location::uri_mapping",
+      "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "item_kind": "schema-def",
+      "line": 39,
+      "symbol": "source_location::uri_unavailable_reason",
+      "end_line": 49
     },
     {
       "crate_name": "<schema>",
@@ -12439,6 +12647,96 @@
       "symbol": "vibe_core::lifecycle::point::tests::parser_rejects_noncanonical_and_out_of_family_inputs",
       "end_line": 327,
       "fingerprint": "tok1:a13c5aa479f29db95e02957652916df41e2999af811daf04621bf3df2520eb93"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/mod.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_core::machine_view",
+      "end_line": 4,
+      "fingerprint": "tok1:b9e73c4ecbef6ebfb41f9ae8a9b410b4a93e4b983253288a1934e6180c1e3662"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/identity.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::machine_view::identity",
+      "end_line": 3,
+      "fingerprint": "tok1:b9e73c4ecbef6ebfb41f9ae8a9b410b4a93e4b983253288a1934e6180c1e3662"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/identity.rs",
+      "item_kind": "fn",
+      "line": 137,
+      "symbol": "vibe_core::machine_view::identity::EntityReference::new",
+      "end_line": 159,
+      "fingerprint": "tok1:d5598c2b0fdb5612f8bdd479f09e05a3915556e0feb32e2faa353413c371c2a0"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/location.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::machine_view::location",
+      "end_line": 3,
+      "fingerprint": "tok1:5a5b0278ccc23cca92b22264a82d16678e6ce10c7ad7eab682510e03f0a1b0b5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/location.rs",
+      "item_kind": "fn",
+      "line": 159,
+      "symbol": "vibe_core::machine_view::location::SourceLocation::original_from_projected",
+      "end_line": 174,
+      "fingerprint": "tok1:f8364630aed7bf762051f1295b51aaf2d9ef3a68f4a200149a7593c18972fb0d"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_core::machine_view::tests::missing_owner_and_foreign_occurrence_are_typed_not_minted",
+      "end_line": 99,
+      "fingerprint": "tok1:081b00b6e14dd93bfee437c367eb1ac7c15b94bd27de5b0872b90db12e53aa98"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 101,
+      "symbol": "vibe_core::machine_view::tests::opaque_non_utf8_resource_and_original_byte_basis_survive",
+      "end_line": 129,
+      "fingerprint": "tok1:4e6220255c5e47915184bf12a4690399fda21853b583187124519ad9e4661138"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 131,
+      "symbol": "vibe_core::machine_view::tests::projected_markdown_cannot_be_reported_as_original_xml_without_owner_map",
+      "end_line": 159,
+      "fingerprint": "tok1:2e3d7883255420e2d9aaa6b28b081c6432df3af9ea82bb0d2069c2de9bbb79c5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 17,
+      "symbol": "vibe_core::machine_view::tests::repeated_inclusion_shares_owner_address_but_not_occurrence",
+      "end_line": 50,
+      "fingerprint": "tok1:59fc9a42604453a83749a9ee67ad1dd77432179f67f33707407fe58916f50230"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 161,
+      "symbol": "vibe_core::machine_view::tests::unknown_encoding_missing_bytes_and_invalid_text_ranges_are_explicit",
+      "end_line": 192,
+      "fingerprint": "tok1:24d3b0b6dc7b52b15e0356b35c29cb989c73a4567e866a52668895d92a8b8b62"
     },
     {
       "crate_name": "vibe-core",
@@ -24297,27 +24595,27 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "type",
-      "line": 176,
+      "line": 177,
       "symbol": "vibe_orchestrator::PlannedExecution",
-      "end_line": 184,
+      "end_line": 185,
       "fingerprint": "tok1:191483bf11bbac73eba16de80a62f8766695782c1f8fbdbb8ca093e1d1a5993e"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "struct",
-      "line": 70,
+      "line": 71,
       "symbol": "vibe_orchestrator::RitualPlan",
-      "end_line": 130,
+      "end_line": 131,
       "fingerprint": "tok1:7a71d71233c48c4118ab307f4e0d01bcb673d0960107bf611bbf6187a820a441"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "fn",
-      "line": 133,
+      "line": 134,
       "symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "end_line": 140,
+      "end_line": 141,
       "fingerprint": "tok1:cd0162dc26bbc8e8eb4ba7ad66414381a472f6c79bf112ba60362fa407ec7e16"
     },
     {
@@ -25012,6 +25310,303 @@
       "symbol": "vibe_orchestrator::machine_operation::publication::tests::forged_payload_effect_identity_and_nonresult_stage_retain_original",
       "end_line": 212,
       "fingerprint": "tok1:d7d86b800d9332b8ebfabafe62f9dcaa9e37552154a9987c8337110e413d51e1"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/mod.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_view",
+      "end_line": 4,
+      "fingerprint": "tok1:91bc67e01f9ee7b3158bd24d49efcc7bfb11927a675e6cd3221f20d20af4ce8b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "item_kind": "fn",
+      "line": 64,
+      "symbol": "vibe_orchestrator::machine_view::adapter_tests::composite_mismatch_epoch_stamps_and_conflicting_claim_retain_original",
+      "end_line": 90,
+      "fingerprint": "tok1:f34a1584c05ab8c15fe37e70bc5beeddfdfac5f44a56321d4c597063f52ad49e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "item_kind": "fn",
+      "line": 33,
+      "symbol": "vibe_orchestrator::machine_view::adapter_tests::composite_replays_composed_and_refused_values_without_atomicity_claim",
+      "end_line": 62,
+      "fingerprint": "tok1:103c67f4768fd47fbcc0d85a632300559af45e63f9d38558125d15c625428303"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_orchestrator::machine_view::adapter_tests::local_page_refuses_false_complete_duplicate_occurrence_and_wrong_epoch",
+      "end_line": 160,
+      "fingerprint": "tok1:230b429f0cdea9c0467d1a9305d5eb636685d51900e4d8fc200d97c054ea8984"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "item_kind": "fn",
+      "line": 92,
+      "symbol": "vibe_orchestrator::machine_view::adapter_tests::local_pages_check_stated_adjacency_but_leave_cursor_unverified",
+      "end_line": 125,
+      "fingerprint": "tok1:dc9aa1b0a9f4353e8ecd820a6f52b0c699dce9231b24f2f786b463b5c2502893"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_view::page_session",
+      "end_line": 4,
+      "fingerprint": "tok1:7fe020e8091da3142d245cb98557714d11337bc05085a53d1cbf66083f52f398"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "item_kind": "fn",
+      "line": 146,
+      "symbol": "vibe_orchestrator::machine_view::page_session::PageSession::new",
+      "end_line": 304,
+      "fingerprint": "tok1:fc6e333198c72460f364a6b92ccf1e12aead1d1c216254473acf8bbef5ed8e50"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "item_kind": "fn",
+      "line": 192,
+      "symbol": "vibe_orchestrator::machine_view::page_session::tests::entity_parent_and_partial_child_limits_are_checked_before_publication",
+      "end_line": 317,
+      "fingerprint": "tok1:9684dc173c9035d0f74bf05209a1f203caf250da38ad6d5624c0687e00cc113e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "item_kind": "fn",
+      "line": 145,
+      "symbol": "vibe_orchestrator::machine_view::page_session::tests::forged_replayed_cross_session_and_mixed_context_tokens_refuse",
+      "end_line": 190,
+      "fingerprint": "tok1:7f05328dc7c585dbae5091ec7102d8bddbb706afb4f6adef2dc94fa08ef4e4f1"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_orchestrator::machine_view::page_session::tests::owner_session_pages_reconstruct_retained_rows_and_parent_order",
+      "end_line": 143,
+      "fingerprint": "tok1:32ff539258f1b34439c8b5e5526dc19fd83ad5888a9e862155383c478675a0dc"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "item_kind": "fn",
+      "line": 319,
+      "symbol": "vibe_orchestrator::machine_view::page_session::tests::selected_capture_bindings_and_single_occurrence_joins_refuse_invention",
+      "end_line": 421,
+      "fingerprint": "tok1:8f495868a4f138329d82521a6e2d3ef695e5f1785313aada231dea35b76247ca"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_view::page_wire",
+      "end_line": 3,
+      "fingerprint": "tok1:7fe020e8091da3142d245cb98557714d11337bc05085a53d1cbf66083f52f398"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_orchestrator::machine_view::page_wire::review_generated_page",
+      "end_line": 174,
+      "fingerprint": "tok1:068806eb3f988141db5dcba441b6ddf670ea4247666529021b2aafd620ffcf43"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_view::paging",
+      "end_line": 3,
+      "fingerprint": "tok1:7fe020e8091da3142d245cb98557714d11337bc05085a53d1cbf66083f52f398"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "item_kind": "fn",
+      "line": 104,
+      "symbol": "vibe_orchestrator::machine_view::paging::AuthorizedProjection<T>::page",
+      "end_line": 157,
+      "fingerprint": "tok1:8ec63bbc69251ac676250d5023f63235a9b70f8d462cb67618be81ae1040e1f4"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_view::resource_uri",
+      "end_line": 4,
+      "fingerprint": "tok1:5a5b0278ccc23cca92b22264a82d16678e6ce10c7ad7eab682510e03f0a1b0b5"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "item_kind": "fn",
+      "line": 81,
+      "symbol": "vibe_orchestrator::machine_view::resource_uri::OwnerResourceUriMap::new",
+      "end_line": 117,
+      "fingerprint": "tok1:0ee6a18861aab319a689dca3b65604ac1a17d0a67b43fba83d1e45491d9b7c21"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 73,
+      "symbol": "vibe_orchestrator::machine_view::resource_uri::tests::duplicate_bindings_tokens_and_pathlike_spellings_refuse_before_mapping",
+      "end_line": 127,
+      "fingerprint": "tok1:5bb8e1122291238927f8bff2639da8364bdbbd5495e55b03c5336d35853fb413"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 17,
+      "symbol": "vibe_orchestrator::machine_view::resource_uri::tests::non_utf8_exact_key_gets_only_declared_client_uri_without_path_authority",
+      "end_line": 46,
+      "fingerprint": "tok1:126948a736882989cf213607928e84ea53ae20d384d61bb854d2f1920c2e9117"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 48,
+      "symbol": "vibe_orchestrator::machine_view::resource_uri::tests::scope_revision_and_absent_resource_refuse_with_distinct_reasons",
+      "end_line": 71,
+      "fingerprint": "tok1:cfdcc757d94cdb8d9b6073a7ea22a1099b8b3ba4a7d3d11f80db0640b1a16356"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_view::snapshot",
+      "end_line": 3,
+      "fingerprint": "tok1:91bc67e01f9ee7b3158bd24d49efcc7bfb11927a675e6cd3221f20d20af4ce8b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "item_kind": "fn",
+      "line": 96,
+      "symbol": "vibe_orchestrator::machine_view::snapshot::CompositeSnapshot::compose",
+      "end_line": 170,
+      "fingerprint": "tok1:6a91bedc33a1bd2259652ed0e1f915b9e3426d04e12f82ad07d9509eaf1ccb16"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_view::snapshot_wire",
+      "end_line": 3,
+      "fingerprint": "tok1:91bc67e01f9ee7b3158bd24d49efcc7bfb11927a675e6cd3221f20d20af4ce8b"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "item_kind": "fn",
+      "line": 113,
+      "symbol": "vibe_orchestrator::machine_view::snapshot_wire::replay_generated_composite",
+      "end_line": 158,
+      "fingerprint": "tok1:b8e3a446c129a9d6b7dcbb752049271e9bdd48e3770d82d4502f784446b3232e"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_orchestrator::machine_view::source_location_uri",
+      "end_line": 4,
+      "fingerprint": "tok1:5a5b0278ccc23cca92b22264a82d16678e6ce10c7ad7eab682510e03f0a1b0b5"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_orchestrator::machine_view::source_location_uri::publish_source_location_uri",
+      "end_line": 117,
+      "fingerprint": "tok1:174db0cc85dac5c13488220fa4a23dbd83dd8969fa1333cd8ada3aa429042133"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::exact_non_utf8_owner_mapping_publishes_only_unverified_client_uri",
+      "end_line": 61,
+      "fingerprint": "tok1:036d8289d9ed1af6d7c974dd77c8be9ad7bdbc3bac5bea09e05915355969ec9f"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 112,
+      "symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::forged_uri_status_scope_resource_and_revision_retain_original_evidence",
+      "end_line": 156,
+      "fingerprint": "tok1:d8ee4c458a6aa2f21b9994ca2977a74e50e48d2175eb3d3aa0e5acca9e271d47"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::unavailable_owner_scope_revision_and_resource_remain_null_with_typed_reasons",
+      "end_line": 110,
+      "fingerprint": "tok1:9be0dbd366988b3a1665768dd4fa9c8036051341167280e7073d817b3be15dff"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 137,
+      "symbol": "vibe_orchestrator::machine_view::tests::complete_fixed_pages_reconstruct_every_authorized_row",
+      "end_line": 167,
+      "fingerprint": "tok1:f22ee72fc21040740ae8f94375bbca3d3eafa0d371ab1e9cdc04dd97a965a8e3"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_orchestrator::machine_view::tests::compose_refuses_missing_stale_and_conflicting_axis_claims",
+      "end_line": 83,
+      "fingerprint": "tok1:660922f511021f8ff40c4e071a6848f2bfdee74b38ee42a0b2c338c2bb5e56f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 85,
+      "symbol": "vibe_orchestrator::machine_view::tests::matching_multi_owner_claims_remain_unverified_not_atomic",
+      "end_line": 135,
+      "fingerprint": "tok1:bdac418fe1994bca684f45c5636e2c8334b6e9c70c43282dbc40f8ed0f206855"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_orchestrator::machine_view::tests::mixed_filter_scope_projection_or_revision_cursors_refuse_and_partial_never_finishes_complete",
+      "end_line": 274,
+      "fingerprint": "tok1:3ac88c67a4a4e33a72d9e5ee40b1e4165dafb7e87f1428668ba0cf280aca5513"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -32908,6 +33503,87 @@
     },
     {
       "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_wire::behaviour::machine_view",
+      "end_line": 5,
+      "fingerprint": "tok1:b9e73c4ecbef6ebfb41f9ae8a9b410b4a93e4b983253288a1934e6180c1e3662"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "item_kind": "fn",
+      "line": 94,
+      "symbol": "vibe_wire::behaviour::machine_view::EntityReference::validate_machine_entity_reference",
+      "end_line": 149,
+      "fingerprint": "tok1:39fb35e652eefc401a6cecdf8f4e3bd9fd8b9962f7f7233d446eeaaf712a0e81"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "item_kind": "fn",
+      "line": 153,
+      "symbol": "vibe_wire::behaviour::machine_view::SourceLocation::validate_machine_source_location",
+      "end_line": 215,
+      "fingerprint": "tok1:064db1767d20f6705e3ec1aa7f9f0d6405cc956d2fb1bdc1b19288b8e91faa00"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 220,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::client_uri_declaration_syntax_preserves_resource_without_grant",
+      "end_line": 245,
+      "fingerprint": "tok1:641e4a9069ef5a9a945ff66503c765f648f4ed355b972d5df268c9dba2252a74"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 247,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::forged_uri_and_scope_metadata_refuse_without_interpreting_paths",
+      "end_line": 269,
+      "fingerprint": "tok1:4ecfcb99e5ee42f1dfdd255a22b7a79777d24f02cb9442f6432eda91836bd876"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 97,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::mismatched_observation_epoch_and_bad_ordinals_refuse",
+      "end_line": 138,
+      "fingerprint": "tok1:5cd533bf82d750beb252ef67343ce9f21ba895a5b49483535dbaaf12e7aa5f9f"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 140,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::non_utf8_resource_and_exact_original_byte_bounds_survive",
+      "end_line": 175,
+      "fingerprint": "tok1:be62ca134eb1501340316e91688c45ace2a3be0d7720944b029f49fccd50633c"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 177,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::projected_position_never_becomes_original_without_reverse_map",
+      "end_line": 218,
+      "fingerprint": "tok1:482a91f2b345bb865c87251665154624de79744c02b65fc62b43fd2155d04ff0"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "item_kind": "fn",
+      "line": 75,
+      "symbol": "vibe_wire::behaviour::machine_view::tests::repeated_logical_entity_retains_two_distinct_occurrences",
+      "end_line": 95,
+      "fingerprint": "tok1:084e474c306779fde0e797a86534f1e295ca0fe69b05e408525e17b0cd10796c"
+    },
+    {
+      "crate_name": "vibe-wire",
       "file": "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
       "item_kind": "mod",
       "line": 8,
@@ -33022,6 +33698,42 @@
       "symbol": "vibe_wire::tests::machine_operation_contract::unknown_root_and_arm_fields_refuse",
       "end_line": 133,
       "fingerprint": "tok1:9c5e3e07f30e406950b4784cea9805c9d930288aab5cc341fff32bcf744f79b7"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_wire::tests::machine_view_contract",
+      "end_line": 2,
+      "fingerprint": "tok1:b9e73c4ecbef6ebfb41f9ae8a9b410b4a93e4b983253288a1934e6180c1e3662"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "item_kind": "fn",
+      "line": 43,
+      "symbol": "vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets",
+      "end_line": 93,
+      "fingerprint": "tok1:20705ae3a16d6a2c50910dbc548584034a800957a1beadf909e2511d51fb4686"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "item_kind": "fn",
+      "line": 124,
+      "symbol": "vibe_wire::tests::machine_view_contract::semantic_invalid_inputs_remain_reader_valid_for_later_owner_refusal",
+      "end_line": 151,
+      "fingerprint": "tok1:e7e11770ee5e700e43d064829d0b4dcd9c8901e7ed2be9330dab6c542e166a54"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_wire::tests::machine_view_contract::strict_structural_cases_refuse_unknown_missing_and_wrong_primitive",
+      "end_line": 122,
+      "fingerprint": "tok1:92a8e365d89a0c3e9b0c245c04ef30d7bfde8519e7f36ad80378caada92bb7ff"
     },
     {
       "crate_name": "vibe-wire",
@@ -35990,6 +36702,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/machine/e1/bound_page.jtd.json",
+      "from_symbol": "bound_page",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/application/e1/bundle_manifest.jtd.json",
       "from_symbol": "bundle_manifest",
       "line": 1,
@@ -36035,6 +36755,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "from_symbol": "composite_snapshot",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
       "verb": "implements"
     },
     {
@@ -36195,6 +36923,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-MAP",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/machine/e1/entity_reference.jtd.json",
+      "from_symbol": "entity_reference",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
       "verb": "implements"
     },
     {
@@ -36956,6 +37692,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/machine/e1/source_location.jtd.json",
+      "from_symbol": "source_location",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
       "verb": "implements"
     },
     {
@@ -42661,6 +43405,93 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/mod.rs",
+      "from_symbol": "vibe_core::machine_view",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/identity.rs",
+      "from_symbol": "vibe_core::machine_view::identity",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/identity.rs",
+      "from_symbol": "vibe_core::machine_view::identity::EntityReference::new",
+      "line": 137,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/location.rs",
+      "from_symbol": "vibe_core::machine_view::location",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/location.rs",
+      "from_symbol": "vibe_core::machine_view::location::SourceLocation::original_from_projected",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "from_symbol": "vibe_core::machine_view::tests::missing_owner_and_foreign_occurrence_are_typed_not_minted",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "from_symbol": "vibe_core::machine_view::tests::opaque_non_utf8_resource_and_original_byte_basis_survive",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "from_symbol": "vibe_core::machine_view::tests::projected_markdown_cannot_be_reported_as_original_xml_without_owner_map",
+      "line": 132,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "from_symbol": "vibe_core::machine_view::tests::repeated_inclusion_shares_owner_address_but_not_occurrence",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-core/src/machine_view/tests.rs",
+      "from_symbol": "vibe_core::machine_view::tests::unknown_encoding_missing_bytes_and_invalid_text_ranges_are_explicit",
+      "line": 162,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-core/src/manifest/mod.rs",
@@ -53594,7 +54425,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::PlannedExecution",
-      "line": 183,
+      "line": 184,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -53602,7 +54433,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan",
-      "line": 103,
+      "line": 104,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -53610,7 +54441,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "line": 137,
+      "line": 138,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -54243,6 +55074,304 @@
       "line": 168,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/mod.rs",
+      "from_symbol": "vibe_orchestrator::machine_view",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::adapter_tests::composite_mismatch_epoch_stamps_and_conflicting_claim_retain_original",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::adapter_tests::composite_replays_composed_and_refused_values_without_atomicity_claim",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::adapter_tests::local_page_refuses_false_complete_duplicate_occurrence_and_wrong_epoch",
+      "line": 128,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::adapter_tests::local_pages_check_stated_adjacency_but_leave_cursor_unverified",
+      "line": 93,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::PageSession::new",
+      "line": 152,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::tests::entity_parent_and_partial_child_limits_are_checked_before_publication",
+      "line": 197,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::tests::entity_parent_and_partial_child_limits_are_checked_before_publication",
+      "line": 193,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::tests::forged_replayed_cross_session_and_mixed_context_tokens_refuse",
+      "line": 146,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::tests::owner_session_pages_reconstruct_retained_rows_and_parent_order",
+      "line": 106,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_session::tests::selected_capture_bindings_and_single_occurrence_joins_refuse_invention",
+      "line": 320,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_wire",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::page_wire::review_generated_page",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::paging",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::paging::AuthorizedProjection<T>::page",
+      "line": 106,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::resource_uri",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::resource_uri::OwnerResourceUriMap::new",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::resource_uri::tests::duplicate_bindings_tokens_and_pathlike_spellings_refuse_before_mapping",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::resource_uri::tests::non_utf8_exact_key_gets_only_declared_client_uri_without_path_authority",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::resource_uri::tests::scope_revision_and_absent_resource_refuse_with_distinct_reasons",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::snapshot",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::snapshot::CompositeSnapshot::compose",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::snapshot_wire",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::snapshot_wire::replay_generated_composite",
+      "line": 115,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::source_location_uri",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::source_location_uri::publish_source_location_uri",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::exact_non_utf8_owner_mapping_publishes_only_unverified_client_uri",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::forged_uri_status_scope_resource_and_revision_retain_original_evidence",
+      "line": 113,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::source_location_uri::tests::unavailable_owner_scope_revision_and_resource_remain_null_with_typed_reasons",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::tests::complete_fixed_pages_reconstruct_every_authorized_row",
+      "line": 138,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::tests::compose_refuses_missing_stale_and_conflicting_axis_claims",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::tests::matching_multi_owner_claims_remain_unverified_not_atomic",
+      "line": 86,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "from_symbol": "vibe_orchestrator::machine_view::tests::mixed_filter_scope_projection_or_revision_cursors_refuse_and_partial_never_finishes_complete",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -61493,6 +62622,86 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::EntityReference::validate_machine_entity_reference",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::SourceLocation::validate_machine_source_location",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::client_uri_declaration_syntax_preserves_resource_without_grant",
+      "line": 221,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::forged_uri_and_scope_metadata_refuse_without_interpreting_paths",
+      "line": 248,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::mismatched_observation_epoch_and_bad_ordinals_refuse",
+      "line": 98,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::non_utf8_resource_and_exact_original_byte_bounds_survive",
+      "line": 141,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::projected_position_never_becomes_original_without_reverse_map",
+      "line": 178,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "from_symbol": "vibe_wire::behaviour::machine_view::tests::repeated_logical_entity_retains_two_distinct_occurrences",
+      "line": 76,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
       "file": "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
       "from_symbol": "vibe_wire::behaviour::preview_affected_source_review",
       "line": 8,
@@ -61605,6 +62814,68 @@
       "line": 123,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::semantic_invalid_inputs_remain_reader_valid_for_later_owner_refusal",
+      "line": 125,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "from_symbol": "vibe_wire::tests::machine_view_contract::strict_structural_cases_refuse_unknown_missing_and_wrong_primitive",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -89197,7 +90468,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:458ca184110b2c5ac5d26e97b3f8b969d8bd75fee666366bbc29fa23ce00d072",
+      "content_hash": "sha256:e324db4f224779365a476bf9a7d4d6b471eebe53d0392aaf910e9dff8e50971b",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -89305,7 +90576,7 @@
     },
     {
       "anchor": "machine-operation-contracts",
-      "content_hash": "sha256:d5ce82809f851adec7ef7e18018508af4a1135983cfdf5a1d20aef26e61e17c2",
+      "content_hash": "sha256:4c66f6fcdcf95e1fba1da95206b5d3157c6a45786709dc49623e1de10bac3d24",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Desired strict operation and capability contracts",
@@ -89514,6 +90785,122 @@
       "heading": "PROP-054's optional authored extension operation-schema declaration is the source for descriptor-only extension discovery. Validate its registered host-owned format IDs and epochs, bind the selected provider/declaration to the retained manifest or content capture, and keep source authenticity, implementation status, contextual availability and authorization separate. A parsed table without its owning retained-source evidence may be listed only with an explicit unverified or unavailable reason. A validated schema may be discoverable without loading the native handler, but is not a validated callable service until its domain owner and admission are separately proven. An arbitrary handler config or a schema inferred from a native ABI call is never this source. @status:spec/plan",
       "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE-LAW"
+    },
+    {
+      "anchor": "MACHINE-ENTITY-REFERENCES",
+      "content_hash": "sha256:1e35571c8679c82724a3f3e0f5dac325b91708973d045eb69b3bc5343ed2d4d2",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Logical, captured, observed and presented identities",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "kind": "req",
+      "revision": 2
+    },
+    {
+      "anchor": "req-machine-entity-references",
+      "content_hash": "sha256:03ada7c525c89e7ba90128fa375fa261d58fb5ad9f97888919d987d0f0b74681",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r2` @status:spec/plan",
+      "line": 48,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-entity-references"
+    },
+    {
+      "anchor": "MACHINE-ENTITY-REFERENCES-LAW",
+      "content_hash": "sha256:d15bbfecde736517f5dd163674e6ee64b0139428784de1c49c54921962e707b9",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A public entity reference keeps four axes separate: the domain owner's minted logical address where one exists; the captured content/source identity and revision; the observation or projection identity; and the occurrence of that entity in one presentation or contribution. A shared logical entity reached twice has one logical address and two occurrence references. Every presented occurrence has its own projection-local occurrence ID: a page row must join that exact ID to one entity occurrence, and two distinct rows cannot reuse one single-occurrence entity reference. A content/source identity joins a selected capture only through an explicit owner-supplied binding, never because their opaque spellings happen to match. A content hash identifies bytes, not a selected world or a complete observation; a display line, host path, arena index and wall-clock timestamp are never universal entity or snapshot identities. Missing owner identities remain typed extraction gaps rather than newly minted guesses. Preserve PROP-032's location-independent address law and PROP-036's repeated DAG occurrence behavior. @status:spec/plan",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES-LAW"
+    },
+    {
+      "anchor": "MACHINE-COMPOSITE-SNAPSHOT",
+      "content_hash": "sha256:6cbcd6c65c2e0aa93eebc2671bc52e049bdbacdccc2f937ed01e54b18e330161",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Compatible multi-owner observations",
+      "line": 51,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-composite-snapshot",
+      "content_hash": "sha256:5abf3f4fb0e8aeb02c74df5df210b6bd5a9c24589ca3ac380f30a38350be1737",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-composite-snapshot"
+    },
+    {
+      "anchor": "MACHINE-COMPOSITE-SNAPSHOT-LAW",
+      "content_hash": "sha256:0ed1d5c3d891fc5d24e4110213e7ed37eb0e778a593a09c5b65c1399523b3410",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A CompositeSnapshot records independently captured source, selected world, target and operation observations with each owner's revision or content witness, participation and completeness. Composition validates stated compatibility and returns a typed conflict, stale, missing or unverified reason where it cannot establish it; it does not imply one atomic read across domains. An absent component is not a complete empty component. A wall clock is diagnostic only and cannot substitute for any capture or revision identity. @status:spec/plan",
+      "line": 53,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT-LAW"
+    },
+    {
+      "anchor": "MACHINE-BOUND-PAGING",
+      "content_hash": "sha256:9f1ca679e60bc2a813d2d56cf247bde587e693d30e196641a59b6b0f732ce451",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "One projection across filters and pages",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-bound-paging",
+      "content_hash": "sha256:e3bb34db7ff059cec74bae316302cf9d5ca13cdefecee612f02c79ec8fd5e42f",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 56,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-bound-paging"
+    },
+    {
+      "anchor": "MACHINE-BOUND-PAGING-LAW",
+      "content_hash": "sha256:c569b9235b7c30ce66f364d99c50c6c01a3314a0ac1e7536b91c0f5f6aa77f0a",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A page, child expansion or chunk cursor is bound to one projection identity, source revisions, selected filter and authorized scope. Mixing pages from different projections or silently re-reading owners under one cursor refuses with a typed reason. A complete page sequence reconstructs the full authorized structure; truncation, unavailable children and redaction remain explicit and never masquerade as a complete final page. Cursor values convey no file or effect authority. @status:spec/plan",
+      "line": 57,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING-LAW"
+    },
+    {
+      "anchor": "MACHINE-SOURCE-LOCATION",
+      "content_hash": "sha256:cf96d81dbab1293b92efe8ccab93c044198cb2d1babeabeddbcc2de0b47a31c7",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Opaque resources and explicit position basis",
+      "line": 59,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-source-location",
+      "content_hash": "sha256:f4df4c4e10ea7ec87b5bfb5c0d28bd2af0a2bcc0e2a8a494e83ae55c9c63be85",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-source-location"
+    },
+    {
+      "anchor": "MACHINE-SOURCE-LOCATION-LAW",
+      "content_hash": "sha256:43e7d387f8be00fefc2aad68baf652312d8efafa34214cea62585a1d4d8b3d0b",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A source location carries an opaque resource identity, captured revision, encoding and explicit position basis such as original bytes or a named text projection. A trusted owner maps that resource to a client URI within its authorized scope; arbitrary host paths are not public identities or URI grants. Projected Markdown line positions are never presented as original XML byte positions without a retained reversible source map. A non-UTF8 resource, unknown encoding, absent raw bytes or unavailable reverse mapping retains its exact opaque resource with a typed unavailable reason rather than a lossy or fabricated location. @status:spec/plan",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION-LAW"
     },
     {
       "anchor": "root",
@@ -144149,6 +145536,12 @@
       "file": "crates/vibe-trace/src/fragment.rs",
       "line": 22,
       "message": "edge `vibe_trace::fragment` --implements--> `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code`: no spec unit carries this anchor"
+    },
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "line": 44,
+      "message": "`vibe_wire::tests::machine_view_contract::four_roots_roundtrip_exact_shapes_and_non_utf8_octets` realises 4 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
     },
     {
       "code": "pin-into-unmarked-unit",
