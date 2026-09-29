@@ -631,7 +631,8 @@ replay makes no new target write; a restored terminal operation is not silently
 reapplied. Interrupted before-image preparation without valid intent may
 leave inspectable residue but grants no target mutation or automatic cleanup.
 
-The report has integer `schema = 1`, operation, operation id and outcome
+The report has integer `schema = 1`, required nullable `operation` and
+`operation_id` (null when malformed input supplies no valid identity), and outcome
 `completed`, `no_op`, `pending`, `uncertain`, `refused`; `target_state` is
 `approved_before`, `validated_after`, `absent`, `third_state`, `unavailable`.
 It carries nullable intent/before/after/diff identities and a nullable typed
