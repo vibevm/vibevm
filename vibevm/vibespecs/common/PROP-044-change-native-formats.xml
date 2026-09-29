@@ -408,7 +408,18 @@ and owner values, survive unchanged. An unprovable edit refuses instead of
 serializing a struct or falling back. Identity plans are byte-identical with
 no edits. Repeating exact input and selection reproduces exact output and
 identities. Planning performs no filesystem, cache, lock, provider, LLM,
-publication or implicit application operation.</MANIFEST-MIGRATION-PLAN></p>
+publication or implicit application operation.
+
+The initial identity recipe uses SHA-256 and frames each byte string with its
+unsigned 64-bit big-endian byte length. Content frames the UTF-8 domain
+`vibe-manifest-content-r1` then the exact document bytes. Diff frames
+`vibe-manifest-migration-diff-r1`, source profile, target profile, recipe,
+before text and after text, then the edit count encoded as an unsigned 64-bit
+big-endian value inside a frame. Each edit in source order frames field path,
+original byte start and end (each encoded likewise), before token and after
+token. Digests are lowercase hexadecimal without a prefix. A fixed
+independently computed golden vector binds this recipe; changing domains,
+framing or ordering requires a distinct recipe revision.</MANIFEST-MIGRATION-PLAN></p>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
