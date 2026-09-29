@@ -21,6 +21,7 @@ mod extension;
 pub mod i18n;
 mod lockfile;
 mod mechanism;
+mod migration;
 mod package;
 mod plane;
 mod project;
@@ -56,6 +57,11 @@ pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_portable_token,
+};
+pub use migration::{
+    CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationOutcome,
+    ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal, MigrationRefusalKind,
+    MigrationSelection, MigrationTokenEdit, SNAPSHOT_TO_COPY, plan_manifest_migration,
 };
 pub use package::application::{
     ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,
