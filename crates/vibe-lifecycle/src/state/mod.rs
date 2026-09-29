@@ -8,6 +8,7 @@ mod identity;
 mod io;
 mod recovery;
 mod store;
+mod submission;
 mod tasks;
 mod validate;
 
@@ -29,6 +30,10 @@ pub(crate) use fingerprint::{
 };
 pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
 pub use store::LifecycleStateStore;
+pub use submission::{
+    ReservationDecision, SubmissionError, SubmissionNamespace, SubmissionReservations,
+    SubmissionScope,
+};
 pub use tasks::{LifecycleTasksError, pending_hosted_tasks};
 
 /// The durable-write fault seams. Tests arm them to prove the ordering of a
