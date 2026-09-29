@@ -154,6 +154,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/migration/e1/application_journal.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "application_journal",
+      "end_line": 134
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/application_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 103,
+      "symbol": "application_journal::authority",
+      "end_line": 132
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -3063,6 +3079,70 @@
       "line": 32,
       "symbol": "mechanism_manifest::mechanism_descriptor",
       "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "operation_report",
+      "end_line": 287
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 254,
+      "symbol": "operation_report::application_error",
+      "end_line": 285
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 117,
+      "symbol": "operation_report::effect",
+      "end_line": 144
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 198,
+      "symbol": "operation_report::guarantees",
+      "end_line": 253
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 173,
+      "symbol": "operation_report::residue",
+      "end_line": 197
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 145,
+      "symbol": "operation_report::warning",
+      "end_line": 172
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_request.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "operation_request",
+      "end_line": 122
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/operation_request.jtd.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "operation_request::authority",
+      "end_line": 120
     },
     {
       "crate_name": "<schema>",
@@ -6929,6 +7009,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/mcp.rs",
+      "item_kind": "struct",
+      "line": 207,
+      "symbol": "vibe_cli::cli::mcp::McpServeArgs",
+      "end_line": 229,
+      "fingerprint": "tok1:eedf3b20733618c675754997f5d8fbcba4ee2bac0a900451ce0d0abe05d7337d"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/pkg.rs",
       "item_kind": "mod",
       "line": 8,
@@ -8081,6 +8170,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "item_kind": "fn",
+      "line": 104,
+      "symbol": "vibe_cli::commands::mcp::run_serve",
+      "end_line": 135,
+      "fingerprint": "tok1:4fb6a8b7656c341cc032ba7aa5a756036c6d41f9373513c87c9a88730b622764"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/outdated.rs",
       "item_kind": "mod",
       "line": 11,
@@ -8519,6 +8617,42 @@
       "symbol": "vibe_cli::commands::refactor::convert_source",
       "end_line": 3,
       "fingerprint": "tok1:9a07cc0e30b9a37cdcb17cca20fc20b721b4d40908a3a2d74ef99c974472b05a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::refactor::machine_entry",
+      "end_line": 2,
+      "fingerprint": "tok1:133d8cacb2746a2491c6741b7a98fe8b160454bbf56e1be2dca0f33fff12fe39"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "vibe_cli::commands::refactor::machine_entry::run",
+      "end_line": 24,
+      "fingerprint": "tok1:1d2a2b93ec390abf9197a68941a8788f13bb35b1a6041afdb9503d4f237f76e3"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::refactor::migration_operation",
+      "end_line": 2,
+      "fingerprint": "tok1:133d8cacb2746a2491c6741b7a98fe8b160454bbf56e1be2dca0f33fff12fe39"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 124,
+      "symbol": "vibe_cli::commands::refactor::migration_operation::run",
+      "end_line": 202,
+      "fingerprint": "tok1:9b3cd72b403615540d6bc8bc529f4154f4fd2c7c3ff0477fa3abdefe2cb9fa8b"
     },
     {
       "crate_name": "vibe-cli",
@@ -10801,9 +10935,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 407,
+      "line": 405,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 532,
+      "end_line": 530,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -11318,6 +11452,114 @@
       "symbol": "vibe_cli::tests::lifecycle_package::failure::package_binding_failure_stops_every_later_contribution",
       "end_line": 60,
       "fingerprint": "tok1:2ea62f02321e1cc218d00ed31c4d37d1d052ff7ff11e83376f917a7d27526e7e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::mcp_migration_authority_args",
+      "end_line": 2,
+      "fingerprint": "tok1:133d8cacb2746a2491c6741b7a98fe8b160454bbf56e1be2dca0f33fff12fe39"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_cli::tests::mcp_migration_authority_args::absent_migration_flags_preserve_compatibility",
+      "end_line": 33,
+      "fingerprint": "tok1:d38ea52ee89e43cfdf6252c9471efafd0da3b7ddf0e2745701977d39c66c9f30"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "item_kind": "fn",
+      "line": 35,
+      "symbol": "vibe_cli::tests::mcp_migration_authority_args::explicit_store_preserves_repeatable_member_selection",
+      "end_line": 61,
+      "fingerprint": "tok1:2c26a2fd52c614ff3c5bfe72ba9e5963058b56d21e16de9a771e9370e824b529"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "vibe_cli::tests::mcp_migration_authority_args::migration_files_require_store_and_unknown_grammar_is_refused",
+      "end_line": 78,
+      "fingerprint": "tok1:5e278d1f44235229a5b3860cce7effca7b9737b6d9d655dad727a1635cf04f05"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::migration_operation",
+      "end_line": 2,
+      "fingerprint": "tok1:133d8cacb2746a2491c6741b7a98fe8b160454bbf56e1be2dca0f33fff12fe39"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 226,
+      "symbol": "vibe_cli::tests::migration_operation::absent_store_inspection_stdin_literal_parity_creates_nothing",
+      "end_line": 241,
+      "fingerprint": "tok1:d1a966fd890f17deb145d4ffff1ac0d8a7688fdc95e3259a36f5a91e782506ac"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 242,
+      "symbol": "vibe_cli::tests::migration_operation::apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode",
+      "end_line": 333,
+      "fingerprint": "tok1:9af34321fc593d8aaa0fe17f7ca9a64135165ca9f79f067d764f60f4978a1a43"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 388,
+      "symbol": "vibe_cli::tests::migration_operation::frozen_source_escape_and_link_refuse_without_target_write",
+      "end_line": 418,
+      "fingerprint": "tok1:6b15425ac650c81c01fcc7a42af1ac89ce0c7aa8867bffc6dcc6b0dd9f28990b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 419,
+      "symbol": "vibe_cli::tests::migration_operation::internal_invariant_diagnostic_retains_unvalidated_original_evidence",
+      "end_line": 448,
+      "fingerprint": "tok1:0fe7df397f40ba71c4d3c62b8fa46475415a46e7095560fc6b99111de6f304aa"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 165,
+      "symbol": "vibe_cli::tests::migration_operation::malformed_schema_null_and_input_read_preflight_preserve_poisoned_state",
+      "end_line": 225,
+      "fingerprint": "tok1:2dc0142f80461690d696b9a1592eb5d84862f6c9fc3a85c80049be7efc4342e0"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 334,
+      "symbol": "vibe_cli::tests::migration_operation::mismatched_plan_ids_and_changed_source_refuse_preserving_target",
+      "end_line": 361,
+      "fingerprint": "tok1:9474040166a2d18685d0321bafbb15c4522107ac32bee1e4d0b1fb820bec2b5a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 362,
+      "symbol": "vibe_cli::tests::migration_operation::third_state_recovery_and_foreign_intent_retain_journal_and_effects",
+      "end_line": 387,
+      "fingerprint": "tok1:3ec43b435e58be334679718f9188550a3a1d2120a9b303ad500e1135cbf4214b"
     },
     {
       "crate_name": "vibe-cli",
@@ -22600,27 +22842,36 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "mod",
-      "line": 35,
+      "line": 36,
       "symbol": "vibe_mcp",
-      "end_line": 35,
+      "end_line": 36,
       "fingerprint": "tok1:aa3e243e33bafe22c9f13b8b34af19ab204fb7eec01d0d68ea8c6051d8fe2ef7"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
+      "item_kind": "struct",
+      "line": 179,
+      "symbol": "vibe_mcp::Server",
+      "end_line": 196,
+      "fingerprint": "tok1:d5aeefbeeb30a14d1abea21ff764189e45998db62612258ec8657950668befe8"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 346,
+      "line": 354,
       "symbol": "vibe_mcp::ServerError",
-      "end_line": 371,
+      "end_line": 379,
       "fingerprint": "tok1:c391eeaf135e87c17945b45ae95430ec58e1df93c51caf0b62d0b153b9a2600f"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 95,
+      "line": 96,
       "symbol": "vibe_mcp::ToolError",
-      "end_line": 170,
+      "end_line": 171,
       "fingerprint": "tok1:fb8b4ae5adc8b829b7e2c4e2c6b16a6ad958d38390ad9e92f1737b0a1ddd654d"
     },
     {
@@ -22798,19 +23049,109 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/context.rs",
       "item_kind": "mod",
-      "line": 16,
+      "line": 18,
       "symbol": "vibe_mcp::context",
-      "end_line": 16,
+      "end_line": 18,
       "fingerprint": "tok1:9f92484acabbb51ebdffbfd36ce2b6a4112f24e3ba5f0d42973b485c32ad08d7"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/context.rs",
       "item_kind": "struct",
-      "line": 26,
+      "line": 33,
       "symbol": "vibe_mcp::context::ServerContext",
-      "end_line": 65,
-      "fingerprint": "tok1:db863fa024f1e0dd4469f05dc4806b046620e20dc25a7f0d7c8cafe97093139e"
+      "end_line": 74,
+      "fingerprint": "tok1:e6898c0ce755594e0c073c66a8c142298a94c4ad3e1cb8cc8d7c566f097b6626"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::context::migration",
+      "end_line": 2,
+      "fingerprint": "tok1:8876599d7bb256d865046b4fd8fdc8d1431c4da2eb6e212379386b6b126d29da"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "item_kind": "fn",
+      "line": 70,
+      "symbol": "vibe_mcp::context::migration::ServerContext::grant_for_manifest_migration",
+      "end_line": 113,
+      "fingerprint": "tok1:f34ced269e45f74564748d57c073f95b7ed70cb6beee5054573a6b1ace320f14"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "item_kind": "fn",
+      "line": 28,
+      "symbol": "vibe_mcp::context::migration::ServerContext::with_manifest_migration_authority",
+      "end_line": 68,
+      "fingerprint": "tok1:68b81697ee693f5f9f928763c62d37d72517140a89a41857835f574364d59f75"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_mcp::context::migration_tests",
+      "end_line": 1,
+      "fingerprint": "tok1:8876599d7bb256d865046b4fd8fdc8d1431c4da2eb6e212379386b6b126d29da"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 172,
+      "symbol": "vibe_mcp::context::migration_tests::cache_overlap_and_nofollow_aliases_refuse_without_effects",
+      "end_line": 223,
+      "fingerprint": "tok1:e70fadcd5ec4aad984c22c8fc6d8591d830279ff74da45bf3d6c79c64e45d595"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_mcp::context::migration_tests::configured_default_and_explicit_members_admit_only_their_files",
+      "end_line": 120,
+      "fingerprint": "tok1:8023556e19ed2b8b36e08e5cd810ae9082c4ad34ffc4bfecf54588e965447e87"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 69,
+      "symbol": "vibe_mcp::context::migration_tests::default_context_refuses_without_creation",
+      "end_line": 85,
+      "fingerprint": "tok1:b832df2c3b906077fdd625810c1a09ca92b40f9877b8c482cb370a1f6cb9c241"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 122,
+      "symbol": "vibe_mcp::context::migration_tests::foreign_and_relative_authority_refuses_before_open",
+      "end_line": 170,
+      "fingerprint": "tok1:55af52895927ac4356e42b7bfe7ba554f6573536a5e9e71e280fd365bffdd03e"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 252,
+      "symbol": "vibe_mcp::context::migration_tests::lifecycle_builders_preserve_explicit_migration_authority",
+      "end_line": 292,
+      "fingerprint": "tok1:75f6c94b15a576e292d6f9d6c73dedb1f34c9cfb3ddcade3796e9ee9a517d903"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "item_kind": "fn",
+      "line": 225,
+      "symbol": "vibe_mcp::context::migration_tests::missing_cache_is_not_initialized_and_policy_rechecks",
+      "end_line": 250,
+      "fingerprint": "tok1:cc8784078f97b911ef5e6ef70f3932321d694287503eba8cbc0064a14d6f941c"
     },
     {
       "crate_name": "vibe-mcp",
@@ -22877,6 +23218,33 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_mcp::tests::diagnostic_output",
+      "end_line": 3,
+      "fingerprint": "tok1:dc5390c60184aec484cbcfda955c4149c5af4a757227e1db18fb3150c0cf3eb7"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "item_kind": "fn",
+      "line": 56,
+      "symbol": "vibe_mcp::tests::diagnostic_output::executed_diagnostic_failure_omits_structured_content",
+      "end_line": 76,
+      "fingerprint": "tok1:5062c36247207de925a669d0ea30c5a6c27e2007a4b267d4958c09b5d0ffdb63"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_mcp::tests::diagnostic_output::explicit_null_structured_outputs_retain_the_field",
+      "end_line": 97,
+      "fingerprint": "tok1:5704077fdc4c3e14aaa0110e72a64ab389eac97eee0c032b9de09a070fca7d46"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "mod",
       "line": 11,
@@ -22888,55 +23256,64 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 493,
+      "line": 501,
       "symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "end_line": 505,
+      "end_line": 513,
       "fingerprint": "tok1:bb751a7ac693f9ebf04766449fa37569b5ef2770f50134a0d2254a810d6b39e3"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 85,
+      "line": 93,
       "symbol": "vibe_mcp::tools::ListToolsMcpTool",
-      "end_line": 103,
+      "end_line": 111,
       "fingerprint": "tok1:8ed20c9530a1a10762d79b551887a68f5a912ed5309f2837097639fab337ec32"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 353,
+      "line": 361,
       "symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "end_line": 363,
+      "end_line": 371,
       "fingerprint": "tok1:7a65232d99728dda7430a8f91d406bd4b6db0c79bece520d3c6c61700a8c63d0"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "trait",
-      "line": 31,
+      "line": 34,
       "symbol": "vibe_mcp::tools::McpTool",
-      "end_line": 59,
+      "end_line": 62,
       "fingerprint": "tok1:0f838854ac3b77b596ba71488d7b13498ab08b93e712b5857c3b1414a67fd4ba"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 133,
+      "line": 141,
       "symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "end_line": 142,
+      "end_line": 150,
       "fingerprint": "tok1:ba43260b8c954a14d387560ebbc7e9997492fc0741b3ec22ac0cd174be0a0aa5"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 220,
+      "line": 228,
       "symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "end_line": 229,
+      "end_line": 237,
       "fingerprint": "tok1:fb755a2dc3313eba121e287265c26e3d4c3769203e53433e864657da436cd68a"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools.rs",
+      "item_kind": "fn",
+      "line": 64,
+      "symbol": "vibe_mcp::tools::default_tools",
+      "end_line": 87,
+      "fingerprint": "tok1:1f2aa19e758d3d5c34fa9c1442a4ebc15a6ddab1fb09b3999e651ae4876826e5"
     },
     {
       "crate_name": "vibe-mcp",
@@ -23003,6 +23380,96 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::tools::migration_operation",
+      "end_line": 2,
+      "fingerprint": "tok1:8876599d7bb256d865046b4fd8fdc8d1431c4da2eb6e212379386b6b126d29da"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "item_kind": "struct",
+      "line": 21,
+      "symbol": "vibe_mcp::tools::migration_operation::ManifestMigrationOperationMcpTool",
+      "end_line": 26,
+      "fingerprint": "tok1:25d892c8d342f84632f6f78e28283a9eea9393692a2c1b979288d53dc1cc6f2d"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "item_kind": "fn",
+      "line": 57,
+      "symbol": "vibe_mcp::tools::migration_operation::ManifestMigrationOperationMcpTool::run",
+      "end_line": 135,
+      "fingerprint": "tok1:42243fcf78160648aa5106a39fa360b0e6f20d6268481264550189376b1412ab"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::tools::migration_operation::tests",
+      "end_line": 2,
+      "fingerprint": "tok1:8876599d7bb256d865046b4fd8fdc8d1431c4da2eb6e212379386b6b126d29da"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 244,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::actual_apply_inspect_restore_and_terminal_replay",
+      "end_line": 283,
+      "fingerprint": "tok1:b9c677cb0f5134c0310dfa525a21c85a87721a90a8149dd3edec8063f922784a"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 200,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::composed_authority_refuses_payload_overrides_without_writes",
+      "end_line": 242,
+      "fingerprint": "tok1:9f843f5fa1ffb0f7f4028effdb16a5cbd442be27ac29974d11a7eaa2e00ad5f3"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 285,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::conflicts_frozen_and_link_targets_preserve_source",
+      "end_line": 336,
+      "fingerprint": "tok1:422513ca6c835ed85fc3582959272dd5a2c032321075febc8ddee3b340875061"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 140,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::descriptor_and_strict_preflight_before_grants",
+      "end_line": 198,
+      "fingerprint": "tok1:df357be42593357be418b11bafb7bb42f08f908f6c8f0c0c917f698a794ec19d"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 338,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::failed_restore_has_real_pending_journal_and_retained_residue",
+      "end_line": 375,
+      "fingerprint": "tok1:16b549089332770f4c955d073c037b4e36d662ba097d4e1e48719e9ce000ad7f"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "item_kind": "fn",
+      "line": 377,
+      "symbol": "vibe_mcp::tools::migration_operation::tests::invariant_failure_is_executed_diagnostic_without_structured_report",
+      "end_line": 414,
+      "fingerprint": "tok1:8235a11bab68bb6eefaae6a23c3ac1fa5b5f9e80726ada8abccac536eadda1e4"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/migration_plan.rs",
       "item_kind": "mod",
       "line": 3,
@@ -23034,8 +23501,17 @@
       "item_kind": "struct",
       "line": 16,
       "symbol": "vibe_mcp::tools::output::ToolOutput",
-      "end_line": 121,
-      "fingerprint": "tok1:82f8d95d543e497d7ff4db4ff8398b3c556d540a043f834953d0c9349699b886"
+      "end_line": 129,
+      "fingerprint": "tok1:34dcdcdcf36639c32b299c9178bb86533e15fbf4a1ff576e21023ba01c28443c"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/output.rs",
+      "item_kind": "fn",
+      "line": 196,
+      "symbol": "vibe_mcp::tools::output::ToolOutput::executed_failure_text",
+      "end_line": 210,
+      "fingerprint": "tok1:68129e6d35d4f6fa39923d8f767f1742b913f6b0ee403a66e37594c7d18d8cc4"
     },
     {
       "crate_name": "vibe-mcp",
@@ -26774,6 +27250,15 @@
     },
     {
       "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_safefs::transaction::external_sync",
+      "end_line": 1,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
+    },
+    {
+      "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/transaction/platform.rs",
       "item_kind": "mod",
       "line": 3,
@@ -26825,6 +27310,15 @@
       "symbol": "vibe_safefs::transaction::platform::windows_abi::ntstatus_error",
       "end_line": 119,
       "fingerprint": "tok1:e8cc348ddb06d9bfc12016317f2ada5089a151afc5757299d0d888af650bf516"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_safefs::transaction::tests::external_sync",
+      "end_line": 1,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
     },
     {
       "crate_name": "vibe-safefs",
@@ -31679,6 +32173,78 @@
     },
     {
       "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 272,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::application_domain_invalids_remain_owner_validation_inputs",
+      "end_line": 297,
+      "fingerprint": "tok1:2dc5ce710a8453052b9f453ae4d731df02f2c144cfb41b8de05577c186395e98"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 253,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::application_journal_structural_invalids_refuse",
+      "end_line": 270,
+      "fingerprint": "tok1:89ebfc89a7e9f2380a781ca4ae4cbd45a9a0e853949a43d32da6cf64bf131075"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 116,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode",
+      "end_line": 150,
+      "fingerprint": "tok1:dffa3ce9c689edb12b6df9fae2612f6d6c315eb6ad2b5a565148fca7bee0f491"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_report_structural_invalids_refuse_nested_guarantees_effects_codes",
+      "end_line": 251,
+      "fingerprint": "tok1:1920b4de3fc7399937e463fa0b8c52031c510264b16822fd3f1f468e86ba7889"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 81,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees",
+      "end_line": 114,
+      "fingerprint": "tok1:6fa9658b5132b9a1900a9768e0ff504b933de2472ba1626e191e678c493f08b6"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 152,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_request_structural_invalids_refuse",
+      "end_line": 167,
+      "fingerprint": "tok1:2f2b35abc6d60076fe279dea2c9ca1747ace0856d43b7253562afb8c0adb5cbb"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "item_kind": "fn",
+      "line": 28,
+      "symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_request_valid_roundtrips_preserve_explicit_intent_and_authority",
+      "end_line": 79,
+      "fingerprint": "tok1:a57176fcf46b7d56bc292e2ad97c7c273571f7a7543f188fa7d2921d61188c50"
+    },
+    {
+      "crate_name": "vibe-wire",
       "file": "crates/vibe-wire/tests/migration_wire_corpus.rs",
       "item_kind": "mod",
       "line": 4,
@@ -31699,27 +32265,27 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 111,
+      "line": 112,
       "symbol": "vibe_workspace::Workspace",
-      "end_line": 153,
+      "end_line": 154,
       "fingerprint": "tok1:f11f238e760e70161733f73be4d7484718f476298a1076e53011eeaca8401432"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 205,
+      "line": 206,
       "symbol": "vibe_workspace::Workspace::node_rel_of",
-      "end_line": 272,
+      "end_line": 273,
       "fingerprint": "tok1:efaecb95c92dc621d4b1357b2bc18580ec05ca2704aadabf9c397e7bb1ea4969"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 67,
+      "line": 68,
       "symbol": "vibe_workspace::WorkspaceMember",
-      "end_line": 109,
+      "end_line": 110,
       "fingerprint": "tok1:27e14926d8b3eee3a5f1ae2f6642e5506608113ff9f991cfe2f8b553110acb4e"
     },
     {
@@ -33344,6 +33910,330 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_workspace::migration_application",
+      "end_line": 7,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "item_kind": "fn",
+      "line": 91,
+      "symbol": "vibe_workspace::migration_application::OwnedManifestMigrationFile::validate_recovery_store_policy",
+      "end_line": 128,
+      "fingerprint": "tok1:c9f83dbc0319885bf57b80dc06a2d3c10ada296d4d182bf2d9077301234b713e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "item_kind": "fn",
+      "line": 75,
+      "symbol": "vibe_workspace::migration_application::OwnedManifestMigrationFile::with_protected_machine_cache_root",
+      "end_line": 89,
+      "fingerprint": "tok1:3b5a6f76869dce94720b358d907239a8bf08fd8b958927ec52fe6141ea888280"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/identity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::identity",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/recovery.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::recovery",
+      "end_line": 2,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/report.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::report",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::retained_sync_tests",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_workspace::migration_application::retained_sync_tests::loaded_restore_requires_image_sync_but_inspect_and_replay_do_not",
+      "end_line": 151,
+      "fingerprint": "tok1:87dff9212b380ffd274046029f4ce3a0d7093f7d759ef40dc172b5a1ba8cdb2c"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "item_kind": "fn",
+      "line": 51,
+      "symbol": "vibe_workspace::migration_application::retained_sync_tests::matching_orphan_requires_actual_image_sync_and_failure_blocks_target",
+      "end_line": 93,
+      "fingerprint": "tok1:110ad0b59f442bffd728ab4208fd47273eca1611b2cc7b021089b10e73f58d63"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::runtime",
+      "end_line": 2,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "item_kind": "fn",
+      "line": 236,
+      "symbol": "vibe_workspace::migration_application::runtime::execute_manifest_migration_json",
+      "end_line": 276,
+      "fingerprint": "tok1:30f07971facb7699f4e8c2d2983e26d6fa602b2afbf670b3c29636039f0d86dd"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::runtime_tests",
+      "end_line": 2,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 141,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+      "end_line": 186,
+      "fingerprint": "tok1:403a7f4f952d1cbf2d11e9acc72f9a166bce8fc50d0f6559603ebaeeab0fc9bb"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::changed_absent_third_state_and_forged_intent_do_not_overwrite",
+      "end_line": 252,
+      "fingerprint": "tok1:5782e398996e9b3d473dfb35601a18b01d28b7de20c3453c426e933c8a22494c"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 366,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::impossible_prefixes_and_foreign_stages_preserve_evidence",
+      "end_line": 399,
+      "fingerprint": "tok1:e6b8c3ae74dbb4a3eb45fcb235b128f0877ea628c2d9f12e34c44fc2b1b56f07"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 188,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::inspection_existing_only_and_orphan_or_foreign_store_preservation",
+      "end_line": 215,
+      "fingerprint": "tok1:51c083aec82bc40bf9031ce2f208f2ce24b52c0a212f0ffa4ac7d162e4139ca0"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 107,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::malformed_forged_grant_and_frozen_preflight_create_no_state",
+      "end_line": 139,
+      "fingerprint": "tok1:b48ff180fdbe09f04b559e0d25a9eb838f698a120c1407816071ca0895b5b971"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 401,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::no_op_no_images_and_failed_journal_keep_prior_effects",
+      "end_line": 433,
+      "fingerprint": "tok1:f59b847045befc52a72b0300817d7c9ddc9fd1d5ce1f65c1c34e6c576d9575d5"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 435,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+      "end_line": 494,
+      "fingerprint": "tok1:7160954f66e47e072c8bc0c397526033b654a724bc13d051ce1f3844de2c7966"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 275,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::process_restart_apply_boundaries_preserve_supported_prefixes",
+      "end_line": 329,
+      "fingerprint": "tok1:99122c7d88afbd8d4ea6ad14111cbbac05d67d74bc5bda1d9a9580b0a5b2dd3f"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "item_kind": "fn",
+      "line": 331,
+      "symbol": "vibe_workspace::migration_application::runtime_tests::process_restart_restore_boundaries_are_idempotent",
+      "end_line": 364,
+      "fingerprint": "tok1:9e28fb2050d63f94caf39fea9807d0ffcaf22f604817b731bcda055658532b4d"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/storage.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::storage",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_application::validation",
+      "end_line": 4,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_workspace::migration_application::validation_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:9693489951ad76d320a4f9aa5852f3ea7fce4c3c10a0c003af44ee187245cf6e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 240,
+      "symbol": "vibe_workspace::migration_application::validation_tests::corrupted_journal_fields_refuse_before_intent_admission",
+      "end_line": 283,
+      "fingerprint": "tok1:5af38a380b6b24022b41ec06c16898e05a0a964592ec0b62da1c37d4221f95df"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 406,
+      "symbol": "vibe_workspace::migration_application::validation_tests::expected_stage_residue_is_reportable_without_namespace_authority",
+      "end_line": 444,
+      "fingerprint": "tok1:35e22689cd72f2cebc17fa9edc216c27820118f751fdce2c4692ef9a00f37f19"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 146,
+      "symbol": "vibe_workspace::migration_application::validation_tests::grant_mismatch_source_identity_and_frozen_effect_refuse",
+      "end_line": 184,
+      "fingerprint": "tok1:b0025f3d7b47aa156f1deac4d4cc58cddb5b3ae2f19ec58b92cd182f8297b67d"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 312,
+      "symbol": "vibe_workspace::migration_application::validation_tests::independent_framed_golden_and_phase_exclusion",
+      "end_line": 363,
+      "fingerprint": "tok1:97acb7abcc392312e64799890905ca6636ced7ab24783326c402d56e0f9dacd2"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 69,
+      "symbol": "vibe_workspace::migration_application::validation_tests::malformed_and_null_preflight_create_nothing",
+      "end_line": 101,
+      "fingerprint": "tok1:9b1250b0ab3b13d3375eab767cd18e7baad4804db39447a5dddf77c471b9dc8e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 446,
+      "symbol": "vibe_workspace::migration_application::validation_tests::no_op_replay_retains_only_coherent_completed_target_effects",
+      "end_line": 479,
+      "fingerprint": "tok1:b11c0353d3073857035057baa8d846c29a294b2ca60957779f98c639054320a4"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 103,
+      "symbol": "vibe_workspace::migration_application::validation_tests::planner_selections_and_refusals_are_not_apply_plans",
+      "end_line": 144,
+      "fingerprint": "tok1:d144b68b076e084a2181a4fb8490fe6bc8d8e4ab3db91b8eb1d61c875e325a54"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 481,
+      "symbol": "vibe_workspace::migration_application::validation_tests::recognized_target_bytes_require_all_planner_identities",
+      "end_line": 504,
+      "fingerprint": "tok1:eb2cd35f9a3860c2279529b657dfc73f18d9f126285c222faca9b908a9ce909e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 365,
+      "symbol": "vibe_workspace::migration_application::validation_tests::report_errors_retain_observed_effects_without_fabricated_guarantees",
+      "end_line": 404,
+      "fingerprint": "tok1:6740625770e72c6aadc18a12328390f21211cd77db1b8b0977b6f49b0c1ab502"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 506,
+      "symbol": "vibe_workspace::migration_application::validation_tests::report_validation_failure_retains_all_observed_evidence",
+      "end_line": 548,
+      "fingerprint": "tok1:8a2374fed5ca5abb3ab6eb40b37b1a578f14249bcb4754bab9b8d0197a7b1198"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 285,
+      "symbol": "vibe_workspace::migration_application::validation_tests::required_nullable_and_unknown_nested_fields_remain_strict",
+      "end_line": 310,
+      "fingerprint": "tok1:07bbce9ede893103c0f42b265360d520e91d39f9e9e9c289da7ce7e2b2d534fa"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "item_kind": "fn",
+      "line": 186,
+      "symbol": "vibe_workspace::migration_application::validation_tests::six_semantic_corpus_inputs_refuse_at_their_owners",
+      "end_line": 238,
+      "fingerprint": "tok1:0a5c924593cd5a24d2fe5bde7909c4011862bf07d1ba3550b3186e111d0b32d5"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning.rs",
       "item_kind": "mod",
       "line": 6,
@@ -34161,6 +35051,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/migration/e1/application_journal.jtd.json",
+      "from_symbol": "application_journal",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/application_report.jtd.json",
       "from_symbol": "application_report",
       "line": 1,
@@ -34510,6 +35408,22 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/migration/e1/operation_report.jtd.json",
+      "from_symbol": "operation_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/migration/e1/operation_request.jtd.json",
+      "from_symbol": "operation_request",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
       "verb": "implements"
     },
     {
@@ -35814,6 +36728,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/mcp.rs",
+      "from_symbol": "vibe_cli::cli::mcp::McpServeArgs",
+      "line": 208,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
       "file": "crates/vibe-cli/src/cli/pkg.rs",
       "from_symbol": "vibe_cli::cli::pkg",
       "line": 8,
@@ -36840,6 +37763,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "from_symbol": "vibe_cli::commands::mcp::run_serve",
+      "line": 104,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
       "file": "crates/vibe-cli/src/commands/outdated.rs",
       "from_symbol": "vibe_cli::commands::outdated",
       "line": 11,
@@ -37230,6 +38162,40 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#convert-source",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+      "from_symbol": "vibe_cli::commands::refactor::machine_entry",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+      "from_symbol": "vibe_cli::commands::refactor::machine_entry::run",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "from_symbol": "vibe_cli::commands::refactor::migration_operation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "from_symbol": "vibe_cli::commands::refactor::migration_operation::run",
+      "line": 124,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
@@ -39302,7 +40268,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 485,
+      "line": 483,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -39826,6 +40792,112 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "from_symbol": "vibe_cli::tests::mcp_migration_authority_args",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "from_symbol": "vibe_cli::tests::mcp_migration_authority_args::absent_migration_flags_preserve_compatibility",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "from_symbol": "vibe_cli::tests::mcp_migration_authority_args::explicit_store_preserves_repeatable_member_selection",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "from_symbol": "vibe_cli::tests::mcp_migration_authority_args::migration_files_require_store_and_unknown_grammar_is_refused",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::absent_store_inspection_stdin_literal_parity_creates_nothing",
+      "line": 227,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode",
+      "line": 243,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::frozen_source_escape_and_link_refuse_without_target_write",
+      "line": 389,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::internal_invariant_diagnostic_retains_unvalidated_original_evidence",
+      "line": 420,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::malformed_schema_null_and_input_read_preflight_preserve_poisoned_state",
+      "line": 166,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::mismatched_plan_ids_and_changed_source_refuse_preserving_target",
+      "line": 335,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/migration_operation.rs",
+      "from_symbol": "vibe_cli::tests::migration_operation::third_state_recovery_and_foreign_intent_retain_journal_and_effects",
+      "line": 363,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-cli/tests/migration_plan.rs",
@@ -50202,15 +51274,24 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp",
-      "line": 35,
+      "line": 36,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
       "verb": "implements"
     },
     {
       "file": "crates/vibe-mcp/src/lib.rs",
+      "from_symbol": "vibe_mcp::Server",
+      "line": 188,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
+      "verb": "implements",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 356,
+      "line": 364,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -50218,7 +51299,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 108,
+      "line": 109,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -50383,7 +51464,7 @@
     {
       "file": "crates/vibe-mcp/src/context.rs",
       "from_symbol": "vibe_mcp::context",
-      "line": 16,
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "verb": "implements"
@@ -50391,10 +51472,98 @@
     {
       "file": "crates/vibe-mcp/src/context.rs",
       "from_symbol": "vibe_mcp::context::ServerContext",
-      "line": 36,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "from_symbol": "vibe_mcp::context::migration",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "from_symbol": "vibe_mcp::context::migration::ServerContext::grant_for_manifest_migration",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration.rs",
+      "from_symbol": "vibe_mcp::context::migration::ServerContext::with_manifest_migration_authority",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::cache_overlap_and_nofollow_aliases_refuse_without_effects",
+      "line": 173,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::configured_default_and_explicit_members_admit_only_their_files",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::default_context_refuses_without_creation",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::foreign_and_relative_authority_refuses_before_open",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::lifecycle_builders_preserve_explicit_migration_authority",
+      "line": 253,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "from_symbol": "vibe_mcp::context::migration_tests::missing_cache_is_not_initialized_and_policy_rechecks",
+      "line": 226,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-mcp/src/install.rs",
@@ -50453,6 +51622,32 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "from_symbol": "vibe_mcp::tests::diagnostic_output",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "from_symbol": "vibe_mcp::tests::diagnostic_output::executed_diagnostic_failure_omits_structured_content",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "from_symbol": "vibe_mcp::tests::diagnostic_output::explicit_null_structured_outputs_retain_the_field",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools",
       "line": 11,
@@ -50463,7 +51658,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "line": 504,
+      "line": 512,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -50471,7 +51666,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ListToolsMcpTool",
-      "line": 102,
+      "line": 110,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -50479,7 +51674,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "line": 362,
+      "line": 370,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -50487,7 +51682,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::McpTool",
-      "line": 46,
+      "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -50495,7 +51690,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "line": 141,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -50503,10 +51698,19 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "line": 228,
+      "line": 236,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools.rs",
+      "from_symbol": "vibe_mcp::tools::default_tools",
+      "line": 66,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+      "verb": "implements",
+      "pinned_r": 4
     },
     {
       "file": "crates/vibe-mcp/src/tools/explain.rs",
@@ -50565,6 +51769,94 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::ManifestMigrationOperationMcpTool",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::ManifestMigrationOperationMcpTool::run",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::actual_apply_inspect_restore_and_terminal_replay",
+      "line": 245,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::composed_authority_refuses_payload_overrides_without_writes",
+      "line": 201,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::conflicts_frozen_and_link_targets_preserve_source",
+      "line": 286,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::descriptor_and_strict_preflight_before_grants",
+      "line": 141,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::failed_restore_has_real_pending_journal_and_retained_residue",
+      "line": 339,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_operation::tests::invariant_failure_is_executed_diagnostic_without_structured_report",
+      "line": 378,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
       "file": "crates/vibe-mcp/src/tools/migration_plan.rs",
       "from_symbol": "vibe_mcp::tools::migration_plan",
       "line": 3,
@@ -50592,10 +51884,20 @@
     {
       "file": "crates/vibe-mcp/src/tools/output.rs",
       "from_symbol": "vibe_mcp::tools::output::ToolOutput",
-      "line": 116,
+      "line": 120,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
-      "verb": "implements"
+      "verb": "implements",
+      "pinned_r": 4
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/output.rs",
+      "from_symbol": "vibe_mcp::tools::output::ToolOutput::executed_failure_text",
+      "line": 199,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-mcp/src/tools/query.rs",
@@ -54070,6 +55372,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::external_sync",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-safefs/src/transaction/platform.rs",
       "from_symbol": "vibe_safefs::transaction::platform",
       "line": 3,
@@ -54121,6 +55431,14 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NATIVE-NOFOLLOW-BOUNDARY",
       "verb": "deviates",
       "reason": "the reviewed NT calls return NTSTATUS, so this one pure conversion preserves their typed Win32 I/O errors"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_sync",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-safefs/src/transaction/tree.rs",
@@ -58508,6 +59826,77 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::application_domain_invalids_remain_owner_validation_inputs",
+      "line": 273,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::application_journal_structural_invalids_refuse",
+      "line": 254,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_report_structural_invalids_refuse_nested_guarantees_effects_codes",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees",
+      "line": 82,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_request_structural_invalids_refuse",
+      "line": 153,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "from_symbol": "vibe_wire::tests::migration_application_wire_corpus::operation_request_valid_roundtrips_preserve_explicit_intent_and_authority",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
       "file": "crates/vibe-wire/tests/migration_wire_corpus.rs",
       "from_symbol": "vibe_wire::tests::migration_wire_corpus",
       "line": 4,
@@ -58526,7 +59915,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 140,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -58535,7 +59924,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::node_rel_of",
-      "line": 261,
+      "line": 262,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "documents"
@@ -58543,7 +59932,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 90,
+      "line": 91,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -60081,6 +61470,320 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "from_symbol": "vibe_workspace::migration_application",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "from_symbol": "vibe_workspace::migration_application::OwnedManifestMigrationFile::validate_recovery_store_policy",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application.rs",
+      "from_symbol": "vibe_workspace::migration_application::OwnedManifestMigrationFile::with_protected_machine_cache_root",
+      "line": 77,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/identity.rs",
+      "from_symbol": "vibe_workspace::migration_application::identity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/recovery.rs",
+      "from_symbol": "vibe_workspace::migration_application::recovery",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/report.rs",
+      "from_symbol": "vibe_workspace::migration_application::report",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::retained_sync_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::retained_sync_tests::loaded_restore_requires_image_sync_but_inspect_and_replay_do_not",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::retained_sync_tests::matching_orphan_requires_actual_image_sync_and_failure_blocks_target",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime::execute_manifest_migration_json",
+      "line": 237,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+      "line": 142,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::changed_absent_third_state_and_forged_intent_do_not_overwrite",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::impossible_prefixes_and_foreign_stages_preserve_evidence",
+      "line": 367,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::inspection_existing_only_and_orphan_or_foreign_store_preservation",
+      "line": 189,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::malformed_forged_grant_and_frozen_preflight_create_no_state",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::no_op_no_images_and_failed_journal_keep_prior_effects",
+      "line": 402,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+      "line": 436,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::process_restart_apply_boundaries_preserve_supported_prefixes",
+      "line": 276,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::runtime_tests::process_restart_restore_boundaries_are_idempotent",
+      "line": 332,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/storage.rs",
+      "from_symbol": "vibe_workspace::migration_application::storage",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::corrupted_journal_fields_refuse_before_intent_admission",
+      "line": 241,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::expected_stage_residue_is_reportable_without_namespace_authority",
+      "line": 407,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::grant_mismatch_source_identity_and_frozen_effect_refuse",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::independent_framed_golden_and_phase_exclusion",
+      "line": 313,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::malformed_and_null_preflight_create_nothing",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::no_op_replay_retains_only_coherent_completed_target_effects",
+      "line": 447,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::planner_selections_and_refusals_are_not_apply_plans",
+      "line": 104,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::recognized_target_bytes_require_all_planner_identities",
+      "line": 482,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::report_errors_retain_observed_effects_without_fabricated_guarantees",
+      "line": 366,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::report_validation_failure_retains_all_observed_evidence",
+      "line": 507,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::required_nullable_and_unknown_nested_fields_remain_strict",
+      "line": 286,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "from_symbol": "vibe_workspace::migration_application::validation_tests::six_semantic_corpus_inputs_refuse_at_their_owners",
+      "line": 187,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "verb": "verifies",
+      "pinned_r": 3
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning.rs",
@@ -72795,7 +74498,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:e53b8876183ee62a24c12e2d44064d072aa4b33ac6136702a4d6f95c7f36ae8c",
+      "content_hash": "sha256:d2836b8407acfa6ab88775e373e74d4c971359546311617a089073aa3dc7d210",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -73146,7 +74849,7 @@
     },
     {
       "anchor": "placement",
-      "content_hash": "sha256:7a2022f83f7e331c8a5b33fa9a61c76b7ce38dbe5147333ef4818027051310d2",
+      "content_hash": "sha256:6dfcd921e7ac88ecbe35ba8d9173e91b46175ab0fb16bedaf5388191a3d0a4b5",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "5. Placement and computed policy",
@@ -73241,12 +74944,52 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-APPLY-LAW"
     },
     {
+      "anchor": "MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "content_hash": "sha256:684b9c0b947479a7b2f723b4e4f99ca43b742b02b1e17c9c6077a4a182ec5e05",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "Bounded application wire and journal protocol",
+      "line": 559,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "kind": "req",
+      "revision": 3
+    },
+    {
+      "anchor": "MIGRATION-APPLICATION-WIRE-LAW",
+      "content_hash": "sha256:fc8a13c08ac4c6a6f132bc7da62da8e22ac4ca7611317d86a3604befac75c70e",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "**One bounded migration protocol.** Register generated strict formats\n`migration-operation-request`, `migration-operation-report` and\n`migration-application-journal` at wire epoch 1 under `schemas/migration/e1/`.\nAll use `unknown_fields = deny`. Request/report are recoverable projections;\nthe retained application journal is authoritative recovery state, not derived\ndata. Product 1.1.0, manifest epoch, wire epoch and journal protocol revision\nremain distinct. This protocol covers one owned authored file and adds no\nuniversal operation engine.\n\nThe request root has integer `schema = 1` and discriminator `operation` with\n`apply`, `inspect`, `recover`. Every branch carries `operation_id` and\n`authority`: explicit absolute `project_root` and `recovery_store_root`,\nportable project-relative `target_relative`, and singleton `scope`\n`owned_authored_file`. These declarations require the admitting caller's\nbounded write authority; they are not filesystem ownership evidence. Apply\nalso carries `approved_request_json` and `before_content_id`,\n`after_content_id`, `diff_id`. The JSON string is decoded by the existing\nstrict pure-planning request owner, including its null-presence checks, then\nreplayed by the planner. All three identities must match a planned/no-op\nresult. No caller-supplied unchecked after document or duplicate planning\npayload codec is introduced. Recover carries `expected_intent_id` and explicit\n`action` `complete` or `restore`; inspect introduces no new durable intent.\n\nAll clients for a physical project root use its existing safefs opaque\nidentity token as their project-lock key in the same explicitly designated\nphysical recovery store. Store identity has its own opaque identity-token\ndomain. Different stores and ancestor/descendant project scopes are outside\nthis common-barrier guarantee; document that limit. Inspection opens only\nexisting store/lock state and creates no files or directories. Apply may\ninitialize its selected store. Relative operands remain capability anchored,\nno-follow, regular and single-link under the existing filesystem owner.\n\nThe journal has `schema = 1`, `protocol_revision = 1`, `operation_id`,\n`intent_id`, `authority`, `project_binding`, `store_binding`,\n`approved_request_json`, the three planner identities, `before_raw_sha256`,\n`after_raw_sha256`, canonical unsigned decimal string `before_length` and\n`after_length`, nullable uint32 `unix_mode`, and phase `prepared`,\n`publishing`, `published`, `restoring` or `restored`. Exact before bytes are\nretained separately as `before.bin`; prepared intent becomes durable only\nafter that image is verified. Journal updates replace a whole strictly\nvalidated checkpoint; no append parser is added. Immutable intent fields\nmust match on every replay. File bytes and Unix permission mode are the\ninitial preservation scope; do not imply preservation of ACLs, extended\nattributes, ownership or timestamps. Report the actual narrower scope.\n\nIdentity recipes use SHA-256 with unsigned 64-bit big-endian byte-length\nframing, as the existing planner does. The operation storage key frames\n`vibe-manifest-migration-operation-r1`, physical project binding and\noperation id, in that order. Its lowercase hex digest names\n`migrations/{key}/before.bin` and `migrations/{key}/journal.json` below the\nselected store. The intent identity frames\n`vibe-manifest-migration-intent-r1`, operation id, physical project/store\nbindings, authority project/store spellings, target-relative path, scope,\napproved request JSON, before/after/diff content identities, raw before/after\nSHA-256 strings, before/after decimal lengths, and mode (`absent` or canonical\nunsigned decimal), in that order. Phase is excluded. Planner content hashes\nand raw filesystem hashes remain separate fields and recipes. Apply/restore\nstages use the existing `.vibe-stage-tx-` grammar with the first 32 lowercase\nhex digits of a SHA-256 digest framing\n`vibe-manifest-migration-stage-r1`, intent identity and `apply` or `restore`.\nA stage spelling alone never proves ownership.\n\nBefore publication checkpoint `publishing`; after verified publication\ncheckpoint `published`. Restore similarly brackets its write with\n`restoring` and verified `restored`. Reinspect actual bytes after every\npossibly published error or interruption. Automatic completion supports an\nexact approved-before state; automatic restoration supports an exact\nvalidated-after state. Absent, unknown third or unreadable states require\nexplicit resolution and preserve retained evidence. A matching completed\nreplay makes no new target write; a restored terminal operation is not silently\nreapplied. Interrupted before-image preparation without valid intent may\nleave inspectable residue but grants no target mutation or automatic cleanup.\n\nThe report has integer `schema = 1`, required nullable `operation` and\n`operation_id` (null when malformed input supplies no valid identity), and outcome\n`completed`, `no_op`, `pending`, `uncertain`, `refused`; `target_state` is\n`approved_before`, `validated_after`, `absent`, `third_state`, `unavailable`.\nIt carries required nullable intent/before/after/diff identities and a required\nnullable typed error, plus arrays `effects`, `warnings`, `residue`. Each effect has kind\n`store_bootstrap`, `barrier`, `before_image`, `journal`, `target_publication`,\n`target_restore` and state `not_started`, `completed`, `pending`, `uncertain`.\nResidue rows have location `store` or `project`, relative path and ownership\n`proved` or `unproven`; reporting a row grants no removal authority.\n\n`guarantees` carries platform `linux`, `macos`, `windows`, `other`, concurrency\n`participating_clients` or `unestablished`, required nullable `barrier_binding`, boolean\n`uncooperating_writers_excluded` (always false in this protocol), durability\n`file_and_directory_synced`, `journal_recoverable`, `unconfirmed`, and\npreservation `bytes_and_unix_mode` or `bytes_only`. The aggregate never exceeds\nthe weakest observed boundary; preflight and uncertain synchronization must\nnot fabricate an achieved guarantee. Required nullable report fields explicitly carry null for unavailable\nevidence; omission is a structural refusal, unlike the nonnullable optional choices of\nthe existing planning request. `journal_recoverable` does not assert\npersistent-media directory synchronization: a power/system failure may lose\nnamespace entries, including retained images or intent. Process-interruption\nrecovery is supported only when its required retained evidence survives;\nmissing evidence requires explicit resolution and never fabricated rollback.\nDocument this persistence limit and report its reduced tier without disabling\nthe platform solely for lack of a stronger namespace flush.\n\nErrors carry code, field and reason strings. Codes are `invalid_request`,\n`unsupported_schema`, `authority_refused`, `store_not_disjoint`,\n`barrier_unavailable`, `plan_refused`, `source_changed`, `third_state`,\n`intent_mismatch`, `journal_invalid`, `journal_io`, `publication_io`,\n`synchronization_failed`, `preservation_unavailable`, `recovery_ambiguous`.\nWarnings carry code and action; codes are `observed_conflict`,\n`publication_uncertain`, `durability_reduced`, `durability_unconfirmed`,\n`residue_retained`, `metadata_scope_reduced`. Actions are `inspect`,\n`retry`, `manual_resolution`, `supply_input`. External-writer risk is always\nexpressed in guarantees and documentation; an unobserved race is not invented\nas an observed conflict. Strict generated readers own structural shape;\nthe operation owner validates schema/protocol values, canonical decimal\nstrings, identities, paths, phase and actual result invariants before any\nwrite or emission. Generated reports retain typed effects even on refusal;\nan error never implies that earlier store or target writes did not occur. @status:spec/plan",
+      "line": 561,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-APPLICATION-WIRE-LAW"
+    },
+    {
+      "anchor": "MANIFEST-MIGRATION-SURFACES",
+      "content_hash": "sha256:51002b224a503d844779f56030e89aa11f4a1873c218376d3144ec68e140e1e9",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "Explicit CLI and context-bound MCP application",
+      "line": 677,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+      "kind": "req",
+      "revision": 2
+    },
+    {
+      "anchor": "MIGRATION-SURFACE-LAW",
+      "content_hash": "sha256:44bfd790a0259eeb02d273157ed5cf2bcc5b109f40482eea82fd78a786fc83d7",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "**Shared operation, explicit admission.** CLI\n`vibe refactor migration-operation` and MCP tool\n`manifest_migration_operation` consume the registered operation request and\nreturn the same registered operation report. The request discriminator owns\napply, inspect and recover; surfaces do not implement another recipe, journal\nor report codec. Planning remains the existing separate pure operation.\n\nThe CLI consumes stdin or an explicit `--request-json` literal. It runs before\nconfiguration promotion, tracing, Context, VVM, registry and progress\ninitialization, as the pure planning entry does. A small shared early-dispatch\nhelper may carry only these two machine entries; unrelated commands retain\ntheir existing route. Decode structural shape/schema before opening any\nproject or recovery store. An explicit CLI operation admits its one owned\nauthored-file request, subject to the existing exclusions and physical\ncapability checks; a version or a path spelling alone never grants it.\nThe handler renders exactly one generated report plus newline, retaining\nall effects, warnings and residue. Completed/no-op exit 0; pending exit 2;\nuncertain/refused exit 1, except invalid request/schema preflight exits 2.\nUnreadable stdin is a preflight `invalid_request` with field `request.input`,\nfixed reason and exit 1; no new wire error code or PlanError response is added.\nOutput failure has exit 1 and a fixed diagnostic; it cannot assert that an\noperation already performed had no effects.\n\nMCP migration authority is configured by the trusted server composition root,\nnot tool arguments. Add an explicit ServerContext builder for one absolute\nrecovery-store root and a finite portable-relative authored-file allowlist.\nCompatibility contexts without that builder refuse migration admission before\nruntime; other tools retain their behavior. The builder creates no filesystem\nstate. It requires an explicit absolute server project root; relative legacy\ncontexts do not acquire a migration grant by guessing cwd. The CLI server\ncomposer already resolves its `--path` and may grant migration authority via\n`vibe mcp serve --migration-recovery-store <absolute-path>` and repeatable\n`--migration-file <relative-path>`. If a store is supplied with no file flags,\nonly root `vibe.toml` is admitted. File flags without a store are invalid\nserver configuration. This is a bounded grant, not a new authentication\nframework or a per-operation confirmation flow.\n\nThe tool binds the request's project spelling, target operand and store\nspelling to the configured authority. It opens the trusted project through\nthe existing grant owner, never an arbitrary payload root. A member file is\nadmitted only when explicitly listed; file paths cannot escape or follow\nlinks. The recovery store stays physically disjoint from the project and\ncannot intersect the server's machine package-cache root. Reject lexical\nancestor/descendant overlap through the existing path owner; when that cache\nexists, use the existing-only no-follow disjointness owner to reject physical\naliases before recovery-store creation. A missing cache is not initialized.\nAn unbound/relative machine-cache root cannot grant migration authority.\nNeither tool arguments nor an implicit HOME/default store may override these\nselections. Normal Linux, macOS and Windows operation remains usable through\nthis explicit configuration and the declared weaker portable contract.\n\nBefore runtime entry, strict decode, unsupported schema and admission refusal\nuse the existing generic structured ToolError preflight channel with the\nowning generated report. After runtime entry, completed/no-op and truthful\npending inspection use normal executed ToolOutput; refused/uncertain operation\nfailures retain their full structured effects through executed_failure.\nNo tool-name branch belongs in the dispatcher. Context admission does not\nload a lockfile, provider, configuration or hosted lifecycle installation.\nInternal report-validation failure retains its original evidence and cannot\nbe converted to an empty preflight, unchecked normal report or fabricated\nsuccess. The exactly-one-generated-report rule applies to validated normal\nresults. On this internal invariant failure only, CLI emits no normal-report\nstdout, exits 1 and writes a labelled diagnostic to stderr containing the\nvalidation fault and original evidence. MCP returns an executed diagnostic-only\nfailure with isError true and text containing that same labelled evidence,\nwithout normal-report structuredContent. Diagnostic serialization of the\nretained report is explicitly unvalidated and is never a replay authority.\nThe generic tool seam owns this text-only executed-failure distinction;\nexisting structured results, including a deliberate JSON null, retain their\nold rendering. No tool-name special case or new domain-error codec is added.\nVerify this branch with a deliberately inconsistent retained report without\nperforming a new target mutation or claiming it is a normal runtime result.\n\nVerify real isolated CLI startup and MemoryTransport dispatch for all three\noperations, stdin/literal parity, poisoned configuration and stale VVM,\nstrict/null/unknown input, absent-store inspection without creation,\ncontext/file/store refusal, frozen/link/escape cases, exact replay, source\nconflict and retained interrupted effects. Implementations, Linux native\nmeasurements and unperformed macOS/Windows proof remain distinct claims.\nNo surface initializes a user's actual project/store during its test proof,\nand no public publication is inferred. @status:spec/plan",
+      "line": 679,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-SURFACE-LAW"
+    },
+    {
       "anchor": "our-formats",
       "content_hash": "sha256:41e3b309a3d57e17c06afa0919009fc652a431521d8c812201b881019ecae6fd",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "6. The formats of this project, by name",
-      "line": 560,
+      "line": 762,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
     },
     {
@@ -73255,7 +74998,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.1 The catalog is three things with three fates.** The\nread-for-rewrite core (`by-name/`, `repomd.json`) stops being read at all —\nserver mutations become journal appends, `add`/`remove`/`reindex` become\nreprojections; after that, reader strictness drops for free, `generated_at`\ncomes from the journal (event time, not process clocks), the catalog becomes\ndeterministic and rebuild-testable. The export files (`primary.jsonl(.gz)`,\n`by-cap/`, `by-purl/`) are strict canonical exports, and every published\nformat must have a *generated reader used in a round-trip test* — publishing\nwhat we cannot read back is how write-only formats drift. The narrow public\ngate — name, version, hash+recipe, URL, yanked, tombstone — is a new, small,\nslow-moving artifact: the one surface we actually defend before foreign tools,\nso that everything richer behind it may churn weekly. The catalog repository\nitself is *declared disposable*: pin content by hash, not by commit — a\npermission we can actually keep, instead of a promise we cannot. @status:spec/plan",
-      "line": 561,
+      "line": 763,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
     },
     {
@@ -73264,7 +75007,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The catalog's version stops being a number nobody\ncompares.** Its heavy role moves into the *path* (the epoch); its light role\ninto per-record must-understand. The old question \"is the version a gate or a\ndeclaration?\" dissolved because it sought both answers inside one `u32`. @status:spec/plan",
-      "line": 575,
+      "line": 777,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
     },
     {
@@ -73273,7 +75016,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.2 `vibe.toml` is the most expensive format in the\nsystem** — authored, unrecoverable, resident in foreign repositories, and an\nexternal surface *de facto* because agents read files, not APIs. It is the one\nplace we honestly pay the stability tax: an **epoch marker in the file,\nintroduced before first publication** (absence ≠ \"assume 1\"; absence is the\ndistinct pre-epoch state, interpreted through an explicitly selected frozen\nprofile; missing profile selection requires input rather than a heuristic);\nstrictness with did-you-mean hints in our namespace (in a hand-written file an\nunknown key is a typo and the author is present — the asymmetry with the\nmachine-written catalog is principled, not inconsistent); a named reserve\nsection we never touch; a **generated projection as the published copy**, so\nforeign tools read a recoverable artifact while the hand-written original\nremains our internal concern; migration by codemod + bot PR; and a minimal\nsurface — every new manifest key is a years-long obligation and requires a\nbreak note, a codemod, and generated documentation. @status:spec/plan",
-      "line": 579,
+      "line": 781,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
     },
     {
@@ -73282,7 +75025,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by\nconstruction.** \"Schema version 5, reject on `!=`\" is replaced by: the lockfile\nis valid only for the exact (epoch, generator hash, recipe ids) that built it;\nany mismatch → silently regenerate; `--frozen` turns that into a loud error for\nCI. Deterministic by the same rules as the catalog. Consequence for design:\nsince this format's evolution is free, volatile facts belong here — the bottom\nrung of the ladder. @status:spec/plan",
-      "line": 594,
+      "line": 796,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
     },
     {
@@ -73291,7 +75034,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.4 Configs are preferences, not data — failure is\nstructurally impossible.** `fn load() -> Config` with no `Result`: unknown key\n→ warning; invalid value → default plus warning; the file is rewritten to\ncanonical form opportunistically. Blocking a build over a stale setting is the\nworst possible trade at ten releases a day. Strict failure belongs where wrong\nreading corrupts results; graceful degradation where it only changes comfort. @status:spec/plan",
-      "line": 601,
+      "line": 803,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
     },
     {
@@ -73300,7 +75043,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.5 Surfaces nobody inventoried are formats too.**\nThe seven CLI `--json` reports (scripts and agents parse them), MCP tool\nschemas (literally a contract with foreign agents), skill/subskill files, the\njournal, the handshake — each is \"something a foreign parser reads\", each gets\na registry entry, a schema, an epoch and a corpus. @status:spec/plan",
-      "line": 607,
+      "line": 809,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
     },
     {
@@ -73309,7 +75052,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "7. Obligations have types; stability is a mechanism",
-      "line": 613,
+      "line": 815,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
     },
     {
@@ -73318,7 +75061,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Three types of obligation, and only two eternal ones.**\n*Eternal* (both about honesty, not content): we never present a wrong answer as\nright; we never answer silence for a name that existed. Both are keepable\nforever because they forbid no change. *Expiring*: epoch support windows — they\ndo not get broken, they *expire on schedule*. *Revocable*: everything else —\nnames, fields, structures, vocabularies, paths. The owner's prediction «любое\nобязательство однажды нарушим» is satisfied by construction: almost nothing\nhere is vowed. @status:spec/plan",
-      "line": 614,
+      "line": 816,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
     },
     {
@@ -73327,7 +75070,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**An obligation without a written breaking procedure\nis a hope, not an obligation.** Every obligation ships with its procedure\n(announce → transform/reproject → publish in parallel → sunset → leave a\ntombstone) and the procedure is *rehearsed*: the release pipeline replays a\ncold upgrade from the oldest supported epoch, and a staged sunset is drilled\nperiodically. Early breaking is the same procedure compressed, plus a recorded\nowner reason — friction is asymmetric by design: extending a sunset is free,\nshortening one takes an explicit owner act. @status:spec/plan",
-      "line": 622,
+      "line": 824,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
     },
     {
@@ -73336,7 +75079,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A period of stability is a closed break window plus\na published expiry.** The honest move-fast contract with millions of users is\nnot \"we won't break you\" but **\"you always know the date you break, and the fix\nis one command.\"** The date travels inside the world it retires; clients warn\nahead of it; on the day, the refusal carries the recipe. Heavy breaks batch\ninto trains — parallel publication and support windows are fixed costs per\ntrain, not per change. @status:spec/plan",
-      "line": 630,
+      "line": 832,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
@@ -73345,7 +75088,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Historical pre-publication ruling (owner, 2026-08-10, near-verbatim):** «я пока ничего не публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех пор, пока я не скажу, что состоялось первое представление публике… технически этот факт нельзя определить никак — только владелец может сказать, что это произошло». This records the original rationale, not a technical publication detector or a continuing automatic graduation trigger.\n\nDeveloper Preview 1 at 1.0.0 has users; the historical no-public-users premise does not describe current state. The next owned product/package line is 1.1.0, distinct from that delivered boundary. [PROP-000 ##OWNED-PROTOTYPE-REGIME](PROP-000.xml#OWNED-PROTOTYPE-REGIME) governs: the owner has not declared graduation, and only the owner's explicit prototype-exit declaration activates the applicable major-breaking obligations. A push, publication, tag, version number or user count cannot substitute for it. `public = true` in `formats/EPOCHS.toml` is owner-managed format-window bookkeeping, not automatic graduation or permission to publish. The next line is held local-only by [NEXT-PUBLICATION-HOLD](PROP-000.xml#NEXT-PUBLICATION-HOLD). No format flag, epoch or support calendar is changed by this policy.\n\nBefore owner exit, break machinery reports rather than imposing mandatory migrations, bot PRs, parallel worlds or sunset calendars. Regeneration remains an available prototype recipe, not permission to overwrite users' retained data or the delivered Developer Preview 1 boundary. An explicitly requested local typed migration remains allowed under its separately bound authority; this does not assert a migration implementation. After explicit owner exit, applicable migration, support-window and handshake obligations must be bound for major breaks. Early epoch markers, recipe identity, must-understand and yank remain architecture work, not evidence of an inferred public switch. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 637,
+      "line": 839,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
     {
@@ -73354,7 +75097,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 643,
+      "line": 845,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -73363,7 +75106,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Governing rule: a policy that exists only in\nprose is already broken.** Every rule below lives at one of three levels,\npreferring the highest: L1 — inexpressible in types (the agent physically\ncannot write it); L2 — inexpressible in the schema language; L3 — refused by\nCI. An agent's freedom is confined to three directories: schemas, codemods, and\napplication code; everything else is generated and drift-gated. @status:spec/plan",
-      "line": 644,
+      "line": 846,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -73372,7 +75115,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The gate set.** G1: all wire I/O through\n`wire::publish/load(FormatId,…)`; unregistered formats untypeable (L1). G2:\nserde derives forbidden outside `**/generated/**` (L3). G3: regenerate +\n`git diff --exit-code` (L3). G4: a writer must not accept a wire-parsed type as\ninput (L1). G5: double-build under different clocks/host/locale/paths must be\nbyte-identical; `now()` banned in writer modules (L1+L3). G6:\n`rebuild --check` — tear down and reproject from a pinned input (L3). G7:\nschema/format changes demand a break note; golden wire-diff empty or covered\n(L3). G8: schema changes refused while the break window is closed (L3). G9: a\nvocabulary exists in exactly one schema; both wire sides, Rust types, docs and\nprose lists are generated from it (L1+L3). G10: every derived value carries a\nrecipe id; every recipe has a frozen golden (L3). G11: every published format\nhas a generated reader exercised in round-trip tests (L3). G12: clients must\nread the corpora of supported epochs; on sunset the same test flips to\nasserting the refusal text and recipe (L3). G13: schema/format edits never\nshare a commit with application code (L3). G14: config load returns no\n`Result` (L1). G15: manifest codemods edit the TOML document in place;\nserialising from a struct is refused (L3). @status:spec/plan",
-      "line": 650,
+      "line": 852,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -73381,7 +75124,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A gate's message is the only documentation that is\nreliably read.** Every failure states what was violated, why the rule exists\n(one sentence), and the exact next command — generated from the registry and\nbreak notes, never hand-written. And the agent is left no decisions it gets\nwrong: strict-or-tolerant, optional-or-required, open-or-closed, field-or-epoch\neach have exactly one machine answer — policy from the generator, placement\nfrom the ladder, epoch from the wire-diff. The agent brings *intent*; the\nschema fixes form; the generator fixes policy. @status:spec/plan",
-      "line": 668,
+      "line": 870,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -73390,7 +75133,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**8a. The wire-work decision path — what an agent\ndoes when its task touches a format, in order, no steps skipped:**\n(1) *Name the format.* Find it in `formats/REGISTRY.toml`; absent → this task\nmints a format, which is an owner-visible act — stop and surface. (2) *Place\nthe fact.* Walk the ladder (§5) from the bottom: does the lockfile bear it?\nthe exports? only then higher — and a new `vibe.toml` key is a years-long\nobligation demanding its own break note. (3) *Edit the schema, never the\ntype.* The change is made in `schemas/<format>/e<N>/…`; collections carry an\nexplicit empty-policy annotation; vocabularies live here and nowhere else.\n(4) *Regenerate* (`cargo xtask codegen`) and write behaviour only against\ngenerated types. (5) *Run the wire-diff.* Empty → done. Non-empty → write the\nbreak note (what · who fixes · recipe), and let the diff class decide: additive\nunder must-understand → light break, no epoch; shape or meaning of existing\ndata → epoch question, which is an owner fork. (6) *Never touch* `generated/**`\nby hand, vendored copies, or another epoch's frozen schema — those three edits\nare always wrong regardless of intent. @status:spec/plan",
-      "line": 676,
+      "line": 878,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -73399,7 +75142,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 693,
+      "line": 895,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -73408,7 +75151,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The recoverability bet.** Upstream sources vanish —\ndeleted repositories, force-pushes, privatisation. If rebuild-from-truth stops\nbeing possible and a content-addressed source archive is not built, the index\nsilently becomes authoritative and the whole system degrades into a\ncompatibility regime without its detector. *Trigger:* first observed\nunreachable source that the journal references → the archive subsystem becomes\na mandate, not an idea. This is the likeliest way this document is wrong. @status:spec/plan",
-      "line": 694,
+      "line": 896,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -73417,7 +75160,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The journal/projection rework is a real rebuild, not an\nedit.** Its cost gate is measured before commitment (the TZ's phase 0 measures\nthe three server mutation paths); if it exceeds the budget, the documented\nfallback is temporary unknown-capture on the three read-modify-write types —\nnamed here explicitly as the compromise it is, so it cannot masquerade as the\ndesign. @status:spec/plan",
-      "line": 701,
+      "line": 903,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -73426,7 +75169,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Foreign `curl | jq` will happen regardless of\ngenerated clients**, and there will never be a signal of it (raw files in git\ngive no telemetry, by design). The honest posture: assume raw parsing exists,\nkeep the narrow gate genuinely boring, and treat any change to it at the\nhighest severity class. @status:spec/plan",
-      "line": 707,
+      "line": 909,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -73435,7 +75178,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The degenerate-first guard.** The epoch machinery\nmust exist, but its first implementation may be degenerate — one live world and\n`min_client` in the handshake; parallel publication is built when the second\nworld is actually minted. A gate heavier than the system it guards gets walked\naround, and a walked-around gate is worse than none: it manufactures false\nconfidence. *Trigger for scaling up:* the first real epoch train, and no\nearlier. @status:spec/plan",
-      "line": 712,
+      "line": 914,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -73444,7 +75187,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Signature and authenticity remain parked by the\nowner's standing ruling (`BACKLOG.md` B-015): mechanism slots only, no\ncryptography.** What this document adds is ordering, not scope: the\nmust-understand set and the signature *slot* exist in the schema before any\ntolerance ships, because a tolerant reader that can silently ignore a future\nsignature field is a downgrade attack waiting; slots are irreversible-window\nwork, cryptography is not. @status:spec/plan",
-      "line": 719,
+      "line": 921,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -73453,7 +75196,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "10. Sources — the two-way links",
-      "line": 727,
+      "line": 929,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -73462,7 +75205,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**This contract's lore and evidence, so a cold reader entering\nfrom either side finds the other:** the architectural reasoning with rejected\nalternatives is\n[`vibevm/vibespecs/design/change-native-formats-verdict.xml`](../design/change-native-formats-verdict.xml)\n(the convened-council verdict, recorded near-verbatim); the research it stands\non — ten data-at-rest ecosystems, eight serialization formats, the\nclient-survival study, the wire census of this tree, four adversarial worker\nreviews and the reviewer's verdict — is imported whole at\n[`vibevm/vibespecs/research/schema-evolution-2026-08/`](../research/schema-evolution-2026-08/)\n(reading order: its `12-HANDOFF.xml §2`); the first build that implemented this\ncontract left its reasoning at the anchors of\n[PROP-005](../modules/vibe-index/PROP-005-package-index.xml) and in the docblocks\nits phases wrote, never in the plan that carried it. Where lore and\nthis contract disagree, this contract wins and the lore is corrected. @status:spec/plan",
-      "line": 728,
+      "line": 930,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
@@ -108588,7 +110331,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bc47a959d5099ab13a4f6a94ce3e742689edf572c704c564bb2af0da7f0b4f7b",
+      "content_hash": "sha256:433ca2835bf0e04db16dd6baa91d46fb677a124c5361826adee79bf9dbcecaf9",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "PROP-015 — MCP server and agent integration",
@@ -108678,7 +110421,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:fcda9a04012e582226f7a7d099fca6e5d8341fb694a56d552d6d4ad2a5718309",
+      "content_hash": "sha256:975eb05e35ffa1390bf9821843831faf53d4961a60d24ab17a0dd7c13d2ad89c",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2. Decisions",
@@ -108687,21 +110430,21 @@
     },
     {
       "anchor": "server",
-      "content_hash": "sha256:17d7b99ca825def41a0ff4c57b8797e1e83ec03bc1a1cbb113137640a749f826",
+      "content_hash": "sha256:9031e335894a50b66533396bc77955757d188faad09347efb2051033bd38a47e",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.1 The server: JSON-RPC 2.0 over stdio",
       "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
       "kind": "req",
-      "revision": 2
+      "revision": 3
     },
     {
       "anchor": "req-server",
-      "content_hash": "sha256:69bf5cd4b4f8f2bd7e252cb55cd8ee2f3a2a2607d96446f7d0e82428acaf8a7f",
+      "content_hash": "sha256:8b6d232872945e4c092ad5c9c62b6c7525a5ebe37dfa82159c855745709be694",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
-      "heading": "`req r2` @status:impl/done",
+      "heading": "`req r3` @status:impl/done",
       "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-server"
     },
@@ -108761,21 +110504,21 @@
     },
     {
       "anchor": "tools",
-      "content_hash": "sha256:ff1ee7da0711d0e7cd69ca7ede5ae54ac21f8e45af21bd6b9162258eac984515",
+      "content_hash": "sha256:d86e1a44d86a70a8cf727a31e67f67ce5248814ae39922896b4c88ad2867605f",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.2 The tool surface: one seam, three tools",
       "line": 62,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "kind": "req",
-      "revision": 2
+      "revision": 4
     },
     {
       "anchor": "req-tools",
-      "content_hash": "sha256:2e4fac8dafc81f1a7812091b73f98744bd0d2cada11139366cb436103f10e708",
+      "content_hash": "sha256:25ee820275ac0037b0127e85592fa1d08d1f9be1200c7adbacf0ddd60e7d210c",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
-      "heading": "`req r2` @status:impl/done",
+      "heading": "`req r4` @status:impl/done",
       "line": 63,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-tools"
     },
@@ -109041,12 +110784,52 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT"
     },
     {
+      "anchor": "EXECUTED-DIAGNOSTIC-FAILURE",
+      "content_hash": "sha256:dd7ee04beb775de4748512353526cef744e7f0c28fd471f65801777c10ef5f33",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "heading": "Executed diagnostic failure without a valid report",
+      "line": 208,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "EXECUTED-DIAGNOSTIC-LAW",
+      "content_hash": "sha256:133c662b2c0fd5e6bf03e4aba7a15092ee8de8da13beee72873956c362ad1a20",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "heading": "The generic ToolOutput seam may represent an executed diagnostic-only failure: mandatory diagnostic text, isError true, and no structuredContent. It is distinct from preflight, and carries no invented validated report. Existing structured success/failure constructors retain their exact content, including explicit JSON null; the dispatcher follows an explicit output-mode flag rather than inspecting a tool name or treating null as absence. Keep existing structured() and into_parts() compatibility surfaces, and expose the mode explicitly for generic rendering. The manifest migration cell uses this mode only for internal report-invariant failure, retaining the original unvalidated evidence in labelled diagnostic text under [its surface contract](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-SURFACES). Ordinary domain refusal still emits its valid owning report. @status:spec/plan",
+      "line": 210,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-LAW"
+    },
+    {
+      "anchor": "MANIFEST-MIGRATION-CELL",
+      "content_hash": "sha256:ba83cfc69a22a67c5019891c8dc79d6278e3250c676be538d5477491741c0ffd",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "heading": "Context-bound migration application cell",
+      "line": 212,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "MIGRATION-CELL-LAW",
+      "content_hash": "sha256:75b5f649420354dcc3bc391b5c6a11100b6af7e1a1e4effdee5eb5677cba1940",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "heading": "The additional `manifest_migration_operation` cell uses the generic tool seam and structured preflight/executed-result channels. Its project/file/recovery-store authority is supplied by the server composer and cannot be overridden by tool arguments. Its sole operation and admission contract is [PROP-044 application surfaces](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-SURFACES); a default context without that explicit grant refuses this cell before runtime. This does not alter existing tools or grant hosted lifecycle/provider authority. @status:spec/plan",
+      "line": 214,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MIGRATION-CELL-LAW"
+    },
+    {
       "anchor": "errors",
       "content_hash": "sha256:d8f2c70f2027d7d7a22f147eaae426ac3d636d95e3fff7412c6cddb815605f21",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.3 Tool and server errors cite their REQ",
-      "line": 209,
+      "line": 217,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "kind": "req",
       "revision": 2
@@ -109057,7 +110840,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r2` @status:impl/done",
-      "line": 210,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-errors"
     },
     {
@@ -109066,7 +110849,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** `ToolError` and `ServerError` are the crate's two error\n  layers. @status:impl/done",
-      "line": 212,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ERROR-LAYERS"
     },
     {
@@ -109075,7 +110858,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Each variant's Display text carries the violated `spec://` unit\n  and a fix surface (the Class-F product-error grammar), so a failing tool\n  call is navigable back to this PROP without source access. @status:impl/done",
-      "line": 214,
+      "line": 222,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ERROR-CITES-REQ"
     },
     {
@@ -109084,7 +110867,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Structured preflight without domain execution",
-      "line": 218,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT",
       "kind": "req",
       "revision": 1
@@ -109095,7 +110878,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "A tool may carry an owning typed report in a ToolError preflight\nvariant. The generic dispatcher preserves that value in structuredContent,\nits required text projection and isError true; it does not turn the error\ninto an executed ToolOutput, invoke the domain or inspect a tool name.\nOrdinary errors without a report retain their existing text-only rendering.\nDisplay still carries the governing spec address and repair surface.\nStructured planner-entered refusal remains the distinct executed-result\nchannel. Report ownership, schema validation and caller-data disclosure belong\nto the tool's domain contract, not to a new server-wide domain engine.\nThe pure manifest planning cell is governed by\n[PROP-044 migration transport](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-TRANSPORT)\nand ignores ServerContext; opening that plan does not load the lockfile or\ninitialize state. @status:spec/done",
-      "line": 220,
+      "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-PREFLIGHT-LAW"
     },
     {
@@ -109104,7 +110887,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.4 Agent detection",
-      "line": 235,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-detection",
       "kind": "req",
       "revision": 1
@@ -109115,7 +110898,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 236,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-agent-detection"
     },
     {
@@ -109124,7 +110907,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** The integration surface supports a fixed set of MCP-capable\ncoding agents (Claude Code, Claude Code Desktop, Cursor, OpenCode, Codex). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 237,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-SET"
     },
     {
@@ -109133,7 +110916,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "An agent is *present* in a project when its project-level markers exist\n  (e.g. `.claude` / `CLAUDE.md`, `.cursor` / `.cursorrules`) or its\n  user-level host config directory exists. @status:impl/done",
-      "line": 240,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-PRESENCE"
     },
     {
@@ -109142,7 +110925,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Detection drives the default\n  target set for `vibe mcp install`; the operator can always override with\n  an explicit agent filter. @status:impl/done",
-      "line": 243,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-DETECTION-DEFAULT"
     },
     {
@@ -109151,7 +110934,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.5 Per-agent configuration",
-      "line": 248,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config",
       "kind": "req",
       "revision": 2
@@ -109162,7 +110945,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r2` @status:impl/done",
-      "line": 249,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-agent-config"
     },
     {
@@ -109171,7 +110954,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** Each agent declares its config shape, and the writer is\nagent-aware but format-generic: @status:impl/done",
-      "line": 250,
+      "line": 258,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SHAPE-DECL"
     },
     {
@@ -109180,7 +110963,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Format** — JSON or TOML per agent (Codex is TOML-only). @status:impl/done",
-      "line": 253,
+      "line": 261,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-FORMAT"
     },
     {
@@ -109189,7 +110972,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Section key** — the agent's MCP-servers table name (`mcpServers`,\n  `mcp`, `mcp_servers`). @status:impl/done",
-      "line": 254,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SECTION-KEY"
     },
     {
@@ -109198,7 +110981,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Scope** — project (`.<agent>/…` in the repo) and/or user (the host\n  config dir). Some agents are user-only (Claude Code Desktop, Codex). @status:impl/done",
-      "line": 256,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE"
     },
     {
@@ -109207,7 +110990,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Config path** — resolved per (agent, scope), cross-platform. The\n  path must be the file the agent actually reads for MCP *discovery*,\n  not merely a settings file it happens to own. For Claude Code that is\n  `<project>/.mcp.json` (project) and the top-level `mcpServers` of\n  `~/.claude.json` (user) — **never `settings.json`**, which only\n  *gates* `.mcp.json` servers (`enabledMcpjsonServers`) and does not\n  define them. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 258,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-PATH"
     },
     {
@@ -109216,7 +110999,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Merge discipline** — installing upserts vibevm's one entry under the\n  section key and **preserves every foreign key, and their order**: the\n  JSON writer round-trips order-preserving (`serde_json/preserve_order`),\n  so a merge into a large `~/.claude.json` appends rather than\n  re-alphabetising the operator's whole file. Uninstalling strips only\n  vibevm's entry and leaves the rest. The operator's other MCP servers\n  and unrelated config survive every operation. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 265,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-MERGE"
     },
     {
@@ -109225,7 +111008,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The vibevm entry is **scope-independent**: `vibe mcp serve` with no\n  `--path`, resolving its project root from the launcher's CWD (an MCP\n  client sets CWD to the project directory for a project-scope server),\n  so one shape serves every scope and a committed `.mcp.json` stays\n  portable. @status:impl/done",
-      "line": 274,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE-INDEPENDENT"
     },
     {
@@ -109234,7 +111017,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "On Windows the launcher is wrapped as `cmd /c vibe …` because\n  `vibe` is a `vibe.cmd` shim that an MCP client's bare process-spawn\n  cannot exec directly. @status:impl/done",
-      "line": 279,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-WINDOWS-SHIM"
     },
     {
@@ -109243,7 +111026,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.6 Skill materialisation",
-      "line": 284,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill",
       "kind": "req",
       "revision": 1
@@ -109254,7 +111037,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 285,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-skill"
     },
     {
@@ -109263,7 +111046,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** For agents that support a skill manifest (Claude Code,\nOpenCode, Codex — not the JSON-config-only Cursor / Claude Code Desktop),\n`vibe mcp install` also writes a `SKILL.md` describing how to use vibevm\nthrough the MCP tools. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 286,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-MANIFEST"
     },
     {
@@ -109272,7 +111055,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The skill body is **data, not code** — a vendored\n  template (`include_str!`) rendered into each agent's skill directory\n  (`.<agent>/skills/vibevm/SKILL.md`). @status:impl/done",
-      "line": 291,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-BODY-DATA"
     },
     {
@@ -109281,7 +111064,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Writing is idempotent: identical\n  content is left untouched (`unchanged`); a divergent file is updated. @status:impl/done",
-      "line": 294,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-IDEMPOTENT"
     },
     {
@@ -109290,7 +111073,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.7 The integration lifecycle",
-      "line": 298,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "kind": "req",
       "revision": 1
@@ -109301,7 +111084,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 299,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-lifecycle"
     },
     {
@@ -109310,7 +111093,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** The agent-integration command family is a coherent\nlifecycle over the (agent × scope) matrix, every verb idempotent and\nevery mutating verb offering `--dry-run` and a confirmation: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 300,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-MATRIX"
     },
     {
@@ -109319,7 +111102,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`install`** — detect (or accept a filter), preview, confirm, write\n  MCP entries and skills. @status:impl/done",
-      "line": 304,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-INSTALL"
     },
     {
@@ -109328,7 +111111,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`status`** — read-only: what would install / upgrade / uninstall do. @status:impl/done",
-      "line": 306,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-STATUS"
     },
     {
@@ -109337,7 +111120,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`upgrade`** — refresh stale MCP blocks and `SKILL.md` files in place. @status:impl/done",
-      "line": 307,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-UPGRADE"
     },
     {
@@ -109346,7 +111129,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`uninstall`** — strip vibevm's MCP entries and skill files, preserving\n  foreign config. @status:impl/done",
-      "line": 308,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-UNINSTALL"
     },
     {
@@ -109355,7 +111138,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Per-(agent, scope) outcomes are reported as structured records\n(`AgentInstallReport` / `SkillInstallReport`) the CLI renders or emits as\nJSON. @status:impl/done",
-      "line": 311,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-REPORTS"
     },
     {
@@ -109364,7 +111147,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.8 Selective skill projection",
-      "line": 315,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
       "kind": "req",
       "revision": 1
@@ -109375,7 +111158,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 316,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-skill-include"
     },
     {
@@ -109384,7 +111167,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** `SkillDecl` gains an optional `include` — a list of glob\npatterns relative to the skill's `path`. @status:impl/done",
-      "line": 317,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-DECL"
     },
     {
@@ -109393,7 +111176,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "When present, only matching files are\n  projected into the agent's skill directory, preserving their relative\n  structure; when absent or empty, the whole `path` tree is projected — the\n  existing §2.6 behaviour, unchanged. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 320,
+      "line": 328,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"
     },
     {
@@ -109402,7 +111185,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Selection composes with the\n  already-working nested `path`: a skill can point at a subdirectory **and** pick\n  specific files out of it. @status:impl/done",
-      "line": 324,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-COMPOSES"
     },
     {
@@ -109411,7 +111194,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "This is available to any skill but is load-bearing for bridge packages\n  ([PROP-023](../vibe-registry/PROP-023-bridge-packages.xml)): a bridged upstream\n  tree is full of unrelated files, and the maintainer projects just the\n  `SKILL.md` and whatever it references without vendoring the noise. @status:impl/done",
-      "line": 327,
+      "line": 335,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-BRIDGE-USE"
     },
     {
@@ -109420,7 +111203,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Glob\n  matching is deterministic; a pattern that matches nothing is a\n  declared-but-empty selection (surfaced, not a silent no-op). @status:impl/done",
-      "line": 331,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-DETERMINISTIC"
     },
     {
@@ -109429,7 +111212,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "3. Out of scope",
-      "line": 341,
+      "line": 349,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#out-of-scope"
     },
     {
@@ -109438,7 +111221,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**The original M1.7 slice introduced no wire formats or lockfile changes.**\n  Its server reads the existing lockfile schema and its three tools surface\n  existing fields. Later tool-owned request/report/error documents are\n  registered under their own format contract; they do not change the MCP\n  JSON-RPC protocol or the lockfile. @status:spec/done",
-      "line": 343,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-NO-WIRE-CHANGES"
     },
     {
@@ -109447,7 +111230,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**No agent-specific behaviour beyond config shape.** The integration\n  knows each agent's *file format and paths*, not its runtime semantics. @status:spec/done",
-      "line": 348,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-AGENT-SEMANTICS"
     },
     {
@@ -109456,7 +111239,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**HTTP / SSE transports.** Stdio is the shipped transport; the\n  `Transport` trait leaves room without committing to more today. @status:spec/done",
-      "line": 350,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-HTTP-SSE"
     },
     {
@@ -109465,7 +111248,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**LLM-provider tools.** PROP-003 §F virtual-capability emission waits on\n  a real `vibe-llm` (`VIBEVM-SPEC.md` §10.4). @status:spec/done",
-      "line": 352,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-LLM-TOOLS"
     },
     {
@@ -109474,7 +111257,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "4. Acceptance",
-      "line": 356,
+      "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#acceptance"
     },
     {
@@ -109483,7 +111266,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The server answers `initialize` / `tools/list` / `tools/call` over a\n  `MemoryTransport` round-trip; each tool has a behavioural oracle. @status:impl/done",
-      "line": 358,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-SERVER-ROUNDTRIP"
     },
     {
@@ -109492,7 +111275,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`query_package` / `read_subskill` / `materialise_subskill` each behave\n  per §2.2 against a lockfile fixture (found / not-found / invalid-pkgref;\n  the delivery-mode split; the force / no-overwrite contract). @status:impl/done",
-      "line": 360,
+      "line": 368,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-TOOL-CONTRACTS"
     },
     {
@@ -109501,7 +111284,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`vibe mcp install` writes the expected entry under each agent's section\n  key, preserves foreign keys, and is idempotent; `uninstall` is its\n  inverse; `status` writes nothing. @status:impl/done",
-      "line": 363,
+      "line": 371,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-INSTALL-LIFECYCLE"
     },
     {
