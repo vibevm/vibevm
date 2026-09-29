@@ -1,0 +1,48 @@
+{
+  "source": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+  "sha256": "b3709c66787569b2fa48976b5444a904c4e9d35bd02cf22defa7ef2338bf5154",
+  "canonical_units": [
+    {
+      "anchor": "MACHINE-OPERATION-REGISTRY",
+      "exit": 0,
+      "sha256": "88e1719bfc7333068c5e63ae780c8dc23a6fe53054ac50a8c2a08bebe5644c1b",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-registry.log"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-STATE",
+      "exit": 0,
+      "sha256": "cf2113cc38cad6aefd2f5cd748bea689ab9e74090dc2bc80074ee532cf04104e",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-state.log"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-ENVELOPE",
+      "exit": 0,
+      "sha256": "ab39711408b44405ba5c6bfa837cef4068e4c90d486f27b1cbfaf4886ef75cec",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-envelope.log"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-VALIDATION",
+      "exit": 0,
+      "sha256": "ba17908479ae6063e5d38e279403ccf0388132e45cebf2c9d50532614fffb9ba",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-validation.log"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-SERVICE",
+      "exit": 0,
+      "sha256": "d9187d4c9771c7be78c8a2eeddbeaf2ff9f763deb0b7ebcff15cc1e55eb1648f",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-service.log"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-DISCOVERY",
+      "exit": 0,
+      "sha256": "02cdf3708f73766ff2e8075c302b1ad3a0fc6714a06b3311b91b4a56107464eb",
+      "log": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-discovery.log"
+    }
+  ],
+  "specdoc": {
+    "exit": 0,
+    "log": "/tmp/vibevm-next-M16-B1-source-proof/specdoc.log",
+    "sha256": "392539e32803d04dfa5433acab02de1c4eaa143f36136ca22ee1fb55d605091f"
+  },
+  "scope": "Source shape and six r1 anchors only; no executable registry, schema, handler or native platform proof."
+}
