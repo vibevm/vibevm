@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "change_id": "environment-layout-traceability",
+  "before_capture_id": "environment-layout-baseline-a1dee7e93",
+  "after_capture_id": "environment-layout-after-2c9270dea",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "2c9270dea4d861429028cf305350599903db32c7"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Derived source index adds no executable operation, root relocation or user-visible behavior."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Source-unit/item/edge locations are traceability metadata, not a guide/workflow semantic change; positive layout guidance is separately due."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-environment-layout-contribution-review",
+      "subject_id": "2c9270dea4d861429028cf305350599903db32c7",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-central-review.md",
+      "verdict": "passed",
+      "sha256": "4230f1bb61c20732d0bc76699eae915e251da043f6e37ef0346b31b11ac863a4"
+    },
+    {
+      "claim_id": "reviewed-environment-layout-source-delta",
+      "subject_id": "environment-layout-after-2c9270dea",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-source-review.md",
+      "verdict": "passed",
+      "sha256": "e7202c6cbb2a0b3f8066dff2ad6c5f2c03bcf17315596bdef1f7ac6479027737"
+    },
+    {
+      "claim_id": "selected-environment-layout-verification",
+      "subject_id": "environment-layout-after-2c9270dea",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-verification.md",
+      "verdict": "passed",
+      "sha256": "011a88e0b531b05f70c040bbb7bcb6b0456bdf828b9e9da04d98d1299e99b981"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2c9270dea4d861429028cf305350599903db32c7",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-central-review.md"
+  }
+}

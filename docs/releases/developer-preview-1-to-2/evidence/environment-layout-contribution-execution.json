@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "command": "CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true python3 -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/environment-layout-transition.json --mode contribution --format json",
+  "exit_code": 0,
+  "verdict": "passed",
+  "checked_claim_count": 77,
+  "artifacts": [
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-contribution-check.json",
+      "sha256": "3c03c4c8ab084b006a637e27d7cded084d900778fefe0054edeb0c38c0677526",
+      "bytes": 11533
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-contribution-check.stderr",
+      "sha256": "7794a7931dd29e168e338614d877317de13bd0228a90916ee60085db911785d9",
+      "bytes": 1599
+    }
+  ],
+  "scope": "Exact M-14-A.2 contribution accounting; five pending findings retain later canonical/native/documentation and semantic obligations. Root semantic review is independently retained."
+}

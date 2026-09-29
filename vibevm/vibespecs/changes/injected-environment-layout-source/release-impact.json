@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "change_id": "injected-environment-layout-source",
+  "before_capture_id": "environment-layout-baseline-a1dee7e93",
+  "after_capture_id": "environment-layout-after-2c9270dea",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "3d48b8ca1a2d4e44971fa0cc2d4fabbefbaae1f5"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:environment:injected-layout-contract",
+      "capability_id": "injected-environment-root-resource-policy",
+      "kind": "introduced",
+      "before": "A1 role facts existed without the exact five-root defaults/resource/target-path/prefix and legacy-layout boundary contract.",
+      "after": "Seven new reqr1 source units define explicit required versus inapplicable roots, settings-anchored defaults, root-relative identity, target-specific byte grammar/lexical comparison, unverified declarative prefixes and unsupported reserved operations; existing roots/consumer paths remain unchanged.",
+      "platform": "Selected GNU/Linux pure/injected layout data and legacy compatibility proof; no authenticated root/evidence, physical alias/native collation, target/deploy/executor/privilege operation, full SDK/platform or final release claim.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-DEFAULTS",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-RESOURCE-IDENTITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#PAYLOAD-PREFIX-COMPATIBILITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#RESERVED-ENVIRONMENT-RESOURCES",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY"
+      ],
+      "audience": "developer / domain-library consumer / repository maintainer"
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Pure/injected library data and behavior-equivalent legacy spelling adapters do not relocate roots, adopt target operations or require user migration."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Update bounded root/path/resource/prefix API and compatibility guidance; full canonical SDK/page/build/native/effect proof remains separate."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-environment-layout-contribution-review",
+      "subject_id": "3d48b8ca1a2d4e44971fa0cc2d4fabbefbaae1f5",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-central-review.md",
+      "verdict": "passed",
+      "sha256": "4230f1bb61c20732d0bc76699eae915e251da043f6e37ef0346b31b11ac863a4"
+    },
+    {
+      "claim_id": "reviewed-environment-layout-source-delta",
+      "subject_id": "environment-layout-after-2c9270dea",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-source-review.md",
+      "verdict": "passed",
+      "sha256": "e7202c6cbb2a0b3f8066dff2ad6c5f2c03bcf17315596bdef1f7ac6479027737"
+    },
+    {
+      "claim_id": "selected-environment-layout-verification",
+      "subject_id": "environment-layout-after-2c9270dea",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-verification.md",
+      "verdict": "passed",
+      "sha256": "011a88e0b531b05f70c040bbb7bcb6b0456bdf828b9e9da04d98d1299e99b981"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "3d48b8ca1a2d4e44971fa0cc2d4fabbefbaae1f5",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-central-review.md"
+  }
+}
