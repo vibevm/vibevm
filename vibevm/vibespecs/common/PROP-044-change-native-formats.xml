@@ -354,7 +354,9 @@ git-organisation registry has that Maven Central structurally lacks. Runtime
 compatibility shims are forbidden; the only exception is frozen per-epoch
 *readers* of old manifests inside the indexer — readers, not shims: they branch
 no logic and are never edited after freezing.</MIGRATION-TAXONOMY></p>
-    <p><MANIFEST-MIGRATION-PLAN fact="true" status="spec/done">**Pure authored-manifest migration planning.** A planner consumes exact
+    <p><MANIFEST-MIGRATION-PLAN fact="true" status="spec/done">`req r1`
+
+**Pure authored-manifest migration planning.** A planner consumes exact
 in-memory source text and explicitly selected source profile, target profile
 and recipe. A missing selection produces typed input requirements with named
 alternatives; an unknown profile or revision, incompatible edge, malformed
