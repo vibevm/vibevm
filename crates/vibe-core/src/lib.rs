@@ -17,6 +17,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#c
 pub mod capabilities;
 pub mod capability_ref;
 pub mod content_hash;
+pub mod environment;
 pub mod error;
 pub mod global_registry;
 pub mod host_owner;
