@@ -1,5 +1,45 @@
 macro_rules! external_tests {
     () => {
+#[test]
+#[cfg(unix)]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
+fn directory_flush_reopens_readable_capability_without_namespace_creation() {
+    let (scope, project, _store) = existing_external_fixture();
+    let root = project.root_dir().unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    let held = root.dir.try_clone().unwrap().into_std_file();
+    #[cfg(target_os = "linux")]
+    {
+        use std::os::fd::AsRawFd;
+        let flags = fs::read_to_string(format!("/proc/self/fdinfo/{}", held.as_raw_fd())).unwrap();
+        println!("held directory fdinfo: {flags}");
+    }
+    println!("held directory sync result: {:?}", held.sync_all());
+    let readable = root.dir.open(".").unwrap().into_std();
+    assert!(readable.metadata().unwrap().is_dir());
+    assert_eq!(
+        crate::transaction::file_identity(&readable, root.path()).unwrap(),
+        root.identity().unwrap()
+    );
+    println!("readable directory sync result: {:?}", readable.sync_all());
+    readable.sync_all().unwrap();
+    assert_eq!(root.sync_directory(), DirectoryDurability::Synced);
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+}
+
+#[test]
+#[cfg(unix)]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
+fn directory_flush_refuses_a_foreign_expected_identity() {
+    let (scope, project, store_path) = existing_external_fixture();
+    fs::create_dir(&store_path).unwrap();
+    let other = Project::open(&store_path).unwrap().root_dir().unwrap();
+    let root = project.root_dir().unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(crate::transaction::sync_readable_directory(&root, other.identity().unwrap()).is_err());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+}
+
 fn existing_external_fixture() -> (tempfile::TempDir, Project, std::path::PathBuf) {
     let scope = tempfile::tempdir().unwrap();
     let project_path = scope.path().join("project");
