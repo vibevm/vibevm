@@ -153,9 +153,10 @@ pub use runner::{
 };
 pub use state::{
     FingerprintError, LifecycleStateError, LifecycleStateStore, LifecycleTasksError,
-    PostPublicationRecovery, RunIdentity, SupersededTrace, fingerprint_execution,
-    fingerprint_execution_with, fingerprint_handler_execution, fingerprint_handler_execution_with,
-    pending_hosted_tasks, preparation_error_fingerprint,
+    PostPublicationRecovery, ReservationDecision, RunIdentity, SubmissionError,
+    SubmissionNamespace, SubmissionReservations, SubmissionScope, SupersededTrace,
+    fingerprint_execution, fingerprint_execution_with, fingerprint_handler_execution,
+    fingerprint_handler_execution_with, pending_hosted_tasks, preparation_error_fingerprint,
     preparation_error_fingerprint_for_identity, select_run_identity,
 };
 pub use vibe_core::lifecycle::{
