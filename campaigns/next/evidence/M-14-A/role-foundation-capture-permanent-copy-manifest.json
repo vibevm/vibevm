@@ -1,0 +1,29 @@
+{
+  "raw_normalized_copies": [
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-baseline-94e50b4b7-source-capture.json",
+      "sha256": "5f08711d3a90a0e882564ae0afd967319bc93a291d1388d075a8295dc41f1996",
+      "bytes": 519673
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-baseline-94e50b4b7-capture-e1.json",
+      "sha256": "8e5939deddc77d3243671b7ea0ac41835e0d7e26630b818ac5c965d07d5b5064",
+      "bytes": 1184697
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-after-1568af9f3-source-capture.json",
+      "sha256": "79c558716e81749fcca0bd922de0e5e97e1412d4c06a6e77eb1528007489dc6f",
+      "bytes": 520099
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-after-1568af9f3-capture-e1.json",
+      "sha256": "437eeacbf2eb082efed66fe64ca526a5027db3a63add73395e86a86d4f5c98a7",
+      "bytes": 1186504
+    }
+  ],
+  "before_files": 3847,
+  "after_files": 3855,
+  "unchanged_packages": 48,
+  "unchanged_finite_source_declared_rows": 6,
+  "limit": "selected file/capability subsets, not complete SDK/native census"
+}

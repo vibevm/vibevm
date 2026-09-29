@@ -1,0 +1,6 @@
+{
+  "state": "Root orchestration failure before capture author invocation",
+  "exit": 1,
+  "reason": "subjects.json unavailable because preparation process82306 was still running; FileNotFoundError; no capture outputs created",
+  "correction": "Waited same preparation handle to exit0, then used produced immutable subjects"
+}
