@@ -75,7 +75,7 @@ fn invalid_uri_fixture(name: &str) -> SourceLocation {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 fn repeated_logical_entity_retains_two_distinct_occurrences() {
     let mut first = entity_fixture("epoch");
@@ -97,7 +97,7 @@ fn repeated_logical_entity_retains_two_distinct_occurrences() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 fn mismatched_observation_epoch_and_bad_ordinals_refuse() {
     let mismatch = entity_fixture("mismatch");

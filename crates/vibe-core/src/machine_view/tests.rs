@@ -17,7 +17,7 @@ fn projected_span() -> TextSpan {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 fn repeated_inclusion_shares_owner_address_but_not_occurrence() {
     let logical = LogicalIdentity::OwnerMinted(LogicalOwnerAddress::supplied(
@@ -52,7 +52,7 @@ fn repeated_inclusion_shares_owner_address_but_not_occurrence() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 fn missing_owner_and_foreign_occurrence_are_typed_not_minted() {
     assert!(OpaqueText::new("  \n").is_err());

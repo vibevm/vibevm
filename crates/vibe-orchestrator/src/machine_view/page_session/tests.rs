@@ -192,7 +192,7 @@ fn forged_replayed_cross_session_and_mixed_context_tokens_refuse() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
@@ -319,7 +319,7 @@ fn entity_parent_and_partial_child_limits_are_checked_before_publication() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
-    r = 1
+    r = 2
 )]
 fn selected_capture_bindings_and_single_occurrence_joins_refuse_invention() {
     assert_eq!(
