@@ -4,3 +4,4 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME");
 
 pub mod framing;
+pub mod state;
