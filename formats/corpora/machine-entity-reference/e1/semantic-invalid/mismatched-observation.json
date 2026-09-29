@@ -17,7 +17,7 @@
   "occurrence": {
     "observed": {
       "projection": "projection-one",
-      "observation": "other"
+      "observation": "observation-one"
     },
     "contribution": "include-a",
     "ordinal": "0"
