@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "change_id": "capability-traceability-maintenance",
+  "before_capture_id": "capability-baseline-4a3f80a34",
+  "after_capture_id": "capability-after-2c35eed03",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "65d631fd88d92c9f7906263a190b82fc3d489fae"
+    },
+    {
+      "kind": "commit",
+      "identity": "723948861df3f2d3c9b7497de409efb880376c83"
+    },
+    {
+      "kind": "commit",
+      "identity": "ac1cbb72ee5fd956212ca596c764be23a7d12d5b"
+    },
+    {
+      "kind": "commit",
+      "identity": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181"
+    }
+  ],
+  "affected_paths": [
+    "BACKLOG.md",
+    "crates/vibe-wire/src/generated/application/e1/mod.rs",
+    "crates/vibe-wire/src/generated/application/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/mod.rs",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+    "crates/vibe-wire/src/generated/hello/mod.rs",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/mod.rs",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+    "crates/vibe-wire/src/generated/journal/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+    "crates/vibe-wire/src/generated/llm/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs",
+    "crates/vibe-wire/src/generated/native/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+    "crates/vibe-wire/src/generated/preview/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/mod.rs",
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "B215 deferred finding, specmap and equivalent generated namespace-wrapper comments only; public root export is accounted separately.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "source index/deferred lint/generator metadata changes do not modify delivered user documentation or claim a repair.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-capability-source-delta",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-review.md",
+      "verdict": "passed",
+      "sha256": "05fcd6ce509c75a2429c50732bb8878d52889c7979c962d89f95b749a27d3dd6"
+    },
+    {
+      "claim_id": "selected-capability-verification",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-verification.md",
+      "verdict": "passed",
+      "sha256": "4c4f224844c981dfb5f647444332b4c2824c60ac934d1d0f99c649bbdc4bab24"
+    },
+    {
+      "claim_id": "capability-source-byte-bindings",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-bindings-check.json",
+      "verdict": "passed",
+      "sha256": "ff5a5c05f56e831f4e01869bbd0ef1f469eafef8a71d9fc101e836f3132d7994"
+    },
+    {
+      "claim_id": "central-capability-contribution-review",
+      "subject_id": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md",
+      "verdict": "passed",
+      "sha256": "a37bacd95a041592919f1415da36d14fe3d468f27696010476ba7ef9ddbc9c24"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md"
+  }
+}

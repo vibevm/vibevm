@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "change_id": "capability-inventory-foundation",
+  "before_capture_id": "capability-baseline-4a3f80a34",
+  "after_capture_id": "capability-after-2c35eed03",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "65d631fd88d92c9f7906263a190b82fc3d489fae"
+    },
+    {
+      "kind": "commit",
+      "identity": "723948861df3f2d3c9b7497de409efb880376c83"
+    },
+    {
+      "kind": "commit",
+      "identity": "c9679b19b1bd6b819b8e679a39d11dc8ef564e22"
+    },
+    {
+      "kind": "commit",
+      "identity": "9f45ef0de236a6d759531eb9e6667a3841cc7bbe"
+    },
+    {
+      "kind": "commit",
+      "identity": "0036e5843f5fc49a0c7a53df6c3e5060688f39dd"
+    },
+    {
+      "kind": "commit",
+      "identity": "ac1cbb72ee5fd956212ca596c764be23a7d12d5b"
+    },
+    {
+      "kind": "commit",
+      "identity": "40a3d71739f9ae76a6dc0023f5b5fdd2d1ffd807"
+    },
+    {
+      "kind": "commit",
+      "identity": "2c35eed038d3f6bfdcbce88f8c0fbb0addc005a9"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/cli.rs",
+    "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+    "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+    "crates/vibe-mcp/src/capability_coverage_tests.rs",
+    "crates/vibe-mcp/src/lib.rs",
+    "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+    "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+    "crates/vibe-wire/src/behaviour/mod.rs",
+    "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+    "crates/vibe-wire/src/generated/capability/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/mod.rs",
+    "formats/REGISTRY.toml",
+    "formats/capability-coverage/README.md",
+    "formats/capability-coverage/coverage-e1.json",
+    "formats/corpora/capability-coverage/e1/invalid/missing-model-schema-ref.json",
+    "formats/corpora/capability-coverage/e1/invalid/schema-out-of-range.json",
+    "formats/corpora/capability-coverage/e1/invalid/unknown-disposition.json",
+    "formats/corpora/capability-coverage/e1/invalid/unknown-external-access.json",
+    "formats/corpora/capability-coverage/e1/invalid/unknown-field.json",
+    "formats/corpora/capability-coverage/e1/invalid/unknown-implementation.json",
+    "formats/corpora/capability-coverage/e1/invalid/unknown-surface-kind.json",
+    "formats/corpora/capability-coverage/e1/invalid/wrong-model-effects-type.json",
+    "formats/corpora/capability-coverage/e1/invalid/wrong-registered-type.json",
+    "formats/corpora/capability-coverage/e1/invalid/wrong-schema-type.json",
+    "formats/corpora/capability-coverage/e1/valid/empty.json",
+    "formats/corpora/capability-coverage/e1/valid/mapped.json",
+    "schemas/capability/e1/coverage.jtd.json",
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+    "xtask/src/capability_coverage.rs",
+    "xtask/src/main.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:capability-coverage",
+      "capability_id": "capability-source-inventory",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No capability-coverage registered schema/owned reader at the selected baseline.",
+      "after": "Source introduces epoch1 source-bound inventory with an explicit registration flag, distinct baseline/observation references, models and planned families; source observation and data publication remain separately identified.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-wire:Coverage::validate_capability_coverage",
+      "capability_id": "capability-declaration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No capability coverage validator declaration at selected baseline.",
+      "after": "Source introduces pure local/reference consistency checks without actual source/registration/runtime/authorization or semantic acceptance.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-VERIFICATION"
+      ]
+    },
+    {
+      "interface_id": "tool:xtask:capability-coverage",
+      "capability_id": "native-registration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; GNU/Linux registration metadata evidence only, no all-platform/full API result",
+      "before": "No xtask capability-coverage command or its native owner observation tests at selected baseline.",
+      "after": "Source introduces selected inventory/native command-tree/default MCP/TUI registration comparison and exact owning selected case checks; handler effects and all-feature delivery remain separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "source-declared developer inventory/validator/registration-observer interfaces, no full API or all-platform implementation claim.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "update developer guidance for source inventory/native registration consistency and explicit gaps.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-capability-source-delta",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-review.md",
+      "verdict": "passed",
+      "sha256": "05fcd6ce509c75a2429c50732bb8878d52889c7979c962d89f95b749a27d3dd6"
+    },
+    {
+      "claim_id": "selected-capability-verification",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-verification.md",
+      "verdict": "passed",
+      "sha256": "4c4f224844c981dfb5f647444332b4c2824c60ac934d1d0f99c649bbdc4bab24"
+    },
+    {
+      "claim_id": "capability-source-byte-bindings",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-bindings-check.json",
+      "verdict": "passed",
+      "sha256": "ff5a5c05f56e831f4e01869bbd0ef1f469eafef8a71d9fc101e836f3132d7994"
+    },
+    {
+      "claim_id": "central-capability-contribution-review",
+      "subject_id": "2c35eed038d3f6bfdcbce88f8c0fbb0addc005a9",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md",
+      "verdict": "passed",
+      "sha256": "a37bacd95a041592919f1415da36d14fe3d468f27696010476ba7ef9ddbc9c24"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2c35eed038d3f6bfdcbce88f8c0fbb0addc005a9",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md"
+  }
+}

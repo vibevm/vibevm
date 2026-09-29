@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "change_id": "vvm-mirror-refusal-test-maintenance",
+  "before_capture_id": "capability-baseline-4a3f80a34",
+  "after_capture_id": "capability-after-2c35eed03",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "3246fc776610d427aa0e274bccfdca10eaff7de2"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/commands/vvm/source.rs"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "exact 3246fc776 test-only Err-match correction, no production VVM behavior change.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "test assertion behavior unchanged; no product workflow/claim edit.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-capability-source-delta",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-review.md",
+      "verdict": "passed",
+      "sha256": "05fcd6ce509c75a2429c50732bb8878d52889c7979c962d89f95b749a27d3dd6"
+    },
+    {
+      "claim_id": "selected-capability-verification",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-verification.md",
+      "verdict": "passed",
+      "sha256": "4c4f224844c981dfb5f647444332b4c2824c60ac934d1d0f99c649bbdc4bab24"
+    },
+    {
+      "claim_id": "capability-source-byte-bindings",
+      "subject_id": "capability-after-2c35eed03",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-source-bindings-check.json",
+      "verdict": "passed",
+      "sha256": "ff5a5c05f56e831f4e01869bbd0ef1f469eafef8a71d9fc101e836f3132d7994"
+    },
+    {
+      "claim_id": "central-capability-contribution-review",
+      "subject_id": "3246fc776610d427aa0e274bccfdca10eaff7de2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md",
+      "verdict": "passed",
+      "sha256": "a37bacd95a041592919f1415da36d14fe3d468f27696010476ba7ef9ddbc9c24"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "3246fc776610d427aa0e274bccfdca10eaff7de2",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/capability-central-review.md"
+  }
+}
