@@ -1,0 +1,205 @@
+{
+  "scope_before": "62161a91c3b36376e5944561018a671b79ce6363",
+  "scope_after": "5b0ffde00661af732213378d047d9b4e0e701983",
+  "history": [
+    {
+      "commit": "cc4d9b0ff469c449a7bf4d8467b023a653c95537",
+      "parents": [
+        "62161a91c3b36376e5944561018a671b79ce6363"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "ca94c0a946c994518850fb41c775e2e0935c2bb4",
+      "parents": [
+        "cc4d9b0ff469c449a7bf4d8467b023a653c95537"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "7216ef99a66745f4756136a31e393e022035dfe8",
+      "parents": [
+        "ca94c0a946c994518850fb41c775e2e0935c2bb4"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "af74b641dfa5c145c3e540ce4dc2ff8c44a63b8b",
+      "parents": [
+        "7216ef99a66745f4756136a31e393e022035dfe8"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "5f930872367f19e0e0c798f2a511b00260c8afd9",
+      "parents": [
+        "af74b641dfa5c145c3e540ce4dc2ff8c44a63b8b"
+      ],
+      "raw_paths": [
+        "crates/vibe-core/src/manifest/migration.rs",
+        "crates/vibe-core/src/manifest/migration/tests.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "product_paths": [
+        "crates/vibe-core/src/manifest/migration.rs",
+        "crates/vibe-core/src/manifest/migration/tests.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "record_candidate": "pure-materialization-migration-planner"
+    },
+    {
+      "commit": "640ed8e3340971713044eb8616636968360a53f5",
+      "parents": [
+        "5f930872367f19e0e0c798f2a511b00260c8afd9"
+      ],
+      "raw_paths": [
+        "crates/vibe-core/src/manifest/migration.rs"
+      ],
+      "product_paths": [
+        "crates/vibe-core/src/manifest/migration.rs"
+      ],
+      "record_candidate": "pure-materialization-migration-planner"
+    },
+    {
+      "commit": "d882b9bdffe31f566986d4cf58ef918fb9c1c156",
+      "parents": [
+        "640ed8e3340971713044eb8616636968360a53f5"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "73ef9545c30eac0b1ecc69819896cfd2017688f1",
+      "parents": [
+        "d882b9bdffe31f566986d4cf58ef918fb9c1c156"
+      ],
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "record_candidate": "explicit-manifest-migration-profile-law"
+    },
+    {
+      "commit": "5b0ffde00661af732213378d047d9b4e0e701983",
+      "parents": [
+        "73ef9545c30eac0b1ecc69819896cfd2017688f1"
+      ],
+      "raw_paths": [
+        "specmap.json"
+      ],
+      "product_paths": [
+        "specmap.json"
+      ],
+      "record_candidate": "manifest-migration-traceability"
+    }
+  ],
+  "endpoints": {
+    "crates/vibe-core/src/manifest/migration.rs": [
+      null,
+      {
+        "git_blob_sha1": "58ee173797ec662056665ba336234295ce378586",
+        "sha256": "3eec4d86bf5e514aea8c94b00f3d9d2ccb94fcc3405d46867f772bdbd531afca"
+      }
+    ],
+    "crates/vibe-core/src/manifest/migration/tests.rs": [
+      null,
+      {
+        "git_blob_sha1": "72adfd1cf8817316cff616f7e0802535024d5858",
+        "sha256": "cf398b2c6839ba4458bd3fcd9748d946d8b2336786827151eb9d594b63c077fa"
+      }
+    ],
+    "crates/vibe-core/src/manifest/mod.rs": [
+      {
+        "git_blob_sha1": "f2fbe5d6fd443100e8325775023d38ad31388b21",
+        "sha256": "e1a34b7349f747c3a8ed5ea3a66d63ec688efe5c2ea7e751a34383b0db5ef664"
+      },
+      {
+        "git_blob_sha1": "e3edabe5a0a6e31d87a02a050cdf92bb1061f55a",
+        "sha256": "d81a2e928c620641d7e786a0a32fbde0636e67028a31e3d1bfad3720fbd358cd"
+      }
+    ],
+    "specmap.json": [
+      {
+        "git_blob_sha1": "d5ac76a612c6ad9c2515456716408828f502c2a4",
+        "sha256": "78d77b42b1bbc8ec5e9c181566e54f4f2768f42b307d62a07477815a9d4d0b48"
+      },
+      {
+        "git_blob_sha1": "bd5b4699e4e698ffa4e7d5dbf66bbf6cfe0e5c32",
+        "sha256": "5f6e5bc38f3d372a8ab7cb4b759ff64c3a496ea626cd230daa04de455feb8c50"
+      }
+    ],
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml": [
+      {
+        "git_blob_sha1": "473ba6bacd208c7de1b1daaff103a5ab29736309",
+        "sha256": "bf7e546565cb033c052de8cda2eeec4a29729176d04d33be28840553bd63092c"
+      },
+      {
+        "git_blob_sha1": "a31a1198db459d3321b7e68f0a0b407d8d59ceb9",
+        "sha256": "216dca7839f7cfee11655a16d1674d1cd9cb7188e4bc57cacf1a3444735e310f"
+      }
+    ]
+  },
+  "records": [
+    {
+      "change_id": "explicit-manifest-migration-profile-law",
+      "sha256": "dd9de1e3d3a48a451a1b2c20762745da01e4fc9c01d17512a2ee7c7cc2e5b050",
+      "required_claim_ids": [
+        "central-migration-plan-contribution-review",
+        "reviewed-migration-plan-source-delta",
+        "selected-migration-plan-verification"
+      ]
+    },
+    {
+      "change_id": "manifest-migration-traceability",
+      "sha256": "9f88a2fdeeeb4871d54c10a1d6db08500b3cebc3aae09ca72b3b3d3a0fcdf945",
+      "required_claim_ids": [
+        "central-migration-plan-contribution-review",
+        "reviewed-migration-plan-source-delta",
+        "selected-migration-plan-verification"
+      ]
+    },
+    {
+      "change_id": "pure-materialization-migration-planner",
+      "sha256": "4733984b1ab261e4ab3e01046a2068da76f87eba40f9d87fb8a24483d0dfc90a",
+      "required_claim_ids": [
+        "central-migration-plan-contribution-review",
+        "reviewed-migration-plan-source-delta",
+        "selected-migration-plan-verification"
+      ]
+    }
+  ],
+  "evidence_verdict_policy": "Explicit root argument: passed; exact retained bytes alone do not determine semantic verdict.",
+  "public_surfaces": "Exact equality with baseline source declarations; no execution/denominator claim.",
+  "adoption": "Root must review and install record candidates under canonical changes/<id>/release-impact.json and evidence under the release root; scratch output is not directly admitted or accepted."
+}

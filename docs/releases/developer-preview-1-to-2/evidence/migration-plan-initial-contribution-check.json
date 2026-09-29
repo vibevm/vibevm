@@ -1,0 +1,30 @@
+{
+  "checked_claims": [],
+  "findings": [
+    {
+      "code": "raw-capture-read",
+      "reason": "Retained evidence file is unavailable",
+      "state": "failed",
+      "subject": "capture:migration-plan-baseline-62161a91c"
+    }
+  ],
+  "mode": "contribution",
+  "schema": 1,
+  "subject_ids": [
+    "architecture-after-3ffb13b29",
+    "architecture-baseline-2145ec8d1",
+    "authority-after-fe0e04eba",
+    "authority-baseline-e95aa1c36",
+    "bootstrap-4cec12cd3",
+    "bootstrap-6c2a59ef9",
+    "capability-after-2c35eed03",
+    "capability-after-dd7d05e4c",
+    "capability-baseline-4a3f80a34",
+    "dp1-30d217bfce47bca",
+    "migration-plan-after-5b0ffde00",
+    "migration-plan-baseline-62161a91c",
+    "next-1.1-after-110da6f17",
+    "policy-baseline-e203b9dab"
+  ],
+  "verdict": "failed"
+}

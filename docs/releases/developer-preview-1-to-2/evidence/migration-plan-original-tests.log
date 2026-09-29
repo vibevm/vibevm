@@ -1,0 +1,24 @@
+Faithful copy of the completion tool output from session34101; this is not a redirected full compiler log.
+Command: CARGO_TARGET_DIR=/home/olegchir/git/v/vibevm-next/target CARGO_BUILD_JOBS=4 cargo test --locked --offline -p vibe-core --lib manifest::migration::tests
+Observed exit:0. Initial-call compiler output and the pre-existing vibe-cli unused manifest build-key warning are omitted here, not reconstructed.
+
+   Compiling tempfile v3.27.0
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.16s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 12 tests
+test manifest::migration::tests::unknown_ids_edges_and_each_missing_choice_are_typed ... ok
+test manifest::migration::tests::retained_historical_scalar_is_not_relabelled_as_package_manifest ... ok
+test manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes ... ok
+test manifest::migration::tests::crlf_and_utf8_outside_token_are_untouched ... ok
+test manifest::migration::tests::malformed_and_current_semantically_invalid_output_refuse ... ok
+test manifest::migration::tests::explicit_epoch_one_has_separate_identity_without_epoch_insertion ... ok
+test manifest::migration::tests::inline_and_normal_tables_keep_original_authored_syntax ... ok
+test manifest::migration::tests::planned_output_is_byte_identical_current_fixpoint ... ok
+test manifest::migration::tests::unknown_shapes_types_and_vocabularies_refuse ... ok
+test manifest::migration::tests::current_modes_and_absent_default_are_exact_identity ... ok
+test manifest::migration::tests::deterministic_plan_and_identity_depend_on_exact_input_and_selection ... ok
+test manifest::migration::tests::quote_families_escaped_decoding_and_initial_newlines_survive ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 518 filtered out; finished in 0.00s

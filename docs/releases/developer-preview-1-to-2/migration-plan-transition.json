@@ -1,0 +1,163 @@
+{
+  "captures": [
+    {
+      "capture_id": "architecture-after-3ffb13b29",
+      "source": "evidence/architecture-after-3ffb13b29-capture-e1.json",
+      "capture_file_sha256": "f759ae5f05eb757144fc650703d4f8b3463b3e44f2ae8c11470f1552aecfea1f",
+      "commit_sha1": "3ffb13b29f2c5164ba1759cdb064ebf2d2964e01",
+      "git_tree_sha1": "4ec66e4dde4963c9e83dda7a61a5ea22b7ef5983"
+    },
+    {
+      "capture_id": "architecture-baseline-2145ec8d1",
+      "source": "evidence/architecture-baseline-2145ec8d1-capture-e1.json",
+      "capture_file_sha256": "4397abc754b0f716ed0cc4ee17df1259e75ce6ee26b0ec0b2404020061c284c7",
+      "commit_sha1": "2145ec8d1b54083d0bf415d93b5a89f3fe01fa4a",
+      "git_tree_sha1": "6415cb5cc839e6050208297c002bfc5a3559262e"
+    },
+    {
+      "capture_id": "authority-after-fe0e04eba",
+      "source": "evidence/authority-after-fe0e04eba-capture-e1.json",
+      "capture_file_sha256": "9489031bde826da984de695fcfae7a8dcf638828c98ac5aca62858505e6a875c",
+      "commit_sha1": "fe0e04eba6a7595def8804e940df68b9b542db7d",
+      "git_tree_sha1": "37b1106a442441bcbf81523623a716806ec68cc4"
+    },
+    {
+      "capture_id": "authority-baseline-e95aa1c36",
+      "source": "evidence/authority-baseline-e95aa1c36-capture-e1.json",
+      "capture_file_sha256": "f8b4ab2a005991cad0af8d6aa96ef417f98ef37b9d57c6db8adbc6bd998b4946",
+      "commit_sha1": "e95aa1c36ee09b72ca4073928d401e8a91e7d297",
+      "git_tree_sha1": "04190f32c5212b7a3f2c04c1c00440b5386e4ce5"
+    },
+    {
+      "capture_file_sha256": "48baac9654179f167e859c84f421e3e740737e5795e7bcba0a8df80afd25f5ba",
+      "capture_id": "bootstrap-4cec12cd3",
+      "commit_sha1": "4cec12cd358c4ee58fb0a53180e4f3d4df868fb8",
+      "git_tree_sha1": "9ba4a5ee14eaec87c612714ecd79910b1801b38f",
+      "source": "evidence/bootstrap-4cec12cd3-capture-e1.json"
+    },
+    {
+      "capture_file_sha256": "5be669c4fdd99de85ceb56bb2639096b341b0c4db0f1eaa4a8ed2a150a5b0251",
+      "capture_id": "bootstrap-6c2a59ef9",
+      "commit_sha1": "6c2a59ef9820b12d985d39527a0c86ea817379b4",
+      "git_tree_sha1": "5008bf3fd9621ae247080614c1a70f1f19f77bbf",
+      "source": "evidence/bootstrap-6c2a59ef9-capture-e1.json"
+    },
+    {
+      "capture_id": "capability-after-2c35eed03",
+      "source": "evidence/capability-after-2c35eed03-capture-e1.json",
+      "capture_file_sha256": "f19e793cca87447d008eace0fc81208e6f7ed44f6145e163b057295c3edb062d",
+      "commit_sha1": "2c35eed038d3f6bfdcbce88f8c0fbb0addc005a9",
+      "git_tree_sha1": "ffaf8743ba817a7abfde970ea8ddd9d82b231f4a"
+    },
+    {
+      "capture_id": "capability-after-dd7d05e4c",
+      "source": "evidence/capability-after-dd7d05e4c-capture-e1.json",
+      "capture_file_sha256": "71a0b454fdfc26faac277aec498d33eb157d889a60be02f25c762639b7fc7cc8",
+      "commit_sha1": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181",
+      "git_tree_sha1": "a39305c30ca48480816cd83275e012571f54de8c"
+    },
+    {
+      "capture_id": "capability-baseline-4a3f80a34",
+      "source": "evidence/capability-baseline-4a3f80a34-capture-e1.json",
+      "capture_file_sha256": "1f0bcd29501045f104282401ce6e622dceedbdc0bdffcc800a6576d6a77d463c",
+      "commit_sha1": "4a3f80a344cdc1a892f71b7edafa54a7547020e9",
+      "git_tree_sha1": "c8c5eb300a30ab442c996543ed9ca55854907429"
+    },
+    {
+      "capture_id": "migration-plan-after-5b0ffde00",
+      "source": "evidence/migration-plan-after-5b0ffde00-capture-e1.json",
+      "capture_file_sha256": "b83d8952aaf961ede7308cb43c938fff4884c951faa09b7d20d0011a0df78299",
+      "commit_sha1": "5b0ffde00661af732213378d047d9b4e0e701983",
+      "git_tree_sha1": "79e2b41c1ba0d0ee475c6ec57a1b4220f2170f89"
+    },
+    {
+      "capture_id": "migration-plan-baseline-62161a91c",
+      "source": "evidence/migration-plan-baseline-62161a91c-capture-e1.json",
+      "capture_file_sha256": "a82d94ab0af1b74905ca2f6c4074d01a3026b4a85da0ab2105e5303016eb3ebb",
+      "commit_sha1": "62161a91c3b36376e5944561018a671b79ce6363",
+      "git_tree_sha1": "f218d1180439d299ec0592fe87d1e354f9ebb83a"
+    },
+    {
+      "capture_id": "next-1.1-after-110da6f17",
+      "source": "evidence/next-1.1-after-110da6f17-capture-e1.json",
+      "capture_file_sha256": "d9e61c2db85301e4dd44316000b62d796fb20d66946edf282ef2d064a52013f3",
+      "commit_sha1": "110da6f1791a40ede6e3851837ec4db386e50930",
+      "git_tree_sha1": "f82f0602dacde6d9ad576a519dd8d450f1f1ac76"
+    },
+    {
+      "capture_id": "policy-baseline-e203b9dab",
+      "source": "evidence/policy-baseline-e203b9dab-capture-e1.json",
+      "capture_file_sha256": "7ea3975f32a86478fb50c34fad46062d019db568c4efc253d1fee3c1259e4dc8",
+      "commit_sha1": "e203b9dabf908f71acb15c8d460ea2007f08a301",
+      "git_tree_sha1": "54a79a4228f423108b53bee057db5bf51e2c23d8"
+    }
+  ],
+  "change_records": [
+    "explicit-manifest-migration-profile-law",
+    "manifest-migration-traceability",
+    "pure-materialization-migration-planner"
+  ],
+  "contribution_scope": {
+    "before_capture_id": "migration-plan-baseline-62161a91c",
+    "after_capture_id": "migration-plan-after-5b0ffde00",
+    "record_digests": [
+      {
+        "change_id": "explicit-manifest-migration-profile-law",
+        "sha256": "bed7b99ea0046e49cde30964588f8df3864e671d4d105c7404ea87fd2e46a444",
+        "required_claim_ids": [
+          "central-migration-plan-contribution-review",
+          "reviewed-migration-plan-source-delta",
+          "selected-migration-plan-verification"
+        ]
+      },
+      {
+        "change_id": "manifest-migration-traceability",
+        "sha256": "ff685ac8259fe3a8dc73d618186dbffe4e8ed97c81db8aff9558299ba6fd78a4",
+        "required_claim_ids": [
+          "central-migration-plan-contribution-review",
+          "reviewed-migration-plan-source-delta",
+          "selected-migration-plan-verification"
+        ]
+      },
+      {
+        "change_id": "pure-materialization-migration-planner",
+        "sha256": "e0ef149bb5fc8c57c1ed109f344a3680697ea0ef548480003d7995788b41fec1",
+        "required_claim_ids": [
+          "central-migration-plan-contribution-review",
+          "reviewed-migration-plan-source-delta",
+          "selected-migration-plan-verification"
+        ]
+      }
+    ],
+    "affected_source_review": {
+      "source": "evidence/migration-plan-affected-source-review.json",
+      "sha256": "7c03b1cc8f9600130813837d664149605569a6fc034cbf7260b88cbb13dfb4b3"
+    }
+  },
+  "documentation": {
+    "state": "pending-owner-binding"
+  },
+  "dp1": {
+    "capture_file_sha256": "12055d9ea5d9be48f66aa2ca40a5ba785fb7e731e82f662d7804554df43cb6d9",
+    "capture_id": "dp1-30d217bfce47bca",
+    "commit_sha1": "30d217bfce47bcaccadabd9468f00e315dbcfead",
+    "git_tree_sha1": "0f4a5ddeddae677a487f49fbc4493eb0b4eb5b95",
+    "source": "evidence/dp1-capture-e1.json"
+  },
+  "dp2": {
+    "state": "pending"
+  },
+  "migration_guide": {
+    "state": "pending"
+  },
+  "proof": {
+    "capture_validated": false,
+    "contributions_verified": false,
+    "documentation_verified": false,
+    "final_product_panel_passed": false,
+    "migration_rehearsed": false
+  },
+  "record_kind": "preview-transition",
+  "schema": 1,
+  "schema_status": "Scoped root-reviewed contribution candidate; native account validation pending and final DP2 proof unaccepted."
+}
