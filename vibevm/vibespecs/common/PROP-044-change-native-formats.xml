@@ -557,7 +557,7 @@ authored format epoch, wire epoch and journal protocol revision remain
 independent.</MIGRATION-APPLY-LAW></p>
     </MANIFEST-MIGRATION-APPLY>
     <MANIFEST-MIGRATION-APPLICATION-WIRE title="Bounded application wire and journal protocol">
-      <p>`req r2`</p>
+      <p>`req r3`</p>
       <p><MIGRATION-APPLICATION-WIRE-LAW fact="true" status="spec/plan">**One bounded migration protocol.** Register generated strict formats
 `migration-operation-request`, `migration-operation-report` and
 `migration-application-journal` at wire epoch 1 under `schemas/migration/e1/`.
@@ -635,21 +635,21 @@ The report has integer `schema = 1`, required nullable `operation` and
 `operation_id` (null when malformed input supplies no valid identity), and outcome
 `completed`, `no_op`, `pending`, `uncertain`, `refused`; `target_state` is
 `approved_before`, `validated_after`, `absent`, `third_state`, `unavailable`.
-It carries nullable intent/before/after/diff identities and a nullable typed
-error, plus arrays `effects`, `warnings`, `residue`. Each effect has kind
+It carries required nullable intent/before/after/diff identities and a required
+nullable typed error, plus arrays `effects`, `warnings`, `residue`. Each effect has kind
 `store_bootstrap`, `barrier`, `before_image`, `journal`, `target_publication`,
 `target_restore` and state `not_started`, `completed`, `pending`, `uncertain`.
 Residue rows have location `store` or `project`, relative path and ownership
 `proved` or `unproven`; reporting a row grants no removal authority.
 
 `guarantees` carries platform `linux`, `macos`, `windows`, `other`, concurrency
-`participating_clients` or `unestablished`, nullable `barrier_binding`, boolean
+`participating_clients` or `unestablished`, required nullable `barrier_binding`, boolean
 `uncooperating_writers_excluded` (always false in this protocol), durability
 `file_and_directory_synced`, `journal_recoverable`, `unconfirmed`, and
 preservation `bytes_and_unix_mode` or `bytes_only`. The aggregate never exceeds
 the weakest observed boundary; preflight and uncertain synchronization must
-not fabricate an achieved guarantee. Nullable report fields deliberately
-represent unavailable evidence, unlike the nonnullable optional choices of
+not fabricate an achieved guarantee. Required nullable report fields explicitly carry null for unavailable
+evidence; omission is a structural refusal, unlike the nonnullable optional choices of
 the existing planning request. `journal_recoverable` does not assert
 persistent-media directory synchronization: a power/system failure may lose
 namespace entries, including retained images or intent. Process-interruption
