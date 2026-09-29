@@ -675,7 +675,7 @@ write or emission. Generated reports retain typed effects even on refusal;
 an error never implies that earlier store or target writes did not occur.</MIGRATION-APPLICATION-WIRE-LAW></p>
     </MANIFEST-MIGRATION-APPLICATION-WIRE>
     <MANIFEST-MIGRATION-SURFACES title="Explicit CLI and context-bound MCP application">
-      <p>`req r1`</p>
+      <p>`req r2`</p>
       <p><MIGRATION-SURFACE-LAW fact="true" status="spec/plan">**Shared operation, explicit admission.** CLI
 `vibe refactor migration-operation` and MCP tool
 `manifest_migration_operation` consume the registered operation request and
@@ -735,9 +735,19 @@ failures retain their full structured effects through executed_failure.
 No tool-name branch belongs in the dispatcher. Context admission does not
 load a lockfile, provider, configuration or hosted lifecycle installation.
 Internal report-validation failure retains its original evidence and cannot
-be converted to an empty preflight or fabricated successful result; bind its
-final transport disposition against actual runtime invariants before
-claiming surface completion.
+be converted to an empty preflight, unchecked normal report or fabricated
+success. The exactly-one-generated-report rule applies to validated normal
+results. On this internal invariant failure only, CLI emits no normal-report
+stdout, exits 1 and writes a labelled diagnostic to stderr containing the
+validation fault and original evidence. MCP returns an executed diagnostic-only
+failure with isError true and text containing that same labelled evidence,
+without normal-report structuredContent. Diagnostic serialization of the
+retained report is explicitly unvalidated and is never a replay authority.
+The generic tool seam owns this text-only executed-failure distinction;
+existing structured results, including a deliberate JSON null, retain their
+old rendering. No tool-name special case or new domain-error codec is added.
+Verify this branch with a deliberately inconsistent retained report without
+performing a new target mutation or claiming it is a normal runtime result.
 
 Verify real isolated CLI startup and MemoryTransport dispatch for all three
 operations, stdin/literal parity, poisoned configuration and stale VVM,

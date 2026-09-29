@@ -42,7 +42,7 @@ close that loop:</close-the-loop></p>
   </motivation>
   <decisions title="2. Decisions">
     <server title="2.1 The server: JSON-RPC 2.0 over stdio">
-      <p><req-server fact="true" status="impl/done">`req r2`</req-server></p>
+      <p><req-server fact="true" status="impl/done">`req r3`</req-server></p>
       <p><SERVER-TRANSPORT-AGNOSTIC fact="true" status="impl/done">**Decision.** `vibe-mcp` is a transport-agnostic MCP server.</SERVER-TRANSPORT-AGNOSTIC></p>
       <facts ordered="false">
         <SERVER-JSONRPC fact="true" status="impl/done">It speaks
@@ -60,7 +60,7 @@ close that loop:</close-the-loop></p>
       </facts>
     </server>
     <tools title="2.2 The tool surface: one seam, three tools">
-      <p><req-tools fact="true" status="impl/done">`req r3`</req-tools></p>
+      <p><req-tools fact="true" status="impl/done">`req r4`</req-tools></p>
       <p><TOOL-SEAM fact="true" status="impl/done">**Decision.** Every tool implements one seam (`McpTool`): it `describe`s
 itself (name, human description, JSON-Schema input shape) and `run`s
 against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
@@ -205,6 +205,10 @@ that was wrong about depth are in
 [`vibevm/vibespecs/design/map-query-language.xml`](../../design/map-query-language.xml) — the
 lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT></p>
       </map-select>
+      <EXECUTED-DIAGNOSTIC-FAILURE title="Executed diagnostic failure without a valid report">
+        <p>`req r1`</p>
+        <p><EXECUTED-DIAGNOSTIC-LAW fact="true" status="spec/plan">The generic ToolOutput seam may represent an executed diagnostic-only failure: mandatory diagnostic text, isError true, and no structuredContent. It is distinct from preflight, and carries no invented validated report. Existing structured success/failure constructors retain their exact content, including explicit JSON null; the dispatcher follows an explicit output-mode flag rather than inspecting a tool name or treating null as absence. Keep existing structured() and into_parts() compatibility surfaces, and expose the mode explicitly for generic rendering. The manifest migration cell uses this mode only for internal report-invariant failure, retaining the original unvalidated evidence in labelled diagnostic text under [its surface contract](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-SURFACES). Ordinary domain refusal still emits its valid owning report.</EXECUTED-DIAGNOSTIC-LAW></p>
+      </EXECUTED-DIAGNOSTIC-FAILURE>
       <MANIFEST-MIGRATION-CELL title="Context-bound migration application cell">
         <p>`req r1`</p>
         <p><MIGRATION-CELL-LAW fact="true" status="spec/plan">The additional `manifest_migration_operation` cell uses the generic tool seam and structured preflight/executed-result channels. Its project/file/recovery-store authority is supplied by the server composer and cannot be overridden by tool arguments. Its sole operation and admission contract is [PROP-044 application surfaces](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-SURFACES); a default context without that explicit grant refuses this cell before runtime. This does not alter existing tools or grant hosted lifecycle/provider authority.</MIGRATION-CELL-LAW></p>
