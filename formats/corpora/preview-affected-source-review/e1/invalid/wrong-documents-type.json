@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "review_id": "shape-only introduced interface",
+  "before_capture_id": "shape-only before",
+  "after_capture_id": "shape-only after",
+  "source_record": "evidence/shape-only-review.md",
+  "source_record_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "paths": [
+    {
+      "path": "src/new.rs",
+      "interface_ids": [
+        "preview-tool"
+      ],
+      "after": {
+        "git_blob_sha1": "0123456789abcdef0123456789abcdef01234567",
+        "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "preview-tool",
+      "capability_id": "preview-shape-inspection",
+      "kind": "introduced",
+      "audience": "developer",
+      "platform": "declared-platform",
+      "before": "absent",
+      "after": "source-declared shape fixture",
+      "source_paths": [
+        "src/new.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.example/tool/common/PROP-001#root"
+      ],
+      "topic_ids": [
+        "preview-tool-usage"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "preview-tool-usage",
+      "obligation": "Describe the finite source-declared interface; no actual documentation page is bound."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.example",
+      "name": "tool",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "documents": "not-a-document-array"
+    }
+  ]
+}

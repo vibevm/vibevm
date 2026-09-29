@@ -113,6 +113,7 @@ pub enum FormatId {
     NativePackageRequest,
     NativeReply,
     PackageSkillReceipt,
+    PreviewAffectedSourceReview,
     PreviewCapture,
     PreviewCheckReport,
     PreviewCheckRequest,
