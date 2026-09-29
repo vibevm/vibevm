@@ -1,0 +1,1153 @@
+{
+  "schema": 1,
+  "kind": "readonly-current-proof-byte-refresh",
+  "current_full_head_subject": "dd1f113bc81697a0b872df23a73320a352659728",
+  "head_provenance": "Root supplied full HEAD; no Git invocation or independent checkout/commit verification",
+  "task": "M-13-D.2",
+  "task_acceptance": false,
+  "predecessor_acceptance_claimed": false,
+  "input_evidence": [
+    {
+      "path": "campaigns/next/evidence/M-13-D/accepted-floor-binding.json",
+      "sha256": "e5f60c9958d988c713df15922f8b5adcd8aadb98f8866f2faa1f969fdef0d5ea"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/current-reconciliation-preparation.json",
+      "sha256": "c049527231125c68a99a546e685bd7e262db691e7be08931f742d4592ad37fd0"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/current-reconciliation-evidence.json",
+      "sha256": "9747d6fb07d6c1b13ec4483794b9bfd176d438bd283c6dc78b88ed904c44bb71"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-reuse-review.json",
+      "sha256": "e6d54fe8861fb1262f651809ffc71002ef10a228d85015a631cbdbb415a810b6"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-reuse-review.md",
+      "sha256": "ce68bffc21811722ea7cc58ea14d221787cf9919db6c329148c0cefd35c4b7c4"
+    }
+  ],
+  "counts": {
+    "current_source_files": 158,
+    "current_source_matches": 158,
+    "semantic_guard_rows": 633,
+    "guard_subject_files": 158,
+    "metadata_receipts": 9,
+    "metadata_and_review_input_files": 13,
+    "metadata_and_review_input_matches": 13,
+    "byte_mismatches": 0,
+    "metadata_member_manifests_without_current_baseline_hash": 33
+  },
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "before_sha256": "28ad2c511997d92a05965a4cfd13de6c437644a85f3558bdf655421186a1c5df",
+      "current_sha256": "28ad2c511997d92a05965a4cfd13de6c437644a85f3558bdf655421186a1c5df",
+      "matches": true
+    },
+    {
+      "path": "crates/progress-core/Cargo.toml",
+      "before_sha256": "699d0d47bf77484de4be16a2465df1a614465e981997da125266533186109153",
+      "current_sha256": "699d0d47bf77484de4be16a2465df1a614465e981997da125266533186109153",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-actions/Cargo.toml",
+      "before_sha256": "416a65f69bee405240b185a6b90813c70b594f1223306737a01972e4c5c6fdc9",
+      "current_sha256": "416a65f69bee405240b185a6b90813c70b594f1223306737a01972e4c5c6fdc9",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/Cargo.toml",
+      "before_sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+      "current_sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-check/Cargo.toml",
+      "before_sha256": "cc9e563a596c45f99679902d31e207dfaa0ba79c57eabf61b5e7e84f739a5ff6",
+      "current_sha256": "cc9e563a596c45f99679902d31e207dfaa0ba79c57eabf61b5e7e84f739a5ff6",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-cli/Cargo.toml",
+      "before_sha256": "a7ce7b2d1fbdf8bc0d13596165148bab6c89e9a476be236081255df19f768352",
+      "current_sha256": "a7ce7b2d1fbdf8bc0d13596165148bab6c89e9a476be236081255df19f768352",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-core/Cargo.toml",
+      "before_sha256": "e2461e1f080649315ad1e1094ad5f5048c039e83f2f1108ab3ba7b07848fb35f",
+      "current_sha256": "e2461e1f080649315ad1e1094ad5f5048c039e83f2f1108ab3ba7b07848fb35f",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-doc-server/Cargo.toml",
+      "before_sha256": "a7a9fa9867a233393d5bbeb04141a91455791745d4aedeaa4469c3ac5351562a",
+      "current_sha256": "a7a9fa9867a233393d5bbeb04141a91455791745d4aedeaa4469c3ac5351562a",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-doc-shell/Cargo.toml",
+      "before_sha256": "e36208c07481a86690276458ccf5d32376e0cc951312941d943859f0778c4786",
+      "current_sha256": "e36208c07481a86690276458ccf5d32376e0cc951312941d943859f0778c4786",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-doc/Cargo.toml",
+      "before_sha256": "571c80719971786d1cb577782cc4fc239a658008d3d34db9d1e6ccacb6a8aef4",
+      "current_sha256": "571c80719971786d1cb577782cc4fc239a658008d3d34db9d1e6ccacb6a8aef4",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-ext/Cargo.toml",
+      "before_sha256": "d88baa7919653d53d7864046e55cf29368e6ce1bc9b6ab36fbb5d813e9f8eac4",
+      "current_sha256": "d88baa7919653d53d7864046e55cf29368e6ce1bc9b6ab36fbb5d813e9f8eac4",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-extension-registry/Cargo.toml",
+      "before_sha256": "3942bdc8b99150a97c791e19ebf79ae27e05a35ff3dda73cecab1bf080c8a79c",
+      "current_sha256": "3942bdc8b99150a97c791e19ebf79ae27e05a35ff3dda73cecab1bf080c8a79c",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-facts/Cargo.toml",
+      "before_sha256": "fe0467dcd78579126d5ae71b8c2f877f494eac21186ac594ca2025095af41283",
+      "current_sha256": "fe0467dcd78579126d5ae71b8c2f877f494eac21186ac594ca2025095af41283",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-graph/Cargo.toml",
+      "before_sha256": "e9e65fa5e31f79625c090ffdf6185f99cafc396d6ab8e7acffd9a23794e08f83",
+      "current_sha256": "e9e65fa5e31f79625c090ffdf6185f99cafc396d6ab8e7acffd9a23794e08f83",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-index/Cargo.toml",
+      "before_sha256": "7226a37c1b1861a3813170eb61554c4a453663199db30c06b07a98c5ed94f976",
+      "current_sha256": "7226a37c1b1861a3813170eb61554c4a453663199db30c06b07a98c5ed94f976",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-install/Cargo.toml",
+      "before_sha256": "95413b2bd299e59ac929d6dc48d857d5de60a29af0d224dd9caaa0e455ac8fe3",
+      "current_sha256": "95413b2bd299e59ac929d6dc48d857d5de60a29af0d224dd9caaa0e455ac8fe3",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/Cargo.toml",
+      "before_sha256": "e216c6ff9ff5f496a19676b44ced7989b7fcba6bb7ab89d67e31e1598912ec9f",
+      "current_sha256": "e216c6ff9ff5f496a19676b44ced7989b7fcba6bb7ab89d67e31e1598912ec9f",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-llm/Cargo.toml",
+      "before_sha256": "137743a61e71c176a4af0ceb954f2dac15fb0f069443b72b9448a5f3e83a40dc",
+      "current_sha256": "137743a61e71c176a4af0ceb954f2dac15fb0f069443b72b9448a5f3e83a40dc",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-mcp/Cargo.toml",
+      "before_sha256": "670d978ea16785927cb84bf16555234301661ba59ebcb91457988dc4c373361c",
+      "current_sha256": "670d978ea16785927cb84bf16555234301661ba59ebcb91457988dc4c373361c",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-native-loader/Cargo.toml",
+      "before_sha256": "ebc34e701c46ff907885d36f62c9db09e28dd27054fee67e15618cbfef8eb0dd",
+      "current_sha256": "ebc34e701c46ff907885d36f62c9db09e28dd27054fee67e15618cbfef8eb0dd",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/Cargo.toml",
+      "before_sha256": "450c3638dd9d123bf7b56f87c5b91277ecadbc8157140ff9a7fa87d22bbb2081",
+      "current_sha256": "450c3638dd9d123bf7b56f87c5b91277ecadbc8157140ff9a7fa87d22bbb2081",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-package-source/Cargo.toml",
+      "before_sha256": "b4b5f46ff29409806310b4fee29d2bb5c549094632a542291c0e41248574d43f",
+      "current_sha256": "b4b5f46ff29409806310b4fee29d2bb5c549094632a542291c0e41248574d43f",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-publish/Cargo.toml",
+      "before_sha256": "846f09c1f5aa3053b459c26fb5878941ad89b6ca5dd6d70575fb7b75e72caacb",
+      "current_sha256": "846f09c1f5aa3053b459c26fb5878941ad89b6ca5dd6d70575fb7b75e72caacb",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-registry/Cargo.toml",
+      "before_sha256": "b00ef9afa1790dae6b0e4bec32b1dbc363d597cdabb3f0a35befac45a3871e79",
+      "current_sha256": "b00ef9afa1790dae6b0e4bec32b1dbc363d597cdabb3f0a35befac45a3871e79",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-requirements/Cargo.toml",
+      "before_sha256": "53ab70e300751fd18e400b3763c6faa88b04b6d3f4142049baed2f2e173d0028",
+      "current_sha256": "53ab70e300751fd18e400b3763c6faa88b04b6d3f4142049baed2f2e173d0028",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-resolver/Cargo.toml",
+      "before_sha256": "69318ae75c99f1b6ccd29e5d973514339676d2d836099581cb8f7ec0cd755899",
+      "current_sha256": "69318ae75c99f1b6ccd29e5d973514339676d2d836099581cb8f7ec0cd755899",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-safefs/Cargo.toml",
+      "before_sha256": "619ede8f9c2fca016723f9136f7fc39755d7feecb3e87fa5c0164757b4026a4c",
+      "current_sha256": "619ede8f9c2fca016723f9136f7fc39755d7feecb3e87fa5c0164757b4026a4c",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-scrape/Cargo.toml",
+      "before_sha256": "76a89133b920d9e42493086789bee689540e3988bc07830c47db83ad10397b4c",
+      "current_sha256": "76a89133b920d9e42493086789bee689540e3988bc07830c47db83ad10397b4c",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-settings/Cargo.toml",
+      "before_sha256": "936f184a2f513350ccc7727c19fe25451b191f29d293ac49ac944e71ac337aa7",
+      "current_sha256": "936f184a2f513350ccc7727c19fe25451b191f29d293ac49ac944e71ac337aa7",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-spec/Cargo.toml",
+      "before_sha256": "a072aced3e3c1ea2824734643d2ba85e0b20830563e0c65bf17629be2ba3c0d8",
+      "current_sha256": "a072aced3e3c1ea2824734643d2ba85e0b20830563e0c65bf17629be2ba3c0d8",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-specdoc/Cargo.toml",
+      "before_sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091",
+      "current_sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-test-support/Cargo.toml",
+      "before_sha256": "92b7c7bb4dde3eca0ade1fb3aa1070af8de1ecdb7534434108d04e9f7255b2ff",
+      "current_sha256": "92b7c7bb4dde3eca0ade1fb3aa1070af8de1ecdb7534434108d04e9f7255b2ff",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-trace/Cargo.toml",
+      "before_sha256": "36c0b51070c06b8a73d903bf097852892dfe98e290e07b1d459e4df82e1169c7",
+      "current_sha256": "36c0b51070c06b8a73d903bf097852892dfe98e290e07b1d459e4df82e1169c7",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-wire/Cargo.toml",
+      "before_sha256": "2252f89e13186951d055432d6e15e2a19c3b1678e24d19b1a6bcbd532afcebbd",
+      "current_sha256": "2252f89e13186951d055432d6e15e2a19c3b1678e24d19b1a6bcbd532afcebbd",
+      "matches": true
+    },
+    {
+      "path": "crates/vibe-workspace/Cargo.toml",
+      "before_sha256": "dd3b3bebd7f47d13b8adee7d9c7f5da80aea39f763c0159351b4dbff02fa0a61",
+      "current_sha256": "dd3b3bebd7f47d13b8adee7d9c7f5da80aea39f763c0159351b4dbff02fa0a61",
+      "matches": true
+    },
+    {
+      "path": "research/rust-demo/vibe.toml",
+      "before_sha256": "f1636b8de849c7c40ae486d789eb2b18dae5e7adf1ea121694cd3e72551b10aa",
+      "current_sha256": "f1636b8de849c7c40ae486d789eb2b18dae5e7adf1ea121694cd3e72551b10aa",
+      "matches": true
+    },
+    {
+      "path": "research/ts-demo/vibe.toml",
+      "before_sha256": "ec14529747f9085ea59dd22192823234e1131cab3122c4bfcb4d5e2e60f9d1b7",
+      "current_sha256": "ec14529747f9085ea59dd22192823234e1131cab3122c4bfcb4d5e2e60f9d1b7",
+      "matches": true
+    },
+    {
+      "path": "vibe.toml",
+      "before_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "current_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/Cargo.toml",
+      "before_sha256": "dab88b58aa5728d196e39c84714492aac81b713dd2d1c6ae769eea58243a8b60",
+      "current_sha256": "dab88b58aa5728d196e39c84714492aac81b713dd2d1c6ae769eea58243a8b60",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-conform/Cargo.toml",
+      "before_sha256": "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a",
+      "current_sha256": "8ee78c0aae56d3ab418fb26a44c8fd41ddfb747c91abf12ff9cef67c15b8b40a",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-mcp/Cargo.toml",
+      "before_sha256": "615e496fcb3b61953351ed3842cd21594d50d03f4dc85f355c8c0d7dedcf2d87",
+      "current_sha256": "615e496fcb3b61953351ed3842cd21594d50d03f4dc85f355c8c0d7dedcf2d87",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/Cargo.toml",
+      "before_sha256": "df2d31ef92d9e3388261d9a89afb09ef8a32bbe53d1e21ededdc4bc50b20dee9",
+      "current_sha256": "df2d31ef92d9e3388261d9a89afb09ef8a32bbe53d1e21ededdc4bc50b20dee9",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark-grammar/Cargo.toml",
+      "before_sha256": "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05",
+      "current_sha256": "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark/Cargo.toml",
+      "before_sha256": "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17",
+      "current_sha256": "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/vibe.toml",
+      "before_sha256": "a65d374bc2a585a2a3049f3613b42aef692036ec21443f5017a761580e080582",
+      "current_sha256": "a65d374bc2a585a2a3049f3613b42aef692036ec21443f5017a761580e080582",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/Cargo.toml",
+      "before_sha256": "140067a7e414546c72e9b919cabd7411efdee3c9ea4568bf11fb4ed78a2b2e87",
+      "current_sha256": "140067a7e414546c72e9b919cabd7411efdee3c9ea4568bf11fb4ed78a2b2e87",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-cli/Cargo.toml",
+      "before_sha256": "fedd9b01863a6d533f26b832795d3514b07740c5a327e2a226be78a9f847af18",
+      "current_sha256": "fedd9b01863a6d533f26b832795d3514b07740c5a327e2a226be78a9f847af18",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "39797012a906a141851f35214efa598c48950d6c8fc95beba20ea69d58e68722",
+      "current_sha256": "39797012a906a141851f35214efa598c48950d6c8fc95beba20ea69d58e68722",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform/Cargo.toml",
+      "before_sha256": "bcff2564f7754d4a3c0db533e4cbfdb941885d0eab39e46e78af11483fccbb8e",
+      "current_sha256": "bcff2564f7754d4a3c0db533e4cbfdb941885d0eab39e46e78af11483fccbb8e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-extract-bridge/Cargo.toml",
+      "before_sha256": "9d60fbc859282a7fe865508a722aace90c242b850944675748f943d48971b058",
+      "current_sha256": "9d60fbc859282a7fe865508a722aace90c242b850944675748f943d48971b058",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap-scan/Cargo.toml",
+      "before_sha256": "d88c9624f3b3710f13250fd663a3599d1179efd6355ae309fef40b69d94d18c8",
+      "current_sha256": "d88c9624f3b3710f13250fd663a3599d1179efd6355ae309fef40b69d94d18c8",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap/Cargo.toml",
+      "before_sha256": "afe1a48cd71eee2fddf66e60b1efa6696237851d956f6b69b9b96785369636aa",
+      "current_sha256": "afe1a48cd71eee2fddf66e60b1efa6696237851d956f6b69b9b96785369636aa",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "96d946d47a9ad9f24ead376e1b632549868d2ceffadc2b69b0238b5999b53404",
+      "current_sha256": "96d946d47a9ad9f24ead376e1b632549868d2ceffadc2b69b0238b5999b53404",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg/Cargo.toml",
+      "before_sha256": "9c56757c5a36e31decc50a5fade00eb75b2a4fc3d943f634df10b325d7ad2f91",
+      "current_sha256": "9c56757c5a36e31decc50a5fade00eb75b2a4fc3d943f634df10b325d7ad2f91",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/vibe.toml",
+      "before_sha256": "24a96acee8c4fda3ef5c06804e186023a5efaec0a61718a02b4935ed871cf75f",
+      "current_sha256": "24a96acee8c4fda3ef5c06804e186023a5efaec0a61718a02b4935ed871cf75f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/Cargo.toml",
+      "before_sha256": "3d568d079013066371602ecf902da025f5dbaac8d5b7f7795fe2ed289b182f4a",
+      "current_sha256": "3d568d079013066371602ecf902da025f5dbaac8d5b7f7795fe2ed289b182f4a",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-cli/Cargo.toml",
+      "before_sha256": "fedd9b01863a6d533f26b832795d3514b07740c5a327e2a226be78a9f847af18",
+      "current_sha256": "fedd9b01863a6d533f26b832795d3514b07740c5a327e2a226be78a9f847af18",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "39797012a906a141851f35214efa598c48950d6c8fc95beba20ea69d58e68722",
+      "current_sha256": "39797012a906a141851f35214efa598c48950d6c8fc95beba20ea69d58e68722",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform/Cargo.toml",
+      "before_sha256": "bcff2564f7754d4a3c0db533e4cbfdb941885d0eab39e46e78af11483fccbb8e",
+      "current_sha256": "bcff2564f7754d4a3c0db533e4cbfdb941885d0eab39e46e78af11483fccbb8e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-extract-bridge/Cargo.toml",
+      "before_sha256": "9d60fbc859282a7fe865508a722aace90c242b850944675748f943d48971b058",
+      "current_sha256": "9d60fbc859282a7fe865508a722aace90c242b850944675748f943d48971b058",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-mcp/Cargo.toml",
+      "before_sha256": "6375c8bd29cfbeab34849a030017aa9050f1d8559b814961144732e79ebde109",
+      "current_sha256": "6375c8bd29cfbeab34849a030017aa9050f1d8559b814961144732e79ebde109",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap-scan/Cargo.toml",
+      "before_sha256": "d88c9624f3b3710f13250fd663a3599d1179efd6355ae309fef40b69d94d18c8",
+      "current_sha256": "d88c9624f3b3710f13250fd663a3599d1179efd6355ae309fef40b69d94d18c8",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap/Cargo.toml",
+      "before_sha256": "afe1a48cd71eee2fddf66e60b1efa6696237851d956f6b69b9b96785369636aa",
+      "current_sha256": "afe1a48cd71eee2fddf66e60b1efa6696237851d956f6b69b9b96785369636aa",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "96d946d47a9ad9f24ead376e1b632549868d2ceffadc2b69b0238b5999b53404",
+      "current_sha256": "96d946d47a9ad9f24ead376e1b632549868d2ceffadc2b69b0238b5999b53404",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg/Cargo.toml",
+      "before_sha256": "9c56757c5a36e31decc50a5fade00eb75b2a4fc3d943f634df10b325d7ad2f91",
+      "current_sha256": "9c56757c5a36e31decc50a5fade00eb75b2a4fc3d943f634df10b325d7ad2f91",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/vibe.toml",
+      "before_sha256": "37298015ad93b86650f62bdf9dd35266908f4cadc1fae46e8d8cf6bec92c38d2",
+      "current_sha256": "37298015ad93b86650f62bdf9dd35266908f4cadc1fae46e8d8cf6bec92c38d2",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v1.1.0/vibe.toml",
+      "before_sha256": "6e9f7f12819a97a5c8e78220a00c873d5685e9d4bff197980076dbcb50aeae8b",
+      "current_sha256": "6e9f7f12819a97a5c8e78220a00c873d5685e9d4bff197980076dbcb50aeae8b",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.1.0/vibe.toml",
+      "before_sha256": "34b89ca803cff0f5353d8d16726581b9506bcbf201e60e659553f1266ba9a6f2",
+      "current_sha256": "34b89ca803cff0f5353d8d16726581b9506bcbf201e60e659553f1266ba9a6f2",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/Cargo.toml",
+      "before_sha256": "90c076cfc072a8f51b3f9528520438e519d9fe4106538c6ebbe158c26807d8a8",
+      "current_sha256": "90c076cfc072a8f51b3f9528520438e519d9fe4106538c6ebbe158c26807d8a8",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-cli/Cargo.toml",
+      "before_sha256": "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e",
+      "current_sha256": "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043",
+      "current_sha256": "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform/Cargo.toml",
+      "before_sha256": "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f",
+      "current_sha256": "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-env-audit/Cargo.toml",
+      "before_sha256": "328774ef8fb756685c94c7232c7ea9dd7df22c3ee84e64e1df58897ee0d25654",
+      "current_sha256": "328774ef8fb756685c94c7232c7ea9dd7df22c3ee84e64e1df58897ee0d25654",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-specmap/Cargo.toml",
+      "before_sha256": "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546",
+      "current_sha256": "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "8e4283265a7a58bfecbbea80c222f53b96580665a7062bfe36cfc7bbb9a1a9a8",
+      "current_sha256": "8e4283265a7a58bfecbbea80c222f53b96580665a7062bfe36cfc7bbb9a1a9a8",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg/Cargo.toml",
+      "before_sha256": "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5",
+      "current_sha256": "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/vibe.toml",
+      "before_sha256": "4a2a736bd3b8c55077018494c29031a16304acc297854ba282cd62a70e3f4031",
+      "current_sha256": "4a2a736bd3b8c55077018494c29031a16304acc297854ba282cd62a70e3f4031",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/Cargo.toml",
+      "before_sha256": "674e33a1df183c13ba0b032121092d78f067f3ff9ab684306da0754c56705c94",
+      "current_sha256": "674e33a1df183c13ba0b032121092d78f067f3ff9ab684306da0754c56705c94",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-cli/Cargo.toml",
+      "before_sha256": "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e",
+      "current_sha256": "c51487d34ec0bf42cb79197bc1bc201fc55fada71a2914f6d5a6a84bbc56070e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043",
+      "current_sha256": "a6f438eba983b2a68435f54654a7e9474b8e89faed51f0c3800540c05d767043",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform/Cargo.toml",
+      "before_sha256": "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f",
+      "current_sha256": "1f4c957a99e2b3e65d7bef8fcc14cfeeb2dfe514d92e2efb5425ecec0a0f591f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-mcp/Cargo.toml",
+      "before_sha256": "7c0fc5d753a355df0fc70ce08d297faa961eb93a22a8935e1eb05b92e7edd048",
+      "current_sha256": "7c0fc5d753a355df0fc70ce08d297faa961eb93a22a8935e1eb05b92e7edd048",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-specmap/Cargo.toml",
+      "before_sha256": "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546",
+      "current_sha256": "78fa92c42754a447d0e3c37ffdb80cbfb3df3930bd9c8ab1f7a0cef90c7d1546",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "8e4283265a7a58bfecbbea80c222f53b96580665a7062bfe36cfc7bbb9a1a9a8",
+      "current_sha256": "8e4283265a7a58bfecbbea80c222f53b96580665a7062bfe36cfc7bbb9a1a9a8",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg/Cargo.toml",
+      "before_sha256": "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5",
+      "current_sha256": "9d62b917f105583c3d5e681cf2282fd4121ca30e5a414f191eb1af4cceefb0f5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/vibe.toml",
+      "before_sha256": "2e1e07cb961259faf8edf6c3b5ccdb0c15cf7891d274cdd571234d7cfd257436",
+      "current_sha256": "2e1e07cb961259faf8edf6c3b5ccdb0c15cf7891d274cdd571234d7cfd257436",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.1.0/vibe.toml",
+      "before_sha256": "f3d8ec1cbcf7178b891b6ee76612052aa80f7bc91cf7f6002e5f42dacbcc6576",
+      "current_sha256": "f3d8ec1cbcf7178b891b6ee76612052aa80f7bc91cf7f6002e5f42dacbcc6576",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/Cargo.toml",
+      "before_sha256": "8d833c2bdfa1b2c5b41c1570865c889cb05f83dbbda82bbac37c08473209d9c1",
+      "current_sha256": "8d833c2bdfa1b2c5b41c1570865c889cb05f83dbbda82bbac37c08473209d9c1",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-cli/Cargo.toml",
+      "before_sha256": "56364e5908da65e2c6a80018c80974aed0c03ac807961e3ec02fa30c6e3affa3",
+      "current_sha256": "56364e5908da65e2c6a80018c80974aed0c03ac807961e3ec02fa30c6e3affa3",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "916d4f127c6309c4ec39fae7fa870f14949deec19e63918105bd10943c98697e",
+      "current_sha256": "916d4f127c6309c4ec39fae7fa870f14949deec19e63918105bd10943c98697e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform/Cargo.toml",
+      "before_sha256": "f9c8fa4dc03ee32d44f6aac3d57a3dc3459bf123665ec06156b6b60072b84b0a",
+      "current_sha256": "f9c8fa4dc03ee32d44f6aac3d57a3dc3459bf123665ec06156b6b60072b84b0a",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-extract-bridge/Cargo.toml",
+      "before_sha256": "762735c3d84d6445e7da50a6854ccfa22b93c39da7bc3839a9798eeab06b484e",
+      "current_sha256": "762735c3d84d6445e7da50a6854ccfa22b93c39da7bc3839a9798eeab06b484e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap-scan/Cargo.toml",
+      "before_sha256": "aa9055147736bbb29b533952e10047c9f15ac02610742c9314ccb31ca65dc30f",
+      "current_sha256": "aa9055147736bbb29b533952e10047c9f15ac02610742c9314ccb31ca65dc30f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap/Cargo.toml",
+      "before_sha256": "2787a169942f42deaa28f2916b0e368968053b6bd5ea57aad1f51a40b8abd1c0",
+      "current_sha256": "2787a169942f42deaa28f2916b0e368968053b6bd5ea57aad1f51a40b8abd1c0",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "6acdb14505e35663a4c13049377e10cbc107f4209d27beeb522e64ca7b175302",
+      "current_sha256": "6acdb14505e35663a4c13049377e10cbc107f4209d27beeb522e64ca7b175302",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg/Cargo.toml",
+      "before_sha256": "7c108ab7bb9f42ce6fdcb7432d79e1d3c03c0df2f4e0d9c42f237ec87eafd3d4",
+      "current_sha256": "7c108ab7bb9f42ce6fdcb7432d79e1d3c03c0df2f4e0d9c42f237ec87eafd3d4",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/vibe.toml",
+      "before_sha256": "8da33ce1decd9921fc564e05940e7ccb12aebd893921237c0022706fba6c9786",
+      "current_sha256": "8da33ce1decd9921fc564e05940e7ccb12aebd893921237c0022706fba6c9786",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/Cargo.toml",
+      "before_sha256": "441da7dd86165ef3518bdeaad6eab7fa5b2b64b70686a0ecc9adcc01368c4dd9",
+      "current_sha256": "441da7dd86165ef3518bdeaad6eab7fa5b2b64b70686a0ecc9adcc01368c4dd9",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-cli/Cargo.toml",
+      "before_sha256": "56364e5908da65e2c6a80018c80974aed0c03ac807961e3ec02fa30c6e3affa3",
+      "current_sha256": "56364e5908da65e2c6a80018c80974aed0c03ac807961e3ec02fa30c6e3affa3",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform-frontend/Cargo.toml",
+      "before_sha256": "916d4f127c6309c4ec39fae7fa870f14949deec19e63918105bd10943c98697e",
+      "current_sha256": "916d4f127c6309c4ec39fae7fa870f14949deec19e63918105bd10943c98697e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform/Cargo.toml",
+      "before_sha256": "f9c8fa4dc03ee32d44f6aac3d57a3dc3459bf123665ec06156b6b60072b84b0a",
+      "current_sha256": "f9c8fa4dc03ee32d44f6aac3d57a3dc3459bf123665ec06156b6b60072b84b0a",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-extract-bridge/Cargo.toml",
+      "before_sha256": "762735c3d84d6445e7da50a6854ccfa22b93c39da7bc3839a9798eeab06b484e",
+      "current_sha256": "762735c3d84d6445e7da50a6854ccfa22b93c39da7bc3839a9798eeab06b484e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-mcp/Cargo.toml",
+      "before_sha256": "6fb873cf84bf9c4409d1390b63bf9874a9e89e8c1732d74bb2586dbb18df78fe",
+      "current_sha256": "6fb873cf84bf9c4409d1390b63bf9874a9e89e8c1732d74bb2586dbb18df78fe",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap-scan/Cargo.toml",
+      "before_sha256": "aa9055147736bbb29b533952e10047c9f15ac02610742c9314ccb31ca65dc30f",
+      "current_sha256": "aa9055147736bbb29b533952e10047c9f15ac02610742c9314ccb31ca65dc30f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap/Cargo.toml",
+      "before_sha256": "2787a169942f42deaa28f2916b0e368968053b6bd5ea57aad1f51a40b8abd1c0",
+      "current_sha256": "2787a169942f42deaa28f2916b0e368968053b6bd5ea57aad1f51a40b8abd1c0",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg-bridge/Cargo.toml",
+      "before_sha256": "6acdb14505e35663a4c13049377e10cbc107f4209d27beeb522e64ca7b175302",
+      "current_sha256": "6acdb14505e35663a4c13049377e10cbc107f4209d27beeb522e64ca7b175302",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg/Cargo.toml",
+      "before_sha256": "7c108ab7bb9f42ce6fdcb7432d79e1d3c03c0df2f4e0d9c42f237ec87eafd3d4",
+      "current_sha256": "7c108ab7bb9f42ce6fdcb7432d79e1d3c03c0df2f4e0d9c42f237ec87eafd3d4",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/vibe.toml",
+      "before_sha256": "68157fa93a5acdd4e0c39500bc3f8eab16e1d455530f27e40564187dcb0d7321",
+      "current_sha256": "68157fa93a5acdd4e0c39500bc3f8eab16e1d455530f27e40564187dcb0d7321",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.1.0/vibe.toml",
+      "before_sha256": "240b75b959de053344fe2324c4d9fd526bb6b0b509fd1c8672f28c5f7f90ee53",
+      "current_sha256": "240b75b959de053344fe2324c4d9fd526bb6b0b509fd1c8672f28c5f7f90ee53",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibe.toml",
+      "before_sha256": "06e5a7643aa1ba2f9167cfaeef1e839b777984dda2ac85d62c14ffbd06633b3f",
+      "current_sha256": "06e5a7643aa1ba2f9167cfaeef1e839b777984dda2ac85d62c14ffbd06633b3f",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibe.toml",
+      "before_sha256": "c17658c26ed030f51aa3b99d31087b26a79e4272ec66f9c67db340c38ef7cb62",
+      "current_sha256": "c17658c26ed030f51aa3b99d31087b26a79e4272ec66f9c67db340c38ef7cb62",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/design/package.json",
+      "before_sha256": "7ba4ad53ffd53c0f1d7316cd51fe820cff033154c4a432dee0bf1c25dd4ce8e7",
+      "current_sha256": "7ba4ad53ffd53c0f1d7316cd51fe820cff033154c4a432dee0bf1c25dd4ce8e7",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/package.json",
+      "before_sha256": "3d2a7324de1b12e4320f1771607a2fc62621ec45be304289c321ae70439d1e31",
+      "current_sha256": "3d2a7324de1b12e4320f1771607a2fc62621ec45be304289c321ae70439d1e31",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/package.json",
+      "before_sha256": "b673abe18f0f72df5c250cb5726b965193971d2c7392c2aaad718b2a41be8497",
+      "current_sha256": "b673abe18f0f72df5c250cb5726b965193971d2c7392c2aaad718b2a41be8497",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/vibe.toml",
+      "before_sha256": "c98a55d7645caefe496d5de2ac903b89c959ddefa93c6c601bf62329bd1957ed",
+      "current_sha256": "c98a55d7645caefe496d5de2ac903b89c959ddefa93c6c601bf62329bd1957ed",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/delegation-first/v1.1.0/vibe.toml",
+      "before_sha256": "4d5381d0c24eed32005c9bd137b15f92b4720ab23b732048e690f09b2508a808",
+      "current_sha256": "4d5381d0c24eed32005c9bd137b15f92b4720ab23b732048e690f09b2508a808",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v1.1.0/vibe.toml",
+      "before_sha256": "482f3b83d9bce1dac21c4116598240454cd2292744e642004394aa3f7a4e85b0",
+      "current_sha256": "482f3b83d9bce1dac21c4116598240454cd2292744e642004394aa3f7a4e85b0",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/Cargo.toml",
+      "before_sha256": "3c2d7410318c73b76f841a02af78b8224b377fa65263aa1de4d25f7711d61214",
+      "current_sha256": "3c2d7410318c73b76f841a02af78b8224b377fa65263aa1de4d25f7711d61214",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-backend-claude-code/Cargo.toml",
+      "before_sha256": "c881ce42b20c4f6dd26dd94f219169881eb97b65cd083c33bcec1c796f25bd90",
+      "current_sha256": "c881ce42b20c4f6dd26dd94f219169881eb97b65cd083c33bcec1c796f25bd90",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-cli/Cargo.toml",
+      "before_sha256": "fda58678cc11c1791489cdefb78c7b17b9689277ee51cf657e220f5c9540d5d3",
+      "current_sha256": "fda58678cc11c1791489cdefb78c7b17b9689277ee51cf657e220f5c9540d5d3",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-core/Cargo.toml",
+      "before_sha256": "85f171f712d624e8a1b4f87447e98f065a273bb4060b6a41697ad13b3f70515a",
+      "current_sha256": "85f171f712d624e8a1b4f87447e98f065a273bb4060b6a41697ad13b3f70515a",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-initiative/Cargo.toml",
+      "before_sha256": "56828b1ef255a8b574be0315abc485861f0ad1df64f9ba72dc83c0fe32634606",
+      "current_sha256": "56828b1ef255a8b574be0315abc485861f0ad1df64f9ba72dc83c0fe32634606",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mc-client/Cargo.toml",
+      "before_sha256": "28e979f1d3859e4dafcc973774c95ffde067c7f42ca95091500f7f6023e85f7d",
+      "current_sha256": "28e979f1d3859e4dafcc973774c95ffde067c7f42ca95091500f7f6023e85f7d",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mission-control/Cargo.toml",
+      "before_sha256": "0bf36894cd81d77aadc4322356bd06a72af70f5b51261b71d1838207b8fa1b7b",
+      "current_sha256": "0bf36894cd81d77aadc4322356bd06a72af70f5b51261b71d1838207b8fa1b7b",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-pod/Cargo.toml",
+      "before_sha256": "b6d580c153557ffef191db546e489670d6c12d4df12f7f1b0c799483c3874b3b",
+      "current_sha256": "b6d580c153557ffef191db546e489670d6c12d4df12f7f1b0c799483c3874b3b",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/vibe.toml",
+      "before_sha256": "9516c59d293205e9f1418aea106123911209e45a29b6c9b892523253b8c1e84d",
+      "current_sha256": "9516c59d293205e9f1418aea106123911209e45a29b6c9b892523253b8c1e84d",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.1.0/vibe.toml",
+      "before_sha256": "3b79f5f7282f30458ea96a86bee7dd702b44db778793340a431964081d2e566c",
+      "current_sha256": "3b79f5f7282f30458ea96a86bee7dd702b44db778793340a431964081d2e566c",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.1.0/vibe.toml",
+      "before_sha256": "31b12a612eccc747b1c213bae0d87d007546f9443bcce11dac2f63e032e32b88",
+      "current_sha256": "31b12a612eccc747b1c213bae0d87d007546f9443bcce11dac2f63e032e32b88",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.1.0/vibe.toml",
+      "before_sha256": "bd75ab2890265cead98fb4925373fbdbe52a29cbebe624c964c24ac778665555",
+      "current_sha256": "bd75ab2890265cead98fb4925373fbdbe52a29cbebe624c964c24ac778665555",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.1.0/vibe.toml",
+      "before_sha256": "870269c9c4a1260fcb92e11cfa6eba2dabb048d979665b5701f921e7857c64b5",
+      "current_sha256": "870269c9c4a1260fcb92e11cfa6eba2dabb048d979665b5701f921e7857c64b5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.1.0/vibe.toml",
+      "before_sha256": "dc5cedf6912d34e1dd5af79f9144d3c9fb119be69590f9e02b691dc61d2976af",
+      "current_sha256": "dc5cedf6912d34e1dd5af79f9144d3c9fb119be69590f9e02b691dc61d2976af",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.1.0/vibe.toml",
+      "before_sha256": "538688d39d7607ce0820c29674280f1ccfd5e14d95e7c8a430da91917d0333c5",
+      "current_sha256": "538688d39d7607ce0820c29674280f1ccfd5e14d95e7c8a430da91917d0333c5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.1.0/vibe.toml",
+      "before_sha256": "023c09d21f72d0c202478b06164f15550b21372e1d4325408a8d8d86495401d9",
+      "current_sha256": "023c09d21f72d0c202478b06164f15550b21372e1d4325408a8d8d86495401d9",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.1.0/vibe.toml",
+      "before_sha256": "c55ad42538bee4e14ec904e312076854698c48bd908969953e2e4e50487261e5",
+      "current_sha256": "c55ad42538bee4e14ec904e312076854698c48bd908969953e2e4e50487261e5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.1.0/vibe.toml",
+      "before_sha256": "cdac4e40616f929447b154b3a0ed2c7e804dfc6c945bbd0216aa549d78531c66",
+      "current_sha256": "cdac4e40616f929447b154b3a0ed2c7e804dfc6c945bbd0216aa549d78531c66",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.1.0/vibe.toml",
+      "before_sha256": "59c67b7e0b86121cbff0bececc3012740ad14fee099101f33402cecea5c40b82",
+      "current_sha256": "59c67b7e0b86121cbff0bececc3012740ad14fee099101f33402cecea5c40b82",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.1.0/vibe.toml",
+      "before_sha256": "1e1a5021ef884d54f011c6edb4c9f5a1b2c87e0f023a273e6da63823cb02c3c5",
+      "current_sha256": "1e1a5021ef884d54f011c6edb4c9f5a1b2c87e0f023a273e6da63823cb02c3c5",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/git-practices/v1.1.0/vibe.toml",
+      "before_sha256": "be3ad4d7fdc98d261824ae4475152311ce9b78896229b76c7f35f45c4769cd4e",
+      "current_sha256": "be3ad4d7fdc98d261824ae4475152311ce9b78896229b76c7f35f45c4769cd4e",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.1.0/vibe.toml",
+      "before_sha256": "cf4db0b78dd49df8127a52fdd38448e35a5ef7e43e5bed703a1ef07cf34754fb",
+      "current_sha256": "cf4db0b78dd49df8127a52fdd38448e35a5ef7e43e5bed703a1ef07cf34754fb",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.1.0/vibe.toml",
+      "before_sha256": "a00058534e33388ce850a9fd7c47bff7cd15b320ec19e3170381a888715fbf78",
+      "current_sha256": "a00058534e33388ce850a9fd7c47bff7cd15b320ec19e3170381a888715fbf78",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.1.0/vibe.toml",
+      "before_sha256": "408da77f89793bb9eb39ab067076afddd71734c45c1fab687129aaa4f3938163",
+      "current_sha256": "408da77f89793bb9eb39ab067076afddd71734c45c1fab687129aaa4f3938163",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.1.0/vibe.toml",
+      "before_sha256": "f82b80a6766d9c12851776f5ae781c00de9634be1ed38160fab7fa0b713c0717",
+      "current_sha256": "f82b80a6766d9c12851776f5ae781c00de9634be1ed38160fab7fa0b713c0717",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.1.0/vibe.toml",
+      "before_sha256": "b70b1e2e14790597071cc20072d7654b81c21ab6f08729b4384a7553ff5c2707",
+      "current_sha256": "b70b1e2e14790597071cc20072d7654b81c21ab6f08729b4384a7553ff5c2707",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.1.0/vibe.toml",
+      "before_sha256": "1cb83291714f84f2221a68dcdb9bd4b5bb8a7ec7debc21f0e88f1e332ee9e3bf",
+      "current_sha256": "1cb83291714f84f2221a68dcdb9bd4b5bb8a7ec7debc21f0e88f1e332ee9e3bf",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.1.0/vibe.toml",
+      "before_sha256": "9af89d64dce7a4ae9208465360f892fb079478b5ef63a583388c32c98f9c4cb3",
+      "current_sha256": "9af89d64dce7a4ae9208465360f892fb079478b5ef63a583388c32c98f9c4cb3",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.1.0/vibe.toml",
+      "before_sha256": "96f8bfa9131bc63fce4b9706aac06e3a45cf785367a6af16d9edc53f73182210",
+      "current_sha256": "96f8bfa9131bc63fce4b9706aac06e3a45cf785367a6af16d9edc53f73182210",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
+      "before_sha256": "21150f0c7a699eeb79a06d59e9a076ea804f40e8cc97244c416a0553b1749c07",
+      "current_sha256": "21150f0c7a699eeb79a06d59e9a076ea804f40e8cc97244c416a0553b1749c07",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.1.0/vibe.toml",
+      "before_sha256": "a18e55afc61910b963fa0e294711bf8146888053b8b97838f40b601d07a950e2",
+      "current_sha256": "a18e55afc61910b963fa0e294711bf8146888053b8b97838f40b601d07a950e2",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.1.0/vibe.toml",
+      "before_sha256": "5eaa297474da94f7d57228f61f2d7e244048daf34f1a542178c273535f99f094",
+      "current_sha256": "5eaa297474da94f7d57228f61f2d7e244048daf34f1a542178c273535f99f094",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.1.0/vibe.toml",
+      "before_sha256": "f6ab4b2879fc13b67fd05d945463494693b5f9866b9480d6fcac2225943c8780",
+      "current_sha256": "f6ab4b2879fc13b67fd05d945463494693b5f9866b9480d6fcac2225943c8780",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.1.0/vibe.toml",
+      "before_sha256": "2adaf2e4cb4662fb8a5ccc92f7512aac17b3d9979fcba23ef973f83715866702",
+      "current_sha256": "2adaf2e4cb4662fb8a5ccc92f7512aac17b3d9979fcba23ef973f83715866702",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.1.0/vibe.toml",
+      "before_sha256": "5fe1ad36023af203029e43612f2029ad51a9233c08f1878e94b1f903e04a215b",
+      "current_sha256": "5fe1ad36023af203029e43612f2029ad51a9233c08f1878e94b1f903e04a215b",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.1.0/vibe.toml",
+      "before_sha256": "fb070502612f6366b30f9c6a662a33df373765318b7cc0addb9edcbdb244e4ef",
+      "current_sha256": "fb070502612f6366b30f9c6a662a33df373765318b7cc0addb9edcbdb244e4ef",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.1.0/vibe.toml",
+      "before_sha256": "2521e3f020d555b8fa60d81932955428df3ef7b080452944741b4fc41e03f0cc",
+      "current_sha256": "2521e3f020d555b8fa60d81932955428df3ef7b080452944741b4fc41e03f0cc",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.1.0/vibe.toml",
+      "before_sha256": "0ee554f53f93cb0445fdbbb45358fd9d4794ef42d7faf2fac9e8f93941b2fb4d",
+      "current_sha256": "0ee554f53f93cb0445fdbbb45358fd9d4794ef42d7faf2fac9e8f93941b2fb4d",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.1.0/vibe.toml",
+      "before_sha256": "acd1434732b5b0685ef009bb19f14cbd51abb48616ceae7b6d297e6be3de7850",
+      "current_sha256": "acd1434732b5b0685ef009bb19f14cbd51abb48616ceae7b6d297e6be3de7850",
+      "matches": true
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.zap/zap/v1.1.0/vibe.toml",
+      "before_sha256": "51c6f410f57be9f783ffe04aec627af7fe986de0fa50d255586f36d0b7cee36c",
+      "current_sha256": "51c6f410f57be9f783ffe04aec627af7fe986de0fa50d255586f36d0b7cee36c",
+      "matches": true
+    },
+    {
+      "path": "xtask/Cargo.toml",
+      "before_sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708",
+      "current_sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708",
+      "matches": true
+    }
+  ],
+  "metadata_and_review_inputs": [
+    {
+      "path": "/tmp/vibevm-next-1.1-root-cargo-metadata.json",
+      "before_sha256": "014548c4c52f01fa6ca6163c4e55b85c0156025878694dfdfb24211549a53cb6",
+      "current_sha256": "014548c4c52f01fa6ca6163c4e55b85c0156025878694dfdfb24211549a53cb6",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/report.json",
+      "before_sha256": "cc60fdc00ea76b4a1b9f08686610023a209ae7e15eb087a42746487cd87f516f",
+      "current_sha256": "cc60fdc00ea76b4a1b9f08686610023a209ae7e15eb087a42746487cd87f516f",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-proof-summary.json",
+      "before_sha256": "c4a64ca8a2ab6f0e1ad9d097fb535b3750079a7eea7567bf1ae9aca57275e568",
+      "current_sha256": "c4a64ca8a2ab6f0e1ad9d097fb535b3750079a7eea7567bf1ae9aca57275e568",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D2-reconciliation-preparation.md",
+      "before_sha256": "2ccb1c5a5adbe81af5ad3845d0f2f0d648786c600d540f1dae35c73cbebf537e",
+      "current_sha256": "2ccb1c5a5adbe81af5ad3845d0f2f0d648786c600d540f1dae35c73cbebf537e",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D2-reconciliation-preparation.json",
+      "before_sha256": "c049527231125c68a99a546e685bd7e262db691e7be08931f742d4592ad37fd0",
+      "current_sha256": "c049527231125c68a99a546e685bd7e262db691e7be08931f742d4592ad37fd0",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/0.json",
+      "before_sha256": "8072921f2067e1636f20892e817244cbbc003b1bc91b014b12e38192fcdba59e",
+      "current_sha256": "8072921f2067e1636f20892e817244cbbc003b1bc91b014b12e38192fcdba59e",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/1.json",
+      "before_sha256": "64bb0222a532c7a7c974916b9f24d41288ea022501d14fb5e6b89a63f4e30781",
+      "current_sha256": "64bb0222a532c7a7c974916b9f24d41288ea022501d14fb5e6b89a63f4e30781",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/2.json",
+      "before_sha256": "2b9e835b86caa7400419dad7ad0a20512bfec40e3c8915d1bee05aecdeb6f9a2",
+      "current_sha256": "2b9e835b86caa7400419dad7ad0a20512bfec40e3c8915d1bee05aecdeb6f9a2",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/3.json",
+      "before_sha256": "2c925ff89e780e951ad5de30f9467c2877e3eacfc3bd702872a379ffc2699a32",
+      "current_sha256": "2c925ff89e780e951ad5de30f9467c2877e3eacfc3bd702872a379ffc2699a32",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/4.json",
+      "before_sha256": "9364d5b98a16044f45e335dc84b2ef341edc4b6ef81529abe2beb9fa1e6ac5b4",
+      "current_sha256": "9364d5b98a16044f45e335dc84b2ef341edc4b6ef81529abe2beb9fa1e6ac5b4",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/5.json",
+      "before_sha256": "cd625c95bf38f47007a39f809c0a1ca4bc0e314777aad513d9c6f603afe4fd7d",
+      "current_sha256": "cd625c95bf38f47007a39f809c0a1ca4bc0e314777aad513d9c6f603afe4fd7d",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/6.json",
+      "before_sha256": "b0ef12f854e71303e987ba1a87c6afb75347f78cbab32c969647a7121190bcd8",
+      "current_sha256": "b0ef12f854e71303e987ba1a87c6afb75347f78cbab32c969647a7121190bcd8",
+      "matches": true
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/7.json",
+      "before_sha256": "cb645789c3f613523d81eaa4a3d7e647a82720ba7b9804c053b45197b8891f44",
+      "current_sha256": "cb645789c3f613523d81eaa4a3d7e647a82720ba7b9804c053b45197b8891f44",
+      "matches": true
+    }
+  ],
+  "mismatches": [],
+  "guard_reuse": {
+    "eligible_for_bound_unchanged_source_inputs": true,
+    "reused_historical_rows": 633,
+    "owned_numeric": 151,
+    "inheritance": 95,
+    "preservation": 387,
+    "fresh_semantic_validation": false,
+    "reason": "Exact whole-file equality transports retained field observations; no new parser/field evaluation."
+  },
+  "metadata_reuse": {
+    "eligible_scope": "historical GNU/Linux source roster/version/inheritance and preserved fixture identities for unchanged scoped Cargo metadata inputs; not a fresh invocation or full resolution/runtime/native-platform proof",
+    "receipt_bytes_unchanged": true,
+    "fresh_invocations": 0,
+    "prior_counts": {
+      "root_workspace_members": 41,
+      "root_own_1_1": 35,
+      "root_fixture_1_0": 6,
+      "canonical_runs": 8,
+      "canonical_recorded_exit0": 8,
+      "canonical_member_occurrences": 87,
+      "canonical_local_1_1": 87
+    },
+    "command_and_environment_limits": [
+      "Receipt report contains exact eight manifest paths/exit codes, but neither report nor metadata outputs record complete argv or environment; do not infer --locked/--offline/no-deps flags from resolve:null.",
+      "Metadata JSON version1 with resolve:null observes local package/member declaration projection, not a full resolved dependency graph.",
+      "Root JSON does not itself retain process exit; proof summary/root historical review supports its successful roster observation.",
+      "Scoped tracked config/toolchain files are unchanged by Root observation; global/ancestor/untracked Cargo config, CARGO_HOME/CARGO_* variables, tool executable/version, cwd/features/target switches and registry/cache state are not independently rebounded by these receipts.",
+      "Reuse declares historical source-level result only; if Root wants fresh operational/resolver behavior or observes one of those effective input changes, bind one affected command rather than automatically repeat nine unchanged gates."
+    ],
+    "unrefreshed_member_paths_without_baseline_hash": [
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-build-provider/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-compiler-plugin/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-json-backend/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-mechanism-plugin/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-package-provider/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-plugin/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+    ],
+    "complete_current_input_graph_rebound": false
+  },
+  "historical_limits_retained": {
+    "earlier_predecessor_and_native_debt_labels": "Historical evidence labels preserved; this refresh creates no new acceptance/native judgment.",
+    "package_manifest_and_tree_continuity": "Earlier 48 manifest/41 tree claims remain historical; no Git/tree census performed now.",
+    "public_operations": false
+  },
+  "execution": {
+    "sha256_reads_only": true,
+    "git": false,
+    "cargo": false,
+    "tests": false,
+    "formatter": false,
+    "new_semantic_parser": false,
+    "product_writes": false
+  }
+}
