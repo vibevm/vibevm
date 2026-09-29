@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "task": "M-13-D.2",
+  "state": "readonly-preparation-not-task-acceptance",
+  "current_product_subject": "123688b24",
+  "exact_current_read_files": 158,
+  "matching_field_guards": 633,
+  "required_numeric_edits": 0,
+  "package_manifest_continuity": 48,
+  "package_tree_continuity": 41,
+  "binding": "accepted-floor-binding.json",
+  "raw_provenance_paths": "Original /tmp field/slot paths in the retained reports name producer inputs; byte-identical permanent copies are joined by accepted-floor-binding.json.",
+  "predecessor": "M-13-D.1 native macOS/Windows proof remains open; no successor acceptance inferred.",
+  "artifacts": [
+    {
+      "source": "campaigns/next/evidence/M-13-D/current-reconciliation-preparation.md",
+      "sha256": "2ccb1c5a5adbe81af5ad3845d0f2f0d648786c600d540f1dae35c73cbebf537e"
+    },
+    {
+      "source": "campaigns/next/evidence/M-13-D/current-reconciliation-preparation.json",
+      "sha256": "c049527231125c68a99a546e685bd7e262db691e7be08931f742d4592ad37fd0"
+    }
+  ]
+}
