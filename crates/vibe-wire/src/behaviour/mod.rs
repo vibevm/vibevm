@@ -19,6 +19,7 @@
 //! files.
 
 pub mod artifact_record;
+pub mod capability_coverage;
 pub mod compile_trace_report;
 pub mod compiler_trace_index;
 pub mod deploy_records;
