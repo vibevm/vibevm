@@ -12877,6 +12877,51 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/migration.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_core::manifest::migration",
+      "end_line": 6,
+      "fingerprint": "tok1:80bb9c89e436ae05de90f5ffb66a139401f8688d426467a43dd9f6bdb5b20a34"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/migration.rs",
+      "item_kind": "fn",
+      "line": 92,
+      "symbol": "vibe_core::manifest::migration::plan_manifest_migration",
+      "end_line": 106,
+      "fingerprint": "tok1:1653a3b57b68d120d81bb2de17ee581749188a7cfa92f1700c2414713c0feced"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::migration::tests",
+      "end_line": 2,
+      "fingerprint": "tok1:80bb9c89e436ae05de90f5ffb66a139401f8688d426467a43dd9f6bdb5b20a34"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "item_kind": "fn",
+      "line": 379,
+      "symbol": "vibe_core::manifest::migration::tests::independently_fixed_r1_identity_and_token_vector",
+      "end_line": 413,
+      "fingerprint": "tok1:366a03a96edc5291cbbb7c1393fbc6fdc29c77e0b6861e95e8383b1863f1c727"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "item_kind": "fn",
+      "line": 61,
+      "symbol": "vibe_core::manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
+      "end_line": 88,
+      "fingerprint": "tok1:f4dfb2ad56ac5ef2d84f14696d41b26ab8376f2e26f0dad44884b3bb5a7582fe"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package.rs",
       "item_kind": "mod",
       "line": 22,
@@ -41026,6 +41071,49 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/migration.rs",
+      "from_symbol": "vibe_core::manifest::migration",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/migration.rs",
+      "from_symbol": "vibe_core::manifest::migration::plan_manifest_migration",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "from_symbol": "vibe_core::manifest::migration::tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "from_symbol": "vibe_core::manifest::migration::tests::independently_fixed_r1_identity_and_token_vector",
+      "line": 380,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "from_symbol": "vibe_core::manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
@@ -72355,7 +72443,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:89621a14011f605849f0e17e96d941711e11f604798501677beed9b7cde084d2",
+      "content_hash": "sha256:3369a839d5b8fdd8e7c20b02076fd49cede8a574e03b4c19f561dfb3720a53ce",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -72706,7 +72794,7 @@
     },
     {
       "anchor": "placement",
-      "content_hash": "sha256:2508119ef55e91e38ef36717f5ccf6a3e254ac3f14b85efe702f7a8f7baa4742",
+      "content_hash": "sha256:39048d0329ce0fc3a3add7f51843e2f7a3b39d1f553560b2532f1e7675c5d55e",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "5. Placement and computed policy",
@@ -72741,12 +72829,32 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TAXONOMY"
     },
     {
+      "anchor": "MANIFEST-MIGRATION-PLAN",
+      "content_hash": "sha256:3d436c78d5768f83e3ea2694b715f96e71c5ce9aa34801064e09ec80fd7a4bce",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "Pure authored-manifest migration planning",
+      "line": 357,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "MIGRATION-PLAN-LAW",
+      "content_hash": "sha256:e1163a3083b93d4758fa1c0d31ae9638716adb5c8c1b5b602e18c932fcad8478",
+      "doc_path": "common/PROP-044",
+      "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "heading": "**Pure authored-manifest migration planning.** A planner consumes exact\nin-memory source text and explicitly selected source profile, target profile\nand recipe. A missing selection produces typed input requirements with named\nalternatives; an unknown profile or revision, incompatible edge, malformed\nsyntax or unrecognized shape produces a typed refusal. Neither the package's\nproduct version nor an absent epoch selects a grammar. Absence remains the\ndistinct pre-epoch state; a recipe never inserts an epoch or changes an\nunrelated authored selection as a convenience.\n\nRecognized grammars are finite, immutable named revisions, checked over the\nowning TOML syntax tree. Their exact field sets, primitive shapes and value\nvocabularies are frozen independently of the evolving current Manifest\ndecoder. A new shape needs a new profile revision. The initial bounded recipe\nis the documented materialization `snapshot` to `copy` rename, rehearsed on\nretained historical fixture bytes with immutable provenance. A retained test\nfixture proves its recognized case, not a real-file corpus; that broader\nrehearsal remains required before claiming broad migration support. This\nrecipe does not implement the complete historical manifest language. Current\npre-epoch and explicit epoch-1 identity profiles remain distinct. SourceDescriptor,\nfeature-specific converters and effectful application are separate atoms.\n\nThe first registry entries are `materialization-legacy-absent-r1`,\n`materialization-current-absent-r1` and `materialization-current-epoch1-r1`.\nTheir bounded package-role grammar admits only root `package` and optional\n`requires`; package requires string `name`, `group`, `kind`, `version`, with\nkind in `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`. Optional strings are\n`materialization`, `license`, `description`, `homepage`; optional string arrays\nare `authors`, `keywords`; optional booleans are `bridge`, `frozen`. Epoch is\nabsent in the two absent profiles and integer 1 in the epoch-1 profile.\nRequires admits only `packages`, whose owner-qualified keys map to string\nconstraints or tables with required string `version` and optional string\n`link`, one of `static`, `dynamic`, `static-transitive`, `static-hard`.\nThe frozen structural key shape is `[kind:]group/name`: exactly one slash,\nnonempty group and name, no `@`, and at most one optional colon prefix whose\nkind is in the six-token package vocabulary above. The current naming owner\nstill checks group/name and constraint semantics; it cannot remove this\nstructural qualification requirement from a frozen profile.\nNormal and inline TOML tables are equivalent shapes. Every other key, shape\nor vocabulary is refused. Legacy materialization is required and exactly\n`snapshot`; current materialization is absent or `copy`, `hardlink`,\n`in-place`. The only nonidentity edge is `snapshot-to-copy-r1`, from legacy\nabsent to current absent; `identity-r1` covers the two current profiles each\nto itself. No edge adds an epoch. Current semantic validation may refuse an\notherwise recognized shape; that never widens this frozen grammar.\n\nA successful plan carries exact before and after text, ordered token edits,\nsource/target/recipe identities, deterministic domain-framed content and diff\nidentities, and an output checked by the current Manifest owner. That final\nchecker validates the result; it does not define the frozen input grammar.\nAll bytes outside selected token spans, including comments, order, quote style\nand owner values, survive unchanged. An unprovable edit refuses instead of\nserializing a struct or falling back. Identity plans are byte-identical with\nno edits. Repeating exact input and selection reproduces exact output and\nidentities. Planning performs no filesystem, cache, lock, provider, LLM,\npublication or implicit application operation.\n\nThe initial identity recipe uses SHA-256 and frames each byte string with its\nunsigned 64-bit big-endian byte length. Content frames the UTF-8 domain\n`vibe-manifest-content-r1` then the exact document bytes. Diff frames\n`vibe-manifest-migration-diff-r1`, source profile, target profile, recipe,\nbefore text and after text, then the edit count encoded as an unsigned 64-bit\nbig-endian value inside a frame. Each edit in source order frames field path,\noriginal byte start and end (each encoded likewise), before token and after\ntoken. Digests are lowercase hexadecimal without a prefix. A fixed\nindependently computed golden vector binds this recipe; changing domains,\nframing or ordering requires a distinct recipe revision. @status:spec/done",
+      "line": 359,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-PLAN-LAW"
+    },
+    {
       "anchor": "our-formats",
-      "content_hash": "sha256:896d422cf717771513a13096fb87be42c61dd3c985e1807fd3a1fb04a62ca421",
+      "content_hash": "sha256:41e3b309a3d57e17c06afa0919009fc652a431521d8c812201b881019ecae6fd",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "6. The formats of this project, by name",
-      "line": 358,
+      "line": 427,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
     },
     {
@@ -72755,7 +72863,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.1 The catalog is three things with three fates.** The\nread-for-rewrite core (`by-name/`, `repomd.json`) stops being read at all —\nserver mutations become journal appends, `add`/`remove`/`reindex` become\nreprojections; after that, reader strictness drops for free, `generated_at`\ncomes from the journal (event time, not process clocks), the catalog becomes\ndeterministic and rebuild-testable. The export files (`primary.jsonl(.gz)`,\n`by-cap/`, `by-purl/`) are strict canonical exports, and every published\nformat must have a *generated reader used in a round-trip test* — publishing\nwhat we cannot read back is how write-only formats drift. The narrow public\ngate — name, version, hash+recipe, URL, yanked, tombstone — is a new, small,\nslow-moving artifact: the one surface we actually defend before foreign tools,\nso that everything richer behind it may churn weekly. The catalog repository\nitself is *declared disposable*: pin content by hash, not by commit — a\npermission we can actually keep, instead of a promise we cannot. @status:spec/plan",
-      "line": 359,
+      "line": 428,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
     },
     {
@@ -72764,16 +72872,16 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The catalog's version stops being a number nobody\ncompares.** Its heavy role moves into the *path* (the epoch); its light role\ninto per-record must-understand. The old question \"is the version a gate or a\ndeclaration?\" dissolved because it sought both answers inside one `u32`. @status:spec/plan",
-      "line": 373,
+      "line": 442,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
     },
     {
       "anchor": "FMT-MANIFEST",
-      "content_hash": "sha256:ccd2f3d01b5d49fdf7ee5cc4903ae1209600bb9f2b6bba07871b8409c5e39d44",
+      "content_hash": "sha256:e92c2bc5371d2cfc5166790b73befa2a6f4265e1bac714a9fc378ce0dc1a825a",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**6.2 `vibe.toml` is the most expensive format in the\nsystem** — authored, unrecoverable, resident in foreign repositories, and an\nexternal surface *de facto* because agents read files, not APIs. It is the one\nplace we honestly pay the stability tax: an **epoch marker in the file,\nintroduced before first publication** (absence ≠ \"assume 1\"; absence is the\ndistinct pre-epoch state, interpreted by a heuristic exactly once in history);\nstrictness with did-you-mean hints in our namespace (in a hand-written file an\nunknown key is a typo and the author is present — the asymmetry with the\nmachine-written catalog is principled, not inconsistent); a named reserve\nsection we never touch; a **generated projection as the published copy**, so\nforeign tools read a recoverable artifact while the hand-written original\nremains our internal concern; migration by codemod + bot PR; and a minimal\nsurface — every new manifest key is a years-long obligation and requires a\nbreak note, a codemod, and generated documentation. @status:spec/plan",
-      "line": 377,
+      "heading": "**6.2 `vibe.toml` is the most expensive format in the\nsystem** — authored, unrecoverable, resident in foreign repositories, and an\nexternal surface *de facto* because agents read files, not APIs. It is the one\nplace we honestly pay the stability tax: an **epoch marker in the file,\nintroduced before first publication** (absence ≠ \"assume 1\"; absence is the\ndistinct pre-epoch state, interpreted through an explicitly selected frozen\nprofile; missing profile selection requires input rather than a heuristic);\nstrictness with did-you-mean hints in our namespace (in a hand-written file an\nunknown key is a typo and the author is present — the asymmetry with the\nmachine-written catalog is principled, not inconsistent); a named reserve\nsection we never touch; a **generated projection as the published copy**, so\nforeign tools read a recoverable artifact while the hand-written original\nremains our internal concern; migration by codemod + bot PR; and a minimal\nsurface — every new manifest key is a years-long obligation and requires a\nbreak note, a codemod, and generated documentation. @status:spec/plan",
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
     },
     {
@@ -72782,7 +72890,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by\nconstruction.** \"Schema version 5, reject on `!=`\" is replaced by: the lockfile\nis valid only for the exact (epoch, generator hash, recipe ids) that built it;\nany mismatch → silently regenerate; `--frozen` turns that into a loud error for\nCI. Deterministic by the same rules as the catalog. Consequence for design:\nsince this format's evolution is free, volatile facts belong here — the bottom\nrung of the ladder. @status:spec/plan",
-      "line": 391,
+      "line": 461,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
     },
     {
@@ -72791,7 +72899,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.4 Configs are preferences, not data — failure is\nstructurally impossible.** `fn load() -> Config` with no `Result`: unknown key\n→ warning; invalid value → default plus warning; the file is rewritten to\ncanonical form opportunistically. Blocking a build over a stale setting is the\nworst possible trade at ten releases a day. Strict failure belongs where wrong\nreading corrupts results; graceful degradation where it only changes comfort. @status:spec/plan",
-      "line": 398,
+      "line": 468,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
     },
     {
@@ -72800,7 +72908,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**6.5 Surfaces nobody inventoried are formats too.**\nThe seven CLI `--json` reports (scripts and agents parse them), MCP tool\nschemas (literally a contract with foreign agents), skill/subskill files, the\njournal, the handshake — each is \"something a foreign parser reads\", each gets\na registry entry, a schema, an epoch and a corpus. @status:spec/plan",
-      "line": 404,
+      "line": 474,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
     },
     {
@@ -72809,7 +72917,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "7. Obligations have types; stability is a mechanism",
-      "line": 410,
+      "line": 480,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
     },
     {
@@ -72818,7 +72926,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Three types of obligation, and only two eternal ones.**\n*Eternal* (both about honesty, not content): we never present a wrong answer as\nright; we never answer silence for a name that existed. Both are keepable\nforever because they forbid no change. *Expiring*: epoch support windows — they\ndo not get broken, they *expire on schedule*. *Revocable*: everything else —\nnames, fields, structures, vocabularies, paths. The owner's prediction «любое\nобязательство однажды нарушим» is satisfied by construction: almost nothing\nhere is vowed. @status:spec/plan",
-      "line": 411,
+      "line": 481,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
     },
     {
@@ -72827,7 +72935,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**An obligation without a written breaking procedure\nis a hope, not an obligation.** Every obligation ships with its procedure\n(announce → transform/reproject → publish in parallel → sunset → leave a\ntombstone) and the procedure is *rehearsed*: the release pipeline replays a\ncold upgrade from the oldest supported epoch, and a staged sunset is drilled\nperiodically. Early breaking is the same procedure compressed, plus a recorded\nowner reason — friction is asymmetric by design: extending a sunset is free,\nshortening one takes an explicit owner act. @status:spec/plan",
-      "line": 419,
+      "line": 489,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
     },
     {
@@ -72836,7 +72944,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A period of stability is a closed break window plus\na published expiry.** The honest move-fast contract with millions of users is\nnot \"we won't break you\" but **\"you always know the date you break, and the fix\nis one command.\"** The date travels inside the world it retires; clients warn\nahead of it; on the day, the refusal carries the recipe. Heavy breaks batch\ninto trains — parallel publication and support windows are fixed costs per\ntrain, not per change. @status:spec/plan",
-      "line": 427,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
@@ -72845,7 +72953,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Historical pre-publication ruling (owner, 2026-08-10, near-verbatim):** «я пока ничего не публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех пор, пока я не скажу, что состоялось первое представление публике… технически этот факт нельзя определить никак — только владелец может сказать, что это произошло». This records the original rationale, not a technical publication detector or a continuing automatic graduation trigger.\n\nDeveloper Preview 1 at 1.0.0 has users; the historical no-public-users premise does not describe current state. The next owned product/package line is 1.1.0, distinct from that delivered boundary. [PROP-000 ##OWNED-PROTOTYPE-REGIME](PROP-000.xml#OWNED-PROTOTYPE-REGIME) governs: the owner has not declared graduation, and only the owner's explicit prototype-exit declaration activates the applicable major-breaking obligations. A push, publication, tag, version number or user count cannot substitute for it. `public = true` in `formats/EPOCHS.toml` is owner-managed format-window bookkeeping, not automatic graduation or permission to publish. The next line is held local-only by [NEXT-PUBLICATION-HOLD](PROP-000.xml#NEXT-PUBLICATION-HOLD). No format flag, epoch or support calendar is changed by this policy.\n\nBefore owner exit, break machinery reports rather than imposing mandatory migrations, bot PRs, parallel worlds or sunset calendars. Regeneration remains an available prototype recipe, not permission to overwrite users' retained data or the delivered Developer Preview 1 boundary. An explicitly requested local typed migration remains allowed under its separately bound authority; this does not assert a migration implementation. After explicit owner exit, applicable migration, support-window and handshake obligations must be bound for major breaks. Early epoch markers, recipe identity, must-understand and yank remain architecture work, not evidence of an inferred public switch. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 434,
+      "line": 504,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
     {
@@ -72854,7 +72962,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 440,
+      "line": 510,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -72863,7 +72971,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Governing rule: a policy that exists only in\nprose is already broken.** Every rule below lives at one of three levels,\npreferring the highest: L1 — inexpressible in types (the agent physically\ncannot write it); L2 — inexpressible in the schema language; L3 — refused by\nCI. An agent's freedom is confined to three directories: schemas, codemods, and\napplication code; everything else is generated and drift-gated. @status:spec/plan",
-      "line": 441,
+      "line": 511,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -72872,7 +72980,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The gate set.** G1: all wire I/O through\n`wire::publish/load(FormatId,…)`; unregistered formats untypeable (L1). G2:\nserde derives forbidden outside `**/generated/**` (L3). G3: regenerate +\n`git diff --exit-code` (L3). G4: a writer must not accept a wire-parsed type as\ninput (L1). G5: double-build under different clocks/host/locale/paths must be\nbyte-identical; `now()` banned in writer modules (L1+L3). G6:\n`rebuild --check` — tear down and reproject from a pinned input (L3). G7:\nschema/format changes demand a break note; golden wire-diff empty or covered\n(L3). G8: schema changes refused while the break window is closed (L3). G9: a\nvocabulary exists in exactly one schema; both wire sides, Rust types, docs and\nprose lists are generated from it (L1+L3). G10: every derived value carries a\nrecipe id; every recipe has a frozen golden (L3). G11: every published format\nhas a generated reader exercised in round-trip tests (L3). G12: clients must\nread the corpora of supported epochs; on sunset the same test flips to\nasserting the refusal text and recipe (L3). G13: schema/format edits never\nshare a commit with application code (L3). G14: config load returns no\n`Result` (L1). G15: manifest codemods edit the TOML document in place;\nserialising from a struct is refused (L3). @status:spec/plan",
-      "line": 447,
+      "line": 517,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -72881,7 +72989,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**A gate's message is the only documentation that is\nreliably read.** Every failure states what was violated, why the rule exists\n(one sentence), and the exact next command — generated from the registry and\nbreak notes, never hand-written. And the agent is left no decisions it gets\nwrong: strict-or-tolerant, optional-or-required, open-or-closed, field-or-epoch\neach have exactly one machine answer — policy from the generator, placement\nfrom the ladder, epoch from the wire-diff. The agent brings *intent*; the\nschema fixes form; the generator fixes policy. @status:spec/plan",
-      "line": 465,
+      "line": 535,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -72890,7 +72998,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**8a. The wire-work decision path — what an agent\ndoes when its task touches a format, in order, no steps skipped:**\n(1) *Name the format.* Find it in `formats/REGISTRY.toml`; absent → this task\nmints a format, which is an owner-visible act — stop and surface. (2) *Place\nthe fact.* Walk the ladder (§5) from the bottom: does the lockfile bear it?\nthe exports? only then higher — and a new `vibe.toml` key is a years-long\nobligation demanding its own break note. (3) *Edit the schema, never the\ntype.* The change is made in `schemas/<format>/e<N>/…`; collections carry an\nexplicit empty-policy annotation; vocabularies live here and nowhere else.\n(4) *Regenerate* (`cargo xtask codegen`) and write behaviour only against\ngenerated types. (5) *Run the wire-diff.* Empty → done. Non-empty → write the\nbreak note (what · who fixes · recipe), and let the diff class decide: additive\nunder must-understand → light break, no epoch; shape or meaning of existing\ndata → epoch question, which is an owner fork. (6) *Never touch* `generated/**`\nby hand, vendored copies, or another epoch's frozen schema — those three edits\nare always wrong regardless of intent. @status:spec/plan",
-      "line": 473,
+      "line": 543,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -72899,7 +73007,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 490,
+      "line": 560,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -72908,7 +73016,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The recoverability bet.** Upstream sources vanish —\ndeleted repositories, force-pushes, privatisation. If rebuild-from-truth stops\nbeing possible and a content-addressed source archive is not built, the index\nsilently becomes authoritative and the whole system degrades into a\ncompatibility regime without its detector. *Trigger:* first observed\nunreachable source that the journal references → the archive subsystem becomes\na mandate, not an idea. This is the likeliest way this document is wrong. @status:spec/plan",
-      "line": 491,
+      "line": 561,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -72917,7 +73025,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The journal/projection rework is a real rebuild, not an\nedit.** Its cost gate is measured before commitment (the TZ's phase 0 measures\nthe three server mutation paths); if it exceeds the budget, the documented\nfallback is temporary unknown-capture on the three read-modify-write types —\nnamed here explicitly as the compromise it is, so it cannot masquerade as the\ndesign. @status:spec/plan",
-      "line": 498,
+      "line": 568,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -72926,7 +73034,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Foreign `curl | jq` will happen regardless of\ngenerated clients**, and there will never be a signal of it (raw files in git\ngive no telemetry, by design). The honest posture: assume raw parsing exists,\nkeep the narrow gate genuinely boring, and treat any change to it at the\nhighest severity class. @status:spec/plan",
-      "line": 504,
+      "line": 574,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -72935,7 +73043,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**The degenerate-first guard.** The epoch machinery\nmust exist, but its first implementation may be degenerate — one live world and\n`min_client` in the handshake; parallel publication is built when the second\nworld is actually minted. A gate heavier than the system it guards gets walked\naround, and a walked-around gate is worse than none: it manufactures false\nconfidence. *Trigger for scaling up:* the first real epoch train, and no\nearlier. @status:spec/plan",
-      "line": 509,
+      "line": 579,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -72944,7 +73052,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**Signature and authenticity remain parked by the\nowner's standing ruling (`BACKLOG.md` B-015): mechanism slots only, no\ncryptography.** What this document adds is ordering, not scope: the\nmust-understand set and the signature *slot* exist in the schema before any\ntolerance ships, because a tolerant reader that can silently ignore a future\nsignature field is a downgrade attack waiting; slots are irreversible-window\nwork, cryptography is not. @status:spec/plan",
-      "line": 516,
+      "line": 586,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -72953,7 +73061,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "10. Sources — the two-way links",
-      "line": 524,
+      "line": 594,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -72962,7 +73070,7 @@
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "**This contract's lore and evidence, so a cold reader entering\nfrom either side finds the other:** the architectural reasoning with rejected\nalternatives is\n[`vibevm/vibespecs/design/change-native-formats-verdict.xml`](../design/change-native-formats-verdict.xml)\n(the convened-council verdict, recorded near-verbatim); the research it stands\non — ten data-at-rest ecosystems, eight serialization formats, the\nclient-survival study, the wire census of this tree, four adversarial worker\nreviews and the reviewer's verdict — is imported whole at\n[`vibevm/vibespecs/research/schema-evolution-2026-08/`](../research/schema-evolution-2026-08/)\n(reading order: its `12-HANDOFF.xml §2`); the first build that implemented this\ncontract left its reasoning at the anchors of\n[PROP-005](../modules/vibe-index/PROP-005-package-index.xml) and in the docblocks\nits phases wrote, never in the plan that carried it. Where lore and\nthis contract disagree, this contract wins and the lore is corrected. @status:spec/plan",
-      "line": 525,
+      "line": 595,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
