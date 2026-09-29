@@ -1,0 +1,58 @@
+{
+  "checked_claims": [
+    "catalogue:bootstrap-4cec12cd3:capture-shape-and-meaning",
+    "catalogue:bootstrap-4cec12cd3:original-observation-digest",
+    "catalogue:bootstrap-4cec12cd3:package-subtree-and-manifest-identities",
+    "catalogue:bootstrap-4cec12cd3:repository-tree",
+    "catalogue:bootstrap-4cec12cd3:source-blob-and-byte-identities",
+    "catalogue:bootstrap-4cec12cd3:source-declared-surface-linkage",
+    "catalogue:bootstrap-6c2a59ef9:capture-shape-and-meaning",
+    "catalogue:bootstrap-6c2a59ef9:original-observation-digest",
+    "catalogue:bootstrap-6c2a59ef9:package-subtree-and-manifest-identities",
+    "catalogue:bootstrap-6c2a59ef9:repository-tree",
+    "catalogue:bootstrap-6c2a59ef9:source-blob-and-byte-identities",
+    "catalogue:bootstrap-6c2a59ef9:source-declared-surface-linkage",
+    "catalogue:capability-after-dd7d05e4c:capture-shape-and-meaning",
+    "catalogue:capability-after-dd7d05e4c:original-observation-digest",
+    "catalogue:capability-after-dd7d05e4c:package-subtree-and-manifest-identities",
+    "catalogue:capability-after-dd7d05e4c:repository-tree",
+    "catalogue:capability-after-dd7d05e4c:source-blob-and-byte-identities",
+    "catalogue:capability-after-dd7d05e4c:source-declared-surface-linkage",
+    "catalogue:capability-baseline-4a3f80a34:capture-shape-and-meaning",
+    "catalogue:capability-baseline-4a3f80a34:original-observation-digest",
+    "catalogue:capability-baseline-4a3f80a34:package-subtree-and-manifest-identities",
+    "catalogue:capability-baseline-4a3f80a34:repository-tree",
+    "catalogue:capability-baseline-4a3f80a34:source-blob-and-byte-identities",
+    "catalogue:capability-baseline-4a3f80a34:source-declared-surface-linkage",
+    "dp1:capture-shape-and-meaning",
+    "dp1:original-observation-digest",
+    "dp1:package-subtree-and-manifest-identities",
+    "dp1:repository-tree",
+    "dp1:source-blob-and-byte-identities",
+    "dp1:source-declared-surface-linkage"
+  ],
+  "findings": [
+    {
+      "code": "documentation-proof-later",
+      "reason": "Capture mode does not verify documentation proof.",
+      "state": "pending",
+      "subject": "documentation"
+    },
+    {
+      "code": "final-product-proof-later",
+      "reason": "Capture mode does not verify the final product panel.",
+      "state": "pending",
+      "subject": "dp2"
+    }
+  ],
+  "mode": "capture",
+  "schema": 1,
+  "subject_ids": [
+    "bootstrap-4cec12cd3",
+    "bootstrap-6c2a59ef9",
+    "capability-after-dd7d05e4c",
+    "capability-baseline-4a3f80a34",
+    "dp1-30d217bfce47bca"
+  ],
+  "verdict": "passed"
+}

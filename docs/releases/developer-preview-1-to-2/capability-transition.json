@@ -1,0 +1,114 @@
+{
+  "captures": [
+    {
+      "capture_file_sha256": "48baac9654179f167e859c84f421e3e740737e5795e7bcba0a8df80afd25f5ba",
+      "capture_id": "bootstrap-4cec12cd3",
+      "commit_sha1": "4cec12cd358c4ee58fb0a53180e4f3d4df868fb8",
+      "git_tree_sha1": "9ba4a5ee14eaec87c612714ecd79910b1801b38f",
+      "source": "evidence/bootstrap-4cec12cd3-capture-e1.json"
+    },
+    {
+      "capture_file_sha256": "5be669c4fdd99de85ceb56bb2639096b341b0c4db0f1eaa4a8ed2a150a5b0251",
+      "capture_id": "bootstrap-6c2a59ef9",
+      "commit_sha1": "6c2a59ef9820b12d985d39527a0c86ea817379b4",
+      "git_tree_sha1": "5008bf3fd9621ae247080614c1a70f1f19f77bbf",
+      "source": "evidence/bootstrap-6c2a59ef9-capture-e1.json"
+    },
+    {
+      "capture_id": "capability-after-dd7d05e4c",
+      "source": "evidence/capability-after-dd7d05e4c-capture-e1.json",
+      "capture_file_sha256": "71a0b454fdfc26faac277aec498d33eb157d889a60be02f25c762639b7fc7cc8",
+      "commit_sha1": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181",
+      "git_tree_sha1": "a39305c30ca48480816cd83275e012571f54de8c"
+    },
+    {
+      "capture_id": "capability-baseline-4a3f80a34",
+      "source": "evidence/capability-baseline-4a3f80a34-capture-e1.json",
+      "capture_file_sha256": "1f0bcd29501045f104282401ce6e622dceedbdc0bdffcc800a6576d6a77d463c",
+      "commit_sha1": "4a3f80a344cdc1a892f71b7edafa54a7547020e9",
+      "git_tree_sha1": "c8c5eb300a30ab442c996543ed9ca55854907429"
+    }
+  ],
+  "change_records": [
+    "local-source-retrieval",
+    "originating-publication-ownership",
+    "preview-accounting-foundation",
+    "source-traceability-maintenance"
+  ],
+  "contribution_scope": {
+    "affected_source_review": {
+      "sha256": "a5bcf5ca104e9b48381c3e9087eaa2415ac84b5dda8726ab46404e6e25321fb3",
+      "source": "evidence/bootstrap-affected-source-review.json"
+    },
+    "after_capture_id": "bootstrap-4cec12cd3",
+    "before_capture_id": "dp1-30d217bfce47bca",
+    "record_digests": [
+      {
+        "change_id": "local-source-retrieval",
+        "required_claim_ids": [
+          "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
+          "reviewed-bootstrap-source-delta",
+          "selected-bootstrap-verification-observations"
+        ],
+        "sha256": "c1ffa190c2188472018cae6af7f08c3a773188f9b13c049d784fb50812c09627"
+      },
+      {
+        "change_id": "originating-publication-ownership",
+        "required_claim_ids": [
+          "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
+          "reviewed-bootstrap-source-delta",
+          "selected-bootstrap-verification-observations"
+        ],
+        "sha256": "e9a13e55ccaf80edc6a70ff25eba422183b4c6e8faad579898961d530e075a35"
+      },
+      {
+        "change_id": "preview-accounting-foundation",
+        "required_claim_ids": [
+          "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
+          "reviewed-bootstrap-source-delta",
+          "selected-bootstrap-verification-observations"
+        ],
+        "sha256": "06896526f9e58e80f7488a3fee8f4e3bde3382a4a4e7776b4e8c48c972ee8bb3"
+      },
+      {
+        "change_id": "source-traceability-maintenance",
+        "required_claim_ids": [
+          "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
+          "reviewed-bootstrap-source-delta",
+          "selected-bootstrap-verification-observations"
+        ],
+        "sha256": "ca39c1101cd326d49b7607f9fe5e98e671352cb87e4e71b6e4509b59e0de2604"
+      }
+    ]
+  },
+  "documentation": {
+    "state": "pending-owner-binding"
+  },
+  "dp1": {
+    "capture_file_sha256": "12055d9ea5d9be48f66aa2ca40a5ba785fb7e731e82f662d7804554df43cb6d9",
+    "capture_id": "dp1-30d217bfce47bca",
+    "commit_sha1": "30d217bfce47bcaccadabd9468f00e315dbcfead",
+    "git_tree_sha1": "0f4a5ddeddae677a487f49fbc4493eb0b4eb5b95",
+    "source": "evidence/dp1-capture-e1.json"
+  },
+  "dp2": {
+    "state": "pending"
+  },
+  "migration_guide": {
+    "state": "pending"
+  },
+  "proof": {
+    "capture_validated": false,
+    "contributions_verified": false,
+    "documentation_verified": false,
+    "final_product_panel_passed": false,
+    "migration_rehearsed": false
+  },
+  "record_kind": "preview-transition",
+  "schema": 1,
+  "schema_status": "registered shape; stage-dependent evidence pending"
+}
