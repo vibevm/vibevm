@@ -48,6 +48,7 @@ pub mod agents;
 pub mod context;
 pub mod install;
 pub mod jsonrpc;
+pub mod machine_session;
 pub mod pkg_servers;
 pub mod pkgskill;
 pub mod tools;
