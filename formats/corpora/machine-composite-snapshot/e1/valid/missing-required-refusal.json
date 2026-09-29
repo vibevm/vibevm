@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "source": {
+    "state": "required",
+    "witness": {
+      "owner": "source-owner",
+      "capture": "capture-a",
+      "revision": "rev-a",
+      "observation": "obs-a",
+      "compatibility_claim": "join-a",
+      "expected_revisions": [],
+      "freshness": "current",
+      "completeness": {
+        "kind": "complete"
+      }
+    }
+  },
+  "world": {
+    "state": "required",
+    "witness": null
+  },
+  "target": {
+    "state": "not_participating"
+  },
+  "operation": {
+    "state": "not_participating"
+  },
+  "outcome": {
+    "status": "refused",
+    "issue": {
+      "kind": "missing",
+      "axis": "world"
+    }
+  }
+}

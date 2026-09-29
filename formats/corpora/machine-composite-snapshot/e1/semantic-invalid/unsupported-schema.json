@@ -1,0 +1,40 @@
+{
+  "schema": 2,
+  "source": {
+    "state": "required",
+    "witness": {
+      "owner": "source-owner",
+      "capture": "capture-a",
+      "revision": "rev-a",
+      "observation": "obs-a",
+      "compatibility_claim": "join-a",
+      "expected_revisions": [],
+      "freshness": "current",
+      "completeness": {
+        "kind": "complete"
+      }
+    }
+  },
+  "world": {
+    "state": "not_participating"
+  },
+  "target": {
+    "state": "not_participating"
+  },
+  "operation": {
+    "state": "not_participating"
+  },
+  "outcome": {
+    "status": "composed",
+    "stamps": [
+      {
+        "axis": "source",
+        "owner": "source-owner",
+        "capture": "capture-a",
+        "revision": "rev-a",
+        "observation": "obs-a"
+      }
+    ],
+    "completeness": "declared_complete_single_owner"
+  }
+}

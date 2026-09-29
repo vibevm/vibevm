@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "source": {
+    "state": "required",
+    "witness": {
+      "owner": "source-owner",
+      "capture": "capture-a",
+      "revision": "rev-a",
+      "observation": "obs-a",
+      "compatibility_claim": "join-a",
+      "expected_revisions": [],
+      "freshness": "current",
+      "completeness": {
+        "kind": "complete"
+      }
+    }
+  },
+  "world": {
+    "state": "required",
+    "witness": {
+      "owner": "world-owner",
+      "capture": "world-capture",
+      "revision": "world-rev",
+      "observation": "world-obs",
+      "compatibility_claim": "join-a",
+      "expected_revisions": [],
+      "freshness": "current",
+      "completeness": {
+        "kind": "complete"
+      }
+    }
+  },
+  "target": {
+    "state": "not_participating"
+  },
+  "operation": {
+    "state": "not_participating"
+  },
+  "outcome": {
+    "status": "composed",
+    "stamps": [
+      {
+        "axis": "source",
+        "owner": "source-owner",
+        "capture": "capture-a",
+        "revision": "rev-a",
+        "observation": "obs-a"
+      },
+      {
+        "axis": "world",
+        "owner": "world-owner",
+        "capture": "world-capture",
+        "revision": "world-rev",
+        "observation": "world-obs"
+      }
+    ],
+    "completeness": "unverified_cross_owner"
+  }
+}

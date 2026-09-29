@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "projection_id": "projection-one",
+  "filter_id": "filter-all",
+  "authorized_scope_id": "scope-owned",
+  "axis_stamps": [
+    {
+      "axis": "source",
+      "owner": "source-owner",
+      "capture": "capture-a",
+      "revision": "rev-a",
+      "observation": "obs-a"
+    }
+  ],
+  "rows": [
+    {
+      "entity_reference_id": "projection-row-a",
+      "occurrence_id": "include-a:0",
+      "parent_occurrence_id": null,
+      "child_state": {
+        "status": "complete"
+      }
+    }
+  ],
+  "next_cursor_id": "cursor-next",
+  "end": {
+    "status": "more"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "resource_id_octets": [
+    255,
+    0,
+    47,
+    92
+  ],
+  "captured_revision": "raw-rev",
+  "location": {
+    "basis": "unavailable",
+    "reason": "missing_reverse_map"
+  }
+}

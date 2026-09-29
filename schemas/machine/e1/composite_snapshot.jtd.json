@@ -1,0 +1,226 @@
+{
+  "metadata": {
+    "description": "Independent owner observations and declared compatibility; no atomic global read is implied.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::composite_snapshot"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "source": {
+      "ref": "participation"
+    },
+    "world": {
+      "ref": "participation"
+    },
+    "target": {
+      "ref": "participation"
+    },
+    "operation": {
+      "ref": "participation"
+    },
+    "outcome": {
+      "ref": "outcome"
+    }
+  },
+  "definitions": {
+    "axis": {
+      "enum": [
+        "source",
+        "world",
+        "target",
+        "operation"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "expectation": {
+      "properties": {
+        "axis": {
+          "ref": "axis"
+        },
+        "revision": {
+          "type": "string"
+        }
+      }
+    },
+    "completeness": {
+      "discriminator": "kind",
+      "mapping": {
+        "complete": {
+          "properties": {}
+        },
+        "partial": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "witness": {
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "capture": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "observation": {
+          "type": "string"
+        },
+        "compatibility_claim": {
+          "type": "string",
+          "nullable": true
+        },
+        "expected_revisions": {
+          "elements": {
+            "ref": "expectation"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "freshness": {
+          "enum": [
+            "current",
+            "stale"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "completeness": {
+          "ref": "completeness"
+        }
+      }
+    },
+    "participation": {
+      "discriminator": "state",
+      "mapping": {
+        "not_participating": {
+          "properties": {}
+        },
+        "required": {
+          "properties": {
+            "witness": {
+              "ref": "witness",
+              "nullable": true
+            }
+          }
+        }
+      }
+    },
+    "stamp": {
+      "properties": {
+        "axis": {
+          "ref": "axis"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "capture": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "observation": {
+          "type": "string"
+        }
+      }
+    },
+    "issue": {
+      "discriminator": "kind",
+      "mapping": {
+        "no_participating_axis": {
+          "properties": {}
+        },
+        "missing": {
+          "properties": {
+            "axis": {
+              "ref": "axis"
+            }
+          }
+        },
+        "stale": {
+          "properties": {
+            "axis": {
+              "ref": "axis"
+            }
+          }
+        },
+        "conflicting_claim": {
+          "properties": {
+            "axis": {
+              "ref": "axis"
+            }
+          }
+        },
+        "conflicting_revision": {
+          "properties": {
+            "claimant": {
+              "ref": "axis"
+            },
+            "target": {
+              "ref": "axis"
+            }
+          }
+        }
+      }
+    },
+    "outcome": {
+      "discriminator": "status",
+      "mapping": {
+        "composed": {
+          "properties": {
+            "stamps": {
+              "elements": {
+                "ref": "stamp"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "completeness": {
+              "enum": [
+                "declared_complete_single_owner",
+                "partial",
+                "unverified_cross_owner",
+                "unverified_missing_claim"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            }
+          }
+        },
+        "refused": {
+          "properties": {
+            "issue": {
+              "ref": "issue"
+            }
+          }
+        }
+      }
+    }
+  }
+}

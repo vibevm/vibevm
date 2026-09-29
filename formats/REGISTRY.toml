@@ -1309,3 +1309,39 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-operation-envelope/e1"
 sunset = "none"
+
+[format.machine-entity-reference]
+epoch = 1
+schema = "schemas/machine/e1/entity_reference.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-entity-reference/e1"
+sunset = "none"
+
+[format.machine-composite-snapshot]
+epoch = 1
+schema = "schemas/machine/e1/composite_snapshot.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-composite-snapshot/e1"
+sunset = "none"
+
+[format.machine-bound-page]
+epoch = 1
+schema = "schemas/machine/e1/bound_page.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-bound-page/e1"
+sunset = "none"
+
+[format.machine-source-location]
+epoch = 1
+schema = "schemas/machine/e1/source_location.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-source-location/e1"
+sunset = "none"

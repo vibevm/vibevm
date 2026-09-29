@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "source": {
+    "state": "required"
+  },
+  "world": {
+    "state": "not_participating"
+  },
+  "target": {
+    "state": "not_participating"
+  },
+  "operation": {
+    "state": "not_participating"
+  },
+  "outcome": {
+    "status": "composed",
+    "stamps": [
+      {
+        "axis": "source",
+        "owner": "source-owner",
+        "capture": "capture-a",
+        "revision": "rev-a",
+        "observation": "obs-a"
+      }
+    ],
+    "completeness": "declared_complete_single_owner"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "projection_id": "projection-one",
+  "filter_id": "filter-all",
+  "authorized_scope_id": "scope-owned",
+  "axis_stamps": [
+    {
+      "axis": "source",
+      "owner": "source-owner",
+      "capture": "capture-a",
+      "revision": "rev-a",
+      "observation": "obs-a"
+    }
+  ],
+  "page_cursor_id": "cursor-next",
+  "rows": [
+    {
+      "entity_reference_id": "projection-row-b",
+      "occurrence_id": "include-b:1",
+      "parent_occurrence_id": null,
+      "child_state": {
+        "status": "redacted",
+        "reason": "private"
+      }
+    }
+  ],
+  "next_cursor_id": null,
+  "end": {
+    "status": "declared_complete"
+  }
+}

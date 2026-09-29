@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "reference_id": "projection-row-a",
+  "logical": {
+    "kind": "owner_minted",
+    "owner": "spec-owner",
+    "address": "spec://org.example/a#rule"
+  },
+  "captured": {
+    "content_or_source": "capture-a",
+    "revision": "rev-a"
+  },
+  "observed": {
+    "projection": "projection-one",
+    "observation": "observation-one"
+  },
+  "occurrence": {
+    "observed": {
+      "projection": "projection-one",
+      "observation": "observation-one"
+    },
+    "contribution": "include-a",
+    "ordinal": 4
+  }
+}

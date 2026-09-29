@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "description": "Four source-bound identity axes; reference_id is projection-local, not a minted logical owner address.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::entity_reference"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "reference_id": {
+      "type": "string"
+    },
+    "logical": {
+      "ref": "logical"
+    },
+    "captured": {
+      "ref": "captured"
+    },
+    "observed": {
+      "ref": "observation"
+    },
+    "occurrence": {
+      "ref": "occurrence"
+    }
+  },
+  "definitions": {
+    "logical": {
+      "discriminator": "kind",
+      "mapping": {
+        "owner_minted": {
+          "properties": {
+            "owner": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "extraction_gap": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "captured": {
+      "properties": {
+        "content_or_source": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        }
+      }
+    },
+    "observation": {
+      "properties": {
+        "projection": {
+          "type": "string"
+        },
+        "observation": {
+          "type": "string"
+        }
+      }
+    },
+    "occurrence": {
+      "properties": {
+        "observed": {
+          "ref": "observation"
+        },
+        "contribution": {
+          "type": "string"
+        },
+        "ordinal": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
