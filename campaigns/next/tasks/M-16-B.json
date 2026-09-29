@@ -26,7 +26,9 @@
         "crates/vibe-core/src/manifest/mod.rs",
         "crates/vibe-extension-registry/src/lib.rs",
         "crates/vibe-extension-registry/src/model.rs",
-        "formats/capability-coverage/coverage-e1.json"
+        "formats/capability-coverage/coverage-e1.json",
+        "crates/vibe-lifecycle/src/state/tests.rs",
+        "crates/vibe-lifecycle/src/state/tests/discovery_schema.rs"
       ],
       "write_paths": [
         "formats/",
@@ -76,7 +78,9 @@
         "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs",
         "crates/vibe-spec/src/compiler/pass_tier/tests.rs",
         "crates/vibe-spec/src/compiler/transform/lowering_worlds.rs",
-        "crates/vibe-spec/src/compiler/transform/plan_test_support.rs"
+        "crates/vibe-spec/src/compiler/transform/plan_test_support.rs",
+        "crates/vibe-lifecycle/src/state/tests.rs",
+        "crates/vibe-lifecycle/src/state/tests/discovery_schema.rs"
       ],
       "steps": [
         "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
@@ -113,7 +117,8 @@
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "Exact extension-schema producer amendment: after source-first PROP-054/PROP-080 law, B.1 may add an optional typed authored operation-schema declaration to the existing ExtensionDecl/strict wire and carry it through the already retained workspace/registry projection without native load. The 29 current ExtensionDecl literal owners are enumerated as exact paths in this packet; edits outside those names require another explicit perimeter amendment. Arbitrary config, native ABI manifest loading, provider fetch/build and synthetic callable status are forbidden. Retained package/source identity and registered format/epoch validation must precede positive descriptor-only discovery; source-observed catalogue rows remain noncallable. The current capability catalogue must be reconciled against actual CLI/MCP additions before claiming a complete denominator."
+        "Exact extension-schema producer amendment: after source-first PROP-054/PROP-080 law, B.1 may add an optional typed authored operation-schema declaration to the existing ExtensionDecl/strict wire and carry it through the already retained workspace/registry projection without native load. The 29 current ExtensionDecl literal owners are enumerated as exact paths in this packet; edits outside those names require another explicit perimeter amendment. Arbitrary config, native ABI manifest loading, provider fetch/build and synthetic callable status are forbidden. Retained package/source identity and registered format/epoch validation must precede positive descriptor-only discovery; source-observed catalogue rows remain noncallable. The current capability catalogue must be reconciled against actual CLI/MCP additions before claiming a complete denominator.",
+        "Frozen fingerprint test binding: the new optional operation-schema metadata is explicitly excluded from the existing execution-declaration fingerprint under PROP-054, while the authored manifest/source witness changes. state/tests/declaration.rs is at the 600-line ceiling after the mechanical None field, so its focused metadata-exclusion case lives in the exact new state/tests/discovery_schema.rs sibling, registered only through state/tests.rs; do not expand the old file or rewrite the fingerprint epoch."
       ]
     },
     {
