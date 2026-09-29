@@ -192,7 +192,7 @@ mod tests {
     /// no surface, provider or transport edge: the whole point of the
     /// extraction is that neither CLI nor MCP can be reached from here.
     ///
-    /// Two edges go beyond the accepted nine, and both are accepted for a
+    /// Three edges go beyond the accepted nine, each for a
     /// named, load-bearing reason:
     ///
     /// * `toml` — the moved package-skill preset builder constructs
@@ -202,6 +202,9 @@ mod tests {
     ///   RFC 3339 start into the trace epoch's instant, and
     ///   `vibe_wire ..shared::Timestamp` IS `chrono::DateTime<Utc>`. Nothing
     ///   here reads a clock: every instant the funnel writes is injected.
+    /// * `serde_json` — the library-level machine envelope validator decodes
+    ///   embedded generated domain payloads before publication; leaving this
+    ///   only in MCP would let library and transport disagree on replay.
     #[test]
     fn the_application_service_has_exactly_the_accepted_lower_dependencies() {
         let manifest: toml::Table = toml::from_str(include_str!("../Cargo.toml")).unwrap();
@@ -216,6 +219,7 @@ mod tests {
         let expected = BTreeSet::from([
             "anyhow",
             "chrono",
+            "serde_json",
             "specmark",
             "toml",
             "vibe-agent-projection",

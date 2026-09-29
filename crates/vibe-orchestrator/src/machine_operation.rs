@@ -324,6 +324,8 @@ impl MachineOperationService {
 }
 
 mod discovery;
+mod publication;
+pub use publication::MachineEnvelopeValidationError;
 
 #[cfg(test)]
 mod tests {
