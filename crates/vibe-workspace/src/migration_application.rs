@@ -16,9 +16,12 @@ use vibe_wire::generated::migration::e1::{
 
 pub mod identity;
 pub mod report;
+mod runtime;
 pub mod validation;
 
-pub use report::{ReportBuilder, validate_operation_report};
+pub use runtime::execute_manifest_migration_json;
+
+pub use report::{ReportBuilder, ReportValidationFailure, validate_operation_report};
 pub use validation::{decode_journal_json, decode_operation_json, validate_journal};
 
 /// This constructor is the admitting caller's explicit grant for ONE owned
