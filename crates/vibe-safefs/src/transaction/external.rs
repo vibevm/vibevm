@@ -275,6 +275,17 @@ impl ExternalStore {
         project_view(&self.root)?.read_file_snapshot_bounded(relative, cap)
     }
 
+    /// Confirm the approved retained file's data sync without rewriting it.
+    /// Success returns actual parent-directory durability, not a CAS promise.
+    pub fn sync_stable_file_bounded(
+        &self,
+        relative: &str,
+        cap: usize,
+        expected: &crate::StableFileSnapshot,
+    ) -> Result<DirectoryDurability> {
+        sync_stable_external_file(&self.root, relative, cap, expected)
+    }
+
     /// Open a relative directory chain no-follow; absence is distinct from
     /// link/non-directory/I/O refusal.
     pub fn open_directory(&self, relative: &str) -> Result<Option<ExternalDirectory>> {
@@ -573,3 +584,5 @@ fn lock_still_named(
             .context(format!("rechecking external lock `{}`", display.display()))),
     }
 }
+
+include!("external_sync.rs");

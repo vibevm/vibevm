@@ -515,7 +515,7 @@ macro_rules! project_file_methods {
 
     /// Resolve the pinned directory that should hold `relative`'s final
     /// component, or `None` when an ancestor is absent.
-    fn holder_of(&self, directory: &Pinned, relative: &str) -> Result<Option<(Pinned, String)>> {
+    pub(crate) fn holder_of(&self, directory: &Pinned, relative: &str) -> Result<Option<(Pinned, String)>> {
         let (parents, name) = split_relative(relative)?;
         if parents.is_empty() {
             return Ok(Some((directory.shallow_clone()?, name)));
