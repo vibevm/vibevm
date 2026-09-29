@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "change_id": "mailbox-proof-citation",
+  "before_capture_id": "architecture-baseline-2145ec8d1",
+  "after_capture_id": "architecture-after-3ffb13b29",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "a59159cb981ac2a7420451e45fcc96534495772c"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-mcp/src/agentic.rs"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Mailbox test proof address alone changes from relay to the existing directory contract; assertions and production behavior remain unchanged.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "Proof annotation attribution does not deliver or change a user guide or workflow.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-architecture-source-delta",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-source-review.md",
+      "verdict": "passed",
+      "sha256": "1454a38e90d3503e973a30fbd4084f0531fb521afabb022c3f6c5c81faa23682"
+    },
+    {
+      "claim_id": "selected-architecture-verification",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-verification.md",
+      "verdict": "passed",
+      "sha256": "9c29069d1cc78960082ce70f364cb82bbf9ba14e052bdc7bdb30b0cc573ea054"
+    },
+    {
+      "claim_id": "central-architecture-contribution-review",
+      "subject_id": "a59159cb981ac2a7420451e45fcc96534495772c",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md",
+      "verdict": "passed",
+      "sha256": "ccf2704e0071612d1423fe638bd12bbb9e2dac5b2ce4138081e6e8877035693c"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "a59159cb981ac2a7420451e45fcc96534495772c",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md"
+  }
+}

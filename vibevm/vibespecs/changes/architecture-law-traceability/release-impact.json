@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "change_id": "architecture-law-traceability",
+  "before_capture_id": "architecture-baseline-2145ec8d1",
+  "after_capture_id": "architecture-after-3ffb13b29",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "3ffb13b29f2c5164ba1759cdb064ebf2d2964e01"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Source-index regeneration only; no executable operation or runtime behavior changes.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "Source index metadata does not deliver a guide or change user documentation; source-law guidance is accounted separately.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-architecture-source-delta",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-source-review.md",
+      "verdict": "passed",
+      "sha256": "1454a38e90d3503e973a30fbd4084f0531fb521afabb022c3f6c5c81faa23682"
+    },
+    {
+      "claim_id": "selected-architecture-verification",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-verification.md",
+      "verdict": "passed",
+      "sha256": "9c29069d1cc78960082ce70f364cb82bbf9ba14e052bdc7bdb30b0cc573ea054"
+    },
+    {
+      "claim_id": "central-architecture-contribution-review",
+      "subject_id": "3ffb13b29f2c5164ba1759cdb064ebf2d2964e01",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md",
+      "verdict": "passed",
+      "sha256": "ccf2704e0071612d1423fe638bd12bbb9e2dac5b2ce4138081e6e8877035693c"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "3ffb13b29f2c5164ba1759cdb064ebf2d2964e01",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md"
+  }
+}
