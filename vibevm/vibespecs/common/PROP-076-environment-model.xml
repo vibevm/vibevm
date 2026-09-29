@@ -200,4 +200,34 @@
     consumer migration and native execution proofs remain separate claims.</ENVIRONMENT-PROOF-BOUNDARY-LAW></p>
     </ENVIRONMENT-PROOF-BOUNDARY>
   </proof>
+  <environment-layout-policy title="11. Injected environment layout and target resource policy">
+    <ENVIRONMENT-LAYOUT title="Five injected roots">
+      <p>`req r1`</p>
+      <p><ENVIRONMENT-LAYOUT-LAW fact="true" status="spec/plan">EnvironmentLayout names configuration, immutable store, profile, mutable state and disposable cache bindings. Each is supplied, explicitly derived, inapplicable or missing-required; absence never discovers HOME/PATH. Supplied target home remains independent of settings. Constructors create nothing.</ENVIRONMENT-LAYOUT-LAW></p>
+    </ENVIRONMENT-LAYOUT>
+    <ENVIRONMENT-LAYOUT-DEFAULTS title="One pure defaults table">
+      <p>`req r1`</p>
+      <p><ENVIRONMENT-LAYOUT-DEFAULTS-LAW fact="true" status="spec/plan">Only explicit selection of the settings-anchored defaults table derives from injected target settings binding S: configuration S; immutable store S/store; mutable state S/state. These three bindings are required by this selected table; missing S leaves them missing-required/unresolved and cannot mark them inapplicable. Other explicit layout selections must state their required versus inapplicable root roles; a missing required binding never becomes inapplicable. Profile has no observed legacy directory default: workspace profile is inapplicable, otherwise require explicit binding. Disposable cache requires explicit binding when requested, otherwise is inapplicable; independent registry/search caches retain S/registries and S/search-cache. Config files remain S/config.toml, S/settings.toml and S/registry.toml; explicit config-file override stays separate. Store reuses the existing binary-CAS spelling; state is a proposed environment anchor, not migration of deployments. No raw instance/producer/reference becomes a directory component, hash or encoding. Partition names are separately target-policy checked.</ENVIRONMENT-LAYOUT-DEFAULTS-LAW></p>
+    </ENVIRONMENT-LAYOUT-DEFAULTS>
+    <ENVIRONMENT-RESOURCE-IDENTITY title="Root-relative resource identity">
+      <p>`req r1`</p>
+      <p><ENVIRONMENT-RESOURCE-IDENTITY-LAW fact="true" status="spec/plan">ResourceIdentity includes environment instance, root-role/binding reference, principal, explicit target path/case policy and validated component sequence. Equal pathname text never transfers receipts between bindings. A1 physical_evidence references remain unverified supplied data; physical aliases, containment and effect admission belong to the storage owner.</ENVIRONMENT-RESOURCE-IDENTITY-LAW></p>
+    </ENVIRONMENT-RESOURCE-IDENTITY>
+    <TARGET-PATH-POLICY title="Target grammar independent of executor">
+      <p>`req r1`</p>
+      <p><TARGET-PATH-POLICY-LAW fact="true" status="spec/plan">Linux components reject empty, dot, dotdot, NUL and embedded slash; colon, backslash, device-like names and other valid literal bytes remain legal under Windows control. Windows portable-Win32 policy alone adds drive/UNC structure, reserved characters/names including COM/LPT superscript digits, trailing-dot/space restrictions. Case/collision comparison is explicitly selected lexical policy, not OS-inferred native behavior; unknown comparison is unresolved/unsupported. Generic Unicode lowercase is not an NTFS guarantee. Never apply source-portable RelPath to Linux payloads.</TARGET-PATH-POLICY-LAW></p>
+    </TARGET-PATH-POLICY>
+    <PAYLOAD-PREFIX-COMPATIBILITY title="Declarative prefix constraints">
+      <p>`req r1`</p>
+      <p><PAYLOAD-PREFIX-COMPATIBILITY-LAW fact="true" status="spec/plan">Describe relocatable payloads with producer evidence references and conditions, prefix-bound payloads with exact target-prefix constraints, or unsupported payloads with reason. Declarative matching does not verify evidence or authorize effects. Unknown relocatability cannot become relocatable because destination is HOME; changed prefix refuses prefix-bound payloads. No binary rewriting occurs.</PAYLOAD-PREFIX-COMPATIBILITY-LAW></p>
+    </PAYLOAD-PREFIX-COMPATIBILITY>
+    <RESERVED-ENVIRONMENT-RESOURCES title="Future resource statuses">
+      <p>`req r1`</p>
+      <p><RESERVED-ENVIRONMENT-RESOURCES-LAW fact="true" status="spec/plan">Account, service, mount and boot roles remain describable with explicit unsupported-operation status. Missing required bindings are unresolved; unneeded roots are inapplicable. No account provisioning, service activation, mount, privilege broker or live-system operation is implemented by layout metadata.</RESERVED-ENVIRONMENT-RESOURCES-LAW></p>
+    </RESERVED-ENVIRONMENT-RESOURCES>
+    <ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY title="Existing consumers unchanged">
+      <p>`req r1`</p>
+      <p><ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY-LAW fact="true" status="spec/plan">Project vibevm roots and root vibe.toml remain under PROP-052. Existing vibe-bin store/bin and deployment state/deployments consumers retain their paths. New layout descriptions neither move them nor establish target operations. Consumer adoption requires separately bound amendments and proof.</ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY-LAW></p>
+    </ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY>
+  </environment-layout-policy>
 </spec>
