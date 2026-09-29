@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "previous_source_sha256": "b3709c66787569b2fa48976b5444a904c4e9d35bd02cf22defa7ef2338bf5154",
+  "current_source_sha256": "210c966878dc883cce94c98a6dc519fc8bfab35b11a48343cb5de0af3e1535b7",
+  "corrected_law": "MACHINE-OPERATION-SERVICE-LAW",
+  "source_shape_checks_exit0": true,
+  "independent_corrected_review": "bounded no remaining source-law blocker",
+  "other_five_req_units_unchanged": "Verified by exact one-line Git diff in same worktree; no other unit readers rerun",
+  "implementation_task_accepted": false,
+  "native_execution": false,
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-correction-proof/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-correction-raw/result.json",
+      "sha256": "a5a90950513c4d812687dcd00365354ca254661a37f242a2c0a795194d96db8f",
+      "bytes": 1122
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-correction-proof/service-unit.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-correction-raw/service-unit.log",
+      "sha256": "d9187d4c9771c7be78c8a2eeddbeaf2ff9f763deb0b7ebcff15cc1e55eb1648f",
+      "bytes": 70
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-correction-proof/specdoc.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-correction-raw/specdoc.log",
+      "sha256": "30cdf9639f64516d02fe19354271b4841b2affd7e31ba43baef225233b55b918",
+      "bytes": 48
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-correction-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-correction-review.md",
+      "sha256": "f9f436112a72909855b5f02f6d50d4dae3227a479f8cbfa4e168c8c8390f7cd1",
+      "bytes": 2011
+    }
+  ]
+}
