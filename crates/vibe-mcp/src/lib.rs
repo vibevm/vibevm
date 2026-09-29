@@ -28,8 +28,8 @@
 //! declared name. Results come back as [`tools::ToolOutput`] — the
 //! executed channel (ordinary success, or an executed structured failure
 //! that keeps its report under `isError: true`) — while [`ToolError`]
-//! stays the preflight / tool-failure channel, rendered text-only with
-//! no structured content.
+//! stays the preflight / tool-failure channel. Ordinary variants are text-only;
+//! StructuredPreflight retains an owning report without domain execution.
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
@@ -96,6 +96,8 @@ pub struct ToolDescriptor {
 /// dispatcher can decide whether to render the error as a tool-level
 /// failure (`isError: true` in the result payload) or as a transport-
 /// level JSON-RPC error.
+/// StructuredPreflight retains an owning report without domain execution;
+/// ordinary variants keep their text-only result.
 ///
 /// ```
 /// use vibe_mcp::ToolError;
@@ -105,6 +107,13 @@ pub struct ToolDescriptor {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors")]
 pub enum ToolError {
+    #[error(
+        "structured preflight: {message} \
+         (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; \
+          fix: inspect the typed report and pass arguments matching the tool's inputSchema)"
+    )]
+    StructuredPreflight { report: Value, message: String },
+
     #[error(
         "invalid arguments: {0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
@@ -312,12 +321,15 @@ impl<T: Transport> Server<T> {
                 JsonRpcResponse::ok(req.id, result)
             }
             Err(e) => {
-                let result = serde_json::json!({
+                let mut result = serde_json::json!({
                     "content": [
                         { "type": "text", "text": e.to_string() }
                     ],
                     "isError": true,
                 });
+                if let ToolError::StructuredPreflight { report, .. } = e {
+                    result["structuredContent"] = report;
+                }
                 JsonRpcResponse::ok(req.id, result)
             }
         }
@@ -503,6 +515,10 @@ version = "0.0.1"
         assert!(
             v["result"]["isError"].as_bool() == Some(true),
             "expected in-band error; got {v}"
+        );
+        assert!(
+            v["result"].get("structuredContent").is_none(),
+            "ordinary tool errors retain the existing text-only channel: {v}"
         );
     }
 
