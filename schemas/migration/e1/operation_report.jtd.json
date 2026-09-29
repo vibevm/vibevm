@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "description": "Epoch-1 migration effects report. Required nullable operation/operation_id represent unestablished preflight identity; omitted keys remain refused. Optional nullable evidence is unavailable when absent or null. Schema1 and coherent outcomes/effects/identities/guarantees are owner checks; errors do not imply no mutation.",
+    "description": "Epoch-1 migration effects report. Required nullable operation/operation_id represent unestablished preflight identity; required nullable evidence explicitly uses null when unavailable. Omitted required keys remain refused. Schema1 and coherent outcomes/effects/identities/guarantees are owner checks; errors do not imply no mutation.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
-      "r": 2
+      "r": 3
     },
     "rustOptions": {
       "package": "vibe_wire::migration::e1::operation_report"
@@ -82,46 +82,35 @@
     },
     "guarantees": {
       "ref": "guarantees"
-    }
-  },
-  "optionalProperties": {
+    },
     "intent_id": {
       "type": "string",
-      "nullable": true,
-      "metadata": {
-        "x-default": null
-      }
+      "nullable": true
     },
     "before_content_id": {
       "type": "string",
       "metadata": {
-        "description": "Existing planner domain-framed content identity; checked by replay.",
-        "x-default": null
+        "description": "Existing planner domain-framed content identity; checked by replay."
       },
       "nullable": true
     },
     "after_content_id": {
       "type": "string",
       "metadata": {
-        "description": "Existing planner domain-framed content identity; checked by replay.",
-        "x-default": null
+        "description": "Existing planner domain-framed content identity; checked by replay."
       },
       "nullable": true
     },
     "diff_id": {
       "type": "string",
       "metadata": {
-        "description": "Existing planner diff identity; checked by replay.",
-        "x-default": null
+        "description": "Existing planner diff identity; checked by replay."
       },
       "nullable": true
     },
     "error": {
       "ref": "application_error",
-      "nullable": true,
-      "metadata": {
-        "x-default": null
-      }
+      "nullable": true
     }
   },
   "definitions": {
@@ -252,15 +241,12 @@
           "metadata": {
             "x-vocabulary": "closed"
           }
-        }
-      },
-      "optionalProperties": {
+        },
         "barrier_binding": {
           "type": "string",
           "nullable": true,
           "metadata": {
-            "x-default": null,
-            "description": "Absent or null means no established barrier evidence; presence as a string remains owner-bound evidence."
+            "description": "Required nullable barrier evidence: explicit null means no established barrier; omission is refused by the existing required-nullable pass."
           }
         }
       }
