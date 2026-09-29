@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "scope": {
+    "before_capture_id": "capability-baseline-4a3f80a34",
+    "after_capture_id": "capability-after-2c35eed03"
+  },
+  "tasks": [
+    {
+      "task_id": "M-16-A.1",
+      "change_ids": [
+        "capability-inventory-foundation"
+      ]
+    }
+  ],
+  "unplanned": [
+    {
+      "contribution_id": "vvm-test-compilation-repair",
+      "reason": "Existing test-only Debug-bound compile repair needed by selected native CLI targets.",
+      "change_ids": [
+        "vvm-mirror-refusal-test-maintenance"
+      ]
+    },
+    {
+      "contribution_id": "capability-traceability-maintenance",
+      "reason": "Namespace comments/source-index and retained existing lint debt.",
+      "change_ids": [
+        "capability-traceability-maintenance"
+      ]
+    }
+  ]
+}

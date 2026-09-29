@@ -1,0 +1,1712 @@
+{
+  "schema": 1,
+  "kind": "one-off-source-byte-binding-observation",
+  "result": "passed",
+  "dataset_sha256": "790a3f7db527054c3a3c12c5bfbdc8f9437ee6594ba5bdeceb6b532c5c7bc660",
+  "capture_sha256": "71a0b454fdfc26faac277aec498d33eb157d889a60be02f25c762639b7fc7cc8",
+  "observation_capture_id": "capability-after-dd7d05e4c",
+  "baseline_capture_id": "capability-baseline-4a3f80a34",
+  "selected_commit": "dd7d05e4c6e79fe4c498787bf0e568c22e9cf181",
+  "actual_tree": "a39305c30ca48480816cd83275e012571f54de8c",
+  "source_count": 169,
+  "passed_count": 169,
+  "failure_count": 0,
+  "query_counts": {
+    "retained_pass_git_processes": 4,
+    "subject_queries": 2,
+    "ls_tree_processes": 1,
+    "ls_tree_selected_paths": 153,
+    "cat_file_batch_processes": 1,
+    "cat_file_blob_requests": 153,
+    "cat_file_blob_bytes": 1782207,
+    "capture_map_reuse": 16,
+    "prior_unretained_readonly_pass_git_processes": 4,
+    "failed_report_assembly_subject_queries": 2,
+    "total_git_processes_including_recovery": 10
+  },
+  "limits": [
+    "No source/model/semantic/runtime/auth completeness claim.",
+    "No SourceID/path uniqueness or pure-validator retest.",
+    "No production engine, Cargo, native owner gates, source writes or Git writes.",
+    "Immutable Git bytes observed without lazy fetch, ambient config, replacements, grafts or optional Git writes."
+  ],
+  "recovery_note": "First readonly pass output transport was truncated before persistence. A report recovery attempt then referenced incorrect capture field git_commit and failed after two subject queries. Correct canonical fields repository_commit_sha1/repository_tree_sha1/git_blob_sha1 are used in this retained pass.",
+  "sources": [
+    {
+      "source_id": "source:campaigns/next/manifest.json",
+      "path": "campaigns/next/manifest.json",
+      "declared_sha256": "e3c39a4688e992e7156dac55c2b0b655d7b7a46a231ae9b73fd8c09f994568dc",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c312cb8d78d3ea187ceab8f5b1b922d20dbce546",
+      "mode": "100644",
+      "actual_sha256": "e3c39a4688e992e7156dac55c2b0b655d7b7a46a231ae9b73fd8c09f994568dc",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-actions/src/action.rs",
+      "path": "crates/vibe-actions/src/action.rs",
+      "declared_sha256": "b694a0db594791660b0bc279cc211566dcf289a306aa9a3a9c7b61be4fc5a175",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e19157898f78d7834de39172229daefb51aa5abd",
+      "mode": "100644",
+      "actual_sha256": "b694a0db594791660b0bc279cc211566dcf289a306aa9a3a9c7b61be4fc5a175",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-actions/src/invoke.rs",
+      "path": "crates/vibe-actions/src/invoke.rs",
+      "declared_sha256": "b299ad55c3f4eb5478569a572f6438142f1b5a80fdbf16ebeec21f6f45a5a5bb",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c50a73dfb8f355b0049315c19717a941712cbca8",
+      "mode": "100644",
+      "actual_sha256": "b299ad55c3f4eb5478569a572f6438142f1b5a80fdbf16ebeec21f6f45a5a5bb",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-actions/src/lib.rs",
+      "path": "crates/vibe-actions/src/lib.rs",
+      "declared_sha256": "f4479cf1347e7a95eaf982964137de4e3c11a59de4f6da93583bc53c4bb482e3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e160205b630462bf94d3fdbeb5973539d81a097e",
+      "mode": "100644",
+      "actual_sha256": "f4479cf1347e7a95eaf982964137de4e3c11a59de4f6da93583bc53c4bb482e3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/Cargo.toml",
+      "path": "crates/vibe-cli/Cargo.toml",
+      "declared_sha256": "a7ce7b2d1fbdf8bc0d13596165148bab6c89e9a476be236081255df19f768352",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "5a42b3d57042905e7153a587f1c2798c3623d42d",
+      "mode": "100644",
+      "actual_sha256": "a7ce7b2d1fbdf8bc0d13596165148bab6c89e9a476be236081255df19f768352",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/resources/package-tree.schema.v1.json",
+      "path": "crates/vibe-cli/resources/package-tree.schema.v1.json",
+      "declared_sha256": "bf5b9a978b11fa11c46587c1014d8c27be73f6b8724c24a3292a16ff6a90719b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b99f3acea1827e50cf9eeb4f20d6a1468608ed05",
+      "mode": "100644",
+      "actual_sha256": "bf5b9a978b11fa11c46587c1014d8c27be73f6b8724c24a3292a16ff6a90719b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli.rs",
+      "path": "crates/vibe-cli/src/cli.rs",
+      "declared_sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e",
+      "blob_oid": "a1f151c775b001c6da6a5a6ed9440c5f5b8e5cff",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/agentic.rs",
+      "path": "crates/vibe-cli/src/cli/agentic.rs",
+      "declared_sha256": "b3806a6aedae9ab05a2327adfc0fb8dd231c7a3c079cc71fbb7410c144b9f194",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "25d12f30ff19eeab5c17d74d5f1a493707899cfd",
+      "mode": "100644",
+      "actual_sha256": "b3806a6aedae9ab05a2327adfc0fb8dd231c7a3c079cc71fbb7410c144b9f194",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/aiui.rs",
+      "path": "crates/vibe-cli/src/cli/aiui.rs",
+      "declared_sha256": "e8158fc330259a998e3eaa08cd7012e8daf5e1901ce5a09ceef79b7c2ab025af",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ae7d368c6d36eb46c5bd884dbf54505020f94939",
+      "mode": "100644",
+      "actual_sha256": "e8158fc330259a998e3eaa08cd7012e8daf5e1901ce5a09ceef79b7c2ab025af",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/cache.rs",
+      "path": "crates/vibe-cli/src/cli/cache.rs",
+      "declared_sha256": "67aa574b408ee7a5a38779581741a0df73e55605247abe785e56e317969e320f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "00da6144076b2f3dd41f7bd313f497b9e7db973d",
+      "mode": "100644",
+      "actual_sha256": "67aa574b408ee7a5a38779581741a0df73e55605247abe785e56e317969e320f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "path": "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "declared_sha256": "b97e47923f76d441226f665ae79cf5eca81847933c36c347b230520cd148ab5f",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "b97e47923f76d441226f665ae79cf5eca81847933c36c347b230520cd148ab5f",
+      "blob_oid": "2ed3c1d32d16bb862e1a38e4270e29edbe7c84c6",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/doc.rs",
+      "path": "crates/vibe-cli/src/cli/doc.rs",
+      "declared_sha256": "4e1b2b8ff05295c8585f2103d2130a27906ef29c2e8719f98f21c110f04a5540",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ebe4023b9ed68b67289e5dc351ed6264336ae9b6",
+      "mode": "100644",
+      "actual_sha256": "4e1b2b8ff05295c8585f2103d2130a27906ef29c2e8719f98f21c110f04a5540",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/explain.rs",
+      "path": "crates/vibe-cli/src/cli/explain.rs",
+      "declared_sha256": "559834eb46c66ad21c2e646193f4dc3282492c8ad7757168ad3865996e0b1cf2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "3beef0a25d73248265245a5e4c35ad1b3bda9ef7",
+      "mode": "100644",
+      "actual_sha256": "559834eb46c66ad21c2e646193f4dc3282492c8ad7757168ad3865996e0b1cf2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/extensions.rs",
+      "path": "crates/vibe-cli/src/cli/extensions.rs",
+      "declared_sha256": "fd70b35f3477c390e883223b7b8290438df490bf7b79362b778989a9d0938ea7",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "2dd850f050e3aec901ebd20975a9d126a13b51c9",
+      "mode": "100644",
+      "actual_sha256": "fd70b35f3477c390e883223b7b8290438df490bf7b79362b778989a9d0938ea7",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/inspect.rs",
+      "path": "crates/vibe-cli/src/cli/inspect.rs",
+      "declared_sha256": "934efda011ec22b1bff0ac03288cad515ca91e4d04f8402356dfe8938cc29c28",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "23d9f57ce457fe2d726ccbbb2ccb4d53ab106ed1",
+      "mode": "100644",
+      "actual_sha256": "934efda011ec22b1bff0ac03288cad515ca91e4d04f8402356dfe8938cc29c28",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/lifecycle.rs",
+      "path": "crates/vibe-cli/src/cli/lifecycle.rs",
+      "declared_sha256": "2daf7fb79d7dd4f59eaaf2c22b79096ca8689264dc372f7641147c6a0b81536e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b039608b040be22405c3c533e96e17feeacee084",
+      "mode": "100644",
+      "actual_sha256": "2daf7fb79d7dd4f59eaaf2c22b79096ca8689264dc372f7641147c6a0b81536e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/mcp.rs",
+      "path": "crates/vibe-cli/src/cli/mcp.rs",
+      "declared_sha256": "ab27ffea116d396b9ee5b4d932eaa26c7b639ec5ad4e5ee67087345fa1d39de3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "a3143c6b751cd16147b501e5fb3cc278402f49a0",
+      "mode": "100644",
+      "actual_sha256": "ab27ffea116d396b9ee5b4d932eaa26c7b639ec5ad4e5ee67087345fa1d39de3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/pkg.rs",
+      "path": "crates/vibe-cli/src/cli/pkg.rs",
+      "declared_sha256": "5e8b4be91e73b2842aad3f43d9e441ca3c0cf139f1322118a8c717da0e5dc890",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8c97e6a41f633280b307cded63f4dc0d8859f390",
+      "mode": "100644",
+      "actual_sha256": "5e8b4be91e73b2842aad3f43d9e441ca3c0cf139f1322118a8c717da0e5dc890",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/prefs.rs",
+      "path": "crates/vibe-cli/src/cli/prefs.rs",
+      "declared_sha256": "797cca9158446e9bac6e6a052a1bfffe481869abe98734a23615b253d85d0e5b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fe737e759a88ea5dd2f5c9bf8663ded05b9b8409",
+      "mode": "100644",
+      "actual_sha256": "797cca9158446e9bac6e6a052a1bfffe481869abe98734a23615b253d85d0e5b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/progress.rs",
+      "path": "crates/vibe-cli/src/cli/progress.rs",
+      "declared_sha256": "456cd35b00d562a81bb0d33baf195cbadc2163106ec1487caf87e03afe4f2b89",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b6776b3c4afececeb4295ac729cbdd94a7a61e23",
+      "mode": "100644",
+      "actual_sha256": "456cd35b00d562a81bb0d33baf195cbadc2163106ec1487caf87e03afe4f2b89",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/query.rs",
+      "path": "crates/vibe-cli/src/cli/query.rs",
+      "declared_sha256": "81f195be4d71c4ebcf5879e13bf6979b6263d0f3cdd1d3b276d4fa7dceb339ee",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "de864ece5b34523b47a01ed35f25f7175f613585",
+      "mode": "100644",
+      "actual_sha256": "81f195be4d71c4ebcf5879e13bf6979b6263d0f3cdd1d3b276d4fa7dceb339ee",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/registry.rs",
+      "path": "crates/vibe-cli/src/cli/registry.rs",
+      "declared_sha256": "d648d20baebb5dad5718319921234505e381d8662deab02c9c1313e59132c361",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fad9827df93d8fc3d4d2b7dc593e2e6d7de626cc",
+      "mode": "100644",
+      "actual_sha256": "d648d20baebb5dad5718319921234505e381d8662deab02c9c1313e59132c361",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/requirements.rs",
+      "path": "crates/vibe-cli/src/cli/requirements.rs",
+      "declared_sha256": "853ffda7f55a1674e2ef5489cbb23eb110d426c5f30a43ee824b85ff4ead093e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "333601880dec9cce21f7abe1e9d07c01aaef9710",
+      "mode": "100644",
+      "actual_sha256": "853ffda7f55a1674e2ef5489cbb23eb110d426c5f30a43ee824b85ff4ead093e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/run.rs",
+      "path": "crates/vibe-cli/src/cli/run.rs",
+      "declared_sha256": "69d7303f0c5c5d12edff996556181d392efec4952f2cd7a10e23795de0288e74",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "69d7303f0c5c5d12edff996556181d392efec4952f2cd7a10e23795de0288e74",
+      "blob_oid": "5156fa93f7c3f99f09319883f50003d4b9b4bab1",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/scrape.rs",
+      "path": "crates/vibe-cli/src/cli/scrape.rs",
+      "declared_sha256": "e0b542c35f26a47a1f0fb5dfb44c2bdb4e0fec65d0f33e1fb7c1111e57bd1d26",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e295164bf53c2dde78837b271cb75565056d8b35",
+      "mode": "100644",
+      "actual_sha256": "e0b542c35f26a47a1f0fb5dfb44c2bdb4e0fec65d0f33e1fb7c1111e57bd1d26",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/select.rs",
+      "path": "crates/vibe-cli/src/cli/select.rs",
+      "declared_sha256": "5bbfd525656ac8906c6cbd1bec70fa640bfd4dbb19248fa44049073a76e44b06",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "cc465173c459ca7d373328226a9ec66b343a5003",
+      "mode": "100644",
+      "actual_sha256": "5bbfd525656ac8906c6cbd1bec70fa640bfd4dbb19248fa44049073a76e44b06",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/skill.rs",
+      "path": "crates/vibe-cli/src/cli/skill.rs",
+      "declared_sha256": "ef4d57ca02e00c6876da80753c5654c9d3bb375a84d1e0151383c28c7f3c2543",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "bb82352625de29340cc1114bea475215a90653f9",
+      "mode": "100644",
+      "actual_sha256": "ef4d57ca02e00c6876da80753c5654c9d3bb375a84d1e0151383c28c7f3c2543",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/specmap.rs",
+      "path": "crates/vibe-cli/src/cli/specmap.rs",
+      "declared_sha256": "33c3b928781c5f7418ba947a39bba2868990a57ec041004c4eba3c06530d859f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "5186efb8163744dad3458fc1ec6842dc1e0729c4",
+      "mode": "100644",
+      "actual_sha256": "33c3b928781c5f7418ba947a39bba2868990a57ec041004c4eba3c06530d859f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/term.rs",
+      "path": "crates/vibe-cli/src/cli/term.rs",
+      "declared_sha256": "b0a6b9ae75383bad5d5ac2ecd7dce297da9e2ea3ed839573000bb020300eb5c2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "214d4136d186aa60671c0207867c70ec65d15953",
+      "mode": "100644",
+      "actual_sha256": "b0a6b9ae75383bad5d5ac2ecd7dce297da9e2ea3ed839573000bb020300eb5c2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/tests.rs",
+      "path": "crates/vibe-cli/src/cli/tests.rs",
+      "declared_sha256": "8e852092136527c4368add51036a55c36d56924c5dd2181ac38ebc13941d3506",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "93ccc9003bfbb118c7e0261621311f0aa2205f60",
+      "mode": "100644",
+      "actual_sha256": "8e852092136527c4368add51036a55c36d56924c5dd2181ac38ebc13941d3506",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/vars.rs",
+      "path": "crates/vibe-cli/src/cli/vars.rs",
+      "declared_sha256": "3888228909591ef8651f0adb550b741424161c7e99a2cfaaf7ed94c81c686e63",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "72f2e792740015582942ff69e31a563479b5250c",
+      "mode": "100644",
+      "actual_sha256": "3888228909591ef8651f0adb550b741424161c7e99a2cfaaf7ed94c81c686e63",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/vvm.rs",
+      "path": "crates/vibe-cli/src/cli/vvm.rs",
+      "declared_sha256": "462b40dd57e626763a8b9a002f1b1540b8d82f02eb3a8659a02b7701e6553fd3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8ad9b7c4903fb534596642936a3ec3a23ed0f11e",
+      "mode": "100644",
+      "actual_sha256": "462b40dd57e626763a8b9a002f1b1540b8d82f02eb3a8659a02b7701e6553fd3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/workspace.rs",
+      "path": "crates/vibe-cli/src/cli/workspace.rs",
+      "declared_sha256": "bacc1643d76a04f015259bfd381910af804b74bf6c7e713bd87dad7af63d568f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "31b0c085c30819cee7736694360c8efee8fab9c2",
+      "mode": "100644",
+      "actual_sha256": "bacc1643d76a04f015259bfd381910af804b74bf6c7e713bd87dad7af63d568f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/command_progress.rs",
+      "path": "crates/vibe-cli/src/command_progress.rs",
+      "declared_sha256": "6d1c10e1096c182d52a50a6285506edee5777e4f2ba7e48ce37d1c86b43cb898",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "02bbbb8d2655ad1d5fa869f79394f0771086545d",
+      "mode": "100644",
+      "actual_sha256": "6d1c10e1096c182d52a50a6285506edee5777e4f2ba7e48ce37d1c86b43cb898",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/agentic/mod.rs",
+      "path": "crates/vibe-cli/src/commands/agentic/mod.rs",
+      "declared_sha256": "f0c8c00fcd0a6f5276fc13ac3adc98ebf30cd43dd0fe837838371c73edbe3190",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "098a06afe8e89540b9c4e9e755ff8a260a76fa1e",
+      "mode": "100644",
+      "actual_sha256": "f0c8c00fcd0a6f5276fc13ac3adc98ebf30cd43dd0fe837838371c73edbe3190",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/aiui/mod.rs",
+      "path": "crates/vibe-cli/src/commands/aiui/mod.rs",
+      "declared_sha256": "b2fa1be5a81b6daaa7cd4c0bf78cef33aaff7809ed2bde1ff5ef31e7598a4e60",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "67bef7f4fdb01d359e72de91ffbd6e7c27916a85",
+      "mode": "100644",
+      "actual_sha256": "b2fa1be5a81b6daaa7cd4c0bf78cef33aaff7809ed2bde1ff5ef31e7598a4e60",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/application/mod.rs",
+      "path": "crates/vibe-cli/src/commands/application/mod.rs",
+      "declared_sha256": "73a70625dd3b711e67dcbb4e7203559494c4adfd03c2eae1fb1f02e0dc744f9a",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1f921861fec4f973aa1d05a116614b3093a59d61",
+      "mode": "100644",
+      "actual_sha256": "73a70625dd3b711e67dcbb4e7203559494c4adfd03c2eae1fb1f02e0dc744f9a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/application/model.rs",
+      "path": "crates/vibe-cli/src/commands/application/model.rs",
+      "declared_sha256": "37e280d70f1b76d6ea5c3568baf9759a0b769420170a79b6dbf85e1321879a17",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "0dd362224c7ebedff79754b0518e93950accba5e",
+      "mode": "100644",
+      "actual_sha256": "37e280d70f1b76d6ea5c3568baf9759a0b769420170a79b6dbf85e1321879a17",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/bin.rs",
+      "path": "crates/vibe-cli/src/commands/bin.rs",
+      "declared_sha256": "b3379de96c9eb5d6c4005aa71baf4ad9ced6c29d5afba82c155461226f646e35",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "d4e8a9940add6477fbbdff2e05a2a4a30644dbef",
+      "mode": "100644",
+      "actual_sha256": "b3379de96c9eb5d6c4005aa71baf4ad9ced6c29d5afba82c155461226f646e35",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/cache/check.rs",
+      "path": "crates/vibe-cli/src/commands/cache/check.rs",
+      "declared_sha256": "7a27c60a5f4dc3c654bfd93562a2a06a6c67ac83388e1574704916f923ccc0b1",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c30e043268203e2a1d9220875a1ec4f554d39c78",
+      "mode": "100644",
+      "actual_sha256": "7a27c60a5f4dc3c654bfd93562a2a06a6c67ac83388e1574704916f923ccc0b1",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/cache/mod.rs",
+      "path": "crates/vibe-cli/src/commands/cache/mod.rs",
+      "declared_sha256": "81199f7c7408c84b51762d8c7717426c1d63bce7440172ee6282da0758dcf13e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b0568e8256cf01ad7c94c15224f748d272f5bd91",
+      "mode": "100644",
+      "actual_sha256": "81199f7c7408c84b51762d8c7717426c1d63bce7440172ee6282da0758dcf13e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/check.rs",
+      "path": "crates/vibe-cli/src/commands/check.rs",
+      "declared_sha256": "16b34d380dd04ae037d3fd97c824bd0850df848ef7879d345f53a8f8265e7506",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ab7f62314a8f9f839dcdbdd444e8319767ac308f",
+      "mode": "100644",
+      "actual_sha256": "16b34d380dd04ae037d3fd97c824bd0850df848ef7879d345f53a8f8265e7506",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/clean.rs",
+      "path": "crates/vibe-cli/src/commands/clean.rs",
+      "declared_sha256": "70ba41c16c5c842bf3558f70c631c13f6bb5037d808a917f495d545e888c0977",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "6f849050eb1a8980e05f4ca0a7b194a81c9702c2",
+      "mode": "100644",
+      "actual_sha256": "70ba41c16c5c842bf3558f70c631c13f6bb5037d808a917f495d545e888c0977",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/compile_trace.rs",
+      "path": "crates/vibe-cli/src/commands/compile_trace.rs",
+      "declared_sha256": "900ba9d9da9e5ae6c85dec20735155accbdfa225a397f329ca3c7671eb150263",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "4ca4eed68aedb72e5452772d0bd73f444fc8dca3",
+      "mode": "100644",
+      "actual_sha256": "900ba9d9da9e5ae6c85dec20735155accbdfa225a397f329ca3c7671eb150263",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/compile_trace/draft.rs",
+      "path": "crates/vibe-cli/src/commands/compile_trace/draft.rs",
+      "declared_sha256": "5421c69ccfb6dde82d1a4ee089efaa97b0deb2001669ef6a6be93a1448f62bca",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "390941a677aa5fc3d5a5b3595ab3160b904cf9e7",
+      "mode": "100644",
+      "actual_sha256": "5421c69ccfb6dde82d1a4ee089efaa97b0deb2001669ef6a6be93a1448f62bca",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/deploy.rs",
+      "path": "crates/vibe-cli/src/commands/deploy.rs",
+      "declared_sha256": "275448766b11e1ac5c5c59d626f4d4c07ae468389e49b946a0415e3b3417922f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "71c22c43320ed16db4478d73edcfe8edfab3d515",
+      "mode": "100644",
+      "actual_sha256": "275448766b11e1ac5c5c59d626f4d4c07ae468389e49b946a0415e3b3417922f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/doc.rs",
+      "path": "crates/vibe-cli/src/commands/doc.rs",
+      "declared_sha256": "1c923218e52608f097200fa5643922d0a106656d80d7a7703d41ef22cbd75f0c",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8126849be7145ebf1b7ae81a273664f7aeeeb671",
+      "mode": "100644",
+      "actual_sha256": "1c923218e52608f097200fa5643922d0a106656d80d7a7703d41ef22cbd75f0c",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/explain.rs",
+      "path": "crates/vibe-cli/src/commands/explain.rs",
+      "declared_sha256": "138c09a78482dde0fce1bc1155d4529634a7ac01a67d37c99aa2a42764441115",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "3fb964b58483a173f4ab7d217fd9456f5e9b89ac",
+      "mode": "100644",
+      "actual_sha256": "138c09a78482dde0fce1bc1155d4529634a7ac01a67d37c99aa2a42764441115",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/extensions.rs",
+      "path": "crates/vibe-cli/src/commands/extensions.rs",
+      "declared_sha256": "d8e44be5a0859eb847f9f82530532e264b9736657ebf6ee01baed22751e7512e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ed84f60aa52457a70d73a15c3580ff71627ac669",
+      "mode": "100644",
+      "actual_sha256": "d8e44be5a0859eb847f9f82530532e264b9736657ebf6ee01baed22751e7512e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/extensions_analyze.rs",
+      "path": "crates/vibe-cli/src/commands/extensions_analyze.rs",
+      "declared_sha256": "57ebcfedbf93708a2cbc68a06097c6a86a4eeb99f6dd2e1a2efc7c99eab61d60",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "061b7b56ed5d98ee307987b43c138e123472ae6b",
+      "mode": "100644",
+      "actual_sha256": "57ebcfedbf93708a2cbc68a06097c6a86a4eeb99f6dd2e1a2efc7c99eab61d60",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/facts.rs",
+      "path": "crates/vibe-cli/src/commands/facts.rs",
+      "declared_sha256": "ae7eec82b641a95947d38d54da68a8e255324a301d4d15ff4ccfee80bdc00a0c",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1e0291e93a0883a3c24f6c9e3495eec3c302977d",
+      "mode": "100644",
+      "actual_sha256": "ae7eec82b641a95947d38d54da68a8e255324a301d4d15ff4ccfee80bdc00a0c",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/facts_check.rs",
+      "path": "crates/vibe-cli/src/commands/facts_check.rs",
+      "declared_sha256": "ff43d8ad4223bb0e01e1edbe136de8365ca4e514171841e889a0649c7f44d103",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "daf2d8ffe229d6c015cac1f8b363b0b42269a0d7",
+      "mode": "100644",
+      "actual_sha256": "ff43d8ad4223bb0e01e1edbe136de8365ca4e514171841e889a0649c7f44d103",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/friends.rs",
+      "path": "crates/vibe-cli/src/commands/friends.rs",
+      "declared_sha256": "e3e0e77f928734956664fe1775b25a9b6f4a1b304030b0aa5b8c6f8286af1bdc",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "16fec6b20aba64c1e562e5337812039075329d14",
+      "mode": "100644",
+      "actual_sha256": "e3e0e77f928734956664fe1775b25a9b6f4a1b304030b0aa5b8c6f8286af1bdc",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/init/mod.rs",
+      "path": "crates/vibe-cli/src/commands/init/mod.rs",
+      "declared_sha256": "4feb6abdb2a7845c78aae825ef07dd9be23de9b18ec4e8aae4e3aec114a9b7c7",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "0dab3643ec3a57170119fd8197f15ccc317346bc",
+      "mode": "100644",
+      "actual_sha256": "4feb6abdb2a7845c78aae825ef07dd9be23de9b18ec4e8aae4e3aec114a9b7c7",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/install/mod.rs",
+      "path": "crates/vibe-cli/src/commands/install/mod.rs",
+      "declared_sha256": "d88516d34c69c90f45763a3ca1cc3a91ec19b452289b2ce645d134390e798b5a",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1acf81b39410e9e0d7cbd78a69a37d08dc922d99",
+      "mode": "100644",
+      "actual_sha256": "d88516d34c69c90f45763a3ca1cc3a91ec19b452289b2ce645d134390e798b5a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/lifecycle.rs",
+      "path": "crates/vibe-cli/src/commands/lifecycle.rs",
+      "declared_sha256": "3fff4708e7801649ca9acd2573fb5614d55e85495522c219bd7bdc7872d5018c",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "7e550e6819e3eb77a405f4dd1aca499f2a3bbfb4",
+      "mode": "100644",
+      "actual_sha256": "3fff4708e7801649ca9acd2573fb5614d55e85495522c219bd7bdc7872d5018c",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/list.rs",
+      "path": "crates/vibe-cli/src/commands/list.rs",
+      "declared_sha256": "f222a62acba558c6a0c8944bace76517532c727118f85643e4b1d500a0cc46e8",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ba0de0eb7f38af09745f86e6dadec9e04bb3b543",
+      "mode": "100644",
+      "actual_sha256": "f222a62acba558c6a0c8944bace76517532c727118f85643e4b1d500a0cc46e8",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/mcp/mod.rs",
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "declared_sha256": "ff2cc09d8c57651f842237b1076d3fe996d203622b8573b7c9ff41663b2415e5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "a591e71016a050d50025a13209425a0a43f7f618",
+      "mode": "100644",
+      "actual_sha256": "ff2cc09d8c57651f842237b1076d3fe996d203622b8573b7c9ff41663b2415e5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
+      "path": "crates/vibe-cli/src/commands/mod.rs",
+      "declared_sha256": "983fbe30b537b17ae673d65840519fb700a5787c2b57103e475b23b39d16085b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "2f5b10188900642b32b422ad9e9f38c0beb1e8c7",
+      "mode": "100644",
+      "actual_sha256": "983fbe30b537b17ae673d65840519fb700a5787c2b57103e475b23b39d16085b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/outdated.rs",
+      "path": "crates/vibe-cli/src/commands/outdated.rs",
+      "declared_sha256": "c884bb9e48d30107a1b320315be60415b2579cd732316f2a6680c1c0822116e0",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "a115b79e8574a4503f45c8bd9a547399ba22f469",
+      "mode": "100644",
+      "actual_sha256": "c884bb9e48d30107a1b320315be60415b2579cd732316f2a6680c1c0822116e0",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/prefs/mod.rs",
+      "path": "crates/vibe-cli/src/commands/prefs/mod.rs",
+      "declared_sha256": "a702fbffdafe5ef403aa43d4f42eb6d077466a228db47bfa127fecf5590f430f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "d37dc3c2977be1322e80d315cc6cabfabd041855",
+      "mode": "100644",
+      "actual_sha256": "a702fbffdafe5ef403aa43d4f42eb6d077466a228db47bfa127fecf5590f430f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/progress.rs",
+      "path": "crates/vibe-cli/src/commands/progress.rs",
+      "declared_sha256": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fe398e30969258beda67d65911ae426d56dabc54",
+      "mode": "100644",
+      "actual_sha256": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/progress/grounding.rs",
+      "path": "crates/vibe-cli/src/commands/progress/grounding.rs",
+      "declared_sha256": "79ad2d4ec3582edcb4be96041c2ccec12c09485495a66b8ffb6c580c58c3af0b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e854654930d89ae78c0e91b3f69f51481e18143b",
+      "mode": "100644",
+      "actual_sha256": "79ad2d4ec3582edcb4be96041c2ccec12c09485495a66b8ffb6c580c58c3af0b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/progress_evidence.rs",
+      "path": "crates/vibe-cli/src/commands/progress_evidence.rs",
+      "declared_sha256": "ce6d9cf1239da39c0ae8eccf8db2618f4fdb7843a17186e2ded3c8b2f7149fef",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "cb1ef118a27fe076824d4305b5f0e91eaf7b74e6",
+      "mode": "100644",
+      "actual_sha256": "ce6d9cf1239da39c0ae8eccf8db2618f4fdb7843a17186e2ded3c8b2f7149fef",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/query.rs",
+      "path": "crates/vibe-cli/src/commands/query.rs",
+      "declared_sha256": "3eafa07299d19809eeca4ed36aa250f358203e186a4b5f660b5aa5992567f6f3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f609d5f0c0d571a5c177c9708656590557641e31",
+      "mode": "100644",
+      "actual_sha256": "3eafa07299d19809eeca4ed36aa250f358203e186a4b5f660b5aa5992567f6f3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/convert_source.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+      "declared_sha256": "a74fde188f79adcc463d37cd4efff21983e8fd85c91de3f8f265c2b91ec5010f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c260510349dc2154846c4ff1de37fff1afcb2991",
+      "mode": "100644",
+      "actual_sha256": "a74fde188f79adcc463d37cd4efff21983e8fd85c91de3f8f265c2b91ec5010f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/mod.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "declared_sha256": "699a7aa0d3ab055583dd71dc97945c4a9dec0d1974cd4d10c5f84a8a1a9dfa60",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "eb3b26956b07e72c9b3b7761fa7cd7a8d61ab39c",
+      "mode": "100644",
+      "actual_sha256": "699a7aa0d3ab055583dd71dc97945c4a9dec0d1974cd4d10c5f84a8a1a9dfa60",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/registry/mod.rs",
+      "path": "crates/vibe-cli/src/commands/registry/mod.rs",
+      "declared_sha256": "a298f1dca685848f63dbbe266a1a6b572314d82da64573e7b814445c3d9bddcc",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "280b3ad0ae5029c28ff28da64a3f0a15a5a22da4",
+      "mode": "100644",
+      "actual_sha256": "a298f1dca685848f63dbbe266a1a6b572314d82da64573e7b814445c3d9bddcc",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/reinstall.rs",
+      "path": "crates/vibe-cli/src/commands/reinstall.rs",
+      "declared_sha256": "7e9ee4d8e5a82fcac200e1d17e49f962d67c53948376af6fd772a32d60cc942e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "9aab5d25d73c990d392c12ab5b6a98af50d47f98",
+      "mode": "100644",
+      "actual_sha256": "7e9ee4d8e5a82fcac200e1d17e49f962d67c53948376af6fd772a32d60cc942e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/requirements.rs",
+      "path": "crates/vibe-cli/src/commands/requirements.rs",
+      "declared_sha256": "62d58b8371ae665722f377aebe931b2d6867dda87b38a938881ddad6aad4d9ef",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b43867f3136d6929775923c7ff30cfb417349651",
+      "mode": "100644",
+      "actual_sha256": "62d58b8371ae665722f377aebe931b2d6867dda87b38a938881ddad6aad4d9ef",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/run.rs",
+      "path": "crates/vibe-cli/src/commands/run.rs",
+      "declared_sha256": "2d181d0f04f55cf37cc8a3894b485de21e5617bb9f04e13fcab9120ef5f21276",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "a6e67582001376e5a9faeafbc85315d432c7bbe7",
+      "mode": "100644",
+      "actual_sha256": "2d181d0f04f55cf37cc8a3894b485de21e5617bb9f04e13fcab9120ef5f21276",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/scrape.rs",
+      "path": "crates/vibe-cli/src/commands/scrape.rs",
+      "declared_sha256": "74099b3c2ccbf62bf317a82faf963b6678122adda8890e1dd2428dab377f2dd5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1c920ec4caab11d6d00b28e3eb4752e78a02a85d",
+      "mode": "100644",
+      "actual_sha256": "74099b3c2ccbf62bf317a82faf963b6678122adda8890e1dd2428dab377f2dd5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/search.rs",
+      "path": "crates/vibe-cli/src/commands/search.rs",
+      "declared_sha256": "92858fd262bbafd2a6fa68f13129dcad0f65a6f3d44417030ab7509c859ae5b7",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1f4ac4922dd3524eec4e9a6ac424e2dfcff6fd80",
+      "mode": "100644",
+      "actual_sha256": "92858fd262bbafd2a6fa68f13129dcad0f65a6f3d44417030ab7509c859ae5b7",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/select.rs",
+      "path": "crates/vibe-cli/src/commands/select.rs",
+      "declared_sha256": "87babe2e369546f26e2b7f04be811decb071a7787fbc35c6cd3667c535150ec6",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e6ca468ef315dbd437bae065bd635e2337e648fe",
+      "mode": "100644",
+      "actual_sha256": "87babe2e369546f26e2b7f04be811decb071a7787fbc35c6cd3667c535150ec6",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/show/mod.rs",
+      "path": "crates/vibe-cli/src/commands/show/mod.rs",
+      "declared_sha256": "c6c5ab01da1bdc7ea723a42df68358def4fa10afa59e2e87b6feac60b67fe308",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "816e367db58ddf48b6c0a379cea5db0e132e9cb7",
+      "mode": "100644",
+      "actual_sha256": "c6c5ab01da1bdc7ea723a42df68358def4fa10afa59e2e87b6feac60b67fe308",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/skill/mod.rs",
+      "path": "crates/vibe-cli/src/commands/skill/mod.rs",
+      "declared_sha256": "a83c232488eb6766e828456203466f9e2d14667f0e7fc773558215d6e3dfcdc9",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8f35de49a1721a7ec69ee0776aa417203f00987e",
+      "mode": "100644",
+      "actual_sha256": "a83c232488eb6766e828456203466f9e2d14667f0e7fc773558215d6e3dfcdc9",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/specmap.rs",
+      "path": "crates/vibe-cli/src/commands/specmap.rs",
+      "declared_sha256": "37cbc80d027fe26d35d73c0e643c8da5cd2fb81915d31c64cf960f88bff4ba36",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f33d7429e27b924549ef77cbac6e0a67a2f746a3",
+      "mode": "100644",
+      "actual_sha256": "37cbc80d027fe26d35d73c0e643c8da5cd2fb81915d31c64cf960f88bff4ba36",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/term.rs",
+      "path": "crates/vibe-cli/src/commands/term.rs",
+      "declared_sha256": "876d7570d80b9a0a25bee677b2da37c544a6378cdcbd7ec618e62f45ab060939",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f57885c096b9a4680f8a9c20c6ff25d8fef25c9a",
+      "mode": "100644",
+      "actual_sha256": "876d7570d80b9a0a25bee677b2da37c544a6378cdcbd7ec618e62f45ab060939",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tools.rs",
+      "path": "crates/vibe-cli/src/commands/tools.rs",
+      "declared_sha256": "62568218c5b6e4d142b12d395fa3ab24abb22f2f247445f598df1c7541ea20c0",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8c99c603ee0c19ac92939db3bc45393170690414",
+      "mode": "100644",
+      "actual_sha256": "62568218c5b6e4d142b12d395fa3ab24abb22f2f247445f598df1c7541ea20c0",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/trace.rs",
+      "path": "crates/vibe-cli/src/commands/trace.rs",
+      "declared_sha256": "e1406a20b30d7110e9e61dc2514b99f749d2d0290c4f7a35cc3fa6f010149cf3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "46f1f916aa87a61cfc063973278bc91af781296a",
+      "mode": "100644",
+      "actual_sha256": "e1406a20b30d7110e9e61dc2514b99f749d2d0290c4f7a35cc3fa6f010149cf3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/artifacts.rs",
+      "path": "crates/vibe-cli/src/commands/tree/artifacts.rs",
+      "declared_sha256": "80db9c044f54512a0d1d72c476cc9039a612ab8010cd7431ceb5627a699b2e0a",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "beb70edd6763527c735170d956b565075e00b5dd",
+      "mode": "100644",
+      "actual_sha256": "80db9c044f54512a0d1d72c476cc9039a612ab8010cd7431ceb5627a699b2e0a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/build.rs",
+      "path": "crates/vibe-cli/src/commands/tree/build.rs",
+      "declared_sha256": "71824729af0524944c3427eff789e71d7496d205b9a0bc52510386bb818c6bea",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "794fbc519e16d6e12acdf319efb7cce81f275b9e",
+      "mode": "100644",
+      "actual_sha256": "71824729af0524944c3427eff789e71d7496d205b9a0bc52510386bb818c6bea",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/diagnostics.rs",
+      "path": "crates/vibe-cli/src/commands/tree/diagnostics.rs",
+      "declared_sha256": "761404eaaab6309745cfb5e2f11c6c73a7155dd08df43b2c0007d1f92a90b058",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "174e4c2f0b06cb8e4421d21b4bfb77f908b9fcf5",
+      "mode": "100644",
+      "actual_sha256": "761404eaaab6309745cfb5e2f11c6c73a7155dd08df43b2c0007d1f92a90b058",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/host.rs",
+      "path": "crates/vibe-cli/src/commands/tree/host.rs",
+      "declared_sha256": "52e24ef6eac8a62136043ddf292e3523f17240b93ae1eb0cad15cb3cede58d63",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e3c7f1c75cdf38e3a80f803eaaf913233a9ed0e5",
+      "mode": "100644",
+      "actual_sha256": "52e24ef6eac8a62136043ddf292e3523f17240b93ae1eb0cad15cb3cede58d63",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/mod.rs",
+      "declared_sha256": "ce8a6f9d614e6d7e537fc54447d4b7b962fc376d5f8dc92b0dad351805a1c244",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e5565304580d8e8ab8898d4ef31840227a326a21",
+      "mode": "100644",
+      "actual_sha256": "ce8a6f9d614e6d7e537fc54447d4b7b962fc376d5f8dc92b0dad351805a1c244",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/model.rs",
+      "path": "crates/vibe-cli/src/commands/tree/model.rs",
+      "declared_sha256": "cd4ad907aff4563b210602d6ffe1137abd2a3ab0140607484fbba4906181f652",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "85564340ae24ee5473209d38f96654c0ca17bdab",
+      "mode": "100644",
+      "actual_sha256": "cd4ad907aff4563b210602d6ffe1137abd2a3ab0140607484fbba4906181f652",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/picker.rs",
+      "path": "crates/vibe-cli/src/commands/tree/picker.rs",
+      "declared_sha256": "1854b6198ddd3f19154116b78d0e6923de264802c39a76e1fae42fdade09295f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fed77bdd2e1686a18b89359612f49405d08592bd",
+      "mode": "100644",
+      "actual_sha256": "1854b6198ddd3f19154116b78d0e6923de264802c39a76e1fae42fdade09295f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/plain.rs",
+      "path": "crates/vibe-cli/src/commands/tree/plain.rs",
+      "declared_sha256": "aa13d3b1baa497934353eb431b89610eb4c2e8eb25a1d8d2f612e8c157db6109",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "6c8b7b79e737f2a0e4d4b6ecc1a93af715d1507e",
+      "mode": "100644",
+      "actual_sha256": "aa13d3b1baa497934353eb431b89610eb4c2e8eb25a1d8d2f612e8c157db6109",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "declared_sha256": "68a1561a9f018bef28ca31d77e21ee8ae56da9208754a9e7bdd47727ec3cedc1",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "47f6db989ece189c7cd6692a15c9ad1b02bc2910",
+      "mode": "100644",
+      "actual_sha256": "68a1561a9f018bef28ca31d77e21ee8ae56da9208754a9e7bdd47727ec3cedc1",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "declared_sha256": "b924954037695099122612356f9afdcff8588a5e367c78fe3e6b206c5eb7e8d8",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "39636e74b3a6de6eead06f6cf68da0cb38c6eddc",
+      "mode": "100644",
+      "actual_sha256": "b924954037695099122612356f9afdcff8588a5e367c78fe3e6b206c5eb7e8d8",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "declared_sha256": "ab88dbba829e3007120bcdde58482a351eb44cd4f7229f1f907d5172470b2520",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f4e1a42bb65ae3733e34cf03a6e8330ca0619c77",
+      "mode": "100644",
+      "actual_sha256": "ab88dbba829e3007120bcdde58482a351eb44cd4f7229f1f907d5172470b2520",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "declared_sha256": "460efb0ad07e3955c6f27c45868147f5d0a4bb17396ed1a54eedd261066e1085",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1b589cac3a13992a9cf68adebdaab42adedafaa0",
+      "mode": "100644",
+      "actual_sha256": "460efb0ad07e3955c6f27c45868147f5d0a4bb17396ed1a54eedd261066e1085",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "declared_sha256": "b179442d0542d7d62a827df7aac25c2e6ee5d8b37d74259c62cbcb7c8d181af5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f0438ce64a0357b92e3997fc6a25566684119c59",
+      "mode": "100644",
+      "actual_sha256": "b179442d0542d7d62a827df7aac25c2e6ee5d8b37d74259c62cbcb7c8d181af5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/input.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/input.rs",
+      "declared_sha256": "7075ee8c040528a9bd15bfb58797d88639e4c46bd568ef185b0a44db048c8028",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "7594796b89df8afdb037cacabe89e55dfa096a62",
+      "mode": "100644",
+      "actual_sha256": "7075ee8c040528a9bd15bfb58797d88639e4c46bd568ef185b0a44db048c8028",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/keymap_bridge.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/keymap_bridge.rs",
+      "declared_sha256": "fff3134a38600390ec399a85cdbde345a60b1814932039b8defe367f9291807d",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "7427b69746dba1c196eb8ed384609097c55b582b",
+      "mode": "100644",
+      "actual_sha256": "fff3134a38600390ec399a85cdbde345a60b1814932039b8defe367f9291807d",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "declared_sha256": "85a2de29fc37dac958dd38eaf58f39c58167d8c029860c143be9daf38faa978e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8b373fa80e05d13e78aa4645d159f166711a349b",
+      "mode": "100644",
+      "actual_sha256": "85a2de29fc37dac958dd38eaf58f39c58167d8c029860c143be9daf38faa978e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "declared_sha256": "1d9802d23966ebcce78a981778305d7c4c0de6ae0e33283279c0a42e6ccd4895",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1e1ae413f3037e949ef43f84adec4c3f3a8c40a7",
+      "mode": "100644",
+      "actual_sha256": "1d9802d23966ebcce78a981778305d7c4c0de6ae0e33283279c0a42e6ccd4895",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/menu/mode.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/menu/mode.rs",
+      "declared_sha256": "7a108384cdd4544d56ca8c616898fc8b5c7008c8052f37dc711da9590f448ad1",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "28955a3a886e4a721be440558ff708ffe077bbb4",
+      "mode": "100644",
+      "actual_sha256": "7a108384cdd4544d56ca8c616898fc8b5c7008c8052f37dc711da9590f448ad1",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
+      "declared_sha256": "c853e4672d0b15e2e0a73d2390df7e88679f02dd1d173bf0f9f68aaaa88d7536",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "eddf355c2394583c9936f3fd03ff85ad14727451",
+      "mode": "100644",
+      "actual_sha256": "c853e4672d0b15e2e0a73d2390df7e88679f02dd1d173bf0f9f68aaaa88d7536",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/mod.rs",
+      "declared_sha256": "2da46e90ef6d358559f3a216227e510cb7bfd117b23d5a364f8363d3fd6a4604",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "1727031b1b2b5230b0f1f0aa502feee7f1f0a506",
+      "mode": "100644",
+      "actual_sha256": "2da46e90ef6d358559f3a216227e510cb7bfd117b23d5a364f8363d3fd6a4604",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/model_view.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/model_view.rs",
+      "declared_sha256": "f57b176376eeb8281ac361995fd98b5356fb837f7449afc59b5429d8b63240bb",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "841d9a18376025ebc28a62779acae52d0396a871",
+      "mode": "100644",
+      "actual_sha256": "f57b176376eeb8281ac361995fd98b5356fb837f7449afc59b5429d8b63240bb",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/modes.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/modes.rs",
+      "declared_sha256": "079c6b3ea2a03c37638fe1dcdbff5fea251cece1243bdeb50d697a98d3d9f3fc",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "d8e44560aa379ceec681e8bbcddbceab1836cedb",
+      "mode": "100644",
+      "actual_sha256": "079c6b3ea2a03c37638fe1dcdbff5fea251cece1243bdeb50d697a98d3d9f3fc",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/row.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/row.rs",
+      "declared_sha256": "e4fcaff3aab3c97fbc79d2fd60b73c2406e8522759b6cd07a0ec131dc584a7b0",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "91ecee89ef348de3d1ca584f8b3354727baeeff2",
+      "mode": "100644",
+      "actual_sha256": "e4fcaff3aab3c97fbc79d2fd60b73c2406e8522759b6cd07a0ec131dc584a7b0",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
+      "declared_sha256": "e1cac60d0c0a03c4a6abce0ae71212e1ca9033a748fdbea2f809cd879eb5c676",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "e1cac60d0c0a03c4a6abce0ae71212e1ca9033a748fdbea2f809cd879eb5c676",
+      "blob_oid": "2d394915d72713d19a15a2c9c67130fe99b73319",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
+      "declared_sha256": "e8f0f3571846753c967620e6a82b92a4d60bb241073b0e4fe8d814d4350a2fbe",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "372b8468e3454ae8c84c10d50c7f2419f0832bc5",
+      "mode": "100644",
+      "actual_sha256": "e8f0f3571846753c967620e6a82b92a4d60bb241073b0e4fe8d814d4350a2fbe",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/search/providers.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/search/providers.rs",
+      "declared_sha256": "2b521807021de1b67ff89cefc5aef55200cae891cdeae8fe9d5597ca055f3d0b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "4d1a51c2b32438552998cb1dba118da94e94627f",
+      "mode": "100644",
+      "actual_sha256": "2b521807021de1b67ff89cefc5aef55200cae891cdeae8fe9d5597ca055f3d0b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "declared_sha256": "112c09253ff4ffeb049b958d430c238ad62c788a4c909b35928bcf5db846dfd5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "eed0d045d2241f98f5475e7c6ff4ae551f2ae1d3",
+      "mode": "100644",
+      "actual_sha256": "112c09253ff4ffeb049b958d430c238ad62c788a4c909b35928bcf5db846dfd5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "declared_sha256": "019ec3a9e2aa372750ce4fbb1750c2ccf59c3c46fbc49fa6f744371a7eb0bca2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "cd5683a1e246a3bbcc40d8de9efa648b3967c471",
+      "mode": "100644",
+      "actual_sha256": "019ec3a9e2aa372750ce4fbb1750c2ccf59c3c46fbc49fa6f744371a7eb0bca2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/state.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/state.rs",
+      "declared_sha256": "4120f5db2b5b4daa5cf54bb85a9c0e5d5ebd423663f3112e0dcc99f36e628f20",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "33244b7a3b0410663748abc9bfa74b8c003789ae",
+      "mode": "100644",
+      "actual_sha256": "4120f5db2b5b4daa5cf54bb85a9c0e5d5ebd423663f3112e0dcc99f36e628f20",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "path": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "declared_sha256": "5b6cc0c0640eaf2b6eabd1581fd8cbcb2291281bb81abe56b0979854d4c27dd3",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "e452229d22a44f69c7c6bf34dc1619c379a40081",
+      "mode": "100644",
+      "actual_sha256": "5b6cc0c0640eaf2b6eabd1581fd8cbcb2291281bb81abe56b0979854d4c27dd3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/uninstall.rs",
+      "path": "crates/vibe-cli/src/commands/uninstall.rs",
+      "declared_sha256": "fe485cc15e2b7fc07350e0cfe4dbf7009040a4ea862761a49a04d97b0ebe0ffa",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "84afe1bbea813a649a579f68eb032f4dbb9c6d12",
+      "mode": "100644",
+      "actual_sha256": "fe485cc15e2b7fc07350e0cfe4dbf7009040a4ea862761a49a04d97b0ebe0ffa",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/update.rs",
+      "path": "crates/vibe-cli/src/commands/update.rs",
+      "declared_sha256": "935a0075e695eecaf992fd1561076322c6392ac1ae1b16fc3486242453bf0c4e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "20ace6b4ec2222b8d029e5ea5208fd278810f39d",
+      "mode": "100644",
+      "actual_sha256": "935a0075e695eecaf992fd1561076322c6392ac1ae1b16fc3486242453bf0c4e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/vars.rs",
+      "path": "crates/vibe-cli/src/commands/vars.rs",
+      "declared_sha256": "3b13acd73ccc5a30219f0d65994d4f2cfccf66900cf4883480d9a333d37f3f5e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "59782031b170d10cd019caa8f7906cef731f1170",
+      "mode": "100644",
+      "actual_sha256": "3b13acd73ccc5a30219f0d65994d4f2cfccf66900cf4883480d9a333d37f3f5e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/vvm/mod.rs",
+      "path": "crates/vibe-cli/src/commands/vvm/mod.rs",
+      "declared_sha256": "1939ac96e0fa9c0a937580274d69e7291596c409511e4eb01005d1156a81aa09",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "0e96b1f51d7bf56cc3932a9a001a06ef13c1b26a",
+      "mode": "100644",
+      "actual_sha256": "1939ac96e0fa9c0a937580274d69e7291596c409511e4eb01005d1156a81aa09",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/vvm/model.rs",
+      "path": "crates/vibe-cli/src/commands/vvm/model.rs",
+      "declared_sha256": "984ad359088e12da51c3655d891cf800d0feba68d780a7b4631d2f69bf8e8d3f",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "9c5c5511f5427c45ddcd2c966b4c4ecfc6be7548",
+      "mode": "100644",
+      "actual_sha256": "984ad359088e12da51c3655d891cf800d0feba68d780a7b4631d2f69bf8e8d3f",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/why.rs",
+      "path": "crates/vibe-cli/src/commands/why.rs",
+      "declared_sha256": "c90c37f975be9a6e60966fc826a5df7d09bdbe167a088ba4344bd05031825060",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fcb35117400c20ca313c0249ffe56009be30b80e",
+      "mode": "100644",
+      "actual_sha256": "c90c37f975be9a6e60966fc826a5df7d09bdbe167a088ba4344bd05031825060",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/workspace/mod.rs",
+      "path": "crates/vibe-cli/src/commands/workspace/mod.rs",
+      "declared_sha256": "d10c638b903c662c9f22395f8bcf5a356016d2c1c512dfcf17ab71b74377c736",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "fc505e8f264cab6b848e39b690510701c1799ad8",
+      "mode": "100644",
+      "actual_sha256": "d10c638b903c662c9f22395f8bcf5a356016d2c1c512dfcf17ab71b74377c736",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/composition.rs",
+      "path": "crates/vibe-cli/src/composition.rs",
+      "declared_sha256": "7183ffb71623dc12d6a40fcef39236b1c7a9e8aad7eaac28d0dfcc0c2f676f04",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c349046f9fb47946e9ae59a1e84fd5addcb8943a",
+      "mode": "100644",
+      "actual_sha256": "7183ffb71623dc12d6a40fcef39236b1c7a9e8aad7eaac28d0dfcc0c2f676f04",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/exit_code.rs",
+      "path": "crates/vibe-cli/src/exit_code.rs",
+      "declared_sha256": "34533b37ff4e8cb37852fe6fef0bab15c159538197eaf2149ae58f1716303580",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "56fa76376760d3d8f904d2330210b2bf8fcd2b9c",
+      "mode": "100644",
+      "actual_sha256": "34533b37ff4e8cb37852fe6fef0bab15c159538197eaf2149ae58f1716303580",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/main.rs",
+      "path": "crates/vibe-cli/src/main.rs",
+      "declared_sha256": "650651d0c117f5a9a8e12675a132257ba21b929fe5e65c80cf4bf8c05d03a0c7",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f8bbcba5f330d37a19403626f57f4d18d5cee008",
+      "mode": "100644",
+      "actual_sha256": "650651d0c117f5a9a8e12675a132257ba21b929fe5e65c80cf4bf8c05d03a0c7",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/output.rs",
+      "path": "crates/vibe-cli/src/output.rs",
+      "declared_sha256": "d4acab4694cff477b0044cc3557e3f3813ffdb832335cedcc607d4e811fdc1c8",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "178b87e672a6f3f6ab56165e1aa8bf1ca08e4330",
+      "mode": "100644",
+      "actual_sha256": "d4acab4694cff477b0044cc3557e3f3813ffdb832335cedcc607d4e811fdc1c8",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/visibility/effective.rs",
+      "path": "crates/vibe-core/src/visibility/effective.rs",
+      "declared_sha256": "330a39e94e28b6df2508082010ce762dd942323186002aecb208f30b836c05a7",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "6e25b23f9b140fe9ec0e39040b2e117a1d9bb201",
+      "mode": "100644",
+      "actual_sha256": "330a39e94e28b6df2508082010ce762dd942323186002aecb208f30b836c05a7",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/visibility/graph.rs",
+      "path": "crates/vibe-core/src/visibility/graph.rs",
+      "declared_sha256": "61fead21aca45cbdf509e06ca8105e5b0aa40c68f84c936d80d34f571392a199",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "d8dda1386dc5e8160948a318d0feb81d43031b6d",
+      "mode": "100644",
+      "actual_sha256": "61fead21aca45cbdf509e06ca8105e5b0aa40c68f84c936d80d34f571392a199",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/visibility/mod.rs",
+      "path": "crates/vibe-core/src/visibility/mod.rs",
+      "declared_sha256": "64d716ab3168263b064223f8428a40195dbda1c7e50317b867e51b01607226c4",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f55214320ee3a1e49711ffdbac02d8fc01380a1d",
+      "mode": "100644",
+      "actual_sha256": "64d716ab3168263b064223f8428a40195dbda1c7e50317b867e51b01607226c4",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/visibility/query.rs",
+      "path": "crates/vibe-core/src/visibility/query.rs",
+      "declared_sha256": "db6722c46c030d30e61df5ad29198061d3773612e7d4019423946fd27170f02b",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "6a4a3c7e88e54dd42dca8aab61650fd1a272a2db",
+      "mode": "100644",
+      "actual_sha256": "db6722c46c030d30e61df5ad29198061d3773612e7d4019423946fd27170f02b",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-facts/src/lib.rs",
+      "path": "crates/vibe-facts/src/lib.rs",
+      "declared_sha256": "a148d3fde6f26b034277d02d0321ac219efb3d93cd1e5c1d98ccb0e8bccd8f59",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "55a59f0cd9a8fd90fc1777da4a06e5250043c353",
+      "mode": "100644",
+      "actual_sha256": "a148d3fde6f26b034277d02d0321ac219efb3d93cd1e5c1d98ccb0e8bccd8f59",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-facts/src/report.rs",
+      "path": "crates/vibe-facts/src/report.rs",
+      "declared_sha256": "c4427eca6da4c55b9ad96b9d95ed2d22e5d91e8d61fce15920a3debb09084a16",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "10c6a53227a32945493880455309fe6d928980db",
+      "mode": "100644",
+      "actual_sha256": "c4427eca6da4c55b9ad96b9d95ed2d22e5d91e8d61fce15920a3debb09084a16",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-facts/src/store.rs",
+      "path": "crates/vibe-facts/src/store.rs",
+      "declared_sha256": "0e137f58ac5b0eec0411b526eb97b5e00fd6a1517f5288a60012e0d0a4fbb549",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "885c99195c9a0e43157d8fb449a47064195c62ce",
+      "mode": "100644",
+      "actual_sha256": "0e137f58ac5b0eec0411b526eb97b5e00fd6a1517f5288a60012e0d0a4fbb549",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/agent_config.rs",
+      "path": "crates/vibe-mcp/src/agent_config.rs",
+      "declared_sha256": "1d11423f26f19423ec07189efdd617d77b0923d188c8a50709e4988c422cf180",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "95dabefd3dbe86df10f7bc6c7cec9a4c75248aea",
+      "mode": "100644",
+      "actual_sha256": "1d11423f26f19423ec07189efdd617d77b0923d188c8a50709e4988c422cf180",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/agentic.rs",
+      "path": "crates/vibe-mcp/src/agentic.rs",
+      "declared_sha256": "1bb7a2660a83341f63251d16fd092b44a3459f09f9c8812894feec9726836b10",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "212eaa17f84c57c902a0ee66c8e89a68c83498e8",
+      "mode": "100644",
+      "actual_sha256": "1bb7a2660a83341f63251d16fd092b44a3459f09f9c8812894feec9726836b10",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/agents.rs",
+      "path": "crates/vibe-mcp/src/agents.rs",
+      "declared_sha256": "46f38239f4ab0bff274853de896d702ae18c85cec0bd781a89617e7d3983ee27",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "80700552539620d2d35d224624efdf02141014a7",
+      "mode": "100644",
+      "actual_sha256": "46f38239f4ab0bff274853de896d702ae18c85cec0bd781a89617e7d3983ee27",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "path": "crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "declared_sha256": "faab3a0f66d4441400c3c78b74cb46bf7b8e2cf387c490ce2d5430c2226871d2",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "faab3a0f66d4441400c3c78b74cb46bf7b8e2cf387c490ce2d5430c2226871d2",
+      "blob_oid": "2bd5269739dd08af153a6fb7c1c9ded15beaa53e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/context.rs",
+      "path": "crates/vibe-mcp/src/context.rs",
+      "declared_sha256": "2a337c5a9099d1be8b15ffe412625644bce17241c3372e76c83a5380e637f401",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "4336a866502622637dad7c61bd2eb6f94b22cc9a",
+      "mode": "100644",
+      "actual_sha256": "2a337c5a9099d1be8b15ffe412625644bce17241c3372e76c83a5380e637f401",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/install.rs",
+      "path": "crates/vibe-mcp/src/install.rs",
+      "declared_sha256": "09414c5518a6c44202307d55942daab7726e5b2736b57bdc02a9764adf7ae0cd",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "4abfc5159f05d5f20d0e87ed140407bee1cbc1a8",
+      "mode": "100644",
+      "actual_sha256": "09414c5518a6c44202307d55942daab7726e5b2736b57bdc02a9764adf7ae0cd",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/lib.rs",
+      "path": "crates/vibe-mcp/src/lib.rs",
+      "declared_sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e",
+      "blob_oid": "9a595219ac332ed995bf601cfa7cd7cf4889ebf2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/pkg_servers.rs",
+      "path": "crates/vibe-mcp/src/pkg_servers.rs",
+      "declared_sha256": "00dfc1b87c4f3b5c304cd15cab13eddf3c8757b56d82c77dd83fc125244f15b0",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "4ebbf868d7063453c242e0bcdcd2b5a717f82106",
+      "mode": "100644",
+      "actual_sha256": "00dfc1b87c4f3b5c304cd15cab13eddf3c8757b56d82c77dd83fc125244f15b0",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/pkgskill.rs",
+      "path": "crates/vibe-mcp/src/pkgskill.rs",
+      "declared_sha256": "4e8bd4da1002d4ca56bee419eeaa78d11aa6499fc334146fa98b3de023228313",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "10e15ef0355e03c45f13283e50638040925ca053",
+      "mode": "100644",
+      "actual_sha256": "4e8bd4da1002d4ca56bee419eeaa78d11aa6499fc334146fa98b3de023228313",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools.rs",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "declared_sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "793d1b36902094dca43e2c5bbabeee412f3c4c20d0dc40eb0cfed2bd4f4e24f3",
+      "blob_oid": "5c7f29046f0bf4b6a341b2e6b4c72dedf87048ef",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
+      "path": "crates/vibe-mcp/src/tools/explain.rs",
+      "declared_sha256": "15686d5adc10f316b4eaf6b84dcb14cfdc46c475aafc6d5891ac48dffd203b98",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "95951e439116c8c32965d64e8aa2dce80a89f381",
+      "mode": "100644",
+      "actual_sha256": "15686d5adc10f316b4eaf6b84dcb14cfdc46c475aafc6d5891ac48dffd203b98",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_run.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+      "declared_sha256": "884545b0306908fe9ee85a650efcc1ea09c7ba92728b2c14856515d1ec99916e",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "90f4e4513aaa8ba1c5c85554b6915dc638d75534",
+      "mode": "100644",
+      "actual_sha256": "884545b0306908fe9ee85a650efcc1ea09c7ba92728b2c14856515d1ec99916e",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_run/ports.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_run/ports.rs",
+      "declared_sha256": "af0127828904057114cf25f3640b0e3e35ff24754b91e7ca0ed68bd98311d3c5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "83f5a23142a3bddb42c5a2ad83cc5ed5d1c91335",
+      "mode": "100644",
+      "actual_sha256": "af0127828904057114cf25f3640b0e3e35ff24754b91e7ca0ed68bd98311d3c5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
+      "declared_sha256": "25f5aefa2069fd3f05b14a299434adec55ac3f835975dc32129b32ebf2ace1b9",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "76fb484249bce0af101705e5afa8808a5d199a13",
+      "mode": "100644",
+      "actual_sha256": "25f5aefa2069fd3f05b14a299434adec55ac3f835975dc32129b32ebf2ace1b9",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/output.rs",
+      "path": "crates/vibe-mcp/src/tools/output.rs",
+      "declared_sha256": "0085dfbca5a0094a446fe2e02b8f4e7c091fbecbea671fee8a634c355835cab2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "2da794c3c47a7636877b888a1003b67f70469373",
+      "mode": "100644",
+      "actual_sha256": "0085dfbca5a0094a446fe2e02b8f4e7c091fbecbea671fee8a634c355835cab2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/query.rs",
+      "path": "crates/vibe-mcp/src/tools/query.rs",
+      "declared_sha256": "47dc7846b94e96e73a1274dcdbf7967a761a8b43c0b1308a577a46fda3406eeb",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "433d43a1de82cc98d699a9af0bd6c3d63dcaf85e",
+      "mode": "100644",
+      "actual_sha256": "47dc7846b94e96e73a1274dcdbf7967a761a8b43c0b1308a577a46fda3406eeb",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/read_doc.rs",
+      "path": "crates/vibe-mcp/src/tools/read_doc.rs",
+      "declared_sha256": "44f99f185884aa87ec9b10e489f551a34024afe39147ef95669563f1f7edf983",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "11216e42b1d3b7245c91031d4dd0842faec3089c",
+      "mode": "100644",
+      "actual_sha256": "44f99f185884aa87ec9b10e489f551a34024afe39147ef95669563f1f7edf983",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/requirements_query.rs",
+      "path": "crates/vibe-mcp/src/tools/requirements_query.rs",
+      "declared_sha256": "5b30bc82080d88b97cead02c20dfb9a61427e684aaa25fd2c362431a6ecc7eec",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "36a2a053b73b48fb942179e0c8aa79ba0b2ae509",
+      "mode": "100644",
+      "actual_sha256": "5b30bc82080d88b97cead02c20dfb9a61427e684aaa25fd2c362431a6ecc7eec",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/select.rs",
+      "path": "crates/vibe-mcp/src/tools/select.rs",
+      "declared_sha256": "573946f9cbef4542b4986cd000c7130b2eb79a0e05e01e736b0f910881a1db25",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "6cd8ea6c70374b7f6386d8fa059453b524f0a6aa",
+      "mode": "100644",
+      "actual_sha256": "573946f9cbef4542b4986cd000c7130b2eb79a0e05e01e736b0f910881a1db25",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/values.rs",
+      "path": "crates/vibe-orchestrator/src/values.rs",
+      "declared_sha256": "11f0e90bdd93b5540c1c243d45bf695caa8f35cd423c93e862d73d6e3352b900",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "7e1fbc8f892025a95f16db55c12d4bcd66ca04d4",
+      "mode": "100644",
+      "actual_sha256": "11f0e90bdd93b5540c1c243d45bf695caa8f35cd423c93e862d73d6e3352b900",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-resolver/src/lib.rs",
+      "path": "crates/vibe-resolver/src/lib.rs",
+      "declared_sha256": "6756ce1b8d3990cb6372f6dcf6438e58dc4d5dec2cdb63c5bd0884f646c22b64",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "ad15f2b73aa66d2d17f9209c3833cfcefc87f9a5",
+      "mode": "100644",
+      "actual_sha256": "6756ce1b8d3990cb6372f6dcf6438e58dc4d5dec2cdb63c5bd0884f646c22b64",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-settings/src/resolver/mod.rs",
+      "path": "crates/vibe-settings/src/resolver/mod.rs",
+      "declared_sha256": "0e011aed88330c96f4d8b1a54f9f27dee068f657d465f4844cd47469a5595b1d",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "217df6c23d7a5eb6933c157f1f86404c285b1a78",
+      "mode": "100644",
+      "actual_sha256": "0e011aed88330c96f4d8b1a54f9f27dee068f657d465f4844cd47469a5595b1d",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-settings/src/schema/mod.rs",
+      "path": "crates/vibe-settings/src/schema/mod.rs",
+      "declared_sha256": "e0179bed0803cf8158755f35ed9c426aed834ed3ac1a9114455b156904b46128",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "b7449003a240b017bedc2f6d7c191e4d48c3fc57",
+      "mode": "100644",
+      "actual_sha256": "e0179bed0803cf8158755f35ed9c426aed834ed3ac1a9114455b156904b46128",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-settings/src/schema/registry.rs",
+      "path": "crates/vibe-settings/src/schema/registry.rs",
+      "declared_sha256": "892b290f6ab3a79035f429518a31304bb26585b2963fae12cdbfe191d97bfe71",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "90a11809269beb8c850b363b625c0319d01e5d96",
+      "mode": "100644",
+      "actual_sha256": "892b290f6ab3a79035f429518a31304bb26585b2963fae12cdbfe191d97bfe71",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-settings/src/schema/types.rs",
+      "path": "crates/vibe-settings/src/schema/types.rs",
+      "declared_sha256": "616c4318ddccbbd9854d8e2e53ec457d146d2834e8efc6dcae286ff44f3795f1",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "074ded33e281157a4408808e822c82c06d822531",
+      "mode": "100644",
+      "actual_sha256": "616c4318ddccbbd9854d8e2e53ec457d146d2834e8efc6dcae286ff44f3795f1",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-spec/src/compiler/ir.rs",
+      "path": "crates/vibe-spec/src/compiler/ir.rs",
+      "declared_sha256": "ef67dd4e7579d52c013d9e90c18ef0327d0bd27b0ba0708a4306c6f9c3e848f2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "5b5887c154e6729fd731d8b608d11e7cdaf04d0f",
+      "mode": "100644",
+      "actual_sha256": "ef67dd4e7579d52c013d9e90c18ef0327d0bd27b0ba0708a4306c6f9c3e848f2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-spec/src/compiler/observer.rs",
+      "path": "crates/vibe-spec/src/compiler/observer.rs",
+      "declared_sha256": "2577ac1ee0f5be47492b2db5267103c4756834bb1f501158f43e414018b67abd",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "f4493150c21fbf8f1f3b5f2150ec03050f25e88a",
+      "mode": "100644",
+      "actual_sha256": "2577ac1ee0f5be47492b2db5267103c4756834bb1f501158f43e414018b67abd",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-spec/src/lib.rs",
+      "path": "crates/vibe-spec/src/lib.rs",
+      "declared_sha256": "5f0d9a36c94d7f1400c6e95bee6f0d6446b594e6cb0670745f70cb07508b01c5",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "54c515bcbf8b407bbb5cd50db17f0c44c1183de4",
+      "mode": "100644",
+      "actual_sha256": "5f0d9a36c94d7f1400c6e95bee6f0d6446b594e6cb0670745f70cb07508b01c5",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "declared_sha256": "9cb1d137afb3bf17c0bf98d49be74f0cacff4c2113fd39f18f3cb5551f6de5e3",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "9cb1d137afb3bf17c0bf98d49be74f0cacff4c2113fd39f18f3cb5551f6de5e3",
+      "blob_oid": "6e3a4c6179711d04ebd40c1aeb333c483e16fd07",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "declared_sha256": "2dcf6cdc47b7609bd2f1f177417fa27512d37dcb670920d5a2420b74cba476a9",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "2dcf6cdc47b7609bd2f1f177417fa27512d37dcb670920d5a2420b74cba476a9",
+      "blob_oid": "1ba5504a239e4af79ce0ea0387e3e56432936366",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+      "path": "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+      "declared_sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d",
+      "blob_oid": "1add587912c56dce7c6691c6f6937fea0a23761a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/bins.rs",
+      "path": "crates/vibe-workspace/src/bins.rs",
+      "declared_sha256": "f8e503081594cd73f987e0a1d2db1ab1c2fa1adfcd3c3b63c75646f66964a896",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "8bd91f2ac4eb3989d83587096e2f1ff0bf182aa9",
+      "mode": "100644",
+      "actual_sha256": "f8e503081594cd73f987e0a1d2db1ab1c2fa1adfcd3c3b63c75646f66964a896",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/compile_trace.rs",
+      "path": "crates/vibe-workspace/src/compile_trace.rs",
+      "declared_sha256": "6a9e8dc6877a943f3b00500c6eaa2cd8b952bdda163b8d51b7b2946599d27712",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "c8dd51c842b3b7a554310dc92480796f9e75602b",
+      "mode": "100644",
+      "actual_sha256": "6a9e8dc6877a943f3b00500c6eaa2cd8b952bdda163b8d51b7b2946599d27712",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/tools.rs",
+      "path": "crates/vibe-workspace/src/tools.rs",
+      "declared_sha256": "a8e71d6587e08b31109269d78b6a83c8e6db676d8ecadde76adc26e5d75bfb90",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "0a2bd3f2399f4af5c7e4a66d536ff43575fe694b",
+      "mode": "100644",
+      "actual_sha256": "a8e71d6587e08b31109269d78b6a83c8e6db676d8ecadde76adc26e5d75bfb90",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:formats/REGISTRY.toml",
+      "path": "formats/REGISTRY.toml",
+      "declared_sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776",
+      "blob_oid": "d809c149e1569d3cd0028066ab0727e179aec956",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:schemas/capability/e1/coverage.jtd.json",
+      "path": "schemas/capability/e1/coverage.jtd.json",
+      "declared_sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60",
+      "blob_oid": "c772452277c460aa114564a00468550fb8beebc3",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+      "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+      "declared_sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2",
+      "basis": "immutable-Git-object-bytes",
+      "blob_oid": "162f359fc77003491ff77fec0fc1cf8f8234b2c0",
+      "mode": "100644",
+      "actual_sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "declared_sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d",
+      "blob_oid": "63b80509239f062d14eb02f7d53a25caef711f9a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:xtask/Cargo.toml",
+      "path": "xtask/Cargo.toml",
+      "declared_sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708",
+      "blob_oid": "0aa62524bd1ed4341ba1d744dfae679195a40f43",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:xtask/src/capability_coverage.rs",
+      "path": "xtask/src/capability_coverage.rs",
+      "declared_sha256": "1748e9d705527e9aa65bf4eb3a565fc22bda7858d375445a1e125f61009560c3",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "1748e9d705527e9aa65bf4eb3a565fc22bda7858d375445a1e125f61009560c3",
+      "blob_oid": "c471fd248b72dce818a03a74754583b099cf636a",
+      "result": "passed"
+    },
+    {
+      "source_id": "source:xtask/src/main.rs",
+      "path": "xtask/src/main.rs",
+      "declared_sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c",
+      "basis": "root-verified-DD-capture-file-map",
+      "actual_sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c",
+      "blob_oid": "3c1d39878904cd5a796807c6a0a077581793d7b1",
+      "result": "passed"
+    }
+  ],
+  "failures": [],
+  "root_curation": "Retained byte observation with machine-local paths/environment omitted; raw report kept locally."
+}
