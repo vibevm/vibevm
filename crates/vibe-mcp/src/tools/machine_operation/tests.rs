@@ -293,3 +293,67 @@ fn real_questions_and_refusal_keep_owner_result_and_channel() {
         validate_report_for_request(&request, &report).unwrap();
     }
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+    r = 1
+)]
+fn input_arm_unknown_field_and_missing_nullable_refuse_over_dispatch() {
+    let root = tempfile::tempdir().unwrap();
+    for source in [
+        include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-input-arm-field.json"
+        )),
+        include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-operation-envelope/e1/structural-invalid/missing-input-evidence-id.json"
+        )),
+    ] {
+        let args: Value = serde_json::from_str(source).unwrap();
+        assert!(matches!(
+            PlanManifestMigrationEnvelopeMcpTool.run(&args, &context(root.path())),
+            Err(ToolError::StructuredPreflight { .. })
+        ));
+        let result = call(root.path(), args);
+        assert_eq!(result["isError"], true);
+        let error: OperationEnvelope =
+            serde_json::from_value(result["structuredContent"].clone()).unwrap();
+        assert!(matches!(error.body, Body::Error(_)));
+        assert!(error.operation_id.is_none());
+        assert!(error.domain_owner.is_none());
+        assert!(error.source_id.is_none());
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+    r = 1
+)]
+fn malformed_result_and_unowned_event_remain_diagnostic_only() {
+    let request = decode_migration_request(request()).unwrap();
+    let bad_result = envelope(Body::Result(Box::new(BodyResult {
+        format_id: Some(REPORT.to_owned()),
+        payload_json: Some("{invalid-domain-json".to_owned()),
+        effect_state: BodyResultEffectState::NoEffects,
+        completeness: BodyResultCompleteness::Complete,
+        provenance_id: None,
+    })));
+    let event: OperationEnvelope = serde_json::from_str(include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/machine-operation-envelope/e1/valid/event.json"
+    )))
+    .unwrap();
+    for (untrusted, evidence) in [
+        (bad_result, "{invalid-domain-json"),
+        (event, "\"stage\":\"event\""),
+    ] {
+        let output = publish(untrusted, &request, false, "must not publish").unwrap();
+        assert!(output.is_error());
+        assert!(!output.has_structured());
+        assert!(output.text().contains("UNVALIDATED"));
+        assert!(output.text().contains(evidence));
+    }
+}
