@@ -243,7 +243,7 @@ idempotent skill writer, the per-(agent, scope) report records):</SKILL-CMD-FAMI
 needs no LLM, so it works today, agent-present or not.</ONLY-STANDALONE-V1></p>
     </vibe-skill>
     <relay title="2.7 The agentic relay — delegate intent back to the caller">
-      <p><req-relay fact="true" status="spec/done">`req r4`</req-relay></p>
+      <p><req-relay fact="true" status="spec/done">`req r5`</req-relay></p>
       <facts ordered="false">
         <RELAY-PARKS fact="true" status="spec/done" action="continue" actionstage="doc" audience="user,agent">**Decision.** When a reasoning operation runs under the relay backend, it
   does not act. It writes an `Intent` — a markdown prompt with light
@@ -270,7 +270,7 @@ seam rather than just printing the intent from the producer:</two-step-lead></p>
         <SKILL-STATES-NO-CHANNEL fact="true" status="spec/done">The installed skill (§2.9) states this contract explicitly so agents do
   not wait for a channel that is not there. (Full bidirectional
   conversations are §6.)</SKILL-STATES-NO-CHANNEL>
-        <relay-why fact="true" status="spec/done">**Why:** the two-step seam buys two properties a direct print cannot, both stated at `##two-step-lead`: **uniformity** — any command that discovers mid-run it needs reasoning parks an intent the same way, so an agent learns one drain verb rather than per-command stdout parsing (`##SEAM-UNIFORMITY`); and **decoupling** — producer and consumer need not be the same invocation, which is what lets a future deterministic command park a reasoning step and exit (`##SEAM-DECOUPLING`).</relay-why>
+        <relay-why fact="true" status="spec/done">**Why:** the two-step seam buys two properties within an explicitly admitted reasoning or production purpose: **uniformity** — admitted workloads use one intent/drain seam instead of per-command stdout parsing (`##SEAM-UNIFORMITY`); and **decoupling** — their producer and consumer may be separate invocations (`##SEAM-DECOUPLING`). Discovering a reasoning need does not let deterministic build, ordinary/scoped verify or pure inspection become a producer; they report the prerequisite for separately admitted work.</relay-why>
         <relay-rejected fact="true" status="spec/done">**Considered and rejected:** **printing the intent directly from the producer**, with no `vibe command` seam — rejected for the two reasons above; it is cheaper by one command and forfeits both. **A return channel (write-back)** — **deferred, not rejected**: the MVP relay is fire-and-forget (`##NO-WRITE-BACK`), the calling agent orchestrates (`##AGENT-ORCHESTRATES`), and full bidirectional conversations are parked at §6 `##FB-CONVERSATIONS`.</relay-rejected>
         <relay-revisit fact="true" status="spec/done">**Revisit when:** either the **single slot overflows** — a producer runs while `.vibe/agentic/command.md` already holds an undrained intent, which the mailbox's own shape makes mechanically observable (`##FILE-COMMAND-MD`) — **or** the fire-and-forget contract starts costing a round trip, observed as an agent issuing a follow-up `vibe …` command whose only purpose is to hand a result back (the case `##SKILL-STATES-NO-CHANNEL` tells agents not to expect). Either fires §6's `##FB-CONVERSATIONS`.</relay-revisit>
       </facts>
