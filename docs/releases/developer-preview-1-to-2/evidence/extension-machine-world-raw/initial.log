@@ -1,0 +1,68 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+   Compiling vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.60s
+     Running unittests src/lib.rs (target/debug/deps/vibe_workspace-991f9eaf05d0dcce)
+
+running 4 tests
+test extension_world::machine_schema::tests::host_without_content_identity_is_unverified_and_unavailable ... ok
+test extension_world::machine_schema::tests::authored_native_schema_projects_from_lock_bound_world_without_loading_artifact ... ok
+test extension_world::machine_schema::tests::cross_provider_operation_and_model_id_collisions_refuse ... ok
+test extension_world::machine_schema::tests::unknown_pathlike_format_and_unsupported_epoch_refuse ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 570 filtered out; finished in 0.00s
+
