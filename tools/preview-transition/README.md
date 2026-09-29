@@ -39,9 +39,20 @@ net delivered impact from commits or reverts.
 
 The request grammar also names `bindings` (`roles` or `linked`),
 `documentation` (`intake`, `updated`, or `verified`), `release` (`reviewed` or
-`verified`), and `retired`. Other domain checks remain pending until the
-corresponding implementation work lands; the checker never promotes a
-currently unimplemented stage to passed.
+`verified`), and `retired`. The later stages emit deterministic prerequisite
+diagnostics. They distinguish absent capture/map/base/guide selections from
+selected declarations that this stage has not verified. Bindings and release
+predecessors also distinguish missing permanent record/contribution-scope selection
+from supplied but unverified bindings; an empty list or absent scope is not proof.
+Bindings explicitly report unsupported authoritative native role/identity and
+domain-join adapters.
+Each stage retains its full due predicate and keeps predecessor proof separate
+from later obligations: reviewed guidance does not prove rehearsal, and candidate
+eligibility does not establish later narrow final attestation. Producer flags,
+checked/updated/reviewed/verified labels, equal declared hashes or an unrelated
+successful claim cannot turn these prerequisite reports into a stage pass.
+Actual owner adapters remain with the later domain/documentation/release work;
+the checker adds no native parser, hash engine or generic evidence trust authority.
 
 Documentation `--mode documentation --stage intake` checks explicitly retained
 capture/raw/map bytes, an immutable local Git source tree and complete file census,
