@@ -70,17 +70,24 @@ pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
                 path.display()
             );
         }
-        let unknown_fields = entry
-            .get("unknown_fields")
-            .and_then(toml::Value::as_str)
-            .map(str::to_owned)
-            .unwrap_or_else(|| {
+        let unknown_fields = match entry.get("unknown_fields") {
+            None => {
                 if foreign_parsers == "none" {
                     "deny".to_owned()
                 } else {
                     "allow".to_owned()
                 }
-            });
+            }
+            Some(value) => value
+                .as_str()
+                .with_context(|| {
+                    format!(
+                        "`{}`: `[format.{id}].unknown_fields` must be a string when present",
+                        path.display()
+                    )
+                })?
+                .to_owned(),
+        };
         if !matches!(unknown_fields.as_str(), "allow" | "deny") {
             bail!(
                 "`{}`: `[format.{id}].unknown_fields` must be allow|deny, got `{unknown_fields}`",

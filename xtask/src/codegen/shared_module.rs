@@ -48,8 +48,8 @@
 //! that is not byte-identical; a fragment whose consumers disagree on
 //! reader strictness (the strictness pass rules through the registry
 //! per schema, while a fragment is shared across schemas — unanimous
-//! `none` consumers make the shared block strict, no `none` consumer
-//! leaves it permissive, and a mixture refuses); and the counter — the
+//! effective `deny` consumers make the shared block strict, unanimous
+//! `allow` leaves it permissive, and a mixture refuses); and the counter — the
 //! declarations a module loses must equal the closure its schema
 //! pulled, and the tree's unique names must not move.
 
@@ -69,21 +69,16 @@ use super::vocabulary::Resolved;
 
 /// The one reader policy a resolved shared fragment can carry.
 ///
-/// This is deliberately not a pair of booleans: a fragment is emitted
-/// under exactly one policy after all of its registered consumers have
-/// been considered. Enums and aliases carry the same classification,
-/// although only a generated struct has fields for serde to deny.
+/// A fragment has one policy across all consumers. Enums/aliases are classified,
+/// but only structs own object fields for serde to deny.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum FragmentReaderPolicy {
     Permissive,
     Strict,
 }
 
-/// The computed policy of every shared fragment with at least one
-/// registered consumer. A fragment seen only from an unregistered
-/// schema is absent and therefore retains the old permissive shared
-/// emission; the schema-local strictness pass later issues the existing
-/// unregistered-format refusal.
+/// Registered fragments have computed policies. Unregistered consumption remains
+/// absent here and is refused by the schema-local pass.
 #[derive(Debug)]
 pub(super) struct SharedStrictness {
     fragments: BTreeMap<String, FragmentReaderPolicy>,
@@ -97,62 +92,62 @@ impl SharedStrictness {
     }
 }
 
-/// Compute one policy per fragment from the registry roles of every
-/// schema in the resolved-closure map. A unanimous `none` set is
-/// strict, a set with no `none` member is permissive, and a mixture is
-/// refused with both consumer sets named.
-///
-/// Fed by the run's schema → closure map and the registry; the roles
-/// are read through the one registry loader (`format_id`), the same
-/// loader `Strictness` builds its map from, so the two can never
-/// disagree. A schema no record claims is not refused here — its own
-/// strictness pass refuses it when its module is processed.
+/// Join resolved closures with the registry owner's effective unknown-field
+/// policies: unanimous deny is strict, unanimous allow is permissive, mixed
+/// policies refuse. Unregistered schemas are refused by the local pass later.
 pub(super) fn guard_shared_strictness(
     root: &Path,
     resolved: &[(PathBuf, Resolved)],
 ) -> Result<SharedStrictness> {
     let entries = load_format_registry(root)?;
-    // Registry spelling of a schema path — repo-relative, forward
-    // slashes — the same normalisation `Strictness` keys its map by.
-    let role_of = |schema: &Path| -> Option<String> {
+    let mut policies: BTreeMap<String, (String, String)> = BTreeMap::new();
+    for entry in entries {
+        if entry.schema == "none" {
+            continue;
+        }
+        if let Some((first, policy)) = policies.get(&entry.schema) {
+            if *policy != entry.unknown_fields {
+                bail!(
+                    "formats/REGISTRY.toml: [format.{first}] and [format.{}] share schema `{}` with conflicting unknown_fields policies ({policy} / {}); no first-owner selection is allowed",
+                    entry.id,
+                    entry.schema,
+                    entry.unknown_fields
+                );
+            }
+        } else {
+            policies.insert(entry.schema, (entry.id, entry.unknown_fields));
+        }
+    }
+    let policy_of = |schema: &Path| -> Option<String> {
         let rel = schema.strip_prefix(root).unwrap_or(schema);
         let key = rel.display().to_string().replace('\\', "/");
-        entries
-            .iter()
-            .find(|entry| entry.schema == key)
-            .map(|entry| entry.foreign_parsers.clone())
+        policies.get(&key).map(|(_, policy)| policy.clone())
     };
     policies_from_resolutions(
         resolved
             .iter()
             .map(|(schema, resolution)| (schema.as_path(), &resolution.ordinary_vocabularies)),
-        role_of,
+        policy_of,
     )
 }
 
-/// Pure join of the two inputs production already owns: resolved
-/// schema closures and the registry's role lookup. Keeping it separate
-/// makes the unanimous and mixed laws testable without a second
-/// registry parser or a hand-maintained fragment list.
-fn policies_from_resolutions<'a, I, F>(resolved: I, mut role_of: F) -> Result<SharedStrictness>
+/// Join resolved closures and effective policies without another registry parser.
+fn policies_from_resolutions<'a, I, F>(resolved: I, mut policy_of: F) -> Result<SharedStrictness>
 where
     I: IntoIterator<Item = (&'a Path, &'a BTreeSet<String>)>,
     F: FnMut(&Path) -> Option<String>,
 {
-    // fragment → (schema, role) for every registered consumer, in walk
-    // order; a divergence between records sharing one schema was
-    // already refused by `Strictness::load`, which runs before this
-    // guard in production.
+    // Duplicate schema policies were reconciled before this join.
     let mut consumers: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
     for (schema, closure) in resolved {
-        let Some(role) = role_of(schema) else {
+        let Some(policy) = policy_of(schema) else {
             continue;
         };
         for fragment in closure {
             consumers
                 .entry(fragment.clone())
                 .or_default()
-                .push((schema.display().to_string(), role.clone()));
+                .push((schema.display().to_string(), policy.clone()));
         }
     }
     let mut fragments = BTreeMap::new();
@@ -170,12 +165,12 @@ fn classify_fragment(
 ) -> Result<FragmentReaderPolicy> {
     let strict: Vec<&str> = consumers
         .iter()
-        .filter(|(_, role)| role == "none")
+        .filter(|(_, policy)| policy == "deny")
         .map(|(schema, _)| schema.as_str())
         .collect();
     let permissive: Vec<&str> = consumers
         .iter()
-        .filter(|(_, role)| role != "none")
+        .filter(|(_, policy)| policy == "allow")
         .map(|(schema, _)| schema.as_str())
         .collect();
     if strict.is_empty() {
@@ -187,11 +182,10 @@ fn classify_fragment(
     bail!(
         "vocabulary `{fragment}` has mixed registered reader policy, so \
          its one shared block cannot be both strict and permissive.\n\
-         Strict consumers (`foreign_parsers = \"none\"`): {}\n\
-         Permissive consumers (`foreign_parsers = \"ours\"` or \
-         `\"many\"`): {}\n\
+         Strict consumers (`unknown_fields = \"deny\"`): {}\n\
+         Permissive consumers (`unknown_fields = \"allow\"`): {}\n\
          Fix: give every registered consumer of `{fragment}` the same \
-         strictness class, or stop sharing the fragment across those \
+         effective unknown-field policy, or stop sharing the fragment across those \
          formats, then run `cargo xtask codegen`.",
         strict.join(", "),
         permissive.join(", "),
@@ -201,7 +195,7 @@ fn classify_fragment(
 /// Apply the computed per-fragment policy at the strictness slot of
 /// the shared module's normal post-processing pipeline. The routing
 /// fold is the same one the replacement uses; policy itself was
-/// computed solely from registry roles and resolved closures. A strict
+/// computed solely from effective registry policy and resolved closures. A strict
 /// enum or alias is recognised but copied, because the serde container
 /// attribute is valid only on generated structs.
 pub(super) fn apply_shared_strictness(

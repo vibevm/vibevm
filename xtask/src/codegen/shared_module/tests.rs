@@ -113,14 +113,13 @@ fn closure(names: &[&str]) -> BTreeSet<String> {
     names.iter().map(|name| name.to_string()).collect()
 }
 
-/// Build the two production inputs as fixtures: registry roles keyed by
-/// schema, and resolved vocabulary closures keyed by the same schemas.
+/// Fixture effective policies and resolved closures keyed by schema.
 fn strictness_fixture(rows: &[(&str, &str, &str)]) -> Result<SharedStrictness> {
-    let mut roles = std::collections::BTreeMap::new();
+    let mut policies = std::collections::BTreeMap::new();
     let mut resolved: std::collections::BTreeMap<PathBuf, BTreeSet<String>> =
         std::collections::BTreeMap::new();
-    for (schema, role, fragment) in rows {
-        roles.insert(PathBuf::from(schema), role.to_string());
+    for (schema, policy, fragment) in rows {
+        policies.insert(PathBuf::from(schema), policy.to_string());
         resolved
             .entry(PathBuf::from(schema))
             .or_default()
@@ -130,7 +129,7 @@ fn strictness_fixture(rows: &[(&str, &str, &str)]) -> Result<SharedStrictness> {
         resolved
             .iter()
             .map(|(schema, fragments)| (schema.as_path(), fragments)),
-        |schema| roles.get(schema).cloned(),
+        |schema| policies.get(schema).cloned(),
     )
 }
 
@@ -260,10 +259,10 @@ fn rewire_refuses_a_closure_name_with_no_block() -> Result<()> {
 }
 
 #[test]
-fn unanimous_none_consumers_emit_one_strict_shared_struct() -> Result<()> {
+fn unanimous_deny_consumers_emit_one_strict_shared_struct() -> Result<()> {
     let strictness = strictness_fixture(&[
-        ("schemas/first.jtd.json", "none", "shared_row"),
-        ("schemas/second.jtd.json", "none", "shared_row"),
+        ("schemas/first.jtd.json", "deny", "shared_row"),
+        ("schemas/second.jtd.json", "deny", "shared_row"),
     ])?;
     assert_eq!(
         strictness.fragments.get("shared_row"),
@@ -288,8 +287,8 @@ pub value: String,\n\
 #[test]
 fn rewrite_generated_runs_the_shared_strictness_slot() -> Result<()> {
     let strictness = strictness_fixture(&[
-        ("schemas/first.jtd.json", "none", "shared_row"),
-        ("schemas/second.jtd.json", "none", "shared_row"),
+        ("schemas/first.jtd.json", "deny", "shared_row"),
+        ("schemas/second.jtd.json", "deny", "shared_row"),
     ])?;
     let dir = tempfile::tempdir()?;
     let file = dir.path().join("mod.rs");
@@ -335,8 +334,8 @@ pub value: String,\n\
 #[test]
 fn all_permissive_consumers_preserve_shared_bytes() -> Result<()> {
     let strictness = strictness_fixture(&[
-        ("schemas/first.jtd.json", "many", "shared_row"),
-        ("schemas/second.jtd.json", "ours", "shared_row"),
+        ("schemas/first.jtd.json", "allow", "shared_row"),
+        ("schemas/second.jtd.json", "allow", "shared_row"),
     ])?;
     assert_eq!(
         strictness.fragments.get("shared_row"),
@@ -357,10 +356,10 @@ pub value: String,\n\
 #[test]
 fn mixed_consumers_refuse_with_both_sets_named() {
     let err = strictness_fixture(&[
-        ("schemas/strict_first.jtd.json", "none", "shared_row"),
-        ("schemas/strict_second.jtd.json", "none", "shared_row"),
-        ("schemas/many.jtd.json", "many", "shared_row"),
-        ("schemas/ours.jtd.json", "ours", "shared_row"),
+        ("schemas/strict_first.jtd.json", "deny", "shared_row"),
+        ("schemas/strict_second.jtd.json", "deny", "shared_row"),
+        ("schemas/many.jtd.json", "allow", "shared_row"),
+        ("schemas/ours.jtd.json", "allow", "shared_row"),
     ])
     .expect_err("strict and permissive consumers cannot share one block");
     let msg = err.to_string();
@@ -381,10 +380,10 @@ fn mixed_consumers_refuse_with_both_sets_named() {
 #[test]
 fn unanimous_strict_enum_and_scalar_keep_valid_generated_shape() -> Result<()> {
     let strictness = strictness_fixture(&[
-        ("schemas/first.jtd.json", "none", "reply_status"),
-        ("schemas/second.jtd.json", "none", "reply_status"),
-        ("schemas/first.jtd.json", "none", "envelope"),
-        ("schemas/second.jtd.json", "none", "envelope"),
+        ("schemas/first.jtd.json", "deny", "reply_status"),
+        ("schemas/second.jtd.json", "deny", "reply_status"),
+        ("schemas/first.jtd.json", "deny", "envelope"),
+        ("schemas/second.jtd.json", "deny", "envelope"),
     ])?;
     let before = "#[derive(Serialize, Deserialize)]\n\
 pub enum ReplyStatus {\n    \
@@ -562,3 +561,6 @@ fn the_counter_refuses_a_moved_name_set() -> Result<()> {
     assert!(msg.contains("Missing"), "names the appeared name: {msg}");
     Ok(())
 }
+
+#[path = "policy_tests.rs"]
+mod policy_tests;
