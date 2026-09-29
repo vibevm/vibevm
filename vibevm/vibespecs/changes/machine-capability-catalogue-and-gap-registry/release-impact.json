@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "change_id": "machine-capability-catalogue-and-gap-registry",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "d59b69c2900a4d3c857c6bb7a1aa27b2c49b6cad"
+    },
+    {
+      "kind": "commit",
+      "identity": "c3d852805a201635cfb66d7327d8bd85ef119ffc"
+    },
+    {
+      "kind": "commit",
+      "identity": "895aee5d404074324e94a0c8c2a86f2f71fb2476"
+    },
+    {
+      "kind": "commit",
+      "identity": "44cbaf284548987fc4c3095fe205f8bb2b2c20af"
+    },
+    {
+      "kind": "commit",
+      "identity": "0c77d8a1ed10be2245ba2f12ba7ea911f19735b7"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-orchestrator/src/machine_operation.rs",
+    "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+    "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+    "formats/capability-coverage/README.md",
+    "formats/capability-coverage/coverage-e1.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:capability-coverage:e1",
+      "capability_id": "current-machine-capability-catalogue",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "The retained coverage inventory predated migration/environment/machine source rows and current MCP registrations.",
+      "after": "The candidate inventory and README now account for the selected machine source observation, 198 source files, 15 default MCP tools, 214 operation identities and 29 model identities with explicit limits; source-observed rows are not made callable.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_operation::coverage",
+      "capability_id": "typed-machine-extraction-gaps",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "The neutral service had no typed mapping from retained coverage IDs into explicit operation/model extraction gaps.",
+      "after": "A typed gap registry retains those identities while allowing only the exact reviewed planner binding; the other 213 operations and 29 models remain gaps, with no inferred authority or full semantic coverage.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Developer-facing inventory and library discovery of gaps change; the added rows do not execute or authorize the catalogued operations."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Keep capability README and machine API guidance explicit about source counts, selected observation, one reviewed planner binding and remaining gaps."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "0c77d8a1ed10be2245ba2f12ba7ea911f19735b7",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "selected-b1-verification",
+      "subject_id": "0c77d8a1ed10be2245ba2f12ba7ea911f19735b7",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-verification.md",
+      "verdict": "passed",
+      "sha256": "26f05cb618b4ac3fae90e45c3fed3edabc93b677079247de4ea7336d842452dc"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "0c77d8a1ed10be2245ba2f12ba7ea911f19735b7",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "0c77d8a1ed10be2245ba2f12ba7ea911f19735b7",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

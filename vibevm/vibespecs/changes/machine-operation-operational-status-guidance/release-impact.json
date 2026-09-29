@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "change_id": "machine-operation-operational-status-guidance",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "4325030e9b2c3387f946c047820454990ca5476b"
+    },
+    {
+      "kind": "commit",
+      "identity": "53889e824d2c55694706b3faa332f009fc2822ef"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/boot/90-user.xml"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "This local guidance changes how a maintainer sees campaign status, not installed product behavior or client protocol."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "This is user-owned agent boot memory, not public product or developer documentation."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "53889e824d2c55694706b3faa332f009fc2822ef",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "53889e824d2c55694706b3faa332f009fc2822ef",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "53889e824d2c55694706b3faa332f009fc2822ef",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

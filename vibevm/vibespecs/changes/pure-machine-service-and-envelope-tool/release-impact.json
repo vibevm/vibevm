@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "change_id": "pure-machine-service-and-envelope-tool",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4"
+    },
+    {
+      "kind": "commit",
+      "identity": "0a5d512d35d2816339482d17f73641d18f3fe297"
+    },
+    {
+      "kind": "commit",
+      "identity": "23c9a871ce248493152c88b83f78f9a3466daf4c"
+    },
+    {
+      "kind": "commit",
+      "identity": "1c5f0fe10a1c7453ac1acc3f40fe94a903cecf65"
+    },
+    {
+      "kind": "commit",
+      "identity": "44cbaf284548987fc4c3095fe205f8bb2b2c20af"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-mcp/src/tools/machine_operation.rs",
+    "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+    "crates/vibe-orchestrator/Cargo.toml",
+    "crates/vibe-orchestrator/src/lib.rs",
+    "crates/vibe-orchestrator/src/machine_operation.rs",
+    "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
+    "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+    "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+    "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_operation",
+      "capability_id": "pure-machine-planner-service",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "No neutral typed machine operation service composed retained descriptors with the pure manifest migration planner.",
+      "after": "A finite service admits only the reviewed pure migration planning route after independent status/source/format checks, delegates to the existing workspace owner, retains invalid original evidence diagnostically, and exposes other operations as gaps rather than a generic eval/handler engine.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE"
+      ]
+    },
+    {
+      "interface_id": "mcp:plan_manifest_migration_envelope",
+      "capability_id": "pure-machine-planner-transport",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "The existing MCP migration planner had no strict outer machine envelope tool.",
+      "after": "One registered MCP tool enforces the generated epoch-1 Input envelope and owner request decoder before the pure service, validates publication through the shared library owner, and preserves structured preflight, executed refusal and diagnostic-only original evidence without project/store access.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "An additional structured pure-planning entry is available to clients; no file apply, provider, shell or generic operation execution is admitted."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Developer/MCP guidance must name the new tool, exact envelope/domain formats and outcome-channel meanings."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "44cbaf284548987fc4c3095fe205f8bb2b2c20af",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "selected-b1-verification",
+      "subject_id": "44cbaf284548987fc4c3095fe205f8bb2b2c20af",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-verification.md",
+      "verdict": "passed",
+      "sha256": "26f05cb618b4ac3fae90e45c3fed3edabc93b677079247de4ea7336d842452dc"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "44cbaf284548987fc4c3095fe205f8bb2b2c20af",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "44cbaf284548987fc4c3095fe205f8bb2b2c20af",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}
