@@ -312,6 +312,7 @@ pub(super) fn check(
     let mut actual: BTreeMap<&str, BTreeSet<String>> = BTreeMap::new();
     let mut historical_paths = BTreeMap::new();
     let mut current_subjects: BTreeMap<&str, BTreeSet<String>> = BTreeMap::new();
+    let mut current_paths: BTreeMap<&str, BTreeSet<String>> = BTreeMap::new();
     for record in &records {
         for relation in &record.relations {
             if !ids.contains(relation.change_id.as_str()) {
@@ -393,6 +394,8 @@ pub(super) fn check(
         .iter()
         .map(|record| record_path(&record.change_id))
         .collect();
+    let mut touched = BTreeSet::new();
+    let mut touched_complete = true;
     for commit in &commits {
         let (mut paths, paths_complete) = changed_paths(&root, commit, report)?;
         let raw_paths = paths.clone();
@@ -403,6 +406,8 @@ pub(super) fn check(
             paths.clear();
         }
         paths.retain(|path| !excluded(path, &before));
+        touched.extend(paths.iter().cloned());
+        touched_complete &= paths_complete;
         let matching = by_commit.get(commit.as_str());
         if !paths.is_empty() && matching.is_none() {
             return Err(fault(
@@ -415,6 +420,10 @@ pub(super) fn check(
             let mut covered = BTreeSet::new();
             let mut complete = true;
             for record in matching {
+                current_paths
+                    .entry(&record.change_id)
+                    .or_default()
+                    .extend(paths.iter().cloned());
                 actual
                     .entry(&record.change_id)
                     .or_default()
@@ -482,6 +491,21 @@ pub(super) fn check(
             report,
         )?;
     }
+    super::affected_review::check(
+        super::affected_review::Context {
+            root: &root,
+            release: &captures.release,
+            before: &before,
+            after: &after,
+            scope,
+            records: &records,
+            touched: &touched,
+            touched_complete,
+            current_paths: &current_paths,
+            current_subjects: &current_subjects,
+        },
+        report,
+    )?;
     if !report.findings.iter().any(|finding| {
         matches!(
             finding.code.as_str(),

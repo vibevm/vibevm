@@ -1,10 +1,15 @@
 //! Read-only checker for the permanent Developer Preview transition records.
 
+mod affected_review;
 mod capture;
 mod contribution;
 mod documentation;
+mod git_entry;
 mod readiness;
 
+#[cfg(test)]
+#[path = "affected_review/tests.rs"]
+mod affected_review_tests;
 #[cfg(test)]
 mod captured_git_tests;
 #[cfg(test)]

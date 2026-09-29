@@ -13,64 +13,28 @@ pub(super) struct VerifiedSource {
     pub files: BTreeMap<String, Vec<u8>>,
 }
 
-struct Entry<'a> {
-    mode: &'a str,
-    kind: &'a str,
-    oid: &'a str,
-    repository_path: &'a str,
-}
-
-impl Entry<'_> {
-    fn regular(&self) -> bool {
-        matches!(self.mode, "100644" | "100755") && self.kind == "blob"
-    }
-}
+use super::super::git_entry;
+use git_entry::Entry;
 
 fn entry<'a>(
     row: &'a [u8],
     id: &str,
     report: &mut CheckReport,
 ) -> Result<Option<Entry<'a>>, CheckFailure> {
-    let Some(separator) = row.iter().position(|byte| *byte == b'\t') else {
-        return Err(fault(
-            "documentation-git-row",
-            id,
-            "Git census row has no path delimiter",
-        ));
-    };
-    let metadata = std::str::from_utf8(&row[..separator]).map_err(|_| {
-        fault(
-            "documentation-git-row",
-            id,
-            "Git census metadata cannot be represented",
-        )
-    })?;
-    let mut parts = metadata.split(' ');
-    let (Some(mode), Some(kind), Some(oid), None) =
-        (parts.next(), parts.next(), parts.next(), parts.next())
-    else {
-        return Err(fault(
-            "documentation-git-row",
-            id,
-            "Git census metadata is malformed",
-        ));
-    };
-    let Ok(repository_path) = std::str::from_utf8(&row[separator + 1..]) else {
-        pending(
-            report,
-            "documentation-git-path-unsupported",
-            id,
-            "Captured path is not representable by the UTF-8 wire format",
-            FindingState::Unsupported,
-        );
-        return Ok(None);
-    };
-    Ok(Some(Entry {
-        mode,
-        kind,
-        oid,
-        repository_path,
-    }))
+    match git_entry::decode(row) {
+        Ok(entry) => Ok(Some(entry)),
+        Err(git_entry::DecodeError::PathEncoding) => {
+            pending(
+                report,
+                "documentation-git-path-unsupported",
+                id,
+                "Captured path is not representable by the UTF-8 wire format",
+                FindingState::Unsupported,
+            );
+            Ok(None)
+        }
+        Err(error) => Err(fault("documentation-git-row", id, error.reason())),
+    }
 }
 
 fn text(bytes: &[u8], id: &str) -> Result<String, CheckFailure> {
@@ -176,7 +140,7 @@ pub(super) fn verify(
     let rows = capture::git(&root, &args)?;
     let mut observed = BTreeMap::new();
     let mut supported = true;
-    for row in rows.split(|byte| *byte == 0).filter(|row| !row.is_empty()) {
+    for row in git_entry::rows(&rows) {
         let Some(row) = entry(row, id, report)? else {
             supported = false;
             continue;
@@ -263,7 +227,7 @@ pub(super) fn verify(
                 &input_row.path,
             ],
         )?;
-        let mut entries = rows.split(|byte| *byte == 0).filter(|row| !row.is_empty());
+        let mut entries = git_entry::rows(&rows);
         let raw = entries.next().ok_or_else(|| {
             fault(
                 "documentation-build-entry",

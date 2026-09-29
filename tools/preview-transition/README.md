@@ -37,6 +37,28 @@ The report keeps central semantic review and complete interface/topic/native
 linkage pending; byte hashes do not authenticate an evidence producer or infer
 net delivered impact from commits or reverts.
 
+An optional exact `affected_source_review` selects a retained finite review and
+its independent source bytes. The checker reuses that same contribution traversal
+to reconcile every touched product path, including transient paths absent at both
+endpoints, then checks endpoint identities or explicit absence at the captured
+commits. A present nonregular entry cannot prove absence or regular-file bytes.
+Captured manifest authorities, scoped canonical document candidates and permanent
+XML anchors use their existing owners; mutable worktree edits do not replace Git
+blobs. Known collisions and local byte contradictions refuse even alongside
+unsupported profiles, authorities or unrepresentable paths. Unknown paths prevent
+claims of complete inventory or missing canonical documents.
+
+Selected current effects join the reviewed finite interface, path, capability,
+audience, platform, anchor and topic obligations. Comparable capture subjects also
+check declared kind/before/after consistency; historical or intermediate subjects
+retain explicit pending semantic comparison instead of becoming global net impact.
+Independent no-impact path reasons do not force a mixed record's whole disposition.
+Missing optional review preserves the bounded byte/delta result with a specific
+pending finding. BASE.3 central review separately requires these finite subclaims
+and actual semantic adequacy; declared rows do not prove a complete native,
+capability, topic or documentation census, authenticate a reviewer, or grant stage
+acceptance.
+
 The temporary campaign `bridge-check` command validates only routing references
 against supplied capture and record IDs, which remain unverified declarations.
 It does not run this permanent checker or certify its results. Before central
