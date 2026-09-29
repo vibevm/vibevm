@@ -1,0 +1,34 @@
+[
+  {
+    "name": "name-correction",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "--locked",
+      "environment::layout_tests::settings_table_missing_s_keeps_required_roots_unresolved",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "raw_log": "/tmp/vibevm-next-M14-A2-name-correction.log"
+  },
+  {
+    "name": "legacy-settings",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "--locked",
+      "settings::tests::override_wins_verbatim_over_home",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "raw_log": "/tmp/vibevm-next-M14-A2-legacy-settings.log"
+  }
+]
