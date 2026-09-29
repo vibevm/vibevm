@@ -435,6 +435,11 @@ and `recipe`. Missing selections reach the domain's typed questions; an
 unrecognized string reaches its typed refusal. Wrong primitive types,
 unknown fields or unsupported request schema fail preflight without calling
 the planner. There are no path, provider, apply, project or authority fields.
+Optional selections are omittable, not nullable: explicit JSON null is a
+preflight type error, not an unsupplied choice. The owning request decoder
+checks that presence distinction before lowering into optional Rust fields;
+it uses the existing JSON value/derived-reader path, not another parser or a
+generic schema interpreter.
 
 A report has `schema = 1`, stage `planner`, and a discriminated outcome:
 `planned`, `no_op`, `needs_input` or `refused`. Planned and no-op outcomes
@@ -456,7 +461,8 @@ fragment owns closed codes `invalid_request`, `unsupported_schema`,
 `input_read`, `unknown_selection`, `incompatible_edge`, `malformed_syntax`,
 `unrecognized_shape`, `invalid_current_manifest`, `unprovable_edit`, plus
 field and fixed reason strings. Preflight uses the first three codes; domain
-refusal uses the last six. Generated readers check structural shape; the
+refusal uses the last six. Generated readers and the owning presence check
+enforce structural shape; the
 pure adapter checks schema/stage/code and result invariants before emission.
 The common error object is shared through the existing vocabulary resolver,
 not a primitive alias pretending to be an object or a second error codec.
