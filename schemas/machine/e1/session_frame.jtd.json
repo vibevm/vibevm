@@ -1,0 +1,291 @@
+{
+  "metadata": {
+    "description": "Epoch-one on-demand machine-session frame value. Generated decoding checks shape only; the session owner checks negotiation, assigned context IDs, fixed envelope_json format, epoch, effects and publication before dispatch. A shaped event is not a streaming capability.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::session_frame"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "session_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "request_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "body": {
+      "ref": "body"
+    }
+  },
+  "definitions": {
+    "body": {
+      "discriminator": "kind",
+      "mapping": {
+        "initialize_offer": {
+          "properties": {
+            "api_versions": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "schema_offers": {
+              "elements": {
+                "ref": "schema_offer"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "position_encodings": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "requested_capabilities": {
+              "ref": "capabilities"
+            }
+          }
+        },
+        "initialized": {
+          "properties": {
+            "api_version": {
+              "type": "string"
+            },
+            "selected_schemas": {
+              "elements": {
+                "ref": "schema_offer"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "position_encoding": {
+              "type": "string"
+            },
+            "actual_capabilities": {
+              "ref": "capabilities"
+            },
+            "contexts": {
+              "elements": {
+                "ref": "context"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "legacy_mcp_observed_version": {
+              "type": "string"
+            }
+          }
+        },
+        "initialization_refused": {
+          "properties": {
+            "reason": {
+              "enum": [
+                "no_common_api_version",
+                "no_common_schema",
+                "no_common_position_encoding",
+                "invalid_offer",
+                "service_unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "supported_api_versions": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "supported_schemas": {
+              "elements": {
+                "ref": "schema_offer"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "supported_position_encodings": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "request": {
+          "properties": {
+            "context_id": {
+              "type": "string"
+            },
+            "target_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "envelope_json": {
+              "type": "string"
+            }
+          }
+        },
+        "event": {
+          "properties": {
+            "event_id": {
+              "type": "string"
+            },
+            "envelope_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "outcome": {
+              "ref": "outcome"
+            }
+          }
+        },
+        "complete": {
+          "properties": {
+            "envelope_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "outcome": {
+              "ref": "outcome"
+            }
+          }
+        },
+        "refusal": {
+          "properties": {
+            "reason": {
+              "enum": [
+                "not_initialized",
+                "unsupported_version",
+                "unknown_context",
+                "unknown_target",
+                "invalid_request",
+                "unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "envelope_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "outcome": {
+              "ref": "outcome"
+            }
+          }
+        }
+      }
+    },
+    "schema_offer": {
+      "properties": {
+        "format_id": {
+          "type": "string"
+        },
+        "epoch": {
+          "type": "uint16"
+        }
+      }
+    },
+    "capabilities": {
+      "properties": {
+        "streaming": {
+          "type": "boolean"
+        },
+        "replay": {
+          "type": "boolean"
+        },
+        "control": {
+          "type": "boolean"
+        }
+      }
+    },
+    "context": {
+      "properties": {
+        "context_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "workspace",
+            "member",
+            "home",
+            "container"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "availability": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "target_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "reason": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "outcome": {
+      "properties": {
+        "effect_state": {
+          "enum": [
+            "no_effects",
+            "completed",
+            "uncertain"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "provenance_id": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  }
+}

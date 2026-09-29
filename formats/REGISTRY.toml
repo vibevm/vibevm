@@ -1345,3 +1345,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-source-location/e1"
 sunset = "none"
+
+[format.machine-session-frame]
+epoch = 1
+schema = "schemas/machine/e1/session_frame.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-session-frame/e1"
+sunset = "none"
