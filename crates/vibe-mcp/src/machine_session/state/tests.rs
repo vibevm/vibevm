@@ -89,6 +89,20 @@ fn two_clients_get_distinct_private_contexts_and_no_false_capabilities() {
     };
     assert_eq!(a_body.api_version, "1");
     assert_eq!(a_body.selected_schemas, supported_schemas());
+    assert_eq!(
+        a_body
+            .selected_schemas
+            .iter()
+            .map(|offer| offer.format_id.as_str())
+            .collect::<Vec<_>>(),
+        [
+            FormatId::MachineSessionFrame.id(),
+            FormatId::MachineOperationEnvelope.id(),
+            FormatId::MigrationPlanRequest.id(),
+            FormatId::MigrationPlanReport.id(),
+            FormatId::MigrationPlanError.id(),
+        ]
+    );
     assert_eq!(a_body.position_encoding, POSITION_ENCODING);
     assert_eq!(a_body.legacy_mcp_observed_version, PROTOCOL_VERSION);
     assert!(!a_body.actual_capabilities.streaming);
@@ -180,6 +194,35 @@ fn unsupported_offers_name_actual_supported_sets_without_initializing() {
         panic!("unregistered schema epoch was admitted")
     };
     assert_eq!(body.reason, BodyInitializationRefusedReason::NoCommonSchema);
+    for missing in [FormatId::MigrationPlanReport, FormatId::MigrationPlanError] {
+        let mut without = offer(&format!("missing-{}", missing.id()));
+        let Body::InitializeOffer(body) = &mut without.body else {
+            unreachable!()
+        };
+        body.schema_offers
+            .retain(|row| row.format_id != missing.id());
+        let Body::InitializationRefused(body) = reply(session.receive(without)).body else {
+            panic!("missing domain result/error format was admitted")
+        };
+        assert_eq!(body.reason, BodyInitializationRefusedReason::NoCommonSchema);
+        assert_eq!(body.supported_schemas, supported_schemas());
+
+        let mut wrong_epoch = offer(&format!("wrong-{}-epoch", missing.id()));
+        let Body::InitializeOffer(body) = &mut wrong_epoch.body else {
+            unreachable!()
+        };
+        body.schema_offers
+            .iter_mut()
+            .find(|row| row.format_id == missing.id())
+            .unwrap()
+            .epoch += 1;
+        let Body::InitializationRefused(body) = reply(session.receive(wrong_epoch)).body else {
+            panic!("wrong domain result/error epoch was admitted")
+        };
+        assert_eq!(body.reason, BodyInitializationRefusedReason::NoCommonSchema);
+        assert_eq!(body.supported_schemas, supported_schemas());
+        assert_eq!(session.phase(), SessionPhase::Uninitialized);
+    }
     let mut path_offer = serde_json::to_value(offer("path-in-body")).unwrap();
     path_offer["body"]["project_root"] = serde_json::json!("/not-authorized");
     assert!(serde_json::from_value::<SessionFrame>(path_offer).is_err());
