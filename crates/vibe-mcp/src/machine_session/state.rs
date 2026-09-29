@@ -81,6 +81,9 @@ fn supported_schemas() -> Vec<SchemaOffer> {
     [
         FormatId::MachineSessionFrame,
         FormatId::MachineOperationEnvelope,
+        FormatId::MigrationPlanRequest,
+        FormatId::MigrationPlanReport,
+        FormatId::MigrationPlanError,
     ]
     .into_iter()
     .map(|format| SchemaOffer {
