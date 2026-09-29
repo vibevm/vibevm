@@ -78,7 +78,9 @@
         "vibevm/vibespecs/common/PROP-076-environment-model.xml",
         "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
         "crates/vibe-core/src/layout.rs",
-        "crates/vibe-core/src/settings.rs"
+        "crates/vibe-core/src/settings.rs",
+        "crates/vibe-core/src/manifest/declarant_path.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/tests.rs"
       ],
       "write_paths": [
         "crates/vibe-core/src/environment/",
@@ -90,7 +92,10 @@
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/mechanism.rs",
         "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
-        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "crates/vibe-core/src/settings.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs"
       ],
       "steps": [
         "First add the exact injected-layout/resource/path/prefix policy requirements to permanent PROP-076 and validate its existing canonical readers before executable A2 edits. Desired rules and observed implementation remain separate; no existing roots or provider config are relocated implicitly.",
@@ -124,7 +129,8 @@
         "crates/vibe-core/src/layout.rs is the existing layout authority named in the baseline architecture; inspect it when the execution packet admits the implementation.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "Source-before-execution perimeter amendment: read the existing settings/layout authorities and add only A2 rules in PROP-076. Preserve A1 contract semantics and all existing user/project roots; no settings resolver/provider behavior rewrite is granted by the source addition."
+        "Source-before-execution perimeter amendment: read the existing settings/layout authorities and add only A2 rules in PROP-076. Preserve A1 contract semantics and all existing user/project roots; no settings resolver/provider behavior rewrite is granted by the source addition.",
+        "Exact shared-name adapter amendment: settings.rs may add pure injected-root helpers and route legacy ambient accessors through the same suffix constants without changing precedence or paths. vibebin/store.rs may replace only STORE_DIR/BIN_DIR with aliases; deploy/model.rs may replace only DEPLOY_STATE_DIR with an alias. No provider/configuration/placement/cleanup/activation behavior change or path relocation is granted. Linux payloads never pass through the generic source-portable declarant-path grammar."
       ]
     }
   ]

@@ -1,9 +1,9 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 13
+revision = 14
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-09-29T14:40:43Z"
+updated_at = "2026-09-29T14:56:02Z"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
@@ -1729,7 +1729,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Ratify EnvironmentDefinition/TargetBinding/ExecutionContext and platform roles; centralized layout/source-law amendment; freeze existing bare-install compatibility and future distro boundary","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json"
-contract_sha256 = "a517bc4bd180a6aa79f08380b4665aad082d31d8dc7a726c78a51a42123c3110"
+contract_sha256 = "4c5f8336d2086c1cb75856a67adef7afdd5650f9a83ff8febeb084e77e56901a"
 
 [[node]]
 id = "M-14-A.1"
@@ -1744,7 +1744,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-A.json#M-14-A.1","Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.","Pure construction needs neither Docker nor a host HOME lookup."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json#M-14-A.1"
-contract_sha256 = "a517bc4bd180a6aa79f08380b4665aad082d31d8dc7a726c78a51a42123c3110"
+contract_sha256 = "4c5f8336d2086c1cb75856a67adef7afdd5650f9a83ff8febeb084e77e56901a"
 
 [[node]]
 id = "M-14-A.2"
@@ -1759,7 +1759,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-A.json#M-14-A.2","Every environment root has one layout constructor and callers receive explicit bindings.","No root privilege broker, live system mutation or pacman policy is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-A.json#M-14-A.2"
-contract_sha256 = "a517bc4bd180a6aa79f08380b4665aad082d31d8dc7a726c78a51a42123c3110"
+contract_sha256 = "4c5f8336d2086c1cb75856a67adef7afdd5650f9a83ff8febeb084e77e56901a"
 
 [[node]]
 id = "M-14-B"
