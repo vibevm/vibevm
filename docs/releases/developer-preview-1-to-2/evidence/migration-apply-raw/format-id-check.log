@@ -1,0 +1,12 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.43s
+     Running tests/format_registry_completeness.rs (target/debug/deps/format_registry_completeness-a31c9eaed78b9881)
+
+running 1 test
+test format_id_completeness ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+

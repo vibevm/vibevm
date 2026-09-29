@@ -1,0 +1,10 @@
+[
+  {
+    "case": "process_restart_apply_boundaries_preserve_supported_prefixes",
+    "exit": 0
+  },
+  {
+    "case": "process_restart_restore_boundaries_are_idempotent",
+    "exit": 0
+  }
+]

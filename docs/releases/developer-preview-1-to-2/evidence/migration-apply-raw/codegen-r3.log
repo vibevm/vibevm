@@ -1,0 +1,1542 @@
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+xtask codegen: 112 schemas → 3 generated trees
+  - vocabularies (shared) → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/shared/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/shared
+📦 Generated Rust code.
+📦     Root schema converted into type: Shared
+📦     Definition "absorption_occurrence" converted into type: AbsorptionOccurrence
+📦     Definition "absorption_plan" converted into type: AbsorptionPlan
+📦     Definition "absorption_state" converted into type: AbsorptionState
+📦     Definition "artifact" converted into type: Artifact
+📦     Definition "artifact_context" converted into type: ArtifactContext
+📦     Definition "artifact_frame" converted into type: ArtifactFrame
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "artifact_witness" converted into type: ArtifactWitness
+📦     Definition "authority" converted into type: Authority
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "cardinality_artifact" converted into type: CardinalityArtifact
+📦     Definition "cardinality_document" converted into type: CardinalityDocument
+📦     Definition "closure_contribution" converted into type: ClosureContribution
+📦     Definition "closure_document" converted into type: ClosureDocument
+📦     Definition "closure_edge" converted into type: ClosureEdge
+📦     Definition "closure_ir" converted into type: ClosureIr
+📦     Definition "closure_occurrence" converted into type: ClosureOccurrence
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "compile_mode" converted into type: CompileMode
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "contribution_absorption" converted into type: ContributionAbsorption
+📦     Definition "contribution_meta" converted into type: ContributionMeta
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "digest_witness" converted into type: DigestWitness
+📦     Definition "directive" converted into type: Directive
+📦     Definition "directive_error" converted into type: DirectiveError
+📦     Definition "directives" converted into type: Directives
+📦     Definition "doc_node" converted into type: DocNode
+📦     Definition "doc_tree" converted into type: DocTree
+📦     Definition "document_address" converted into type: DocumentAddress
+📦     Definition "document_ir" converted into type: DocumentIr
+📦     Definition "document_observation" converted into type: DocumentObservation
+📦     Definition "document_provider" converted into type: DocumentProvider
+📦     Definition "document_subject" converted into type: DocumentSubject
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "duration" converted into type: Duration
+📦     Definition "embed_resolution_snapshot" converted into type: EmbedResolutionSnapshot
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "emission_contribution_witness" converted into type: EmissionContributionWitness
+📦     Definition "emission_provenance" converted into type: EmissionProvenance
+📦     Definition "emitted_artifact" converted into type: EmittedArtifact
+📦     Definition "evidence_run" converted into type: EvidenceRun
+📦     Definition "evidence_status" converted into type: EvidenceStatus
+📦     Definition "execution" converted into type: Execution
+📦     Definition "expansion_observation" converted into type: ExpansionObservation
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "fence_snapshot" converted into type: FenceSnapshot
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "in_place_use" converted into type: InPlaceUse
+📦     Definition "input_measurement" converted into type: InputMeasurement
+📦     Definition "io" converted into type: Io
+📦     Definition "ir" converted into type: Ir
+📦     Definition "lane_chunk" converted into type: LaneChunk
+📦     Definition "lane_contribution" converted into type: LaneContribution
+📦     Definition "lane_frame" converted into type: LaneFrame
+📦     Definition "lane_ir" converted into type: LaneIr
+📦     Definition "lane_node" converted into type: LaneNode
+📦     Definition "level_closure" converted into type: LevelClosure
+📦     Definition "level_document" converted into type: LevelDocument
+📦     Definition "level_emitted" converted into type: LevelEmitted
+📦     Definition "level_lane" converted into type: LevelLane
+📦     Definition "level_source" converted into type: LevelSource
+📦     Definition "link_contribution_witness" converted into type: LinkContributionWitness
+📦     Definition "link_occurrence" converted into type: LinkOccurrence
+📦     Definition "link_result" converted into type: LinkResult
+📦     Definition "link_state" converted into type: LinkState
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "migration_planning_error" converted into type: MigrationPlanningError
+📦     Definition "naming_convention" converted into type: NamingConvention
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_artifact_shape" converted into type: NativeDeployArtifactShape
+📦     Definition "native_deploy_effect" converted into type: NativeDeployEffect
+📦     Definition "native_deploy_network" converted into type: NativeDeployNetwork
+📦     Definition "native_deploy_operation" converted into type: NativeDeployOperation
+📦     Definition "native_deploy_privilege" converted into type: NativeDeployPrivilege
+📦     Definition "native_deploy_reversibility" converted into type: NativeDeployReversibility
+📦     Definition "native_mechanism_role" converted into type: NativeMechanismRole
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "origin_rename" converted into type: OriginRename
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "project" converted into type: Project
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "qualification_state" converted into type: QualificationState
+📦     Definition "rename_entry" converted into type: RenameEntry
+📦     Definition "reply_artifact" converted into type: ReplyArtifact
+📦     Definition "reply_status" converted into type: ReplyStatus
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "run" converted into type: Run
+📦     Definition "run_agent_mode" converted into type: RunAgentMode
+📦     Definition "scrape_health_finding" converted into type: ScrapeHealthFinding
+📦     Definition "scrape_health_phase" converted into type: ScrapeHealthPhase
+📦     Definition "scrape_health_row" converted into type: ScrapeHealthRow
+📦     Definition "scrape_health_rows" converted into type: ScrapeHealthRows
+📦     Definition "scrape_health_severity" converted into type: ScrapeHealthSeverity
+📦     Definition "scrape_health_step" converted into type: ScrapeHealthStep
+📦     Definition "scrape_health_stream_witness" converted into type: ScrapeHealthStreamWitness
+📦     Definition "scrape_health_terminal_state" converted into type: ScrapeHealthTerminalState
+📦     Definition "slot_target" converted into type: SlotTarget
+📦     Definition "source_doc" converted into type: SourceDoc
+📦     Definition "source_resolution_snapshot" converted into type: SourceResolutionSnapshot
+📦     Definition "span" converted into type: Span
+📦     Definition "spec_address" converted into type: SpecAddress
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "verification_evidence" converted into type: VerificationEvidence
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+📦     Definition "world" converted into type: World
+📦     Definition "world_package" converted into type: WorldPackage
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/bundle_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/bundle_manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/bundle_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: BundleManifest
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "bundle_file" converted into type: BundleFile
+📦     Definition "bundle_launcher" converted into type: BundleLauncher
+📦     Definition "bundle_management" converted into type: BundleManagement
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "package_identity" converted into type: PackageIdentity
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/context.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/context/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/context
+📦 Generated Rust code.
+📦     Root schema converted into type: Context
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "application_operation" converted into type: ApplicationOperation
+📦     Definition "package_identity" converted into type: PackageIdentity
+📦     Definition "path" converted into type: Path
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/distribution_index.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/distribution_index/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/distribution_index
+📦 Generated Rust code.
+📦     Root schema converted into type: DistributionIndex
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "distribution_target" converted into type: DistributionTarget
+📦     Definition "package_identity" converted into type: PackageIdentity
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/index.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/index/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/index
+📦 Generated Rust code.
+📦     Root schema converted into type: Index
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "application_launcher_ownership" converted into type: ApplicationLauncherOwnership
+📦     Definition "application_provenance" converted into type: ApplicationProvenance
+📦     Definition "application_record" converted into type: ApplicationRecord
+📦     Definition "application_selection" converted into type: ApplicationSelection
+📦     Definition "application_selection_mode" converted into type: ApplicationSelectionMode
+📦     Definition "application_source_observation" converted into type: ApplicationSourceObservation
+📦     Definition "application_status" converted into type: ApplicationStatus
+📦     Definition "management_entry" converted into type: ManagementEntry
+📦     Definition "management_runtime" converted into type: ManagementRuntime
+📦     Definition "package_identity" converted into type: PackageIdentity
+📦     Definition "path" converted into type: Path
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/management.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/management/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/management
+📦 Generated Rust code.
+📦     Root schema converted into type: Management
+📦     Definition "owned_launcher" converted into type: OwnedLauncher
+📦     Definition "path" converted into type: Path
+  - /home/olegchir/git/v/vibevm-next/schemas/application/e1/reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application/e1/reply
+📦 Generated Rust code.
+📦     Root schema converted into type: Reply
+📦     Definition "application_launcher_ownership" converted into type: ApplicationLauncherOwnership
+📦     Definition "application_operation" converted into type: ApplicationOperation
+📦     Definition "application_status" converted into type: ApplicationStatus
+📦     Definition "management_entry" converted into type: ManagementEntry
+📦     Definition "management_runtime" converted into type: ManagementRuntime
+📦     Definition "path" converted into type: Path
+  - /home/olegchir/git/v/vibevm-next/schemas/application_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/application_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ApplicationReport
+  - /home/olegchir/git/v/vibevm-next/schemas/artifact_record.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/artifact_record/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/artifact_record
+📦 Generated Rust code.
+📦     Root schema converted into type: ArtifactRecord
+📦     Definition "artifact_kind" converted into type: ArtifactKind
+📦     Definition "artifact_shape" converted into type: ArtifactShape
+📦     Definition "content_digest" converted into type: ContentDigest
+📦     Definition "digest_algorithm" converted into type: DigestAlgorithm
+📦     Definition "freshness_fingerprints" converted into type: FreshnessFingerprints
+📦     Definition "producer_identity" converted into type: ProducerIdentity
+📦     Definition "provider_identity" converted into type: ProviderIdentity
+📦     Definition "relative_identity" converted into type: RelativeIdentity
+📦     Definition "relative_root" converted into type: RelativeRoot
+📦     Definition "rfc3339_timestamp" converted into type: Rfc3339Timestamp
+📦     Definition "verification_state" converted into type: VerificationState
+📦     Definition "verification_status" converted into type: VerificationStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/boot_artifact_transaction.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/boot_artifact_transaction/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/boot_artifact_transaction
+📦 Generated Rust code.
+📦     Root schema converted into type: BootArtifactTransaction
+📦     Definition "entry" converted into type: Entry
+📦     Definition "state" converted into type: State
+  - /home/olegchir/git/v/vibevm-next/schemas/capability/e1/coverage.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/capability/e1/coverage/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/capability/e1/coverage
+📦 Generated Rust code.
+📦     Root schema converted into type: Coverage
+📦     Definition "disposition" converted into type: Disposition
+📦     Definition "external_access" converted into type: ExternalAccess
+📦     Definition "implementation" converted into type: Implementation
+📦     Definition "model" converted into type: Model
+📦     Definition "planned_family" converted into type: PlannedFamily
+📦     Definition "source" converted into type: Source
+📦     Definition "surface" converted into type: Surface
+📦     Definition "surface_kind" converted into type: SurfaceKind
+  - /home/olegchir/git/v/vibevm-next/schemas/compiler_ir/e1/ir.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/compiler_ir/e1/ir/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/compiler_ir/e1/ir
+📦 Generated Rust code.
+📦     Root schema converted into type: Ir
+📦     Definition "absorption_occurrence" converted into type: AbsorptionOccurrence
+📦     Definition "absorption_plan" converted into type: AbsorptionPlan
+📦     Definition "absorption_state" converted into type: AbsorptionState
+📦     Definition "artifact_context" converted into type: ArtifactContext
+📦     Definition "artifact_frame" converted into type: ArtifactFrame
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "authority" converted into type: Authority
+📦     Definition "cardinality_artifact" converted into type: CardinalityArtifact
+📦     Definition "cardinality_document" converted into type: CardinalityDocument
+📦     Definition "closure_contribution" converted into type: ClosureContribution
+📦     Definition "closure_document" converted into type: ClosureDocument
+📦     Definition "closure_edge" converted into type: ClosureEdge
+📦     Definition "closure_ir" converted into type: ClosureIr
+📦     Definition "closure_occurrence" converted into type: ClosureOccurrence
+📦     Definition "compile_mode" converted into type: CompileMode
+📦     Definition "contribution_absorption" converted into type: ContributionAbsorption
+📦     Definition "contribution_meta" converted into type: ContributionMeta
+📦     Definition "directive" converted into type: Directive
+📦     Definition "directive_error" converted into type: DirectiveError
+📦     Definition "directives" converted into type: Directives
+📦     Definition "doc_node" converted into type: DocNode
+📦     Definition "doc_tree" converted into type: DocTree
+📦     Definition "document_address" converted into type: DocumentAddress
+📦     Definition "document_ir" converted into type: DocumentIr
+📦     Definition "document_observation" converted into type: DocumentObservation
+📦     Definition "document_provider" converted into type: DocumentProvider
+📦     Definition "document_subject" converted into type: DocumentSubject
+📦     Definition "embed_resolution_snapshot" converted into type: EmbedResolutionSnapshot
+📦     Definition "emission_contribution_witness" converted into type: EmissionContributionWitness
+📦     Definition "emission_provenance" converted into type: EmissionProvenance
+📦     Definition "emitted_artifact" converted into type: EmittedArtifact
+📦     Definition "expansion_observation" converted into type: ExpansionObservation
+📦     Definition "fence_snapshot" converted into type: FenceSnapshot
+📦     Definition "in_place_use" converted into type: InPlaceUse
+📦     Definition "ir" converted into type: Ir0
+📦     Definition "lane_chunk" converted into type: LaneChunk
+📦     Definition "lane_contribution" converted into type: LaneContribution
+📦     Definition "lane_frame" converted into type: LaneFrame
+📦     Definition "lane_ir" converted into type: LaneIr
+📦     Definition "lane_node" converted into type: LaneNode
+📦     Definition "level_closure" converted into type: LevelClosure
+📦     Definition "level_document" converted into type: LevelDocument
+📦     Definition "level_emitted" converted into type: LevelEmitted
+📦     Definition "level_lane" converted into type: LevelLane
+📦     Definition "level_source" converted into type: LevelSource
+📦     Definition "link_contribution_witness" converted into type: LinkContributionWitness
+📦     Definition "link_occurrence" converted into type: LinkOccurrence
+📦     Definition "link_result" converted into type: LinkResult
+📦     Definition "link_state" converted into type: LinkState
+📦     Definition "origin_rename" converted into type: OriginRename
+📦     Definition "qualification_state" converted into type: QualificationState
+📦     Definition "rename_entry" converted into type: RenameEntry
+📦     Definition "source_doc" converted into type: SourceDoc
+📦     Definition "source_resolution_snapshot" converted into type: SourceResolutionSnapshot
+📦     Definition "span" converted into type: Span
+📦     Definition "spec_address" converted into type: SpecAddress
+  - /home/olegchir/git/v/vibevm-next/schemas/compiler_trace_index/e1/index.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/compiler_trace_index/e1/index/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/compiler_trace_index/e1/index
+📦 Generated Rust code.
+📦     Root schema converted into type: Index
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "duration" converted into type: Duration
+📦     Definition "ir_cardinality" converted into type: IrCardinality
+📦     Definition "ir_level" converted into type: IrLevel
+📦     Definition "pass_event" converted into type: PassEvent
+📦     Definition "pass_shape" converted into type: PassShape
+📦     Definition "pass_status" converted into type: PassStatus
+📦     Definition "project_identity" converted into type: ProjectIdentity
+📦     Definition "run_status" converted into type: RunStatus
+📦     Definition "scope" converted into type: Scope
+📦     Definition "scope_kind" converted into type: ScopeKind
+📦     Definition "scope_status" converted into type: ScopeStatus
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "timing_row" converted into type: TimingRow
+  - /home/olegchir/git/v/vibevm-next/schemas/deploy_checkpoints.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_checkpoints/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_checkpoints
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployCheckpoints
+  - /home/olegchir/git/v/vibevm-next/schemas/deploy_intent.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_intent/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_intent
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployIntent
+📦     Definition "deploy_target_identity" converted into type: DeployTargetIdentity
+📦     Definition "planned_resource" converted into type: PlannedResource
+📦     Definition "rfc3339_timestamp" converted into type: Rfc3339Timestamp
+  - /home/olegchir/git/v/vibevm-next/schemas/deploy_inverse.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_inverse/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_inverse
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployInverse
+  - /home/olegchir/git/v/vibevm-next/schemas/deploy_lock_resources.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_lock_resources/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_lock_resources
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployLockResources
+📦     Definition "image_byte_count" converted into type: ImageByteCount
+📦     Definition "lock_binding" converted into type: LockBinding
+📦     Definition "native_provider_binding" converted into type: NativeProviderBinding
+  - /home/olegchir/git/v/vibevm-next/schemas/deploy_receipt.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_receipt/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/deploy_receipt
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployReceipt
+📦     Definition "deploy_identity" converted into type: DeployIdentity
+📦     Definition "destination_scope" converted into type: DestinationScope
+📦     Definition "owned_resource" converted into type: OwnedResource
+📦     Definition "provider_identity" converted into type: ProviderIdentity
+📦     Definition "receipt_status" converted into type: ReceiptStatus
+📦     Definition "rfc3339_timestamp" converted into type: Rfc3339Timestamp
+  - /home/olegchir/git/v/vibevm-next/schemas/distribution/e1/aggregate_distribution_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/distribution/e1/aggregate_distribution_manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/distribution/e1/aggregate_distribution_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: AggregateDistributionManifest
+📦     Definition "bundle_distribution_manifest" converted into type: BundleDistributionManifest
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "distribution_asset" converted into type: DistributionAsset
+📦     Definition "distribution_component" converted into type: DistributionComponent
+📦     Definition "distribution_component_name" converted into type: DistributionComponentName
+📦     Definition "distribution_source_archive" converted into type: DistributionSourceArchive
+📦     Definition "platform_distribution_fragment" converted into type: PlatformDistributionFragment
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_chapters.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_chapters/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_chapters
+📦 Generated Rust code.
+📦     Root schema converted into type: DocChapters
+📦     Definition "forward_link" converted into type: ForwardLink
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: DocManifest
+📦     Definition "adapted_source" converted into type: AdaptedSource
+📦     Definition "audience" converted into type: Audience
+📦     Definition "authorship" converted into type: Authorship
+📦     Definition "bridge_authorship" converted into type: BridgeAuthorship
+📦     Definition "card_media" converted into type: CardMedia
+📦     Definition "doc_package" converted into type: DocPackage
+📦     Definition "doc_page" converted into type: DocPage
+📦     Definition "documentation_status" converted into type: DocumentationStatus
+📦     Definition "documented_subject" converted into type: DocumentedSubject
+📦     Definition "group" converted into type: Group
+📦     Definition "navigation" converted into type: Navigation
+📦     Definition "navigation_chapter" converted into type: NavigationChapter
+📦     Definition "navigation_section" converted into type: NavigationSection
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "page_genre" converted into type: PageGenre
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translation_status" converted into type: TranslationStatus
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_reviews.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_reviews/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_reviews
+📦 Generated Rust code.
+📦     Root schema converted into type: DocReviews
+📦     Definition "page_review" converted into type: PageReview
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_shell_index.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_shell_index/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_shell_index
+📦 Generated Rust code.
+📦     Root schema converted into type: DocShellIndex
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_shell_release_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_shell_release_manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_shell_release_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: DocShellReleaseManifest
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "distribution_asset" converted into type: DistributionAsset
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_site_config.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_site_config/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_site_config
+📦 Generated Rust code.
+📦     Root schema converted into type: DocSiteConfig
+📦     Definition "site_analytics" converted into type: SiteAnalytics
+📦     Definition "site_host_source" converted into type: SiteHostSource
+📦     Definition "site_registry_source" converted into type: SiteRegistrySource
+📦     Definition "site_sources" converted into type: SiteSources
+📦     Definition "site_table" converted into type: SiteTable
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_site_state.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_site_state/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_site_state
+📦 Generated Rust code.
+📦     Root schema converted into type: DocSiteState
+📦     Definition "group" converted into type: Group
+📦     Definition "rendered_version" converted into type: RenderedVersion
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_surface.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_surface/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_surface
+📦 Generated Rust code.
+📦     Root schema converted into type: DocSurface
+📦     Definition "surface_command" converted into type: SurfaceCommand
+📦     Definition "surface_fact" converted into type: SurfaceFact
+📦     Definition "surface_flag" converted into type: SurfaceFlag
+📦     Definition "surface_format" converted into type: SurfaceFormat
+📦     Definition "surface_schema" converted into type: SurfaceSchema
+📦     Definition "surface_schema_field" converted into type: SurfaceSchemaField
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_surface_diff.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_surface_diff/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_surface_diff
+📦 Generated Rust code.
+📦     Root schema converted into type: DocSurfaceDiff
+📦     Definition "change_kind" converted into type: ChangeKind
+📦     Definition "change_verb" converted into type: ChangeVerb
+📦     Definition "page_to_update" converted into type: PageToUpdate
+📦     Definition "surface_change" converted into type: SurfaceChange
+📦     Definition "unplaced_change" converted into type: UnplacedChange
+  - /home/olegchir/git/v/vibevm-next/schemas/doc_todo.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_todo/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/doc_todo
+📦 Generated Rust code.
+📦     Root schema converted into type: DocTodo
+📦     Definition "item_severity" converted into type: ItemSeverity
+📦     Definition "section_name" converted into type: SectionName
+📦     Definition "todo_item" converted into type: TodoItem
+📦     Definition "todo_metrics" converted into type: TodoMetrics
+📦     Definition "todo_section" converted into type: TodoSection
+  - /home/olegchir/git/v/vibevm-next/schemas/extensions_analyze.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/extensions_analyze/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/extensions_analyze
+📦 Generated Rust code.
+📦     Root schema converted into type: ExtensionsAnalyze
+📦     Definition "artifact_row" converted into type: ArtifactRow
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "byte_pair" converted into type: BytePair
+📦     Definition "contribution_kind" converted into type: ContributionKind
+📦     Definition "contribution_row" converted into type: ContributionRow
+📦     Definition "delta_row" converted into type: DeltaRow
+📦     Definition "lane_identity" converted into type: LaneIdentity
+📦     Definition "provider_identity" converted into type: ProviderIdentity
+📦     Definition "stage" converted into type: Stage
+  - /home/olegchir/git/v/vibevm-next/schemas/extensions_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/extensions_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/extensions_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ExtensionsReport
+📦     Definition "applies_to" converted into type: AppliesTo
+📦     Definition "extension_entry" converted into type: ExtensionEntry
+📦     Definition "handler" converted into type: Handler
+📦     Definition "ir_level" converted into type: IrLevel
+📦     Definition "json_map" converted into type: JsonMap
+📦     Definition "manifest_kind" converted into type: ManifestKind
+📦     Definition "native_observation" converted into type: NativeObservation
+📦     Definition "order" converted into type: Order
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "pass" converted into type: Pass
+📦     Definition "pass_kind" converted into type: PassKind
+📦     Definition "project" converted into type: Project
+📦     Definition "provider" converted into type: Provider
+📦     Definition "selector_subject" converted into type: SelectorSubject
+📦     Definition "state" converted into type: State
+📦     Definition "string_list" converted into type: StringList
+📦     Definition "string_map" converted into type: StringMap
+📦     Definition "tier" converted into type: Tier
+  - /home/olegchir/git/v/vibevm-next/schemas/hello/e1/hello.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/hello/e1/hello/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/hello/e1/hello
+📦 Generated Rust code.
+📦     Root schema converted into type: Hello
+📦     Definition "min_client" converted into type: MinClient
+📦     Definition "world" converted into type: World
+📦     Definition "world_sunset" converted into type: WorldSunset
+  - /home/olegchir/git/v/vibevm-next/schemas/index/e1/by_cap.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_cap/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_cap
+📦 Generated Rust code.
+📦     Root schema converted into type: ByCap
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index/e1/by_name.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_name/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_name
+📦 Generated Rust code.
+📦     Root schema converted into type: ByName
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "package_entry" converted into type: PackageEntry
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "tombstone" converted into type: Tombstone
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/index/e1/by_purl.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_purl/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/by_purl
+📦 Generated Rust code.
+📦     Root schema converted into type: ByPurl
+📦     Definition "binding_site" converted into type: BindingSite
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index/e1/entry.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/entry/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/entry
+📦 Generated Rust code.
+📦     Root schema converted into type: Entry
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/index/e1/repomd.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/repomd/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index/e1/repomd
+📦 Generated Rust code.
+📦     Root schema converted into type: Repomd
+📦     Definition "naming_convention" converted into type: NamingConvention
+📦     Definition "repomd_file_entry" converted into type: RepomdFileEntry
+📦     Definition "timestamp" converted into type: Timestamp
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/capabilities_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/capabilities_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/capabilities_report
+📦 Generated Rust code.
+📦     Root schema converted into type: CapabilitiesReport
+📦     Definition "capability_row" converted into type: CapabilityRow
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/get_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/get_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/get_report
+📦 Generated Rust code.
+📦     Root schema converted into type: GetReport
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/list_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/list_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/list_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ListReport
+📦     Definition "group" converted into type: Group
+📦     Definition "package_row" converted into type: PackageRow
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/outdated_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/outdated_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/outdated_report
+📦 Generated Rust code.
+📦     Root schema converted into type: OutdatedReport
+📦     Definition "group" converted into type: Group
+📦     Definition "outdated_row" converted into type: OutdatedRow
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "status" converted into type: Status
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/purls_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/purls_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/purls_report
+📦 Generated Rust code.
+📦     Root schema converted into type: PurlsReport
+📦     Definition "binding_site" converted into type: BindingSite
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "purl_row" converted into type: PurlRow
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/search_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/search_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/search_report
+📦 Generated Rust code.
+📦     Root schema converted into type: SearchReport
+📦     Definition "group" converted into type: Group
+📦     Definition "hit_row" converted into type: HitRow
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_cli/e1/verify_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/verify_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_cli/e1/verify_report
+📦 Generated Rust code.
+📦     Root schema converted into type: VerifyReport
+📦     Definition "mismatch" converted into type: Mismatch
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/admin_status_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/admin_status_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/admin_status_response
+📦 Generated Rust code.
+📦     Root schema converted into type: AdminStatusResponse
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/capabilities_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/capabilities_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/capabilities_response
+📦 Generated Rust code.
+📦     Root schema converted into type: CapabilitiesResponse
+📦     Definition "capability_hit" converted into type: CapabilityHit
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/error_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/error_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/error_response
+📦 Generated Rust code.
+📦     Root schema converted into type: ErrorResponse
+📦     Definition "group" converted into type: Group
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/health_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/health_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/health_response
+📦 Generated Rust code.
+📦     Root schema converted into type: HealthResponse
+📦     Definition "health_status" converted into type: HealthStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/package_delete_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_delete_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_delete_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageDeleteResponse
+📦     Definition "group" converted into type: Group
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/package_list_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_list_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_list_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageListResponse
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "package_row" converted into type: PackageRow
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/package_search_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_search_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_search_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageSearchResponse
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "search_hit" converted into type: SearchHit
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/package_upsert_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_upsert_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_upsert_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageUpsertResponse
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/package_versions_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_versions_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/package_versions_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageVersionsResponse
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/index_http/e1/purls_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/purls_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/index_http/e1/purls_response
+📦 Generated Rust code.
+📦     Root schema converted into type: PurlsResponse
+📦     Definition "binding_site" converted into type: BindingSite
+📦     Definition "group" converted into type: Group
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "purl_hit" converted into type: PurlHit
+📦     Definition "unavailable" converted into type: Unavailable
+📦     Definition "version" converted into type: Version
+  - /home/olegchir/git/v/vibevm-next/schemas/init_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/init_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/init_report
+📦 Generated Rust code.
+📦     Root schema converted into type: InitReport
+📦     Definition "outcome" converted into type: Outcome
+📦     Definition "outcome_action" converted into type: OutcomeAction
+  - /home/olegchir/git/v/vibevm-next/schemas/install_plan.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/install_plan/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/install_plan
+📦 Generated Rust code.
+📦     Root schema converted into type: InstallPlan
+📦     Definition "plan_entry" converted into type: PlanEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/install_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/install_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/install_report
+📦 Generated Rust code.
+📦     Root schema converted into type: InstallReport
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "duration" converted into type: Duration
+📦     Definition "install_contribution_report" converted into type: InstallContributionReport
+📦     Definition "install_delegation" converted into type: InstallDelegation
+📦     Definition "install_hook_report" converted into type: InstallHookReport
+📦     Definition "install_slot_target" converted into type: InstallSlotTarget
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/journal/e1/journal.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/journal/e1/journal/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/journal/e1/journal
+📦 Generated Rust code.
+📦     Root schema converted into type: Journal
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "event" converted into type: Event
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "naming_convention" converted into type: NamingConvention
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle/e1/context.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle/e1/context/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle/e1/context
+📦 Generated Rust code.
+📦     Root schema converted into type: Context
+📦     Definition "artifact" converted into type: Artifact
+📦     Definition "execution" converted into type: Execution
+📦     Definition "io" converted into type: Io
+📦     Definition "project" converted into type: Project
+📦     Definition "run" converted into type: Run
+📦     Definition "run_agent_mode" converted into type: RunAgentMode
+📦     Definition "slot_target" converted into type: SlotTarget
+📦     Definition "world" converted into type: World
+📦     Definition "world_package" converted into type: WorldPackage
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle/e1/reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle/e1/reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle/e1/reply
+📦 Generated Rust code.
+📦     Root schema converted into type: Reply
+📦     Definition "reply_artifact" converted into type: ReplyArtifact
+📦     Definition "reply_status" converted into type: ReplyStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle_plan.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_plan/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_plan
+📦 Generated Rust code.
+📦     Root schema converted into type: LifecyclePlan
+📦     Definition "planned_contribution" converted into type: PlannedContribution
+📦     Definition "slot_target" converted into type: SlotTarget
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_report
+📦 Generated Rust code.
+📦     Root schema converted into type: LifecycleReport
+📦     Definition "artifact_witness" converted into type: ArtifactWitness
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "digest_witness" converted into type: DigestWitness
+📦     Definition "duration" converted into type: Duration
+📦     Definition "evidence_run" converted into type: EvidenceRun
+📦     Definition "evidence_status" converted into type: EvidenceStatus
+📦     Definition "input_measurement" converted into type: InputMeasurement
+📦     Definition "lifecycle_contribution_report" converted into type: LifecycleContributionReport
+📦     Definition "lifecycle_delegation" converted into type: LifecycleDelegation
+📦     Definition "lifecycle_step_report" converted into type: LifecycleStepReport
+📦     Definition "slot_target" converted into type: SlotTarget
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+📦     Definition "verification_evidence" converted into type: VerificationEvidence
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle_state.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_state/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_state
+📦 Generated Rust code.
+📦     Root schema converted into type: LifecycleState
+📦     Definition "execution_record" converted into type: ExecutionRecord
+📦     Definition "slot_continuation" converted into type: SlotContinuation
+📦     Definition "slot_target_record" converted into type: SlotTargetRecord
+📦     Definition "state_artifact" converted into type: StateArtifact
+📦     Definition "state_digest_witness" converted into type: StateDigestWitness
+📦     Definition "state_input_measurement" converted into type: StateInputMeasurement
+📦     Definition "state_run" converted into type: StateRun
+  - /home/olegchir/git/v/vibevm-next/schemas/lifecycle_tasks.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_tasks/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/lifecycle_tasks
+📦 Generated Rust code.
+📦     Root schema converted into type: LifecycleTasks
+📦     Definition "pending_task" converted into type: PendingTask
+📦     Definition "tasks_run" converted into type: TasksRun
+  - /home/olegchir/git/v/vibevm-next/schemas/list_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/list_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/list_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ListReport
+📦     Definition "list_entry" converted into type: ListEntry
+📦     Definition "package_kind" converted into type: PackageKind
+  - /home/olegchir/git/v/vibevm-next/schemas/llm/openai_compatible/e1/agent_result.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/agent_result/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/agent_result
+📦 Generated Rust code.
+📦     Root schema converted into type: AgentResult
+📦     Definition "output" converted into type: Output
+  - /home/olegchir/git/v/vibevm-next/schemas/llm/openai_compatible/e1/chat_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/chat_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/chat_request
+📦 Generated Rust code.
+📦     Root schema converted into type: ChatRequest
+📦     Definition "message" converted into type: Message
+  - /home/olegchir/git/v/vibevm-next/schemas/llm/openai_compatible/e1/chat_response.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/chat_response/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/llm/openai_compatible/e1/chat_response
+📦 Generated Rust code.
+📦     Root schema converted into type: ChatResponse
+📦     Definition "choice" converted into type: Choice
+📦     Definition "message" converted into type: Message
+📦     Definition "usage" converted into type: Usage
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/application_journal.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/application_journal/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/application_journal
+📦 Generated Rust code.
+📦     Root schema converted into type: ApplicationJournal
+📦     Definition "authority" converted into type: Authority
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/operation_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/operation_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/operation_report
+📦 Generated Rust code.
+📦     Root schema converted into type: OperationReport
+📦     Definition "application_error" converted into type: ApplicationError
+📦     Definition "effect" converted into type: Effect
+📦     Definition "guarantees" converted into type: Guarantees
+📦     Definition "residue" converted into type: Residue
+📦     Definition "warning" converted into type: Warning
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/operation_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/operation_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/operation_request
+📦 Generated Rust code.
+📦     Root schema converted into type: OperationRequest
+📦     Definition "authority" converted into type: Authority
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/plan_error.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_error/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_error
+📦 Generated Rust code.
+📦     Root schema converted into type: PlanError
+📦     Definition "migration_planning_error" converted into type: MigrationPlanningError
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/plan_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_report
+📦 Generated Rust code.
+📦     Root schema converted into type: PlanReport
+📦     Definition "epoch" converted into type: Epoch
+📦     Definition "migration_planning_error" converted into type: MigrationPlanningError
+📦     Definition "outcome" converted into type: Outcome
+📦     Definition "plan" converted into type: Plan
+📦     Definition "question" converted into type: Question
+📦     Definition "token_edit" converted into type: TokenEdit
+  - /home/olegchir/git/v/vibevm-next/schemas/migration/e1/plan_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/migration/e1/plan_request
+📦 Generated Rust code.
+📦     Root schema converted into type: PlanRequest
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/backend_reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/backend_reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/backend_reply
+📦 Generated Rust code.
+📦     Root schema converted into type: BackendReply
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/build_reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/build_reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/build_reply
+📦 Generated Rust code.
+📦     Root schema converted into type: BuildReply
+📦     Definition "apply_result" converted into type: ApplyResult
+📦     Definition "build_fingerprint" converted into type: BuildFingerprint
+📦     Definition "build_plan" converted into type: BuildPlan
+📦     Definition "fingerprint_result" converted into type: FingerprintResult
+📦     Definition "plan_result" converted into type: PlanResult
+📦     Definition "planned_output" converted into type: PlannedOutput
+📦     Definition "staged_output" converted into type: StagedOutput
+📦     Definition "verified_output" converted into type: VerifiedOutput
+📦     Definition "verify_result" converted into type: VerifyResult
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/build_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/build_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/build_request
+📦 Generated Rust code.
+📦     Root schema converted into type: BuildRequest
+📦     Definition "build_authority" converted into type: BuildAuthority
+📦     Definition "build_fingerprint" converted into type: BuildFingerprint
+📦     Definition "build_plan" converted into type: BuildPlan
+📦     Definition "build_target" converted into type: BuildTarget
+📦     Definition "declared_input" converted into type: DeclaredInput
+📦     Definition "declared_output" converted into type: DeclaredOutput
+📦     Definition "invocation_identity" converted into type: InvocationIdentity
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_artifact_shape" converted into type: NativeDeployArtifactShape
+📦     Definition "planned_output" converted into type: PlannedOutput
+📦     Definition "staged_output" converted into type: StagedOutput
+📦     Definition "staging_authority" converted into type: StagingAuthority
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/compile_reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/compile_reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/compile_reply
+📦 Generated Rust code.
+📦     Root schema converted into type: CompileReply
+📦     Definition "absorption_occurrence" converted into type: AbsorptionOccurrence
+📦     Definition "absorption_plan" converted into type: AbsorptionPlan
+📦     Definition "absorption_state" converted into type: AbsorptionState
+📦     Definition "artifact_context" converted into type: ArtifactContext
+📦     Definition "artifact_frame" converted into type: ArtifactFrame
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "authority" converted into type: Authority
+📦     Definition "cardinality_artifact" converted into type: CardinalityArtifact
+📦     Definition "cardinality_document" converted into type: CardinalityDocument
+📦     Definition "closure_contribution" converted into type: ClosureContribution
+📦     Definition "closure_document" converted into type: ClosureDocument
+📦     Definition "closure_edge" converted into type: ClosureEdge
+📦     Definition "closure_ir" converted into type: ClosureIr
+📦     Definition "closure_occurrence" converted into type: ClosureOccurrence
+📦     Definition "compile_mode" converted into type: CompileMode
+📦     Definition "contribution_absorption" converted into type: ContributionAbsorption
+📦     Definition "contribution_meta" converted into type: ContributionMeta
+📦     Definition "directive" converted into type: Directive
+📦     Definition "directive_error" converted into type: DirectiveError
+📦     Definition "directives" converted into type: Directives
+📦     Definition "doc_node" converted into type: DocNode
+📦     Definition "doc_tree" converted into type: DocTree
+📦     Definition "document_address" converted into type: DocumentAddress
+📦     Definition "document_ir" converted into type: DocumentIr
+📦     Definition "document_observation" converted into type: DocumentObservation
+📦     Definition "document_provider" converted into type: DocumentProvider
+📦     Definition "document_subject" converted into type: DocumentSubject
+📦     Definition "embed_resolution_snapshot" converted into type: EmbedResolutionSnapshot
+📦     Definition "emission_contribution_witness" converted into type: EmissionContributionWitness
+📦     Definition "emission_provenance" converted into type: EmissionProvenance
+📦     Definition "emitted_artifact" converted into type: EmittedArtifact
+📦     Definition "expansion_observation" converted into type: ExpansionObservation
+📦     Definition "fence_snapshot" converted into type: FenceSnapshot
+📦     Definition "in_place_use" converted into type: InPlaceUse
+📦     Definition "ir" converted into type: Ir
+📦     Definition "lane_chunk" converted into type: LaneChunk
+📦     Definition "lane_contribution" converted into type: LaneContribution
+📦     Definition "lane_frame" converted into type: LaneFrame
+📦     Definition "lane_ir" converted into type: LaneIr
+📦     Definition "lane_node" converted into type: LaneNode
+📦     Definition "level_closure" converted into type: LevelClosure
+📦     Definition "level_document" converted into type: LevelDocument
+📦     Definition "level_emitted" converted into type: LevelEmitted
+📦     Definition "level_lane" converted into type: LevelLane
+📦     Definition "level_source" converted into type: LevelSource
+📦     Definition "link_contribution_witness" converted into type: LinkContributionWitness
+📦     Definition "link_occurrence" converted into type: LinkOccurrence
+📦     Definition "link_result" converted into type: LinkResult
+📦     Definition "link_state" converted into type: LinkState
+📦     Definition "origin_rename" converted into type: OriginRename
+📦     Definition "qualification_state" converted into type: QualificationState
+📦     Definition "rename_entry" converted into type: RenameEntry
+📦     Definition "source_doc" converted into type: SourceDoc
+📦     Definition "source_resolution_snapshot" converted into type: SourceResolutionSnapshot
+📦     Definition "span" converted into type: Span
+📦     Definition "spec_address" converted into type: SpecAddress
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/compile_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/compile_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/compile_request
+📦 Generated Rust code.
+📦     Root schema converted into type: CompileRequest
+📦     Definition "absorption_occurrence" converted into type: AbsorptionOccurrence
+📦     Definition "absorption_plan" converted into type: AbsorptionPlan
+📦     Definition "absorption_state" converted into type: AbsorptionState
+📦     Definition "artifact_context" converted into type: ArtifactContext
+📦     Definition "artifact_frame" converted into type: ArtifactFrame
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "authority" converted into type: Authority
+📦     Definition "cardinality_artifact" converted into type: CardinalityArtifact
+📦     Definition "cardinality_document" converted into type: CardinalityDocument
+📦     Definition "closure_contribution" converted into type: ClosureContribution
+📦     Definition "closure_document" converted into type: ClosureDocument
+📦     Definition "closure_edge" converted into type: ClosureEdge
+📦     Definition "closure_ir" converted into type: ClosureIr
+📦     Definition "closure_occurrence" converted into type: ClosureOccurrence
+📦     Definition "compile_mode" converted into type: CompileMode
+📦     Definition "contribution_absorption" converted into type: ContributionAbsorption
+📦     Definition "contribution_meta" converted into type: ContributionMeta
+📦     Definition "directive" converted into type: Directive
+📦     Definition "directive_error" converted into type: DirectiveError
+📦     Definition "directives" converted into type: Directives
+📦     Definition "doc_node" converted into type: DocNode
+📦     Definition "doc_tree" converted into type: DocTree
+📦     Definition "document_address" converted into type: DocumentAddress
+📦     Definition "document_ir" converted into type: DocumentIr
+📦     Definition "document_observation" converted into type: DocumentObservation
+📦     Definition "document_provider" converted into type: DocumentProvider
+📦     Definition "document_subject" converted into type: DocumentSubject
+📦     Definition "embed_resolution_snapshot" converted into type: EmbedResolutionSnapshot
+📦     Definition "emission_contribution_witness" converted into type: EmissionContributionWitness
+📦     Definition "emission_provenance" converted into type: EmissionProvenance
+📦     Definition "emitted_artifact" converted into type: EmittedArtifact
+📦     Definition "execution" converted into type: Execution
+📦     Definition "expansion_observation" converted into type: ExpansionObservation
+📦     Definition "fence_snapshot" converted into type: FenceSnapshot
+📦     Definition "in_place_use" converted into type: InPlaceUse
+📦     Definition "io" converted into type: Io
+📦     Definition "ir" converted into type: Ir
+📦     Definition "lane_chunk" converted into type: LaneChunk
+📦     Definition "lane_contribution" converted into type: LaneContribution
+📦     Definition "lane_frame" converted into type: LaneFrame
+📦     Definition "lane_ir" converted into type: LaneIr
+📦     Definition "lane_node" converted into type: LaneNode
+📦     Definition "level_closure" converted into type: LevelClosure
+📦     Definition "level_document" converted into type: LevelDocument
+📦     Definition "level_emitted" converted into type: LevelEmitted
+📦     Definition "level_lane" converted into type: LevelLane
+📦     Definition "level_source" converted into type: LevelSource
+📦     Definition "link_contribution_witness" converted into type: LinkContributionWitness
+📦     Definition "link_occurrence" converted into type: LinkOccurrence
+📦     Definition "link_result" converted into type: LinkResult
+📦     Definition "link_state" converted into type: LinkState
+📦     Definition "origin_rename" converted into type: OriginRename
+📦     Definition "project" converted into type: Project
+📦     Definition "qualification_state" converted into type: QualificationState
+📦     Definition "rename_entry" converted into type: RenameEntry
+📦     Definition "source_doc" converted into type: SourceDoc
+📦     Definition "source_resolution_snapshot" converted into type: SourceResolutionSnapshot
+📦     Definition "span" converted into type: Span
+📦     Definition "spec_address" converted into type: SpecAddress
+📦     Definition "world" converted into type: World
+📦     Definition "world_package" converted into type: WorldPackage
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/context.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/context/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/context
+📦 Generated Rust code.
+📦     Root schema converted into type: Context
+📦     Definition "artifact" converted into type: Artifact
+📦     Definition "execution" converted into type: Execution
+📦     Definition "io" converted into type: Io
+📦     Definition "project" converted into type: Project
+📦     Definition "run" converted into type: Run
+📦     Definition "run_agent_mode" converted into type: RunAgentMode
+📦     Definition "slot_target" converted into type: SlotTarget
+📦     Definition "world" converted into type: World
+📦     Definition "world_package" converted into type: WorldPackage
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/deploy_reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/deploy_reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/deploy_reply
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployReply
+📦     Definition "apply_result" converted into type: ApplyResult
+📦     Definition "fingerprint_result" converted into type: FingerprintResult
+📦     Definition "observed_resource" converted into type: ObservedResource
+📦     Definition "plan_result" converted into type: PlanResult
+📦     Definition "planned_resource" converted into type: PlannedResource
+📦     Definition "recover_result" converted into type: RecoverResult
+📦     Definition "remove_result" converted into type: RemoveResult
+📦     Definition "verify_result" converted into type: VerifyResult
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/deploy_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/deploy_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/deploy_request
+📦 Generated Rust code.
+📦     Root schema converted into type: DeployRequest
+📦     Definition "deploy_artifact" converted into type: DeployArtifact
+📦     Definition "deploy_authority" converted into type: DeployAuthority
+📦     Definition "deploy_client" converted into type: DeployClient
+📦     Definition "deploy_clients" converted into type: DeployClients
+📦     Definition "deploy_plan" converted into type: DeployPlan
+📦     Definition "invocation_identity" converted into type: InvocationIdentity
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_artifact_shape" converted into type: NativeDeployArtifactShape
+📦     Definition "observed_resource" converted into type: ObservedResource
+📦     Definition "planned_resource" converted into type: PlannedResource
+📦     Definition "prior_receipt" converted into type: PriorReceipt
+📦     Definition "recovery_intent" converted into type: RecoveryIntent
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: Manifest
+📦     Definition "manifest_extension" converted into type: ManifestExtension
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/mechanism_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/mechanism_manifest/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/mechanism_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: MechanismManifest
+📦     Definition "mechanism_descriptor" converted into type: MechanismDescriptor
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_effect" converted into type: NativeDeployEffect
+📦     Definition "native_deploy_network" converted into type: NativeDeployNetwork
+📦     Definition "native_deploy_operation" converted into type: NativeDeployOperation
+📦     Definition "native_deploy_privilege" converted into type: NativeDeployPrivilege
+📦     Definition "native_deploy_reversibility" converted into type: NativeDeployReversibility
+📦     Definition "native_mechanism_role" converted into type: NativeMechanismRole
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/package_reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/package_reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/package_reply
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageReply
+📦     Definition "apply_result" converted into type: ApplyResult
+📦     Definition "fingerprint_result" converted into type: FingerprintResult
+📦     Definition "package_fingerprint" converted into type: PackageFingerprint
+📦     Definition "package_plan" converted into type: PackagePlan
+📦     Definition "plan_result" converted into type: PlanResult
+📦     Definition "planned_output" converted into type: PlannedOutput
+📦     Definition "staged_output" converted into type: StagedOutput
+📦     Definition "verified_output" converted into type: VerifiedOutput
+📦     Definition "verify_result" converted into type: VerifyResult
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/package_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/package_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/package_request
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageRequest
+📦     Definition "declared_output" converted into type: DeclaredOutput
+📦     Definition "input_origin" converted into type: InputOrigin
+📦     Definition "invocation_identity" converted into type: InvocationIdentity
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_artifact_shape" converted into type: NativeDeployArtifactShape
+📦     Definition "package_authority" converted into type: PackageAuthority
+📦     Definition "package_fingerprint" converted into type: PackageFingerprint
+📦     Definition "package_plan" converted into type: PackagePlan
+📦     Definition "package_target" converted into type: PackageTarget
+📦     Definition "planned_output" converted into type: PlannedOutput
+📦     Definition "resolved_input" converted into type: ResolvedInput
+📦     Definition "staged_output" converted into type: StagedOutput
+📦     Definition "staging_authority" converted into type: StagingAuthority
+  - /home/olegchir/git/v/vibevm-next/schemas/native/e1/reply.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/reply/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/native/e1/reply
+📦 Generated Rust code.
+📦     Root schema converted into type: Reply
+📦     Definition "reply_artifact" converted into type: ReplyArtifact
+📦     Definition "reply_status" converted into type: ReplyStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/package_skill_receipt.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/package_skill_receipt/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/package_skill_receipt
+📦 Generated Rust code.
+📦     Root schema converted into type: PackageSkillReceipt
+📦     Definition "package_skill_applying" converted into type: PackageSkillApplying
+📦     Definition "package_skill_binding" converted into type: PackageSkillBinding
+📦     Definition "package_skill_file" converted into type: PackageSkillFile
+📦     Definition "package_skill_target" converted into type: PackageSkillTarget
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/affected_source_review.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/affected_source_review/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/affected_source_review
+📦 Generated Rust code.
+📦     Root schema converted into type: AffectedSourceReview
+📦     Definition "blob_identity" converted into type: BlobIdentity
+📦     Definition "contract_document" converted into type: ContractDocument
+📦     Definition "contract_source" converted into type: ContractSource
+📦     Definition "effect_kind" converted into type: EffectKind
+📦     Definition "interface_review" converted into type: InterfaceReview
+📦     Definition "path_binding" converted into type: PathBinding
+📦     Definition "topic_obligation" converted into type: TopicObligation
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/capture.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/capture/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/capture
+📦 Generated Rust code.
+📦     Root schema converted into type: Capture
+📦     Definition "file_capture" converted into type: FileCapture
+📦     Definition "package_capture" converted into type: PackageCapture
+📦     Definition "scope_exclusion" converted into type: ScopeExclusion
+📦     Definition "surface_capture" converted into type: SurfaceCapture
+📦     Definition "toolchain" converted into type: Toolchain
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/check_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/check_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/check_report
+📦 Generated Rust code.
+📦     Root schema converted into type: CheckReport
+📦     Definition "finding" converted into type: Finding
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/check_request.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/check_request/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/check_request
+📦 Generated Rust code.
+📦     Root schema converted into type: CheckRequest
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/documentation_capture.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/documentation_capture/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/documentation_capture
+📦 Generated Rust code.
+📦     Root schema converted into type: DocumentationCapture
+📦     Definition "build_input" converted into type: BuildInput
+📦     Definition "exclusion" converted into type: Exclusion
+📦     Definition "file_identity" converted into type: FileIdentity
+📦     Definition "page" converted into type: Page
+📦     Definition "source_kind" converted into type: SourceKind
+📦     Definition "source_subject" converted into type: SourceSubject
+📦     Definition "toolchain" converted into type: Toolchain
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/documentation_map.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/documentation_map/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/documentation_map
+📦 Generated Rust code.
+📦     Root schema converted into type: DocumentationMap
+📦     Definition "topic" converted into type: Topic
+📦     Definition "topic_proof" converted into type: TopicProof
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/release_impact.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/release_impact/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/release_impact
+📦 Generated Rust code.
+📦     Root schema converted into type: ReleaseImpact
+📦     Definition "acceptance" converted into type: Acceptance
+📦     Definition "documentation_disposition" converted into type: DocumentationDisposition
+📦     Definition "effect" converted into type: Effect
+📦     Definition "evidence_ref" converted into type: EvidenceRef
+📦     Definition "implementation_subject" converted into type: ImplementationSubject
+📦     Definition "relation" converted into type: Relation
+📦     Definition "user_disposition" converted into type: UserDisposition
+  - /home/olegchir/git/v/vibevm-next/schemas/preview/e1/transition.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/transition/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/preview/e1/transition
+📦 Generated Rust code.
+📦     Root schema converted into type: Transition
+📦     Definition "capture_ref" converted into type: CaptureRef
+📦     Definition "contribution_scope" converted into type: ContributionScope
+📦     Definition "documentation_capture_ref" converted into type: DocumentationCaptureRef
+📦     Definition "pending_capture" converted into type: PendingCapture
+📦     Definition "pending_documentation" converted into type: PendingDocumentation
+📦     Definition "pending_guide" converted into type: PendingGuide
+📦     Definition "proof_state" converted into type: ProofState
+📦     Definition "record_digest" converted into type: RecordDigest
+📦     Definition "source_digest_ref" converted into type: SourceDigestRef
+  - /home/olegchir/git/v/vibevm-next/schemas/registry_publish_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/registry_publish_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/registry_publish_report
+📦 Generated Rust code.
+📦     Root schema converted into type: RegistryPublishReport
+  - /home/olegchir/git/v/vibevm-next/schemas/registry_sync_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/registry_sync_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/registry_sync_report
+📦 Generated Rust code.
+📦     Root schema converted into type: RegistrySyncReport
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "refreshed_entry" converted into type: RefreshedEntry
+📦     Definition "skipped_entry" converted into type: SkippedEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/reinstall_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/reinstall_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/reinstall_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ReinstallReport
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "duration" converted into type: Duration
+📦     Definition "reinstall_contribution_report" converted into type: ReinstallContributionReport
+📦     Definition "reinstall_delegation" converted into type: ReinstallDelegation
+📦     Definition "reinstall_hook_report" converted into type: ReinstallHookReport
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+  - /home/olegchir/git/v/vibevm-next/schemas/requirements_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/requirements_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/requirements_report
+📦 Generated Rust code.
+📦     Root schema converted into type: RequirementsReport
+📦     Definition "adoption_observation" converted into type: AdoptionObservation
+📦     Definition "authoring_observation" converted into type: AuthoringObservation
+📦     Definition "fact_status" converted into type: FactStatus
+📦     Definition "relation_source" converted into type: RelationSource
+📦     Definition "required_artifact_kind" converted into type: RequiredArtifactKind
+📦     Definition "requirement_relation" converted into type: RequirementRelation
+📦     Definition "requirement_row" converted into type: RequirementRow
+📦     Definition "requirement_source" converted into type: RequirementSource
+📦     Definition "requirements_observation" converted into type: RequirementsObservation
+📦     Definition "requirements_query" converted into type: RequirementsQuery
+📦     Definition "source_result" converted into type: SourceResult
+📦     Definition "timestamp" converted into type: Timestamp
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e1/health_result.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/health_result/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/health_result
+📦 Generated Rust code.
+📦     Root schema converted into type: HealthResult
+📦     Definition "finding" converted into type: Finding
+📦     Definition "health_status" converted into type: HealthStatus
+📦     Definition "scrape_health_finding" converted into type: ScrapeHealthFinding
+📦     Definition "scrape_health_severity" converted into type: ScrapeHealthSeverity
+📦     Definition "severity" converted into type: Severity
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e1/plan.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/plan/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/plan
+📦 Generated Rust code.
+📦     Root schema converted into type: Plan
+📦     Definition "applicability" converted into type: Applicability
+📦     Definition "assertion" converted into type: Assertion
+📦     Definition "asset_identity" converted into type: AssetIdentity
+📦     Definition "asset_role" converted into type: AssetRole
+📦     Definition "asset_source" converted into type: AssetSource
+📦     Definition "blocker" converted into type: Blocker
+📦     Definition "command" converted into type: Command
+📦     Definition "command_step" converted into type: CommandStep
+📦     Definition "contract_action" converted into type: ContractAction
+📦     Definition "contract_boundary" converted into type: ContractBoundary
+📦     Definition "contract_identity" converted into type: ContractIdentity
+📦     Definition "effect_plan" converted into type: EffectPlan
+📦     Definition "entry_kind" converted into type: EntryKind
+📦     Definition "environment_identity" converted into type: EnvironmentIdentity
+📦     Definition "file_class" converted into type: FileClass
+📦     Definition "health_baseline" converted into type: HealthBaseline
+📦     Definition "health_limits" converted into type: HealthLimits
+📦     Definition "healthcheck" converted into type: Healthcheck
+📦     Definition "item" converted into type: Item
+📦     Definition "lock_manager" converted into type: LockManager
+📦     Definition "mode" converted into type: Mode
+📦     Definition "modification" converted into type: Modification
+📦     Definition "native_lock_change" converted into type: NativeLockChange
+📦     Definition "network" converted into type: Network
+📦     Definition "owner" converted into type: Owner
+📦     Definition "per_file_matches" converted into type: PerFileMatches
+📦     Definition "prepared_arg" converted into type: PreparedArg
+📦     Definition "prepared_command" converted into type: PreparedCommand
+📦     Definition "project_identity" converted into type: ProjectIdentity
+📦     Definition "proof" converted into type: Proof
+📦     Definition "relocation" converted into type: Relocation
+📦     Definition "rewrite" converted into type: Rewrite
+📦     Definition "rust_form" converted into type: RustForm
+📦     Definition "sandbox_requirement" converted into type: SandboxRequirement
+📦     Definition "set_matches" converted into type: SetMatches
+📦     Definition "snapshot_file_identity" converted into type: SnapshotFileIdentity
+📦     Definition "span" converted into type: Span
+📦     Definition "summary" converted into type: Summary
+📦     Definition "test_disposition" converted into type: TestDisposition
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e1/report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e1/report
+📦 Generated Rust code.
+📦     Root schema converted into type: Report
+📦     Definition "deleted_artifact" converted into type: DeletedArtifact
+📦     Definition "dependency_graph_result" converted into type: DependencyGraphResult
+📦     Definition "file_witness" converted into type: FileWitness
+📦     Definition "finding" converted into type: Finding
+📦     Definition "health_result" converted into type: HealthResult
+📦     Definition "health_result_step" converted into type: HealthResultStep
+📦     Definition "phase" converted into type: Phase
+📦     Definition "recovery_step" converted into type: RecoveryStep
+📦     Definition "relocation_result" converted into type: RelocationResult
+📦     Definition "residual_count" converted into type: ResidualCount
+📦     Definition "rewrite_result" converted into type: RewriteResult
+📦     Definition "scrape_health_finding" converted into type: ScrapeHealthFinding
+📦     Definition "scrape_health_phase" converted into type: ScrapeHealthPhase
+📦     Definition "scrape_health_row" converted into type: ScrapeHealthRow
+📦     Definition "scrape_health_rows" converted into type: ScrapeHealthRows
+📦     Definition "scrape_health_severity" converted into type: ScrapeHealthSeverity
+📦     Definition "scrape_health_step" converted into type: ScrapeHealthStep
+📦     Definition "scrape_health_stream_witness" converted into type: ScrapeHealthStreamWitness
+📦     Definition "scrape_health_terminal_state" converted into type: ScrapeHealthTerminalState
+📦     Definition "severity" converted into type: Severity
+📦     Definition "stream_witness" converted into type: StreamWitness
+📦     Definition "terminal_state" converted into type: TerminalState
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e2/prepared_health_snapshot.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/prepared_health_snapshot/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/prepared_health_snapshot
+📦 Generated Rust code.
+📦     Root schema converted into type: PreparedHealthSnapshot
+📦     Definition "applicability" converted into type: Applicability
+📦     Definition "asset_identity" converted into type: AssetIdentity
+📦     Definition "asset_role" converted into type: AssetRole
+📦     Definition "asset_source" converted into type: AssetSource
+📦     Definition "baseline_policy" converted into type: BaselinePolicy
+📦     Definition "bundle_entry" converted into type: BundleEntry
+📦     Definition "bundle_entry_kind" converted into type: BundleEntryKind
+📦     Definition "command_step" converted into type: CommandStep
+📦     Definition "custom_bundle" converted into type: CustomBundle
+📦     Definition "effect_plan" converted into type: EffectPlan
+📦     Definition "environment_value" converted into type: EnvironmentValue
+📦     Definition "health_blocker" converted into type: HealthBlocker
+📦     Definition "healthcheck_kind" converted into type: HealthcheckKind
+📦     Definition "network_mode" converted into type: NetworkMode
+📦     Definition "prepared_arg" converted into type: PreparedArg
+📦     Definition "prepared_command" converted into type: PreparedCommand
+📦     Definition "prepared_healthcheck" converted into type: PreparedHealthcheck
+📦     Definition "result_protocol" converted into type: ResultProtocol
+📦     Definition "sandbox_requirement" converted into type: SandboxRequirement
+📦     Definition "termination_mode" converted into type: TerminationMode
+📦     Definition "test_disposition" converted into type: TestDisposition
+📦     Definition "u64_count" converted into type: U64Count
+📦     Definition "version_kind" converted into type: VersionKind
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e2/retirement_checkpoint.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/retirement_checkpoint/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/retirement_checkpoint
+📦 Generated Rust code.
+📦     Root schema converted into type: RetirementCheckpoint
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "cleanup_intent" converted into type: CleanupIntent
+📦     Definition "entry_kind" converted into type: EntryKind
+📦     Definition "entry_state" converted into type: EntryState
+📦     Definition "safefs_manifest" converted into type: SafefsManifest
+📦     Definition "tree_entry" converted into type: TreeEntry
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e2/transaction_journal.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/transaction_journal/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/transaction_journal
+📦 Generated Rust code.
+📦     Root schema converted into type: TransactionJournal
+📦     Definition "actual_mutation_evidence" converted into type: ActualMutationEvidence
+📦     Definition "assurance" converted into type: Assurance
+📦     Definition "cleanup" converted into type: Cleanup
+📦     Definition "contract_boundary_action" converted into type: ContractBoundaryAction
+📦     Definition "contract_commit" converted into type: ContractCommit
+📦     Definition "export_entry" converted into type: ExportEntry
+📦     Definition "export_payload" converted into type: ExportPayload
+📦     Definition "export_plan" converted into type: ExportPlan
+📦     Definition "file_state" converted into type: FileState
+📦     Definition "in_place_plan" converted into type: InPlacePlan
+📦     Definition "internal_report" converted into type: InternalReport
+📦     Definition "location" converted into type: Location
+📦     Definition "mutation_direction" converted into type: MutationDirection
+📦     Definition "mutation_kind" converted into type: MutationKind
+📦     Definition "mutation_origin" converted into type: MutationOrigin
+📦     Definition "mutation_progress" converted into type: MutationProgress
+📦     Definition "mutation_status" converted into type: MutationStatus
+📦     Definition "mutation_step" converted into type: MutationStep
+📦     Definition "outcome" converted into type: Outcome
+📦     Definition "owned_entry_seal" converted into type: OwnedEntrySeal
+📦     Definition "owned_tree_cleanup_intent" converted into type: OwnedTreeCleanupIntent
+📦     Definition "owned_tree_cleanup_wal" converted into type: OwnedTreeCleanupWal
+📦     Definition "owned_tree_seal" converted into type: OwnedTreeSeal
+📦     Definition "path_state" converted into type: PathState
+📦     Definition "path_transition" converted into type: PathTransition
+📦     Definition "planned_mutation_evidence" converted into type: PlannedMutationEvidence
+📦     Definition "planned_mutation_kind" converted into type: PlannedMutationKind
+📦     Definition "prepared_mode" converted into type: PreparedMode
+📦     Definition "snapshot_kind" converted into type: SnapshotKind
+📦     Definition "snapshot_record" converted into type: SnapshotRecord
+📦     Definition "subtree_entry" converted into type: SubtreeEntry
+📦     Definition "subtree_state" converted into type: SubtreeState
+📦     Definition "transaction_mode" converted into type: TransactionMode
+📦     Definition "transaction_state" converted into type: TransactionState
+📦     Definition "tree_entry" converted into type: TreeEntry
+📦     Definition "tree_entry_kind" converted into type: TreeEntryKind
+📦     Definition "tree_manifest" converted into type: TreeManifest
+📦     Definition "u64_count" converted into type: U64Count
+📦     Definition "usize_count" converted into type: UsizeCount
+📦     Definition "verification_evidence" converted into type: VerificationEvidence
+📦     Definition "verification_phase" converted into type: VerificationPhase
+📦     Definition "verification_record" converted into type: VerificationRecord
+📦     Definition "verification_workspace_intent" converted into type: VerificationWorkspaceIntent
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e2/verification_health_evidence.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/verification_health_evidence/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e2/verification_health_evidence
+📦 Generated Rust code.
+📦     Root schema converted into type: VerificationHealthEvidence
+📦     Definition "scrape_health_finding" converted into type: ScrapeHealthFinding
+📦     Definition "scrape_health_phase" converted into type: ScrapeHealthPhase
+📦     Definition "scrape_health_row" converted into type: ScrapeHealthRow
+📦     Definition "scrape_health_rows" converted into type: ScrapeHealthRows
+📦     Definition "scrape_health_severity" converted into type: ScrapeHealthSeverity
+📦     Definition "scrape_health_step" converted into type: ScrapeHealthStep
+📦     Definition "scrape_health_stream_witness" converted into type: ScrapeHealthStreamWitness
+📦     Definition "scrape_health_terminal_state" converted into type: ScrapeHealthTerminalState
+  - /home/olegchir/git/v/vibevm-next/schemas/scrape/e3/transaction_owner.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e3/transaction_owner/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/scrape/e3/transaction_owner
+📦 Generated Rust code.
+📦     Root schema converted into type: TransactionOwner
+  - /home/olegchir/git/v/vibevm-next/schemas/slot_record.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/slot_record/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/slot_record
+📦 Generated Rust code.
+📦     Root schema converted into type: SlotRecord
+📦     Definition "slot_file" converted into type: SlotFile
+  - /home/olegchir/git/v/vibevm-next/schemas/uninstall_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/uninstall_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/uninstall_report
+📦 Generated Rust code.
+📦     Root schema converted into type: UninstallReport
+  - /home/olegchir/git/v/vibevm-next/schemas/update_report.jtd.json → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/update_report/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/update_report
+📦 Generated Rust code.
+📦     Root schema converted into type: UpdateReport
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "duration" converted into type: Duration
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+📦     Definition "update_contribution_report" converted into type: UpdateContributionReport
+📦     Definition "update_delegation" converted into type: UpdateDelegation
+📦     Definition "update_hook_report" converted into type: UpdateHookReport
+xtask codegen: shared module — 603 copies replaced by re-exports across 110 modules; declarations 1463 → 860 in the schema modules (the shared home adds 180), unique names 902 unchanged.
+  - formats/REGISTRY.toml → /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated.new-597645-1790680199465268331/format_id/
+xtask codegen: /home/olegchir/git/v/vibevm-next/crates/vibe-wire/src/generated (147 submodules).
+  - /home/olegchir/git/v/vibevm-next/crates/progress-core/schemas/artifact_requirements.jtd.json → /home/olegchir/git/v/vibevm-next/crates/progress-core/src/generated.new-597645-1790680199465451395/artifact_requirements/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/crates/progress-core/src/generated.new-597645-1790680199465451395/artifact_requirements
+📦 Generated Rust code.
+📦     Root schema converted into type: ArtifactRequirements
+📦     Definition "artifact_kind" converted into type: ArtifactKind
+xtask codegen: /home/olegchir/git/v/vibevm-next/crates/progress-core/src/generated (1 submodule).
+  - /home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/schemas/specmap.jtd.json → /home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated.new-597645-1790680199465554660/specmap/
+📝 Writing Rust code to: /home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated.new-597645-1790680199465554660/specmap
+📦 Generated Rust code.
+📦     Root schema converted into type: Specmap
+📦     Definition "code_item" converted into type: CodeItem
+📦     Definition "edge" converted into type: Edge
+📦     Definition "spec_unit" converted into type: SpecUnit
+📦     Definition "suspect" converted into type: Suspect
+📦     Definition "warning" converted into type: Warning
+xtask codegen: /home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated (1 submodule).
+📝 Writing TypeScript code to: /tmp/.tmpvkBefL
+📦 Generated TypeScript code.
+📦     Root schema converted into type: DocManifest
+📦     Definition "adapted_source" converted into type: AdaptedSource
+📦     Definition "audience" converted into type: Audience
+📦     Definition "authorship" converted into type: Authorship
+📦     Definition "bridge_authorship" converted into type: BridgeAuthorship
+📦     Definition "card_media" converted into type: CardMedia
+📦     Definition "doc_package" converted into type: DocPackage
+📦     Definition "doc_page" converted into type: DocPage
+📦     Definition "documentation_status" converted into type: DocumentationStatus
+📦     Definition "documented_subject" converted into type: DocumentedSubject
+📦     Definition "group" converted into type: Group
+📦     Definition "navigation" converted into type: Navigation
+📦     Definition "navigation_chapter" converted into type: NavigationChapter
+📦     Definition "navigation_section" converted into type: NavigationSection
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "page_genre" converted into type: PageGenre
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "translation_status" converted into type: TranslationStatus
+📦     Definition "version" converted into type: Version
+  - schemas/doc_manifest.jtd.json → /home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/src/generated/doc-manifest.ts

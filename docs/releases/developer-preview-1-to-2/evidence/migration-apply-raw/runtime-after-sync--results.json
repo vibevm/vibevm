@@ -1,0 +1,104 @@
+[
+  {
+    "case": "changed_absent_third_state_and_forged_intent_do_not_overwrite",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::changed_absent_third_state_and_forged_intent_do_not_overwrite",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  },
+  {
+    "case": "no_op_no_images_and_failed_journal_keep_prior_effects",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::no_op_no_images_and_failed_journal_keep_prior_effects",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  },
+  {
+    "case": "prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  },
+  {
+    "case": "impossible_prefixes_and_foreign_stages_preserve_evidence",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::impossible_prefixes_and_foreign_stages_preserve_evidence",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  },
+  {
+    "case": "process_restart_apply_boundaries_preserve_supported_prefixes",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::process_restart_apply_boundaries_preserve_supported_prefixes",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  },
+  {
+    "case": "process_restart_restore_boundaries_are_idempotent",
+    "exit": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "migration_application::runtime::runtime_tests::process_restart_restore_boundaries_are_idempotent",
+      "--",
+      "--exact",
+      "--nocapture"
+    ]
+  }
+]

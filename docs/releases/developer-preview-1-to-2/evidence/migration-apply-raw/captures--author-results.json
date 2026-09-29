@@ -1,0 +1,18 @@
+[
+  {
+    "side": "before",
+    "exit": 1,
+    "command": [
+      "/home/olegchir/git/v/vibevm-next/target/debug/vibevm-next-capture-author",
+      "/home/olegchir/git/v/vibevm-next",
+      "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f",
+      "migration-apply-baseline-b486af778",
+      "/tmp/vibevm-next-M13-D1-captures/before-template.json",
+      "/tmp/vibevm-next-M13-D1-captures/before-files.json",
+      "/tmp/vibevm-next-M13-C2-account/toolchains-template.json",
+      "evidence/migration-apply-baseline-b486af778-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-baseline-b486af778-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-baseline-b486af778-capture-e1.json"
+    ]
+  }
+]

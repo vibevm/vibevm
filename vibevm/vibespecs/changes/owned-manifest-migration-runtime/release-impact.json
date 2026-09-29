@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "change_id": "owned-manifest-migration-runtime",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "84b9ad5deb2c670b6d1e9f34bd5ee86e1647e0d6"
+    },
+    {
+      "kind": "commit",
+      "identity": "d69a88b3afc8157d63ce32f7005313682f0e7c94"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-workspace/src/lib.rs",
+    "crates/vibe-workspace/src/migration_application.rs",
+    "crates/vibe-workspace/src/migration_application/identity.rs",
+    "crates/vibe-workspace/src/migration_application/recovery.rs",
+    "crates/vibe-workspace/src/migration_application/report.rs",
+    "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+    "crates/vibe-workspace/src/migration_application/runtime.rs",
+    "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+    "crates/vibe-workspace/src/migration_application/storage.rs",
+    "crates/vibe-workspace/src/migration_application/validation.rs",
+    "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-workspace:migration_application",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Pure migration planning existed without a grant-bound effectful application actor or retained journal recovery protocol.",
+      "after": "Explicit one-file grant, core-planner replay/identities, strict checkpoint validation, participating-client lock, verified retained before-image and finite publication/restore/replay matrix produce validated generated reports. Internal invariant failures preserve their original evidence through Result rather than unchecked report emission; inspection/replay create no new target write and byte reads do not upgrade sync tiers.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "manual",
+    "reason": "Explicit opt-in migration changes only an independently admitted authored file; manual selection/action is required. No automatic tree migration, product bump or publication grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document this scoped interface, explicit admission, recovery/effect semantics and reduced guarantees; source declarations/selected Linux evidence do not prove complete guide/topic coverage or native macOS/Windows."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "d69a88b3afc8157d63ce32f7005313682f0e7c94",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "d69a88b3afc8157d63ce32f7005313682f0e7c94",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

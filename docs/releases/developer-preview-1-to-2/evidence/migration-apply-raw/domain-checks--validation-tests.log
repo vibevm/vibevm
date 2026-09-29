@@ -1,0 +1,72 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+   Compiling vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.95s
+     Running unittests src/lib.rs (target/debug/deps/vibe_workspace-991f9eaf05d0dcce)
+
+running 8 tests
+test migration_application::validation_tests::report_errors_retain_observed_effects_without_fabricated_guarantees ... ok
+test migration_application::validation_tests::independent_framed_golden_and_phase_exclusion ... ok
+test migration_application::validation_tests::malformed_and_null_preflight_create_nothing ... ok
+test migration_application::validation_tests::required_nullable_and_unknown_nested_fields_remain_strict ... ok
+test migration_application::validation_tests::six_semantic_corpus_inputs_refuse_at_their_owners ... ok
+test migration_application::validation_tests::grant_mismatch_source_identity_and_frozen_effect_refuse ... ok
+test migration_application::validation_tests::planner_selections_and_refusals_are_not_apply_plans ... ok
+test migration_application::validation_tests::corrupted_journal_fields_refuse_before_intent_admission ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 546 filtered out; finished in 0.01s
+

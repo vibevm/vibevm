@@ -1,0 +1,1590 @@
+{
+  "status": "scratch-evidence-retention-candidate-not-acceptance",
+  "before": "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f",
+  "after": "149bcea525564260be82972edf9afc8b5a2067a0",
+  "hash_recipe": "SHA256 of exact original raw bytes",
+  "summary": {
+    "files": 92,
+    "bytes": 628255,
+    "categories": {
+      "compile-only": 5,
+      "fail": 6,
+      "metadata": 10,
+      "mixed": 3,
+      "pass": 46,
+      "review": 22
+    },
+    "ordinary_case_inventory": 64,
+    "ordinary_cases_with_observed_pass_receipts": 64,
+    "missing_ordinary_case_receipts": 0,
+    "final_restart_cases": 2,
+    "final_restart_exit_results": [
+      {
+        "case": "process_restart_apply_boundaries_preserve_supported_prefixes",
+        "exit": 0
+      },
+      {
+        "case": "process_restart_restore_boundaries_are_idempotent",
+        "exit": 0
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M13-D1-account-candidates/manifest.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/account-candidates--manifest.json",
+      "sha256": "17739f2fd9aa2770933150fa99da0ace4ece393d782aaf31cadffb518a834ac9",
+      "bytes": 18272,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-account-inventory.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/account-inventory.md",
+      "sha256": "aa748efe648e5abcf035b9df339d4b4065a46d194be9011ef7a76f5cd9086a02",
+      "bytes": 7127,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-affected-rustfmt-owner-files.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/affected-rustfmt-owner-files.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "category": "pass",
+      "exit": 0,
+      "exit_provenance": "Root explicit observed receipt message:42module/generated owners; excludes two include macro fragments."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-affected-rustfmt.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/affected-rustfmt.log",
+      "sha256": "1821db5b8b438a756a5ecfefe6625d43f4af45a8ec9b00d5e6e498698de1b216",
+      "bytes": 52839,
+      "category": "fail",
+      "exit": 1,
+      "exit_provenance": "Root explicit observed receipt message:44directfiles; two include macro fragments request formatting."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/after-author-retry.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--after-author-retry.log",
+      "sha256": "af6d8843f92409d5e2b2447129928320d5a5acfa416237dd88fcde2f6ba51f63",
+      "bytes": 159,
+      "category": "pass",
+      "exit": 0,
+      "exit_provenance": "Retained author-results/author-retry-results.json"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/author-results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--author-results.json",
+      "sha256": "45277cad3cd80c9a74c3872d962b5e697a62d491396fd5784830607f2028e947",
+      "bytes": 739,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/author-retry-results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--author-retry-results.json",
+      "sha256": "293259689fd4df1f55eda8176b009a873ad2a46dd9ae2d6a92058278b99ef3b6",
+      "bytes": 1460,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/before-author-retry.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--before-author-retry.log",
+      "sha256": "4d602eba3cc7a52486f47eefe5be1cc1773f4ea5329bb217274604d04e31eb98",
+      "bytes": 159,
+      "category": "pass",
+      "exit": 0,
+      "exit_provenance": "Retained author-results/author-retry-results.json"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/before-author.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--before-author.log",
+      "sha256": "a809dc59da1196004054f527ad1d9100d520a7676a5a30a5cc3ceab25189475b",
+      "bytes": 103,
+      "category": "fail",
+      "exit": 1,
+      "exit_provenance": "Retained author-results/author-retry-results.json"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-captures/permanent-copy-manifest.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/captures--permanent-copy-manifest.json",
+      "sha256": "b5e2100b2074163b83e073ea017f4615593cea401f6958f953b37070082783ae",
+      "bytes": 821,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-operation-checks.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-operation-checks.log",
+      "sha256": "ed87143f1936145f2bf224f467b7f319cc8685c1013abdcc27d49411ee992d24",
+      "bytes": 7857,
+      "category": "mixed",
+      "native_harness_summaries": [
+        "FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-operation-checks.md",
+      "sha256": "ec7ac6a9b088ed1e0290bcb75caf5f50bf620462ecdfd62d36c8bd4b4099a092",
+      "bytes": 5642,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-operation-inspect-absent-retry.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-operation-inspect-absent-retry.log",
+      "sha256": "354bffc19b4ff5179235ae230d1efd57abffb1da4d8204f3c3df4203cf71e9b1",
+      "bytes": 3554,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-operation-pending-proof.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-operation-pending-proof.log",
+      "sha256": "73918d08b1576d4fa60908bb225b3619a1a7f9c090088b55fc498984fe1f98e7",
+      "bytes": 3642,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.10s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-operation-roundtrip-retry.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-operation-roundtrip-retry.log",
+      "sha256": "50ca85a601c867d5ceefc523a2ab7cbf1e6fe51e9d8e0fc12bf6ea3f158a0636",
+      "bytes": 3562,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.08s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-server-grant-tests.log",
+      "sha256": "74986b156c76444baf9fe652b7510341186bc497cdea2738031479432a8a1969",
+      "bytes": 6416,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cli-server-grant.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/cli-server-grant.md",
+      "sha256": "c646f882af927e3a6025087c6a57512fe1fba8a65d66c72f8077a575db3063ca",
+      "bytes": 2781,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-codegen-r3.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/codegen-r3.log",
+      "sha256": "78917c7c008d3926ffb0044ecde22f8518305f2ea21d39cacf56283c070747ce",
+      "bytes": 125503,
+      "category": "metadata",
+      "limit": "Final emission output retained; explicit process exit receipt not present in bound files. Root reported exit0; not inferred here."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-codegen.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/codegen.log",
+      "sha256": "85dcf5008c56802cace292c6a9ceb9e1b908b2f7ee39c50071a0edc6b7652c9a",
+      "bytes": 73501,
+      "category": "fail"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-diagnostic-output-null-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/diagnostic-output-null-tests.log",
+      "sha256": "4e8575018854e72de5eee2f5e97a0662f6d016ad0b43f797b61a3f9a6bc4cebb",
+      "bytes": 2239,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-diagnostic-output-text-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/diagnostic-output-text-tests.log",
+      "sha256": "dbd55447b5fa36ab0d14d1e83c64634b38933cf1645bf12502bccbb7ebf25a74",
+      "bytes": 3267,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-diagnostic-output.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/diagnostic-output.md",
+      "sha256": "8e19f58ce982afeecb3810ca65b53cb4cb9f6564da5a6dda1912f431a78b178d",
+      "bytes": 2531,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-directory-sync/identity-refusal-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/directory-sync--identity-refusal-tests.log",
+      "sha256": "a8cf5d5107a197796e173bf61602325185c4152c19bf1a4e4200a972bc19ab34",
+      "bytes": 3709,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 130 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-directory-sync/probe-2.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/directory-sync--probe-2.log",
+      "sha256": "4f307e83096b4f8e8e90f456fc4e00ff03c2422c57ef41f3b89eee6976a73365",
+      "bytes": 3939,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 129 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-directory-sync/probe.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/directory-sync--probe.log",
+      "sha256": "5605354b932b0c8dabb878d862c0e947f0fbd65b958f6e4f96801b71675ddf49",
+      "bytes": 2573,
+      "category": "fail"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-directory-sync/readable-flush-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/directory-sync--readable-flush-tests.log",
+      "sha256": "6aa11748b9ae194a9758ee401db3efdd465ff501fcfc11369765941640212fdd",
+      "bytes": 3939,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 130 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-directory-sync.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/directory-sync.md",
+      "sha256": "d4593df27ac979eb8117961607a51274b4cf4730065434c313a820d6ad7e3c02",
+      "bytes": 3247,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/check.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--check.log",
+      "sha256": "c4415eff2e223f5a4531044c47bae8468d07416732f67d4227fec5cc7c9313fb",
+      "bytes": 2712,
+      "category": "compile-only"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/citation-compile.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--citation-compile.log",
+      "sha256": "8ea5350f6bbdb6bae7c446ee69d3c7783bd2fe9aa7172abf2c04cf91d7cc2365",
+      "bytes": 2068,
+      "category": "compile-only"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/report-identities.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--report-identities.log",
+      "sha256": "ceadf96337de066cee77bdd8975b364438bbece2b26a43a23368dca56c9a7a7d",
+      "bytes": 2198,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/report-replay.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--report-replay.log",
+      "sha256": "ddca627a6d960599d0156c2bae75a622c98f156cf44349e743045cabfc8374de",
+      "bytes": 2203,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/report-retention.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--report-retention.log",
+      "sha256": "685077025edbb6536a8c127d25748f6df7459db8f13c1ee1a9035ed47f4119f2",
+      "bytes": 2199,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/report-stage.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--report-stage.log",
+      "sha256": "8ca0518a30c27df347f399f62347e97585a3b3af4970eeb1aa987ef027e3c56b",
+      "bytes": 2300,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 557 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-checks/validation-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-checks--validation-tests.log",
+      "sha256": "005c1de8e8e92a78d6071cb52bad887feb697fbe5e72ccadcfbb57fad5a5012a",
+      "bytes": 3550,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 8 passed; 0 failed; 0 ignored; 0 measured; 546 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-foundation.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-foundation.md",
+      "sha256": "3f62312ec6e12737aac2df85af5da32a0246f60cf95bfd7b4ece219c90c870c0",
+      "bytes": 4674,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-domain-review-fixes.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/domain-review-fixes.md",
+      "sha256": "82f5da8f4505f320f8e8d72e7ba39ae87f5e8ac105df69759245c1b92c4bea8a",
+      "bytes": 2672,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-existing-store-api.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/existing-store-api.md",
+      "sha256": "5a11af5d073b831f9e9c91922161452ef22f081fca001bb8c01eb3182c2718fc",
+      "bytes": 2703,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-format-id-check.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/format-id-check.log",
+      "sha256": "9ed3f2c156ab2b264172174c0621003b0f4729d9deb10a7d7329cde08d9f50d4",
+      "bytes": 580,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-foundation-independent-review.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/foundation-independent-review.md",
+      "sha256": "f39388324f79bc61c3f28fd533d4611b2f279bedccccf11af10ee1600e478024",
+      "bytes": 3974,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-admission-check.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-admission-check.log",
+      "sha256": "432033c14dd4a9d72565f789a1c5fbd8607623ea1ab9f1676de2e606542e57f3",
+      "bytes": 6203,
+      "category": "compile-only"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-admission-independent-review.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-admission-independent-review.md",
+      "sha256": "242d30f91f45c951fbc5e77a8c459a458a3949b31d625f4150982a9523bf319e",
+      "bytes": 2553,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-admission-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-admission-tests.log",
+      "sha256": "697a939964eb76aae054e68e21fe862e8b5360a06765b4e05558cfa6a114273e",
+      "bytes": 4626,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 6 passed; 0 failed; 0 ignored; 0 measured; 72 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-admission.md",
+      "sha256": "1c0513e4acf4c4f241dce6eb3494975aca8fbdced9a18f54dfa3375a1b11f3ee",
+      "bytes": 3685,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/citation-compile.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-operation-checks--citation-compile.log",
+      "sha256": "ccd9d53b3247512a3468eae1b368acfffda833d254b6368b2b20199b31128c7b",
+      "bytes": 2050,
+      "category": "compile-only"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/family.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-operation-checks--family.log",
+      "sha256": "444ad37561aad792fdadbfac09bea2fc6ba6ba4e1b93c1bacb2e8874ddd519f1",
+      "bytes": 2779,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 6 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.03s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/mcp-operation-checks--report.md",
+      "sha256": "ebb8080be92b2300efe2bebae3ddf5ec7a71a34b77470513b0047d30eee41936",
+      "bytes": 4007,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-mechanical-inventory.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/mechanical-inventory.json",
+      "sha256": "37d052681f1c8c66b718c84fd34a53cc73c10a64d9e0986118b2011dff01ed02",
+      "bytes": 101059,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-portability-audit.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/portability-audit.md",
+      "sha256": "896d6f2bdcbb9341d42208bc79945d26787c0065d2fe9df3dc2e628cc1ca32ed",
+      "bytes": 3836,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_apply_boundaries_preserve_supported_prefixes.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/restart-retained-sync--process_restart_apply_boundaries_preserve_supported_prefixes.log",
+      "sha256": "bbe2257bffb060223604d8cc8c93f35a75fca921799b64174dd661c420aa01df",
+      "bytes": 2558,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.26s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_restore_boundaries_are_idempotent.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/restart-retained-sync--process_restart_restore_boundaries_are_idempotent.log",
+      "sha256": "b1f65b97b5b5cfd9f82f6b95b9e048795c39c354d31b233806e415e3c525a9da",
+      "bytes": 2327,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.16s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-restart-retained-sync/results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/restart-retained-sync--results.json",
+      "sha256": "b5bfd9989c472d6d64a8ae6fed78a29a8db8705e750d810c2f394d0cc784d43d",
+      "bytes": 190,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-image-fix.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-image-fix.md",
+      "sha256": "152c702d2da3975f6b03cd05c80da705ba9265e0b693d71cb918f725098ae021",
+      "bytes": 4062,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-runtime-checks/0.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-runtime-checks--0.log",
+      "sha256": "9db981b6c65cc798086bbd5009e8ecc0b13cd8ab2e86afd2a23db85595256cad",
+      "bytes": 2417,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-runtime-checks/1.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-runtime-checks--1.log",
+      "sha256": "1a2a4befbf7caa3b38790b08979629bdda386f1152f9371e39cab6af62c1a24c",
+      "bytes": 2235,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-runtime-checks/2.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-runtime-checks--2.log",
+      "sha256": "453b22915cbe08942b0c611da5201a7161b825c49b217f113c8032bcfdaf4071",
+      "bytes": 2222,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-runtime-checks/results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-runtime-checks--results.json",
+      "sha256": "30e9b9ef3ecd0fc24258631cf73cb3842b429292e37a8916d5ff378bf0c0c4e1",
+      "bytes": 507,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-sync/matching-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-sync--matching-tests.log",
+      "sha256": "4f0f414d28a0699432d709449033a1f0ddf6ba4e58e6b1d906416cd2ac2031e8",
+      "bytes": 3786,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 132 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-sync/refusals-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-sync--refusals-tests.log",
+      "sha256": "2e2b9a3dc84bdef4327eb088f2c02618ce619b41d19504da15b858f0d365ebae",
+      "bytes": 3643,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 132 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retained-sync.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/retained-sync.md",
+      "sha256": "2b5fcaa6f15a5da1b21991ce40a7ed4a580d4ce1412a46aa8339050253e09af4",
+      "bytes": 3475,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-retention-review-close.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/retention-review-close.md",
+      "sha256": "2be1a0b6c75f3c0a41dd027cba19c0672a33911670a5031baec60d71d1691ada",
+      "bytes": 2496,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/changed_absent_third_state_and_forged_intent_do_not_overwrite.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-after-sync--changed_absent_third_state_and_forged_intent_do_not_overwrite.log",
+      "sha256": "e404c236bc5e51f417a3a443ed7df1513db4f2aafda0fb75b4f0b5d8a21a145c",
+      "bytes": 2211,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/impossible_prefixes_and_foreign_stages_preserve_evidence.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-after-sync--impossible_prefixes_and_foreign_stages_preserve_evidence.log",
+      "sha256": "10def5d3eb5803060b03fc78c958dee3f42b9679314e1c0fcf71b3414ed4c1b4",
+      "bytes": 2222,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/no_op_no_images_and_failed_journal_keep_prior_effects.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-after-sync--no_op_no_images_and_failed_journal_keep_prior_effects.log",
+      "sha256": "1bee3d810dbc5a4acd13cd5d0b4204b8943ae3dd0493bd954056c1dd44cf9e00",
+      "bytes": 2219,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-after-sync--prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts.log",
+      "sha256": "ea336fe9e18b28c1b5b276319f0bd7d9afdc883fa3dbfed0349fafe3bdabbd35",
+      "bytes": 2222,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-after-sync--results.json",
+      "sha256": "a587ebbb6884d3100c018d32ee20f9161df9864ece14f2c324fc2aec386238c1",
+      "bytes": 2421,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-apply-after-sync.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-apply-after-sync.log",
+      "sha256": "0261b44d500231d180451643f920ff5778141fcbe9f86162bb9351e53004b795",
+      "bytes": 2394,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-apply-diagnostic-2.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-apply-diagnostic-2.log",
+      "sha256": "ce0108a9efba1170047ad7e450432d73bff89ab31eee14214b813be4df500e75",
+      "bytes": 4117,
+      "category": "fail",
+      "native_harness_summaries": [
+        "FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-apply-diagnostic.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-apply-diagnostic.log",
+      "sha256": "6e08652e8672083c23b2e3a41a35cf1c74197bec0a64521c7fa8e4cc98477f98",
+      "bytes": 2786,
+      "category": "fail",
+      "native_harness_summaries": [
+        "FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 567 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-independent-review.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-independent-review.md",
+      "sha256": "bd2c2aa9aeb828060fdde46e4eab07cc9dce5187c9cd1b763a0a7da5b85db4e6",
+      "bytes": 3702,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-tests.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/runtime-tests.log",
+      "sha256": "98f2b6679cfa75f8ad2af21c3c1209a1774aae1322aa64d3162159ca0a3a4c68",
+      "bytes": 6301,
+      "category": "mixed",
+      "native_harness_summaries": [
+        "FAILED. 2 passed; 7 failed; 1 ignored; 0 measured; 558 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-schema-authoring.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/schema-authoring.md",
+      "sha256": "bcb951e4b48a381e2ac64602eed2af73c5d6ed2c883e0c157389f4dfca94dd42",
+      "bytes": 12293,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-source-review.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/source-review.md",
+      "sha256": "ecf5a60ba1182f7cc29ced7148f1033e9491d8003da48fc0b4c8fc7ed0e5a1c6",
+      "bytes": 3743,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-specmap-citations-corrected.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/specmap-citations-corrected.log",
+      "sha256": "4d42c748d5957f577cea1ac09bd58b5b2ec7ed14b41f98060ccebe188e6688ac",
+      "bytes": 1928,
+      "category": "pass",
+      "specmap_summary": [
+        "specmap: wrote /home/olegchir/git/v/vibevm-next/specmap.json (8728 spec units, 3963 tagged code items, 3372 edges, 0 suspects, 34 warnings)."
+      ],
+      "limit": "Index-output classification only, not product/task acceptance; no explicit exit in raw log."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-specmap-final.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/specmap-final.log",
+      "sha256": "ba03d2e9923d0f9d9afc2424ff361efba90c03b7a88d01da7aee3fe9d8b70605",
+      "bytes": 2174,
+      "category": "mixed",
+      "specmap_summary": [
+        "specmap: wrote /home/olegchir/git/v/vibevm-next/specmap.json (8728 spec units, 3963 tagged code items, 3372 edges, 7 suspects, 34 warnings)."
+      ],
+      "limit": "Index-output classification only, not product/task acceptance; no explicit exit in raw log."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-specmap.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/specmap.log",
+      "sha256": "214958e07f6ac8f47052486d41366cb80e0aa93bdc72c3f16e4d224e8face114",
+      "bytes": 1952,
+      "category": "pass",
+      "specmap_summary": [
+        "specmap: wrote /home/olegchir/git/v/vibevm-next/specmap.json (8720 spec units, 3863 tagged code items, 3279 edges, 0 suspects, 34 warnings)."
+      ],
+      "limit": "Index-output classification only, not product/task acceptance; no explicit exit in raw log."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/existing_disjoint_store_opens_and_invalid_scope_refuses.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--existing_disjoint_store_opens_and_invalid_scope_refuses.log",
+      "sha256": "244d0a3836e33e86ad72207384448c7ffc45a0d173a72bda36f11b9b561558ec",
+      "bytes": 3627,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_absence_has_no_creation.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--existing_project_lock_absence_has_no_creation.log",
+      "sha256": "72ceec8519b1e1d831971848c9cfec8b1930add9e1273bacbdd293a33cda80d1",
+      "bytes": 3617,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_reacquires_rechecks_and_store_token_is_stable.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--existing_project_lock_reacquires_rechecks_and_store_token_is_stable.log",
+      "sha256": "2e3397ace36aaafd57fdaeca4b91282d22a16a09f7386526e0ad216458e13d8a",
+      "bytes": 3639,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/existing_store_absence_has_no_creation.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--existing_store_absence_has_no_creation.log",
+      "sha256": "1004fd53336273822b25cee64264c45f96f1c37da62ab2f614e87b893a599dc1",
+      "bytes": 3696,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/external_lock_rechecks_identity_and_durable_writes_report_parent_support.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--external_lock_rechecks_identity_and_durable_writes_report_parent_support.log",
+      "sha256": "62f3c59352a58f2556fcc5af78771aa5bbeed204e08282e72f4b0f192d478489",
+      "bytes": 3644,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-store-checks/results.json",
+      "proposed_release_evidence_basename": "migration-apply-raw/store-checks--results.json",
+      "sha256": "9e012049effbf720bffa1dd12e6af30781e547e991c13fe38b8087c0c6f9d944",
+      "bytes": 1547,
+      "category": "metadata"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-surface-bindings.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/surface-bindings.md",
+      "sha256": "df8261b929f00bb9ecff8bc0ebda88ffc2d91d8a8502261103db0d87f21eb3f9",
+      "bytes": 6613,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-surface-citation-compile.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/surface-citation-compile.log",
+      "sha256": "d34e960a7b2d74e1877c751e0826863ecb049debf1d13be067cba50c8350d270",
+      "bytes": 4489,
+      "category": "compile-only"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/1-operation_request_valid_roundtrips_preserve_explicit_intent_and_authority.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--1-operation_request_valid_roundtrips_preserve_explicit_intent_and_authority.log",
+      "sha256": "9d1846375ff3ea792a8dba7c7b9f52d7ea77afa786d9d94e7b1017f8874f3689",
+      "bytes": 642,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/2-operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--2-operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees.log",
+      "sha256": "dc1e87518c77e1a252cf6ff59d8eac3ed1854f4ec9c3f521080cf0a3e55f7e4b",
+      "bytes": 578,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/3-application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--3-application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode.log",
+      "sha256": "f5d6ade33d2b6a12db1a4f24a5959f7e4103e2f142c8cddc4f168c78c3af1743",
+      "bytes": 558,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/4-operation_request_structural_invalids_refuse.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--4-operation_request_structural_invalids_refuse.log",
+      "sha256": "14894b681ba8271bbe30cfea10a1d74de64cfd6628e8e868a983cbccc0129526",
+      "bytes": 530,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/5-operation_report_structural_invalids_refuse_nested_guarantees_effects_codes.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--5-operation_report_structural_invalids_refuse_nested_guarantees_effects_codes.log",
+      "sha256": "7bea19fa6c4eb8980f34e069f7a01fdd10324fe25ee5b1d3c7bc655b12197f4a",
+      "bytes": 561,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/6-application_journal_structural_invalids_refuse.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--6-application_journal_structural_invalids_refuse.log",
+      "sha256": "4e6844f969bb6dd511a2ed0c4f8ed9530767290a57d7057dfb349fd912c1b83e",
+      "bytes": 532,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-checks/7-application_domain_invalids_remain_owner_validation_inputs.log",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-checks--7-application_domain_invalids_remain_owner_validation_inputs.log",
+      "sha256": "99185e2c15ca706805a5498a3b4b3a42e18b0b3b25a86b0f7ca3edd7ba62d77f",
+      "bytes": 544,
+      "category": "pass",
+      "native_harness_summaries": [
+        "ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-law-review.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-law-review.md",
+      "sha256": "e6e4d9c98c9f0d922feb2b9b215d7d1be6071c94c454057b157ff06f80965001",
+      "bytes": 3821,
+      "category": "review"
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-wire-reader-checks.md",
+      "proposed_release_evidence_basename": "migration-apply-raw/wire-reader-checks.md",
+      "sha256": "14d0212df809037a04aa536bb535cd2742a636eae607743b121676a840e62d68",
+      "bytes": 4802,
+      "category": "review"
+    }
+  ],
+  "ordinary_case_receipt_joins": [
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::malformed_and_null_preflight_create_nothing",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::planner_selections_and_refusals_are_not_apply_plans",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::grant_mismatch_source_identity_and_frozen_effect_refuse",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::six_semantic_corpus_inputs_refuse_at_their_owners",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::corrupted_journal_fields_refuse_before_intent_admission",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::required_nullable_and_unknown_nested_fields_remain_strict",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::independent_framed_golden_and_phase_exclusion",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::report_errors_retain_observed_effects_without_fabricated_guarantees",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--validation-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::expected_stage_residue_is_reportable_without_namespace_authority",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--report-stage.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::no_op_replay_retains_only_coherent_completed_target_effects",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--report-replay.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::recognized_target_bytes_require_all_planner_identities",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--report-identities.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::report_validation_failure_retains_all_observed_evidence",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md",
+      "retained_observed_pass_receipts": [
+        "domain-checks--report-retention.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::malformed_forged_grant_and_frozen_preflight_create_no_state",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-tests.log",
+      "retained_observed_pass_receipts": [
+        "runtime-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-apply-after-sync.log",
+      "retained_observed_pass_receipts": [
+        "runtime-apply-after-sync.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-apply-diagnostic-2.log",
+        "runtime-apply-diagnostic.log",
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::inspection_existing_only_and_orphan_or_foreign_store_preservation",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-tests.log",
+      "retained_observed_pass_receipts": [
+        "runtime-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::changed_absent_third_state_and_forged_intent_do_not_overwrite",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/changed_absent_third_state_and_forged_intent_do_not_overwrite.log",
+      "retained_observed_pass_receipts": [
+        "runtime-after-sync--changed_absent_third_state_and_forged_intent_do_not_overwrite.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::process_restart_apply_boundaries_preserve_supported_prefixes",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_apply_boundaries_preserve_supported_prefixes.log",
+      "retained_observed_pass_receipts": [
+        "restart-retained-sync--process_restart_apply_boundaries_preserve_supported_prefixes.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::process_restart_restore_boundaries_are_idempotent",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_restore_boundaries_are_idempotent.log",
+      "retained_observed_pass_receipts": [
+        "restart-retained-sync--process_restart_restore_boundaries_are_idempotent.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::impossible_prefixes_and_foreign_stages_preserve_evidence",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/impossible_prefixes_and_foreign_stages_preserve_evidence.log",
+      "retained_observed_pass_receipts": [
+        "runtime-after-sync--impossible_prefixes_and_foreign_stages_preserve_evidence.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::no_op_no_images_and_failed_journal_keep_prior_effects",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/no_op_no_images_and_failed_journal_keep_prior_effects.log",
+      "retained_observed_pass_receipts": [
+        "runtime-after-sync--no_op_no_images_and_failed_journal_keep_prior_effects.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts.log",
+      "retained_observed_pass_receipts": [
+        "retained-runtime-checks--2.log",
+        "runtime-after-sync--prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "runtime-tests.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::retained_sync_tests::matching_orphan_requires_actual_image_sync_and_failure_blocks_target",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-retained-image-fix.md + retention-review-close.md",
+      "retained_observed_pass_receipts": [
+        "retained-runtime-checks--0.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::retained_sync_tests::loaded_restore_requires_image_sync_but_inspect_and_replay_do_not",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-retained-image-fix.md + retention-review-close.md",
+      "retained_observed_pass_receipts": [
+        "retained-runtime-checks--1.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::directory_flush_reopens_readable_capability_without_namespace_creation",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-directory-sync.md",
+      "retained_observed_pass_receipts": [
+        "directory-sync--probe-2.log",
+        "directory-sync--readable-flush-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::directory_flush_refuses_a_foreign_expected_identity",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-directory-sync.md",
+      "retained_observed_pass_receipts": [
+        "directory-sync--identity-refusal-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::retained_image_sync_confirms_data_without_rewrite_and_refuses_injected_failure",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-retained-sync.md",
+      "retained_observed_pass_receipts": [
+        "retained-sync--matching-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::retained_image_sync_refuses_replacement_changed_bytes_missing_and_links",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-retained-sync.md",
+      "retained_observed_pass_receipts": [
+        "retained-sync--refusals-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::default_context_refuses_without_creation",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::configured_default_and_explicit_members_admit_only_their_files",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::foreign_and_relative_authority_refuses_before_open",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::cache_overlap_and_nofollow_aliases_refuse_without_effects",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::missing_cache_is_not_initialized_and_policy_rechecks",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::lifecycle_builders_preserve_explicit_migration_authority",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md",
+      "retained_observed_pass_receipts": [
+        "mcp-admission-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::descriptor_and_strict_preflight_before_grants",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::composed_authority_refuses_payload_overrides_without_writes",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::actual_apply_inspect_restore_and_terminal_replay",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::conflicts_frozen_and_link_targets_preserve_source",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::failed_restore_has_real_pending_journal_and_retained_residue",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::invariant_failure_is_executed_diagnostic_without_structured_report",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md",
+      "retained_observed_pass_receipts": [
+        "mcp-operation-checks--family.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--test diagnostic_output",
+      "case": "executed_diagnostic_failure_omits_structured_content",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-diagnostic-output.md",
+      "retained_observed_pass_receipts": [
+        "diagnostic-output-text-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--test diagnostic_output",
+      "case": "explicit_null_structured_outputs_retain_the_field",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-diagnostic-output.md",
+      "retained_observed_pass_receipts": [
+        "diagnostic-output-null-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "malformed_schema_null_and_input_read_preflight_preserve_poisoned_state",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "absent_store_inspection_stdin_literal_parity_creates_nothing",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-inspect-absent-retry.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-pending-proof.log",
+        "cli-operation-roundtrip-retry.log"
+      ],
+      "retained_observed_failed_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "mismatched_plan_ids_and_changed_source_refuse_preserving_target",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "third_state_recovery_and_foreign_intent_retain_journal_and_effects",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "frozen_source_escape_and_link_refuse_without_target_write",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "internal_invariant_diagnostic_retains_unvalidated_original_evidence",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md",
+      "retained_observed_pass_receipts": [
+        "cli-operation-checks.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "absent_migration_flags_preserve_compatibility",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log",
+      "retained_observed_pass_receipts": [
+        "cli-server-grant-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "explicit_store_preserves_repeatable_member_selection",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log",
+      "retained_observed_pass_receipts": [
+        "cli-server-grant-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "migration_files_require_store_and_unknown_grammar_is_refused",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log",
+      "retained_observed_pass_receipts": [
+        "cli-server-grant-tests.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_request_valid_roundtrips_preserve_explicit_intent_and_authority",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/1-operation_request_valid_roundtrips_preserve_explicit_intent_and_authority.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--1-operation_request_valid_roundtrips_preserve_explicit_intent_and_authority.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/2-operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--2-operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/3-application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--3-application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_request_structural_invalids_refuse",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/4-operation_request_structural_invalids_refuse.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--4-operation_request_structural_invalids_refuse.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_report_structural_invalids_refuse_nested_guarantees_effects_codes",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/5-operation_report_structural_invalids_refuse_nested_guarantees_effects_codes.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--5-operation_report_structural_invalids_refuse_nested_guarantees_effects_codes.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_journal_structural_invalids_refuse",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/6-application_journal_structural_invalids_refuse.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--6-application_journal_structural_invalids_refuse.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_domain_invalids_remain_owner_validation_inputs",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-wire-checks/7-application_domain_invalids_remain_owner_validation_inputs.log",
+      "retained_observed_pass_receipts": [
+        "wire-checks--7-application_domain_invalids_remain_owner_validation_inputs.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test format_registry_completeness",
+      "case": "format_id_completeness",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-format-id-check.log",
+      "retained_observed_pass_receipts": [
+        "format-id-check.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_store_absence_has_no_creation",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_store_absence_has_no_creation.log",
+      "retained_observed_pass_receipts": [
+        "store-checks--existing_store_absence_has_no_creation.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_disjoint_store_opens_and_invalid_scope_refuses",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_disjoint_store_opens_and_invalid_scope_refuses.log",
+      "retained_observed_pass_receipts": [
+        "store-checks--existing_disjoint_store_opens_and_invalid_scope_refuses.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_project_lock_absence_has_no_creation",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_absence_has_no_creation.log",
+      "retained_observed_pass_receipts": [
+        "store-checks--existing_project_lock_absence_has_no_creation.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_project_lock_reacquires_rechecks_and_store_token_is_stable",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_reacquires_rechecks_and_store_token_is_stable.log",
+      "retained_observed_pass_receipts": [
+        "store-checks--existing_project_lock_reacquires_rechecks_and_store_token_is_stable.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::external_lock_rechecks_identity_and_durable_writes_report_parent_support",
+      "mechanical_receipt": "/tmp/vibevm-next-M13-D1-store-checks/external_lock_rechecks_identity_and_durable_writes_report_parent_support.log",
+      "retained_observed_pass_receipts": [
+        "store-checks--external_lock_rechecks_identity_and_durable_writes_report_parent_support.log"
+      ],
+      "retained_observed_failed_receipts": [],
+      "status": "observed-native-pass-receipt-present"
+    }
+  ],
+  "gaps": [
+    {
+      "kind": "missing-explicit-process-exit",
+      "source": "/tmp/vibevm-next-M13-D1-codegen-r3.log",
+      "note": "Full final canonical emission output retained; no durable explicit exit-status receipt in bound artifacts; root reported0 separately."
+    }
+  ],
+  "excluded_redundant_receipts": [
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/process_restart_apply_boundaries_preserve_supported_prefixes.log",
+      "reason": "Earlier restart run superseded by final retained-sync restart source/proof."
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-runtime-after-sync/process_restart_restore_boundaries_are_idempotent.log",
+      "reason": "Earlier restart run superseded by final retained-sync restart source/proof."
+    }
+  ],
+  "not_copied": [
+    "codegen staging/source trees",
+    "large scratch capture templates/file-selection arrays",
+    "raw/normalized captures already retained by root; copy manifest retained",
+    "planning/preparation/proposal-only redundant markdown",
+    "candidate account record bodies; candidate manifest retained"
+  ],
+  "limits": "Receipt classifications describe actual selected logs, not milestone/semantic/runtime-all-platform acceptance. Reruns and ignored child probes do not add ordinary cases."
+}

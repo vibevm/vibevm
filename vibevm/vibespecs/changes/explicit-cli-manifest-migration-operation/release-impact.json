@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "change_id": "explicit-cli-manifest-migration-operation",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "5d8ba1e7cefe855e2fdd63875d809777b9b3f9d5"
+    },
+    {
+      "kind": "commit",
+      "identity": "1251af3cb3f5b66346b40a3be7c887b7a84ed650"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/cli/mcp.rs",
+    "crates/vibe-cli/src/command_progress.rs",
+    "crates/vibe-cli/src/commands/mcp/mod.rs",
+    "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+    "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+    "crates/vibe-cli/src/commands/refactor/mod.rs",
+    "crates/vibe-cli/src/main.rs",
+    "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+    "crates/vibe-cli/tests/migration_operation.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "cli:vibe:refactor:migration-operation",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Nested refactor had pure planning and three conversions; MCP serve admitted no explicit migration store/file flags.",
+      "after": "Explicit stdin/literal migration-operation entry runs before ordinary startup, invokes the shared one-file actor and emits exactly one validated JSON report with defined exits, or diagnostic-only internal failure. A two-machine-entry borrowed router preserves pure planning; MCP serve adds explicit recovery-store and repeatable member flags bound to the existing context authority owner.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "manual",
+    "reason": "Explicit opt-in migration changes only an independently admitted authored file; manual selection/action is required. No automatic tree migration, product bump or publication grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document this scoped interface, explicit admission, recovery/effect semantics and reduced guarantees; source declarations/selected Linux evidence do not prove complete guide/topic coverage or native macOS/Windows."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "1251af3cb3f5b66346b40a3be7c887b7a84ed650",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "1251af3cb3f5b66346b40a3be7c887b7a84ed650",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

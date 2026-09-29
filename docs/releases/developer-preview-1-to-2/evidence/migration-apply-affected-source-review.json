@@ -1,0 +1,1164 @@
+{
+  "schema": 1,
+  "review_id": "portable migration application finite source review",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "source_record": "evidence/migration-apply-source-review.md",
+  "source_record_sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6",
+  "paths": [
+    {
+      "path": "crates/vibe-cli/src/cli/mcp.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "before": {
+        "git_blob_sha1": "a3143c6b751cd16147b501e5fb3cc278402f49a0",
+        "sha256": "ab27ffea116d396b9ee5b4d932eaa26c7b639ec5ad4e5ee67087345fa1d39de3"
+      },
+      "after": {
+        "git_blob_sha1": "ba38b3d0728ffeecfef94b72f2f8f5970f24742c",
+        "sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/command_progress.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "before": {
+        "git_blob_sha1": "c6f831aa36de04c6700118c2fc7e0f1e662b4f47",
+        "sha256": "672366b718cc91d32c9cdfbc04ed8fbc2c74a91060b7797793b7632ff9688e9d"
+      },
+      "after": {
+        "git_blob_sha1": "0183ad5d256343a1ab1b0ae3a1333ed9b311d55b",
+        "sha256": "19f1784e0e662945ac0a2b973a21466dc1067e4e70e7857f517c68136c958f2c"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "before": {
+        "git_blob_sha1": "a591e71016a050d50025a13209425a0a43f7f618",
+        "sha256": "ff2cc09d8c57651f842237b1076d3fe996d203622b8573b7c9ff41663b2415e5"
+      },
+      "after": {
+        "git_blob_sha1": "cd0482d0e399d25e10d4274e7ddfe59af8719122",
+        "sha256": "005066f44379094d86716537d022f54e5f6e5a087308d83966390369aea786a4"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "after": {
+        "git_blob_sha1": "8fcf9771defaec11035c1c6d36c6a36cadf7b447",
+        "sha256": "a15e1e09df879e6524c45b1e5c976a29b94bdd1b65d6a9895f144b832e8110bb"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "after": {
+        "git_blob_sha1": "f78fdaffb3038f321cde3dc3d9c55aa59fe45ad9",
+        "sha256": "96a5a46ee6499022d2de7aa7e9a6936a708c942b55308c3dc659433530aac337"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "before": {
+        "git_blob_sha1": "54419160b3322dda8c7f5aba133e40a4d50ebf33",
+        "sha256": "2a1b7b0a0173c52c7594b69baf7f988dfca12e54e7d5fcb4f4e78bf000051681"
+      },
+      "after": {
+        "git_blob_sha1": "497e2eed5b9b6344c08736466f39d7804f7d3de6",
+        "sha256": "0473cb57809c4723c6290e26250833b2b5fc2420a359bb96dd2e51790eab93e2"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "before": {
+        "git_blob_sha1": "2cae8976cdfb6dc068c3f732117141af128be7e5",
+        "sha256": "302ac6a2628e701311f8efa0119692ba354fb8c37dd20f76a2c82288770aaeea"
+      },
+      "after": {
+        "git_blob_sha1": "acd34c68e2261a8364ddc693c2a9069b65d20e33",
+        "sha256": "2e7d84ff34f9e89b757944f5ad8999357ecb847f284360cbcf038bcba201a0cb"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "after": {
+        "git_blob_sha1": "2adb5cf63619c8e84777a9a28c7b07cd8bf1406e",
+        "sha256": "f7aca14572d69075da32bf1f73c588124b7392b30697ca6f58050b3810b167a3"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/tests/migration_operation.rs",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "after": {
+        "git_blob_sha1": "fcd348097403a55ac66aaf01f09bce2d2242ad45",
+        "sha256": "51d9b988f275ee2924a9bacf211946a4dc5605127057e03799280847d2bd392d"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "before": {
+        "git_blob_sha1": "4336a866502622637dad7c61bd2eb6f94b22cc9a",
+        "sha256": "2a337c5a9099d1be8b15ffe412625644bce17241c3372e76c83a5380e637f401"
+      },
+      "after": {
+        "git_blob_sha1": "56bc76b2eb0d6e7c74e914226468437594dc118f",
+        "sha256": "e9939013224e37ca652ed75f6d4d919033904fa670967af6790e9158f9d26f09"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/context/migration.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "after": {
+        "git_blob_sha1": "d6241a354f9dfb5e9a6a618d5736bb3b09904e16",
+        "sha256": "b33e68b8d54ad5fe56ec1718713abb75589f6031542c3be31c3360c693dfc2e0"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/context/migration_tests.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "after": {
+        "git_blob_sha1": "104f55c5d7d866d6a210329aac65b13f5777997e",
+        "sha256": "f4d5bb64cc3fbde220fcaf6048407ba7bbd082dfc2aa2a6348cee9da744604ea"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/lib.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "before": {
+        "git_blob_sha1": "aab99659628ae5ff9a3e8d72cff2d03f5ae8e313",
+        "sha256": "21cd952c707517216cf2c8585bc93fd4fb6994292c0e35332b3a0d6f2c4788f3"
+      },
+      "after": {
+        "git_blob_sha1": "e6779d88f1bbcf33e2bf54e912ee4684508db469",
+        "sha256": "c8126d25179794c9eb6a73d7efb8c123cb0fb9a4a161616c3cff085fa3b3179c"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "before": {
+        "git_blob_sha1": "1dabc7cc71766df4d33c0db7783d5b6cbace8e5f",
+        "sha256": "b86221bcaf700956e4f6c64ed1f037b2febd4701595ee34fc83df72887af0808"
+      },
+      "after": {
+        "git_blob_sha1": "6ec56f8b571125f0fa5303e96a48ab2840963e70",
+        "sha256": "0d3de9ba20dd7af68ee244b81959a80573cd8f368a407b0d8a6a674f0d929095"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/migration_operation.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "after": {
+        "git_blob_sha1": "dc91a627d1af4b4201842aa33e8d3cefefbfb423",
+        "sha256": "1a60a4d221c838373e496d04de723d01c826ef35b2c3aa05a33a83b30ccb228c"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "after": {
+        "git_blob_sha1": "58dc82d068d95f374d9763e5d6c39a349e9c3630",
+        "sha256": "f131a5058f68b0ff9a0ad2a1c107cd190eac51d9c0bd5342e5dc7820ed2ac17d"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/output.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "before": {
+        "git_blob_sha1": "9d1bb7468907873caeeb25b8bed52440cee04ab8",
+        "sha256": "294f5f81fd2280217b56d5e66a35420726d71b79704401e13f57b4cd6c996400"
+      },
+      "after": {
+        "git_blob_sha1": "c05268d21f71314a102cc7486c34ce3c88d3680a",
+        "sha256": "d3edabb042e76190c415f9ba11577a66657e1a0022f43e32200b73aaacc688f4"
+      }
+    },
+    {
+      "path": "crates/vibe-mcp/tests/diagnostic_output.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "after": {
+        "git_blob_sha1": "8e715989312997996d7b1009564c6788361c5fe5",
+        "sha256": "81ccea2a367175069ae2f9055c097840e7b459561590984dfc33ea7a971eb38c"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/project_methods.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "667a58caf5e628411c64db4ca6c83cedc03b4af9",
+        "sha256": "e1222f83dfa512f42803a868d2480765b38f2e8ee61588d02ffcc86bcec03a75"
+      },
+      "after": {
+        "git_blob_sha1": "25e947e0887cb44e1d01d7ccfdcb2219bce57735",
+        "sha256": "34a08356cf1fe1d4bcfee9a8e1fe0e9571d148fd6c0dbda9b88dcbb74477fd78"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "43f2915af9362bc7126ed3ad8874451b096351da",
+        "sha256": "c448f23aba59488d26c02b68d8c80e9c920196c72ebc0a8927ab71f35b9cd26c"
+      },
+      "after": {
+        "git_blob_sha1": "edd98ed93fb2f80e6cc136e7bc772f1f503c0a12",
+        "sha256": "c3d8f10ed9441233794baffe45f4d5e8fa49934626783890b7a9993d0897e2e3"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/external.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "60ae0991c49b46fa90e4324da693e1590dab2bf8",
+        "sha256": "72da00f7662da230fab7cc97e61dec94f5d21f2b5623b634dc8a5ac4959853dc"
+      },
+      "after": {
+        "git_blob_sha1": "da89996a574c01832e7eb2ca765f1596044553a0",
+        "sha256": "2ad27977111b1b9d35625d941ee2d1096d662b992439a80563a4ee4de7ef0a97"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "after": {
+        "git_blob_sha1": "f5165f4efbea1480575b8c8c17802dbd5de8cf12",
+        "sha256": "12da4df9f8272eb2f74359058b6baf04d1ee418dc7f29544d40e2da33ac1e213"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/operations.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "d88ee6d7ea2422287a884b6ae7aa657e6104d480",
+        "sha256": "eb381cb5b6f11aeedbc6df3b0be630d7a60f0557bec525679afefa93ad159d13"
+      },
+      "after": {
+        "git_blob_sha1": "5aefeee6ad170947c8f3a76f242ebde694ce01f8",
+        "sha256": "496a5cdd8dd74112980f60b80945f23b12280e12871e323d199a9b80116facc1"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/tests.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "52c5dd6226ddf346dfed1050fabc5354d568982b",
+        "sha256": "a9f5032628eb49877f1fa82374b5f424e912393a32c6fcca0f91a4767abd6c7f"
+      },
+      "after": {
+        "git_blob_sha1": "3c9ffa1a31756f95ef0d2f3af66ea000bc556c03",
+        "sha256": "656d1cb0efd51345e5cd86462238a2a22f25d53d8d8e8a3c0e3b6d78cb49ff51"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/tests/external.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "before": {
+        "git_blob_sha1": "bacc682f88a613bfcdb433fd1f38ccdbe9f1a3e2",
+        "sha256": "7f7b81ae6c79c9a711cd869047aee53095511b42a47792bb0ffcd7436795a22a"
+      },
+      "after": {
+        "git_blob_sha1": "c9575bdf1b65bc876e7abb17256607cee2a84435",
+        "sha256": "9cc09d28e4c0fce4c72b2c44cd16438e0d33979b0410e7674fe1fd76fe098dd0"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "after": {
+        "git_blob_sha1": "c0d8f1911ef55dfdf46267ff091b9464bc6e3c0e",
+        "sha256": "7ba0048e79b2635058e05bccf269199e19cc46f8b7a3a558bae69b93cdd15530"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "04ad6c212e66a24fcaefcc25e5fb7b1a92ec8d0f",
+        "sha256": "e02ee6ec49eafe48907b2ffd5e6b3cf629bfcd40dcdcf32cc1d714e33d7befa1"
+      },
+      "after": {
+        "git_blob_sha1": "0d7eca06de9264ba36edea6b97ef83452a6024ae",
+        "sha256": "ca5fbe347f650991a78a08c19354fba5cc4b7b806eaadb74481a4df3f23dbd5e"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "99f83578985a09e3f6698929e3db27b825aa1703",
+        "sha256": "0294c0fe36414b08589fd792b8855907121d5bd43b1fc965e37f556eb2d27dba"
+      },
+      "after": {
+        "git_blob_sha1": "09cb7edfcb0c47e3f961d110cf5d5ab027c5e522",
+        "sha256": "55e037e94ec4ae3606288ce3496cf9e06b6181a0f8475da59ce55b6fe2b55ad8"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "1b91e04f25d5b4824d266707fe6c1fcb83d3727f",
+        "sha256": "2f17a3e079910bc4caf4d1de8b3319d893d0b179890e92bc3891f4dd49a798a6"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "49c2f063f2e4fcf1d78a298a915d561ebfe95cf1",
+        "sha256": "d14946c85ff415c547082c95f6f6fc041787ce912f91203fada9298318f15e4a"
+      },
+      "after": {
+        "git_blob_sha1": "d86c789022bd1e0b1da1ebb37c9f8bc04c26d36b",
+        "sha256": "79b365b0c447f095e9dcac13555ada57009e965a3e5e2127ab8af9ae570df3a1"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d2aa060b31b1639f2e0927491b1715cf171fc519",
+        "sha256": "900838e9cf43189694b86d452cb7e1600779b33583bdc742a1c953fadbdfb2ff"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e3d47624fcead6a5a34c7f72c899d4a8f65bd277",
+        "sha256": "98af9c50a5447f03e35e9e9ca22a4b9e01a63d689a871069b4a53253b72c2db5"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "aadd479a6f0e5aef5ac41823f7784f7fbf82b7ee",
+        "sha256": "5469314a99173bbba89070929fbcc60eab52bf51e8f4527f252d8a15fe59b343"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "before": {
+        "git_blob_sha1": "0df178279f22152bb75b72c1373157022f397539",
+        "sha256": "330de50187872fb37153fc35a30b5f0d5b16f6034acda09c42c322ce427d19c8"
+      },
+      "after": {
+        "git_blob_sha1": "a45a33cbd8cfc32dfb247c9a0d5d7176380664ed",
+        "sha256": "f7c0c27c89fb8de7cc285f30159f5649b109dfabb68a7fb9c3d04b73115c4580"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application.rs",
+      "interface_ids": [
+        "mcp:manifest_migration_operation",
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "06bd083ce0394b7b5ceba3ff0fe22e0dd10e0d00",
+        "sha256": "97ec9f1b4b600ad2a9a10575a38cc049db4abfd7912e924ce3f746994ceb8f45"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/identity.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "45f4b317241559043b0a8354cac6609b23ea1b61",
+        "sha256": "d8e027bc7153acd2006d09b17bd7c0a62e8db66f005fcfc2a5421bed037f1d5f"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/recovery.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "38587855bd8f2b1dcc8d939997fef09a4552dfe8",
+        "sha256": "8d03723029139bf03ae9669595a06b2e55bc7cdb8f0a7465d5f0d8cf1699014f"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/report.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "c93113f53aa9acbc628d9cb0a051c8231e208452",
+        "sha256": "cfbfc46bb0e8af021a76672b495c575de2099d735aa496e989861df1b5b5e6eb"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "5b31cf507bd358e8bd964e3726ab575274f13f39",
+        "sha256": "6daff116407fd6521f08ca3c405e9c27520dad8ddb89a56099563d9ff31c127a"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "24e80f03c67783e41f386e300d8a64bd3606b79d",
+        "sha256": "9350b4817ebdea667768a0661df2603d1fdf264e72a7439292b0282ef5f2a2c5"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "ff6009e9cdf10dd3e9e70f169632e5b0773b8aa2",
+        "sha256": "9d3e48b1478865c5d813ba708e62f049b5c482598a0075d36b51c3743a090dcc"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/storage.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "639ac829ca3ee432b7d33df6b7fa3b8bf12a41e5",
+        "sha256": "46aceb9e118b9a9e9fe80c2f9b936e982d55f630990344f912443bfef72be45d"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/validation.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "c11af71f5a0c3b1586aa790269748bcef7d6c1e8",
+        "sha256": "cf783d1068cbb00f22a38c9f64b7d141b828b369c36a4ca67c178097e97ca3cc"
+      }
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "after": {
+        "git_blob_sha1": "9a89f8dd5ee407e6ba889e299fcf1c05a6907bb7",
+        "sha256": "6ab85672e9f0b4e6ff042338a7027ea99376fcbe16c15bf03742a0f36c01441e"
+      }
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "before": {
+        "git_blob_sha1": "99189e53365075cddb173944cb089770ae1c816f",
+        "sha256": "ddf880d3271fd55f65258f70a44983e4a720427f9dbe7749187a367b413460e1"
+      },
+      "after": {
+        "git_blob_sha1": "ac769843e19a9098ecdded471a4759679d1bd35d",
+        "sha256": "b3df1a4d13acae6afad1495c9487213870b424b4b2c19fc196377d13f757638d"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f35fbb6c9eb64669bcee9d649904323e1eae4409",
+        "sha256": "6bc2cbf74135ea185202a0cc6227d3b050c92afb0caed4278a6338708824c9d6"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "084f5a6c850f0839dff8ba31c8e7238be7e787fe",
+        "sha256": "111a041dc7461f1fea26e06d6afa82ed88c7551736a46a8dce355a195cd0231d"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "720eb8541e6558c6e6bf4c63d2b946d1aa30ff5d",
+        "sha256": "09b8ea5bfb70ca81d6ebbe469c99c07b536e42e12cffc29c8ddf133277f1eba0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "c5eed778703a32ccee827b91772e5da8d686b98c",
+        "sha256": "717d54d5c31255b5f4bf58adeffe272c74178ddcc9d14e566d22f9b924a36885"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "946a36615eab4098b3a90fcf3b57563a755c8126",
+        "sha256": "c0af696df1ebd783d6303d2c55d4a57bc9fdf06e1dfc9c634818a99f4a9ce008"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "ff31eff5ec703ab4326dc856c6685ecdfc1fd5f6",
+        "sha256": "3701facec55f87a79af547f0823eb8728d62860e879bc56f6b921cb26a0a62c0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0aba7c06568c2d7837fca70f4380fd5e492cb33b",
+        "sha256": "11d595b035ada315206b82847ccff8c46c188d3f865ba2faca789ca7ef5961b4"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "5839f0f65843c8f3cca8a6fde478e1c0d1574c62",
+        "sha256": "915d2e655bae7891e1a6a3e71cc59c7f340d219efb584f70936d47003647769b"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "c2e83be04eb19fe58f0f9b24313ac6f0103a6838",
+        "sha256": "28bf71897ae9f40555f89058d1d7395cb0e56f688c324f27780e5db72aedf2d0"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "53c310c1473d9296502f9eed440f1768d0b5c700",
+        "sha256": "58e3f54dc6e8f3d9e092da3453b2d73290be3259b83d215c61669e1384676f3f"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-application-journal/e1/valid/restored.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "c5e4849a3ec11c785a857f3f7c4d43bfb7100b9e",
+        "sha256": "7133480c1a277b5e61cf71e8363237f9603d763d20f35a5222a45f83dbfe0d40"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "832019b352e152ca71cfeb04f33c3fd1958ee2bb",
+        "sha256": "f11f9832bc53ead2c017e56b127ff145a4d7acc29d2d8b213b573b8b80ea308a"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "08a5c40ba99f9cc21f5d8a9ee25c9649e16dd734",
+        "sha256": "912ccd179b67905a45abeadb2117a4b7f5f502145265c4d441b381b15a5ec26e"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "fef4d4099c7c0c3efbbacdcb5cd4c411e4756f79",
+        "sha256": "741e1954c4e2470c560187a5f89ab21b0ab66b1fd32eb9b79eaf2854f75a0f62"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "7ed1265186fa4df87becc985c9df4d165536781c",
+        "sha256": "574fe72aa95f8f63a46f8e6b3bc2b5cc782bec599b23a500ffcc38002501fbc7"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "6927ca385003fd0500a9e1519d50e5da2547458c",
+        "sha256": "cfaae3d4d2db2dd8853fc103562d5492e002f04a2e0a7afc1738fc5d3aade195"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "064713de8314acec685619a2b3cf873639293297",
+        "sha256": "4acae2e7071701b8d9be055c425b57275cdadf4ae27c102ccfdb8964c54def43"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "28b2b456114a66068103489364b191188bdfbac4",
+        "sha256": "c683358131b08eec0ae7e54337bd79a5775723dd5ab77e3c23b2900a91f30d71"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "9a70ac8644760190fb307728456ab06d7abed5df",
+        "sha256": "129c06c3e93733a1591c3d2321a0edaf832aefdeb5e633588f818828eade417e"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/valid/completed.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "ec47ab3bfe1181be93bd9f2f05b28159767db601",
+        "sha256": "75546fc437c82e2101a8271be77e7bd2e0fa06d4f1057a7136dc0445eb03e99c"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "c380113ef316e913fac92781a6fa40cf374d57b8",
+        "sha256": "dd4ec197fc72c26d4e5be2f83471bb5a7651ae7c7daa3ff21a880a82ae3ff8cd"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a5c09aa5981805f0236ba8f56c48d46d049de734",
+        "sha256": "c57380d64e67e61994d8e0c196579c2ecc01cf28ec1fd34d827584e6d07238f9"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d5cbca802ea28702bdcc6f64358029aca09e5074",
+        "sha256": "1e054ad3048c171f38d73f809e18ee357a2e75e404bdb7b2268d07a3b1635b27"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "439bdcb4c80f5fba0a4ff31d7d62ca7885cf4485",
+        "sha256": "7b8da67122c3d14353c38c18953b5cd09f8f1dadea87a56612b330d78f87966c"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "8503450d79518a41808d0d65915c087a17492fc1",
+        "sha256": "1b18e636fd3ed03460a1f2daa975b8d1bc82ea56b9025dd152772d6ea05d66c9"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "9af1c836665d87c2788987fcfd784272fa05a605",
+        "sha256": "a3558ec0d5d9a819bc41ef29f751732dc88c834311c7f7e54b255e6f0840d441"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0a8297717bcbe5a639025b32336510f5e7ac54e1",
+        "sha256": "692a95b2d4b0f17cf266a8a1bd9eb19393ff60a4401cd5ecf896d737dfe44ad3"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/valid/apply.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "eac91cc754c8a1eeec5486d9a000c9cd20d6b349",
+        "sha256": "e4044c46b3cade412841b0cf3aaf6e4d68bcd0171c4a09cf2d073a13d774e6e4"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "080a1b11fdd1defa3cf7eaa8b4b4442ebcac8b52",
+        "sha256": "5ce42e34ef846424f07affa732f05921deaa1494a33e1f908e890f6d6433f568"
+      }
+    },
+    {
+      "path": "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "04cf60d7af39d05e5fa8cffa999871db0669b152",
+        "sha256": "7190acc3dac4f65a77167549de9345075c4884aff513f985de9e05b0b03db5c8"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/application_journal.jtd.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "2d17c91276e013ff0f96e1350f487da321f9e6bd",
+        "sha256": "1723b455c7b8e7dd7fd7c081a5c1e8e1e11b00b46744a59473ec04d41706c007"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/operation_report.jtd.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "46640553bac9c1e984a5bea694e19f3334874037",
+        "sha256": "63a3b2371fb69849fa11dde792b88de147b63fa9df4bf75ffac74571eb71c9de"
+      }
+    },
+    {
+      "path": "schemas/migration/e1/operation_request.jtd.json",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "after": {
+        "git_blob_sha1": "1c2fe3e13cfe7aabbf91780b64400b353ce8e891",
+        "sha256": "29179c9c465176b56026a1fda9aa3efb678bcbc7dafa2b91b65420d5cf990096"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "a3646e795cd5e1517db09c6ffe1678926b183497",
+        "sha256": "10d61561c831b165376c6b96e8e11b2050ab7a74cc99c85aef0efc81774e9ee1"
+      },
+      "after": {
+        "git_blob_sha1": "486d5e0d68552a0e07b0676bc79334f0637f5fcd",
+        "sha256": "240a063044e75f1f0f3227221bc623a3439da67ce29120af1c368f8a5936680c"
+      },
+      "user_no_impact_reason": "Proposed no-impact: derived source-index locations/edges/revisions only; no executable operation or user-visible runtime semantics.",
+      "documentation_no_impact_reason": "Proposed no-impact: traceability projection refresh is not a user guide/workflow or guide-topic semantic change; positive interface guidance is separately due."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "interface_ids": [
+        "spec:manifest:portable-migration-application"
+      ],
+      "before": {
+        "git_blob_sha1": "78ba0fd65df908f4f5571e3e1c220cc4c6db716d",
+        "sha256": "f137ac315d7b98567af2dfa8dd2843c8898248a3d239b86ff20571fdfab763cb"
+      },
+      "after": {
+        "git_blob_sha1": "a14afaa991ee7ea85e61a5bf9d4bab79c6159afc",
+        "sha256": "b42e638eb134b99800f2342841383b2c7d5bfaf6d6fe264eeb9505c6e9ff307f"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "interface_ids": [
+        "spec:manifest:portable-migration-application"
+      ],
+      "before": {
+        "git_blob_sha1": "b8d93a1b50fbdd7302811bb89c124b2921b99941",
+        "sha256": "401156c9a9868213b8d9525533fee61ab0840a781d25bd261e3e7be562f4a453"
+      },
+      "after": {
+        "git_blob_sha1": "ab6ebe3950ea8b38a7b6c16aab5b5971b4f7c3d3",
+        "sha256": "68293f37f24f1c8aed06c6e02ca02cd161ab1985d437797f4b024d060cebb150"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "mcp:manifest_migration_operation",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Thirteen default tools included pure planning; no context-bound effectful migration tool, explicit finite authority builder or diagnostic-only executed output distinction.",
+      "after": "Fourteenth tool admits only trusted-context project/file/store/cache selections, invokes shared apply/inspect/recover actor, and preserves structured effects on execution failure. Explicit ServerContext authority is optional/default-refused and physically disjoint; generic executed diagnostic failures omit structuredContent while deliberate structured null remains present.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server"
+      ],
+      "source_paths": [
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/context/migration_tests.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/tests/diagnostic_output.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ],
+      "topic_ids": [
+        "context-bound-mcp-migration-operation-guidance"
+      ]
+    },
+    {
+      "interface_id": "cli:vibe:refactor:migration-operation",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Nested refactor had pure planning and three conversions; MCP serve admitted no explicit migration store/file flags.",
+      "after": "Explicit stdin/literal migration-operation entry runs before ordinary startup, invokes the shared one-file actor and emits exactly one validated JSON report with defined exits, or diagnostic-only internal failure. A two-machine-entry borrowed router preserves pure planning; MCP serve adds explicit recovery-store and repeatable member flags bound to the existing context authority owner.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ],
+      "source_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-cli/tests/migration_operation.rs"
+      ],
+      "topic_ids": [
+        "explicit-cli-manifest-migration-operation-guidance"
+      ]
+    },
+    {
+      "interface_id": "format:manifest-migration-application-e1",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Only the separate pure planning frame trio was registered; no bounded operation/journal roots.",
+      "after": "Three registered epoch1 formats migration-operation-request, migration-operation-report and migration-application-journal carry explicit authority, exact plan IDs, finite phase/effects/guarantees and required nullable evidence through canonical strict generated readers. Shape proof stays separate from owner semantic/native proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ],
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+        "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+        "formats/corpora/migration-application-journal/e1/valid/restored.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+        "formats/corpora/migration-operation-report/e1/valid/completed.json",
+        "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-operation-request/e1/valid/apply.json",
+        "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+        "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ],
+      "topic_ids": [
+        "manifest-migration-operation-wire-guidance"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-safefs:ExternalStore:manifest-migration-recovery",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Create-enabled recovery-store/barrier APIs did not provide existing-only inspection or explicit stable retained-file sync; pinned Unix directory flush used an unreadable O_PATH handle.",
+      "after": "Existing-only disjoint store/lock APIs and stable identity token support no-creation inspection; readable capability-relative directory synchronization fixes observed Linux EBADF, and stable-file synchronization proves actual held-file data sync with snapshot/name checks and separately observed parent tier. No universal CAS or synthetic fsync from reads.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ],
+      "source_paths": [
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/external_sync.rs",
+        "crates/vibe-safefs/src/transaction/operations.rs",
+        "crates/vibe-safefs/src/transaction/tests.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs",
+        "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+      ],
+      "topic_ids": [
+        "migration-recovery-filesystem-primitives-guidance"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-workspace:migration_application",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Pure migration planning existed without a grant-bound effectful application actor or retained journal recovery protocol.",
+      "after": "Explicit one-file grant, core-planner replay/identities, strict checkpoint validation, participating-client lock, verified retained before-image and finite publication/restore/replay matrix produce validated generated reports. Internal invariant failures preserve their original evidence through Result rather than unchecked report emission; inspection/replay create no new target write and byte reads do not upgrade sync tiers.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES"
+      ],
+      "source_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/identity.rs",
+        "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "crates/vibe-workspace/src/migration_application/report.rs",
+        "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+        "crates/vibe-workspace/src/migration_application/storage.rs",
+        "crates/vibe-workspace/src/migration_application/validation.rs",
+        "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+      ],
+      "topic_ids": [
+        "owned-manifest-migration-runtime-guidance"
+      ]
+    },
+    {
+      "interface_id": "spec:manifest:portable-migration-application",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Source law lacked the bounded portable application/journal and explicit application surface contract.",
+      "after": "Source requires coordinated one-owned-file application, durable retained before-image, finite inspect/recover/replay and truthful effects/guarantees; explicitly configured CLI/MCP admission and diagnostic-only invariant failures. No law text itself proves runtime or native platforms.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE"
+      ],
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ],
+      "topic_ids": [
+        "portable-manifest-migration-source-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "context-bound-mcp-migration-operation-guidance",
+      "obligation": "Pending developer/guide documentation for mcp:manifest_migration_operation: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    },
+    {
+      "topic_id": "explicit-cli-manifest-migration-operation-guidance",
+      "obligation": "Pending developer/guide documentation for cli:vibe:refactor:migration-operation: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    },
+    {
+      "topic_id": "manifest-migration-operation-wire-guidance",
+      "obligation": "Pending developer/guide documentation for format:manifest-migration-application-e1: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    },
+    {
+      "topic_id": "migration-recovery-filesystem-primitives-guidance",
+      "obligation": "Pending developer/guide documentation for rust:vibe-safefs:ExternalStore:manifest-migration-recovery: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    },
+    {
+      "topic_id": "owned-manifest-migration-runtime-guidance",
+      "obligation": "Pending developer/guide documentation for rust:vibe-workspace:migration_application: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    },
+    {
+      "topic_id": "portable-manifest-migration-source-guidance",
+      "obligation": "Pending developer/guide documentation for spec:manifest:portable-migration-application: explicit opt-in authority, selected input/output/effects and recovery scope, participating-client/external-writer limits, reduced observed durability, diagnostic-only invariant failure where applicable, preservation scope and native-platform measurement limits. Canonical page/anchor/example coverage is not established by this finite declaration."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "git_blob_sha1": "a14afaa991ee7ea85e61a5bf9d4bab79c6159afc",
+          "sha256": "b42e638eb134b99800f2342841383b2c7d5bfaf6d6fe264eeb9505c6e9ff307f"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+          "git_blob_sha1": "ab6ebe3950ea8b38a7b6c16aab5b5971b4f7c3d3",
+          "sha256": "68293f37f24f1c8aed06c6e02ca02cd161ab1985d437797f4b024d060cebb150"
+        }
+      ]
+    }
+  ]
+}

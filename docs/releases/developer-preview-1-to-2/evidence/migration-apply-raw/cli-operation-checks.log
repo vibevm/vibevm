@@ -1,0 +1,131 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+   Compiling vibe-doc-shell v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc-shell)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+   Compiling vibe-scrape v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-scrape)
+warning: `vibe-safefs` (lib) generated 4 warnings
+warning: unused variable: `error`
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    |
+help: `error` is captured in macro and introduced a unused variable
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+    = note: this warning originates in the macro `system_transaction_store_inherent_methods` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+   Compiling vibe-agent-projection v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-agent-projection)
+   Compiling vibe-doc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc)
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+   Compiling vibe-install v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-install)
+   Compiling vibe-orchestrator v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator)
+   Compiling vibe-requirements v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-requirements)
+   Compiling vibe-trace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-trace)
+   Compiling vibe-package-source v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-package-source)
+   Compiling vibe-doc-server v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc-server)
+   Compiling vibe-check v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-check)
+   Compiling vibe-mcp v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-mcp)
+   Compiling vibe-test-support v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-test-support)
+warning: `vibe-scrape` (lib) generated 1 warning
+   Compiling vibe-cli v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.56s
+     Running tests/migration_operation.rs (target/debug/deps/migration_operation-c5c2943440ac1755)
+
+running 7 tests
+test internal_invariant_diagnostic_retains_unvalidated_original_evidence ... ok
+test absent_store_inspection_stdin_literal_parity_creates_nothing ... FAILED
+test mismatched_plan_ids_and_changed_source_refuse_preserving_target ... ok
+test frozen_source_escape_and_link_refuse_without_target_write ... ok
+test third_state_recovery_and_foreign_intent_retain_journal_and_effects ... ok
+test apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode ... FAILED
+test malformed_schema_null_and_input_read_preflight_preserve_poisoned_state ... ok
+
+failures:
+
+---- absent_store_inspection_stdin_literal_parity_creates_nothing stdout ----
+
+thread 'absent_store_inspection_stdin_literal_parity_creates_nothing' (630127) panicked at crates/vibe-cli/tests/migration_operation.rs:129:9:
+assertion `left == right` failed: stdout={"after_content_id":null,"before_content_id":null,"diff_id":null,"effects":[],"error":{"code":"journal_invalid","field":"store","reason":"selected recovery store is absent; inspection creates nothing"},"guarantees":{"barrier_binding":null,"concurrency":"unestablished","durability":"unconfirmed","platform":"linux","preservation":"bytes_only","uncooperating_writers_excluded":false},"intent_id":null,"operation":"inspect","operation_id":"owned-example","outcome":"refused","residue":[],"schema":1,"target_state":"unavailable","warnings":[]}
+ stderr=
+  left: Some(1)
+ right: Some(2)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode stdout ----
+
+thread 'apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode' (630128) panicked at crates/vibe-cli/tests/migration_operation.rs:129:9:
+assertion `left == right` failed: stdout={"after_content_id":"c2301e7846eb2c32854968e3f43055143d84e4eb99c87ea6f644b6b374854658","before_content_id":"c8cbcd4abd3d35c007b8f204fd58c6dfc0b9275794d27b492d9ae4999d51e7f6","diff_id":"373e6aee5740ca409347946d930c0740b1a8784782e4bd97e6b0dd2a242073ba","effects":[{"kind":"barrier","state":"completed"},{"kind":"before_image","state":"completed"},{"kind":"journal","state":"completed"},{"kind":"target_publication","state":"completed"}],"error":null,"guarantees":{"barrier_binding":"sha256:6d79e10ed3556a11e12adf0ff20b8ee34224da4f9e57f4c9d5dc087ee9ef92dc;sha256:12feb4dbe41ad68eccdf4de13a40c8d3eefe46f37baddd3ee6fef420b5a7799b","concurrency":"participating_clients","durability":"unconfirmed","platform":"linux","preservation":"bytes_and_unix_mode","uncooperating_writers_excluded":false},"intent_id":"9a7b87f70d0a04c1225fd4b9634392482f9bb66aa7a14ff09b020c622cc5932c","operation":"inspect","operation_id":"owned-example","outcome":"completed","residue":[],"schema":1,"target_state":"validated_after","warnings":[{"action":"inspect","code":"durability_unconfirmed"}]}
+ stderr=
+  left: Some(0)
+ right: Some(2)
+
+
+failures:
+    absent_store_inspection_stdin_literal_parity_creates_nothing
+    apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+error: test failed, to rerun pass `-p vibe-cli --test migration_operation`

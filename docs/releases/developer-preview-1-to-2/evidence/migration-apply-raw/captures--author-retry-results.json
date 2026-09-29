@@ -1,0 +1,34 @@
+[
+  {
+    "side": "before",
+    "exit": 0,
+    "command": [
+      "/home/olegchir/git/v/vibevm-next/target/debug/vibevm-next-capture-author",
+      "/home/olegchir/git/v/vibevm-next",
+      "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f",
+      "migration-apply-baseline-b486af778",
+      "/tmp/vibevm-next-M13-D1-captures/before-template.json",
+      "/tmp/vibevm-next-M13-D1-captures/before-files.json",
+      "/tmp/vibevm-next-M13-C2-account/toolchains-template.json",
+      "evidence/migration-apply-baseline-b486af778-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-baseline-b486af778-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-baseline-b486af778-capture-e1.json"
+    ]
+  },
+  {
+    "side": "after",
+    "exit": 0,
+    "command": [
+      "/home/olegchir/git/v/vibevm-next/target/debug/vibevm-next-capture-author",
+      "/home/olegchir/git/v/vibevm-next",
+      "149bcea525564260be82972edf9afc8b5a2067a0",
+      "migration-apply-after-149bcea52",
+      "/tmp/vibevm-next-M13-D1-captures/after-template.json",
+      "/tmp/vibevm-next-M13-D1-captures/after-files.json",
+      "/tmp/vibevm-next-M13-C2-account/toolchains-template.json",
+      "evidence/migration-apply-after-149bcea52-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-after-149bcea52-source-capture.json",
+      "/tmp/vibevm-next-capture-author/migration-apply-after-149bcea52-capture-e1.json"
+    ]
+  }
+]

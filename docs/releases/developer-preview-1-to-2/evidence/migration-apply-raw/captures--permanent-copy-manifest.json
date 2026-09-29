@@ -1,0 +1,18 @@
+[
+  {
+    "path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-baseline-b486af778-source-capture.json",
+    "sha256": "a5f096ebf59df2e300b3a8a1162418802211d011dce10c3fabf4ee9d7f2e9d26"
+  },
+  {
+    "path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-baseline-b486af778-capture-e1.json",
+    "sha256": "ab63c4d5d7628d8c74385b7ea62804b430403ae650ad159faccc64e4e61bf9ae"
+  },
+  {
+    "path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-after-149bcea52-source-capture.json",
+    "sha256": "1e2916a75e18ff30629003134727c18a33a29bfa903654c9a998fc967783a312"
+  },
+  {
+    "path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-after-149bcea52-capture-e1.json",
+    "sha256": "78c58f237bb67042caf2cd9625de55411866b9833a00e81298b4578fc3d60f6b"
+  }
+]

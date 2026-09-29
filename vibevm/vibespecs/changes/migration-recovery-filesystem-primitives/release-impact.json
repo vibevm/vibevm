@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "change_id": "migration-recovery-filesystem-primitives",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "90d6371cc44c5c2d81026b9c08630b2140df01a1"
+    },
+    {
+      "kind": "commit",
+      "identity": "86964bae4eaf2661503e4e4b57c845da98c7a765"
+    },
+    {
+      "kind": "commit",
+      "identity": "79a53367abcd611c793db26a4e574dd6871dcdec"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-safefs/src/file/project_methods.rs",
+    "crates/vibe-safefs/src/lib.rs",
+    "crates/vibe-safefs/src/transaction/external.rs",
+    "crates/vibe-safefs/src/transaction/external_sync.rs",
+    "crates/vibe-safefs/src/transaction/operations.rs",
+    "crates/vibe-safefs/src/transaction/tests.rs",
+    "crates/vibe-safefs/src/transaction/tests/external.rs",
+    "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-safefs:ExternalStore:manifest-migration-recovery",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Create-enabled recovery-store/barrier APIs did not provide existing-only inspection or explicit stable retained-file sync; pinned Unix directory flush used an unreadable O_PATH handle.",
+      "after": "Existing-only disjoint store/lock APIs and stable identity token support no-creation inspection; readable capability-relative directory synchronization fixes observed Linux EBADF, and stable-file synchronization proves actual held-file data sync with snapshot/name checks and separately observed parent tier. No universal CAS or synthetic fsync from reads.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "New source/format/filesystem support requires no migration of existing users by itself; effectful application remains explicit opt-in."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document this scoped interface, explicit admission, recovery/effect semantics and reduced guarantees; source declarations/selected Linux evidence do not prove complete guide/topic coverage or native macOS/Windows."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "79a53367abcd611c793db26a4e574dd6871dcdec",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "79a53367abcd611c793db26a4e574dd6871dcdec",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

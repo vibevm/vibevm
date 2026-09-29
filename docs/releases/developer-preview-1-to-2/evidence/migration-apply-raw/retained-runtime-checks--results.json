@@ -1,0 +1,14 @@
+[
+  {
+    "case": "migration_application::runtime::runtime_tests::retained_sync_tests::matching_orphan_requires_actual_image_sync_and_failure_blocks_target",
+    "exit": 0
+  },
+  {
+    "case": "migration_application::runtime::runtime_tests::retained_sync_tests::loaded_restore_requires_image_sync_but_inspect_and_replay_do_not",
+    "exit": 0
+  },
+  {
+    "case": "migration_application::runtime::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+    "exit": 0
+  }
+]
