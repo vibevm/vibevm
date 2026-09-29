@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "native_execution": false,
+  "task_acceptance": false,
+  "reviewed_product_subject": "dd1f113bc81697a0b872df23a73320a352659728",
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M13-D1-platform-contract-audit.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-platform-contract-audit.md",
+      "sha256": "a24fe7d8d8c378c3fd05ac373f32881711f384fe29ef4e00adccb07ffe133636",
+      "bytes": 6188
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-native-proof-selection.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-native-proof-selection.md",
+      "sha256": "4c1bb71e0c7af8ed98214dd8691dd49d3a48aa2581ab57ba8c325c5d905685ff",
+      "bytes": 7363
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D2-current-proof-refresh.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/current-version-proof-refresh.json",
+      "sha256": "8d28674f4194b1f8f832b21dbfc6014d61d7e1abcf6d4146cac69db11f03bc92",
+      "bytes": 61735
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D2-current-proof-refresh.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/current-version-proof-refresh.md",
+      "sha256": "b52a1ced4fe1ad7eb5c45e888f9e7466877643929d9e1360450aa2d2aaa0e005",
+      "bytes": 2626
+    }
+  ],
+  "limits": "Native macOS/Windows proof is unrun. Conditional directory-full-flush risk is not a demonstrated blanket OS failure. Exact byte refresh supports only matching finite source/metadata evidence, not a newly resolved graph."
+}
