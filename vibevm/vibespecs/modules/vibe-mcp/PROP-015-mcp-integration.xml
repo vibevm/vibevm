@@ -42,7 +42,7 @@ close that loop:</close-the-loop></p>
   </motivation>
   <decisions title="2. Decisions">
     <server title="2.1 The server: JSON-RPC 2.0 over stdio">
-      <p><req-server fact="true" status="impl/done">`req r1`</req-server></p>
+      <p><req-server fact="true" status="impl/done">`req r2`</req-server></p>
       <p><SERVER-TRANSPORT-AGNOSTIC fact="true" status="impl/done">**Decision.** `vibe-mcp` is a transport-agnostic MCP server.</SERVER-TRANSPORT-AGNOSTIC></p>
       <facts ordered="false">
         <SERVER-JSONRPC fact="true" status="impl/done">It speaks
@@ -60,7 +60,7 @@ close that loop:</close-the-loop></p>
       </facts>
     </server>
     <tools title="2.2 The tool surface: one seam, three tools">
-      <p><req-tools fact="true" status="impl/done">`req r1`</req-tools></p>
+      <p><req-tools fact="true" status="impl/done">`req r2`</req-tools></p>
       <p><TOOL-SEAM fact="true" status="impl/done">**Decision.** Every tool implements one seam (`McpTool`): it `describe`s
 itself (name, human description, JSON-Schema input shape) and `run`s
 against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
@@ -207,7 +207,7 @@ lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-
       </map-select>
     </tools>
     <errors title="2.3 Tool and server errors cite their REQ">
-      <p><req-errors fact="true" status="impl/done">`req r1`</req-errors></p>
+      <p><req-errors fact="true" status="impl/done">`req r2`</req-errors></p>
       <facts ordered="false">
         <ERROR-LAYERS fact="true" status="impl/done">**Decision.** `ToolError` and `ServerError` are the crate's two error
   layers.</ERROR-LAYERS>
