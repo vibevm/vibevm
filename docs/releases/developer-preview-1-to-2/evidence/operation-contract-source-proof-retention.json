@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "source_path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+  "source_sha256": "b3709c66787569b2fa48976b5444a904c4e9d35bd02cf22defa7ef2338bf5154",
+  "required_anchors": [
+    "MACHINE-OPERATION-REGISTRY",
+    "MACHINE-OPERATION-STATE",
+    "MACHINE-OPERATION-ENVELOPE",
+    "MACHINE-OPERATION-VALIDATION",
+    "MACHINE-OPERATION-SERVICE",
+    "MACHINE-OPERATION-DISCOVERY"
+  ],
+  "reader_exit0": true,
+  "independent_source_review": "no concrete blocker in finite desired-law scope",
+  "implementation_task_accepted": false,
+  "schema_codegen_or_runtime_evidence": false,
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-discovery.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-discovery.log",
+      "sha256": "02cdf3708f73766ff2e8075c302b1ad3a0fc6714a06b3311b91b4a56107464eb",
+      "bytes": 72
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-envelope.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-envelope.log",
+      "sha256": "ab39711408b44405ba5c6bfa837cef4068e4c90d486f27b1cbfaf4886ef75cec",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-registry.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-registry.log",
+      "sha256": "88e1719bfc7333068c5e63ae780c8dc23a6fe53054ac50a8c2a08bebe5644c1b",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-service.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-service.log",
+      "sha256": "d9187d4c9771c7be78c8a2eeddbeaf2ff9f763deb0b7ebcff15cc1e55eb1648f",
+      "bytes": 70
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-state.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-state.log",
+      "sha256": "cf2113cc38cad6aefd2f5cd748bea689ab9e74090dc2bc80074ee532cf04104e",
+      "bytes": 68
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/machine-operation-validation.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/machine-operation-validation.log",
+      "sha256": "ba17908479ae6063e5d38e279403ccf0388132e45cebf2c9d50532614fffb9ba",
+      "bytes": 73
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/result.json",
+      "sha256": "77efcce9bcb2a6823763c7b695551f9de367aa2f534ee5fce44820f959616c97",
+      "bytes": 1952
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-proof/specdoc.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-raw/specdoc.log",
+      "sha256": "392539e32803d04dfa5433acab02de1c4eaa143f36136ca22ee1fb55d605091f",
+      "bytes": 48
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-source-independent-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-source-independent-review.md",
+      "sha256": "beb98258887808a5259409ea9aa3531e3b21559e540969d4579d3e5332307cbc",
+      "bytes": 3708
+    }
+  ]
+}
