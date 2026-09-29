@@ -46,10 +46,8 @@ fn main() -> ExitCode {
         }
     };
 
-    if let Command::Refactor(args) = &cli.command
-        && let commands::refactor::RefactorCommand::PlanMigration(args) = &args.command
-    {
-        return commands::refactor::migration_plan::run(args.request_json.as_deref());
+    if let Some(exit) = commands::refactor::machine_entry::run(&cli.command) {
+        return exit;
     }
     promote_user_config_env();
     init_tracing();
