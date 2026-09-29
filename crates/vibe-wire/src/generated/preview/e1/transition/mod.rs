@@ -75,6 +75,11 @@ pub struct ContributionScope {
     pub before_capture_id: String,
 
     pub record_digests: Vec<RecordDigest>,
+
+    /// Exact retained finite affected-source review selected for this
+    /// contribution scope; selection alone is not acceptance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub affected_source_review: Option<SourceDigestRef>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

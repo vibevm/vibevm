@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "review_id": "shape-only affected source review",
+  "before_capture_id": "shape-only before",
+  "after_capture_id": "shape-only after",
+  "source_record": "evidence/shape-only-review.md",
+  "source_record_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "paths": [
+    {
+      "path": "src/internal.rs",
+      "interface_ids": [],
+      "after": "not-an-endpoint-object",
+      "user_no_impact_reason": "Internal shape fixture; no user behavior claim.",
+      "documentation_no_impact_reason": "Internal shape fixture; no documentation claim."
+    }
+  ],
+  "interfaces": [],
+  "topics": [],
+  "contract_sources": []
+}

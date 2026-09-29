@@ -101,6 +101,18 @@
           "elements": { "ref": "record_digest" },
           "metadata": { "x-empty": "emit" }
         }
+      },
+      "optionalProperties": {
+        "affected_source_review": {
+          "ref": "source_digest_ref",
+          "metadata": {
+            "x-default": null,
+            "description": "Exact retained finite affected-source review selected for this contribution scope; selection alone is not acceptance.",
+            "spec": {
+              "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+            }
+          }
+        }
       }
     },
     "record_digest": {

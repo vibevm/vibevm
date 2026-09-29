@@ -1163,6 +1163,16 @@ unknown_fields = "deny"
 corpus = "formats/corpora/release-impact/e1"
 sunset = "none"
 
+# Finite authored affected-source accounting evidence, not a complete census.
+[format.preview-affected-source-review]
+epoch = 1
+schema = "schemas/preview/e1/affected_source_review.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/preview-affected-source-review/e1"
+sunset = "none"
+
 # A reviewed capture records more than a rebuildable Git tree: it also states
 # observed toolchain, unavailable artifacts and scoped source declarations.
 [format.preview-capture]

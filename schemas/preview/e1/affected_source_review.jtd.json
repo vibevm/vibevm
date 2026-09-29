@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "description": "Finite independently authored affected-source review projection with exact endpoint and retained source bindings; declarations do not confer acceptance, complete census or runtime proof.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::preview::e1::affected_source_review"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "review_id": {
+      "type": "string"
+    },
+    "before_capture_id": {
+      "type": "string"
+    },
+    "after_capture_id": {
+      "type": "string"
+    },
+    "source_record": {
+      "type": "string"
+    },
+    "source_record_sha256": {
+      "type": "string"
+    },
+    "paths": {
+      "elements": {
+        "ref": "path_binding"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "interfaces": {
+      "elements": {
+        "ref": "interface_review"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "topics": {
+      "elements": {
+        "ref": "topic_obligation"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "contract_sources": {
+      "elements": {
+        "ref": "contract_source"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "path_binding": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "interface_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "before": {
+          "ref": "blob_identity",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "after": {
+          "ref": "blob_identity",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "user_no_impact_reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "documentation_no_impact_reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "blob_identity": {
+      "properties": {
+        "git_blob_sha1": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    },
+    "interface_review": {
+      "properties": {
+        "interface_id": {
+          "type": "string"
+        },
+        "capability_id": {
+          "type": "string"
+        },
+        "kind": {
+          "ref": "effect_kind"
+        },
+        "audience": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "source_paths": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "contract_anchors": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "topic_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "effect_kind": {
+      "type": "string",
+      "metadata": {
+        "x-rust-type": "crate::generated::preview::e1::release_impact::EffectKind",
+        "description": "Uses the existing release-impact owner's closed EffectKind codec; no separate effect vocabulary."
+      }
+    },
+    "topic_obligation": {
+      "properties": {
+        "topic_id": {
+          "type": "string"
+        },
+        "obligation": {
+          "type": "string"
+        }
+      }
+    },
+    "contract_source": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "spec_root_components": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "source_profile": {
+          "type": "string"
+        },
+        "manifest_path": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string"
+        },
+        "documents": {
+          "elements": {
+            "ref": "contract_document"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "contract_document": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "git_blob_sha1": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
