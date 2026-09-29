@@ -141,6 +141,9 @@
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
         "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
+        "docs/machine-api/authority-map.md",
+        "formats/capability-coverage/coverage-e1.json",
+        "xtask/src/bin/authority-map-check/main.rs",
         "formats/REGISTRY.toml",
         "formats/EPOCHS.toml",
         "schemas/machine/e1/operation_descriptor.jtd.json",
@@ -156,6 +159,7 @@
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "docs/machine-api/authority-map.md",
         "schemas/",
         "crates/vibe-core/src/",
         "crates/vibe-orchestrator/src/",
@@ -224,6 +228,7 @@
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+        "docs/machine-api/README.md",
         "schemas/machine/e1/operation_envelope.jtd.json",
         "formats/REGISTRY.toml",
         "crates/vibe-mcp/Cargo.toml",
@@ -232,6 +237,8 @@
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "docs/machine-api/README.md",
+        "docs/machine-api/framed-session.md",
         "schemas/",
         "crates/vibe-wire/src/",
         "crates/vibe-wire/tests/",
@@ -279,6 +286,7 @@
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Use a separate byte-oriented machine-session adapter and registered epoch-one frame value; do not retrofit MCP's line Transport or fixed initialize. A bounded four-byte big-endian length with a finite maximum precedes UTF-8 JSON decode. Advertise only implemented capabilities; a test fake does not make production streaming/replay/control available. Context/target IDs come only from a trusted composing surface and never from request paths or manifest fields.",
         "The first pure planner frame exchange must reuse one neutral machine-operation request/result/error publisher owned by vibe-orchestrator, with the existing MCP envelope tool becoming a thin channel adapter. Do not duplicate workspace migration decoding, planning or result replay in the framed session, and do not expose a generic eval/shell route.",
+        "Before B.3 acceptance, document the delivered on-demand framing, handshake, actual capability flags, trusted context-ID boundary, legacy MCP fixed protocol and one-shot reach from executable source and focused receipts. Preserve the incomplete source authentication and persistent-cursor limits; do not describe the fake service as a general action transport.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
