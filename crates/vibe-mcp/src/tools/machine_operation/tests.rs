@@ -6,8 +6,33 @@ use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
 };
-use vibe_wire::generated::migration::e1::plan_report::PlanReport;
-use vibe_workspace::migration_planning::validate_report_for_request;
+use vibe_wire::generated::{
+    machine::e1::operation_envelope::{
+        BodyErrorCompleteness, BodyErrorEffectState, BodyResult, BodyResultCompleteness,
+        BodyResultEffectState,
+    },
+    migration::e1::{
+        plan_error::PlanError,
+        plan_report::{Outcome, PlanReport},
+    },
+};
+use vibe_workspace::migration_planning::{
+    decode_migration_request, plan_migration_json, validate_preflight_error,
+    validate_report_for_request,
+};
+
+const ERROR: &str = "migration-plan-error";
+
+fn envelope(body: Body) -> OperationEnvelope {
+    OperationEnvelope {
+        schema: 1,
+        operation_id: Some(OPERATION.to_owned()),
+        domain_owner: Some(OPERATION.to_owned()),
+        source_id: Some(SOURCE.to_owned()),
+        evidence_id: None,
+        body,
+    }
+}
 
 fn snapshot(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
     fn walk(root: &Path, path: &Path, out: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
@@ -36,6 +61,9 @@ fn input(inner: Value) -> Value {
     json!({"schema":1,"operation_id":OPERATION,"domain_owner":OPERATION,
         "source_id":SOURCE,"evidence_id":null,"body":{"stage":"input",
             "format_id":INPUT,"payload_json":inner.to_string()}})
+}
+fn input_envelope() -> OperationEnvelope {
+    serde_json::from_value(input(request())).unwrap()
 }
 fn request() -> Value {
     json!({"schema":1,"source_text":"# café\r\n[package]\r\nname='demo'\r\ngroup='org.example'\r\nkind='flow'\r\nversion='1.1.0'\r\nmaterialization='snapshot' # keep\r\n",
@@ -212,18 +240,14 @@ fn forged_owner_and_effect_are_diagnostic_not_published_as_reports() {
     };
     row.effect_state = BodyResultEffectState::Completed;
     for forged in [foreign, effect] {
-        assert!(
-            service
-                .validate_pure_planner_publication(Some(&request), forged.clone())
-                .is_err()
-        );
-        let output = publish(
-            &service,
-            forged,
-            &request,
-            false,
-            "forged data must not publish",
-        )
+        let rejected = service
+            .validate_pure_planner_publication(Some(&request), forged)
+            .unwrap_err();
+        let output = map_exchange(PurePlannerExchange::Diagnostic {
+            original_input: input_envelope(),
+            evidence: ExchangeDiagnosticEvidence::UnvalidatedPublication(rejected.original),
+            reason: "forged data must not publish",
+        })
         .unwrap();
         assert!(output.is_error());
         assert!(
@@ -249,8 +273,14 @@ fn invalid_owning_preflight_retains_original_as_diagnostic_only() {
         panic!("expected owning preflight error")
     };
     original.schema = 2;
-    let ToolError::Internal(message) = invalid("invalid generated preflight", Some(&original))
-    else {
+    let ToolError::Internal(message) = map_exchange(PurePlannerExchange::Diagnostic {
+        original_input: input_envelope(),
+        evidence: ExchangeDiagnosticEvidence::DomainResponse(MigrationPlanningResponse::Preflight(
+            original,
+        )),
+        reason: "invalid generated preflight",
+    })
+    .unwrap_err() else {
         panic!("invalid owning error became a normal structured preflight")
     };
     assert!(message.contains("UNVALIDATED original error"));
@@ -372,7 +402,15 @@ fn malformed_result_and_unowned_event_remain_diagnostic_only() {
         (bad_result, "{invalid-domain-json"),
         (event, "\"stage\":\"event\""),
     ] {
-        let output = publish(&service, untrusted, &request, false, "must not publish").unwrap();
+        let rejected = service
+            .validate_pure_planner_publication(Some(&request), untrusted)
+            .unwrap_err();
+        let output = map_exchange(PurePlannerExchange::Diagnostic {
+            original_input: input_envelope(),
+            evidence: ExchangeDiagnosticEvidence::UnvalidatedPublication(rejected.original),
+            reason: "must not publish",
+        })
+        .unwrap();
         assert!(output.is_error());
         assert!(!output.has_structured());
         assert!(output.text().contains("UNVALIDATED"));
