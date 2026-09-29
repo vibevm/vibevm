@@ -34,6 +34,11 @@ ten baseline files plus present changed tracked paths, using the unchanged DP1
 scope exclusions. The CLI/MCP subsets are retained only after their source bytes
 and package declaration manifests match the reviewed baseline.
 
+The exclusion rationale is inherited from DP1. Its phrase about release evidence
+being absent describes that earlier boundary, not this intermediate commit;
+the full captured Git tree includes the retained release evidence. The checker
+does not establish a current absence claim from this historical text.
+
 This is an intermediate source subject. DP2 remains pending. The report proves
 selected bytes, Git identities and declaration linkage; contribution accounting,
 complete capability/topic membership, documentation, runtime and final product
