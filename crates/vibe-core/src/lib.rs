@@ -23,6 +23,7 @@ pub mod global_registry;
 pub mod host_owner;
 pub mod layout;
 pub mod lifecycle;
+pub mod machine_view;
 pub mod manifest;
 pub mod package_ref;
 pub mod progress;
