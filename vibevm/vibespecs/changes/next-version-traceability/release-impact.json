@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "change_id": "next-version-traceability",
+  "before_capture_id": "policy-baseline-e203b9dab",
+  "after_capture_id": "next-1.1-after-110da6f17",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "160c176725c3a1671eaeda0b49d7e62bfeb3c4d0"
+    },
+    {
+      "kind": "commit",
+      "identity": "ebe458b03cfc0d3b12cb0889338555bd8574a57e"
+    },
+    {
+      "kind": "commit",
+      "identity": "110da6f1791a40ede6e3851837ec4db386e50930"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Native specmap source index regeneration only; no version selection, executable handler, format or installed-world mutation in these commits.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "Traceability index metadata does not deliver or change a user guide; source/version and derived-state guidance obligations are accounted separately.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-next-version-source-delta",
+      "subject_id": "next-1.1-after-110da6f17",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/next-version-source-review.md",
+      "verdict": "passed",
+      "sha256": "930d659e34af50133115ee329743eed15d292d3e8093ededbe7b49001c8dbd81"
+    },
+    {
+      "claim_id": "selected-next-version-verification",
+      "subject_id": "next-1.1-after-110da6f17",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/next-version-verification.md",
+      "verdict": "passed",
+      "sha256": "5734edcde5434e9b5d9793bb912db31d689e071225ead94fef390ca45d07570a"
+    },
+    {
+      "claim_id": "central-next-version-contribution-review",
+      "subject_id": "110da6f1791a40ede6e3851837ec4db386e50930",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/next-version-central-review.md",
+      "verdict": "passed",
+      "sha256": "7ccd548055a04cf795819a552058f6b1855e0909fded40f57b4da9505c4b565f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "110da6f1791a40ede6e3851837ec4db386e50930",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/next-version-central-review.md"
+  }
+}
