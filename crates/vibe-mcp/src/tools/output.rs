@@ -27,9 +27,9 @@ use specmark::spec;
 ///   in structuredContent without pretending the domain executed. It does not
 ///   construct ToolOutput or use its executed_failure channel.
 /// - **Executed** — `Ok(ToolOutput)`. The operation ran and produced a
-///   structured report plus its human text projection. Within this
-///   channel there are three shapes, and the axis that separates them
-///   is NOT success-vs-failure — it is *who writes the text*:
+///   report plus its human text projection, or an explicit diagnostic-only
+///   failure when no valid report exists. Structured constructors state the
+///   result status and who writes its text:
 ///   - [`ToolOutput::ok`] — ordinary success (`isError: false`) whose
 ///     text is the deterministic projection of the report;
 ///   - [`ToolOutput::executed`] — ordinary success (`isError: false`)
@@ -52,8 +52,12 @@ use specmark::spec;
 ///   throw away exactly the report a caller asked for. That distinction
 ///   is unchanged by the middle shape: `executed` is still the executed
 ///   channel, and a preflight refusal still has no `ToolOutput` at all.
+///   [`ToolOutput::executed_failure_text`] represents executed diagnostic-only
+///   failure, with mandatory text and no structuredContent; it never invents
+///   a validated report. Explicit JSON null in the other constructors remains
+///   present structured content.
 ///
-/// The text projection is **mandatory on all three shapes**, and for a
+/// The text projection is **mandatory on every shape**, and for a
 /// reason: an executed result must never silently fall back to a
 /// pretty-JSON rendering of its report where a surface had something
 /// better to say — for a failure that would bury the actionable typed
@@ -113,9 +117,13 @@ use specmark::spec;
 /// assert_eq!(failed.structured()["status"], "refused");
 /// ```
 #[derive(Debug, Clone, PartialEq)]
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+    r = 4
+)]
 pub struct ToolOutput {
     structured: Value,
+    structured_present: bool,
     text: String,
     is_error: bool,
 }
@@ -133,6 +141,7 @@ impl ToolOutput {
         let text = deterministic_text(&structured);
         ToolOutput {
             structured,
+            structured_present: true,
             text,
             is_error: false,
         }
@@ -162,6 +171,7 @@ impl ToolOutput {
     pub fn executed(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
             structured: structured.into(),
+            structured_present: true,
             text: text.into(),
             is_error: false,
         }
@@ -177,13 +187,36 @@ impl ToolOutput {
     pub fn executed_failure(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
             structured: structured.into(),
+            structured_present: true,
             text: text.into(),
             is_error: true,
         }
     }
 
+    /// Executed diagnostic-only failure: mandatory labelled diagnostic text,
+    /// isError true, and no validated structured report. The internal null
+    /// placeholder preserves legacy accessors; the explicit mode owns presence.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+        r = 1
+    )]
+    pub fn executed_failure_text(text: impl Into<String>) -> Self {
+        Self {
+            structured: Value::Null,
+            structured_present: false,
+            text: text.into(),
+            is_error: true,
+        }
+    }
+
+    /// Explicit rendering mode, independent of the structured value's type.
+    pub fn has_structured(&self) -> bool {
+        self.structured_present
+    }
+
     /// The structured report — what the dispatcher places in the
-    /// result's single `structuredContent` field.
+    /// result's single `structuredContent` field when has_structured() is true.
+    /// Diagnostic-only output exposes the internal null placeholder here.
     pub fn structured(&self) -> &Value {
         &self.structured
     }
@@ -200,8 +233,8 @@ impl ToolOutput {
     }
 
     /// Consume into the `(structured, text, is_error)` triple — the
-    /// dispatcher's path, so the structured [`Value`] moves into the
-    /// rendered result instead of being cloned out.
+    /// legacy compatibility path. A renderer must read has_structured() before
+    /// consumption; null does not indicate absence.
     pub fn into_parts(self) -> (Value, String, bool) {
         (self.structured, self.text, self.is_error)
     }
