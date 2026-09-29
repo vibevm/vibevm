@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "review_id": "pure environment role finite source review",
+  "before_capture_id": "environment-role-baseline-94e50b4b7",
+  "after_capture_id": "environment-role-after-1568af9f3",
+  "source_record": "evidence/environment-role-source-review.md",
+  "source_record_sha256": "2fe9ad2c91a401f1b896974171d383444b2495f0f06696fc208db709c2f6d7bb",
+  "paths": [
+    {
+      "path": "crates/vibe-core/src/environment/compatibility.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "b56841c112645e55ab98114a719a5c09ecb79b48",
+        "sha256": "1dee080849d8f75fe5f183ee5352aa7c0fe954b68bb95140a20bf7867401afc4"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/export_assertions.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "8f73a0bbf32b1405b3e8d44b27f74e3410a8f24c",
+        "sha256": "81d9339ee1b706460bceed48cec093490addfdc03f989273a05faa8aa3860cb6"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/identity.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "ece67b8dfa83df5d2cac20de9561903964260c7f",
+        "sha256": "45032df8619a02fd9547d884a7dbd4a1dc3388b8a1dae2182db5986841dbff4f"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/mod.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "cd971cc38f87ff46a5f194d1eafa88fa72013147",
+        "sha256": "b8bffdc11346a5dc4fe9de2cb35b85887acf7a69f3215330041a09e873fe940c"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/platform.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "ebf79978ee2364b11d196c6620f042667cb5dc94",
+        "sha256": "3bba3560b4b677112f0a1eb2b53775447e4f094b27441f4befcbb9eb4dcc9b08"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/roles.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "ddf01f8c0b0f6173762a759e01e14f30c1c9c748",
+        "sha256": "0ebeca4ff938556db689552c375b56a8f82209835c9aa1358b62d65cacbe5792"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/environment/tests.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "after": {
+        "git_blob_sha1": "0794f175999b91ea8e4e91b943b64647fc5341c0",
+        "sha256": "9c01e27e60ccb68686ae1897fb0fc2b314058b7f564bd951aff35b1946a1d3a5"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-core:environment"
+      ],
+      "before": {
+        "git_blob_sha1": "ae55aedcd46d9ffca78daf5c8c27d722972681df",
+        "sha256": "8ce48176c3b109da3d13db465d4a2c28dba8a0dfe489a468628c6291ff7c1e74"
+      },
+      "after": {
+        "git_blob_sha1": "3eb59dd75288d380d58a83fc9483175384d2055f",
+        "sha256": "5734dcbc3bb2f20d4284e015e26269ff1496b3acc41555d7587c69abbefc30b8"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "486d5e0d68552a0e07b0676bc79334f0637f5fcd",
+        "sha256": "240a063044e75f1f0f3227221bc623a3439da67ce29120af1c368f8a5936680c"
+      },
+      "after": {
+        "git_blob_sha1": "972457b0e777559e15b6e7991cc07be1391e631e",
+        "sha256": "a3f21533761888cafe7f1742174e03bfd99172dc49fb76d540be313892e05912"
+      },
+      "user_no_impact_reason": "Derived source unit/item/edge projection adds no executable behavior or user operation.",
+      "documentation_no_impact_reason": "Source traceability metadata update is not a guide/workflow semantic change; positive role/interface guidance remains separately due."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "interface_ids": [
+        "spec:environment:role-contract"
+      ],
+      "after": {
+        "git_blob_sha1": "fa5048cdd713d953cab7b2f8110c7f48774d38c6",
+        "sha256": "8c22a8cc6034e2242e4d6c213d6af81f45f08c2114ca772255d916c219401a46"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "spec:environment:role-contract",
+      "capability_id": "explicit-environment-identity-roles",
+      "kind": "introduced",
+      "before": "No permanent five-role environment contract or separately recorded bounded pure implementation boundary.",
+      "after": "PROP076 defines five independent producer/admission roles, three machine roles, explicit compatibility and legacy-host preservation; later observed paragraph records pure source projection only with future/physical/native boundaries retained.",
+      "platform": "Selected GNU/Linux pure constructors/compatibility proof only; injected Windows/Linux facts are descriptive. No authenticated content/physical roots, native executor/deployment, existing-consumer adoption, future delivery, full SDK/API/platform or final release proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#LOCAL-WORKSPACE-COMPATIBILITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#UNSUPPORTED-TARGET-OPERATIONS",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PROOF-BOUNDARY"
+      ],
+      "audience": "developer / domain-library consumer / repository maintainer",
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ],
+      "topic_ids": [
+        "environment-role-source-contract-guidance"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-core:environment",
+      "capability_id": "explicit-environment-identity-roles",
+      "kind": "introduced",
+      "before": "No exported environment role constructors/joins, independent machine-role facts or injected workspace source-projection compatibility module.",
+      "after": "Public pure module exports five typed role IDs/objects and explicit facts/constraints/mapping results; references preserve supplied text/producers and join consistency only. Existing package/content/OS guard owners are reused; separate export namespaces and explicit unsupported future modes are checked without ambient discovery/effects or new hash/wire/parser.",
+      "platform": "Selected GNU/Linux pure constructors/compatibility proof only; injected Windows/Linux facts are descriptive. No authenticated content/physical roots, native executor/deployment, existing-consumer adoption, future delivery, full SDK/API/platform or final release proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#EXECUTION-CONTEXT",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#IDENTITY-OWNER-REUSE",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION"
+      ],
+      "audience": "developer / domain-library consumer / repository maintainer",
+      "source_paths": [
+        "crates/vibe-core/src/environment/compatibility.rs",
+        "crates/vibe-core/src/environment/export_assertions.rs",
+        "crates/vibe-core/src/environment/identity.rs",
+        "crates/vibe-core/src/environment/mod.rs",
+        "crates/vibe-core/src/environment/platform.rs",
+        "crates/vibe-core/src/environment/roles.rs",
+        "crates/vibe-core/src/environment/tests.rs",
+        "crates/vibe-core/src/lib.rs"
+      ],
+      "topic_ids": [
+        "pure-environment-role-foundation-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "environment-role-source-contract-guidance",
+      "obligation": "Pending complete canonical guidance for spec:environment:role-contract: five supplied identity roles, producers and nonauthentication, three machine roles, explicit local source-projection compatibility and legacy guards, separate export namespaces, unsupported future operations and pure/no-native/effect limits. Existing release prose is bounded and not complete page/build/SDK evidence."
+    },
+    {
+      "topic_id": "pure-environment-role-foundation-guidance",
+      "obligation": "Pending complete canonical guidance for rust:vibe-core:environment: five supplied identity roles, producers and nonauthentication, three machine roles, explicit local source-projection compatibility and legacy guards, separate export namespaces, unsupported future operations and pure/no-native/effect limits. Existing release prose is bounded and not complete page/build/SDK evidence."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "git_blob_sha1": "fa5048cdd713d953cab7b2f8110c7f48774d38c6",
+          "sha256": "8c22a8cc6034e2242e4d6c213d6af81f45f08c2114ca772255d916c219401a46"
+        }
+      ]
+    }
+  ]
+}

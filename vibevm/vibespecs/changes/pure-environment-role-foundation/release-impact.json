@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "change_id": "pure-environment-role-foundation",
+  "before_capture_id": "environment-role-baseline-94e50b4b7",
+  "after_capture_id": "environment-role-after-1568af9f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "40ef38d10b969082bab028c6b49621af11289946"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-core/src/environment/compatibility.rs",
+    "crates/vibe-core/src/environment/export_assertions.rs",
+    "crates/vibe-core/src/environment/identity.rs",
+    "crates/vibe-core/src/environment/mod.rs",
+    "crates/vibe-core/src/environment/platform.rs",
+    "crates/vibe-core/src/environment/roles.rs",
+    "crates/vibe-core/src/environment/tests.rs",
+    "crates/vibe-core/src/lib.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-core:environment",
+      "capability_id": "explicit-environment-identity-roles",
+      "kind": "introduced",
+      "before": "No exported environment role constructors/joins, independent machine-role facts or injected workspace source-projection compatibility module.",
+      "after": "Public pure module exports five typed role IDs/objects and explicit facts/constraints/mapping results; references preserve supplied text/producers and join consistency only. Existing package/content/OS guard owners are reused; separate export namespaces and explicit unsupported future modes are checked without ambient discovery/effects or new hash/wire/parser.",
+      "platform": "Selected GNU/Linux pure constructors/compatibility proof only; injected Windows/Linux facts are descriptive. No authenticated content/physical roots, native executor/deployment, existing-consumer adoption, future delivery, full SDK/API/platform or final release proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#EXECUTION-CONTEXT",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#IDENTITY-OWNER-REUSE",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION"
+      ],
+      "audience": "developer / domain-library consumer / repository maintainer"
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "New source/library value contracts do not adopt existing consumers or authorize any write; no user migration is required."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Update bounded role/API guidance, compatibility interpretation and evidence/unsupported boundaries; complete canonical page/build/SDK coverage remains pending."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-environment-role-contribution-review",
+      "subject_id": "40ef38d10b969082bab028c6b49621af11289946",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-central-review.md",
+      "verdict": "passed",
+      "sha256": "9d3f9a636b9cd133632653a2d8024090e2247c2c67fac66a6ba2cf973346156b"
+    },
+    {
+      "claim_id": "reviewed-environment-role-source-delta",
+      "subject_id": "environment-role-after-1568af9f3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-source-review.md",
+      "verdict": "passed",
+      "sha256": "2fe9ad2c91a401f1b896974171d383444b2495f0f06696fc208db709c2f6d7bb"
+    },
+    {
+      "claim_id": "selected-environment-role-verification",
+      "subject_id": "environment-role-after-1568af9f3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-verification.md",
+      "verdict": "passed",
+      "sha256": "762497a58c675b61c1d781a51d04da93b98f55cc0f10c036fc13a3bbcf94541b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "40ef38d10b969082bab028c6b49621af11289946",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/environment-role-central-review.md"
+  }
+}

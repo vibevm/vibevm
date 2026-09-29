@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "exit": 0,
+  "verdict": "passed",
+  "checked_claims": 81,
+  "report": "environment-role-accepted-contribution-check.json",
+  "source_scope": "94e50b4b730f9bd299b13fd0eefeada3e48e4e4a to 1568af9f3542f791d77246d5b5b8c9214e06dde2",
+  "root_semantic_review": "environment-role-central-review.md",
+  "operator_library_guide": {
+    "source": "../environment-roles.md",
+    "sha256": "f91b9e950e65ff6ac26c63914a357bb23d5e2a882fb47156d9e2fd45dba5e049"
+  },
+  "retained_later_findings": "Full capability/topic/native/model/documentation/runtime/release joins and final acceptance are not established by contribution mode."
+}
