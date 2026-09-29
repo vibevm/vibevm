@@ -60213,7 +60213,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:2b5b9222e035e4b52db51a12d660703a28649269b45220b69e9c27b7b8d1dca3",
+      "content_hash": "sha256:4dbc2a6d474e796950ebffeb527168dfa36e330e75aadfd14cdc7132107e9873",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -60564,7 +60564,7 @@
     },
     {
       "anchor": "package-model",
-      "content_hash": "sha256:384f39ebcdca1f5de50c518ec3515f3163f80d473dbee8fa6e4dd2d61930fad7",
+      "content_hash": "sha256:663e403925951244dd16a9fa7fe57db0b1ed73eef5d3ada91da1b58252943ad8",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 7. The package model",
@@ -60600,7 +60600,7 @@
     },
     {
       "anchor": "lockfile-schema",
-      "content_hash": "sha256:c55e717447cbf72f9122e1d87ecd812aa5888001314646b06d6d5328bec92221",
+      "content_hash": "sha256:76779bff44cf214acb37be4ac6b87188cf576499cd81bbb281ff9c4a98650eeb",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.4 Lockfile schema",
@@ -61689,7 +61689,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:edd22d4d04bae6756651f897bfee2385f73f56bac3c03c193c1138383a0be54a",
+      "content_hash": "sha256:651872e74eadcb39de90759154a1367d9f6adf0ab59ef452115a52a8a28e715b",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "PROP-000: Foundational technical decisions",
@@ -63111,7 +63111,7 @@
     },
     {
       "anchor": "prod-arch",
-      "content_hash": "sha256:e25e3926d5168286ed9ba0449ad6af8adca833b5af77606d2941bb09bc4d4f07",
+      "content_hash": "sha256:44bf485c1221ca00be475896f4d0c28906c0cbd9b272024d4446d8558d1d10e4",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "17. Production architecture in the prototype phase",
@@ -63138,30 +63138,39 @@
     },
     {
       "anchor": "OWNED-PROTOTYPE-REGIME",
-      "content_hash": "sha256:4c20ee6bb20bddb4583543990ecd21fdacd96d3099442a48f615641970e1cb74",
+      "content_hash": "sha256:b86a941b4d0c687b76811a0a9c83dd682842f3469e368c0566865ac61561cebf",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "The current owned product and package line is a prototype without permanent users. Only the owner may explicitly declare exit from the prototype regime. Publication, a registry entry, tag, version number, format public flag or freeze does not declare that exit, and agents must not infer it. Obligations for major breaking changes apply after that owner declaration; production-quality architecture remains required throughout the prototype phase. Before exit, migration is not mandatory solely because a format changes; an explicitly requested local typed migration remains permitted under its own scope and authority. @status:spec/done",
+      "heading": "Developer Preview 1 at 1.0.0 has users. Their existence does not itself declare exit from the owner-controlled prototype regime; the owner has not declared graduation. Only the owner may explicitly declare that exit. Publication, a registry entry, tag, version number, format public flag or freeze does not declare it, and agents must not infer it. Obligations for major breaking changes apply after that owner declaration; production-quality architecture remains required throughout the prototype phase. Before exit, migration is not mandatory solely because a format changes; an explicitly requested local typed migration remains permitted under its own scope and authority. Preserve the delivered Developer Preview 1 boundary and its users' exact retained identities. @status:spec/done",
       "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#OWNED-PROTOTYPE-REGIME"
     },
     {
       "anchor": "OWNED-CURRENT-COHORT",
-      "content_hash": "sha256:335917e2e3c1725845110f6bdbaac2bbf59da519f99bd44073840a66f7453083",
+      "content_hash": "sha256:71d554b2c2bf876d6a1d97af9e9efaca5ce950288f99c5cd0c74fc4100c48771",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "The current delivered owned product and canonical package cohort uses 1.0.0 by owner decision. This does not renumber foreign or upstream packages, retained historical identities, research consumers outside that delivered cohort, fixtures or installed derived copies. Product/package version, serialized format epoch, package freeze and exact captured content are independent identities. This policy does not change an existing schema epoch, frozen object, capture, hash or historical record. @status:spec/done",
+      "heading": "The next active owned product and all active owned repository packages use 1.1.0 by explicit owner decision. The current 1.0.0 to 1.1.0 transition is one increment only. The selected 1.1.0 line remains mutable: routine updates and republication within it do not increment the version or reopen that choice. Republication is still subject to [NEXT-PUBLICATION-HOLD](#NEXT-PUBLICATION-HOLD). Developer Preview 1's delivered 1.0.0 identity is retained; foreign or upstream versions, historical records and fixtures are not renumbered by this policy. Product/package version, serialized format epoch, package freeze and exact captured content are independent identities. This source policy does not itself change package slots, numeric manifest fields, an existing schema epoch, frozen object, capture, hash or historical record. @status:spec/done",
       "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#OWNED-CURRENT-COHORT"
     },
     {
       "anchor": "REDBOOK-COMPOSITION-POLICY",
-      "content_hash": "sha256:92a16a1749f59c3583ec8af15b19777d5742337af16d1f806627e530c2b5f754",
+      "content_hash": "sha256:1a7d584c9e28c0dccb009728677129a001a4739fc724925a49262215ed8484e0",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "The owner may change the tested roster of any Redbook edition. The current introduction of variants stays at the existing 1.0.0 without a bump or another version question. Before a future composition overwrite, offer keeping the existing edition or selecting a new version unless the owner has already explicitly chosen. Effective selection and delivered content remain explicit and inspectable; retained captures and content-hash objects remain immutable. Roster mutability grants neither history rewriting nor prototype graduation. Generic non-Redbook freeze law remains unchanged. @status:spec/done",
+      "heading": "The owner may change the tested roster of any Redbook edition. The next composition uses the explicitly selected 1.1.0 line; routine roster updates within that mutable line require no new-version offer, renewed version question or bump. Effective selection and delivered content remain explicit and inspectable. Preserve the published Developer Preview 1 boundary and immutable retained captures and content-hash objects; roster mutability grants neither history rewriting nor prototype graduation. Generic non-Redbook freeze law remains unchanged. Public distribution of the next line remains subject to [NEXT-PUBLICATION-HOLD](#NEXT-PUBLICATION-HOLD). @status:spec/done",
       "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REDBOOK-COMPOSITION-POLICY"
+    },
+    {
+      "anchor": "NEXT-PUBLICATION-HOLD",
+      "content_hash": "sha256:365f356a88cc8336ae3e0511dbcbdaaae16107b5ac73b6fa8edd493a3cc3d1cc",
+      "doc_path": "common/PROP-000",
+      "file": "vibevm/vibespecs/common/PROP-000.xml",
+      "heading": "The next 1.1.0 line is local-only until a later explicit owner instruction permits public distribution. Do not publicly push Git state, mirror it, open a public pull request, publish a release or publish packages containing that line. Existing users may auto-update, so a local version decision or routine mutable update is not permission to expose it publicly. Local preparation and local commits may continue. Publication authority must come from the later explicit owner grant; agents must not infer it from readiness, a successful check, a version number or prior publication. @status:spec/done",
+      "line": 256,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#NEXT-PUBLICATION-HOLD"
     },
     {
       "anchor": "PRINCIPAL-LENS",
@@ -63169,7 +63178,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Lens:** \"a principal engineer at a top-tier infrastructure company, designing a format or protocol that will be used by millions\" is one of the reflection lenses to reach for when a design decision lands. @status:spec/done",
-      "line": 258,
+      "line": 259,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PRINCIPAL-LENS"
     },
     {
@@ -63178,7 +63187,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "It is **not** the only lens — \"the simplest thing that works\" remains valid for leaf features — but architecture-heavy surfaces prefer the principal-engineer lens. @status:spec/done",
-      "line": 259,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#LENS-NOT-ONLY"
     },
     {
@@ -63187,7 +63196,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Consequences:** @status:spec/done",
-      "line": 261,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#prod-consequences-lead"
     },
     {
@@ -63196,7 +63205,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Prefer a recent-but-well-designed library over a tactical shortcut, even when the shortcut is cheaper in the short term. @status:spec/done",
-      "line": 263,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-PREFER-DESIGNED"
     },
     {
@@ -63205,7 +63214,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Extension points, versioning markers, and forward-compatibility hooks land with the initial cut, not in a later \"hardening\" pass. @status:spec/done",
-      "line": 264,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-EXTENSION-POINTS"
     },
     {
@@ -63214,7 +63223,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Reversibility matters: if a format or protocol decision is hard to reverse (lockfile schema, registry URL scheme, identity hash), lean heavier into design rigour before first commit. @status:spec/done",
-      "line": 265,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-REVERSIBILITY"
     },
     {
@@ -63223,7 +63232,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "\"We'll fix it later\" is a valid stance only for implementation quality inside a well-chosen architectural surface — not for the surface itself. @status:spec/done",
-      "line": 266,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-FIX-LATER-SCOPE"
     },
     {
@@ -63232,7 +63241,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "18. Complexity expectation: higher than RPM",
-      "line": 269,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#complexity"
     },
     {
@@ -63241,7 +63250,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Decision:** The dependency / package model is designed to handle complexity **at least** matching RPM-class systems (zypper, DNF), and in several dimensions greater. @status:spec/done",
-      "line": 271,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RPM-CLASS-TARGET"
     },
     {
@@ -63250,7 +63259,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Manifest grammar and lockfile schema reserve fields for — and the resolver implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, and multi-kind cross-deps. **Semantic (LLM-reviewed) conflicts are the one exception:** the heuristic static check ships ([PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.xml) `CHECK-ACTIVATION-CONFLICT`); the optional semantic-review feature itself is not implemented even though the provider seam is now real. When it lands it follows PROP-054 `##LLM-ENHANCEMENT-MODES`, defaults off and never replaces the static resolver/check. All dependency mechanics were designed in from day one; an optional quality enhancement is not solver authority. @status:impl/done",
-      "line": 272,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RICH-DEPS-DAY-ONE"
     },
     {
@@ -63259,7 +63268,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Why:** vibevm's dependency surface is not simpler than RPM — it is wider. A `feat` package may require a `stack` providing a specific capability, `flow`s may declare semantic compatibility with other `flow`s, LLM-backed review adds a non-mechanical conflict dimension RPM never had. @status:spec/done",
-      "line": 275,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#WIDER-THAN-RPM"
     },
     {
@@ -63268,7 +63277,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Undershoot — picking a resolver that lacks virtual packages or disjunctions, or a manifest that cannot express capability-based requires — would force an incompatible schema migration after users exist. @status:spec/done",
-      "line": 276,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#UNDERSHOOT-COST"
     },
     {
@@ -63277,7 +63286,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Resolver choice** (pinned in the module PROP): `resolvo` crate as the primary depsolver. @status:spec/done",
-      "line": 279,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-RESOLVO"
     },
     {
@@ -63286,7 +63295,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "`libsolv` as an explicit FFI-backed fallback behind a `DepSolver` trait (analogous to [PROP-001 §2.2](../modules/vibe-registry/PROP-001-git-backend.xml#backend-trait)'s `GitBackend` pattern). @status:spec/done",
-      "line": 280,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-LIBSOLV-FALLBACK"
     },
     {
@@ -63295,7 +63304,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "PubGrub is rejected for the *primary* role — its algorithm does not handle virtual packages or disjunctions — but is acceptable for explanatory rendering of conflicts in CLI output if it proves superior there. @status:spec/done",
-      "line": 281,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-PUBGRUB-REJECTED"
     },
     {
@@ -63304,7 +63313,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "19. Load-bearing setup documentation",
-      "line": 284,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#setup-docs"
     },
     {
@@ -63313,7 +63322,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Decision:** Two files at the repo root are load-bearing for the project: @status:spec/done",
-      "line": 285,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SETUP-DOCS"
     },
     {
@@ -63322,7 +63331,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "[`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository. @status:spec/done",
-      "line": 287,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DOC-DEV-GUIDE"
     },
     {
@@ -63331,7 +63340,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "[`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI. @status:spec/done",
-      "line": 288,
+      "line": 289,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DOC-RUNTIME-GUIDE"
     },
     {
@@ -63340,7 +63349,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @status:spec/done",
-      "line": 290,
+      "line": 291,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SETUP-DOCS-FLOW"
     },
     {
@@ -63349,7 +63358,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "20. Token secrecy and adapter scope",
-      "line": 292,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy",
       "kind": "req",
       "revision": 1
@@ -63360,7 +63369,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 293,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#req-token-secrecy"
     },
     {
@@ -63369,7 +63378,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Decision.** Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets** in the sense of the `secrets-hygiene` flow (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#surface-secret`): their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 295,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-SURFACE-SECRET"
     },
     {
@@ -63378,7 +63387,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "vibevm's bindings of the flow's four laws (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#laws`): @status:spec/done",
-      "line": 296,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-bindings-lead"
     },
     {
@@ -63387,7 +63396,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Never printed.** Not to stdout, stderr, the CLI log, the `--json` event stream, error messages, panic traces, telemetry, or the lockfile. The CLI prints the *source* of a token (explicit / env-var name / file path) but never the value. The in-process wrapper types (`vibe_publish::Token`, future `vibe_llm::ApiKey`) MUST redact on `Display` and `Debug` — verified by unit tests (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#law-tested`). @status:spec/done",
-      "line": 299,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-NEVER-PRINTED"
     },
     {
@@ -63396,7 +63405,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Never persisted.** Not committed to the repository, not written into the lockfile, not embedded in cache files, not landed in the `.vibe/` tree. The single sanctioned at-rest location is the operator's `~/.vibe/<host>.publish.token` file (per-user, chmod-protected). @status:spec/done",
-      "line": 300,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-NEVER-PERSISTED"
     },
     {
@@ -63405,7 +63414,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Sanctioned process boundaries.** The token may cross a process boundary only via: (a) the host API's `Authorization: Bearer …` header, sent over TLS; (b) a single `git remote add` / `git push` invocation where the token is embedded in the URL as `https://x-access-token:<TOKEN>@host/…` (modern git ≥ 2.31 redacts URL passwords in its own log output to `***`). No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`). @status:spec/done",
-      "line": 301,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-BOUNDARIES"
     },
     {
@@ -63414,7 +63423,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Adapter scope.** A `RepoCreator` impl MUST refuse to operate outside the organization specified in the project's `[[registry]].url`. A publish run targeting `github.com/vibespecs` may not create, modify, or even probe a repository under a different `github.com` org or under any user namespace. Adapter implementations carry an explicit org-prefix check and surface a `PublishError` on attempted scope escalation. (The general integration-scope discipline is the flow's `scope-discipline` document.) @status:spec/done",
-      "line": 302,
+      "line": 303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-ADAPTER-SCOPE"
     },
     {
@@ -63423,7 +63432,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads); of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`). Both are catastrophic beyond what module-local discipline can bound, so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited. @status:spec/done",
-      "line": 305,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#BLAST-RADIUS"
     },
     {
@@ -63432,7 +63441,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "On any suspected leak, rotate first (the flow's `#leak-drill`). @status:spec/done",
-      "line": 306,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#ROTATE-FIRST"
     },
     {
@@ -63441,7 +63450,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Where pinned (operationally):** [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish) carries the publish-side mechanics; [`vibevm/vibespecs/boot/90-user.xml`](../boot/90-user.xml) carries the operator-facing rule for this machine. Both are subordinate to this PROP-000 entry. @status:spec/done",
-      "line": 308,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-PINNED-WHERE"
     },
     {
@@ -63450,7 +63459,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "21. Surface floor — which channels a capability owes",
-      "line": 310,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"
     },
     {
@@ -63459,7 +63468,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Decision:** a capability lives in a **library**; the CLI, the TUI and the MCP server are thin surfaces over it. The rule and its vocabulary are the installed `omnichannel` flow: `spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#root`. This section declares only vibevm's own floor, which is what that flow asks each project to state for itself. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
-      "line": 311,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW"
     },
     {
@@ -63468,7 +63477,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**vibevm's declared floor: library + CLI + MCP**, plus **TUI** where one exists (`vibe tree` has one today). A new capability ships with those, or with a recorded reason why one sufficed. @status:spec/plan",
-      "line": 312,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#VIBEVM-DECLARES-LIBRARY-CLI-MCP"
     },
     {
@@ -63477,7 +63486,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**LSP and IDE extensions are deliberately NOT declared** (owner, 2026-08-06: he will open that work himself). By the flow's own rule an undeclared surface is not a debt, so their absence is a choice and not a gap to be closed. @status:spec/done",
-      "line": 313,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#LSP-AND-IDE-ARE-NOT-DECLARED"
     },
     {
@@ -63486,7 +63495,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**This is a target, not a description of today.** The census that motivated the decision (`campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md`) measured the opposite in places: of 29 top-level commands, 19 keep their substance in a separate crate and **10 keep it inside `vibe-cli`** — the largest being the whole `vibe self` version manager. Of 5 MCP tools, 2 share a library function with their CLI twin, 2 have no CLI twin, and 1 reads the same data as `vibe list` while building its output by hand. @status:spec/done",
-      "line": 314,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION"
     },
     {
@@ -63495,7 +63504,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**The gap is not theoretical.** `vibe list --json` and the MCP `query_package` printed different values for one field on Windows until 2026-08-06, because each rendered the path itself — two surfaces of one capability answering one question differently, which is exactly the failure this floor exists to prevent. @status:spec/done",
-      "line": 315,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR"
     },
     {
@@ -63504,7 +63513,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "Invariants",
-      "line": 317,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#invariants"
     },
     {
@@ -63513,7 +63522,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "(These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done",
-      "line": 318,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INVARIANTS-STOP-RULE"
     },
     {
@@ -63522,7 +63531,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Vocabulary lock, amended by the owner-approved lifecycle.** `lifecycle` and `phase` are canonical VibeVM terms; their exact grammar is PROP-054 `##VOCABULARY-ADMITTED`. `goal` remains prior-art vocabulary, and `plugin` is only a precise human umbrella for a package-supplied extension/mechanism implementation or an external ecosystem artifact — never a stored identity or installable kind. The machine nouns are package, extension point/mechanism, contribution, execution and handler/provider. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`; this set is exact and grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`doc` and `app` entered by the amendment of 2026-09-12, PROP-057, pending the owner's ratification at the merge). Bazel/Maven internals outside the admitted set are not imported blindly. @status:spec/done",
-      "line": 320,
+      "line": 321,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-VOCABULARY"
     },
     {
@@ -63531,7 +63540,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**`spec/` is fixed.** The directory name and role cannot be configured away in v1. @status:spec/done",
-      "line": 321,
+      "line": 322,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-SPEC-DIR"
     },
     {
@@ -63540,7 +63549,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**User-owned files are never written by `vibe`.** `vibevm/vibespecs/boot/00-core.xml` and `vibevm/vibespecs/boot/90-user.xml` are off-limits to install/uninstall/update. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 322,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-USER-FILES"
     },
     {
@@ -63549,7 +63558,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @status:spec/done",
-      "line": 323,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-ATOMIC-COMMITS"
     },
     {
@@ -63558,7 +63567,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Dogfood.** vibevm is being built using the same discipline it enforces. The `spec/` tree in this repo IS `vibe init`'s reference output. @status:spec/done",
-      "line": 324,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-DOGFOOD"
     },
     {
@@ -63567,7 +63576,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @status:spec/done",
-      "line": 325,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-HUMAN-AUTHORSHIP"
     },
     {
@@ -63576,7 +63585,7 @@
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "**Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety. @status:spec/done",
-      "line": 326,
+      "line": 327,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-TOKEN-SECRECY"
     },
     {
@@ -72346,7 +72355,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d3b36750598000162b24e832452bd5a9c4ea71d35dfca41a7512f62f4fcd80f2",
+      "content_hash": "sha256:89621a14011f605849f0e17e96d941711e11f604798501677beed9b7cde084d2",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -72400,7 +72409,7 @@
     },
     {
       "anchor": "laws",
-      "content_hash": "sha256:727ab063cb4678d4b5ac348016fa8291407ed700006e18ce794f1442038e9ce5",
+      "content_hash": "sha256:5bd539e80d16d8eeaed44f9b85442d7621728a728d0bb8b257bfb27d61b0eca0",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "2. The two laws, and the short list of the forbidden",
@@ -72796,7 +72805,7 @@
     },
     {
       "anchor": "obligations",
-      "content_hash": "sha256:b5719fa63c53a858672fbc1f557594d306720f1e5a643b89d2f741b941ca72da",
+      "content_hash": "sha256:25b027ac12d2f86c5604007374386bd8c2e4a45e57287cde5368c62b78d0bdba",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "7. Obligations have types; stability is a mechanism",
@@ -72832,10 +72841,10 @@
     },
     {
       "anchor": "THE-PUBLIC-SWITCH",
-      "content_hash": "sha256:08806bdec33493e5e13417d24848472f218d6af25f2b28ecb6b213bc5f955a85",
+      "content_hash": "sha256:81a07ad6ce0d3fa1363c7f5327c1b693efbc532c92dc85e997d115094720b10e",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**Historical pre-publication ruling (owner, 2026-08-10, near-verbatim):** «я пока ничего не публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех пор, пока я не скажу, что состоялось первое представление публике… технически этот факт нельзя определить никак — только владелец может сказать, что это произошло». This records the original rationale, not a technical publication detector or a continuing automatic graduation trigger.\n\nFor the current owned cohort, [PROP-000 ##OWNED-PROTOTYPE-REGIME](PROP-000.xml#OWNED-PROTOTYPE-REGIME) governs: only the owner's explicit prototype-exit declaration activates the applicable major-breaking obligations. A push, registry publication, tag or version number cannot substitute for it. `public = true` in `formats/EPOCHS.toml` is owner-managed format-window bookkeeping; it does not itself declare prototype exit or authorize an agent to declare it. No flag, epoch, support calendar or migration is changed by this source reconciliation.\n\nBefore owner exit, break machinery reports rather than imposing mandatory migrations, bot PRs, parallel worlds or sunset calendars. Corpora may regenerate; optional break notes and convenience readers do not establish a support promise. Regenerate / re-init / re-fetch remains an available prototype recipe. This does not prohibit explicitly requested local typed migration under its separately bound authority. After explicit owner exit, the applicable migration, support-window and handshake obligations must be bound for major breaks. Wave-0 epoch markers, recipe identity, must-understand and yank remain early architecture work, not evidence of an inferred public switch. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "heading": "**Historical pre-publication ruling (owner, 2026-08-10, near-verbatim):** «я пока ничего не публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех пор, пока я не скажу, что состоялось первое представление публике… технически этот факт нельзя определить никак — только владелец может сказать, что это произошло». This records the original rationale, not a technical publication detector or a continuing automatic graduation trigger.\n\nDeveloper Preview 1 at 1.0.0 has users; the historical no-public-users premise does not describe current state. The next owned product/package line is 1.1.0, distinct from that delivered boundary. [PROP-000 ##OWNED-PROTOTYPE-REGIME](PROP-000.xml#OWNED-PROTOTYPE-REGIME) governs: the owner has not declared graduation, and only the owner's explicit prototype-exit declaration activates the applicable major-breaking obligations. A push, publication, tag, version number or user count cannot substitute for it. `public = true` in `formats/EPOCHS.toml` is owner-managed format-window bookkeeping, not automatic graduation or permission to publish. The next line is held local-only by [NEXT-PUBLICATION-HOLD](PROP-000.xml#NEXT-PUBLICATION-HOLD). No format flag, epoch or support calendar is changed by this policy.\n\nBefore owner exit, break machinery reports rather than imposing mandatory migrations, bot PRs, parallel worlds or sunset calendars. Regeneration remains an available prototype recipe, not permission to overwrite users' retained data or the delivered Developer Preview 1 boundary. An explicitly requested local typed migration remains allowed under its separately bound authority; this does not assert a migration implementation. After explicit owner exit, applicable migration, support-window and handshake obligations must be bound for major breaks. Early epoch markers, recipe identity, must-understand and yank remain architecture work, not evidence of an inferred public switch. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
       "line": 434,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
@@ -120018,10 +120027,10 @@
     },
     {
       "anchor": "why-now",
-      "content_hash": "sha256:5ecbb872b2ed275cdf1f1da2461cf76d16077b3a0177a92031c984fe3634a492",
+      "content_hash": "sha256:286b98a3e6240502dfed084c61c0b1b0b6730d0cf4ab2c1a4bcd5af7075b1a09",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Historical rationale at the original pre-release revision.** vibevm then had no public release, external users or migration cost; PROP-002 §2.7's lockfile schema v2 had already absorbed one revision, and the original argument placed further churn before v0.1.0. Those numbers and release observations are historical context, not current maturity or migration triggers. The current owned cohort follows [PROP-000 ##OWNED-PROTOTYPE-REGIME](../../common/PROP-000.xml#OWNED-PROTOTYPE-REGIME): only explicit owner graduation changes that regime. The resolver examples and revision identities below are not renumbered by this policy. @status:spec/done",
+      "heading": "**Historical rationale at the original pre-release revision.** vibevm then had no public release, external users or migration cost; PROP-002 §2.7's lockfile schema v2 had already absorbed one revision, and the original argument placed further churn before v0.1.0. Those numbers and release observations are historical context, not current maturity or migration triggers. Developer Preview 1 at 1.0.0 now has users; the next active owned cohort is the owner-selected mutable 1.1.0 line, with one increment and no routine update bump or renewed version question. Public distribution remains held until a later explicit grant under [NEXT-PUBLICATION-HOLD](../../common/PROP-000.xml#NEXT-PUBLICATION-HOLD). The owner-controlled prototype regime follows [PROP-000 ##OWNED-PROTOTYPE-REGIME](../../common/PROP-000.xml#OWNED-PROTOTYPE-REGIME): only explicit owner graduation changes that regime. The resolver examples and revision identities below are not renumbered by this policy. @status:spec/done",
       "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#why-now"
     },
@@ -120117,7 +120126,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:baa34f0c86a01d61b77e4bfad5a04fb97b9c10aa53fc203bd37bbc58f2df2b7c",
+      "content_hash": "sha256:0a40f7b1862f3295830075fcadacc1220e4c6b0267e3f85a7a09d7bb08ef6ee6",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2. Decisions",
@@ -120441,7 +120450,7 @@
     },
     {
       "anchor": "features",
-      "content_hash": "sha256:cdaa4a66beb43cc267122ca201e78d1ddf851f3d6254d2e970429667a0d66c3b",
+      "content_hash": "sha256:779574e3919633624b7ad306232eac5cdbaf7018b23d8d7b9cf243a34710e9a4",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.4 Optional components (features) — cargo-tradition with vibevm twists",
@@ -120612,10 +120621,10 @@
     },
     {
       "anchor": "REDBOOK-CONTINUITY-SELECTION",
-      "content_hash": "sha256:acbd3a6777afa1c637a6ce771328f891a4df5ec1f45cbc19481da0cfd2a548cf",
+      "content_hash": "sha256:364d6ce0ffe6851000acb468c5bc74f4fd5f12321720d76834586d506bc823b4",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "Redbook defaults to multi-user-planning; WAL is an alternative. These continuity choices are exclusive only within the Redbook continuity selection group, not globally incompatible package names. Independent explicitly scoped WAL and multi-user-planning use may coexist. Unattended selection requires an explicit choice or explicit permission to use defaults; otherwise return NeedsSelection. Persist the selected choice; update must not replace it merely because the default changed. This is the required selection policy, not a claim that a variant resolver or persistence codec is implemented. Generic additive features, default features, unification and named exclusive groups retain their existing semantics. The [canonical migration and composition law](spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/migration-and-composition#EDITION-LAW) remains authoritative for scoped continuity composition. @status:spec/done",
+      "heading": "The next Redbook composition uses the owner-selected mutable 1.1.0 line, with no version increment or renewed version question for routine updates. Public distribution remains subject to [NEXT-PUBLICATION-HOLD](../../common/PROP-000.xml#NEXT-PUBLICATION-HOLD). Redbook defaults to multi-user-planning; WAL is an alternative. These continuity choices are exclusive only within the Redbook continuity selection group, not globally incompatible package names. Independent explicitly scoped WAL and multi-user-planning use may coexist. Unattended selection requires an explicit choice or explicit permission to use defaults; otherwise return NeedsSelection. Persist the selected choice; update must not replace it merely because the default changed. This is the required selection policy, not a claim that a variant resolver or persistence codec is implemented. Generic additive features, default features, unification and named exclusive groups retain their existing semantics. The [canonical migration and composition law](spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/migration-and-composition#EDITION-LAW) remains authoritative for scoped continuity composition. @status:spec/done",
       "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REDBOOK-CONTINUITY-SELECTION"
     },
