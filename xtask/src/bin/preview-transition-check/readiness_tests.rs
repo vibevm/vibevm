@@ -207,6 +207,7 @@ fn bindings_and_release_predecessors_require_selected_records_and_scope() {
         complete_declarations(&mut selected);
         selected.change_records = vec!["change-example".into()];
         selected.contribution_scope = Some(ContributionScope {
+            affected_source_review: None,
             before_capture_id: selected.dp1.capture_id.clone(),
             after_capture_id: selected.dp1.capture_id.clone(),
             record_digests: vec![RecordDigest {
