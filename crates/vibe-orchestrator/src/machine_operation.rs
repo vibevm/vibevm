@@ -323,8 +323,10 @@ impl MachineOperationService {
     }
 }
 
+mod coverage;
 mod discovery;
 mod publication;
+pub use coverage::*;
 pub use publication::MachineEnvelopeValidationError;
 
 #[cfg(test)]
