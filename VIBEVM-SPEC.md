@@ -718,7 +718,7 @@ version = "0.1.0"
 
 **`source_kind`** records which resolution path produced the entry — `registry` (the `[[registry]]` walk), `git` (a `[requires.packages]` git-source), `override` (a `[[override]]` pin), or `path` (a `[requires.packages]` path-source — typically a sibling workspace member, PROP-007 §2.5). For a `path` entry `source_url` is not a URL: it is the member's directory **relative to the workspace root**, so the lockfile stays portable across machines.
 
-**Schema versioning.** `schema_version` is `5`. vibevm is pre-release and breaks lockfile compatibility freely — there is no migration path and none is needed. A `vibe.lock` whose version is not the current one is rejected outright; `vibe install` regenerates it.
+**Schema versioning.** `schema_version` is `5`. The current reader rejects a `vibe.lock` whose version is not the current one; `vibe install` regenerates it. The current owned prototype regime and owner-only exit follow [PROP-000](vibevm/vibespecs/common/PROP-000.xml#OWNED-PROTOTYPE-REGIME); format-window and compatibility policy follow [PROP-044](vibevm/vibespecs/common/PROP-044-change-native-formats.xml#THE-PUBLIC-SWITCH). Publication or a product/package version does not graduate the prototype or increment a format epoch. Before owner exit, migration is not mandatory solely because compatibility changes; an explicitly requested local typed migration remains allowed. This paragraph changes neither schema version nor current reader behavior and does not claim a migration implementation.
 
 The lockfile is the source of truth for what is installed. `vibe list` reads it. `vibe uninstall` reads it to know what files to remove. It is committed to git.
 

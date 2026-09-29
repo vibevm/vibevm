@@ -59,8 +59,8 @@ when = "installed:org.vibevm.world/wal-specspaces"
 "flow:org.vibevm.world/tool-design-lessons" = "=1.0.0"
 # The cultural-extraction wave (first accumulated after edition 0.2.0; now
 # part of the 1.0.0 tested set).
-# Standing rule (owner, 2026-08-02, the F-114 ruling): the NEXT roster change
-# bumps the edition — a member set never changes again under an unmoved
-# version number.
+# The owner 2026-08-02 F-114 mandatory roster-bump rule is historical and superseded.
+# Current composition variants stay at existing 1.0.0; future changes offer keep/new version.
+# Governing law: spec://org.vibevm.core/vibevm/common/PROP-000#REDBOOK-COMPOSITION-POLICY
 "flow:org.vibevm.world/dev-runtime-docs" = "=1.0.0"
 "flow:org.vibevm.world/wal-specspaces" = "=1.0.0"

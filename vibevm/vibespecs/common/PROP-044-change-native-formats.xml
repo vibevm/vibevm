@@ -128,6 +128,7 @@ pointer a **named ref** (`##PROVIDER-NEUTRALITY`) — never "snapshot", never
 flagged rather than silently changed, and the owner renamed it the same day:
 the mode is **`copy`**, so `snapshot` now carries exactly one sense in the
 system.</TERMS-SNAPSHOT-FROZEN-CHANNEL></p>
+    <p>The scoped [Redbook composition policy](PROP-000.xml#REDBOOK-COMPOSITION-POLICY) permits a mutable tested roster under the selected edition. Edition labels do not replace exact delivered content identity. Retained captures and content-hash objects remain immutable; this policy does not authorize rewriting frozen foreign coordinates, historical Git objects or evidence. Generic non-Redbook freeze rules remain unchanged.</p>
   </laws>
   <truth title="3. Truth and projection">
     <p><TRUTH-KERNEL fact="true" status="spec/plan">**The authoritative core is small, and everything else is
@@ -430,27 +431,11 @@ is one command."** The date travels inside the world it retires; clients warn
 ahead of it; on the day, the refusal carries the recipe. Heavy breaks batch
 into trains — parallel publication and support windows are fixed costs per
 train, not per change.</STABILITY-IS-A-FLAG></p>
-    <p><THE-PUBLIC-SWITCH fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**The pre-publication regime, and the switch only the
-owner can flip (owner ruling, 2026-08-10, near-verbatim: «я пока ничего не
-публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех
-пор, пока я не скажу, что состоялось первое представление публике… технически
-этот факт нельзя определить никак — только владелец может сказать, что это
-произошло»).** Until that declaration the system is in the pre-publication
-regime: breaking is free *and unmigrated* — no codemods run, no bot PRs, no
-parallel worlds, no sunset calendars; break machinery reports instead of
-demanding (corpora regenerate freely, break notes are optional records);
-readers of old shapes are conveniences deletable at will; the standing user
-recipe is «regenerate / re-init / re-fetch». The fact of the first public
-presentation is technically undetectable **by design** and must never be
-inferred from technical events — not from a push, not from the default
-registry filling, not from a tag; any earlier «de-facto publication» reading
-is superseded by this ruling. The switch is one owner-only line
-(`public = true` in `formats/EPOCHS.toml`), and flipping it is the single
-moment obligations, migrations, support windows and the handshake vow
-activate. The wave-0 slots (epoch markers, recipe identity, must-understand,
-yank) are still built early — not because the window is closing silently, but
-because they are cheap now, constrain today's breaking not at all, and are
-what makes the later freeze possible at all.</THE-PUBLIC-SWITCH></p>
+    <p><THE-PUBLIC-SWITCH fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**Historical pre-publication ruling (owner, 2026-08-10, near-verbatim):** «я пока ничего не публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех пор, пока я не скажу, что состоялось первое представление публике… технически этот факт нельзя определить никак — только владелец может сказать, что это произошло». This records the original rationale, not a technical publication detector or a continuing automatic graduation trigger.
+
+For the current owned cohort, [PROP-000 ##OWNED-PROTOTYPE-REGIME](PROP-000.xml#OWNED-PROTOTYPE-REGIME) governs: only the owner's explicit prototype-exit declaration activates the applicable major-breaking obligations. A push, registry publication, tag or version number cannot substitute for it. `public = true` in `formats/EPOCHS.toml` is owner-managed format-window bookkeeping; it does not itself declare prototype exit or authorize an agent to declare it. No flag, epoch, support calendar or migration is changed by this source reconciliation.
+
+Before owner exit, break machinery reports rather than imposing mandatory migrations, bot PRs, parallel worlds or sunset calendars. Corpora may regenerate; optional break notes and convenience readers do not establish a support promise. Regenerate / re-init / re-fetch remains an available prototype recipe. This does not prohibit explicitly requested local typed migration under its separately bound authority. After explicit owner exit, the applicable migration, support-window and handshake obligations must be bound for major breaks. Wave-0 epoch markers, recipe identity, must-understand and yank remain early architecture work, not evidence of an inferred public switch.</THE-PUBLIC-SWITCH></p>
   </obligations>
   <agents title="8. Laws for AI agents — gates, not admonitions">
     <p><AGENT-PROSE-IS-BROKEN fact="true" status="spec/plan">**Governing rule: a policy that exists only in
