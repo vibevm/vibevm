@@ -138,6 +138,9 @@
         "crates/vibe-spec/src/compiler/ir.rs",
         "crates/vibe-mcp/src/context.rs",
         "crates/vibe-requirements/src/query.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+        "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
         "xtask/src/main.rs",
         ".cargo/config.toml",
         "crates/vibe-core/Cargo.toml",
@@ -148,6 +151,7 @@
         "crates/vibe-wire/src/lib.rs"
       ],
       "write_paths": [
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "crates/vibe-core/src/",
         "crates/vibe-orchestrator/src/",
         "crates/vibe-wire/src/",
@@ -160,6 +164,7 @@
         "crates/vibe-wire/src/lib.rs"
       ],
       "steps": [
+        "First extend the permanent PROP-080 source anchors for logical/capture/observation/occurrence identity, composite snapshot and paging compatibility, and source-location basis with desired-versus-implemented status. Only then add code and focused tests citing those anchors.",
         "Define separate logical entity, capture/content, observation/snapshot and presentation occurrence references using existing domain IDs where valid.",
         "Describe CompositeSnapshot as compatible source/world/target/operation observations with completeness; bind filters/pages/children/chunks to one projection and refuse mixed versions.",
         "Define opaque resource IDs, trusted URI mapping and raw/projection position basis with encoding/revision, including non-UTF8 resources and unavailable source mappings."
