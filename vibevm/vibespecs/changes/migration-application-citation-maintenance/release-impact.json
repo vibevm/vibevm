@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "change_id": "migration-application-citation-maintenance",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/cli/mcp.rs",
+    "crates/vibe-cli/src/commands/mcp/mod.rs",
+    "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+    "crates/vibe-workspace/src/migration_application.rs"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Four existing Rust source/test citations only rebind the same body/grammar to current SURFACES revision2; no executable behavior, public API or guide semantics change."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Four existing Rust source/test citations only rebind the same body/grammar to current SURFACES revision2; no executable behavior, public API or guide semantics change."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

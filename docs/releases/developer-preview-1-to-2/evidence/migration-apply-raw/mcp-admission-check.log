@@ -1,0 +1,136 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Checking stable_deref_trait v1.2.1
+    Checking serde v1.0.228
+    Checking tracing v0.1.44
+   Compiling core-ai-native-specmark-grammar v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar)
+    Checking yoke v0.8.2
+    Checking futures-sink v0.3.32
+    Checking zerovec v0.11.6
+    Checking zerotrie v0.2.4
+   Compiling core-ai-native-specmark v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark)
+    Checking chrono v0.4.44
+   Compiling futures-macro v0.3.32
+    Checking vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+    Checking tinystr v0.8.3
+    Checking icu_locale_core v2.2.0
+    Checking potential_utf v0.1.5
+    Checking icu_collections v2.2.0
+    Checking futures-util v0.3.32
+    Checking tokio v1.52.1
+    Checking icu_provider v2.2.0
+    Checking icu_normalizer v2.2.0
+    Checking futures-channel v0.3.32
+    Checking ring v0.17.14
+    Checking icu_properties v2.2.0
+    Checking rustls-webpki v0.103.13
+    Checking rustls v0.23.39
+    Checking idna_adapter v1.2.1
+    Checking progress-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/progress-core)
+    Checking hyper v1.9.0
+    Checking tower v0.5.3
+    Checking hyper-util v0.1.20
+    Checking vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Checking vibe-specdoc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc)
+    Checking vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+    Checking tokio-rustls v0.26.4
+    Checking idna v1.1.0
+    Checking serde_urlencoded v0.7.1
+    Checking tower-http v0.6.8
+    Checking hyper-rustls v0.27.9
+    Checking url v2.5.8
+    Checking log v0.4.29
+    Checking vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+    Checking getrandom v0.3.4
+    Checking crossbeam-utils v0.8.21
+    Checking reqwest v0.12.28
+    Checking option-ext v0.2.0
+    Checking foldhash v0.1.5
+    Checking tap v1.0.1
+    Checking wyz v0.5.1
+    Checking hashbrown v0.15.5
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+    Checking dirs-sys v0.4.1
+    Checking concurrent-queue v2.5.0
+    Checking zerocopy v0.8.48
+    Checking radium v0.7.0
+    Checking either v1.16.0
+    Checking fixedbitset v0.5.7
+    Checking parking v2.2.1
+    Checking funty v2.0.0
+    Checking event-listener v5.4.1
+    Checking petgraph v0.8.3
+    Checking bitvec v1.0.1
+    Checking itertools v0.14.0
+    Checking dirs v5.0.1
+    Checking futures v0.3.32
+    Checking elsa v1.11.2
+    Checking libloading v0.9.0
+    Checking regex-automata v0.4.14
+    Checking core-ai-native-specmap v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap)
+    Checking ahash v0.8.12
+    Checking resolvo v0.11.0
+    Checking regex v1.12.3
+    Checking vibe-spec v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-spec)
+    Checking vibe-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-registry)
+    Checking vibe-native-loader v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader)
+    Checking vibe-resolver v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-resolver)
+    Checking vibe-facts v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-facts)
+    Checking vibe-workspace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-workspace)
+    Checking vibe-agent-projection v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-agent-projection)
+    Checking vibe-requirements v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-requirements)
+    Checking vibe-doc v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-doc)
+    Checking vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+    Checking vibe-trace v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-trace)
+    Checking vibe-install v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-install)
+    Checking vibe-orchestrator v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator)
+    Checking vibe-package-source v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-package-source)
+    Checking vibe-mcp v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-mcp)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 27.14s

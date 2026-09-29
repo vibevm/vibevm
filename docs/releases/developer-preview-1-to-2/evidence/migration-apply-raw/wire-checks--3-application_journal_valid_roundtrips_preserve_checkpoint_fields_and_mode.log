@@ -1,0 +1,11 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running tests/migration_application_wire_corpus.rs (target/debug/deps/migration_application_wire_corpus-ed33d9c7a210443a)
+
+running 1 test
+test application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+

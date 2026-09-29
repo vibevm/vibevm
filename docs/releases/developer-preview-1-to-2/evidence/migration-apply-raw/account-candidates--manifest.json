@@ -1,0 +1,349 @@
+{
+  "status": "candidate-unverified",
+  "scope": {
+    "before_commit": "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f",
+    "after_commit": "149bcea525564260be82972edf9afc8b5a2067a0",
+    "before_capture_id": "migration-apply-baseline-b486af778",
+    "after_capture_id": "migration-apply-after-149bcea52"
+  },
+  "coverage_counts": {
+    "product_subjects": 25,
+    "product_paths": 81,
+    "records": 8
+  },
+  "records": [
+    {
+      "change_id": "portable-manifest-migration-source",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/portable-manifest-migration-source/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/portable-manifest-migration-source/release-impact.json",
+      "group": "source-law",
+      "review_subject": "9c1f497c48530625f6976786baddddfc4a8bbb4d",
+      "sha256": "bd60d96c3f1036e911b3a629c1a9b991dc452ef1f229fe28d206d1cf2f94bdce",
+      "interface_ids": [
+        "spec:manifest:portable-migration-application"
+      ],
+      "actual_source_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ]
+    },
+    {
+      "change_id": "manifest-migration-operation-wire",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/manifest-migration-operation-wire/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/manifest-migration-operation-wire/release-impact.json",
+      "group": "schema-generated-reader",
+      "review_subject": "2508dde09f2aa98e813ea851767da43e3e65a387",
+      "sha256": "e3292db8c58f943aa5c3e6ebd4e6674d1b4112d6e49572c7ed308df889b7367a",
+      "interface_ids": [
+        "format:manifest-migration-application-e1"
+      ],
+      "actual_source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+        "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+        "formats/corpora/migration-application-journal/e1/valid/restored.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+        "formats/corpora/migration-operation-report/e1/valid/completed.json",
+        "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-operation-request/e1/valid/apply.json",
+        "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+        "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ]
+    },
+    {
+      "change_id": "migration-recovery-filesystem-primitives",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-recovery-filesystem-primitives/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/migration-recovery-filesystem-primitives/release-impact.json",
+      "group": "safefs",
+      "review_subject": "79a53367abcd611c793db26a4e574dd6871dcdec",
+      "sha256": "73247f3827f79217fa6c75dd83fc57528ff39eb59df3dae0cdb8f575d11b9e15",
+      "interface_ids": [
+        "rust:vibe-safefs:ExternalStore:manifest-migration-recovery"
+      ],
+      "actual_source_paths": [
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/external_sync.rs",
+        "crates/vibe-safefs/src/transaction/operations.rs",
+        "crates/vibe-safefs/src/transaction/tests.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs",
+        "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+      ]
+    },
+    {
+      "change_id": "owned-manifest-migration-runtime",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/owned-manifest-migration-runtime/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/owned-manifest-migration-runtime/release-impact.json",
+      "group": "foundation-runtime",
+      "review_subject": "d69a88b3afc8157d63ce32f7005313682f0e7c94",
+      "sha256": "f2f9536472bf0d098dc02210cd13eeadeb5c173d1a50e58c61fe8819ecee73f7",
+      "interface_ids": [
+        "rust:vibe-workspace:migration_application"
+      ],
+      "actual_source_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/identity.rs",
+        "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "crates/vibe-workspace/src/migration_application/report.rs",
+        "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+        "crates/vibe-workspace/src/migration_application/storage.rs",
+        "crates/vibe-workspace/src/migration_application/validation.rs",
+        "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+      ]
+    },
+    {
+      "change_id": "context-bound-mcp-migration-operation",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/context-bound-mcp-migration-operation/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/context-bound-mcp-migration-operation/release-impact.json",
+      "group": "mcp-authority-generic-cell",
+      "review_subject": "c5d2fddc1ffcec7a845be600be3436e010441178",
+      "sha256": "6813ebb0fe8820e3cf44e4b31b3f161347652fe5ecd41ac6c7625272fefe1df7",
+      "interface_ids": [
+        "mcp:manifest_migration_operation"
+      ],
+      "actual_source_paths": [
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/context/migration_tests.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/tests/diagnostic_output.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    {
+      "change_id": "explicit-cli-manifest-migration-operation",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/explicit-cli-manifest-migration-operation/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/explicit-cli-manifest-migration-operation/release-impact.json",
+      "group": "cli-compose-entry",
+      "review_subject": "1251af3cb3f5b66346b40a3be7c887b7a84ed650",
+      "sha256": "cf995bfcfc8df171bd4c87c17891d6bae54c6ee20a84b629b33b80784da19c63",
+      "interface_ids": [
+        "cli:vibe:refactor:migration-operation"
+      ],
+      "actual_source_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-cli/tests/migration_operation.rs"
+      ]
+    },
+    {
+      "change_id": "migration-application-citation-maintenance",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-application-citation-maintenance/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/migration-application-citation-maintenance/release-impact.json",
+      "group": "source-citation-maintenance",
+      "review_subject": "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67",
+      "sha256": "5637f77f3d445e8127fe859cb8d9f72cd412c62e4aac21e771331e971c070403",
+      "interface_ids": [],
+      "actual_source_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    {
+      "change_id": "migration-application-traceability",
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-application-traceability/release-impact.json",
+      "future_repository_path": "vibevm/vibespecs/changes/migration-application-traceability/release-impact.json",
+      "group": "index",
+      "review_subject": "149bcea525564260be82972edf9afc8b5a2067a0",
+      "sha256": "d3b2d68373869978d75e6610097739384725052fcf58d128b28c0e6caf41a007",
+      "interface_ids": [],
+      "actual_source_paths": [
+        "specmap.json"
+      ]
+    }
+  ],
+  "input_bytes": [
+    {
+      "path": "/tmp/vibevm-next-M13-D1-mechanical-inventory.json",
+      "sha256": "37d052681f1c8c66b718c84fd34a53cc73c10a64d9e0986118b2011dff01ed02"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-inventory.md",
+      "sha256": "aa748efe648e5abcf035b9df339d4b4065a46d194be9011ef7a76f5cd9086a02"
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/migration-machine-transition.json",
+      "sha256": "9bd9bb69d29d3f1e7358972e3b2cde526645ad7f29ede1163aaeb2d445d62711"
+    },
+    {
+      "path": "schemas/preview/e1/release_impact.jtd.json",
+      "sha256": "56fb2c59285d2318e121612defaef0e0c7f51a3374316c6218ead9c4c454e335"
+    },
+    {
+      "path": "schemas/preview/e1/transition.jtd.json",
+      "sha256": "4c9ee060baee6411ceae444fdd7157931d5ba19cdaa3608877dcba9edb470940"
+    },
+    {
+      "path": "/tmp/vibevm-next-capture-author/migration-apply-baseline-b486af778-capture-e1.json",
+      "sha256": "ab63c4d5d7628d8c74385b7ea62804b430403ae650ad159faccc64e4e61bf9ae"
+    },
+    {
+      "path": "/tmp/vibevm-next-capture-author/migration-apply-after-149bcea52-capture-e1.json",
+      "sha256": "78c58f237bb67042caf2cd9625de55411866b9833a00e81298b4578fc3d60f6b"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-captures/before-author-retry.log",
+      "sha256": "4d602eba3cc7a52486f47eefe5be1cc1773f4ea5329bb217274604d04e31eb98"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-captures/after-author-retry.log",
+      "sha256": "af6d8843f92409d5e2b2447129928320d5a5acfa416237dd88fcde2f6ba51f63"
+    }
+  ],
+  "needs_binding": [
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-affected-source-review.json",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-affected-interface-review.md",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "future_repository_path": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-documentation-review.md",
+      "state": "needs_binding",
+      "sha256": null,
+      "reason": "Root must author/review actual bytes before selecting claims or claiming pass."
+    },
+    {
+      "state": "needs_binding",
+      "item": "record acceptance and evidence verdicts",
+      "reason": "All eight records remain candidate and selected evidence unverified; root separately decides scoped acceptance after exact account."
+    },
+    {
+      "state": "needs_binding",
+      "item": "contribution_scope.affected_source_review",
+      "reason": "Bind real finite review source/digest; currently omitted, not proof."
+    },
+    {
+      "state": "needs_binding",
+      "item": "record byte hashes after root evidence/acceptance edits",
+      "reason": "Current digests bind candidate bytes only; refresh after any authorized root revision."
+    },
+    {
+      "state": "needs_binding",
+      "item": "permanent raw source capture bytes",
+      "reason": "Normalized roots refer to measured source_record hashes; root must retain matching raw artifacts under their exact release-relative evidence sources."
+    },
+    {
+      "state": "needs_binding",
+      "item": "native contribution account",
+      "reason": "Not run by this worker; no stage/task/final-DP2 acceptance asserted."
+    }
+  ],
+  "output_bytes": [
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/migration-apply-transition.json",
+      "sha256": "17fb2b85fa3f93413b1cced8e80b098e2257b760d093cc4382a55ac0195d75a5"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/portable-manifest-migration-source/release-impact.json",
+      "sha256": "bd60d96c3f1036e911b3a629c1a9b991dc452ef1f229fe28d206d1cf2f94bdce"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/manifest-migration-operation-wire/release-impact.json",
+      "sha256": "e3292db8c58f943aa5c3e6ebd4e6674d1b4112d6e49572c7ed308df889b7367a"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-recovery-filesystem-primitives/release-impact.json",
+      "sha256": "73247f3827f79217fa6c75dd83fc57528ff39eb59df3dae0cdb8f575d11b9e15"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/owned-manifest-migration-runtime/release-impact.json",
+      "sha256": "f2f9536472bf0d098dc02210cd13eeadeb5c173d1a50e58c61fe8819ecee73f7"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/context-bound-mcp-migration-operation/release-impact.json",
+      "sha256": "6813ebb0fe8820e3cf44e4b31b3f161347652fe5ecd41ac6c7625272fefe1df7"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/explicit-cli-manifest-migration-operation/release-impact.json",
+      "sha256": "cf995bfcfc8df171bd4c87c17891d6bae54c6ee20a84b629b33b80784da19c63"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-application-citation-maintenance/release-impact.json",
+      "sha256": "5637f77f3d445e8127fe859cb8d9f72cd412c62e4aac21e771331e971c070403"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/changes/migration-application-traceability/release-impact.json",
+      "sha256": "d3b2d68373869978d75e6610097739384725052fcf58d128b28c0e6caf41a007"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/build.py",
+      "sha256": "5b02e39c71832f1a6bb056a9f09089acc63f7623f9477e49c78345590402dc65"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D1-account-candidates/report.md",
+      "sha256": "3d2e9e5bf32d8e980722565af42c0d7df77354f3ae3dcb0d918564a0b7d4b102"
+    }
+  ]
+}

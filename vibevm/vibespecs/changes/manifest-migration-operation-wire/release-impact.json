@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "change_id": "manifest-migration-operation-wire",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "42a12df42999d4b2988e908340a8b52cbd738ef6"
+    },
+    {
+      "kind": "commit",
+      "identity": "aa48a5f98d13f82b2eb632d0bdfe74c3a28b7289"
+    },
+    {
+      "kind": "commit",
+      "identity": "036497cb674379ee595987a706f9204083613f88"
+    },
+    {
+      "kind": "commit",
+      "identity": "2508dde09f2aa98e813ea851767da43e3e65a387"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+    "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+    "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+    "formats/corpora/migration-application-journal/e1/valid/restored.json",
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+    "formats/corpora/migration-operation-report/e1/valid/completed.json",
+    "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-operation-request/e1/valid/apply.json",
+    "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+    "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+    "schemas/migration/e1/application_journal.jtd.json",
+    "schemas/migration/e1/operation_report.jtd.json",
+    "schemas/migration/e1/operation_request.jtd.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:manifest-migration-application-e1",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Only the separate pure planning frame trio was registered; no bounded operation/journal roots.",
+      "after": "Three registered epoch1 formats migration-operation-request, migration-operation-report and migration-application-journal carry explicit authority, exact plan IDs, finite phase/effects/guarantees and required nullable evidence through canonical strict generated readers. Shape proof stays separate from owner semantic/native proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "New source/format/filesystem support requires no migration of existing users by itself; effectful application remains explicit opt-in."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document this scoped interface, explicit admission, recovery/effect semantics and reduced guarantees; source declarations/selected Linux evidence do not prove complete guide/topic coverage or native macOS/Windows."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "2508dde09f2aa98e813ea851767da43e3e65a387",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2508dde09f2aa98e813ea851767da43e3e65a387",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

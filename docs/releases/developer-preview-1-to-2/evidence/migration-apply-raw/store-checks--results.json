@@ -1,0 +1,72 @@
+[
+  {
+    "case": "existing_store_absence_has_no_creation",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "transaction::tests::existing_store_absence_has_no_creation",
+      "--",
+      "--exact"
+    ],
+    "exit": 0
+  },
+  {
+    "case": "existing_disjoint_store_opens_and_invalid_scope_refuses",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "transaction::tests::existing_disjoint_store_opens_and_invalid_scope_refuses",
+      "--",
+      "--exact"
+    ],
+    "exit": 0
+  },
+  {
+    "case": "existing_project_lock_absence_has_no_creation",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "transaction::tests::existing_project_lock_absence_has_no_creation",
+      "--",
+      "--exact"
+    ],
+    "exit": 0
+  },
+  {
+    "case": "existing_project_lock_reacquires_rechecks_and_store_token_is_stable",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "transaction::tests::existing_project_lock_reacquires_rechecks_and_store_token_is_stable",
+      "--",
+      "--exact"
+    ],
+    "exit": 0
+  },
+  {
+    "case": "external_lock_rechecks_identity_and_durable_writes_report_parent_support",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "transaction::tests::external_lock_rechecks_identity_and_durable_writes_report_parent_support",
+      "--",
+      "--exact"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,2296 @@
+{
+  "before": "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f",
+  "after": "149bcea525564260be82972edf9afc8b5a2067a0",
+  "commits": [
+    {
+      "commit": "902d153f36fe61812bdf547ad5660cb223dd7e6f",
+      "parents": [
+        "b486af7788e27ec915a13c8e5cb37e66c8cf4a5f"
+      ],
+      "subject": "docs(next): require portable migration with declared guarantees",
+      "raw_paths": [
+        "campaigns/next/manifest.json",
+        "campaigns/next/owner-rulings/2026-09-29-portable-migration.md",
+        "campaigns/next/plan.seed.toml",
+        "campaigns/next/tasks/M-13-D.json"
+      ],
+      "group": "planning-excluded",
+      "excluded_paths": [
+        "campaigns/next/manifest.json",
+        "campaigns/next/owner-rulings/2026-09-29-portable-migration.md",
+        "campaigns/next/plan.seed.toml",
+        "campaigns/next/tasks/M-13-D.json"
+      ],
+      "product_paths": []
+    },
+    {
+      "commit": "18e5b7d6196d8de30db75270025ab41c56730156",
+      "parents": [
+        "902d153f36fe61812bdf547ad5660cb223dd7e6f"
+      ],
+      "subject": "docs(migrate): define portable apply and recovery guarantees",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "6c4b7528e1b77ba0b4486227670d0ff364e7512c",
+      "parents": [
+        "18e5b7d6196d8de30db75270025ab41c56730156"
+      ],
+      "subject": "docs(specmap): index portable migration application contract",
+      "raw_paths": [
+        "specmap.json"
+      ],
+      "group": "index",
+      "excluded_paths": [],
+      "product_paths": [
+        "specmap.json"
+      ]
+    },
+    {
+      "commit": "74afb20ba00236e6acd8b311cf9fe3ad22bd4ecf",
+      "parents": [
+        "6c4b7528e1b77ba0b4486227670d0ff364e7512c"
+      ],
+      "subject": "docs(migrate): bind bounded application wire and journal protocol",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "876168afd75298a297ef987e13afbbf56eb1fdd9",
+      "parents": [
+        "74afb20ba00236e6acd8b311cf9fe3ad22bd4ecf"
+      ],
+      "subject": "docs(migrate): distinguish process recovery from media durability",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "90d6371cc44c5c2d81026b9c08630b2140df01a1",
+      "parents": [
+        "876168afd75298a297ef987e13afbbf56eb1fdd9"
+      ],
+      "subject": "feat(safefs): open existing external recovery state without creation",
+      "raw_paths": [
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs"
+      ],
+      "group": "safefs",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs"
+      ]
+    },
+    {
+      "commit": "ae08d27c76a67d17494b03e71eaa5c7251626c51",
+      "parents": [
+        "90d6371cc44c5c2d81026b9c08630b2140df01a1"
+      ],
+      "subject": "docs(migrate): retain unavailable identities in preflight reports",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "36e16a43a2ecd2a41686e1180e6114663a70f346",
+      "parents": [
+        "ae08d27c76a67d17494b03e71eaa5c7251626c51"
+      ],
+      "subject": "docs(migrate): advance the revised application wire requirement",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "42a12df42999d4b2988e908340a8b52cbd738ef6",
+      "parents": [
+        "36e16a43a2ecd2a41686e1180e6114663a70f346"
+      ],
+      "subject": "feat(wire): define strict migration operation and journal schemas",
+      "raw_paths": [
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+        "formats/corpora/migration-application-journal/e1/valid/restored.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+        "formats/corpora/migration-operation-report/e1/valid/completed.json",
+        "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-operation-request/e1/valid/apply.json",
+        "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+        "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ],
+      "group": "schema-generated-reader",
+      "excluded_paths": [],
+      "product_paths": [
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+        "formats/corpora/migration-application-journal/e1/valid/restored.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+        "formats/corpora/migration-operation-report/e1/valid/completed.json",
+        "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-operation-request/e1/valid/apply.json",
+        "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+        "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ]
+    },
+    {
+      "commit": "ecaca53663949f9513fa28d59db0a526143391d6",
+      "parents": [
+        "42a12df42999d4b2988e908340a8b52cbd738ef6"
+      ],
+      "subject": "docs(migrate): require explicit null evidence in operation reports",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ]
+    },
+    {
+      "commit": "aa48a5f98d13f82b2eb632d0bdfe74c3a28b7289",
+      "parents": [
+        "ecaca53663949f9513fa28d59db0a526143391d6"
+      ],
+      "subject": "fix(wire): make unavailable migration evidence explicitly nullable",
+      "raw_paths": [
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ],
+      "group": "schema-generated-reader",
+      "excluded_paths": [],
+      "product_paths": [
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ]
+    },
+    {
+      "commit": "036497cb674379ee595987a706f9204083613f88",
+      "parents": [
+        "aa48a5f98d13f82b2eb632d0bdfe74c3a28b7289"
+      ],
+      "subject": "feat(wire): emit migration application readers from revised schemas",
+      "raw_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs"
+      ],
+      "group": "schema-generated-reader",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs"
+      ]
+    },
+    {
+      "commit": "2508dde09f2aa98e813ea851767da43e3e65a387",
+      "parents": [
+        "036497cb674379ee595987a706f9204083613f88"
+      ],
+      "subject": "test(wire): prove bounded migration application readers",
+      "raw_paths": [
+        "crates/vibe-wire/tests/migration_application_wire_corpus.rs"
+      ],
+      "group": "schema-generated-reader",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-wire/tests/migration_application_wire_corpus.rs"
+      ]
+    },
+    {
+      "commit": "84b9ad5deb2c670b6d1e9f34bd5ee86e1647e0d6",
+      "parents": [
+        "2508dde09f2aa98e813ea851767da43e3e65a387"
+      ],
+      "subject": "feat(migrate): validate owned application intent and truthful reports",
+      "raw_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/identity.rs",
+        "crates/vibe-workspace/src/migration_application/report.rs",
+        "crates/vibe-workspace/src/migration_application/validation.rs",
+        "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+      ],
+      "group": "foundation-runtime",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/identity.rs",
+        "crates/vibe-workspace/src/migration_application/report.rs",
+        "crates/vibe-workspace/src/migration_application/validation.rs",
+        "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+      ]
+    },
+    {
+      "commit": "11c97a6cc09235c9643c9b3cabaef372e9e55108",
+      "parents": [
+        "84b9ad5deb2c670b6d1e9f34bd5ee86e1647e0d6"
+      ],
+      "subject": "docs(next): bind explicit migration surface composition owners",
+      "raw_paths": [
+        "campaigns/next/manifest.json",
+        "campaigns/next/plan.seed.toml",
+        "campaigns/next/tasks/M-13-D.json"
+      ],
+      "group": "planning-excluded",
+      "excluded_paths": [
+        "campaigns/next/manifest.json",
+        "campaigns/next/plan.seed.toml",
+        "campaigns/next/tasks/M-13-D.json"
+      ],
+      "product_paths": []
+    },
+    {
+      "commit": "6cb74b58ee0d773e57cf09dd952966f0e34b594c",
+      "parents": [
+        "11c97a6cc09235c9643c9b3cabaef372e9e55108"
+      ],
+      "subject": "docs(migrate): define explicit CLI and context-bound MCP admission",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ]
+    },
+    {
+      "commit": "0fcee19605e5c0e478ddf2fe56b299ab6031f7e7",
+      "parents": [
+        "6cb74b58ee0d773e57cf09dd952966f0e34b594c"
+      ],
+      "subject": "feat(mcp): compose bounded manifest migration authority",
+      "raw_paths": [
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/context/migration_tests.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ],
+      "group": "mcp-authority-generic-cell",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/context/migration_tests.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    {
+      "commit": "5d8ba1e7cefe855e2fdd63875d809777b9b3f9d5",
+      "parents": [
+        "0fcee19605e5c0e478ddf2fe56b299ab6031f7e7"
+      ],
+      "subject": "feat(cli): configure explicit MCP migration store and file grants",
+      "raw_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs"
+      ],
+      "group": "cli-compose-entry",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs"
+      ]
+    },
+    {
+      "commit": "86964bae4eaf2661503e4e4b57c845da98c7a765",
+      "parents": [
+        "5d8ba1e7cefe855e2fdd63875d809777b9b3f9d5"
+      ],
+      "subject": "fix(safefs): synchronize a readable pinned Unix directory handle",
+      "raw_paths": [
+        "crates/vibe-safefs/src/transaction/operations.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs"
+      ],
+      "group": "safefs",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-safefs/src/transaction/operations.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs"
+      ]
+    },
+    {
+      "commit": "79a53367abcd611c793db26a4e574dd6871dcdec",
+      "parents": [
+        "86964bae4eaf2661503e4e4b57c845da98c7a765"
+      ],
+      "subject": "feat(safefs): confirm retained file data sync through its capability",
+      "raw_paths": [
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/external_sync.rs",
+        "crates/vibe-safefs/src/transaction/tests.rs",
+        "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+      ],
+      "group": "safefs",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/external_sync.rs",
+        "crates/vibe-safefs/src/transaction/tests.rs",
+        "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+      ]
+    },
+    {
+      "commit": "d69a88b3afc8157d63ce32f7005313682f0e7c94",
+      "parents": [
+        "79a53367abcd611c793db26a4e574dd6871dcdec"
+      ],
+      "subject": "feat(migrate): apply and recover exact owned manifest transitions",
+      "raw_paths": [
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+        "crates/vibe-workspace/src/migration_application/storage.rs"
+      ],
+      "group": "foundation-runtime",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+        "crates/vibe-workspace/src/migration_application/storage.rs"
+      ]
+    },
+    {
+      "commit": "9c1f497c48530625f6976786baddddfc4a8bbb4d",
+      "parents": [
+        "d69a88b3afc8157d63ce32f7005313682f0e7c94"
+      ],
+      "subject": "docs(migrate): retain invariant evidence in diagnostic-only failures",
+      "raw_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ],
+      "group": "source-law",
+      "excluded_paths": [],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ]
+    },
+    {
+      "commit": "1b7c311a5e6bd63ac5f623f7349a0e5fd2e8b1bf",
+      "parents": [
+        "9c1f497c48530625f6976786baddddfc4a8bbb4d"
+      ],
+      "subject": "feat(mcp): distinguish executed diagnostics from structured results",
+      "raw_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/tests/diagnostic_output.rs"
+      ],
+      "group": "mcp-authority-generic-cell",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/tests/diagnostic_output.rs"
+      ]
+    },
+    {
+      "commit": "1251af3cb3f5b66346b40a3be7c887b7a84ed650",
+      "parents": [
+        "1b7c311a5e6bd63ac5f623f7349a0e5fd2e8b1bf"
+      ],
+      "subject": "feat(cli): execute owned manifest migration before ordinary startup",
+      "raw_paths": [
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/migration_operation.rs"
+      ],
+      "group": "cli-compose-entry",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/migration_operation.rs"
+      ]
+    },
+    {
+      "commit": "c5d2fddc1ffcec7a845be600be3436e010441178",
+      "parents": [
+        "1251af3cb3f5b66346b40a3be7c887b7a84ed650"
+      ],
+      "subject": "feat(mcp): expose context-bound manifest migration operations",
+      "raw_paths": [
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/migration_operation/tests.rs"
+      ],
+      "group": "mcp-authority-generic-cell",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/migration_operation/tests.rs"
+      ]
+    },
+    {
+      "commit": "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67",
+      "parents": [
+        "c5d2fddc1ffcec7a845be600be3436e010441178"
+      ],
+      "subject": "docs(specmark): rebind migration admission to current surface revision",
+      "raw_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ],
+      "group": "source-citation-maintenance",
+      "excluded_paths": [],
+      "product_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    {
+      "commit": "149bcea525564260be82972edf9afc8b5a2067a0",
+      "parents": [
+        "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67"
+      ],
+      "subject": "docs(specmap): index manifest application and actual surface consumers",
+      "raw_paths": [
+        "specmap.json"
+      ],
+      "group": "index",
+      "excluded_paths": [],
+      "product_paths": [
+        "specmap.json"
+      ]
+    }
+  ],
+  "exclusion_authority": {
+    "file": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-baseline-cdee6f284-capture-e1.json",
+    "sha256": "b8626fdb6f008f5ebbe11d765f26d61f223440049578dc9c917c99443b1b23f3",
+    "field": "excluded_from_product_delta",
+    "rows": [
+      {
+        "path": "campaigns/next/",
+        "reason": "Inherited scope exclusion from template capture migration-machine-baseline-cdee6f284; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): temporary planning and execution scaffold; retained inside raw Git tree"
+      },
+      {
+        "path": "vibevm/vibespecs/terraforms/next/",
+        "reason": "Inherited scope exclusion from template capture migration-machine-baseline-cdee6f284; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): temporary staged requirements; retained inside raw Git tree"
+      },
+      {
+        "path": "docs/releases/developer-preview-1-to-2/",
+        "reason": "Inherited scope exclusion from template capture migration-machine-baseline-cdee6f284; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): new capture/output itself; not present in captured Git commit"
+      },
+      {
+        "path": "vibevm/vibedeps/",
+        "reason": "Inherited scope exclusion from template capture migration-machine-baseline-cdee6f284; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): derived installed materialization; lock and canonical vibepacks capture authority"
+      },
+      {
+        "path": "target/",
+        "reason": "Inherited scope exclusion from template capture migration-machine-baseline-cdee6f284; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): Cargo build output, absent from tracked source snapshot"
+      }
+    ]
+  },
+  "product_paths": [
+    "crates/vibe-cli/src/cli/mcp.rs",
+    "crates/vibe-cli/src/command_progress.rs",
+    "crates/vibe-cli/src/commands/mcp/mod.rs",
+    "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+    "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+    "crates/vibe-cli/src/commands/refactor/mod.rs",
+    "crates/vibe-cli/src/main.rs",
+    "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+    "crates/vibe-cli/tests/migration_operation.rs",
+    "crates/vibe-mcp/src/context.rs",
+    "crates/vibe-mcp/src/context/migration.rs",
+    "crates/vibe-mcp/src/context/migration_tests.rs",
+    "crates/vibe-mcp/src/lib.rs",
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-mcp/src/tools/migration_operation.rs",
+    "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+    "crates/vibe-mcp/src/tools/output.rs",
+    "crates/vibe-mcp/tests/diagnostic_output.rs",
+    "crates/vibe-safefs/src/file/project_methods.rs",
+    "crates/vibe-safefs/src/lib.rs",
+    "crates/vibe-safefs/src/transaction/external.rs",
+    "crates/vibe-safefs/src/transaction/external_sync.rs",
+    "crates/vibe-safefs/src/transaction/operations.rs",
+    "crates/vibe-safefs/src/transaction/tests.rs",
+    "crates/vibe-safefs/src/transaction/tests/external.rs",
+    "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+    "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+    "crates/vibe-workspace/src/lib.rs",
+    "crates/vibe-workspace/src/migration_application.rs",
+    "crates/vibe-workspace/src/migration_application/identity.rs",
+    "crates/vibe-workspace/src/migration_application/recovery.rs",
+    "crates/vibe-workspace/src/migration_application/report.rs",
+    "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+    "crates/vibe-workspace/src/migration_application/runtime.rs",
+    "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+    "crates/vibe-workspace/src/migration_application/storage.rs",
+    "crates/vibe-workspace/src/migration_application/validation.rs",
+    "crates/vibe-workspace/src/migration_application/validation_tests.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+    "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+    "formats/corpora/migration-application-journal/e1/valid/restored.json",
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+    "formats/corpora/migration-operation-report/e1/valid/completed.json",
+    "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-operation-request/e1/valid/apply.json",
+    "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+    "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+    "schemas/migration/e1/application_journal.jtd.json",
+    "schemas/migration/e1/operation_report.jtd.json",
+    "schemas/migration/e1/operation_request.jtd.json",
+    "specmap.json",
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+    "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+  ],
+  "excluded_paths": [
+    "campaigns/next/manifest.json",
+    "campaigns/next/owner-rulings/2026-09-29-portable-migration.md",
+    "campaigns/next/plan.seed.toml",
+    "campaigns/next/tasks/M-13-D.json"
+  ],
+  "counts": {
+    "commits": 27,
+    "product_subjects": 25,
+    "excluded_only_subjects": 2,
+    "raw_paths": 85,
+    "product_paths": 81,
+    "excluded_paths": 4
+  },
+  "groups": {
+    "source-law": {
+      "commits": [
+        "18e5b7d6196d8de30db75270025ab41c56730156",
+        "74afb20ba00236e6acd8b311cf9fe3ad22bd4ecf",
+        "876168afd75298a297ef987e13afbbf56eb1fdd9",
+        "ae08d27c76a67d17494b03e71eaa5c7251626c51",
+        "36e16a43a2ecd2a41686e1180e6114663a70f346",
+        "ecaca53663949f9513fa28d59db0a526143391d6",
+        "6cb74b58ee0d773e57cf09dd952966f0e34b594c",
+        "9c1f497c48530625f6976786baddddfc4a8bbb4d"
+      ],
+      "product_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+      ]
+    },
+    "planning-excluded": {
+      "commits": [
+        "902d153f36fe61812bdf547ad5660cb223dd7e6f",
+        "11c97a6cc09235c9643c9b3cabaef372e9e55108"
+      ],
+      "product_paths": []
+    },
+    "schema-generated-reader": {
+      "commits": [
+        "42a12df42999d4b2988e908340a8b52cbd738ef6",
+        "aa48a5f98d13f82b2eb632d0bdfe74c3a28b7289",
+        "036497cb674379ee595987a706f9204083613f88",
+        "2508dde09f2aa98e813ea851767da43e3e65a387"
+      ],
+      "product_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs",
+        "crates/vibe-wire/tests/migration_application_wire_corpus.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json",
+        "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json",
+        "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json",
+        "formats/corpora/migration-application-journal/e1/valid/prepared.json",
+        "formats/corpora/migration-application-journal/e1/valid/restored.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json",
+        "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json",
+        "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json",
+        "formats/corpora/migration-operation-report/e1/valid/completed.json",
+        "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json",
+        "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/migration-operation-request/e1/valid/apply.json",
+        "formats/corpora/migration-operation-request/e1/valid/inspect.json",
+        "formats/corpora/migration-operation-request/e1/valid/recover-complete.json",
+        "schemas/migration/e1/application_journal.jtd.json",
+        "schemas/migration/e1/operation_report.jtd.json",
+        "schemas/migration/e1/operation_request.jtd.json"
+      ]
+    },
+    "safefs": {
+      "commits": [
+        "90d6371cc44c5c2d81026b9c08630b2140df01a1",
+        "86964bae4eaf2661503e4e4b57c845da98c7a765",
+        "79a53367abcd611c793db26a4e574dd6871dcdec"
+      ],
+      "product_paths": [
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/transaction/external.rs",
+        "crates/vibe-safefs/src/transaction/external_sync.rs",
+        "crates/vibe-safefs/src/transaction/operations.rs",
+        "crates/vibe-safefs/src/transaction/tests.rs",
+        "crates/vibe-safefs/src/transaction/tests/external.rs",
+        "crates/vibe-safefs/src/transaction/tests/external_sync.rs"
+      ]
+    },
+    "foundation-runtime": {
+      "commits": [
+        "84b9ad5deb2c670b6d1e9f34bd5ee86e1647e0d6",
+        "d69a88b3afc8157d63ce32f7005313682f0e7c94"
+      ],
+      "product_paths": [
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/migration_application.rs",
+        "crates/vibe-workspace/src/migration_application/identity.rs",
+        "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "crates/vibe-workspace/src/migration_application/report.rs",
+        "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs",
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs",
+        "crates/vibe-workspace/src/migration_application/storage.rs",
+        "crates/vibe-workspace/src/migration_application/validation.rs",
+        "crates/vibe-workspace/src/migration_application/validation_tests.rs"
+      ]
+    },
+    "mcp-authority-generic-cell": {
+      "commits": [
+        "0fcee19605e5c0e478ddf2fe56b299ab6031f7e7",
+        "1b7c311a5e6bd63ac5f623f7349a0e5fd2e8b1bf",
+        "c5d2fddc1ffcec7a845be600be3436e010441178"
+      ],
+      "product_paths": [
+        "crates/vibe-mcp/src/context.rs",
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/context/migration_tests.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-mcp/tests/diagnostic_output.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    "cli-compose-entry": {
+      "commits": [
+        "5d8ba1e7cefe855e2fdd63875d809777b9b3f9d5",
+        "1251af3cb3f5b66346b40a3be7c887b7a84ed650"
+      ],
+      "product_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/mod.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-cli/tests/migration_operation.rs"
+      ]
+    },
+    "source-citation-maintenance": {
+      "commits": [
+        "4d17fcb64e71f1f9ec3ed084ca43e50ddc2dde67"
+      ],
+      "product_paths": [
+        "crates/vibe-cli/src/cli/mcp.rs",
+        "crates/vibe-cli/src/commands/mcp/mod.rs",
+        "crates/vibe-cli/tests/mcp_migration_authority_args.rs",
+        "crates/vibe-workspace/src/migration_application.rs"
+      ]
+    },
+    "index": {
+      "commits": [
+        "6c4b7528e1b77ba0b4486227670d0ff364e7512c",
+        "149bcea525564260be82972edf9afc8b5a2067a0"
+      ],
+      "product_paths": [
+        "specmap.json"
+      ]
+    }
+  },
+  "product_path_endpoints": {
+    "crates/vibe-cli/src/cli/mcp.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a3143c6b751cd16147b501e5fb3cc278402f49a0"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ba38b3d0728ffeecfef94b72f2f8f5970f24742c"
+      }
+    },
+    "crates/vibe-cli/src/command_progress.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c6f831aa36de04c6700118c2fc7e0f1e662b4f47"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "0183ad5d256343a1ab1b0ae3a1333ed9b311d55b"
+      }
+    },
+    "crates/vibe-cli/src/commands/mcp/mod.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a591e71016a050d50025a13209425a0a43f7f618"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "cd0482d0e399d25e10d4274e7ddfe59af8719122"
+      }
+    },
+    "crates/vibe-cli/src/commands/refactor/machine_entry.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "8fcf9771defaec11035c1c6d36c6a36cadf7b447"
+      }
+    },
+    "crates/vibe-cli/src/commands/refactor/migration_operation.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "f78fdaffb3038f321cde3dc3d9c55aa59fe45ad9"
+      }
+    },
+    "crates/vibe-cli/src/commands/refactor/mod.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "54419160b3322dda8c7f5aba133e40a4d50ebf33"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "497e2eed5b9b6344c08736466f39d7804f7d3de6"
+      }
+    },
+    "crates/vibe-cli/src/main.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "2cae8976cdfb6dc068c3f732117141af128be7e5"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "acd34c68e2261a8364ddc693c2a9069b65d20e33"
+      }
+    },
+    "crates/vibe-cli/tests/mcp_migration_authority_args.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "2adb5cf63619c8e84777a9a28c7b07cd8bf1406e"
+      }
+    },
+    "crates/vibe-cli/tests/migration_operation.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "fcd348097403a55ac66aaf01f09bce2d2242ad45"
+      }
+    },
+    "crates/vibe-mcp/src/context.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "4336a866502622637dad7c61bd2eb6f94b22cc9a"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "56bc76b2eb0d6e7c74e914226468437594dc118f"
+      }
+    },
+    "crates/vibe-mcp/src/context/migration.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "d6241a354f9dfb5e9a6a618d5736bb3b09904e16"
+      }
+    },
+    "crates/vibe-mcp/src/context/migration_tests.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "104f55c5d7d866d6a210329aac65b13f5777997e"
+      }
+    },
+    "crates/vibe-mcp/src/lib.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "aab99659628ae5ff9a3e8d72cff2d03f5ae8e313"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "e6779d88f1bbcf33e2bf54e912ee4684508db469"
+      }
+    },
+    "crates/vibe-mcp/src/tools.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "1dabc7cc71766df4d33c0db7783d5b6cbace8e5f"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "6ec56f8b571125f0fa5303e96a48ab2840963e70"
+      }
+    },
+    "crates/vibe-mcp/src/tools/migration_operation.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "dc91a627d1af4b4201842aa33e8d3cefefbfb423"
+      }
+    },
+    "crates/vibe-mcp/src/tools/migration_operation/tests.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "58dc82d068d95f374d9763e5d6c39a349e9c3630"
+      }
+    },
+    "crates/vibe-mcp/src/tools/output.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "9d1bb7468907873caeeb25b8bed52440cee04ab8"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c05268d21f71314a102cc7486c34ce3c88d3680a"
+      }
+    },
+    "crates/vibe-mcp/tests/diagnostic_output.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "8e715989312997996d7b1009564c6788361c5fe5"
+      }
+    },
+    "crates/vibe-safefs/src/file/project_methods.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "667a58caf5e628411c64db4ca6c83cedc03b4af9"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "25e947e0887cb44e1d01d7ccfdcb2219bce57735"
+      }
+    },
+    "crates/vibe-safefs/src/lib.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "43f2915af9362bc7126ed3ad8874451b096351da"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "edd98ed93fb2f80e6cc136e7bc772f1f503c0a12"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/external.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "60ae0991c49b46fa90e4324da693e1590dab2bf8"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "da89996a574c01832e7eb2ca765f1596044553a0"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/external_sync.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "f5165f4efbea1480575b8c8c17802dbd5de8cf12"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/operations.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "d88ee6d7ea2422287a884b6ae7aa657e6104d480"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "5aefeee6ad170947c8f3a76f242ebde694ce01f8"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/tests.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "52c5dd6226ddf346dfed1050fabc5354d568982b"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "3c9ffa1a31756f95ef0d2f3af66ea000bc556c03"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/tests/external.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "bacc682f88a613bfcdb433fd1f38ccdbe9f1a3e2"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c9575bdf1b65bc876e7abb17256607cee2a84435"
+      }
+    },
+    "crates/vibe-safefs/src/transaction/tests/external_sync.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c0d8f1911ef55dfdf46267ff091b9464bc6e3c0e"
+      }
+    },
+    "crates/vibe-wire/src/generated/format_id/mod.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "04ad6c212e66a24fcaefcc25e5fb7b1a92ec8d0f"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "0d7eca06de9264ba36edea6b97ef83452a6024ae"
+      }
+    },
+    "crates/vibe-wire/src/generated/format_id/properties.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "99f83578985a09e3f6698929e3db27b825aa1703"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "09cb7edfcb0c47e3f961d110cf5d5ab027c5e522"
+      }
+    },
+    "crates/vibe-wire/src/generated/migration/e1/application_journal/mod.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "1b91e04f25d5b4824d266707fe6c1fcb83d3727f"
+      }
+    },
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "49c2f063f2e4fcf1d78a298a915d561ebfe95cf1"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "d86c789022bd1e0b1da1ebb37c9f8bc04c26d36b"
+      }
+    },
+    "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "d2aa060b31b1639f2e0927491b1715cf171fc519"
+      }
+    },
+    "crates/vibe-wire/src/generated/migration/e1/operation_request/mod.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "e3d47624fcead6a5a34c7f72c899d4a8f65bd277"
+      }
+    },
+    "crates/vibe-wire/tests/migration_application_wire_corpus.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "aadd479a6f0e5aef5ac41823f7784f7fbf82b7ee"
+      }
+    },
+    "crates/vibe-workspace/src/lib.rs": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "0df178279f22152bb75b72c1373157022f397539"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a45a33cbd8cfc32dfb247c9a0d5d7176380664ed"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "06bd083ce0394b7b5ceba3ff0fe22e0dd10e0d00"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/identity.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "45f4b317241559043b0a8354cac6609b23ea1b61"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/recovery.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "38587855bd8f2b1dcc8d939997fef09a4552dfe8"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/report.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c93113f53aa9acbc628d9cb0a051c8231e208452"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "5b31cf507bd358e8bd964e3726ab575274f13f39"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/runtime.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "24e80f03c67783e41f386e300d8a64bd3606b79d"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/runtime_tests.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ff6009e9cdf10dd3e9e70f169632e5b0773b8aa2"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/storage.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "639ac829ca3ee432b7d33df6b7fa3b8bf12a41e5"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/validation.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c11af71f5a0c3b1586aa790269748bcef7d6c1e8"
+      }
+    },
+    "crates/vibe-workspace/src/migration_application/validation_tests.rs": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "9a89f8dd5ee407e6ba889e299fcf1c05a6907bb7"
+      }
+    },
+    "formats/REGISTRY.toml": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "99189e53365075cddb173944cb089770ae1c816f"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ac769843e19a9098ecdded471a4759679d1bd35d"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/noncanonical-length.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "f35fbb6c9eb64669bcee9d649904323e1eae4409"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/semantic-invalid/unsupported-protocol.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "084f5a6c850f0839dff8ba31c8e7238be7e787fe"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/before-length-number.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "720eb8541e6558c6e6bf4c63d2b946d1aa30ff5d"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/missing-unix-mode.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c5eed778703a32ccee827b91772e5da8d686b98c"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unix-mode-string.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "946a36615eab4098b3a90fcf3b57563a755c8126"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-authority.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ff31eff5ec703ab4326dc856c6685ecdfc1fd5f6"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-phase.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "0aba7c06568c2d7837fca70f4380fd5e492cb33b"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/structural-invalid/unknown-root.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "5839f0f65843c8f3cca8a6fde478e1c0d1574c62"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/valid/prepared-null-mode.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c2e83be04eb19fe58f0f9b24313ac6f0103a6838"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/valid/prepared.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "53c310c1473d9296502f9eed440f1768d0b5c700"
+      }
+    },
+    "formats/corpora/migration-application-journal/e1/valid/restored.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c5e4849a3ec11c785a857f3f7c4d43bfb7100b9e"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/claims-external-writers-excluded.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "832019b352e152ca71cfeb04f33c3fd1958ee2bb"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/semantic-invalid/wrong-schema.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "08a5c40ba99f9cc21f5d8a9ee25c9649e16dd734"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/barrier-binding-number.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "fef4d4099c7c0c3efbbacdcb5cd4c411e4756f79"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/missing-required-operation.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "7ed1265186fa4df87becc985c9df4d165536781c"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-effect.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "6927ca385003fd0500a9e1519d50e5da2547458c"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-error-code.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "064713de8314acec685619a2b3cf873639293297"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-guarantee.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "28b2b456114a66068103489364b191188bdfbac4"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/structural-invalid/unknown-warning.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "9a70ac8644760190fb307728456ab06d7abed5df"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/valid/completed.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ec47ab3bfe1181be93bd9f2f05b28159767db601"
+      }
+    },
+    "formats/corpora/migration-operation-report/e1/valid/refused-unavailable.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "c380113ef316e913fac92781a6fa40cf374d57b8"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/unsupported-schema.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a5c09aa5981805f0236ba8f56c48d46d049de734"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/semantic-invalid/wrong-before-content-id.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "d5cbca802ea28702bdcc6f64358029aca09e5074"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/structural-invalid/schema-string.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "439bdcb4c80f5fba0a4ff31d7d62ca7885cf4485"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-authority.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "8503450d79518a41808d0d65915c087a17492fc1"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-operation.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "9af1c836665d87c2788987fcfd784272fa05a605"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/structural-invalid/unknown-root.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "0a8297717bcbe5a639025b32336510f5e7ac54e1"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/valid/apply.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "eac91cc754c8a1eeec5486d9a000c9cd20d6b349"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/valid/inspect.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "080a1b11fdd1defa3cf7eaa8b4b4442ebcac8b52"
+      }
+    },
+    "formats/corpora/migration-operation-request/e1/valid/recover-complete.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "04cf60d7af39d05e5fa8cffa999871db0669b152"
+      }
+    },
+    "schemas/migration/e1/application_journal.jtd.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "2d17c91276e013ff0f96e1350f487da321f9e6bd"
+      }
+    },
+    "schemas/migration/e1/operation_report.jtd.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "46640553bac9c1e984a5bea694e19f3334874037"
+      }
+    },
+    "schemas/migration/e1/operation_request.jtd.json": {
+      "before": {
+        "state": "absent"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "1c2fe3e13cfe7aabbf91780b64400b353ce8e891"
+      }
+    },
+    "specmap.json": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a3646e795cd5e1517db09c6ffe1678926b183497"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "486d5e0d68552a0e07b0676bc79334f0637f5fcd"
+      }
+    },
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "78ba0fd65df908f4f5571e3e1c220cc4c6db716d"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "a14afaa991ee7ea85e61a5bf9d4bab79c6159afc"
+      }
+    },
+    "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml": {
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "b8d93a1b50fbdd7302811bb89c124b2921b99941"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "git_oid": "ab6ebe3950ea8b38a7b6c16aab5b5971b4f7c3d3"
+      }
+    }
+  },
+  "case_inventory": [
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::malformed_and_null_preflight_create_nothing",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::planner_selections_and_refusals_are_not_apply_plans",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::grant_mismatch_source_identity_and_frozen_effect_refuse",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::six_semantic_corpus_inputs_refuse_at_their_owners",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::corrupted_journal_fields_refuse_before_intent_admission",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::required_nullable_and_unknown_nested_fields_remain_strict",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::independent_framed_golden_and_phase_exclusion",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::report_errors_retain_observed_effects_without_fabricated_guarantees",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::expected_stage_residue_is_reportable_without_namespace_authority",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::no_op_replay_retains_only_coherent_completed_target_effects",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::recognized_target_bytes_require_all_planner_identities",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::validation_tests::report_validation_failure_retains_all_observed_evidence",
+      "evidence_status": "worker receipt: passed; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-domain-foundation.md + domain-review-fixes.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::malformed_forged_grant_and_frozen_preflight_create_no_state",
+      "evidence_status": "direct initial family: passed (family had 2 passed/7 failed/1 ignored)",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-tests.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+      "evidence_status": "direct corrected basic-apply log:1 passed/0 failed/567 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-apply-after-sync.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::inspection_existing_only_and_orphan_or_foreign_store_preservation",
+      "evidence_status": "direct initial family: passed (family had 2 passed/7 failed/1 ignored)",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-tests.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::changed_absent_third_state_and_forged_intent_do_not_overwrite",
+      "evidence_status": "direct after-sync exact log/results: exit0,1 passed/0 failed/567 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/changed_absent_third_state_and_forged_intent_do_not_overwrite.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::process_restart_apply_boundaries_preserve_supported_prefixes",
+      "evidence_status": "direct latest retained-sync prefix exact log/results: exit0,1 passed/0 failed/569 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_apply_boundaries_preserve_supported_prefixes.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::process_restart_restore_boundaries_are_idempotent",
+      "evidence_status": "direct latest retained-sync prefix exact log/results: exit0,1 passed/0 failed/569 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-restart-retained-sync/process_restart_restore_boundaries_are_idempotent.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::impossible_prefixes_and_foreign_stages_preserve_evidence",
+      "evidence_status": "direct after-sync exact log/results: exit0,1 passed/0 failed/567 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/impossible_prefixes_and_foreign_stages_preserve_evidence.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::no_op_no_images_and_failed_journal_keep_prior_effects",
+      "evidence_status": "direct after-sync exact log/results: exit0,1 passed/0 failed/567 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/no_op_no_images_and_failed_journal_keep_prior_effects.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts",
+      "evidence_status": "direct after-sync exact log/results: exit0,1 passed/0 failed/567 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-runtime-after-sync/prior_checkpoint_and_unknown_durability_are_not_erased_by_later_attempts.log"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::retained_sync_tests::matching_orphan_requires_actual_image_sync_and_failure_blocks_target",
+      "evidence_status": "root-reported exact pass in worker/independent receipts",
+      "receipt": "/tmp/vibevm-next-M13-D1-retained-image-fix.md + retention-review-close.md"
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "case": "migration_application::runtime::runtime_tests::retained_sync_tests::loaded_restore_requires_image_sync_but_inspect_and_replay_do_not",
+      "evidence_status": "root-reported exact pass in worker/independent receipts",
+      "receipt": "/tmp/vibevm-next-M13-D1-retained-image-fix.md + retention-review-close.md"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::directory_flush_reopens_readable_capability_without_namespace_creation",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-directory-sync.md"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::directory_flush_refuses_a_foreign_expected_identity",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-directory-sync.md"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::retained_image_sync_confirms_data_without_rewrite_and_refuses_injected_failure",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-retained-sync.md"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::retained_image_sync_refuses_replacement_changed_bytes_missing_and_links",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-retained-sync.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::default_context_refuses_without_creation",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::configured_default_and_explicit_members_admit_only_their_files",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::foreign_and_relative_authority_refuses_before_open",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::cache_overlap_and_nofollow_aliases_refuse_without_effects",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::missing_cache_is_not_initialized_and_policy_rechecks",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "context::migration_tests::lifecycle_builders_preserve_explicit_migration_authority",
+      "evidence_status": "worker receipt: family pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-admission.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::descriptor_and_strict_preflight_before_grants",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::composed_authority_refuses_payload_overrides_without_writes",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::actual_apply_inspect_restore_and_terminal_replay",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::conflicts_frozen_and_link_targets_preserve_source",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::failed_restore_has_real_pending_journal_and_retained_residue",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "case": "tools::migration_operation::tests::invariant_failure_is_executed_diagnostic_without_structured_report",
+      "evidence_status": "worker receipt: family pass; later citation compile only",
+      "receipt": "/tmp/vibevm-next-M13-D1-mcp-operation-checks/report.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--test diagnostic_output",
+      "case": "executed_diagnostic_failure_omits_structured_content",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-diagnostic-output.md"
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--test diagnostic_output",
+      "case": "explicit_null_structured_outputs_retain_the_field",
+      "evidence_status": "worker receipt: exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-diagnostic-output.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "malformed_schema_null_and_input_read_preflight_preserve_poisoned_state",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "absent_store_inspection_stdin_literal_parity_creates_nothing",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "apply_inspect_restore_terminal_replay_preserve_reader_bytes_and_mode",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "mismatched_plan_ids_and_changed_source_refuse_preserving_target",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "third_state_recovery_and_foreign_intent_retain_journal_and_effects",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "frozen_source_escape_and_link_refuse_without_target_write",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test migration_operation",
+      "case": "internal_invariant_diagnostic_retains_unvalidated_original_evidence",
+      "evidence_status": "worker receipt: initial five pass plus two exact corrected retries; roundtrip later pending-prefix exact pass",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-operation-checks.md"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "absent_migration_flags_preserve_compatibility",
+      "evidence_status": "direct later root raw log: three pass; worker report was unrun",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "explicit_store_preserves_repeatable_member_selection",
+      "evidence_status": "direct later root raw log: three pass; worker report was unrun",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log"
+    },
+    {
+      "package": "vibe-cli",
+      "target": "--test mcp_migration_authority_args",
+      "case": "migration_files_require_store_and_unknown_grammar_is_refused",
+      "evidence_status": "direct later root raw log: three pass; worker report was unrun",
+      "receipt": "/tmp/vibevm-next-M13-D1-cli-server-grant-tests.log"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_request_valid_roundtrips_preserve_explicit_intent_and_authority",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/1-operation_request_valid_roundtrips_preserve_explicit_intent_and_authority.log",
+      "receipt_sha256": "9d1846375ff3ea792a8dba7c7b9f52d7ea77afa786d9d94e7b1017f8874f3689"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/2-operation_report_valid_roundtrips_preserve_nullable_identity_evidence_effects_and_guarantees.log",
+      "receipt_sha256": "dc1e87518c77e1a252cf6ff59d8eac3ed1854f4ec9c3f521080cf0a3e55f7e4b"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/3-application_journal_valid_roundtrips_preserve_checkpoint_fields_and_mode.log",
+      "receipt_sha256": "f5d6ade33d2b6a12db1a4f24a5959f7e4103e2f142c8cddc4f168c78c3af1743"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_request_structural_invalids_refuse",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/4-operation_request_structural_invalids_refuse.log",
+      "receipt_sha256": "14894b681ba8271bbe30cfea10a1d74de64cfd6628e8e868a983cbccc0129526"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "operation_report_structural_invalids_refuse_nested_guarantees_effects_codes",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/5-operation_report_structural_invalids_refuse_nested_guarantees_effects_codes.log",
+      "receipt_sha256": "7bea19fa6c4eb8980f34e069f7a01fdd10324fe25ee5b1d3c7bc655b12197f4a"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_journal_structural_invalids_refuse",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/6-application_journal_structural_invalids_refuse.log",
+      "receipt_sha256": "4e6844f969bb6dd511a2ed0c4f8ed9530767290a57d7057dfb349fd912c1b83e"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test migration_application_wire_corpus",
+      "case": "application_domain_invalids_remain_owner_validation_inputs",
+      "evidence_status": "direct exact log: 1 passed/0 failed/6 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-wire-checks/7-application_domain_invalids_remain_owner_validation_inputs.log",
+      "receipt_sha256": "99185e2c15ca706805a5498a3b4b3a42e18b0b3b25a86b0f7ca3edd7ba62d77f"
+    },
+    {
+      "package": "vibe-wire",
+      "target": "--test format_registry_completeness",
+      "case": "format_id_completeness",
+      "evidence_status": "direct exact log: 1 passed/0 failed/1 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-format-id-check.log",
+      "receipt_sha256": "9ed3f2c156ab2b264172174c0621003b0f4729d9deb10a7d7329cde08d9f50d4"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_store_absence_has_no_creation",
+      "evidence_status": "direct exact log/results: exit0,1 passed/0 failed/128 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_store_absence_has_no_creation.log",
+      "receipt_sha256": "1004fd53336273822b25cee64264c45f96f1c37da62ab2f614e87b893a599dc1"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_disjoint_store_opens_and_invalid_scope_refuses",
+      "evidence_status": "direct exact log/results: exit0,1 passed/0 failed/128 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_disjoint_store_opens_and_invalid_scope_refuses.log",
+      "receipt_sha256": "244d0a3836e33e86ad72207384448c7ffc45a0d173a72bda36f11b9b561558ec"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_project_lock_absence_has_no_creation",
+      "evidence_status": "direct exact log/results: exit0,1 passed/0 failed/128 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_absence_has_no_creation.log",
+      "receipt_sha256": "72ceec8519b1e1d831971848c9cfec8b1930add9e1273bacbdd293a33cda80d1"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::existing_project_lock_reacquires_rechecks_and_store_token_is_stable",
+      "evidence_status": "direct exact log/results: exit0,1 passed/0 failed/128 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-store-checks/existing_project_lock_reacquires_rechecks_and_store_token_is_stable.log",
+      "receipt_sha256": "2e3397ace36aaafd57fdaeca4b91282d22a16a09f7386526e0ad216458e13d8a"
+    },
+    {
+      "package": "vibe-safefs",
+      "target": "--lib",
+      "case": "transaction::tests::external_lock_rechecks_identity_and_durable_writes_report_parent_support",
+      "evidence_status": "direct exact log/results: exit0,1 passed/0 failed/128 filtered",
+      "receipt": "/tmp/vibevm-next-M13-D1-store-checks/external_lock_rechecks_identity_and_durable_writes_report_parent_support.log",
+      "receipt_sha256": "62f3c59352a58f2556fcc5af78771aa5bbeed204e08282e72f4b0f192d478489"
+    }
+  ],
+  "case_inventory_limit": "64 distinct ordinary selected case IDs independently joined to named worker reports and/or authorized root raw logs/results; reruns and ignored restart child excluded. Not a whole-product/native-all-platform pass.",
+  "source_declaration_observations": [
+    {
+      "source": "crates/vibe-cli/src/cli.rs",
+      "before": {
+        "sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e",
+        "length": 21075
+      },
+      "after": {
+        "sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e",
+        "length": 21075
+      }
+    },
+    {
+      "source": "crates/vibe-mcp/src/tools.rs",
+      "before": {
+        "sha256": "b86221bcaf700956e4f6c64ed1f037b2febd4701595ee34fc83df72887af0808",
+        "length": 26060,
+        "observed_constructor_members": [
+          "QueryPackageMcpTool",
+          "ReadSubskillMcpTool",
+          "MaterialiseSubskillMcpTool",
+          "AgenticExplainMcpTool",
+          "ExplainMcpTool",
+          "QueryMcpTool",
+          "SelectMcpTool",
+          "ListToolsMcpTool",
+          "LifecycleTasksMcpTool",
+          "LifecycleRunMcpTool",
+          "RequirementsQueryMcpTool",
+          "ReadDocMcpTool",
+          "PlanManifestMigrationMcpTool"
+        ]
+      },
+      "after": {
+        "sha256": "0d3de9ba20dd7af68ee244b81959a80573cd8f368a407b0d8a6a674f0d929095",
+        "length": 26310,
+        "observed_constructor_members": [
+          "QueryPackageMcpTool",
+          "ReadSubskillMcpTool",
+          "MaterialiseSubskillMcpTool",
+          "AgenticExplainMcpTool",
+          "ExplainMcpTool",
+          "QueryMcpTool",
+          "SelectMcpTool",
+          "ListToolsMcpTool",
+          "LifecycleTasksMcpTool",
+          "LifecycleRunMcpTool",
+          "RequirementsQueryMcpTool",
+          "ReadDocMcpTool",
+          "PlanManifestMigrationMcpTool",
+          "ManifestMigrationOperationMcpTool"
+        ]
+      }
+    },
+    {
+      "source": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "before": {
+        "sha256": "2a1b7b0a0173c52c7594b69baf7f988dfca12e54e7d5fcb4f4e78bf000051681",
+        "length": 9838,
+        "observed_enum_members": [
+          "PlanMigration",
+          "ConvertSource",
+          "ConvertPackageSrc",
+          "ConvertSpecSrc"
+        ]
+      },
+      "after": {
+        "sha256": "0473cb57809c4723c6290e26250833b2b5fc2420a359bb96dd2e51790eab93e2",
+        "length": 10056,
+        "observed_enum_members": [
+          "PlanMigration",
+          "MigrationOperation",
+          "ConvertSource",
+          "ConvertPackageSrc",
+          "ConvertSpecSrc"
+        ]
+      }
+    },
+    {
+      "source": "crates/vibe-cli/src/cli/mcp.rs",
+      "before": {
+        "sha256": "ab27ffea116d396b9ee5b4d932eaa26c7b639ec5ad4e5ee67087345fa1d39de3",
+        "length": 8087,
+        "observed_serve_argument_fields": [
+          "path"
+        ]
+      },
+      "after": {
+        "sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8",
+        "length": 8703,
+        "observed_serve_argument_fields": [
+          "path",
+          "migration_recovery_store",
+          "migration_file"
+        ]
+      }
+    },
+    {
+      "source": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "before": {
+        "sha256": "ff2cc09d8c57651f842237b1076d3fe996d203622b8573b7c9ff41663b2415e5",
+        "length": 20149
+      },
+      "after": {
+        "sha256": "005066f44379094d86716537d022f54e5f6e5a087308d83966390369aea786a4",
+        "length": 20752
+      }
+    }
+  ]
+}

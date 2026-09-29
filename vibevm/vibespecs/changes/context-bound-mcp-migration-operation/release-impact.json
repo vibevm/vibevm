@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "change_id": "context-bound-mcp-migration-operation",
+  "before_capture_id": "migration-apply-baseline-b486af778",
+  "after_capture_id": "migration-apply-after-149bcea52",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "0fcee19605e5c0e478ddf2fe56b299ab6031f7e7"
+    },
+    {
+      "kind": "commit",
+      "identity": "1b7c311a5e6bd63ac5f623f7349a0e5fd2e8b1bf"
+    },
+    {
+      "kind": "commit",
+      "identity": "c5d2fddc1ffcec7a845be600be3436e010441178"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-mcp/src/context.rs",
+    "crates/vibe-mcp/src/context/migration.rs",
+    "crates/vibe-mcp/src/context/migration_tests.rs",
+    "crates/vibe-mcp/src/lib.rs",
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-mcp/src/tools/migration_operation.rs",
+    "crates/vibe-mcp/src/tools/migration_operation/tests.rs",
+    "crates/vibe-mcp/src/tools/output.rs",
+    "crates/vibe-mcp/tests/diagnostic_output.rs",
+    "crates/vibe-workspace/src/migration_application.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "mcp:manifest_migration_operation",
+      "capability_id": "owned-authored-manifest-migration",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Common Linux/macOS/Windows implementation paths; selected GNU/Linux proof only; native macOS/Windows unrun. No full API/historical corpus, power-loss persistence, unrestricted CAS or public publication claim.",
+      "before": "Thirteen default tools included pure planning; no context-bound effectful migration tool, explicit finite authority builder or diagnostic-only executed output distinction.",
+      "after": "Fourteenth tool admits only trusted-context project/file/store/cache selections, invokes shared apply/inspect/recover actor, and preserves structured effects on execution failure. Explicit ServerContext authority is optional/default-refused and physically disjoint; generic executed diagnostic failures omit structuredContent while deliberate structured null remains present.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#MANIFEST-MIGRATION-CELL",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "manual",
+    "reason": "Explicit opt-in migration changes only an independently admitted authored file; manual selection/action is required. No automatic tree migration, product bump or publication grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document this scoped interface, explicit admission, recovery/effect semantics and reduced guarantees; source declarations/selected Linux evidence do not prove complete guide/topic coverage or native macOS/Windows."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-apply-contribution-review",
+      "subject_id": "c5d2fddc1ffcec7a845be600be3436e010441178",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md",
+      "verdict": "passed",
+      "sha256": "7e77c8dce057f9f623d952cebe2d6ccc0b1a7f77b1374c680aa32313ebb1b06e"
+    },
+    {
+      "claim_id": "reviewed-migration-apply-source-delta",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-source-review.md",
+      "verdict": "passed",
+      "sha256": "5c570a32bba139ced4a90f49e2675319eaf784baa3d4f8a7d76a2b1567ef45f6"
+    },
+    {
+      "claim_id": "selected-migration-apply-verification",
+      "subject_id": "migration-apply-after-149bcea52",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-verification.md",
+      "verdict": "passed",
+      "sha256": "aa80b51da9a145cc5910089e3cfcb46e1a88b44996c9b99f6cc0b5873f1cb50e"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "c5d2fddc1ffcec7a845be600be3436e010441178",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-apply-central-review.md"
+  }
+}

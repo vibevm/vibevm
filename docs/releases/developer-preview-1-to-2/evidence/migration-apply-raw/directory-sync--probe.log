@@ -1,0 +1,41 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+error[E0425]: cannot find function `file_identity` in this scope
+  --> crates/vibe-safefs/src/transaction/tests/external.rs:20:16
+   |
+20 |     assert_eq!(file_identity(&readable, root.path()).unwrap(), root.identity().unwrap());
+   |                ^^^^^^^^^^^^^ not found in this scope
+   |
+  ::: crates/vibe-safefs/src/transaction/tests.rs:19:1
+   |
+19 | external_tests!();
+   | ----------------- in this macro invocation
+   |
+   = note: this error originates in the macro `external_tests` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider importing this function through its public re-export
+  --> crates/vibe-safefs/src/transaction/tests.rs:1:1
+   |
+ 1 + use crate::transaction::file_identity;
+   |
+
+warning: unused imports: `CleanupPreparation`, `OwnedTreeCleanupError`, `OwnedTreeCleanupProgress`, `OwnedTreeObservation`, `arm_after_owned_tree_publish_move`, `arm_after_rename_source_check`, `arm_before_owned_tree_check`, `arm_before_owned_tree_publish`, `arm_before_rename_noreplace`, `arm_between_manifest_passes`, `arm_during_manifest_lease`, and `arm_during_native_mutation`
+ --> crates/vibe-safefs/src/transaction/tests.rs:5:5
+  |
+5 |     CleanupPreparation, DirectoryDurability, ExternalStore, OwnedTreeCleanupError,
+  |     ^^^^^^^^^^^^^^^^^^                                      ^^^^^^^^^^^^^^^^^^^^^
+6 |     OwnedTreeCleanupProgress, OwnedTreeObservation, Project, RenameError,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+7 |     arm_after_owned_tree_publish_move, arm_after_rename_source_check, arm_before_owned_tree_check,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+8 |     arm_before_owned_tree_publish, arm_before_rename_noreplace, arm_between_manifest_passes,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+9 |     arm_during_manifest_lease, arm_during_native_mutation, arm_same_filesystem_check,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0425`.
+warning: `vibe-safefs` (lib test) generated 1 warning
+error: could not compile `vibe-safefs` (lib test) due to 1 previous error; 1 warning emitted

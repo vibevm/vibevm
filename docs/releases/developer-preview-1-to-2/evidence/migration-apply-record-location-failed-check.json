@@ -1,0 +1,47 @@
+{
+  "checked_claims": [
+    "capture:migration-apply-after-149bcea52:capture-shape-and-meaning",
+    "capture:migration-apply-after-149bcea52:original-observation-digest",
+    "capture:migration-apply-after-149bcea52:package-subtree-and-manifest-identities",
+    "capture:migration-apply-after-149bcea52:repository-tree",
+    "capture:migration-apply-after-149bcea52:source-blob-and-byte-identities",
+    "capture:migration-apply-after-149bcea52:source-declared-surface-linkage",
+    "capture:migration-apply-baseline-b486af778:capture-shape-and-meaning",
+    "capture:migration-apply-baseline-b486af778:original-observation-digest",
+    "capture:migration-apply-baseline-b486af778:package-subtree-and-manifest-identities",
+    "capture:migration-apply-baseline-b486af778:repository-tree",
+    "capture:migration-apply-baseline-b486af778:source-blob-and-byte-identities",
+    "capture:migration-apply-baseline-b486af778:source-declared-surface-linkage"
+  ],
+  "findings": [
+    {
+      "code": "record-read",
+      "reason": "Retained evidence file is unavailable",
+      "state": "failed",
+      "subject": "context-bound-mcp-migration-operation"
+    }
+  ],
+  "mode": "contribution",
+  "schema": 1,
+  "subject_ids": [
+    "architecture-after-3ffb13b29",
+    "architecture-baseline-2145ec8d1",
+    "authority-after-fe0e04eba",
+    "authority-baseline-e95aa1c36",
+    "bootstrap-4cec12cd3",
+    "bootstrap-6c2a59ef9",
+    "capability-after-2c35eed03",
+    "capability-after-dd7d05e4c",
+    "capability-baseline-4a3f80a34",
+    "dp1-30d217bfce47bca",
+    "migration-apply-after-149bcea52",
+    "migration-apply-baseline-b486af778",
+    "migration-machine-after-ccddf879b",
+    "migration-machine-baseline-cdee6f284",
+    "migration-plan-after-5b0ffde00",
+    "migration-plan-baseline-62161a91c",
+    "next-1.1-after-110da6f17",
+    "policy-baseline-e203b9dab"
+  ],
+  "verdict": "failed"
+}
