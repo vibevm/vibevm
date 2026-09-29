@@ -16,6 +16,7 @@ use vibe_wire::generated::machine::e1::operation_descriptor::{
     OperationDescriptorImplementation as Implementation,
 };
 use vibe_wire::generated::migration::e1::plan_request::PlanRequest;
+use vibe_workspace::extension_world::machine_schema::{MachineSchemaObservation, ProjectionError};
 use vibe_workspace::migration_planning::{
     MigrationPlanningResponse, plan_migration_request, validate_preflight_error,
     validate_report_for_request,
@@ -34,6 +35,7 @@ pub enum PurePlannerAdmission {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MachineOperationError {
     InvalidDescriptor(&'static str),
+    SelectedWorldProjection(ProjectionError),
     DuplicateIdentity(String),
     UnsupportedEpoch,
     UnknownOperation(String),
@@ -45,6 +47,7 @@ impl fmt::Display for MachineOperationError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidDescriptor(reason) => write!(f, "invalid operation descriptor: {reason}"),
+            Self::SelectedWorldProjection(error) => write!(f, "selected world: {error}"),
             Self::DuplicateIdentity(id) => write!(f, "duplicate machine identity: {id}"),
             Self::UnsupportedEpoch => write!(f, "unsupported machine operation epoch"),
             Self::UnknownOperation(id) => write!(f, "unknown machine operation: {id}"),
@@ -69,6 +72,7 @@ const PLANNER_EVIDENCE: &str = "48a29c431fedfabb0b43e9ea6a5e9a938c647f88";
 #[derive(Debug, Clone)]
 pub struct MachineOperationService {
     descriptors: Vec<OperationDescriptor>,
+    selected_world_observations: Vec<MachineSchemaObservation>,
     planner_admission: PurePlannerAdmission,
 }
 
@@ -276,6 +280,7 @@ impl MachineOperationService {
         }
         Ok(Self {
             descriptors,
+            selected_world_observations: Vec::new(),
             planner_admission,
         })
     }
@@ -317,6 +322,8 @@ impl MachineOperationService {
         validated_response(&request, plan_migration_request(request.clone()))
     }
 }
+
+mod discovery;
 
 #[cfg(test)]
 mod tests {
