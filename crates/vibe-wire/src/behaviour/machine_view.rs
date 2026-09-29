@@ -15,7 +15,7 @@ use vibe_core::machine_view::{
 use crate::behaviour::scalars::{has_control_bytes, is_canonical_decimal};
 use crate::generated::machine::e1::{
     entity_reference::{EntityReference, Logical},
-    source_location::{Location, Reason, SourceLocation},
+    source_location::{Location, Reason, SourceLocation, UriMapping},
 };
 
 /// One bounded semantic refusal. The original generated DTO stays with the
@@ -49,6 +49,45 @@ fn decimal(field: &'static str, text: &str) -> Validated<u64> {
     }
     text.parse::<u64>()
         .map_err(|_| invalid(field, "unsigned decimal exceeds u64"))
+}
+
+/// The URI owner's declared portable token spelling. Matching this spelling
+/// is syntax admission only; it never proves that a resource is authorized.
+fn uri_token(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    bytes.first().is_some_and(u8::is_ascii_alphanumeric)
+        && bytes
+            .iter()
+            .all(|byte| byte.is_ascii_alphanumeric() || *byte == b'-' || *byte == b'_')
+}
+
+fn validate_client_uri(value: &SourceLocation) -> Validated<()> {
+    match (&value.client_uri, &value.uri_mapping) {
+        (Some(uri), UriMapping::OwnerDeclaredUnverified(mapping)) => {
+            let token = uri.strip_prefix("vibevm-resource:").ok_or_else(|| {
+                invalid("client_uri", "URI is not an owner-declared resource token")
+            })?;
+            if !uri_token(token) {
+                return Err(invalid("client_uri", "resource token is not portable"));
+            }
+            if !uri_token(&mapping.authorized_scope_id) {
+                return Err(invalid(
+                    "uri_mapping.authorized_scope_id",
+                    "scope token is not portable",
+                ));
+            }
+            Ok(())
+        }
+        (None, UriMapping::Unavailable(_)) => Ok(()),
+        (None, UriMapping::OwnerDeclaredUnverified(_)) => Err(invalid(
+            "client_uri",
+            "declared URI mapping requires a non-null client URI",
+        )),
+        (Some(_), UriMapping::Unavailable(_)) => Err(invalid(
+            "uri_mapping",
+            "unavailable URI mapping cannot carry a client URI",
+        )),
+    }
 }
 
 impl EntityReference {
@@ -120,6 +159,7 @@ impl SourceLocation {
         if self.schema != 1 {
             return Err(invalid("schema", "unsupported source-location epoch"));
         }
+        validate_client_uri(self)?;
         let resource = OpaqueResourceId::new(self.resource_id_octets.clone())
             .map_err(|_| invalid("resource_id_octets", "resource identity is empty"))?;
         let revision = opaque("captured_revision", &self.captured_revision)?;

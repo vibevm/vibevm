@@ -15,5 +15,10 @@
     "start_column": "2",
     "end_line": "3",
     "end_column": "11"
+  },
+  "client_uri": "vibevm-resource:sample_1",
+  "uri_mapping": {
+    "status": "owner_declared_unverified",
+    "authorized_scope_id": "scope_1"
   }
 }

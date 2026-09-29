@@ -2,18 +2,24 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Opaque resource octets and explicit original/projected/unavailable position
-/// basis.
+/// Opaque resource octets, explicit original/projected/unavailable position
+/// basis, and owner-declared client URI metadata. URI syntax and scope are
+/// validated but never grant resource access or authenticate source bytes.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SourceLocation {
     pub captured_revision: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub client_uri: Option<String>,
 
     pub location: Location,
 
     pub resource_id_octets: Vec<u8>,
 
     pub schema: u8,
+
+    pub uri_mapping: UriMapping,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -71,4 +77,41 @@ pub enum Reason {
 
     #[serde(rename = "unknown_encoding")]
     UnknownEncoding,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "status")]
+pub enum UriMapping {
+    #[serde(rename = "owner_declared_unverified")]
+    OwnerDeclaredUnverified(Box<UriMappingOwnerDeclaredUnverified>),
+
+    #[serde(rename = "unavailable")]
+    Unavailable(Box<UriMappingUnavailable>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UriMappingOwnerDeclaredUnverified {
+    pub authorized_scope_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UriMappingUnavailable {
+    pub reason: UriUnavailableReason,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum UriUnavailableReason {
+    #[serde(rename = "absent_resource")]
+    AbsentResource,
+
+    #[serde(rename = "no_owner_mapping")]
+    NoOwnerMapping,
+
+    #[serde(rename = "wrong_revision")]
+    WrongRevision,
+
+    #[serde(rename = "wrong_scope")]
+    WrongScope,
 }

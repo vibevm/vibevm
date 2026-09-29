@@ -10,5 +10,10 @@
   "location": {
     "basis": "unavailable",
     "reason": "missing_reverse_map"
+  },
+  "client_uri": null,
+  "uri_mapping": {
+    "status": "unavailable",
+    "reason": "no_owner_mapping"
   }
 }

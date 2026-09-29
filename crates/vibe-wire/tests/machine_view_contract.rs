@@ -79,6 +79,13 @@ fn four_roots_roundtrip_exact_shapes_and_non_utf8_octets() {
     assert_eq!(raw.resource_id_octets, [255, 0, 47, 92]);
     let _: SourceLocation = reader_valid("source-location", "projected-text");
     let _: SourceLocation = reader_valid("source-location", "unavailable-reverse-map");
+    let mapped: SourceLocation = reader_valid("source-location", "mapped-client-uri");
+    assert_eq!(
+        mapped.client_uri.as_deref(),
+        Some("vibevm-resource:sample_1")
+    );
+    let unavailable: SourceLocation = reader_valid("source-location", "unavailable-client-uri");
+    assert!(unavailable.client_uri.is_none());
 }
 
 #[test]
@@ -96,7 +103,12 @@ fn strict_structural_cases_refuse_unknown_missing_and_wrong_primitive() {
     for name in ["missing-required-nullable", "unknown-row-field"] {
         reader_refuses::<BoundPage>("bound-page", name);
     }
-    for name in ["octet-out-of-range", "unknown-root"] {
+    for name in [
+        "octet-out-of-range",
+        "unknown-root",
+        "missing-required-client-uri",
+        "missing-uri-mapping",
+    ] {
         reader_refuses::<SourceLocation>("source-location", name);
     }
 }
@@ -116,7 +128,16 @@ fn semantic_invalid_inputs_remain_reader_valid_for_later_owner_refusal() {
     for name in ["unsupported-schema", "false-complete-redacted"] {
         semantic_only::<BoundPage>("bound-page", name);
     }
-    for name in ["unsupported-schema", "noncanonical-offset"] {
+    for name in [
+        "unsupported-schema",
+        "noncanonical-offset",
+        "pathlike-client-uri",
+        "pathlike-resource-token",
+        "fragment-resource-token",
+        "mapped-null-uri",
+        "forged-uri-while-unavailable",
+        "pathlike-scope",
+    ] {
         semantic_only::<SourceLocation>("source-location", name);
     }
 }

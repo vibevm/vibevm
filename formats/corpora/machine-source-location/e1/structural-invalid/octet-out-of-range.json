@@ -12,5 +12,10 @@
     "encoding": "iso-8859-1",
     "start": "9",
     "end": "19"
+  },
+  "client_uri": "vibevm-resource:sample_1",
+  "uri_mapping": {
+    "status": "owner_declared_unverified",
+    "authorized_scope_id": "scope_1"
   }
 }
