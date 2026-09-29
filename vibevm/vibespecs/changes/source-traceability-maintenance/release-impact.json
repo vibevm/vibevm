@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "change_id": "source-traceability-maintenance",
+  "before_capture_id": "dp1-30d217bfce47bca",
+  "after_capture_id": "bootstrap-4cec12cd3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "784d972c84b86cc360dd5e3131f7f9ad1c8d905e"
+    },
+    {
+      "kind": "commit",
+      "identity": "f5393b4d057b34808ff528377eb62ef1efb5512d"
+    },
+    {
+      "kind": "commit",
+      "identity": "bb43e753f2f65ae4dfa395ce6af806cb0a2f378a"
+    },
+    {
+      "kind": "commit",
+      "identity": "af09282bb99dc5cbf5797d31ba4890921633ffb8"
+    },
+    {
+      "kind": "commit",
+      "identity": "d2153eac51046f979d8e29273f469ff178b6b737"
+    },
+    {
+      "kind": "commit",
+      "identity": "4079737a1c4c5716c39efece066f7cf2fa490554"
+    },
+    {
+      "kind": "commit",
+      "identity": "bb494af610cabcdcd5663780d636821ec68c553b"
+    },
+    {
+      "kind": "commit",
+      "identity": "49276b25a7e1c895a7f37e3e207d94477fc0c936"
+    },
+    {
+      "kind": "commit",
+      "identity": "041789ae687db26157810b1458400b8d2df792ab"
+    },
+    {
+      "kind": "commit",
+      "identity": "d4f9e7a09ef36b5f1ed5ea9f5ac522d33e05842e"
+    },
+    {
+      "kind": "commit",
+      "identity": "ceec317ebbdf1f837ca4e135ff0502caa2d78753"
+    },
+    {
+      "kind": "commit",
+      "identity": "6c2a59ef9820b12d985d39527a0c86ea817379b4"
+    },
+    {
+      "kind": "commit",
+      "identity": "c8d759bd3e7966e531106a277d86b7432b33ea7a"
+    },
+    {
+      "kind": "commit",
+      "identity": "4cec12cd358c4ee58fb0a53180e4f3d4df868fb8"
+    }
+  ],
+  "affected_paths": [
+    "BACKLOG.md",
+    "crates/vibe-cli/src/cli/run.rs",
+    "crates/vibe-cli/src/commands/application/distribution/codec.rs",
+    "crates/vibe-wire/src/behaviour/native_backend.rs",
+    "crates/vibe-wire/src/generated/application/e1/mod.rs",
+    "crates/vibe-wire/src/generated/application/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/mod.rs",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+    "crates/vibe-wire/src/generated/hello/mod.rs",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/mod.rs",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+    "crates/vibe-wire/src/generated/journal/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+    "crates/vibe-wire/src/generated/llm/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs",
+    "crates/vibe-wire/src/generated/native/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/mod.rs",
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Only source ownership markers, generator comments, index/backlog observations and an equivalent fixed-size base64 loop; no delivered user behavior change.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "No product workflow or published claim changes; metadata and deferred finding notes do not deliver proposed repairs.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "captured-bootstrap-source-identities",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-4cec12cd3-capture-check.json",
+      "verdict": "passed",
+      "sha256": "dd1dd6a4326c0995cf6d88f4a168c174f957a9629b50e8a2e9eabe59656661b4"
+    },
+    {
+      "claim_id": "reviewed-bootstrap-source-delta",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-affected-source-review.md",
+      "verdict": "passed",
+      "sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb"
+    },
+    {
+      "claim_id": "selected-bootstrap-verification-observations",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-verification-inventory.md",
+      "verdict": "passed",
+      "sha256": "ef3f847ff2cbece82cef35ac188908f518bc7d8f4c93e32e2624245d498c126b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "",
+    "review_evidence": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "scope": {
+    "before_capture_id": "dp1-30d217bfce47bca",
+    "after_capture_id": "bootstrap-4cec12cd3"
+  },
+  "tasks": [
+    {
+      "task_id": "NEXT-PREVIEW-BASE.2",
+      "change_ids": [
+        "originating-publication-ownership",
+        "preview-accounting-foundation"
+      ]
+    },
+    {
+      "task_id": "NEXT-PREVIEW-BASE.3",
+      "change_ids": [
+        "preview-accounting-foundation"
+      ]
+    }
+  ],
+  "unplanned": [
+    {
+      "contribution_id": "bootstrap-traceability-repairs",
+      "reason": "Out-of-plan source marker, equivalent base64 loop, generated comment and retained finding/index maintenance.",
+      "change_ids": [
+        "source-traceability-maintenance"
+      ]
+    },
+    {
+      "contribution_id": "bootstrap-local-retrieval-rebinding",
+      "reason": "Actual checkout relocation and reproducibility support corrections, independent of future product milestones.",
+      "change_ids": [
+        "local-source-retrieval"
+      ]
+    }
+  ]
+}

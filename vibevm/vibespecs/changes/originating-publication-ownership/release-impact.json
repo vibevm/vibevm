@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "change_id": "originating-publication-ownership",
+  "before_capture_id": "dp1-30d217bfce47bca",
+  "after_capture_id": "bootstrap-4cec12cd3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "2f01b6540bb0118c0a55497d38bf8c6a60d2865d"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-safefs/src/file/create_new.rs",
+    "crates/vibe-safefs/src/file/create_new_tests.rs",
+    "crates/vibe-safefs/src/lib.rs",
+    "crates/vibe-safefs/src/proof.rs",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-safefs:Project::publish_new_proved_in",
+      "capability_id": "originating-file-publication-ownership",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "publish_new_in returns unit; no originating-proof publication seam is declared.",
+      "after": "New public method returns EntryProof from originating stage; old publication method delegates; identical-byte replacement is refused by source identity check.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "The selected source exposes the reviewed tooling/library or operator-reproduction changes described in its scoped effects.",
+    "migration_action": "manual"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document the reviewed commands/formats/library ownership or operator setup and explicit limitations.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "captured-bootstrap-source-identities",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-4cec12cd3-capture-check.json",
+      "verdict": "passed",
+      "sha256": "dd1dd6a4326c0995cf6d88f4a168c174f957a9629b50e8a2e9eabe59656661b4"
+    },
+    {
+      "claim_id": "reviewed-bootstrap-source-delta",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-affected-source-review.md",
+      "verdict": "passed",
+      "sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb"
+    },
+    {
+      "claim_id": "selected-bootstrap-verification-observations",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-verification-inventory.md",
+      "verdict": "passed",
+      "sha256": "ef3f847ff2cbece82cef35ac188908f518bc7d8f4c93e32e2624245d498c126b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "",
+    "review_evidence": ""
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "change_id": "local-source-retrieval",
+  "before_capture_id": "dp1-30d217bfce47bca",
+  "after_capture_id": "bootstrap-4cec12cd3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "cbedec9051d6ea40d80c7c9d676a2c5748e7a63a"
+    },
+    {
+      "kind": "commit",
+      "identity": "f3270f8164dc955df384a57e52d4a1575c0c548d"
+    },
+    {
+      "kind": "commit",
+      "identity": "07edf21a13f59b6b1e4813aa6452ae45dcff4090"
+    }
+  ],
+  "affected_paths": [
+    ".gitignore",
+    "vibe.lock",
+    "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md"
+  ],
+  "effects": [
+    {
+      "interface_id": "config:vibe-lock:local-source-url",
+      "capability_id": "local-checkout-source-retrieval",
+      "kind": "changed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Local lock source_url declarations name the prior Windows checkout.",
+      "after": "Local lock source_url declarations name the Linux checkout; content_hash values remain historical claims.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ]
+    },
+    {
+      "interface_id": "repository:materialized-web-slot-ignore",
+      "capability_id": "authored-versus-materialized-source",
+      "kind": "changed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No explicit materialized web application slot ignore row.",
+      "after": "Source declares an explicit ignore for derived web application materialization; not removal of canonical package source.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ]
+    },
+    {
+      "interface_id": "documentation:jtd-codegen:linux-download",
+      "capability_id": "linux-generator-retrieval",
+      "kind": "fixed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Linux installation instructions request a tar.gz archive.",
+      "after": "Changed instructions request the published zip, unzip and executable permission; download was not executed here.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "The selected source exposes the reviewed tooling/library or operator-reproduction changes described in its scoped effects.",
+    "migration_action": "manual"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document the reviewed commands/formats/library ownership or operator setup and explicit limitations.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "captured-bootstrap-source-identities",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-4cec12cd3-capture-check.json",
+      "verdict": "passed",
+      "sha256": "dd1dd6a4326c0995cf6d88f4a168c174f957a9629b50e8a2e9eabe59656661b4"
+    },
+    {
+      "claim_id": "reviewed-bootstrap-source-delta",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-affected-source-review.md",
+      "verdict": "passed",
+      "sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb"
+    },
+    {
+      "claim_id": "selected-bootstrap-verification-observations",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-verification-inventory.md",
+      "verdict": "passed",
+      "sha256": "ef3f847ff2cbece82cef35ac188908f518bc7d8f4c93e32e2624245d498c126b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "",
+    "review_evidence": ""
+  }
+}
