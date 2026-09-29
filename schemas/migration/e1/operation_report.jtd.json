@@ -1,0 +1,301 @@
+{
+  "metadata": {
+    "description": "Epoch-1 migration effects report. Required nullable operation/operation_id represent unestablished preflight identity; omitted keys remain refused. Optional nullable evidence is unavailable when absent or null. Schema1 and coherent outcomes/effects/identities/guarantees are owner checks; errors do not imply no mutation.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "r": 2
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::operation_report"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "operation": {
+      "enum": [
+        "apply",
+        "inspect",
+        "recover"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Required nullable field: null when preflight could not establish a valid identity; omitted keys must be rejected by the existing required-nullable pass."
+      },
+      "nullable": true
+    },
+    "operation_id": {
+      "type": "string",
+      "nullable": true,
+      "metadata": {
+        "description": "Required nullable field: null when preflight could not establish a valid identity; omitted keys must be rejected by the existing required-nullable pass."
+      }
+    },
+    "outcome": {
+      "enum": [
+        "completed",
+        "no_op",
+        "pending",
+        "uncertain",
+        "refused"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "target_state": {
+      "enum": [
+        "approved_before",
+        "validated_after",
+        "absent",
+        "third_state",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "effects": {
+      "elements": {
+        "ref": "effect"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "warnings": {
+      "elements": {
+        "ref": "warning"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "residue": {
+      "elements": {
+        "ref": "residue"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "guarantees": {
+      "ref": "guarantees"
+    }
+  },
+  "optionalProperties": {
+    "intent_id": {
+      "type": "string",
+      "nullable": true,
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "before_content_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner domain-framed content identity; checked by replay.",
+        "x-default": null
+      },
+      "nullable": true
+    },
+    "after_content_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner domain-framed content identity; checked by replay.",
+        "x-default": null
+      },
+      "nullable": true
+    },
+    "diff_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner diff identity; checked by replay.",
+        "x-default": null
+      },
+      "nullable": true
+    },
+    "error": {
+      "ref": "application_error",
+      "nullable": true,
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "effect": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "store_bootstrap",
+            "barrier",
+            "before_image",
+            "journal",
+            "target_publication",
+            "target_restore"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "state": {
+          "enum": [
+            "not_started",
+            "completed",
+            "pending",
+            "uncertain"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "warning": {
+      "properties": {
+        "code": {
+          "enum": [
+            "observed_conflict",
+            "publication_uncertain",
+            "durability_reduced",
+            "durability_unconfirmed",
+            "residue_retained",
+            "metadata_scope_reduced"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "action": {
+          "enum": [
+            "inspect",
+            "retry",
+            "manual_resolution",
+            "supply_input"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "residue": {
+      "properties": {
+        "location": {
+          "enum": [
+            "store",
+            "project"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "relative_path": {
+          "type": "string"
+        },
+        "ownership": {
+          "enum": [
+            "proved",
+            "unproven"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "guarantees": {
+      "properties": {
+        "platform": {
+          "enum": [
+            "linux",
+            "macos",
+            "windows",
+            "other"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "concurrency": {
+          "enum": [
+            "participating_clients",
+            "unestablished"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "uncooperating_writers_excluded": {
+          "type": "boolean",
+          "metadata": {
+            "description": "Must be false in this protocol; boolean shape alone does not enforce the invariant."
+          }
+        },
+        "durability": {
+          "enum": [
+            "file_and_directory_synced",
+            "journal_recoverable",
+            "unconfirmed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "preservation": {
+          "enum": [
+            "bytes_and_unix_mode",
+            "bytes_only"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "barrier_binding": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "x-default": null,
+            "description": "Absent or null means no established barrier evidence; presence as a string remains owner-bound evidence."
+          }
+        }
+      }
+    },
+    "application_error": {
+      "properties": {
+        "code": {
+          "enum": [
+            "invalid_request",
+            "unsupported_schema",
+            "authority_refused",
+            "store_not_disjoint",
+            "barrier_unavailable",
+            "plan_refused",
+            "source_changed",
+            "third_state",
+            "intent_mismatch",
+            "journal_invalid",
+            "journal_io",
+            "publication_io",
+            "synchronization_failed",
+            "preservation_unavailable",
+            "recovery_ambiguous"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "field": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

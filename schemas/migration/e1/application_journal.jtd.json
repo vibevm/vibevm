@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "description": "Authoritative epoch-1 migration recovery checkpoint. Required nullable unix_mode distinguishes explicit null from omission through the existing required-nullable generation pass; actual emitted attributes and reader refusal remain to be confirmed. Schema/protocol exactly1, phases, immutable intent, identities, canonical decimals and capabilities require owner validation.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "r": 2
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::application_journal"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "protocol_revision": {
+      "type": "uint32"
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "intent_id": {
+      "type": "string"
+    },
+    "authority": {
+      "ref": "authority"
+    },
+    "project_binding": {
+      "type": "string",
+      "metadata": {
+        "description": "Safefs opaque physical project identity-token domain."
+      }
+    },
+    "store_binding": {
+      "type": "string",
+      "metadata": {
+        "description": "Safefs opaque recovery-store identity-token domain."
+      }
+    },
+    "approved_request_json": {
+      "type": "string"
+    },
+    "before_content_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner domain-framed content identity; checked by replay."
+      }
+    },
+    "after_content_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner domain-framed content identity; checked by replay."
+      }
+    },
+    "diff_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Existing planner diff identity; checked by replay."
+      }
+    },
+    "before_raw_sha256": {
+      "type": "string",
+      "metadata": {
+        "description": "Raw filesystem bytes SHA256, distinct from planner framed content identity."
+      }
+    },
+    "after_raw_sha256": {
+      "type": "string",
+      "metadata": {
+        "description": "Raw filesystem bytes SHA256, distinct from planner framed content identity."
+      }
+    },
+    "before_length": {
+      "type": "string",
+      "metadata": {
+        "description": "Canonical unsigned decimal byte length; owner checks ASCII digits/no leading zero except0 and byte identity."
+      }
+    },
+    "after_length": {
+      "type": "string",
+      "metadata": {
+        "description": "Canonical unsigned decimal byte length; owner checks ASCII digits/no leading zero except0 and byte identity."
+      }
+    },
+    "unix_mode": {
+      "type": "uint32",
+      "nullable": true
+    },
+    "phase": {
+      "enum": [
+        "prepared",
+        "publishing",
+        "published",
+        "restoring",
+        "restored"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "definitions": {
+    "authority": {
+      "properties": {
+        "project_root": {
+          "type": "string",
+          "metadata": {
+            "description": "Explicit absolute project spelling; admission and no-follow capability proof belong to the operation owner."
+          }
+        },
+        "recovery_store_root": {
+          "type": "string",
+          "metadata": {
+            "description": "Explicit absolute physically disjoint recovery store; a path is not authority."
+          }
+        },
+        "target_relative": {
+          "type": "string",
+          "metadata": {
+            "description": "Portable project-relative owned authored-file operand; the owner validates path and target authority."
+          }
+        },
+        "scope": {
+          "enum": [
+            "owned_authored_file"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}

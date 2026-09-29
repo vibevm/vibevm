@@ -1,0 +1,122 @@
+{
+  "metadata": {
+    "description": "Epoch-1 explicit single-file migration operation request. Schema exactly1, paths, caller authority, embedded strict planning JSON and replay identities require owner validation; structural decoding grants no effects.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE",
+      "r": 2
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::operation_request"
+    }
+  },
+  "discriminator": "operation",
+  "mapping": {
+    "apply": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "operation_id": {
+          "type": "string"
+        },
+        "authority": {
+          "ref": "authority"
+        },
+        "approved_request_json": {
+          "type": "string",
+          "metadata": {
+            "description": "Exact JSON text decoded by the existing guarded C2 request owner, including null-presence checks; no second planning codec."
+          }
+        },
+        "before_content_id": {
+          "type": "string",
+          "metadata": {
+            "description": "Existing planner domain-framed content identity; checked by replay."
+          }
+        },
+        "after_content_id": {
+          "type": "string",
+          "metadata": {
+            "description": "Existing planner domain-framed content identity; checked by replay."
+          }
+        },
+        "diff_id": {
+          "type": "string",
+          "metadata": {
+            "description": "Existing planner diff identity; checked by replay."
+          }
+        }
+      }
+    },
+    "inspect": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "operation_id": {
+          "type": "string"
+        },
+        "authority": {
+          "ref": "authority"
+        }
+      }
+    },
+    "recover": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "operation_id": {
+          "type": "string"
+        },
+        "authority": {
+          "ref": "authority"
+        },
+        "expected_intent_id": {
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "complete",
+            "restore"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "authority": {
+      "properties": {
+        "project_root": {
+          "type": "string",
+          "metadata": {
+            "description": "Explicit absolute project spelling; admission and no-follow capability proof belong to the operation owner."
+          }
+        },
+        "recovery_store_root": {
+          "type": "string",
+          "metadata": {
+            "description": "Explicit absolute physically disjoint recovery store; a path is not authority."
+          }
+        },
+        "target_relative": {
+          "type": "string",
+          "metadata": {
+            "description": "Portable project-relative owned authored-file operand; the owner validates path and target authority."
+          }
+        },
+        "scope": {
+          "enum": [
+            "owned_authored_file"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}
