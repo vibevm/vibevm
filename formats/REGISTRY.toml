@@ -1260,3 +1260,32 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-plan-error/e1"
 sunset = "none"
+
+# Explicit single-owned-file migration application/recovery (PROP-044).
+
+[format.migration-operation-request]
+epoch = 1
+schema = "schemas/migration/e1/operation_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-operation-request/e1"
+sunset = "none"
+
+[format.migration-operation-report]
+epoch = 1
+schema = "schemas/migration/e1/operation_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-operation-report/e1"
+sunset = "none"
+
+[format.migration-application-journal]
+epoch = 1
+schema = "schemas/migration/e1/application_journal.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-application-journal/e1"
+sunset = "none"
