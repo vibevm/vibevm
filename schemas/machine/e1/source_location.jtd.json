@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "description": "Opaque resource octets and explicit original/projected/unavailable position basis.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::source_location"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "resource_id_octets": {
+      "elements": {
+        "type": "uint8"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "captured_revision": {
+      "type": "string"
+    },
+    "location": {
+      "ref": "location"
+    }
+  },
+  "definitions": {
+    "reason": {
+      "enum": [
+        "unknown_encoding",
+        "raw_bytes_unavailable",
+        "missing_reverse_map"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "location": {
+      "discriminator": "basis",
+      "mapping": {
+        "original_bytes": {
+          "properties": {
+            "encoding": {
+              "type": "string"
+            },
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            }
+          }
+        },
+        "projected_text": {
+          "properties": {
+            "projection": {
+              "type": "string"
+            },
+            "encoding": {
+              "type": "string"
+            },
+            "start_line": {
+              "type": "string"
+            },
+            "start_column": {
+              "type": "string"
+            },
+            "end_line": {
+              "type": "string"
+            },
+            "end_column": {
+              "type": "string"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "ref": "reason"
+            }
+          }
+        }
+      }
+    }
+  }
+}

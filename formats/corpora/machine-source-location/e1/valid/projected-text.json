@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "resource_id_octets": [
+    255,
+    0,
+    47,
+    92
+  ],
+  "captured_revision": "raw-rev",
+  "location": {
+    "basis": "projected_text",
+    "projection": "markdown-r1",
+    "encoding": "utf-8",
+    "start_line": "3",
+    "start_column": "2",
+    "end_line": "3",
+    "end_column": "11"
+  }
+}

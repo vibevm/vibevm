@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "description": "Projection-local page values; cursor strings require a separate owner protocol and grant no authority.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::bound_page"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "projection_id": {
+      "type": "string"
+    },
+    "filter_id": {
+      "type": "string"
+    },
+    "authorized_scope_id": {
+      "type": "string"
+    },
+    "axis_stamps": {
+      "elements": {
+        "ref": "stamp"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "page_cursor_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "rows": {
+      "elements": {
+        "ref": "row"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "next_cursor_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "end": {
+      "ref": "page_end"
+    }
+  },
+  "definitions": {
+    "axis": {
+      "enum": [
+        "source",
+        "world",
+        "target",
+        "operation"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "stamp": {
+      "properties": {
+        "axis": {
+          "ref": "axis"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "capture": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "observation": {
+          "type": "string"
+        }
+      }
+    },
+    "child_state": {
+      "discriminator": "status",
+      "mapping": {
+        "complete": {
+          "properties": {}
+        },
+        "truncated": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        },
+        "redacted": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "row": {
+      "properties": {
+        "entity_reference_id": {
+          "type": "string"
+        },
+        "occurrence_id": {
+          "type": "string"
+        },
+        "parent_occurrence_id": {
+          "type": "string",
+          "nullable": true
+        },
+        "child_state": {
+          "ref": "child_state"
+        }
+      }
+    },
+    "incomplete_reason": {
+      "discriminator": "kind",
+      "mapping": {
+        "declared_partial": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        },
+        "composite_partial": {
+          "properties": {}
+        },
+        "cross_owner_unverified": {
+          "properties": {}
+        },
+        "missing_compatibility_claim": {
+          "properties": {}
+        }
+      }
+    },
+    "page_end": {
+      "discriminator": "status",
+      "mapping": {
+        "more": {
+          "properties": {}
+        },
+        "declared_complete": {
+          "properties": {}
+        },
+        "incomplete": {
+          "properties": {
+            "reason": {
+              "ref": "incomplete_reason"
+            }
+          }
+        }
+      }
+    }
+  }
+}
