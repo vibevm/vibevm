@@ -1,0 +1,46 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-mcp",
+    "--lib",
+    "tools::query::tests::",
+    "--",
+    "--nocapture"
+  ],
+  "environment": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "exit": 0,
+  "observed": {
+    "passed": 2,
+    "failed": 0,
+    "filtered": 84
+  },
+  "selected_cases": [
+    "tools::query::tests::malformed_advertised_arguments_refuse_before_trace_build",
+    "tools::query::tests::valid_omission_and_filters_keep_exact_defaults_without_io"
+  ],
+  "raw_log": "/tmp/vibevm-next-M16-B1-query-checks/family.log",
+  "raw_log_sha256": "6182c2f0f099d1ae496c409b3d6ab4ea39cdad97347e754d975451d555c2e551",
+  "rustfmt_check_exit": 0,
+  "rustfmt_log": "/tmp/vibevm-next-M16-B1-query-checks/rustfmt.log",
+  "rustfmt_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "source_files": [
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/query.rs",
+      "sha256": "3af3be32a8cb4194d841efc4eb7e67d0b02d744408f03251db396e760bbfc7f5",
+      "lines": 146
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/query/tests.rs",
+      "sha256": "6e4666983825c6ab6028cd1a850e5251fa4a84306d693eb3f3adc414a90cddcb",
+      "lines": 62
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "kind": "M16-B1-bounded-mcp-machine-envelope-cell",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-mcp",
+    "--lib",
+    "tools::machine_operation::tests::",
+    "--",
+    "--nocapture"
+  ],
+  "environment": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "exit": 0,
+  "passed": 3,
+  "failed": 0,
+  "filtered": 86,
+  "ignored": 0,
+  "cases": [
+    "pure_planner_envelope_matches_owner_over_real_dispatch_without_state",
+    "malformed_outer_and_embedded_optional_null_refuse_before_service",
+    "forged_owner_and_effect_are_diagnostic_not_published_as_reports"
+  ],
+  "raw_log": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/run1.log",
+  "raw_sha256": "de910644620534317c24a51e4b28a3ca4e46140e95aaaef48281cdeb9fa14043",
+  "format_check": {
+    "path": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/rustfmt-check.log",
+    "empty_log": true,
+    "exact_three_files": true
+  },
+  "files": [
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "lines": 596,
+      "sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/machine_operation.rs",
+      "lines": 367,
+      "sha256": "dbcf40ae0573da32334ce6a5b7ea71c3cf799e9eeed946e419c05d083d5e4e5f"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+      "lines": 214,
+      "sha256": "e8ae7dea6fa05b137cfbfa2f550f69dc1487c1a13aa27ab617303e3ca3a56dfa"
+    }
+  ],
+  "limitations": [
+    "only one admitted pure planner route, not general machine facade",
+    "descriptor-only extension discovery/native admission/full surface census unproven",
+    "no physical/provider/filesystem operation or complete B.1/account acceptance"
+  ]
+}

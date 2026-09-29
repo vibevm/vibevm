@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "scope": "machine-operation-mcp-raw",
+  "product_code_sha256": {
+    "crates/vibe-mcp/src/tools/machine_operation.rs": "d1434dce0002eb04c0baac3009b7609f9644aa59b03dad445b2aa2a7acb06cb3",
+    "crates/vibe-mcp/src/tools/machine_operation/tests.rs": "565d891957a0d723099d7c65dcb45031f32660f591ce4a3771135ae056fa1f59",
+    "crates/vibe-mcp/src/tools.rs": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
+  },
+  "raw_artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-diagnostic-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-diagnostic-exact.log",
+      "sha256": "1249a6d9e3efc46188311a2576f640d23b7a42ed4f7edc9d31fb942dda214f6f",
+      "bytes": 2269
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-diagnostic-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-diagnostic-fmt-check.log",
+      "sha256": "1f3228938e9b9c3aeb703e8b4d6c180d23ec07388c4d5c9d468b1dfb0a2be7ca",
+      "bytes": 1968
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-diagnostic-fmt-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-diagnostic-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/report.md",
+      "sha256": "938d9a54bbe830239d7f56c04d08a98383238845cc960a9afa69ac4ca2d9a14a",
+      "bytes": 2976
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/result.json",
+      "sha256": "4b271ac04f862c67113d20a9ea025198c0c01c969a1506f032c48f63272b08f7",
+      "bytes": 1827
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/run1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/run1.log",
+      "sha256": "de910644620534317c24a51e4b28a3ca4e46140e95aaaef48281cdeb9fa14043",
+      "bytes": 2697
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-machine-checks/rustfmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/rustfmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-machine-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-machine-review.md",
+      "sha256": "c6abd059481b2cc56191b9312d30616f055bd877c1ec2751c4ec5c4706247fb3",
+      "bytes": 3906
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-null-id-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-null-id-exact.log",
+      "sha256": "249842143da8404ffb355c22705c02f0bb11b93180e85373d217913a1f9bca9d",
+      "bytes": 2273
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-null-id-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-null-id-fmt-check.log",
+      "sha256": "89c7452329774434eb5d8dc00a01083d1ad5ed15f532f1caad793f28ae8bd4dd",
+      "bytes": 525
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-null-id-fmt-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-null-id-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-outcomes-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-outcomes-exact.log",
+      "sha256": "a5851dd4a8890a70beb9b265563b9c03a5477a6bb7028ee197520bd8ca85b028",
+      "bytes": 2265
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-outcomes-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-outcomes-fmt-check.log",
+      "sha256": "5d263da0135ea2eeee3c78848ada0029d85ce111d72415df2e2108e6808d9c69",
+      "bytes": 614
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-mcp-outcomes-fmt-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-mcp-raw/vibevm-next-M16-B1-mcp-outcomes-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "limits": "Selected finite compiler/test/review receipts only; complete machine catalogue/retained extension schema/native/adapters/final release unaccepted."
+}

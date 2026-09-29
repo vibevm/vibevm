@@ -19,6 +19,9 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 pub mod output;
 pub use output::ToolOutput;
 
+pub mod machine_operation;
+pub use machine_operation::PlanManifestMigrationEnvelopeMcpTool;
+
 pub mod migration_operation;
 pub use migration_operation::ManifestMigrationOperationMcpTool;
 
@@ -83,6 +86,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(ReadDocMcpTool),
         Box::new(PlanManifestMigrationMcpTool),
         Box::new(ManifestMigrationOperationMcpTool),
+        Box::new(PlanManifestMigrationEnvelopeMcpTool),
     ]
 }
 

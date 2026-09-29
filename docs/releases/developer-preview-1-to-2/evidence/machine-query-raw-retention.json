@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "scope": "machine-query-raw",
+  "product_code_sha256": {
+    "crates/vibe-mcp/src/tools/query.rs": "3af3be32a8cb4194d841efc4eb7e67d0b02d744408f03251db396e760bbfc7f5",
+    "crates/vibe-mcp/src/tools/query/tests.rs": "6e4666983825c6ab6028cd1a850e5251fa4a84306d693eb3f3adc414a90cddcb"
+  },
+  "raw_artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/family.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/family.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/family.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/family.log",
+      "sha256": "6182c2f0f099d1ae496c409b3d6ab4ea39cdad97347e754d975451d555c2e551",
+      "bytes": 4268
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/report.md",
+      "sha256": "e65a887a10c0eaf7e1e927794a27aedbbcdec7b8ee9ecc3f2eab441738749bde",
+      "bytes": 1299
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/result.json",
+      "sha256": "f867fb826915281dc202229a6141f5f5a5604d107348c08776b36e3aa8466aff",
+      "bytes": 1384
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/rustfmt.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/rustfmt.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-query-checks/rustfmt.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-query-raw/rustfmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "limits": "Selected finite compiler/test/review receipts only; complete machine catalogue/retained extension schema/native/adapters/final release unaccepted."
+}
