@@ -1,0 +1,23 @@
+schema = 1
+source_hash = "sha256:e6890a3fc37716416898f91b3a0da1f584a1416bd346be68a65eb46b3bd561aa"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "8a0299cd5459aa876a45c9cb520678a0a353af90dd6a7e6e9b73376a6cc61584"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "2521e3f020d555b8fa60d81932955428df3ef7b080452944741b4fc41e03f0cc"
+
+[[file]]
+path = "vibevm/vibespecs/boot/11-flow-wal-specspaces.xml"
+sha256 = "7525a8a510acb634664c80b8d73eaa6f2a0ed9f9fe72e1802a36ef07d1f1970b"
+
+[[file]]
+path = "vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml"
+sha256 = "b368c8048c522fb173d7b46b13276946535347222399e7f89ae87180a86d55be"

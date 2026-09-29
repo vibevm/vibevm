@@ -95,7 +95,7 @@
   why-human-ai-teams → org-vibevm-world--git-atomic-commits--why-human-ai-teams (org.vibevm.world/git-atomic-commits)
 -->
 
-<!-- vibe:static org.vibevm.world/git-atomic-commits — vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml -->
+<!-- vibe:static org.vibevm.world/git-atomic-commits — vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml -->
 
 <!-- vibe:begin spec://org.vibevm.world/git-atomic-commits/boot/30-flow-atomic-commits -->
 # Flow: Atomic Commits {#org-vibevm-world--git-atomic-commits--root}
@@ -164,7 +164,7 @@ Commits and a violation of the atomic rule. @status:impl/done
   approval. Same for `git push --force`. @status:impl/done
 <!-- vibe:end spec://org.vibevm.world/git-atomic-commits/boot/30-flow-atomic-commits -->
 
-<!-- vibe:static org.vibevm.world/git-attribution-policy — vibevm/vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml -->
+<!-- vibe:static org.vibevm.world/git-attribution-policy — vibevm/vibedeps/org.vibevm.world.git-attribution-policy/1.1.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml -->
 
 <!-- vibe:begin spec://org.vibevm.world/git-attribution-policy/boot/55-flow-attribution-policy -->
 # Flow: Attribution Policy {#org-vibevm-world--git-attribution-policy--root}
@@ -241,7 +241,7 @@ Per-surface checks:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
 <!-- vibe:end spec://org.vibevm.world/git-attribution-policy/boot/55-flow-attribution-policy -->
 
-<!-- vibe:static org.vibevm.world/git-autonomy — vibevm/vibedeps/org.vibevm.world.git-autonomy/1.0.0/vibevm/vibespecs/boot/32-flow-autonomy.xml -->
+<!-- vibe:static org.vibevm.world/git-autonomy — vibevm/vibedeps/org.vibevm.world.git-autonomy/1.1.0/vibevm/vibespecs/boot/32-flow-autonomy.xml -->
 
 <!-- vibe:begin spec://org.vibevm.world/git-autonomy/boot/32-flow-autonomy -->
 # Flow: Commit autonomy {#org-vibevm-world--git-autonomy--root}
@@ -278,7 +278,7 @@ Per-surface checks:
 @fact:org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
 <!-- vibe:end spec://org.vibevm.world/git-autonomy/boot/32-flow-autonomy -->
 
-<!-- vibe:static org.vibevm.world/git-conventional-commits — vibevm/vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml -->
+<!-- vibe:static org.vibevm.world/git-conventional-commits — vibevm/vibedeps/org.vibevm.world.git-conventional-commits/1.1.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml -->
 
 <!-- vibe:begin spec://org.vibevm.world/git-conventional-commits/boot/31-flow-conventional-commits -->
 # Flow: Conventional Commits {#org-vibevm-world--git-conventional-commits--root}

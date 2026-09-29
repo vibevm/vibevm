@@ -127,7 +127,7 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "core-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -161,7 +161,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -171,7 +171,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -258,7 +258,7 @@ checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
 
 [[package]]
 name = "go-ai-native-cli"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -279,7 +279,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -292,7 +292,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-conform-frontend"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-conform",
@@ -303,7 +303,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-extract-bridge"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-conform",
  "core-ai-native-specmark",
@@ -315,7 +315,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmap",
@@ -326,7 +326,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-specmap-scan"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmap",
  "core-ai-native-specmark",
@@ -336,7 +336,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-tcg"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -353,7 +353,7 @@ dependencies = [
 
 [[package]]
 name = "go-ai-native-tcg-bridge"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "go-ai-native-extract-bridge",

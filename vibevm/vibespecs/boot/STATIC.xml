@@ -525,7 +525,7 @@
   worked-mode-pointer → org-vibevm-world-%2Doperating-modes-%2Dworked-mode-pointer (org.vibevm.world/operating-modes)
   write-the-plan-to-run-cold-lead → org-vibevm-world-%2Dcampaign-plans-%2Dwrite-the-plan-to-run-cold-lead (org.vibevm.world/campaign-plans) -->
 
-<!-- vibe:c1 vibe:static org.vibevm.world/addressable-specs — vibevm/vibedeps/org.vibevm.world.addressable-specs/1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/addressable-specs — vibevm/vibedeps/org.vibevm.world.addressable-specs/1.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -588,7 +588,7 @@ invariant the reader statistically skipped.</org-vibevm-world--addressable-specs
   </org-vibevm-world--addressable-specs--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/campaign-plans — vibevm/vibedeps/org.vibevm.world.campaign-plans/1.0.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/campaign-plans — vibevm/vibedeps/org.vibevm.world.campaign-plans/1.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -672,7 +672,7 @@ the record half:
   </org-vibevm-world--campaign-plans--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/comparative-research — vibevm/vibedeps/org.vibevm.world.comparative-research/1.0.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/comparative-research — vibevm/vibedeps/org.vibevm.world.comparative-research/1.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -723,7 +723,7 @@ and hold the laws:</org-vibevm-world--comparative-research--reach-for-the-skelet
   </org-vibevm-world--comparative-research--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/conflict-protocol — vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.0.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/conflict-protocol — vibevm/vibedeps/org.vibevm.world.conflict-protocol/1.1.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -784,7 +784,7 @@ silently invent semantic behavior.</org-vibevm-world--conflict-protocol--NEVER-S
   </org-vibevm-world--conflict-protocol--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/decision-records — vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/decision-records — vibevm/vibedeps/org.vibevm.world.decision-records/1.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -870,7 +870,7 @@ hardening into dogma.</org-vibevm-world--decision-records--TRIGGER-KEEPS-IMMUNIT
   </org-vibevm-world--decision-records--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/dev-runtime-docs — vibevm/vibedeps/org.vibevm.world.dev-runtime-docs/1.0.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/dev-runtime-docs — vibevm/vibedeps/org.vibevm.world.dev-runtime-docs/1.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -895,7 +895,7 @@ exactly where the drift these files exist to prevent lives.</org-vibevm-world--d
   </org-vibevm-world--dev-runtime-docs--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/discovery-prompt — vibevm/vibedeps/org.vibevm.world.discovery-prompt/1.0.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/discovery-prompt — vibevm/vibedeps/org.vibevm.world.discovery-prompt/1.1.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -941,7 +941,7 @@ failure.</org-vibevm-world--discovery-prompt--STANCE-UNCERTAINTY-IS-DATA-NOT-FAI
   </org-vibevm-world--discovery-prompt--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/git-atomic-commits — vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/git-atomic-commits — vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1002,7 +1002,7 @@ Commits and a violation of the atomic rule.</org-vibevm-world--git-atomic-commit
   </org-vibevm-world--git-atomic-commits--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/git-attribution-policy — vibevm/vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/git-attribution-policy — vibevm/vibedeps/org.vibevm.world.git-attribution-policy/1.1.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1072,7 +1072,7 @@ Per-surface checks:
   </org-vibevm-world--git-attribution-policy--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/git-autonomy — vibevm/vibedeps/org.vibevm.world.git-autonomy/1.0.0/vibevm/vibespecs/boot/32-flow-autonomy.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/git-autonomy — vibevm/vibedeps/org.vibevm.world.git-autonomy/1.1.0/vibevm/vibespecs/boot/32-flow-autonomy.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1105,7 +1105,7 @@ Per-surface checks:
   </org-vibevm-world--git-autonomy--red-lines>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/git-conventional-commits — vibevm/vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/git-conventional-commits — vibevm/vibedeps/org.vibevm.world.git-conventional-commits/1.1.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1146,9 +1146,9 @@ the two run together.</org-vibevm-world--git-conventional-commits--ATOMICITY-IS-
   </org-vibevm-world--git-conventional-commits--format-is-not-atomicity>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/git-practices — vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/STATIC.xml; zone elided: emitted member-by-member in this lane (once-each, B-006) -->
+<!-- vibe:c1 vibe:static org.vibevm.world/git-practices — vibevm/vibedeps/org.vibevm.world.git-practices/1.1.0/vibevm/vibespecs/boot/STATIC.xml; zone elided: emitted member-by-member in this lane (once-each, B-006) -->
 
-<!-- vibe:c1 vibe:static org.vibevm.world/health-audit — vibevm/vibedeps/org.vibevm.world.health-audit/1.0.0/vibevm/vibespecs/boot/42-flow-health-audit.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/health-audit — vibevm/vibedeps/org.vibevm.world.health-audit/1.1.0/vibevm/vibespecs/boot/42-flow-health-audit.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1211,7 +1211,7 @@ the run procedure:
   </org-vibevm-world--health-audit--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/licensing — vibevm/vibedeps/org.vibevm.world.licensing/1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/licensing — vibevm/vibedeps/org.vibevm.world.licensing/1.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1270,7 +1270,7 @@ dependency on licence grounds regardless of how good it is.</org-vibevm-world--l
   </org-vibevm-world--licensing--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/managed-blocks — vibevm/vibedeps/org.vibevm.world.managed-blocks/1.0.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/managed-blocks — vibevm/vibedeps/org.vibevm.world.managed-blocks/1.1.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1311,7 +1311,7 @@ state machine, and what belongs inside the block:
   </org-vibevm-world--managed-blocks--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/manual-tests — vibevm/vibedeps/org.vibevm.world.manual-tests/1.0.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/manual-tests — vibevm/vibedeps/org.vibevm.world.manual-tests/1.1.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1368,7 +1368,7 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
   </org-vibevm-world--manual-tests--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.1.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1532,7 +1532,7 @@ Custody and handoff:
   </org-vibevm-world--multi-user-planning--canon>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/operating-modes — vibevm/vibedeps/org.vibevm.world.operating-modes/1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/operating-modes — vibevm/vibedeps/org.vibevm.world.operating-modes/1.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1603,7 +1603,7 @@ I proceed?" is the exact overhead the codeword was spoken to remove.</org-vibevm
   </org-vibevm-world--operating-modes--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/qualified-naming — vibevm/vibedeps/org.vibevm.world.qualified-naming/1.0.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/qualified-naming — vibevm/vibedeps/org.vibevm.world.qualified-naming/1.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1653,7 +1653,7 @@ shipped flat namespace is a migration; getting it right first is free.</org-vibe
   </org-vibevm-world--qualified-naming--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/secrets-hygiene — vibevm/vibedeps/org.vibevm.world.secrets-hygiene/1.0.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/secrets-hygiene — vibevm/vibedeps/org.vibevm.world.secrets-hygiene/1.1.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1731,7 +1731,7 @@ Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygien
   </org-vibevm-world--secrets-hygiene--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/source-mirrors — vibevm/vibedeps/org.vibevm.world.source-mirrors/1.0.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/source-mirrors — vibevm/vibedeps/org.vibevm.world.source-mirrors/1.1.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1785,7 +1785,7 @@ uses `--force`.</org-vibevm-world--source-mirrors--HISTORY-REACHES-A-HOST-ONLY-T
   </org-vibevm-world--source-mirrors--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/spec-genres — vibevm/vibedeps/org.vibevm.world.spec-genres/1.0.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/spec-genres — vibevm/vibedeps/org.vibevm.world.spec-genres/1.1.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1881,7 +1881,7 @@ authority to a sentence without asking anyone.</org-vibevm-world--spec-genres--G
   </org-vibevm-world--spec-genres--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/sync-from-code — vibevm/vibedeps/org.vibevm.world.sync-from-code/1.0.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/sync-from-code — vibevm/vibedeps/org.vibevm.world.sync-from-code/1.1.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1936,7 +1936,7 @@ Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-
   </org-vibevm-world--sync-from-code--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/tool-design-lessons — vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/tool-design-lessons — vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.1.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1981,7 +1981,7 @@ rationale is why it is not negotiable.</org-vibevm-world--tool-design-lessons--t
   </org-vibevm-world--tool-design-lessons--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/two-process-model — vibevm/vibedeps/org.vibevm.world.two-process-model/1.0.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/two-process-model — vibevm/vibedeps/org.vibevm.world.two-process-model/1.1.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -2046,7 +2046,7 @@ the work it is structurally good at.</org-vibevm-world--two-process-model--THE-S
   </org-vibevm-world--two-process-model--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">

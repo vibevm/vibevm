@@ -1,0 +1,47 @@
+schema = 1
+source_hash = "sha256:8c34f4050da9a54e821582c528781b5dbef5c38fb0053b3d89ef8fe238d2a7aa"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:80987a7771bcb195a1cfe987dcaa16c9d0076ffa45d67526288233371751c089"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "236708690f0e7a38be4928e5164d67eea87f84c2d925c57d50041226a5365671"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "cdac4e40616f929447b154b3a0ed2c7e804dfc6c945bbd0216aa549d78531c66"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/55-flow-attribution-policy.xml"
+sha256 = "0c200d1b3dad5d20e8163a920f34073aa71923d22b45a83d26844bc7aafedc62"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/55-flow-attribution-policy.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml"
+sha256 = "269edc93078cfeefcdfb9cc1f13984bd935f304537b60dd71656ee1ab0a6c10d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml"
+sha256 = "cc2d89470d2e5b314675c57ec5eaced971d240c48ba04cc0067d5d46095da0e0"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml"
+sha256 = "5599fd61d9f6b467e498cfbfa21716fb4c60318fcd69d3f7de5a9aa0e99b9420"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml"

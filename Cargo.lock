@@ -697,7 +697,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -710,7 +710,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -729,7 +729,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -739,7 +739,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "proc-macro2",
  "syn 2.0.117",
@@ -2619,7 +2619,7 @@ dependencies = [
 
 [[package]]
 name = "progress-core"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -3300,7 +3300,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-cli"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -3315,7 +3315,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -3326,7 +3326,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform-frontend"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-conform",
  "core-ai-native-specmark",
@@ -3337,14 +3337,14 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-env-audit"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
 ]
 
 [[package]]
 name = "rust-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -4391,7 +4391,7 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "vibe-actions"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -4402,7 +4402,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-agent-projection"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -4422,7 +4422,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-check"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -4441,7 +4441,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-cli"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "arboard",
@@ -4515,7 +4515,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-core"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -4533,7 +4533,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-doc"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "chrono",
  "core-ai-native-specmark",
@@ -4557,7 +4557,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-doc-server"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "axum",
  "chrono",
@@ -4574,7 +4574,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-doc-shell"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "base64",
  "core-ai-native-specmark",
@@ -4590,7 +4590,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-ext"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde_json",
@@ -4599,7 +4599,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-extension-registry"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "glob",
@@ -4611,7 +4611,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-facts"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "progress-core",
@@ -4627,7 +4627,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-graph"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "indexmap",
@@ -4638,7 +4638,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-index"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "assert_cmd",
  "axum",
@@ -4669,7 +4669,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-install"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "semver",
@@ -4689,7 +4689,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-lifecycle"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "getrandom 0.3.4",
@@ -4717,7 +4717,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-llm"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "reqwest 0.12.28",
@@ -4730,7 +4730,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-mcp"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -4760,7 +4760,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-native-loader"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "libloading 0.9.0",
@@ -4823,7 +4823,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-orchestrator"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -4850,7 +4850,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-package-source"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -4866,7 +4866,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-publish"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -4891,7 +4891,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-registry"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -4913,7 +4913,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-requirements"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "progress-core",
@@ -4930,7 +4930,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-resolver"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "proptest",
@@ -4948,7 +4948,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-safefs"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "cap-fs-ext",
@@ -4965,7 +4965,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-scrape"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "cap-fs-ext",
@@ -4992,7 +4992,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-settings"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -5004,7 +5004,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-spec"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "base64",
  "core-ai-native-specmark",
@@ -5024,7 +5024,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-specdoc"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "progress-core",
@@ -5034,7 +5034,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-test-support"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "assert_cmd",
  "tempfile",
@@ -5044,7 +5044,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-trace"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmap",
@@ -5064,7 +5064,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-wire"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "chrono",
  "core-ai-native-specmark",
@@ -5079,7 +5079,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-workspace"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "glob",
@@ -5857,7 +5857,7 @@ checksum = "ea6fc2961e4ef194dcbfe56bb845534d0dc8098940c7e5c012a258bfec6701bd"
 
 [[package]]
 name = "xtask"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",

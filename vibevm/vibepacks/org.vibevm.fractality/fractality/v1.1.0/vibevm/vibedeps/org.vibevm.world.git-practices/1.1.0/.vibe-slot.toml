@@ -1,0 +1,15 @@
+schema = 1
+source_hash = "sha256:1fd85fa07effc922cae2deeb171cd8400559553ff1de4e56614c469599c6727a"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+
+[[file]]
+path = "README.md"
+sha256 = "50a72bd6e62888a61a5d14d336cc58e4598809b26930672f05666ab5b7a829d8"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "be3ad4d7fdc98d261824ae4475152311ce9b78896229b76c7f35f45c4769cd4e"

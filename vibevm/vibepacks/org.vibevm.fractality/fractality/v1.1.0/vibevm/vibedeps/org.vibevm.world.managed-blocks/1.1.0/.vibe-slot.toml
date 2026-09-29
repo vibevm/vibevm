@@ -1,0 +1,31 @@
+schema = 1
+source_hash = "sha256:62bc674f084a24f5dd49ca6b403675aa69f062bdace0691439f666eba278298c"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "a22f1c24001e5df53a0386a8bce0ea89f23a1b22bebc792dc00db1ec837e8552"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "408da77f89793bb9eb39ab067076afddd71734c45c1fab687129aaa4f3938163"
+
+[[file]]
+path = "vibevm/vibespecs/boot/65-flow-managed-blocks.xml"
+sha256 = "3479fda737707e6187989795befdc1b5d7a4cd5c86c55cd6dce849d3f78859de"
+
+[[file]]
+path = "vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
+sha256 = "d46f28129f9bdb572f92ca3d2bd21908aa27a47b187ee1c87bc68ebf57f5b29f"
+
+[[file]]
+path = "vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml"
+sha256 = "255a5dbfb0f627eaec45a7f48583a917cc406b46e36caa96f76383c32f315a93"
+
+[[file]]
+path = "vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml"
+sha256 = "ecab85f99ecde887cca0e22e71325f65cc6d6217c76a1af62f292e5df4e49353"
