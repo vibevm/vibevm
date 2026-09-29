@@ -152,6 +152,8 @@ pub struct Surface {
 
     pub reason: String,
 
+    pub registered: bool,
+
     pub retention: String,
 
     pub schema_ref: String,

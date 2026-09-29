@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "inventory_id": "shape-only mapped coverage",
+  "baseline_capture_id": "shape-only baseline",
+  "observation_capture_id": "shape-only observation",
+  "sources": [
+    {
+      "source_id": "source:shape-fixture",
+      "path": "src/shape_fixture.rs",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "surfaces": [
+    {
+      "surface_id": "surface:fixture-group",
+      "kind": "cli",
+      "name": "fixture-group",
+      "aliases": [],
+      "owner": "shape-only owner",
+      "target": "shape-only target",
+      "effects": [],
+      "authority": "source declaration only",
+      "carrier": "unbound",
+      "schema_ref": "urn:example:shape-only-schema",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "not runtime inspected",
+      "retention": "fixture data",
+      "conformance_cases": [],
+      "source_ids": [
+        "source:shape-fixture"
+      ],
+      "disposition": "group",
+      "reason": "Grouping shape only; no callable semantic operation is claimed.",
+      "registered": "true"
+    },
+    {
+      "surface_id": "surface:fixture-read",
+      "kind": "cli",
+      "name": "fixture-read",
+      "aliases": [
+        "fixture-inspect"
+      ],
+      "owner": "shape-only owner",
+      "target": "shape-only subject",
+      "effects": [
+        "declared-read"
+      ],
+      "authority": "source declaration only",
+      "carrier": "unbound",
+      "schema_ref": "urn:example:shape-only-schema",
+      "implementation": "planned",
+      "external_access": "unimplemented",
+      "completeness": "planned shape, not implemented API",
+      "retention": "fixture data",
+      "conformance_cases": [
+        "planned:fixture-read"
+      ],
+      "source_ids": [
+        "source:shape-fixture"
+      ],
+      "disposition": "operation",
+      "reason": "Positional mapping shape only; conformance label is not executed evidence.",
+      "parent_surface_id": "surface:fixture-group",
+      "operation_id": "operation:fixture-read",
+      "registered": true
+    }
+  ],
+  "models": [
+    {
+      "model_id": "model:fixture",
+      "name": "shape-only model",
+      "owner": "shape-only owner",
+      "carrier": "unbound",
+      "schema_ref": "urn:example:shape-only-schema",
+      "target": "shape-only subject",
+      "effects": [],
+      "authority": "source declaration only",
+      "completeness": "implementation gap",
+      "retention": "fixture data",
+      "source_ids": [
+        "source:shape-fixture"
+      ],
+      "conformance_cases": [],
+      "implementation": "gap",
+      "external_access": "legacy"
+    }
+  ],
+  "planned_families": [
+    {
+      "family_id": "family:fixture",
+      "name": "shape-only future family",
+      "owner": "shape-only owner",
+      "reason": "Retains a planned family without claiming coverage or implementation.",
+      "source_ids": [
+        "source:shape-fixture"
+      ]
+    }
+  ]
+}
