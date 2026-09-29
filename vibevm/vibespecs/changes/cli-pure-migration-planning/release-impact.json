@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "change_id": "cli-pure-migration-planning",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "ecf03ddce836130bbeae66df112caab894c75f3e"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/command_progress.rs",
+    "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+    "crates/vibe-cli/src/commands/refactor/mod.rs",
+    "crates/vibe-cli/src/main.rs",
+    "crates/vibe-cli/tests/migration_plan.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "cli:vibe:refactor:plan-migration",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Refactor declared only three conversion variants; no pre-initialization JSON planning leaf.",
+      "after": "Nested plan-migration stdin/literal entry emits one exact registered JSON root with existing exit categories before config/tracing/VVM/context/registry; source/runtime proof is bounded GNU/Linux.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Actual scoped source/API/codec/reader/transport effect; no automatic apply, product bump or distribution grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Final developer/guide documentation for the scoped positive interface remains due; no complete documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "ecf03ddce836130bbeae66df112caab894c75f3e",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "ecf03ddce836130bbeae66df112caab894c75f3e",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}

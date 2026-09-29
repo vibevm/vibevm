@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "change_id": "strict-migration-transport-source",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "b47093da9b28d77230af2d8ccbec50fc11caa96c"
+    },
+    {
+      "kind": "commit",
+      "identity": "682c16aa7bb13211c827f5db8488f8630e47d224"
+    },
+    {
+      "kind": "commit",
+      "identity": "7012d485eca631cc42421fde134387553c741e29"
+    },
+    {
+      "kind": "commit",
+      "identity": "804e5c3212caaec3195c61370eb2fca297a9ca39"
+    },
+    {
+      "kind": "commit",
+      "identity": "e7239e444c256db65bdc141fdb7a22d53a51390a"
+    },
+    {
+      "kind": "commit",
+      "identity": "2e028a18e3df2b645f4b13418e648e79452c4d30"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+    "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:manifest:strict-migration-transport",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Source law lacked the explicit strict text-only transport and generic typed-preflight extension.",
+      "after": "Source contracts require strict registered roots, explicit presence/stage/code/epoch/offset semantics, context-free CLI/MCP entry and generic preflight carriage; old MCP scope is historical.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Actual scoped source/API/codec/reader/transport effect; no automatic apply, product bump or distribution grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Final developer/guide documentation for the scoped positive interface remains due; no complete documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "2e028a18e3df2b645f4b13418e648e79452c4d30",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2e028a18e3df2b645f4b13418e648e79452c4d30",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}

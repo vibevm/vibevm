@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "change_id": "migration-generated-provenance-copy",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "ccddf879b6f030e2ac959a076af66489107d3e0e"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Six canonical copied generated source-home comments only; no executable declaration/body or codec meaning changes."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Copied internal provenance comments do not change a user guide or workflow; generator/type guidance is accounted separately."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "ccddf879b6f030e2ac959a076af66489107d3e0e",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "ccddf879b6f030e2ac959a076af66489107d3e0e",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}
