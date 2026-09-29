@@ -100,7 +100,9 @@
         "crates/vibe-cli/src/cli.rs",
         "crates/vibe-cli/src/exit_code.rs",
         "crates/vibe-mcp/src/tools.rs",
-        "crates/vibe-mcp/src/context.rs"
+        "crates/vibe-mcp/src/context.rs",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+        "crates/vibe-cli/tests/migration_plan.rs"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -126,7 +128,9 @@
         "xtask/src/codegen/shared_module.rs",
         "xtask/src/codegen/shared_module/tests.rs",
         "crates/vibe-cli/src/main.rs",
-        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+        "crates/vibe-cli/tests/migration_plan.rs"
       ],
       "steps": [
         "Register migration request/report/error schemas, exact source/target epochs, diff/preconditions and typed input questions.",
@@ -166,7 +170,8 @@
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "Bounded prerequisites before schema emission: repair only the three verified owned-slot references in codegen layout/typescript/diagnostic paths from removed1.0 to active1.1; no product increment, epoch change or publication authority follows.",
         "Strict shared DTO prerequisites: derive shared-fragment policy from the existing format registry effective unknown_fields policy, exactly as consumer generation does; retain mixed-policy refusal. Change only shared_module.rs and its targeted test owner, without a second registry parser or general generator redesign.",
-        "Text-only CLI planning may add one early main.rs dispatch before configuration/tracing/context/registry startup. The pure plan surface may read supplied JSON stdin/literal and write its structured response, but cannot discover arbitrary paths, initialize state or invoke providers. Permanent transport/source law belongs to PROP-044 before implementation."
+        "Text-only CLI planning may add one early main.rs dispatch before configuration/tracing/context/registry startup. The pure plan surface may read supplied JSON stdin/literal and write its structured response, but cannot discover arbitrary paths, initialize state or invoke providers. Permanent transport/source law belongs to PROP-044 before implementation.",
+        "Structured preflight transport uses the existing ToolError channel with an optional typed report carried to structuredContent; it must not pretend the planner executed. Source ownership belongs to PROP-015 before dispatcher/type changes. Real CLI binary integration tests live at the exact migration_plan.rs test owner and use isolated child-process homes, not a global environment change."
       ]
     }
   ]
