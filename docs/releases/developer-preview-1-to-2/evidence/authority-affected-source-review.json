@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "review_id": "machine authority finite source review candidate",
+  "before_capture_id": "authority-baseline-e95aa1c36",
+  "after_capture_id": "authority-after-fe0e04eba",
+  "source_record": "evidence/authority-source-review.md",
+  "source_record_sha256": "848cad49e7323f9d7eabbb15ba1163d46de20d4c54430d6416d20e6e2eacd01a",
+  "paths": [
+    {
+      "path": "docs/machine-api/README.md",
+      "interface_ids": [
+        "docs:machine-api:authority-map",
+        "tool:authority-map-check"
+      ],
+      "after": {
+        "git_blob_sha1": "eae65be215aac97e75fca601ec6366a62b09626f",
+        "sha256": "0c05f6df710ff6ddea29393df13d1ef77950b947aebdb104f3d34a4e69087824"
+      }
+    },
+    {
+      "path": "docs/machine-api/authority-map.md",
+      "interface_ids": [
+        "docs:machine-api:authority-map"
+      ],
+      "after": {
+        "git_blob_sha1": "bfd179b58606e0e603827e3cd2ad506bdb4784d2",
+        "sha256": "62bd8a2e9a8c67fae4c9b77599e46dcbaf4d0a64bb9e5f9b55a265a14505ebd7"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "5645fe7cbf1a17c80c584810d5483368dd3fd91b",
+        "sha256": "92638134f3a4cfd02d596ccdb641347ef668ca608f5f746aaac7d78a2b045e83"
+      },
+      "after": {
+        "git_blob_sha1": "9b15f86379ce3bc2c8f6986a663b762ab78a5179",
+        "sha256": "7997937d270a25857b9ee0dd18358088196bf73c5928363feaf838dac061e6ce"
+      },
+      "user_no_impact_reason": "Only regenerates native source traceability index entries for source laws and the checker marker; no command handler, public operation, format or runtime effect changes.",
+      "documentation_no_impact_reason": "Index metadata does not deliver a guide, change a documented user workflow or establish conformance; authority guidance files are accounted separately in foundation."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "interface_ids": [
+        "docs:machine-api:authority-map",
+        "spec:PROP-080:domain-authority",
+        "tool:authority-map-check"
+      ],
+      "before": {
+        "git_blob_sha1": "63b80509239f062d14eb02f7d53a25caef711f9a",
+        "sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d"
+      },
+      "after": {
+        "git_blob_sha1": "dd42c50583545e40d661fba7b782a8ba314c3dbb",
+        "sha256": "32a88dc9a49dd027ed9ef7e2a73018f21a776e9890ff1f3ae969924f543689a2"
+      }
+    },
+    {
+      "path": "xtask/src/bin/authority-map-check/main.rs",
+      "interface_ids": [
+        "tool:authority-map-check"
+      ],
+      "after": {
+        "git_blob_sha1": "6742b56c42edfabc969d08f94eae709a6c019b58",
+        "sha256": "f92a221abf02ba65fd4824c7346eaf498a30cc9e1b0949193821f1f705cbfd86"
+      }
+    },
+    {
+      "path": "xtask/src/bin/authority-map-check/tests.rs",
+      "interface_ids": [
+        "tool:authority-map-check"
+      ],
+      "after": {
+        "git_blob_sha1": "8e145c97295f495e4b5009d0d8133638760635b1",
+        "sha256": "e78c61a43ea6b469a0220c3e9824469448e0d08ad5128d1814435702e5409319"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "spec:PROP-080:domain-authority",
+      "capability_id": "machine-authority-design",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Inventory and registration source obligations only; these six future architecture laws are absent at the selected baseline.",
+      "after": "Six future domain authority, observability/ETO, semantic/debug epoch, independent-axis, transport-owner seam and finite authority-map laws; no implemented runtime facade or acceptance claim.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#VIEW-CONTRACT-EPOCHS",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVATION-AXES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#TRANSPORT-OWNER-SEAMS",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
+      ],
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "topic_ids": [
+        "machine-authority-design"
+      ]
+    },
+    {
+      "interface_id": "tool:authority-map-check",
+      "capability_id": "authority-map-reference-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Standalone authority-map-check developer binary absent at the selected baseline.",
+      "after": "Read-only generated Coverage reader plus pure validator and canonical Markdown AST joins for the retained 21 models, 15 planned families and proposed conformance references; no live source, semantic, runtime or authorization acceptance.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
+      ],
+      "source_paths": [
+        "docs/machine-api/README.md",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "xtask/src/bin/authority-map-check/main.rs",
+        "xtask/src/bin/authority-map-check/tests.rs"
+      ],
+      "topic_ids": [
+        "authority-map-reference-consistency"
+      ]
+    },
+    {
+      "interface_id": "docs:machine-api:authority-map",
+      "capability_id": "domain-authority-guidance",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer",
+      "platform": "source-declared; bounded GNU/Linux proof, no all-platform runtime claim",
+      "before": "Machine API authority-map design and checker README absent at the selected baseline.",
+      "after": "Retained owner/input/projection/extraction-gap design for 21 models and 15 planned families, 36 PROPOSED UNRUN obligations and README finite-check grammar; no claim that proposed domain conformance or documentation completion has passed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#VIEW-CONTRACT-EPOCHS"
+      ],
+      "source_paths": [
+        "docs/machine-api/README.md",
+        "docs/machine-api/authority-map.md",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "topic_ids": [
+        "domain-authority-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "machine-authority-design",
+      "obligation": "CANDIDATE DRAFT OBLIGATION: document machine-authority-design from independently reviewed source facts with explicit proposed/unrun and source-only limitations; canonical page/build/link/example/runtime evidence remains unbound."
+    },
+    {
+      "topic_id": "authority-map-reference-consistency",
+      "obligation": "CANDIDATE DRAFT OBLIGATION: document authority-map-reference-consistency from independently reviewed source facts with explicit proposed/unrun and source-only limitations; canonical page/build/link/example/runtime evidence remains unbound."
+    },
+    {
+      "topic_id": "domain-authority-guidance",
+      "obligation": "CANDIDATE DRAFT OBLIGATION: document domain-authority-guidance from independently reviewed source facts with explicit proposed/unrun and source-only limitations; canonical page/build/link/example/runtime evidence remains unbound."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "2c680f587ec25ce40959251b965d9e2692c0f6748b4e718bd933f4c3c89d38b4",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "git_blob_sha1": "dd42c50583545e40d661fba7b782a8ba314c3dbb",
+          "sha256": "32a88dc9a49dd027ed9ef7e2a73018f21a776e9890ff1f3ae969924f543689a2"
+        }
+      ]
+    }
+  ]
+}
