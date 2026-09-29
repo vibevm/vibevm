@@ -501,14 +501,15 @@ mod tests {
         let outside = temp.path().join("outside");
         fs::create_dir_all(&outside).unwrap();
         symlink(&outside, store.mirror_dir()).unwrap();
-        let error = prepare_from_mirror(
+        let error = match prepare_from_mirror(
             &store,
             "https://invalid.example/repo",
             &model::Selector::Latest,
             &Progress::default(),
-        )
-        .unwrap_err()
-        .to_string();
+        ) {
+            Ok(_) => panic!("linked managed mirror was unexpectedly admitted"),
+            Err(error) => error.to_string(),
+        };
         assert!(error.contains("symlink or reparse point"), "{error}");
         assert!(fs::read_dir(outside).unwrap().next().is_none());
     }
