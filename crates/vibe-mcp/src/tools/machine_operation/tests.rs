@@ -6,6 +6,8 @@ use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
 };
+use vibe_wire::generated::migration::e1::plan_report::PlanReport;
+use vibe_workspace::migration_planning::validate_report_for_request;
 
 fn snapshot(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
     fn walk(root: &Path, path: &Path, out: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
@@ -26,6 +28,9 @@ fn snapshot(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
 }
 fn context(root: &Path) -> ServerContext {
     ServerContext::with_store_root(root.join("absent-project"), root.join("absent-store"))
+}
+fn admitted_service() -> MachineOperationService {
+    MachineOperationService::pure_text_planner(PurePlannerAdmission::Admitted).unwrap()
 }
 fn input(inner: Value) -> Value {
     json!({"schema":1,"operation_id":OPERATION,"domain_owner":OPERATION,
@@ -180,6 +185,7 @@ fn malformed_outer_and_embedded_optional_null_refuse_before_service() {
     r = 1
 )]
 fn forged_owner_and_effect_are_diagnostic_not_published_as_reports() {
+    let service = admitted_service();
     let request = decode_migration_request(request()).unwrap();
     let MigrationPlanningResponse::Report(report) =
         vibe_workspace::migration_planning::plan_migration_request(request.clone())
@@ -193,7 +199,11 @@ fn forged_owner_and_effect_are_diagnostic_not_published_as_reports() {
         completeness: BodyResultCompleteness::Complete,
         provenance_id: None,
     })));
-    assert!(validate_output(&valid, Some(&request)).is_ok());
+    assert!(
+        service
+            .validate_pure_planner_publication(Some(&request), valid.clone())
+            .is_ok()
+    );
     let mut foreign = valid.clone();
     foreign.domain_owner = Some("rust:foreign:owner".to_owned());
     let mut effect = valid;
@@ -202,8 +212,19 @@ fn forged_owner_and_effect_are_diagnostic_not_published_as_reports() {
     };
     row.effect_state = BodyResultEffectState::Completed;
     for forged in [foreign, effect] {
-        assert!(validate_output(&forged, Some(&request)).is_err());
-        let output = publish(forged, &request, false, "forged data must not publish").unwrap();
+        assert!(
+            service
+                .validate_pure_planner_publication(Some(&request), forged.clone())
+                .is_err()
+        );
+        let output = publish(
+            &service,
+            forged,
+            &request,
+            false,
+            "forged data must not publish",
+        )
+        .unwrap();
         assert!(output.is_error());
         assert!(
             !output.has_structured(),
@@ -333,6 +354,7 @@ fn input_arm_unknown_field_and_missing_nullable_refuse_over_dispatch() {
     r = 1
 )]
 fn malformed_result_and_unowned_event_remain_diagnostic_only() {
+    let service = admitted_service();
     let request = decode_migration_request(request()).unwrap();
     let bad_result = envelope(Body::Result(Box::new(BodyResult {
         format_id: Some(REPORT.to_owned()),
@@ -350,7 +372,7 @@ fn malformed_result_and_unowned_event_remain_diagnostic_only() {
         (bad_result, "{invalid-domain-json"),
         (event, "\"stage\":\"event\""),
     ] {
-        let output = publish(untrusted, &request, false, "must not publish").unwrap();
+        let output = publish(&service, untrusted, &request, false, "must not publish").unwrap();
         assert!(output.is_error());
         assert!(!output.has_structured());
         assert!(output.text().contains("UNVALIDATED"));
