@@ -88184,7 +88184,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:e34ec51aa86dc02f6c831547943c17ea81e922c0991af14617768400a0134e16",
+      "content_hash": "sha256:a56de1e3ad387059dde434d26b7be15d667d402ef4b4ba516f295351ff93e064",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -88289,6 +88289,189 @@
       "heading": "Retain a finite authority map joining every inventoried semantic model and planned family to existing sources, domain owners, extraction gaps and proposed conformance obligations. Mechanically reject missing or duplicate identities, unknown references and mismatched owner or source bindings. Temporary implementation task routing is separate from permanent domain semantics. A successful map check proves these finite joins only; independent semantic review and later executed domain conformance are still required. @status:spec/plan",
       "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
+    },
+    {
+      "anchor": "machine-operation-contracts",
+      "content_hash": "sha256:95d51c10e9f0db878d9061ec1614e248770077854921d095c51a9293cea287f6",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Desired strict operation and capability contracts",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#machine-operation-contracts"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-REGISTRY",
+      "content_hash": "sha256:0c95e85dd6c3b539027a6765805a0357d8e06269e240c056282ea03c0cf6e540",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "One owned descriptor registry",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-registry",
+      "content_hash": "sha256:f471ed39d242bfdbd56f45644d54155a8bda0b989749b56513e8e44c48af3f42",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-registry"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-REGISTRY-LAW",
+      "content_hash": "sha256:db109b89122db5bacde232fa9f1a728c7088d4567afb1d29e6899c0c93655455",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "The ordinary owned-format registry binds each public operation and semantic model to a unique namespaced identity, domain owner, source/coverage identity, registered schema and format epoch. Duplicate IDs, aliases with ambiguous owners, unknown schema references and unsupported epochs refuse. Every inventoried domain has an explicit descriptor or an identified extraction gap; a gap is not an implemented callable handler. Registry rows are discovery data, never file, process, provider or user authority. @status:spec/plan",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY-LAW"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-STATE",
+      "content_hash": "sha256:b1e5ad4cc9c88a34652da34aefef395bf075c12b128b8e13621760cd96f4d58c",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Separate implementation, availability and admission",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-state",
+      "content_hash": "sha256:fe2c92fc78a41501d0f1eaf471a968cc46f9bc57092a272be72c2012cc362711",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-state"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-STATE-LAW",
+      "content_hash": "sha256:3f5894212fc5204c65d3be3bc80a2a0d0b050c150489614b126883f134bb6d23",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A descriptor reports implementation status, contextual availability and authorization independently. A missing domain service or unvalidated schema remains an implementation gap even in an otherwise supported context. An implemented but unavailable service does not become unsupported or silently callable; an available service without an admitted grant has no effect authority. A registered descriptor, schema match or transport name alone proves none of these states. @status:spec/plan",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE-LAW"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-ENVELOPE",
+      "content_hash": "sha256:83880e15a505b5c0513f8167bc23108a5c17b3e056b2a98127c4ffa25c6f89a1",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Typed lifecycle-independent values",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-envelope",
+      "content_hash": "sha256:2376983c36cb60bfb051addb4341cc5315ca19df0cc891e5666591c01cf4d4ea",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-envelope"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-ENVELOPE-LAW",
+      "content_hash": "sha256:780333e4f10972025c90ff068653694afde12fd54fcefc5887e77f1edb561d25",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Registered, versioned contracts own prepared, input, admission, result, error and event values, including explicit operation/model/schema identities and unavailable or uncertain evidence where applicable. These are value and observation boundaries, not a new lifecycle phase sequence. A result, error or event retains its actual domain owner, effect state, provenance and completeness; absent data never implies completed execution. Private pointers, unvalidated provider values and Rust ABI are not public wire contracts. @status:spec/plan",
+      "line": 29,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE-LAW"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-VALIDATION",
+      "content_hash": "sha256:8b9ad787e6499a4095df54f282546cbdfa013e477e42ab9afc94723d91ac695e",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Strict admission and publication",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-validation",
+      "content_hash": "sha256:7435857ee8e45433d3dc4f4a11f336fc6dd651cafbe08fb70a4aceafcd290b9b",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-validation"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-VALIDATION-LAW",
+      "content_hash": "sha256:054b1190278fddd8524d516dd4cadfd1da4b1ebeca5e86a69b99b2aedfa86bde",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Use the registered generated reader and owning semantic validator before dispatch. Reject unknown fields, wrong optional types, unsupported epochs, missing required or required-nullable evidence, and values outside declared bounds instead of choosing a default or dropping a filter. A public adapter that advertises a restrictive input schema enforces that schema before invoking its tool, including existing adapters routed through this contract. Validate result, error and event shapes and owner/effect semantics before publication; validation failure retains original uncertain evidence through the owning error channel, never a fabricated normal success. @status:spec/plan",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION-LAW"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-SERVICE",
+      "content_hash": "sha256:d9c3eea2ecf7c84d6dfb8f9815b4376a12f4968b8c0661a61b7fdbfd9caa7893",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Shared domain delegation",
+      "line": 35,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-service",
+      "content_hash": "sha256:179aa9406b8bacedfb44b684ac62238bcd335a4c5009a29fe619699b05098ec8",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-service"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-SERVICE-LAW",
+      "content_hash": "sha256:bd6fd3d7f717ee12ce5d81e12ac7673a900708bbe9989afa2c8e90c1a3d3c3b0",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "One surface-neutral application service composes registered operations and delegates planning, effect admission, execution, inspection and recovery to their existing domain owners. Library and transport adapters preserve the same validated domain request/result/error identity and owner authorization. The facade offers no arbitrary eval or generic shell endpoint. Existing declared script, binary and native handlers remain possible only through their owning domain admission and explicit authority. A transport cannot manufacture a grant, infer execution from a callback, duplicate a domain engine or install a second parser/graph/scheduler. A missing service remains a visible gap; no stub is advertised as a working operation. @status:spec/plan",
+      "line": 37,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE-LAW"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-DISCOVERY",
+      "content_hash": "sha256:733e530f54f545000bea6555b2d7a8c4bd70f82cbfcd316718460fd0e705aaee",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Retained descriptor-only discovery",
+      "line": 39,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-operation-discovery",
+      "content_hash": "sha256:e906eb0d58b3c204f940d35db1880d724b7f2fcb5f9e35a507ab41e1dab0dec4",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-discovery"
+    },
+    {
+      "anchor": "MACHINE-OPERATION-DISCOVERY-LAW",
+      "content_hash": "sha256:1f0cc8cfe07e3440026823819b8f4994198bd10c9647827ecbff20958e16e41e",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Discovery reads retained, validated descriptor and schema identities from their owning source, including extension declarations, without invoking a handler, loading a native library, starting a provider or fetching/building a schema. Unknown, absent or unvalidated contributed schema remains unavailable with a reason. Retained metadata cannot promote an extension to an executable or authorized service; its later owner must separately prove that path. @status:spec/plan",
+      "line": 41,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY-LAW"
     },
     {
       "anchor": "root",
