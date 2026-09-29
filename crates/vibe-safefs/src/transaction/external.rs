@@ -41,6 +41,48 @@ pub struct ExternalDirectory {
 }
 
 impl ExternalStore {
+    /// Open an explicitly selected existing store without creating any entry.
+    /// None means an absent component; unsafe/non-directory/overlapping paths
+    /// and unavailable I/O remain errors, never an implicit create fallback.
+    pub fn open_existing_disjoint(path: &Path, project: &Project) -> Result<Option<Self>> {
+        let (anchor, components) = absolute_parts(path)?;
+        if components.is_empty() {
+            bail!("external store must not be a filesystem anchor");
+        }
+        let project_identity = project.root_identity()?;
+        let mut current = open_anchor(&anchor)?;
+        let mut ancestors = vec![current.identity()?];
+        for component in components {
+            match current.open_child_checked(&component)? {
+                Some(child) => {
+                    current = child;
+                    ancestors.push(current.identity()?);
+                }
+                None => {
+                    if ancestors.contains(&project_identity) {
+                        bail!("existing external store selection is inside the project");
+                    }
+                    return Ok(None);
+                }
+            }
+        }
+        let store = Self {
+            root: current,
+            ancestor_identities: ancestors,
+            bootstrap_syncs: Vec::new(),
+        };
+        store.prove_disjoint_from(project)?;
+        Ok(Some(store))
+    }
+
+    /// Opaque physical identity, independent of the selected pathname spelling.
+    pub fn identity_token(&self) -> Result<String> {
+        Ok(identity_token(
+            b"vibe-safefs-external-store-identity-e1\0",
+            self.root.identity()?,
+        ))
+    }
+
     /// Open or create an explicit absolute store path one no-follow component
     /// at a time.  A raced creator is reopened no-follow; a link, junction,
     /// file or special entry refuses.
@@ -186,15 +228,21 @@ impl ExternalStore {
     /// store.  The arbitrary project key is hashed into a portable filename;
     /// raw project paths and raw OS identity numbers never enter that name.
     pub fn open_and_lock_project(&self, project_key: &str) -> Result<ExternalProjectLock> {
-        if project_key.is_empty() {
-            bail!("project key must not be empty");
-        }
+        let name = external_lock_name(project_key)?;
         let (locks, _, _) = ensure_external_child_durable(&self.root, "locks")?;
-        let mut digest = Sha256::new();
-        digest.update(b"vibe-safefs-external-lock-e1\0");
-        digest.update(project_key.as_bytes());
-        let name = format!("{:x}.lock", digest.finalize());
-        acquire_external_lock(&locks, &name)
+        acquire_external_lock(&locks, &name, true)?
+            .context("create-enabled external lock open unexpectedly returned absence")
+    }
+
+    /// Acquire only an existing named barrier; creates neither locks/ nor file.
+    /// Contention blocks as in open_and_lock_project. None is actual absence;
+    /// no-follow, single-link, unavailable and name/handle failures remain errors.
+    pub fn lock_existing_project(&self, project_key: &str) -> Result<Option<ExternalProjectLock>> {
+        let name = external_lock_name(project_key)?;
+        let Some(locks) = self.root.open_child_checked("locks")? else {
+            return Ok(None);
+        };
+        acquire_external_lock(&locks, &name, false)
     }
 
     /// Atomic durable file publication below the explicit store capability.
@@ -453,27 +501,49 @@ impl ExternalProjectLock {
 
 const LOCK_ATTEMPTS: u32 = 8;
 
-fn acquire_external_lock(directory: &Pinned, name: &str) -> Result<ExternalProjectLock> {
+fn external_lock_name(project_key: &str) -> Result<String> {
+    if project_key.is_empty() {
+        bail!("project key must not be empty");
+    }
+    let mut digest = Sha256::new();
+    digest.update(b"vibe-safefs-external-lock-e1\0");
+    digest.update(project_key.as_bytes());
+    Ok(format!("{:x}.lock", digest.finalize()))
+}
+
+fn acquire_external_lock(
+    directory: &Pinned,
+    name: &str,
+    create: bool,
+) -> Result<Option<ExternalProjectLock>> {
     let display = directory.join(name);
     for _ in 0..LOCK_ATTEMPTS {
         let mut options = cap_options();
         #[cfg(windows)]
         options.share_mode(0x0000_0001 | 0x0000_0002);
-        let file = directory
+        let file = match directory
             .dir
-            .open_with(name, options.read(true).write(true).create(true))
-            .with_context(|| format!("opening external lock `{}`", display.display()))?
-            .into_std();
+            .open_with(name, options.read(true).write(true).create(create))
+        {
+            Ok(file) => file.into_std(),
+            Err(error) if !create && error.kind() == std::io::ErrorKind::NotFound => {
+                return Ok(None);
+            }
+            Err(error) => {
+                return Err(anyhow::Error::new(error)
+                    .context(format!("opening external lock `{}`", display.display())));
+            }
+        };
         verify_regular_single_link(&file, &display)?;
         crate::race_hook::before_lock(directory, name);
         file.lock()
             .with_context(|| format!("locking `{}`", display.display()))?;
         if lock_still_named(directory, name, &file, &display)? {
-            return Ok(ExternalProjectLock {
+            return Ok(Some(ExternalProjectLock {
                 file,
                 directory: directory.shallow_clone()?,
                 name: name.to_owned(),
-            });
+            }));
         }
         drop(file);
     }
