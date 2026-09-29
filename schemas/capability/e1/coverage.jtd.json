@@ -76,6 +76,9 @@
         "kind": {
           "ref": "surface_kind"
         },
+        "registered": {
+          "type": "boolean"
+        },
         "name": {
           "type": "string"
         },
