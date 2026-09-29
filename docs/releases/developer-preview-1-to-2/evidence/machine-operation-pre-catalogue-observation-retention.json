@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "before_commit": "77f6767f3c864029a64679e1f7e8796b877afddc",
+  "observed_commit": "19f200392b46e85595a592d14e4d62fe169b944f",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "observed_capture_id": "machine-operation-observed-19f200392",
+  "selected_file_counts": [
+    3894,
+    3930
+  ],
+  "whole_package_objects_equal": true,
+  "canonical_package_object_count": 48,
+  "source_declared_subset_count": 6,
+  "initial_location_refusal_exit_code": 1,
+  "corrected_authors_exit_code": [
+    0,
+    0
+  ],
+  "complete_capability_catalogue_verified": false,
+  "native_os_proof": false,
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/machine-operation-baseline-77f6767f3-source-capture.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-baseline-77f6767f3-source-capture.json",
+      "sha256": "39d9504aee848ce603eb42a2ee08311075c2c55095cd106a8d01fd33e0534089",
+      "bytes": 522303
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/machine-operation-baseline-77f6767f3-capture-e1.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-baseline-77f6767f3-capture-e1.json",
+      "sha256": "c0c0f38f36348b7703120eebb5ef1df2dea485b1671e5a527d00c75cc5fd30f7",
+      "bytes": 1195459
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/machine-operation-observed-19f200392-source-capture.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observed-19f200392-source-capture.json",
+      "sha256": "bb07cc83760b290088b00fb240bd8a61f510043a6507e9060368ab7989501549",
+      "bytes": 525048
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/machine-operation-observed-19f200392-capture-e1.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observed-19f200392-capture-e1.json",
+      "sha256": "86c762950107b51fa3fee72739b0682d53f545d037fe340ab21fcb5511cfc9aa",
+      "bytes": 1204432
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/before-author-location-failure.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observation-before-author-location-failure.log",
+      "sha256": "95204c535f6bd273d531bd0bd306420a3b529e0ef0931b6102721cb49c266a5b",
+      "bytes": 85
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/before-author.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observation-before-author.log",
+      "sha256": "1f2bf1396efd5fa1b20f81bb15a6fc18bffcdb06c3cadb15a11304a0fe57083d",
+      "bytes": 159
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/observed-author.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observation-observed-author.log",
+      "sha256": "b05c1b7dca1a3452b1c6049981064d57604b6dbaade3b616fe87231976922c99",
+      "bytes": 159
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/author-results.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observation-author-results.json",
+      "sha256": "9acd86029658d3ba0f60678319f04ef844c737b0447527692bedcfef3dc16ef2",
+      "bytes": 492
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-observation/subjects.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-observation-subjects.json",
+      "sha256": "c2c2e787e25b6654b99aaa038d52d79f0242bfb542a9f379d4ebb6fc7f6e85b1",
+      "bytes": 7441
+    },
+    {
+      "source": "Root-reviewed finite observation",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-pre-catalogue-observation-review.md",
+      "sha256": "1f4235b8c567bbb760c8fde76b3290ac3ae63a2e9c46af3838bf6293826d46a3",
+      "bytes": 1655
+    }
+  ]
+}

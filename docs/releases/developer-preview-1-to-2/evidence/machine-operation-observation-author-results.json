@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "before_commit": "77f6767f3c864029a64679e1f7e8796b877afddc",
+  "observed_commit": "19f200392b46e85595a592d14e4d62fe169b944f",
+  "before_exit": 0,
+  "observed_exit": 0,
+  "tool": "/home/olegchir/git/v/vibevm-next/target/debug/vibevm-next-capture-author",
+  "toolchains_input": "/tmp/vibevm-next-M13-C2-account/toolchains-template.json",
+  "scope": "Finite selected product files for B.1 pre-catalogue observation; compiler/native/platform/documentation effects unproved."
+}
