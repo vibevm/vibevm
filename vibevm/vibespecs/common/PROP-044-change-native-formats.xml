@@ -674,6 +674,80 @@ strings, identities, paths, phase and actual result invariants before any
 write or emission. Generated reports retain typed effects even on refusal;
 an error never implies that earlier store or target writes did not occur.</MIGRATION-APPLICATION-WIRE-LAW></p>
     </MANIFEST-MIGRATION-APPLICATION-WIRE>
+    <MANIFEST-MIGRATION-SURFACES title="Explicit CLI and context-bound MCP application">
+      <p>`req r1`</p>
+      <p><MIGRATION-SURFACE-LAW fact="true" status="spec/plan">**Shared operation, explicit admission.** CLI
+`vibe refactor migration-operation` and MCP tool
+`manifest_migration_operation` consume the registered operation request and
+return the same registered operation report. The request discriminator owns
+apply, inspect and recover; surfaces do not implement another recipe, journal
+or report codec. Planning remains the existing separate pure operation.
+
+The CLI consumes stdin or an explicit `--request-json` literal. It runs before
+configuration promotion, tracing, Context, VVM, registry and progress
+initialization, as the pure planning entry does. A small shared early-dispatch
+helper may carry only these two machine entries; unrelated commands retain
+their existing route. Decode structural shape/schema before opening any
+project or recovery store. An explicit CLI operation admits its one owned
+authored-file request, subject to the existing exclusions and physical
+capability checks; a version or a path spelling alone never grants it.
+The handler renders exactly one generated report plus newline, retaining
+all effects, warnings and residue. Completed/no-op exit 0; pending exit 2;
+uncertain/refused exit 1, except invalid request/schema preflight exits 2.
+Unreadable stdin is a preflight `invalid_request` with field `request.input`,
+fixed reason and exit 1; no new wire error code or PlanError response is added.
+Output failure has exit 1 and a fixed diagnostic; it cannot assert that an
+operation already performed had no effects.
+
+MCP migration authority is configured by the trusted server composition root,
+not tool arguments. Add an explicit ServerContext builder for one absolute
+recovery-store root and a finite portable-relative authored-file allowlist.
+Compatibility contexts without that builder refuse migration admission before
+runtime; other tools retain their behavior. The builder creates no filesystem
+state. It requires an explicit absolute server project root; relative legacy
+contexts do not acquire a migration grant by guessing cwd. The CLI server
+composer already resolves its `--path` and may grant migration authority via
+`vibe mcp serve --migration-recovery-store &lt;absolute-path&gt;` and repeatable
+`--migration-file &lt;relative-path&gt;`. If a store is supplied with no file flags,
+only root `vibe.toml` is admitted. File flags without a store are invalid
+server configuration. This is a bounded grant, not a new authentication
+framework or a per-operation confirmation flow.
+
+The tool binds the request's project spelling, target operand and store
+spelling to the configured authority. It opens the trusted project through
+the existing grant owner, never an arbitrary payload root. A member file is
+admitted only when explicitly listed; file paths cannot escape or follow
+links. The recovery store stays physically disjoint from the project and
+cannot intersect the server's machine package-cache root. Reject lexical
+ancestor/descendant overlap through the existing path owner; when that cache
+exists, use the existing-only no-follow disjointness owner to reject physical
+aliases before recovery-store creation. A missing cache is not initialized.
+An unbound/relative machine-cache root cannot grant migration authority.
+Neither tool arguments nor an implicit HOME/default store may override these
+selections. Normal Linux, macOS and Windows operation remains usable through
+this explicit configuration and the declared weaker portable contract.
+
+Before runtime entry, strict decode, unsupported schema and admission refusal
+use the existing generic structured ToolError preflight channel with the
+owning generated report. After runtime entry, completed/no-op and truthful
+pending inspection use normal executed ToolOutput; refused/uncertain operation
+failures retain their full structured effects through executed_failure.
+No tool-name branch belongs in the dispatcher. Context admission does not
+load a lockfile, provider, configuration or hosted lifecycle installation.
+Internal report-validation failure retains its original evidence and cannot
+be converted to an empty preflight or fabricated successful result; bind its
+final transport disposition against actual runtime invariants before
+claiming surface completion.
+
+Verify real isolated CLI startup and MemoryTransport dispatch for all three
+operations, stdin/literal parity, poisoned configuration and stale VVM,
+strict/null/unknown input, absent-store inspection without creation,
+context/file/store refusal, frozen/link/escape cases, exact replay, source
+conflict and retained interrupted effects. Implementations, Linux native
+measurements and unperformed macOS/Windows proof remain distinct claims.
+No surface initializes a user's actual project/store during its test proof,
+and no public publication is inferred.</MIGRATION-SURFACE-LAW></p>
+    </MANIFEST-MIGRATION-SURFACES>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
