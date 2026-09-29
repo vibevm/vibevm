@@ -28,7 +28,7 @@ use vibe_wire::generated::deploy_receipt::{DeployReceipt, ReceiptStatus};
 /// ```
 /// assert_eq!(vibe_lifecycle::DEPLOY_STATE_DIR, "state/deployments");
 /// ```
-pub const DEPLOY_STATE_DIR: &str = "state/deployments";
+pub const DEPLOY_STATE_DIR: &str = vibe_core::layout::DEPLOY_STATE_RELATIVE;
 
 /// The absolute deployment state home under one settings directory.
 ///

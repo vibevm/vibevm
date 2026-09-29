@@ -30,10 +30,10 @@ use crate::mechanism::contain::{FileFault, digest_file};
 use crate::mechanism::error::DeployProviderError;
 
 /// The settings-relative directory holding the immutable payloads.
-pub(crate) const STORE_DIR: &str = "store";
+pub(crate) const STORE_DIR: &str = vibe_core::layout::IMMUTABLE_STORE_DIR;
 
 /// The settings-relative directory holding the launchers and pointers.
-pub(crate) const BIN_DIR: &str = "bin";
+pub(crate) const BIN_DIR: &str = vibe_core::layout::LAUNCHER_BIN_DIR;
 
 /// What placing one CAS payload turned out to be.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

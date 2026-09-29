@@ -29,14 +29,15 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
 );
 
-use std::path::PathBuf;
+use crate::layout;
+use std::path::{Path, PathBuf};
 
 /// Environment variable that overrides the settings directory wholesale.
 /// When set (non-empty), its value is used verbatim as the settings dir.
 pub const SETTINGS_DIR_ENV: &str = "VIBE_SETTINGS";
 
 /// Canonical settings-dir name under the user's home.
-const CANONICAL_DIR: &str = ".vibe";
+const CANONICAL_DIR: &str = layout::USER_SETTINGS_DIR;
 
 /// The canonical per-user settings directory.
 ///
@@ -75,18 +76,33 @@ pub fn settings_dir_from(override_dir: Option<PathBuf>, home: Option<PathBuf>) -
 
 /// Machine-global registry config: `<settings-dir>/registry.toml`.
 pub fn registry_config_path() -> Option<PathBuf> {
-    Some(settings_dir()?.join("registry.toml"))
+    Some(registry_config_path_from(&settings_dir()?))
+}
+
+/// Pure local-path projection from the caller-selected settings root.
+pub fn registry_config_path_from(root: &Path) -> PathBuf {
+    root.join(layout::REGISTRY_CONFIG_FILE)
 }
 
 /// User-level config: `<settings-dir>/config.toml` (the consolidated home
 /// of the former XDG `~/.config/vibe/config.toml`).
 pub fn user_config_path() -> Option<PathBuf> {
-    Some(settings_dir()?.join("config.toml"))
+    Some(user_config_path_from(&settings_dir()?))
+}
+
+/// Pure local-path projection from the caller-selected settings root.
+pub fn user_config_path_from(root: &Path) -> PathBuf {
+    root.join(layout::USER_CONFIG_FILE)
 }
 
 /// PROP-040 L1 preferences: `<settings-dir>/settings.toml`.
 pub fn settings_toml_path() -> Option<PathBuf> {
-    Some(settings_dir()?.join("settings.toml"))
+    Some(settings_toml_path_from(&settings_dir()?))
+}
+
+/// Pure local-path projection from the caller-selected settings root.
+pub fn settings_toml_path_from(root: &Path) -> PathBuf {
+    root.join(layout::PREFERENCES_FILE)
 }
 
 /// Registry-clone cache root: `<settings-dir>/registries`.
@@ -94,12 +110,22 @@ pub fn settings_toml_path() -> Option<PathBuf> {
 /// Callers still let `VIBE_REGISTRY_CACHE` override this specific path;
 /// the chokepoint only fixes the default.
 pub fn registries_cache_dir() -> Option<PathBuf> {
-    Some(settings_dir()?.join("registries"))
+    Some(registries_cache_dir_from(&settings_dir()?))
+}
+
+/// Pure local-path projection from the caller-selected settings root.
+pub fn registries_cache_dir_from(root: &Path) -> PathBuf {
+    root.join(layout::REGISTRIES_CACHE_DIR)
 }
 
 /// Search-index cache root: `<settings-dir>/search-cache`.
 pub fn search_cache_dir() -> Option<PathBuf> {
-    Some(settings_dir()?.join("search-cache"))
+    Some(search_cache_dir_from(&settings_dir()?))
+}
+
+/// Pure local-path projection from the caller-selected settings root.
+pub fn search_cache_dir_from(root: &Path) -> PathBuf {
+    root.join(layout::SEARCH_CACHE_DIR)
 }
 
 /// vibeterm/aiui discovery dir: `<settings-dir>/aiui`.

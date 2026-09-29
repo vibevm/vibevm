@@ -4,12 +4,20 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE
 
 mod compatibility;
 mod identity;
+mod layout;
 mod platform;
+mod prefix;
+mod resource;
 mod roles;
+mod target_path;
 pub use compatibility::*;
 pub use identity::*;
+pub use layout::*;
 pub use platform::*;
+pub use prefix::*;
+pub use resource::*;
 pub use roles::*;
+pub use target_path::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[error(
@@ -36,3 +44,6 @@ pub(super) fn unique(
 }
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod layout_tests;

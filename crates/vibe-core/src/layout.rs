@@ -39,6 +39,19 @@ pub const VIBEDEPS_DIR: &str = "vibedeps";
 /// unchanged by the move.
 pub const VIBEFACTS_DIR: &str = "vibefacts";
 
+// Shared user/environment suffix authority. These constants do not relocate
+// current consumers or cause ambient lookup; callers inject the selected root.
+pub const USER_SETTINGS_DIR: &str = ".vibe";
+pub const IMMUTABLE_STORE_DIR: &str = "store";
+pub const LAUNCHER_BIN_DIR: &str = "bin";
+pub const MUTABLE_STATE_DIR: &str = "state";
+pub const DEPLOY_STATE_RELATIVE: &str = "state/deployments";
+pub const USER_CONFIG_FILE: &str = "config.toml";
+pub const PREFERENCES_FILE: &str = "settings.toml";
+pub const REGISTRY_CONFIG_FILE: &str = "registry.toml";
+pub const REGISTRIES_CACHE_DIR: &str = "registries";
+pub const SEARCH_CACHE_DIR: &str = "search-cache";
+
 // ---------------------------------------------------------------------------
 // Legacy names — retired whole by R4 (PROP-052 L3), spelled only here
 // ---------------------------------------------------------------------------
