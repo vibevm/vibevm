@@ -199,14 +199,14 @@ id = "F-004"
 source = "project-review:revision-4:F-004"
 text = "· P1 · Point resolver требует общей безопасной path boundary"
 disposition = "owned"
-nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
+nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
 
 [[mandate]]
 id = "F-005"
 source = "project-review:revision-4:F-005"
 text = "· P1 · Slot-record consistency не равна locked-source integrity"
 disposition = "owned"
-nodes = ["M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
+nodes = ["M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
 
 [[mandate]]
 id = "F-002"
@@ -262,7 +262,7 @@ id = "F-013"
 source = "project-review:revision-4:F-013"
 text = "· P1 · Prepare helper может hydrate/cache"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
 
 [[mandate]]
 id = "F-014"
@@ -311,7 +311,7 @@ id = "F-017"
 source = "project-review:revision-4:F-017"
 text = "· P2 · XML→Markdown — existing pivot, не raw map или semantic identity"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
 
 [[mandate]]
 id = "F-018"
@@ -325,7 +325,7 @@ id = "F-019"
 source = "project-review:revision-4:F-019"
 text = "· P2 · Обязательные local derivatives требуют собственной identity и отдельной activation authority"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
 
 [[mandate]]
 id = "F-020"
@@ -339,7 +339,7 @@ id = "F-021"
 source = "project-review:revision-4:F-021"
 text = "· P1 · Foreign XML/Markdown ошибочно получают Vibe semantics по suffix"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2"]
 
 [[mandate]]
 id = "F-022"
@@ -1122,7 +1122,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: SourceDescriptor grammar/migration + CommonMark sections/XML-data/raw handling; classification shared before scan/resolve/convert/collision/boot","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json"
-contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
+contract_sha256 = "abf533b81c3f7cc458d0685d39ce8d68af26be027a3776ee0010ec3b3fa60a50"
 
 [[node]]
 id = "M-06-A.1"
@@ -1137,7 +1137,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.1","Reader and executable migration land together with preserved comments/values.","One descriptor identity is available to downstream scanner/resolver/converter consumers."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.1"
-contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
+contract_sha256 = "abf533b81c3f7cc458d0685d39ce8d68af26be027a3776ee0010ec3b3fa60a50"
 
 [[node]]
 id = "M-06-A.2"
@@ -1152,7 +1152,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.2","Structural view and raw content point to the same captured document.","No CommonMark node acquires normative Vibe fact authority."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.2"
-contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
+contract_sha256 = "abf533b81c3f7cc458d0685d39ce8d68af26be027a3776ee0010ec3b3fa60a50"
 
 [[node]]
 id = "M-06-A.3"
@@ -1167,7 +1167,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.3","Install/derive/read round-trips preserve data bytes exactly.","Optional structure failure does not invalidate unrelated facts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.3"
-contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
+contract_sha256 = "abf533b81c3f7cc458d0685d39ce8d68af26be027a3776ee0010ec3b3fa60a50"
 
 [[node]]
 id = "M-06-A.4"
@@ -1182,7 +1182,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.4","Consumer inventory has no unclassified semantic path.","Existing equivalent Vibe fixtures preserve canonical output and status/void meaning."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.4"
-contract_sha256 = "9543d74350f7697b28094e30e9de5a9b62623a9e67368be24ef3aca025d66ea5"
+contract_sha256 = "abf533b81c3f7cc458d0685d39ce8d68af26be027a3776ee0010ec3b3fa60a50"
 
 [[node]]
 id = "M-06-B"
@@ -1197,7 +1197,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: Actual captured boot graph/provenance/why-included + bytes/scalars/tokenizer metrics, occurrence/shared distinctions and no total cap","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json"
-contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
+contract_sha256 = "c1bb6b3ec14ce0366ef88fefb7ed41cc610ab43c024a852bf4ecaec86a4aa083"
 
 [[node]]
 id = "M-06-B.1"
@@ -1212,7 +1212,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-B.json#M-06-B.1","Full authorized child traversal reconstructs the captured graph.","Provenance previously available only as text is structured."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json#M-06-B.1"
-contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
+contract_sha256 = "c1bb6b3ec14ce0366ef88fefb7ed41cc610ab43c024a852bf4ecaec86a4aa083"
 
 [[node]]
 id = "M-06-B.2"
@@ -1227,7 +1227,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-B.json#M-06-B.2","Measurement report names basis, recipe and unknown portions.","Large corpus can be traversed without hidden total boot cap."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-B.json#M-06-B.2"
-contract_sha256 = "062e7bcae4ddf5a10b2f6e25951c53be216b63a62764b0f8a66112f804604f4f"
+contract_sha256 = "c1bb6b3ec14ce0366ef88fefb7ed41cc610ab43c024a852bf4ecaec86a4aa083"
 
 [[node]]
 id = "M-06-C"
@@ -1553,7 +1553,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Retained reader + integrity ladder; original capture index/verified builtin derivation; refusal matrix","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json"
-contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
+contract_sha256 = "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
 
 [[node]]
 id = "M-01-C.1"
@@ -1568,7 +1568,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.1","Result states its measured stability window without claiming hostile-ABA prevention.","No query creates locks, directories or COW copies."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.1"
-contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
+contract_sha256 = "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
 
 [[node]]
 id = "M-01-C.2"
@@ -1583,7 +1583,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.2","Tamper matrix distinguishes record-only, payload-only and coordinated changes.","No additional local digest is mistaken for authentication."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.2"
-contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
+contract_sha256 = "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
 
 [[node]]
 id = "M-01-C.3"
@@ -1598,7 +1598,22 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.3","Every transformation between source and returned representation is inspectable.","Source/raw/representation hashes remain distinct."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.3"
-contract_sha256 = "432ff624a5c17d67817208e7c90ca7bcb465fb2aad27570e65b333999e5655f4"
+contract_sha256 = "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
+
+[[node]]
+id = "M-01-C.4"
+parent = "M-01-C"
+order = 94
+kind = "atom"
+title = "Report failed source conversion at install"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-01-C.3"]
+mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-01-C.json#M-01-C.4","Warning and check issue name failed file and diagnostic class.","Strict mode leaves previous install state intact; record and diff expose outcomes."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-01-C.json#M-01-C.4"
+contract_sha256 = "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
 
 [[node]]
 id = "M-01-D"
@@ -1613,7 +1628,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Meet baseline work-package scope: Classified builtin unit/resource/section extraction + generated response/errors; raw encoding/span basis, CLI/MCP parity","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json"
-contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
+contract_sha256 = "d13cc214aa7e35bfc80c40a721fd4a4486eb7e5a7012d1151643d3a6935dccdf"
 
 [[node]]
 id = "M-01-D.1"
@@ -1628,7 +1643,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-D.json#M-01-D.1","Every result identifies descriptor, capture, representation and location basis.","Ordinary data has no accidental fact facets."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json#M-01-D.1"
-contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
+contract_sha256 = "d13cc214aa7e35bfc80c40a721fd4a4486eb7e5a7012d1151643d3a6935dccdf"
 
 [[node]]
 id = "M-01-D.2"
@@ -1643,7 +1658,7 @@ mandates = ["F-004","F-005","F-013","F-017","F-019","F-021"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-01-D.json#M-01-D.2","Surface parity compares validated success/error payloads.","Generated contracts and corpus agree with their registry."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-01-D.json#M-01-D.2"
-contract_sha256 = "2951a2be0c9b02dd877ce45f9ecb75b37f04f642db57be491f5ea513a64c9a76"
+contract_sha256 = "d13cc214aa7e35bfc80c40a721fd4a4486eb7e5a7012d1151643d3a6935dccdf"
 
 [[node]]
 id = "M-01-E"

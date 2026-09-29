@@ -1,0 +1,15 @@
+# Fable 1.0.0 gap review against NEXT 1.1.0
+
+Observed 2026-09-30. The pasted observations describe 1.0.0; each disposition below is checked against this worktree. This file is a planning crosswalk, not acceptance evidence for an implementation atom.
+
+| Item | Current 1.1.0 observation | NEXT disposition |
+|---|---|---|
+| A selected-node reader | `read_doc` still documents ignored anchors; M-01-D already promised classified units but lacked exact selection/output behavior. | Strengthened M-01-D.1/D.2: shared `SpecDoc` selector with `#embed`, exact section/fact/dotted/pNN selection, outline, materialized location, CLI/MCP parity and typed errors. |
+| B specmap table facts | The canonical core-ai-native specmap Markdown scanner segments leading paragraphs and list items, not table-cell facts. | M-01-D.1 explicitly covers table cells and permitted quote/header cases with MD/XML and `explain` tests. The canonical package source is under `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/`; derived `vibedeps` copies are not the edit target. |
+| C installed-slot locators | Current specmap stores source file/line/content hash; query-time materialized slot translation and cross-form IR hash are absent. | M-01-C.3 establishes source-neutral locator and canonical IR hash with a versioned format change; M-01-D.2 resolves actual slot path/range or refuses stale/unconverted location. |
+| D failed MD→XML conversion | The materializer can fall back to copied Markdown without a distinct reason/status surfaced to install/check. | New M-01-C.4: default visible warning and recorded reason, `vibe check` issue, strict opt-in atomic refusal, and closure-diff counts. Distinguish ordinary copied files. |
+| E inline-code markers | The current `progress-core` scanner blanks inline-code spans, and the named docs-corpus quarantine is already empty. | No duplicate implementation task. M-06-A.2 now pins the exact real-plus-quoted paragraph/table regression and removes stale quarantine only if found. |
+| F init/help/comment and boot bytes | `init package` hard-codes dynamic despite parsed `--link`; root `vibe.toml` comment says `packages/`; static tree bytes already exist but dynamic/per-package attribution and closure-diff totals are incomplete. | M-06-A.4 schedules init/help/comment/docs correction (BACKLOG B-211 raised P2); M-06-B.2 specifies static/dynamic snippet, package and lane totals with honest unavailable attribution. |
+| G lazy boot conditions | BACKLOG B-105 already records a related owner design question; `installed:<group>/<name>` exists, so the 1.0.0 claim that only `os:` exists is stale. | B-105 now also records `agent:`/true lazy semantics for a separate PROP and owner decision; no 1.1.0 implementation commitment. |
+
+The proposal's automatic workspace-wide tests/clippy/doc gate are not adopted. Each atom binds affected exact cases and format checks to its actual diff. No mutation sweep is planned. Product and package versions remain 1.1.0; no public Git publication is authorized.

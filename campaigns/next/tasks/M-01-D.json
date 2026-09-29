@@ -16,7 +16,10 @@
         "crates/vibe-spec/src/lib.rs",
         "crates/vibe-spec/src/resolver.rs",
         "crates/vibe-workspace/Cargo.toml",
-        "crates/vibe-workspace/src/lib.rs"
+        "crates/vibe-workspace/src/lib.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/",
+        "crates/vibe-spec/src/compiler/",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
@@ -29,18 +32,29 @@
         "crates/vibe-spec/src/lib.rs",
         "crates/vibe-spec/src/resolver.rs",
         "crates/vibe-workspace/Cargo.toml",
-        "crates/vibe-workspace/src/lib.rs"
+        "crates/vibe-workspace/src/lib.rs",
+        "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/",
+        "crates/vibe-spec/src/compiler/",
+        "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml"
       ],
       "steps": [
         "Consume M-06-A descriptor before selecting parser/fragment rules.",
         "Reuse Vibe facts only for declared specs; resolve CommonMark exports and raw XML/opaque resources separately.",
-        "Return encoding, representation recipe and exact span basis; optional structured-view failure does not prevent raw retrieval."
+        "Return encoding, representation recipe and exact span basis; optional structured-view failure does not prevent raw retrieval.",
+        "Implement a shared SpecDoc IR node selector for exact section, fact (paragraph/list/table cell), dotted path and documentation pNN anchors; use the same selector for read_spec and compiler #embed.",
+        "Return just the selected subtree or direct section blocks when children=false; build an outline with per-node byte sizes and heading chain without a prebuilt specmap.",
+        "Index permitted table-cell facts (and quote/header facts only where the dictionary permits) in canonical specmap with MD/XML parity."
       ],
       "positive_cases": [
-        "CommonMark sections retain literal Vibe annotations; invalid XML-data raw bytes remain retrievable."
+        "CommonMark sections retain literal Vibe annotations; invalid XML-data raw bytes remain retrievable.",
+        "Fixture with nested Solution section and table/list facts selects the exact node; #embed and read_spec produce the same selected IR.",
+        "Specmap indexes CC-A-4-1 and CC-A-4-2 from Markdown table cells and XML td elements, with explain success."
       ],
       "negative_cases": [
-        "Same-stem ordinary resources are not spec collisions; projected XML locations are not raw positions."
+        "Same-stem ordinary resources are not spec collisions; projected XML locations are not raw positions.",
+        "Ambiguous dotted path and unknown anchor refuse with candidates, never choose a nearby node.",
+        "Inline-code marker quotes do not mint table-cell facts."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -85,7 +99,10 @@
         "crates/vibe-workspace/Cargo.toml",
         "crates/vibe-workspace/src/lib.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/read_doc.rs",
+        "crates/vibe-trace/src/",
+        "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
@@ -106,18 +123,28 @@
         "crates/vibe-workspace/Cargo.toml",
         "crates/vibe-workspace/src/lib.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/src/tools/read_spec.rs",
+        "crates/vibe-trace/src/",
+        "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
       ],
       "steps": [
         "Use M-16-C service/context carriers and register source request/result/error schemas.",
         "Generate types using cargo xtask codegen, then implement thin CLI/MCP adapters.",
-        "Bind expected resolution/source/document hashes and chunk cursors to one observation; validate errors as well as successes."
+        "Bind expected resolution/source/document hashes and chunk cursors to one observation; validate errors as well as successes.",
+        "Expose read_spec MCP and vibe spec read CLI through the same selected-source resolver as read_doc, with exact versionless installed selection and no untrusted root.",
+        "Return canonical address, dictionary/status, heading chain, selected/full byte sizes, materialized slot path and line range; support md/xml, children=false and outline.",
+        "Resolve source-neutral specmap locators against the actual slot file at query time; refuse stale/unconverted or ambiguous location instead of reporting source coordinates as slot coordinates."
       ],
       "positive_cases": [
-        "Equivalent requests return equal semantic results and proof levels across surfaces."
+        "Equivalent requests return equal semantic results and proof levels across surfaces.",
+        "Markdown and XML consumer slots return the same semantic Solution/fact selection and each reports its own actual extension and line range.",
+        "CLI and MCP success/error payloads agree for whole document, nested section, table fact and outline."
       ],
       "negative_cases": [
-        "Unknown fields/epochs, arbitrary MCP root and stale cursor or expectation refuse before effects."
+        "Unknown fields/epochs, arbitrary MCP root and stale cursor or expectation refuse before effects.",
+        "Unknown package/document/anchor return typed candidate-bearing errors; no hidden write or unbounded whole-document fallback for a selected node."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
