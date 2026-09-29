@@ -21,3 +21,21 @@ Product deltas exclude the temporary `campaigns/next/` and
 captures their exact bytes. Derived `vibevm/vibedeps/` slots and Cargo build
 outputs are outside authored product source. Independent documentation has
 not yet been bound to an exact source revision.
+
+## Intermediate bootstrap subject
+
+The catalogue also retains `bootstrap-6c2a59ef9`, the tracked product subject at
+commit `6c2a59ef9820b12d985d39527a0c86ea817379b4`. Its
+[raw observation](evidence/bootstrap-6c2a59ef9-source-capture.json),
+[epoch-1 capture](evidence/bootstrap-6c2a59ef9-capture-e1.json) and
+[actual capture-check report](evidence/bootstrap-6c2a59ef9-capture-check.json)
+bind 48 package slots and 129 selected current files. The selection retains the
+ten baseline files plus present changed tracked paths, using the unchanged DP1
+scope exclusions. The CLI/MCP subsets are retained only after their source bytes
+and package declaration manifests match the reviewed baseline.
+
+This is an intermediate source subject. DP2 remains pending. The report proves
+selected bytes, Git identities and declaration linkage; contribution accounting,
+complete capability/topic membership, documentation, runtime and final product
+proof remain separate obligations. Recorded toolchains are Linux-session
+observations; historical Windows claims were not copied into this capture.

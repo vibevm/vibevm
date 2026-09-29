@@ -1,4 +1,13 @@
 {
+  "captures": [
+    {
+      "capture_file_sha256": "5be669c4fdd99de85ceb56bb2639096b341b0c4db0f1eaa4a8ed2a150a5b0251",
+      "capture_id": "bootstrap-6c2a59ef9",
+      "commit_sha1": "6c2a59ef9820b12d985d39527a0c86ea817379b4",
+      "git_tree_sha1": "5008bf3fd9621ae247080614c1a70f1f19f77bbf",
+      "source": "evidence/bootstrap-6c2a59ef9-capture-e1.json"
+    }
+  ],
   "change_records": [],
   "documentation": {
     "state": "pending-owner-binding"
