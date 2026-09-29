@@ -17,7 +17,7 @@ fn current_catalogue_projects_all_declared_operations_and_models_as_gaps() {
     let coverage = authored();
     let registry = MachineCoverageRegistry::from_coverage(&coverage).unwrap();
     assert_eq!(registry.operations().len(), 214);
-    assert_eq!(registry.models().len(), 29);
+    assert_eq!(registry.models().len(), 35);
     assert!(registry.operations().iter().all(|gap| {
         gap.reason == ExtractionGapReason::UnboundDomainOwnerAndFormat && gap.bindings.len() == 1
     }));
@@ -129,7 +129,7 @@ fn only_reviewed_mcp_planner_row_binds_with_separate_service_admission() {
             .count(),
         213
     );
-    assert_eq!(registry.models().len(), 29);
+    assert_eq!(registry.models().len(), 35);
 
     let unavailable =
         MachineOperationService::pure_text_planner(PurePlannerAdmission::Unavailable).unwrap();
