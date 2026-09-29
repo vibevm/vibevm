@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "inventory_id": "capability-source-coverage-candidate-53889e824",
+  "inventory_id": "capability-source-coverage-candidate-c2a31e642",
   "baseline_capture_id": "capability-baseline-4a3f80a34",
-  "observation_capture_id": "machine-operation-observed-53889e824",
+  "observation_capture_id": "entity-view-observed-c2a31e642",
   "sources": [
     {
       "source_id": "source:campaigns/next/manifest.json",
       "path": "campaigns/next/manifest.json",
-      "sha256": "99e557b032e8f97bb042614d06ade87f6db8bd179afbabee4ac5f231866c636c"
+      "sha256": "c2351e06d82b80cf3f7d6a124201375d7f7a8d2fb10cc32cdba441b676079f3d"
     },
     {
       "source_id": "source:crates/vibe-actions/src/action.rs",
@@ -645,6 +645,21 @@
       "sha256": "aa455d0c8463ffb8c5b7de0710617f2f783928dbc2fe78bc4351796d51d79847"
     },
     {
+      "source_id": "source:crates/vibe-core/src/machine_view/identity.rs",
+      "path": "crates/vibe-core/src/machine_view/identity.rs",
+      "sha256": "f6356c7fc3d2dad8d0a0cbc842861c41c5598247bfb41bc36408bce9376c5f4d"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/machine_view/location.rs",
+      "path": "crates/vibe-core/src/machine_view/location.rs",
+      "sha256": "35acbd45736fe30a844057aac05d35bceffd5ef8d10778659e9ff2a02d9dd79c"
+    },
+    {
+      "source_id": "source:crates/vibe-core/src/machine_view/mod.rs",
+      "path": "crates/vibe-core/src/machine_view/mod.rs",
+      "sha256": "6380e38535196a3aad7ece0b9d665b235558bfc7722ef028877bcd3dd26c21ff"
+    },
+    {
       "source_id": "source:crates/vibe-core/src/manifest/extension.rs",
       "path": "crates/vibe-core/src/manifest/extension.rs",
       "sha256": "c5a04c3d9365c609752a729e91272687fa58ce27ff8529d45bfb9ffb986b695b"
@@ -807,7 +822,7 @@
     {
       "source_id": "source:crates/vibe-orchestrator/src/lib.rs",
       "path": "crates/vibe-orchestrator/src/lib.rs",
-      "sha256": "83aaff25515979a193eadcb828fcb6daaebb4a450d3eaf4803e42025326b7aa6"
+      "sha256": "8426b9a51f69816fa97e5260ab0176857c4e31414b9e95bab4cdb4ac4fb420b4"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation.rs",
@@ -833,6 +848,41 @@
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation/publication.rs",
       "path": "crates/vibe-orchestrator/src/machine_operation/publication.rs",
       "sha256": "020c9a1d88f2f839582e0a43e3f47e70a2fe966ea146e506bbfc5d4033fa0366"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "sha256": "21e13563ae6744fe4593b5a14c51ae02d4029540489e643039061a491c2120e3"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "sha256": "8f22ece486104353078a8531a4ed3c87413b23a2790b3abb171d34d12c84a648"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "sha256": "237bfb9ea9e9b6c7731be03b09a36e437354c45cbac8ae917deebf0e809c8ce8"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "sha256": "0093b8ad127a5f76d31941bd96c68c489edf8eda6df9750d6c95de798c8c3e88"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "sha256": "77a77851a6f3ebd90edd45e9d1d5152478128e1afeb3f02e95e27cebe6bcc70a"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "sha256": "cc1ac1f6fbcb2d2d6ff2da96a7f919b584fe025cdab8935f3d70611b7171c8ed"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "path": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "sha256": "03ee78e8418e4a8c1d103ad7aafdec314ee58580a3e075b2e3e6f43ca785be4b"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/values.rs",
@@ -890,9 +940,29 @@
       "sha256": "2dcf6cdc47b7609bd2f1f177417fa27512d37dcb670920d5a2420b74cba476a9"
     },
     {
+      "source_id": "source:crates/vibe-wire/src/behaviour/machine_view.rs",
+      "path": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "sha256": "43defb3b053f0c3b6f81745a0faa8b6c62e9121e907b12198008c05a6aa16401"
+    },
+    {
       "source_id": "source:crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
       "path": "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
       "sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs",
+      "sha256": "30c4d9ee5be2c2c19e1e77f83b043782c81400efff697f571fd5e0b5c05fe56b"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs",
+      "sha256": "3b9e6118d46737c4b31e3227eb69b10b812d2b2ec19dbc788e1e99042f445f0d"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs",
+      "sha256": "5926373baf5cdf2e3a7c90f9c74a65cf525cb2a7ef562efa7fe8df0604abe3dc"
     },
     {
       "source_id": "source:crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
@@ -903,6 +973,11 @@
       "source_id": "source:crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
       "path": "crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
       "sha256": "d04eac0685ec1be524c2d197660d9fddcbf2a824238abfa4860d24331f057aa0"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+      "path": "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+      "sha256": "b3fb86b73723bff8c03d11ce50cda45ba9d075778e8254a77cf8eb11a9141d80"
     },
     {
       "source_id": "source:crates/vibe-workspace/src/bins.rs",
@@ -942,12 +1017,27 @@
     {
       "source_id": "source:formats/REGISTRY.toml",
       "path": "formats/REGISTRY.toml",
-      "sha256": "3763be171144eed80866e9b216390d9cc4e936eac4f76f2adf03cfad10f497ac"
+      "sha256": "58f65e94211ef1f44a650be92bb504768badc478a64dd62c4ae6134a41e717af"
     },
     {
       "source_id": "source:schemas/capability/e1/coverage.jtd.json",
       "path": "schemas/capability/e1/coverage.jtd.json",
       "sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/bound_page.jtd.json",
+      "path": "schemas/machine/e1/bound_page.jtd.json",
+      "sha256": "8a7d16fdb767a08228b740d333121f2a81f5b9da85b260d9e41dab99b3c06625"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/composite_snapshot.jtd.json",
+      "path": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "sha256": "e20d54c1f5c6384a83baa2bfacc80eae0d0934cf7d749ceafb60130a791de923"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/entity_reference.jtd.json",
+      "path": "schemas/machine/e1/entity_reference.jtd.json",
+      "sha256": "55d8eff82c78f78b9e54421b6d2405e8e7a49aed53dcdcb1f2a3feb54762a34e"
     },
     {
       "source_id": "source:schemas/machine/e1/operation_descriptor.jtd.json",
@@ -958,6 +1048,11 @@
       "source_id": "source:schemas/machine/e1/operation_envelope.jtd.json",
       "path": "schemas/machine/e1/operation_envelope.jtd.json",
       "sha256": "e8a4b8a53643f65803adaa75e9e607a492540cf3fa528bc6f0189379d56b30bf"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/source_location.jtd.json",
+      "path": "schemas/machine/e1/source_location.jtd.json",
+      "sha256": "a7837a25f82a33508dfb53cab11cd5fc648cbb8814f11eec4e49c7011c147d3a"
     },
     {
       "source_id": "source:vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
@@ -977,7 +1072,7 @@
     {
       "source_id": "source:vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
-      "sha256": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b"
+      "sha256": "3200ee60bdd5db8cc1b2015dc182424c0e72585044f921d119db6e2fb9150cb7"
     },
     {
       "source_id": "source:xtask/Cargo.toml",
@@ -9125,6 +9220,162 @@
       "conformance_cases": [
         "proposed:owning-source-and-shape",
         "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.machine-entity-reference",
+      "name": "Machine entity reference",
+      "owner": "crates/vibe-core/src/machine_view/identity.rs",
+      "carrier": "Generated epoch-one value root and existing pure owner; exact status remains source-observed.",
+      "schema_ref": "schemas/machine/e1/entity_reference.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Four caller-supplied logical/captured/observed/occurrence axes; no minted source identity or authenticated source bytes."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-core/src/machine_view/mod.rs",
+        "source:crates/vibe-core/src/machine_view/identity.rs",
+        "source:crates/vibe-wire/src/behaviour/machine_view.rs",
+        "source:schemas/machine/e1/entity_reference.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.machine-composite-snapshot",
+      "name": "Machine composite snapshot",
+      "owner": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "carrier": "Generated epoch-one value root and existing pure owner; exact status remains source-observed.",
+      "schema_ref": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Pure compatibility of supplied source/world/target/operation witnesses; multi-owner claims remain unverified, never one atomic read."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+        "source:crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+        "source:schemas/machine/e1/composite_snapshot.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.machine-bound-page",
+      "name": "Machine bound page",
+      "owner": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "carrier": "Generated epoch-one value root and existing pure owner; exact status remains source-observed.",
+      "schema_ref": "schemas/machine/e1/bound_page.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Generated page shape and local adjacency; arbitrary wire cursor strings remain unverified without the owner session."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_view/paging.rs",
+        "source:crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+        "source:schemas/machine/e1/bound_page.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.machine-source-location",
+      "name": "Machine source location",
+      "owner": "crates/vibe-core/src/machine_view/location.rs",
+      "carrier": "Generated epoch-one value root and existing pure owner; exact status remains source-observed.",
+      "schema_ref": "schemas/machine/e1/source_location.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Exact byte-opaque resource and raw/projected/unavailable basis; no authenticated reverse map or source-byte proof."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-core/src/machine_view/location.rs",
+        "source:crates/vibe-wire/src/behaviour/machine_view.rs",
+        "source:schemas/machine/e1/source_location.jtd.json",
+        "source:crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    },
+    {
+      "model_id": "model.machine-resource-uri-map",
+      "name": "Owner-declared resource URI map",
+      "owner": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "carrier": "Pure Rust owner with generated value projection but no public callable transport.",
+      "schema_ref": "schemas/machine/e1/source_location.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Pure scope/resource/revision token join; generated source-location URI metadata remains owner-declared-unverified and is not a live resolver."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+        "source:crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+        "source:schemas/machine/e1/source_location.jtd.json"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.machine-page-session",
+      "name": "Process-local page session",
+      "owner": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "carrier": "Pure Rust owner with generated value projection but no public callable transport.",
+      "schema_ref": "schemas/machine/e1/bound_page.jtd.json",
+      "target": "Caller-supplied finite model/projection; domain-selected live source remains separate.",
+      "effects": [
+        "Fixed caller-supplied authorized rows and process-local one-use cursor tokens; not durable cross-request pagination or authenticated capture."
+      ],
+      "authority": "Source and typed value descriptions grant no filesystem, URI resolution, effect or caller authorization.",
+      "completeness": "Finite pure-model and source-shape account only; no full external protocol or native platform proof.",
+      "retention": "Selected source bytes are captured at c2a; runtime source/cursor/URI retention and authenticity remain unverified.",
+      "source_ids": [
+        "source:crates/vibe-orchestrator/src/machine_view/page_session.rs",
+        "source:crates/vibe-orchestrator/src/machine_view/paging.rs",
+        "source:crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+        "source:schemas/machine/e1/bound_page.jtd.json"
+      ],
+      "conformance_cases": [
+        "proposed:owning-pure-invariant",
+        "proposed:generated-reader-and-semantic-refusal"
       ],
       "implementation": "source-observed",
       "external_access": "unknown"
