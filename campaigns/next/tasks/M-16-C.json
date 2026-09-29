@@ -4,7 +4,7 @@
     {
       "id": "M-16-C.1",
       "title": "Reserve scoped submissions before effects",
-      "goal": "Prevent duplicate effects across concurrent CLI/MCP/API submits and result-retention expiry.",
+      "goal": "Establish durable pre-effect reservation and fixture-journal replay for the new machine submission path; real domain recovery and surface adapters follow in C.2/C.4.",
       "read_paths": [
         "crates/vibe-lifecycle/src/lease.rs",
         "crates/vibe-lifecycle/src/state/store.rs",
@@ -32,17 +32,18 @@
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "steps": [
-        "Add host-issued context/target/principal-scoped submission namespaces with epoch/expiry and atomic idempotency-key/request/plan reservations before effects.",
-        "Bind reservation to existing durable domain run/journal IDs; same key/payload attaches, different payload refuses, simultaneous surfaces have one winner.",
-        "Retain compact tombstones for live namespaces and pinned active/parked/recovery identities across expiry; reject retired namespaces even after large payload collection."
+        "Add host-issued context/target/principal-scoped submission namespaces with epoch/expiry and atomic idempotency-key/request/plan reservations under the existing lifecycle lease.",
+        "Build one orchestrator admission service over an owner journal port: reserve an owner-selected run ID, durably initialize that same journal identity, mark journal-ready, and only then invoke a fixture effect once. Reconcile reservation-present/journal-absent with the same ID; refuse uncertain or conflicting journal state.",
+        "Same key/payload attaches to the retained fixture outcome, different payload refuses; retain compact tombstones and reject retired namespaces. Existing/Retired never dispatch.",
+        "Keep current default-lifecycle prelude untouched in C.1: its fresh run allocation creates scratch before reservation and prerequisite install can precede state journaling. C.2/C.4 own safe real-domain and adapter integration."
       ],
       "positive_cases": [
-        "Concurrent identical submits produce one actual domain invocation.",
-        "Lost response followed by retry returns the existing operation outcome."
+        "Concurrent identical fixture submissions produce one actual counted effect under the leased journal owner.",
+        "Lost fixture response followed by retry attaches to the same reserved run and retained fixture outcome."
       ],
       "negative_cases": [
-        "Collected result permits an old expired key to rerun an uncertain operation.",
-        "Caller invents or renews a submission namespace."
+        "Reservation-present/journal-absent resumes only the same run ID before effect; journal-uncertain, changed or missing-after-ready refuses.",
+        "Collected result or expired namespace permits an old key to rerun an uncertain operation; caller invents or renews a namespace."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -52,16 +53,17 @@
         "TO CREATE: simultaneous submit, expiry/tombstone and result-loss replay tests."
       ],
       "acceptance": [
-        "No effect starts before durable admission identity exists.",
-        "Dedup bookkeeping references existing journals rather than becoming a competing execution store."
+        "Fixture effect never starts before reservation, matching durable journal identity and journal-ready marker are proven.",
+        "Dedup index references the fixture domain journal, does not store execution results, and never claims existing default-lifecycle or CLI/MCP protection."
       ],
-      "safe_stop": "Reservation/replay tests pass with a fixture effect counter and no live domain mutation.",
+      "safe_stop": "Reservation and fixture-journal replay tests pass without live domain mutation; carry actual journal and adapter work to C.2/C.4.",
       "commit_subject": "feat(api): reserve idempotent submissions before execution",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "Root owns the PROP-080 submission-reservation law amendment before implementation acceptance; the delegated worker edits only the code/test perimeter."
+        "Root owns the PROP-080 submission-reservation law amendment before implementation acceptance; the delegated worker edits only the code/test perimeter.",
+        "C.2 owns binding actual lifecycle/build/deploy/publication journals and retained results; C.4 owns CLI/MCP/API adapters. The milestone cannot claim cross-surface duplicate-effect protection until those children prove it."
       ]
     },
     {
@@ -102,11 +104,13 @@
       "steps": [
         "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
         "Advertise connection-loss policy; implement continue-to-completion or explicit safe-stop ownership and protected local attach/control for a still-running owner.",
-        "On owner crash recover from domain journals, preserving existing one-writer/one-parked limits and completed/pending/uncertain effects; do not synthesize success from EOF."
+        "On owner crash recover from domain journals, preserving existing one-writer/one-parked limits and completed/pending/uncertain effects; do not synthesize success from EOF.",
+        "Adopt C.1 reservation/journal-ready fence for actual lifecycle/build/deploy/publication owners; handle reservation-present/journal-absent and post-effect uncertain outcomes under the same run identity."
       ],
       "positive_cases": [
         "An operation remains inspectable after the originating API process exits.",
-        "A reconnect attaches to a live owner or receives exact recovery-required state."
+        "A reconnect attaches to a live owner or receives exact recovery-required state.",
+        "A lost actual domain response attaches to the retained result or returns an explicit pending/uncertain recovery handle without a second effect."
       ],
       "negative_cases": [
         "Connection loss silently restarts a provider.",
@@ -231,11 +235,13 @@
       "steps": [
         "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
         "Carry explicit force/trace/deploy-profile and supported operation controls as validated requested options, preserving authority rather than silently choosing startup defaults.",
-        "Return structured phase and partial effects even when a handler exits without a final report; expose equivalent services through CLI, MCP and local API."
+        "Return structured phase and partial effects even when a handler exits without a final report; expose equivalent services through CLI, MCP and local API.",
+        "Route CLI, MCP and local API effectful submits through the C.1/C.2 reservation owner; retain equivalent idempotency and refusal semantics across surfaces."
       ],
       "positive_cases": [
         "A machine client resolves a typed selection and submits the exact resulting plan.",
-        "An authorization refusal includes scope and completed-effect truth."
+        "An authorization refusal includes scope and completed-effect truth.",
+        "Two surfaces racing the same scoped key invoke the domain owner once and observe the same operation identity."
       ],
       "negative_cases": [
         "Free prose or assume-yes is parsed as a blanket grant.",
