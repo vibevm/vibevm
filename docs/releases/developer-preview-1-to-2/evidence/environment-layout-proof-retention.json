@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "code_subject": "dc4da9ad3bb055aec5dacd711da2f56c4cffaa75",
+  "index_subject": "2c9270dea4d861429028cf305350599903db32c7",
+  "logical_new_cases": 8,
+  "case_rename": "settings_table_missing_S_keeps_required_roots_unresolved -> settings_table_missing_s_keeps_required_roots_unresolved; exact repeat is same logical case",
+  "distinct_legacy_cases": 2,
+  "original_family_exit": 0,
+  "name_repeat_exit": 0,
+  "legacy_core_exit": 0,
+  "legacy_lifecycle_exit": 0,
+  "formatter_exit": 0,
+  "specmap_exit": 0,
+  "original_name_warning_retained": true,
+  "new_broad_or_mutation_execution": false,
+  "artifacts": [
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/implementation-plan.md",
+      "sha256": "ce823a4b0521cca1c52e4ea1930a7168e883d704be36e26898c02101ec7edf90",
+      "bytes": 9611
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/plan-review.md",
+      "sha256": "7fa0200f38366a607938f580fb16a4fadcc2644618084670a694c6ce884d6c51",
+      "bytes": 2964
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/code-review.md",
+      "sha256": "c9ee1ab07b5fe8535d6da5f9836a0b0b42d6f6f281b2deaf84116ba60794dd70",
+      "bytes": 4762
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/tests.log",
+      "sha256": "09cef8b9c60c9ab52f6e307d3278210b8a22c926f124607bc44015081a08128c",
+      "bytes": 1933
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/result.json",
+      "sha256": "92d17a32062224e68de9daf7c4103d057dce4acb384c85e6a702027accf52d36",
+      "bytes": 2924
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/name-correction.log",
+      "sha256": "84117458d0bdf79b21c9b7ff7de41987ece3a100e581e67665aa6c33db37486f",
+      "bytes": 607
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/legacy-settings.log",
+      "sha256": "46eb9aafda03ac927663d4209f49f02d57355afb34dcf39f1eeb3cdb32ad7a0e",
+      "bytes": 491
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/core-followup-results.json",
+      "sha256": "63904a39eaa2620b6cf659ec039cf18c29ed9eaea42e8a57db8ed505f100f316",
+      "bytes": 677
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/legacy-vibebin.log",
+      "sha256": "97eb51b41c2b49bae67097769675229348849b0072e20197d1e01b073cfed4cd",
+      "bytes": 4106
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/legacy-vibebin-result.json",
+      "sha256": "d2ac359e8188308dfc0b161fddeea763873496b38bbf7b25968f3177b057f6de",
+      "bytes": 302
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/final-source-hashes.json",
+      "sha256": "d7b0fa36f2a19f67bed6aa21303270e5d3aa64ddc27836ab6db5b08568e8ebe1",
+      "bytes": 2212
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/formatter-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-layout-raw/specmap.log",
+      "sha256": "492fafe5eb676775e7ff1e12cb8b37145d57d700a5a73ca6f180c5ef5034cd21",
+      "bytes": 1978
+    }
+  ]
+}

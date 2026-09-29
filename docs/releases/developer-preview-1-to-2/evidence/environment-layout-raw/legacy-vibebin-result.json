@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "--locked",
+    "mechanism::vibebin::tests::a_plan_owns_the_launcher_and_the_pointer_and_never_the_payload",
+    "--",
+    "--exact"
+  ],
+  "exit": 0,
+  "raw_log": "/tmp/vibevm-next-M14-A2-legacy-vibebin.log"
+}

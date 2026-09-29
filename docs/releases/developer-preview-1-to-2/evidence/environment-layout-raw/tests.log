@@ -1,0 +1,28 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+warning: function `settings_table_missing_S_keeps_required_roots_unresolved` should have a snake case name
+  --> crates/vibe-core/src/environment/layout_tests.rs:83:4
+   |
+83 | fn settings_table_missing_S_keeps_required_roots_unresolved() {
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: convert the identifier to snake case (notice the capitalization): `settings_table_missing_s_keeps_required_roots_unresolved`
+   |
+   = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `vibe-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.11s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 8 tests
+test environment::layout_tests::linux_non_utf8_components_survive_windows_control_plane ... ok
+test environment::layout_tests::settings_table_missing_S_keeps_required_roots_unresolved ... ok
+test environment::layout_tests::prefix_bound_or_missing_relocation_evidence_refuses_relocation_claim ... ok
+test environment::layout_tests::lexical_collision_ascii_limits_and_unknown_policy_are_explicit ... ok
+test environment::layout_tests::traversal_and_windows_reserved_rules_use_only_target_policy ... ok
+test environment::layout_tests::explicit_profile_cache_and_home_bindings_do_not_fall_back ... ok
+test environment::layout_tests::distinct_instances_share_immutable_content_without_sharing_resource_identity ... ok
+test environment::layout_tests::configuration_cache_and_reserved_resources_never_claim_physical_or_effect_authority ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 541 filtered out; finished in 0.00s
+

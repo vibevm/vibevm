@@ -1,0 +1,66 @@
+{
+  "sources": [
+    {
+      "path": "crates/vibe-core/src/environment/target_path.rs",
+      "sha256": "aa455d0c8463ffb8c5b7de0710617f2f783928dbc2fe78bc4351796d51d79847",
+      "bytes": 7515,
+      "lines": 227
+    },
+    {
+      "path": "crates/vibe-core/src/environment/layout.rs",
+      "sha256": "40659ac92a30fa639bc82d2c8850c370f77732d035086541e87fec2f4180a811",
+      "bytes": 10780,
+      "lines": 327
+    },
+    {
+      "path": "crates/vibe-core/src/environment/resource.rs",
+      "sha256": "1bbc258583cce1c558107736c38f55a690ebc3d3b26a47c5628ab54855f61723",
+      "bytes": 4165,
+      "lines": 130
+    },
+    {
+      "path": "crates/vibe-core/src/environment/prefix.rs",
+      "sha256": "3b48d2bc32758c1eba21fe4faf3df050a36a9d79f7f5f850ae0055fd2f465131",
+      "bytes": 3198,
+      "lines": 85
+    },
+    {
+      "path": "crates/vibe-core/src/environment/layout_tests.rs",
+      "sha256": "9aed0c7596e931f653ff6be7943e8eeef9b8b579973ef47165b3dd51c26255e7",
+      "bytes": 18716,
+      "lines": 575
+    },
+    {
+      "path": "crates/vibe-core/src/environment/mod.rs",
+      "sha256": "cc9633f5a1ab9062ad1ecc20da1631f2f9858e1a921ceeaea5bd32b236c9c11b",
+      "bytes": 1360,
+      "lines": 49
+    },
+    {
+      "path": "crates/vibe-core/src/layout.rs",
+      "sha256": "6e262590eb1e7aa8cf1773aa329e59536f93bad69ebb9aa2ef2adfd4d82e9151",
+      "bytes": 14892,
+      "lines": 367
+    },
+    {
+      "path": "crates/vibe-core/src/settings.rs",
+      "sha256": "1d83d15346ea1ac2ce4826acc057094880a1b8fd735d90b85046b1d339d56d6c",
+      "bytes": 9566,
+      "lines": 246
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+      "sha256": "6df696d32fc1f2a0079887b99a68d80c50eb2f800d2011661cf31689dd35aa98",
+      "bytes": 12613,
+      "lines": 350
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+      "sha256": "fa2616b5bb276643af2800d647406c62fc6248bd8f7b8a2bdaaecd355d3dda74",
+      "bytes": 17680,
+      "lines": 458
+    }
+  ],
+  "original_family_log_preserved": "09cef8b9c60c9ab52f6e307d3278210b8a22c926f124607bc44015081a08128c",
+  "only_post_family_change": "One test function identifier S -> s; body unchanged, one exact rerun exit0"
+}
