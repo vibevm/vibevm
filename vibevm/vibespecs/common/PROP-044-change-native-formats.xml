@@ -556,6 +556,117 @@ behavior before claiming that platform's proof complete. Product version,
 authored format epoch, wire epoch and journal protocol revision remain
 independent.</MIGRATION-APPLY-LAW></p>
     </MANIFEST-MIGRATION-APPLY>
+    <MANIFEST-MIGRATION-APPLICATION-WIRE title="Bounded application wire and journal protocol">
+      <p>`req r1`</p>
+      <p><MIGRATION-APPLICATION-WIRE-LAW fact="true" status="spec/plan">**One bounded migration protocol.** Register generated strict formats
+`migration-operation-request`, `migration-operation-report` and
+`migration-application-journal` at wire epoch 1 under `schemas/migration/e1/`.
+All use `unknown_fields = deny`. Request/report are recoverable projections;
+the retained application journal is authoritative recovery state, not derived
+data. Product 1.1.0, manifest epoch, wire epoch and journal protocol revision
+remain distinct. This protocol covers one owned authored file and adds no
+universal operation engine.
+
+The request root has integer `schema = 1` and discriminator `operation` with
+`apply`, `inspect`, `recover`. Every branch carries `operation_id` and
+`authority`: explicit absolute `project_root` and `recovery_store_root`,
+portable project-relative `target_relative`, and singleton `scope`
+`owned_authored_file`. These declarations require the admitting caller's
+bounded write authority; they are not filesystem ownership evidence. Apply
+also carries `approved_request_json` and `before_content_id`,
+`after_content_id`, `diff_id`. The JSON string is decoded by the existing
+strict pure-planning request owner, including its null-presence checks, then
+replayed by the planner. All three identities must match a planned/no-op
+result. No caller-supplied unchecked after document or duplicate planning
+payload codec is introduced. Recover carries `expected_intent_id` and explicit
+`action` `complete` or `restore`; inspect introduces no new durable intent.
+
+All clients for a physical project root use its existing safefs opaque
+identity token as their project-lock key in the same explicitly designated
+physical recovery store. Store identity has its own opaque identity-token
+domain. Different stores and ancestor/descendant project scopes are outside
+this common-barrier guarantee; document that limit. Inspection opens only
+existing store/lock state and creates no files or directories. Apply may
+initialize its selected store. Relative operands remain capability anchored,
+no-follow, regular and single-link under the existing filesystem owner.
+
+The journal has `schema = 1`, `protocol_revision = 1`, `operation_id`,
+`intent_id`, `authority`, `project_binding`, `store_binding`,
+`approved_request_json`, the three planner identities, `before_raw_sha256`,
+`after_raw_sha256`, canonical unsigned decimal string `before_length` and
+`after_length`, nullable uint32 `unix_mode`, and phase `prepared`,
+`publishing`, `published`, `restoring` or `restored`. Exact before bytes are
+retained separately as `before.bin`; prepared intent becomes durable only
+after that image is verified. Journal updates replace a whole strictly
+validated checkpoint; no append parser is added. Immutable intent fields
+must match on every replay. File bytes and Unix permission mode are the
+initial preservation scope; do not imply preservation of ACLs, extended
+attributes, ownership or timestamps. Report the actual narrower scope.
+
+Identity recipes use SHA-256 with unsigned 64-bit big-endian byte-length
+framing, as the existing planner does. The operation storage key frames
+`vibe-manifest-migration-operation-r1`, physical project binding and
+operation id, in that order. Its lowercase hex digest names
+`migrations/{key}/before.bin` and `migrations/{key}/journal.json` below the
+selected store. The intent identity frames
+`vibe-manifest-migration-intent-r1`, operation id, physical project/store
+bindings, authority project/store spellings, target-relative path, scope,
+approved request JSON, before/after/diff content identities, raw before/after
+SHA-256 strings, before/after decimal lengths, and mode (`absent` or canonical
+unsigned decimal), in that order. Phase is excluded. Planner content hashes
+and raw filesystem hashes remain separate fields and recipes. Apply/restore
+stages use the existing `.vibe-stage-tx-` grammar with the first 32 lowercase
+hex digits of a SHA-256 digest framing
+`vibe-manifest-migration-stage-r1`, intent identity and `apply` or `restore`.
+A stage spelling alone never proves ownership.
+
+Before publication checkpoint `publishing`; after verified publication
+checkpoint `published`. Restore similarly brackets its write with
+`restoring` and verified `restored`. Reinspect actual bytes after every
+possibly published error or interruption. Automatic completion supports an
+exact approved-before state; automatic restoration supports an exact
+validated-after state. Absent, unknown third or unreadable states require
+explicit resolution and preserve retained evidence. A matching completed
+replay makes no new target write; a restored terminal operation is not silently
+reapplied. Interrupted before-image preparation without valid intent may
+leave inspectable residue but grants no target mutation or automatic cleanup.
+
+The report has integer `schema = 1`, operation, operation id and outcome
+`completed`, `no_op`, `pending`, `uncertain`, `refused`; `target_state` is
+`approved_before`, `validated_after`, `absent`, `third_state`, `unavailable`.
+It carries nullable intent/before/after/diff identities and a nullable typed
+error, plus arrays `effects`, `warnings`, `residue`. Each effect has kind
+`store_bootstrap`, `barrier`, `before_image`, `journal`, `target_publication`,
+`target_restore` and state `not_started`, `completed`, `pending`, `uncertain`.
+Residue rows have location `store` or `project`, relative path and ownership
+`proved` or `unproven`; reporting a row grants no removal authority.
+
+`guarantees` carries platform `linux`, `macos`, `windows`, `other`, concurrency
+`participating_clients` or `unestablished`, nullable `barrier_binding`, boolean
+`uncooperating_writers_excluded` (always false in this protocol), durability
+`file_and_directory_synced`, `journal_recoverable`, `unconfirmed`, and
+preservation `bytes_and_unix_mode` or `bytes_only`. The aggregate never exceeds
+the weakest observed boundary; preflight and uncertain synchronization must
+not fabricate an achieved guarantee. Nullable report fields deliberately
+represent unavailable evidence, unlike the nonnullable optional choices of
+the existing planning request.
+
+Errors carry code, field and reason strings. Codes are `invalid_request`,
+`unsupported_schema`, `authority_refused`, `store_not_disjoint`,
+`barrier_unavailable`, `plan_refused`, `source_changed`, `third_state`,
+`intent_mismatch`, `journal_invalid`, `journal_io`, `publication_io`,
+`synchronization_failed`, `preservation_unavailable`, `recovery_ambiguous`.
+Warnings carry code and action; codes are `observed_conflict`,
+`publication_uncertain`, `durability_reduced`, `durability_unconfirmed`,
+`residue_retained`, `metadata_scope_reduced`. Actions are `inspect`,
+`retry`, `manual_resolution`, `supply_input`. External-writer risk is always
+expressed in guarantees and documentation; an unobserved race is not invented
+as an observed conflict. Strict generated readers own structural shape;
+the operation owner validates schema/protocol values, canonical decimal
+strings, identities, paths, phase and actual result invariants before any
+write or emission. Generated reports retain typed effects even on refusal;
+an error never implies that earlier store or target writes did not occur.</MIGRATION-APPLICATION-WIRE-LAW></p>
+    </MANIFEST-MIGRATION-APPLICATION-WIRE>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
