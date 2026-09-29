@@ -61,4 +61,3 @@ test machine_operation::exchange::tests::questions_refusal_unavailable_and_unval
 test machine_operation::exchange::tests::direct_exchange_matches_owner_planner_without_effects ... ok
 
 test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 202 filtered out; finished in 0.00s
-

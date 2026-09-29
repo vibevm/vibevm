@@ -66,4 +66,3 @@ test tools::machine_operation::tests::real_questions_and_refusal_keep_owner_resu
 test tools::machine_operation::tests::malformed_outer_and_embedded_optional_null_refuse_before_service ... ok
 
 test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 97 filtered out; finished in 0.01s
-

@@ -4,10 +4,10 @@ Observed on the local mutable 1.1.0 `next` checkout after `7f650331b`. All four 
 
 | Target and filter | Passed | Retained log SHA-256 |
 | --- | ---: | --- |
-| `cargo test --locked --offline -p vibe-mcp --lib machine_session::` | 11 | `7a7c0429ec75c0e63e7166c8db748aa8b2528858a64f83bd12b09c1351523bdd` (`session.log`) |
-| `cargo test --locked --offline -p vibe-orchestrator --lib machine_operation::exchange::tests::` | 4 | `f711b36977921ef85a37aa943cb753592f41519e2c3ec14e4092b51319d58d20` (`orchestrator.log`) |
-| `cargo test --locked --offline -p vibe-mcp --lib tools::machine_operation::tests::` | 7 | `7e61c9b7ce08ad101ff3f8080e79ae783fd777f671cab72bcb176f57d8104440` (`mcp.log`) |
-| `cargo test --locked --offline -p vibe-wire --test machine_session_contract` | 3 | `313943e52c2a1fc807abc889a18bcb76be014e03abafe65f3baa1b212115e6a8` (`wire.log`) |
+| `cargo test --locked --offline -p vibe-mcp --lib machine_session::` | 11 | `cf42f7312f14948d19e0dcbc6702b442086fd1c409b7f07558a88500429cbf76` (`session.log`) |
+| `cargo test --locked --offline -p vibe-orchestrator --lib machine_operation::exchange::tests::` | 4 | `4cc10c197afc6de68382004ccb3e826da658730587cd021120a504f864dc511c` (`orchestrator.log`) |
+| `cargo test --locked --offline -p vibe-mcp --lib tools::machine_operation::tests::` | 7 | `23815eaa9dc69446c9a8f09d0621e9492c5eead056b44fea1ab676bb0a3eabc9` (`mcp.log`) |
+| `cargo test --locked --offline -p vibe-wire --test machine_session_contract` | 3 | `096b7b66e8bc5ef10c2a6ed1b741badfb66612f72a4f6916de555aeeb6f234c5` (`wire.log`) |
 
 The session family includes malformed/truncated/over-limit frame refusal before dispatch, exact frame round-trip and EOF, negotiated support sets, separate client/context identities, unavailable HOME/container contexts, pre-initialization/foreign/duplicate request refusal, one pure planner exchange and output-failure retention. The orchestrator and MCP families compare the shared planner exchange with owner validation and keep forged or diagnostic domain results out of normal publication. The wire family checks seven closed arms and generated-reader structural refusal.
 
