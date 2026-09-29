@@ -1,0 +1,17 @@
+ Downloading crates ...
+  Downloaded core-foundation-sys v0.8.7
+core-foundation-sys
+Bindings to Core Foundation for macOS
+version: 0.8.7
+license: MIT OR Apache-2.0
+rust-version: unknown
+documentation: https://docs.rs/core-foundation-sys/0.8.7
+homepage: https://github.com/servo/core-foundation-rs
+repository: https://github.com/servo/core-foundation-rs
+crates.io: https://crates.io/crates/core-foundation-sys/0.8.7
+features:
+ +default              = [link]
+  link                 = []
+  mac_os_10_7_support  = []
+  mac_os_10_8_features = []
+note: to see how you depend on core-foundation-sys, run `cargo tree --invert core-foundation-sys@0.8.7`

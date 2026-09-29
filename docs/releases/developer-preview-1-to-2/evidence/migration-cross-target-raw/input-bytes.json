@@ -1,0 +1,37 @@
+[
+  {
+    "path": "Cargo.toml",
+    "sha256": "28ad2c511997d92a05965a4cfd13de6c437644a85f3558bdf655421186a1c5df",
+    "bytes": 14834
+  },
+  {
+    "path": "Cargo.lock",
+    "sha256": "b0dae5db669e1a8166121fb4049c32dbf4d3117a376bcfc78add4772d35a4780",
+    "bytes": 145662
+  },
+  {
+    "path": ".cargo/config.toml",
+    "sha256": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+    "bytes": 371
+  },
+  {
+    "path": "crates/vibe-safefs/Cargo.toml",
+    "sha256": "619ede8f9c2fca016723f9136f7fc39755d7feecb3e87fa5c0164757b4026a4c",
+    "bytes": 1227
+  },
+  {
+    "path": "crates/vibe-workspace/Cargo.toml",
+    "sha256": "dd3b3bebd7f47d13b8adee7d9c7f5da80aea39f763c0159351b4dbff02fa0a61",
+    "bytes": 2364
+  },
+  {
+    "path": "crates/vibe-safefs/src/lib.rs",
+    "sha256": "c3d8f10ed9441233794baffe45f4d5e8fa49934626783890b7a9993d0897e2e3",
+    "bytes": 3833
+  },
+  {
+    "path": "crates/vibe-workspace/src/lib.rs",
+    "sha256": "f7c0c27c89fb8de7cc285f30159f5649b109dfabb68a7fb9c3d04b73115c4580",
+    "bytes": 14407
+  }
+]

@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded winx v0.36.4
+winx
+Windows API helper library
+version: 0.36.4
+license: Apache-2.0 WITH LLVM-exception
+rust-version: 1.63
+documentation: https://docs.rs/winx
+repository: https://github.com/sunfishcode/winx
+crates.io: https://crates.io/crates/winx/0.36.4
+note: to see how you depend on winx, run `cargo tree --invert winx@0.36.4`

@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "root_bound_source_checkout": "fc8bd1192d1be1932c61f4b8a76ca3ffbdb9a861",
+  "source_body_comparison": "git diff --name-only 149bcea525564260be82972edf9afc8b5a2067a0 HEAD -- core/manifest, workspace/migration_application, safefs/src, CLI/refactor and MCP/migration_admission: empty; no migration body changes",
+  "cross_target_compile_only": true,
+  "native_execution": false,
+  "attempts": 9,
+  "successes": 2,
+  "offline_cache_prerequisite_failures": 7,
+  "target_installation": "Root rustup target add aarch64-apple-darwin and x86_64-pc-windows-gnu exited0; runtime targets are installed locally, not product installation",
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/aarch64-apple-darwin-retry1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/aarch64-apple-darwin-retry1.log",
+      "sha256": "46d760407a95b5e8dc7831f15d1ed3bedf87f86937dd7fbb751266a9b5fac9e6",
+      "bytes": 5867
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/aarch64-apple-darwin.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/aarch64-apple-darwin.log",
+      "sha256": "8b899530a3ffad0e40385713832d3a23a33ae26005f31bc419f6d681bc3cff9f",
+      "bytes": 294
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/cargo-version.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/cargo-version.log",
+      "sha256": "fb3f25aefd6d5441842d285f5a9b125b3f0f0b0bf2013d9a32677f9e99c6c854",
+      "bytes": 36
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/input-bytes.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/input-bytes.json",
+      "sha256": "602a5842c4fb12889c6261b2f3251390bafa4e2c5d0ba0c686b95b843d7b7017",
+      "bytes": 1041
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/report.md",
+      "sha256": "6c23dbfb44e9547a17623288fb81197c3f22df8586c110b54bd4ffcd036b5f70",
+      "bytes": 2276
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/results.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/results.json",
+      "sha256": "f7ec8a1f90c8bc2ad53a3eba2d2d2947f4839a3941fe93bc83a6b3d11b2df87c",
+      "bytes": 12856
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/rustc-version.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/rustc-version.log",
+      "sha256": "3975d062e234a9f3921955bf6ae5b90f5819df94fa825d057f76b34a35ed0f4d",
+      "bytes": 196
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry1.log",
+      "sha256": "8bda6c39bc1435f56c0aa3a08198e0f6b034fe6b2d194ff423c9ea9ef4ef2d20",
+      "bytes": 288
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry2.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry2.log",
+      "sha256": "87fe73a910e9b1a6cbcf24cf122641bd33d5553fa2a8eaea45c1e0239a30cc79",
+      "bytes": 293
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry3.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry3.log",
+      "sha256": "507015579ae4017cd1a6a82b2fe924e8463dfc9fc657a8ad9ad9de053c88a1f8",
+      "bytes": 287
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry4.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry4.log",
+      "sha256": "8800e6d989b3937b1cd48c4aa5a26a0e359d72c6f19095f76986bbe2512607e8",
+      "bytes": 287
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry5.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry5.log",
+      "sha256": "7ef4b9e3b3cb5197c2419e92044400eab14ec67815a8777a1f9c0e42d7dc2465",
+      "bytes": 280
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu-retry6.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu-retry6.log",
+      "sha256": "757d928894bbb028b47e5a12327cf0e69a8b2d40fd4bc58dfb3f1f0120af5031",
+      "bytes": 3624
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-cross-target-checks/x86_64-pc-windows-gnu.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/x86_64-pc-windows-gnu.log",
+      "sha256": "0b27fcc3b91cbc4052b2f1d9dee497701188ba9f0c33478070062f4e12912d3a",
+      "bytes": 287
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-core-foundation-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-core-foundation-fetch.log",
+      "sha256": "30e5dabec8fbdf2a4cd37fb57ddffc9d8264374404e748bf7f3f87e9a40e98ff",
+      "bytes": 645
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-winapi-util-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-winapi-util-fetch.log",
+      "sha256": "062d6010875df921ca589d1fe01e03bd8ae8bb875dd8eb411affc2d8dadef102",
+      "bytes": 523
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-core-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-core-fetch.log",
+      "sha256": "337c5724803d8dc72a46e5a7e26d495559c05b50103f26d291f1f2d1fad19f70",
+      "bytes": 520
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-implement-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-implement-fetch.log",
+      "sha256": "be4ab783c68c401c61fa7e65fdf6e7fa9536e759608c91095114d7241f5a0100",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-interface-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-interface-fetch.log",
+      "sha256": "58f6c24ca76066cb69182f4bd61ce2aaa642a954bdf6a52f9f13ec451d408b5a",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-link-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-link-fetch.log",
+      "sha256": "2049ad82617fb85bf28736cdff964c4a4271860e538985e6c5e3fef48b56a289",
+      "bytes": 415
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-result-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-result-fetch.log",
+      "sha256": "d52c23677ae511a02ad318f977a9bb7e86dd1392158843810c29d4d84c64fd21",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-strings-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-strings-fetch.log",
+      "sha256": "1bcb161faff97124ca33c13508f6176bb1e3b42ce0a84d9db7b3a6e425010eb3",
+      "bytes": 477
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-sys-0.48.0-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-sys-0.48.0-fetch.log",
+      "sha256": "e1dc6dfa6628bf59d75ca2b20f9c8644d619d74f6a4f887d2b5bc000a2cc822c",
+      "bytes": 508
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-sys-0.52.0-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-sys-0.52.0-fetch.log",
+      "sha256": "49aec274c4777abb8c51f4a9d37aba200a578b9243a46418f8b369d7c4fa4f0d",
+      "bytes": 507
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-sys-0.59.0-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-sys-0.59.0-fetch.log",
+      "sha256": "2a5f9d75b725db33eeb620523ed4c9089418c24d58fb0a889440bb66646ae792",
+      "bytes": 507
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-sys-0.60.2-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-sys-0.60.2-fetch.log",
+      "sha256": "53408a8ab59dd5005a828ce1e044f5df4eef085a59d6af73c6ea0f25d1106086",
+      "bytes": 507
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-sys-0.61.2-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-sys-0.61.2-fetch.log",
+      "sha256": "f63c216e04c670eaaf23c5a67183ec89abb61f705a72aab09cbd16c40fa33875",
+      "bytes": 491
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-targets-0.48.5-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-targets-0.48.5-fetch.log",
+      "sha256": "5f80dff36ea217977d3f8b1e6c933b4553f08af60bc24f51dcc76a0e7f5b4a78",
+      "bytes": 444
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-targets-0.52.6-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-targets-0.52.6-fetch.log",
+      "sha256": "fc7b615595b7a6a6b8ae06ecf06ee961800050cef60fff40ae81eb8d2772e79d",
+      "bytes": 441
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows-targets-0.53.5-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows-targets-0.53.5-fetch.log",
+      "sha256": "f5c88b3d072829b5275a59626e8f7d7082c20589ae7bc7ea8385f8a47ba2984b",
+      "bytes": 425
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows_x86_64_gnu-0.48.5-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows_x86_64_gnu-0.48.5-fetch.log",
+      "sha256": "1a0f59ccd4372acc6820398010cb7269a7943fdb957eb3e2c8eafb6123aef8d8",
+      "bytes": 461
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows_x86_64_gnu-0.52.6-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows_x86_64_gnu-0.52.6-fetch.log",
+      "sha256": "3d49adb6ca5289173c191d5becf181e13e2ae19eed458db97f6dc963a261d2b7",
+      "bytes": 458
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-windows_x86_64_gnu-0.53.1-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-windows_x86_64_gnu-0.53.1-fetch.log",
+      "sha256": "ce6406710ac6b01a720eaa1a03e4ac7139f51619b08358890b8378eece1bd04e",
+      "bytes": 442
+    },
+    {
+      "source": "/tmp/vibevm-next-M13-D1-winx-fetch.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/migration-cross-target-raw/vibevm-next-M13-D1-winx-fetch.log",
+      "sha256": "a4519f4f8e19142c7301519037b44c01ec0135d6918b1e03bd448411c994b59a",
+      "bytes": 364
+    }
+  ]
+}

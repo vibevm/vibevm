@@ -1,0 +1,14 @@
+ Downloading crates ...
+  Downloaded windows-sys v0.61.2
+windows-sys
+Rust for Windows
+version: 0.61.2
+license: MIT OR Apache-2.0
+rust-version: 1.71
+documentation: https://docs.rs/windows-sys/0.61.2
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-sys/0.61.2
+features:
+ +default                                              = []
+  246 deactivated features
+note: to see how you depend on windows-sys, run `cargo tree --invert windows-sys@0.61.2`

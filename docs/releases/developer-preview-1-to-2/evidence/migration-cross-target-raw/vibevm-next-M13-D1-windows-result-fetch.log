@@ -1,0 +1,14 @@
+ Downloading crates ...
+  Downloaded windows-result v0.4.1
+windows-result
+Windows error handling
+version: 0.4.1 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.82
+documentation: https://docs.rs/windows-result/0.4.1
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-result/0.4.1
+features:
+ +default = [std]
+  std     = []
+note: to see how you depend on windows-result, run `cargo tree --invert windows-result@0.4.1`

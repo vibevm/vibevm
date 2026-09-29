@@ -1,0 +1,7 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+error: failed to download `winapi-util v0.1.11`
+
+Caused by:
+  attempting to make an HTTP request, but --offline was specified

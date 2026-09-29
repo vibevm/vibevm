@@ -1,0 +1,11 @@
+ Downloading crates ...
+  Downloaded windows-link v0.2.1
+windows-link
+Linking for Windows
+version: 0.2.1 (latest 0.100.0)
+license: MIT OR Apache-2.0
+rust-version: 1.71
+documentation: https://docs.rs/windows-link/0.2.1
+repository: https://github.com/microsoft/windows-rs
+crates.io: https://crates.io/crates/windows-link/0.2.1
+note: to see how you depend on windows-link, run `cargo tree --invert windows-link@0.2.1`
