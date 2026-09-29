@@ -14,4 +14,3 @@ test structural_unknown_missing_and_wrong_type_refuse ... ok
 test seven_closed_arms_roundtrip_as_generated_values ... ok
 
 test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
-
