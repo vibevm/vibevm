@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "task": "M-14-A.2",
+  "old_task_sha256": "6445987dadc4d4c52759eeb52b3c6ce38a68d6a2b56bc99b624bac91b069675f",
+  "new_task_sha256": "a517bc4bd180a6aa79f08380b4665aad082d31d8dc7a726c78a51a42123c3110",
+  "A1_body_unchanged": true,
+  "accepted_A1_boundary": "3c757cf3fac865d91b506400d484a25bcc1a2312",
+  "changed_scope": "Permanent governing source before A2 behavior; exact settings/layout read owners",
+  "graph": "All212tasks425nodes/mandates/dependencies/states preserved. Whole-file contract pointers updated; A1 accepted semantic body/evidence unchanged.",
+  "actual_execution_claim": false
+}
