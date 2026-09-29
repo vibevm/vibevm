@@ -217,11 +217,21 @@
         "crates/vibe-mcp/src/context.rs",
         "crates/vibe-mcp/src/tools.rs",
         "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+        "schemas/machine/e1/operation_envelope.jtd.json",
+        "formats/REGISTRY.toml",
         "crates/vibe-mcp/Cargo.toml",
         "crates/vibe-orchestrator/Cargo.toml",
         "crates/vibe-orchestrator/src/lib.rs"
       ],
       "write_paths": [
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "schemas/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-wire/tests/",
+        "crates/vibe-mcp/src/machine_session.rs",
+        "crates/vibe-mcp/src/machine_session/",
         "crates/vibe-mcp/src/transport.rs",
         "crates/vibe-mcp/src/lib.rs",
         "crates/vibe-mcp/src/context.rs",
@@ -232,6 +242,7 @@
         "crates/vibe-orchestrator/src/lib.rs"
       ],
       "steps": [
+        "First state the separate on-demand framed machine-session, negotiation, trusted-context and MCP-compatibility law in permanent PROP-080 with desired-versus-implemented status. Preserve the existing fixed MCP JSON-RPC initialize and newline stdio protocol as historical executable behavior.",
         "Implement versioned local framed request/event transport with initialization for API/schema versions, position encoding and streaming/replay/control capabilities.",
         "Register workspace/member/HOME/container contexts only from the trusted owning surface; requests refer to assigned context/target IDs.",
         "Map actual negotiated MCP versions/capabilities into the same domain facade while preserving explicit legacy tools; reject malformed frames, unknown versions and unbound roots."
@@ -259,6 +270,7 @@
       "commit_subject": "feat(api): negotiate framed sessions and trusted contexts",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "Use a separate byte-oriented machine-session adapter and registered epoch-one frame value; do not retrofit MCP's line Transport or fixed initialize. A bounded four-byte big-endian length with a finite maximum precedes UTF-8 JSON decode. Advertise only implemented capabilities; a test fake does not make production streaming/replay/control available. Context/target IDs come only from a trusted composing surface and never from request paths or manifest fields.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
