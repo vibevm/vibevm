@@ -79,6 +79,27 @@ The Linux egress proof uses a dedicated internal-network controller/BuildKit/gua
 
 ## Validation and evidence
 
+The temporary contribution bridge has a separate structural command:
+
+    python -B campaigns/next/campaign.py bridge-check --bridge <owned-bridge.json> --before-capture-id <declared-before> --after-capture-id <declared-after> --record-id <declared-change-id>
+
+Repeat `--record-id` for the nonempty selected set. The strict schema-1 view
+contains `scope`, `tasks` with `task_id`/`change_ids`, and reasoned `unplanned`
+rows with `contribution_id`/`reason`/`change_ids`. It checks actual hashed child
+task membership, unique rows/members and exact reference coverage; many-to-many
+routes and explicitly unbound planned task rows are allowed. Duplicate JSON keys,
+extra fields and acceptance/completion flags refuse. This command reads no plan
+or personal context and runs no product tool. Exit 0 means structural success;
+exit 2 means refusal. Supplied capture and record IDs remain unverified declarations.
+
+Run the separate permanent capture/contribution checks and central semantic review
+before acceptance. The review binds actual bytes/deltas and independently reviewed
+affected capability/topic/contract membership, including new registrations.
+Bridge success does not establish those facts or change task acceptance state.
+No real bridge or record data is created by this command. Its focused cases are:
+
+    python3 -B -m unittest discover -s campaigns/next -p test_change_coverage.py
+
 Authoring checks:
 
     python -B campaigns/next/campaign.py check
