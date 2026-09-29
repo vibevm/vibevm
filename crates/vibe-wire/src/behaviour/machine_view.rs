@@ -136,6 +136,7 @@ impl EntityReference {
         );
         let occurrence = ContributionOccurrenceRef::supplied(
             occurrence_observed,
+            opaque("occurrence.occurrence_id", &self.occurrence.occurrence_id)?,
             opaque("occurrence.contribution", &self.occurrence.contribution)?,
             decimal("occurrence.ordinal", &self.occurrence.ordinal)?,
         );

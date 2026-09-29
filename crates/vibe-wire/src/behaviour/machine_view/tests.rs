@@ -81,11 +81,16 @@ fn repeated_logical_entity_retains_two_distinct_occurrences() {
     let mut first = entity_fixture("epoch");
     first.schema = 1;
     let mut repeated = first.clone();
+    repeated.occurrence.occurrence_id = "occ-b".to_owned();
     repeated.occurrence.ordinal = "1".to_owned();
     let first = first.validate_machine_entity_reference().unwrap();
     let repeated = repeated.validate_machine_entity_reference().unwrap();
     assert_eq!(first.logical(), repeated.logical());
     assert_eq!(first.captured(), repeated.captured());
+    assert_ne!(
+        first.occurrence().occurrence_id(),
+        repeated.occurrence().occurrence_id()
+    );
     assert_ne!(first.occurrence(), repeated.occurrence());
 }
 
@@ -117,6 +122,14 @@ fn mismatched_observation_epoch_and_bad_ordinals_refuse() {
         );
     }
     value.occurrence.ordinal = "0".to_owned();
+    for invalid_id in ["  ", "row\0unsafe", "row\nunsafe"] {
+        value.occurrence.occurrence_id = invalid_id.to_owned();
+        assert_eq!(
+            value.validate_machine_entity_reference().unwrap_err().field,
+            "occurrence.occurrence_id"
+        );
+    }
+    value.occurrence.occurrence_id = "occ-a".to_owned();
     value.reference_id = "row\0unsafe".to_owned();
     assert_eq!(
         value.validate_machine_entity_reference().unwrap_err().field,

@@ -93,19 +93,29 @@ impl ObservationRef {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ContributionOccurrenceRef {
     observed: ObservationRef,
+    occurrence_id: OpaqueText,
     contribution: OpaqueText,
     ordinal: u64,
 }
 impl ContributionOccurrenceRef {
-    pub fn supplied(observed: ObservationRef, contribution: OpaqueText, ordinal: u64) -> Self {
+    pub fn supplied(
+        observed: ObservationRef,
+        occurrence_id: OpaqueText,
+        contribution: OpaqueText,
+        ordinal: u64,
+    ) -> Self {
         Self {
             observed,
+            occurrence_id,
             contribution,
             ordinal,
         }
     }
     pub fn observed(&self) -> &ObservationRef {
         &self.observed
+    }
+    pub fn occurrence_id(&self) -> &OpaqueText {
+        &self.occurrence_id
     }
     pub fn contribution(&self) -> &OpaqueText {
         &self.contribution

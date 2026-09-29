@@ -74,6 +74,9 @@
     },
     "occurrence": {
       "properties": {
+        "occurrence_id": {
+          "type": "string"
+        },
         "observed": {
           "ref": "observation"
         },

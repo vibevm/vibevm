@@ -67,5 +67,7 @@ pub struct Occurrence {
 
     pub observed: Observation,
 
+    pub occurrence_id: String,
+
     pub ordinal: String,
 }
