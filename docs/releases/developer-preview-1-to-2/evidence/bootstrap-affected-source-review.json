@@ -1,0 +1,2293 @@
+{
+  "schema": 1,
+  "review_id": "bootstrap finite affected-source review candidate",
+  "before_capture_id": "dp1-30d217bfce47bca",
+  "after_capture_id": "bootstrap-4cec12cd3",
+  "source_record": "evidence/bootstrap-affected-source-review.md",
+  "source_record_sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb",
+  "paths": [
+    {
+      "path": ".gitignore",
+      "interface_ids": [
+        "repository:materialized-web-slot-ignore"
+      ],
+      "before": {
+        "git_blob_sha1": "3a3845d8380768f89ebb1deb7c8631f04a000235",
+        "sha256": "06d3a883a5c287b679b190cfca8d6aed7cd1efd80cd35b3467fe67346661963c"
+      },
+      "after": {
+        "git_blob_sha1": "f1ba3de6fc29aa2a84ae5ebb9e35f398d6b80c16",
+        "sha256": "dbfae5ec643fefa2859615c82b52e11ff4b43b1cd82f643d506ab3c4c9e32475"
+      }
+    },
+    {
+      "path": "BACKLOG.md",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "2028021c21d98275ccf3ba917d456be2870e3e8c",
+        "sha256": "54a4a0192412a7a9021aeaa3e313061bea653ce4677d8f327398e4a3257cab76"
+      },
+      "after": {
+        "git_blob_sha1": "c891bfad41b6bd45d53ee37895c407584d3c0f13",
+        "sha256": "bbc6a353cbec0154de42f673ab214202a3aad552ed4295bbe455329d501c7066"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "Cargo.lock",
+      "interface_ids": [
+        "tool:preview-transition-assemble",
+        "tool:preview-transition-check"
+      ],
+      "before": {
+        "git_blob_sha1": "a7957f9e36774975562852440f46b96a8149f834",
+        "sha256": "bd4fd1b98c410bf708df7b44ad82132b13a4f51999f42828766dd70375488598"
+      },
+      "after": {
+        "git_blob_sha1": "4ab090c75532ee3a1b5c27fc61363c5fd61682c5",
+        "sha256": "0d1c82c8ebcd76c9fc852ecf563f7c51bc6d68f4ffb96968093ce6010bf0d095"
+      }
+    },
+    {
+      "path": "crates/vibe-cli/src/cli/run.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "0f15a25aa1d7141b5c001c295f75f42313dfe7b1",
+        "sha256": "851eecb6ae2fcb3f16a6e897c9d7473b8e735eed065d7ed6d0197d4b120d81ac"
+      },
+      "after": {
+        "git_blob_sha1": "5156fa93f7c3f99f09319883f50003d4b9b4bab1",
+        "sha256": "69d7303f0c5c5d12edff996556181d392efec4952f2cd7a10e23795de0288e74"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/application/distribution/codec.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "505c3292c5bb19fab131ce6910b9934e8673b3ec",
+        "sha256": "14a9578a0fa28848e869de2b1e9b8a18d1cd53025db5302e37d25b996d2ff46b"
+      },
+      "after": {
+        "git_blob_sha1": "403e71aa4117584e8459f5e761c9a53690bc81cb",
+        "sha256": "7459c936eeed9ec775213172db00009dd1e5ac67f0e97ae8e2ce61b013cc9247"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/create_new.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:Project::publish_new_proved_in"
+      ],
+      "before": {
+        "git_blob_sha1": "5c2726ed5ef3afe89d186412ae1151d6571f6e8e",
+        "sha256": "85b8349458e2f99d27e8bea8a9f0762fa60355686de1833283cbf6c47d15a135"
+      },
+      "after": {
+        "git_blob_sha1": "ab3b62e2c03c095fab2766d0ecb7140620a5e92a",
+        "sha256": "c235cc094aa4ddb9b2325dc93c753705e1393f0014b3fe6d7413c120c1418363"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/create_new_tests.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:Project::publish_new_proved_in"
+      ],
+      "before": {
+        "git_blob_sha1": "03c5e969eb2d1535570d10f5d13db39b61b743f3",
+        "sha256": "60cc10a4a7c4a104cc470af20bd01fba1316fe9d89e0effd01cebda084fb70f2"
+      },
+      "after": {
+        "git_blob_sha1": "f1f2144f71b89d5393192edc8da9f093c78d8392",
+        "sha256": "c1acc5f87e55b5b96585d144a8276ef3d9d6a7895fc4940f55f528e1b1d56c0b"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:Project::publish_new_proved_in"
+      ],
+      "before": {
+        "git_blob_sha1": "c7727ae857499af9cba99acb07d2cc60e4bd717e",
+        "sha256": "b1ae11a365daf09e77ee9fe4703453d5a0911778716befd7b66e58c06608acf8"
+      },
+      "after": {
+        "git_blob_sha1": "43f2915af9362bc7126ed3ad8874451b096351da",
+        "sha256": "c448f23aba59488d26c02b68d8c80e9c920196c72ebc0a8927ab71f35b9cd26c"
+      }
+    },
+    {
+      "path": "crates/vibe-safefs/src/proof.rs",
+      "interface_ids": [
+        "rust:vibe-safefs:Project::publish_new_proved_in"
+      ],
+      "before": {
+        "git_blob_sha1": "4e7138aa0dc49eccf93eaa58344ce6d6cd1d9e25",
+        "sha256": "ffeb63001152b3516941b74b311d653779a8fb874251a3952c81449f29c05a88"
+      },
+      "after": {
+        "git_blob_sha1": "cb120209b1cbb34a3689dd9b48a563146db936c2",
+        "sha256": "7360d20eae7ce65bf0b1491d82492aea1518aae02f4c3e69ace8edf53423997c"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/Cargo.toml",
+      "interface_ids": [
+        "tool:preview-transition-assemble",
+        "tool:preview-transition-check"
+      ],
+      "before": {
+        "git_blob_sha1": "dd2246a8ada3746a6050a531e4b4adc737ce6ede",
+        "sha256": "2252f89e13186951d055432d6e15e2a19c3b1678e24d19b1a6bcbd532afcebbd"
+      },
+      "after": {
+        "git_blob_sha1": "dd2246a8ada3746a6050a531e4b4adc737ce6ede",
+        "sha256": "2252f89e13186951d055432d6e15e2a19c3b1678e24d19b1a6bcbd532afcebbd"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/mod.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "before": {
+        "git_blob_sha1": "a37a1b02f2d8db216ba398b9fbbbe0de3e688824",
+        "sha256": "d65ec087438f6842962c9e83ab1d5e9d9f632929b24b9510bdd8d0f086f5eabb"
+      },
+      "after": {
+        "git_blob_sha1": "a6dd0e20eae5b49d78d45e131561c4f56ed72a06",
+        "sha256": "e6121498f8c64d867596e8b8bf59e2e68510ae4b26b6930fde2a1cf0a7e31df9"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/native_backend.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "099cf1fd076a9e2dbd88879d60270c7c45af0310",
+        "sha256": "bc1cec4d0768af1cf40d7d72424064a491f217b5c034a7059a2ad1ddd6ddf94e"
+      },
+      "after": {
+        "git_blob_sha1": "9049bcdeb5eb646d1b0aeba775ed5198207eda67",
+        "sha256": "e638bcafffa08b62e5b60449b280bf102b7716cc2ed57d7e8abb8c344883fced"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "45c72576427a43e1bc14d54220255e5f760902c1",
+        "sha256": "31ba81cd664c9e13c14446d9629ad44e79139e26ed8c6e5f7b7960a7609b91dc"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_affected_source_review/tests.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "ae309e3909e8f1b87f0ab581bd59e6bdf543c92b",
+        "sha256": "f9bcffc12c86995a819311c147ac0fbbf9fb797fd355930fa3a8453e96900737"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_capture.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "0ff2a1f6ba6ea153bbf63d24df7288d379255173",
+        "sha256": "1836f3162dce61f26412812298c070046970de6e869ac17f350caf02d1778a98"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_check.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "342699b950b8828a03611a5b9f79b598e7780438",
+        "sha256": "cbe66fdeebaf502625bba9574c0d4dc04d10b56289f6d20997d539b95205b26c"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_documentation_capture.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "c7f7b41c218efaead70f4bd133a5588d5a59d12a",
+        "sha256": "09384facf7981c3a3b028a6c582301c3249ba01b9e3ce0fe2847933cf280318a"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_documentation_capture/tests.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "780329eca945940542dd30c4446b03a7bb868dc0",
+        "sha256": "4e518f8984011def4c99936d44a877c8563deab5ac254ab67678cc5d67833569"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_transition.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "7f75bbd05cff3ad4fe2264d5e2cf87a69ce2840e",
+        "sha256": "293fd290d489c73dd67c972f9b86a7a1cf220b7bbd85cc63bd324e91b00f63dc"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "1573c33af38071baaeb5a126f68f80c96268f691",
+        "sha256": "2d0d80c3ac0b3421185bcd0b5b36b75b8af211456a6c103b7d0bb4890d5d25ca"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/release_impact.rs",
+      "interface_ids": [
+        "rust:vibe-wire:preview-validators"
+      ],
+      "after": {
+        "git_blob_sha1": "de16511d2f22ce74aaff2029666e03c960d26e91",
+        "sha256": "dc20f3ca7d7315854f73be143e2d7573d7ec92d8c06289e1056f864b1e9af119"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-assemble/draft.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-assemble/main.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-assemble/output.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-assemble/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/capture.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/contribution.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/contribution_evidence.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/contribution_git_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/contribution_history_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/contribution_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/main.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/bin/preview-transition-check/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ]
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "a91fcf8f210ec01905d2ff3a0f135bada33e306c",
+        "sha256": "658aa9d6540e8417ae3a9362da5c42f43f838ef3c1f3e2e4b5071b1a77adeead"
+      },
+      "after": {
+        "git_blob_sha1": "4cea811d2d43e04a192cd867cf3850519739b3eb",
+        "sha256": "94fdc2dd850217d17d0eb4203be9609916e07976f6ffe97d9972ba7b490e80f4"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e23ca1e44cd9b9147550b23200913f246049529d",
+        "sha256": "1d395361d52b186b6206ee48b70f77777a323287bde7e69963fe0eadfab3de0d"
+      },
+      "after": {
+        "git_blob_sha1": "627f6e9d900dbe09a2ff160fbc3658ce597e0323",
+        "sha256": "cb4a3f74cc93b3ec46f1bad210b956b38dcd0cb0d410d20dda052383c90d2e9f"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "36cddc9f30fa8097dce25239ff815296803eb70b",
+        "sha256": "f82166bd07cc953a3661eec43067c073b178988eafbf7c4765fcad6ead3715ba"
+      },
+      "after": {
+        "git_blob_sha1": "ff9a71e4d836da78d5e4064c69d1e9e601ca5c0d",
+        "sha256": "3e00e5c3aa55f6f11910cb6d572b5456ae5f48f6a2b1f7bb6950b04485313a81"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "a4723bc294bca68c2da19d99422c4b40cdfe1713",
+        "sha256": "1183738c5d172bb7bf17e201d2131272ea707e4f589ac3ac389b6a3ad703bbee"
+      },
+      "after": {
+        "git_blob_sha1": "87635968272d99b355c3bb8a2e1030df91fb9983",
+        "sha256": "0a12fc7e53073fcd62c95dca4aef3b096c93e9bff03b1c304836fd40b33d64cd"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "interface_ids": [
+        "format:preview-transition",
+        "format:release-impact",
+        "format:preview-capture",
+        "format:preview-check-request",
+        "format:preview-check-report",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-affected-source-review"
+      ],
+      "before": {
+        "git_blob_sha1": "4ada2f06f5ab5e5ca2ef53ab4c5efec4db57102d",
+        "sha256": "8e7da3a9500f570400d459b0f2c258b6e211cc72bf5ca0fa3c68c364d58f170c"
+      },
+      "after": {
+        "git_blob_sha1": "5155f4242fbb316fadbee759c4a80e47e97f17df",
+        "sha256": "13e10718fe7839de41b4de36b5590633970192931ed0a9fcdb68887bebda1085"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "interface_ids": [
+        "format:preview-transition",
+        "format:release-impact",
+        "format:preview-capture",
+        "format:preview-check-request",
+        "format:preview-check-report",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-affected-source-review"
+      ],
+      "before": {
+        "git_blob_sha1": "3a5fe1e4431549d2d59cde3d0e117eca5896b4a8",
+        "sha256": "c88d0418d81701baadb825ae369f59205d92bba57be452f4a1401931a47ed539"
+      },
+      "after": {
+        "git_blob_sha1": "29f14666727b0bb3b6eb78219c26acdd864512be",
+        "sha256": "73c2d729cf5aeb3e980f077fde5c5ee791f5e4961cf965c4a76a48eadc295c75"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "f832859b3cdcb6568675d4a885f04927bd599f08",
+        "sha256": "c26d5b37d4f85313136b0e148969338d965581f4ab9f60c972defcff7ad8239b"
+      },
+      "after": {
+        "git_blob_sha1": "e0f2f98dc290df0a5ec8da78e2d2ab3519c9120f",
+        "sha256": "001337fc18a5e414fbac1c6c658e111a989df2d8214333c778b77207449a5346"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "5b339604fb5c6e73860b2207f3dd4665b8885d46",
+        "sha256": "df314389bc1747ff0d431c74b9ff19bb8498ad956fffa2e42f77c7b0f3240509"
+      },
+      "after": {
+        "git_blob_sha1": "0033d373cb5e599315a9c90d75204da2f1b06db7",
+        "sha256": "eddf60cf7b869930b8517ecbc77e01090385bdc8c0e8dd6f755a1d07acc6ebf1"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "441dcb1ff1bf4191932ddf5739faf8500e201dd7",
+        "sha256": "c22535fc63d61051898775d36d23959635897baab466e331260497809203d415"
+      },
+      "after": {
+        "git_blob_sha1": "1304dd65ad4427e8f3a57b9b10b9bee82b0b05e3",
+        "sha256": "1610ebdec60e9ff417eb4eae1e9c58ebd4c7b7adec234e27a0f9e0741eef88d0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "8b0173a3365755ca31196894f567147ef452d9fa",
+        "sha256": "8d369b5fd78145b9ce56ddfeb81666a927ce9c4c4ffa3dd6bf2099b69477ddc8"
+      },
+      "after": {
+        "git_blob_sha1": "8d9da5729d1a6785b6ad7929f7792f64d474e03d",
+        "sha256": "09cd1c633d9eeb49a7416d64cc65de2808ede21a0ff9b280df1cdd03d4d0897b"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "6b0d49b23afbca3f92cecdba71487dd92b6b0593",
+        "sha256": "144638022bb4ccf8deb23d6de3780bcc02a373556c65d7f4fb3f967fcd26bfd6"
+      },
+      "after": {
+        "git_blob_sha1": "d53ca18df6496d2d0435d202d0eda84330aacbb2",
+        "sha256": "337cb660c86b7aff1579366606597444bb80cb37a15045419b27a38720de4110"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "57a9bbcf26c6c1533dcea5e4969776af04f38306",
+        "sha256": "99edce27fae42cde99a42b862779fbe3262850816aa6c9f88c666a827914f354"
+      },
+      "after": {
+        "git_blob_sha1": "43017101b8dfb2031767486403fa5ba2663faa8b",
+        "sha256": "8efaf5f6935487e27d48636f6b2874671114f04c7945e053be8e01950f0a8b5d"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "ae6b2680b25c3653d5412efede96d39f5acdef13",
+        "sha256": "cf5ab30d4618b5e26ff43e2d90d632d3bab347a7e6db76d48a3825dcae63ae5b"
+      },
+      "after": {
+        "git_blob_sha1": "7eb36f278ae93765ccd1224452ab1404909c0f5b",
+        "sha256": "66384bd7cda45cefa4a697e374f5317987fe858dd991f27703c8e66064c354d4"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "55d2baf9e73efe1b6f5cde07a3b85392eee3be00",
+        "sha256": "450285d57c98f3b5cbea6157cb331e4b05f3a48dbc141a4cc5fb9c8243285ac4"
+      },
+      "after": {
+        "git_blob_sha1": "1bdbe9ba26c300446e16f5f94d9bd7586660da82",
+        "sha256": "efa9169f81bb8fecab04571c3c668c6916dff85418fe184d3863cdce68c29848"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "interface_ids": [
+        "format:preview-transition",
+        "format:release-impact",
+        "format:preview-capture",
+        "format:preview-check-request",
+        "format:preview-check-report",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-affected-source-review"
+      ],
+      "before": {
+        "git_blob_sha1": "05dcc7d8915dcce6e47620eeadffae558274184d",
+        "sha256": "2c3e1f16e1a20ba5c30e1955e1f57ebad01dc86a881643fdabc979c0a8fdf9d8"
+      },
+      "after": {
+        "git_blob_sha1": "3bde923e4b5d6feb7aa99587660872fffe04d2e0",
+        "sha256": "e2f152a33c2aa130b5cc7a7bfc7a46634bd2ba62200bc85c448199a20e51ea1c"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "fc4b5a53d1911ced557170db9f3a6c605326423c",
+        "sha256": "fae074c713880ae76f7243378b2c3ebe9e6c48f8a685bc3ad071dbae5691c111"
+      },
+      "after": {
+        "git_blob_sha1": "4a1bd0821d9a45267ee0b3aec9ed148947a273db",
+        "sha256": "e7f6bd6d15dc3f38a91add4bdc5cc0257523552a19ddbabd64ada0d2d87bca5a"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "e2decf604572aee4e477b7acb82d45e33a1c1ab3",
+        "sha256": "e9693e776d81a66d6e730d5d67bf5687860db14cd7b9d23105546a8fba6ff041"
+      },
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/affected_source_review/mod.rs",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "c17cb3571f1eeb90c60cedcdfc8c0c0cdaaf6ddf",
+        "sha256": "d709ce1be8cfb7586b40f2713c865e87fe23e39e1b13abd708ad8f654b47b22d"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/capture/mod.rs",
+      "interface_ids": [
+        "format:preview-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "73d366324ad7265917514a9793b8a877f34e54b6",
+        "sha256": "d009354db156bd5ef1f624bc77fb66cea49518022e755d956c245bc0ebfcc4fe"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/check_report/mod.rs",
+      "interface_ids": [
+        "format:preview-check-report"
+      ],
+      "after": {
+        "git_blob_sha1": "e90d1bcbe93362e26fb23983b8365af2cbc93f4e",
+        "sha256": "4ac5401d3ee4c4756f99a7be539d942f695a0712690f3e4420548c9bd5db90d8"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/check_request/mod.rs",
+      "interface_ids": [
+        "format:preview-check-request"
+      ],
+      "after": {
+        "git_blob_sha1": "b14c4f47a9edd91c9700fb47ea26b091e09f02a4",
+        "sha256": "6f1c3264038d3ca238118b9e59ff385ab18140507a7dfbee393988e4687fed69"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/documentation_capture/mod.rs",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "5dc19baf1c53f500ffd46e9ceb64ac81e965b359",
+        "sha256": "ba43491893216660368ddb1fc266be02e45fad9b606378ffd7a1b6a864624393"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/documentation_map/mod.rs",
+      "interface_ids": [
+        "format:preview-documentation-map"
+      ],
+      "after": {
+        "git_blob_sha1": "b202fff0fa669859cfea302ee6138168f05302e7",
+        "sha256": "7a227884eb49293720c3b78412b3e9b53ef57b495a13e19759d50f1487d8b88e"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "interface_ids": [
+        "format:preview-transition",
+        "format:release-impact",
+        "format:preview-capture",
+        "format:preview-check-request",
+        "format:preview-check-report",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "5a0726c73aef59ac8907c4aeea75c0e265af2416",
+        "sha256": "61ca6b730fd739d541da1ede4be129ea8230042e170dff696bb9c9f9fe436c08"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/release_impact/mod.rs",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "e128f4d8a4c567880d6a24e7ae1bee15a611960e",
+        "sha256": "d359a2b698758472908feaf79ce44f71c9e515136e39a3756e4531b516661221"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/transition/mod.rs",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "b33932f6834cb17761b80d95668afb934519626c",
+        "sha256": "09187bb55a0038ea0ac754a84b022a1570f29026eae61f11e38b86c36228f59f"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "interface_ids": [
+        "format:preview-transition",
+        "format:release-impact",
+        "format:preview-capture",
+        "format:preview-check-request",
+        "format:preview-check-report",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "62cc3578d91afd27a3edec6be4d8407075e2f6a2",
+        "sha256": "5980c1671fdb851ed5098e4b6376a49c9892c30c5e4ebd9ac9cc09c98c969ba0"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "689542eee86241ce6c71d2545629398c808ea3a2",
+        "sha256": "7ae6a28805d0846e61e7f77e589a2ee3a4edf107f924a54bdf7bfe1056c5506f"
+      },
+      "after": {
+        "git_blob_sha1": "f5df8acc0dabc9e2266563861d8dcbb4fe695a21",
+        "sha256": "753daa1b602c3014cbf43e627f6d002956743c5f6aced0e1193ad441206d7ade"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "442c511eeac3031f408e9cff38b238efcab9896b",
+        "sha256": "b3d938c67a3d594cbd67e84cf3e7a1e80fae42f8ed4349a90d79c3e4ef6347ff"
+      },
+      "after": {
+        "git_blob_sha1": "8fd41be5f6825775a12553f26d2f79411768265c",
+        "sha256": "ff09505b458da196a1558dcf4aa9eb750615f5a96081a81c93c2ea2872e6c5b0"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "620d409a251d66a3c6b09905b9ba2561e7dcc92f",
+        "sha256": "9ae8fdbf950caa57308059a3d9657b6e1972a0d2b0ed5167f9a2a8d193193aa9"
+      },
+      "after": {
+        "git_blob_sha1": "a31464c7af2fdda2fe97cc08be7742759b5b678c",
+        "sha256": "805e2c0a3565f30ea01c6deae2566e2c9bc1fe119e0fb3d7f6015aaf383a8504"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "d42abebc67b2bd54a730702b1e66090f69273f05",
+        "sha256": "0418214d4e6d1c592b26c020e887735a0d34423b61fcd68bbeadd9905191c9c2"
+      },
+      "after": {
+        "git_blob_sha1": "1f08af0545b89450e463d35375acd0b11faff059",
+        "sha256": "c515756ab86805c402828aa28250d035f461622f22f7979f85549497c422fae1"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "interface_ids": [
+        "format:preview-affected-source-review",
+        "format:preview-capture",
+        "format:preview-check-report",
+        "format:preview-check-request",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-transition",
+        "format:release-impact"
+      ],
+      "before": {
+        "git_blob_sha1": "ecb24c0f1f78538043935e6d6d3ed049e3db60ba",
+        "sha256": "74e5e43c98fcdc37dbc6badf2b5efe6d64f039f55051b792a8c921d2c2804fee"
+      },
+      "after": {
+        "git_blob_sha1": "8215f202b59e2d7395e453d9d6cca6054ca1387a",
+        "sha256": "e42ef4badc058c16a4775b022488593a08d989379b64ef89eb857a7c5b7173f8"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/invalid/unknown-effect-kind.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "ea485a45a633bb769374aa29dec150cdafe1bfcc",
+        "sha256": "744b5c1cc5766891ea2929824542207d628c76d4f88e883b1f926ee109283798"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/invalid/unknown-field.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "916ae3b0426ac90a7beaf23926a1efb18be5a1f9",
+        "sha256": "5fcc970a77491170047a45a1dc42e10425e9aacb0b7d2219edd6b83a5f1dfcaa"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/invalid/wrong-documents-type.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "ee490297ce8256cb92e749070394564fae4002b5",
+        "sha256": "d3a03934f4fe3891aca49130b207ccff7d73a84bbfeff3dfab61a2b82bad6f12"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/invalid/wrong-endpoint-type.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "af06836101bf76e300eb501b52ada8effe670143",
+        "sha256": "565671cf250b1bd7fb438a360756609106e161ee9018e45b328794a8cdf1c09a"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/invalid/wrong-epoch-type.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "8a4c0dd0dfcf9bc05de7bd3ecf3ef6f5ca78db88",
+        "sha256": "bb4d52b998bab2efb10a5ea93602d01b8dfe86aeff5e2f1123c7595bac0d9a11"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/valid/internal.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "9d2fed8206ac65404777ed8d5e538c3c3d0f9f83",
+        "sha256": "d4eb6e5c9601034ef9a93b3c9c9a495cb5a2bdf2ff38f5e9c57a8f7907b2d6a5"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/valid/introduced.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "8e8171fa94fd206de6ef9971dad400665c941636",
+        "sha256": "a397ccb31513a6be3174e6363b1aab645336fe6eb2b71f6b024ce7e81ea7b624"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-affected-source-review/e1/valid/transient.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "42d1e2af0936bd4293853fd00b947e5207cca552",
+        "sha256": "a4c3172da0c3fb7e0c3651fcac0cf9607702c28b48347b278e3492935ad3d03e"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-capture/e1/valid/dp1.json",
+      "interface_ids": [
+        "format:preview-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "09768bf158250078e15eda961c34e0753e0e5a30",
+        "sha256": "12055d9ea5d9be48f66aa2ca40a5ba785fb7e731e82f662d7804554df43cb6d9"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-check-report/e1/valid/minimal.json",
+      "interface_ids": [
+        "format:preview-check-report"
+      ],
+      "after": {
+        "git_blob_sha1": "d357c1e58464440d9060748a5aa4e6778f547ede",
+        "sha256": "dabb565bb36eef013e54e2dc76966be7b93189edb1aabee0610a408cd1da9f3e"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-check-request/e1/invalid/wrong-repository-roots-type.json",
+      "interface_ids": [
+        "format:preview-check-request"
+      ],
+      "after": {
+        "git_blob_sha1": "4955b4d5e93817a3279d382d96b132a6213f7014",
+        "sha256": "f11ff43635411fbaacaf8b5abf04592cba313bca065fff814c129c94006d433c"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-check-request/e1/valid/minimal.json",
+      "interface_ids": [
+        "format:preview-check-request"
+      ],
+      "after": {
+        "git_blob_sha1": "6411415c9c1a4526401985cb5ebd4ea383f0532e",
+        "sha256": "78b1cf91e86a6231e94729ae01ffb4f1fd6e4aba22ef3203c904fa9378b4a48e"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-check-request/e1/valid/with-repository-roots.json",
+      "interface_ids": [
+        "format:preview-check-request"
+      ],
+      "after": {
+        "git_blob_sha1": "c05d38efb41c89eb5746cc7fe29c9429e3d4c3ee",
+        "sha256": "ed48c59ec17e18ef075cd53ca1bdd5e4bb613c3321dfc8dc3484b2489c82b9c6"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-documentation-capture/e1/invalid/unknown-source-kind.json",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "fa57daa96ec093375946a765adf24b54fe1eb393",
+        "sha256": "6bfad8a9e7a9571ea0fcf6f3c62e400da35f18d98c5101477f3988d9fb265b8c"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-documentation-capture/e1/invalid/wrong-pages-type.json",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "24c0a3bb642df220a9e7682792aa2fd240905c4e",
+        "sha256": "d53864c0eebd202222af97bca1954784722ddb465bd8d87e1ce544714feaf641"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-documentation-capture/e1/valid/content.json",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "41982a54166fc2b1e5df42376f512b4f20699b1a",
+        "sha256": "c06791eab0efe99069361428c8913b7dbf3aeef690b8aa692251c6ca2177ae80"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-documentation-capture/e1/valid/git.json",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "9461b50bd5ebf32089a03539901bdfaefddd7ee4",
+        "sha256": "61cd8c71a31a6e784cd86c34bd02f70970f4d52b8d6c921d4d9aa52991e04f83"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-documentation-map/e1/valid/minimal.json",
+      "interface_ids": [
+        "format:preview-documentation-map"
+      ],
+      "after": {
+        "git_blob_sha1": "2910199b6cf20d8ba7c1c48a18454de00f1290ab",
+        "sha256": "e9369e25ebb5150bb17359557d0faf728fbfc74ba44b79c2ea43f4c47809189e"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/unknown-field.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "b2741baeb96186b3711679772748b1208887b908",
+        "sha256": "9307abbefa078f9ec58e4467d148cc268e20043a4f05a28fee74094729f88ec1"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/wrong-affected-source-review-type.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "ee7ff36d05cc6d4b92eb44335dfb3d6d34a17e0e",
+        "sha256": "04421e6e154a8335ab3e72ea0eaa331405df1aac72d5bf69c7d7dd04a9b06132"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/wrong-catalogue-type.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "a24d45ad3e349872201312bb619447b915eafd01",
+        "sha256": "4d2d00bb4b6072b7ec25a3722a59510c6cb521616c066bd7201de4efe629e0e0"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/wrong-contribution-scope-type.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "63828359714145ba92f2943b214d45199cdb081c",
+        "sha256": "0b8c61e6c37a026d49133a81b56fff40f132c37ec24737666ea35160a8eb2650"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/wrong-documentation-map-type.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "e383dc6b2038cea27270fa77947e5a80117ea013",
+        "sha256": "00430d31a99991d4f5b32c9339f3d33dae6556abe9121e886bd7fb9abed0861d"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/invalid/wrong-epoch-type.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "a30399e114edc35915216326d13e860676892c33",
+        "sha256": "77b650ff3d1e4a43039d1220a5358d3414faf932bf37fd37d67f0c57b320fec0"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/valid/captured.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "066f525fc73e0b5b7137cae6849946726a5e197f",
+        "sha256": "2cde2f62e5bec9959a628a16180e3e0d7165b214f56709f53b13b38667110108"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/valid/with-affected-source-review.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "8a606d136cc7d522bd719a63d5ebc6bade65d43e",
+        "sha256": "ba434d67ca22da9ebf61c52e39116989f0a309e2e6a38e0b47d8302f1d7f9a75"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/valid/with-catalogue.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "38dde2b407fb4f8f8aa27b6d02652bfce3db19dd",
+        "sha256": "3d3642f2882de9470d443d53782fbd156875b0216889eda1bcaa245794698cbb"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/valid/with-contribution-scope.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "0c25518d0a59b18385e8402491830af52ce98965",
+        "sha256": "bbccdcc03506b5a43ddfa0073066e3c6c222db9acc47a60974f259cc529eaf56"
+      }
+    },
+    {
+      "path": "formats/corpora/preview-transition/e1/valid/with-documentation-inputs.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "3c7188e53b0613180086d6dfec03723cc0f9771f",
+        "sha256": "bbd17370fd93a70b8eac069b39448c3a3c606534085af9a11d1cb221a217316b"
+      }
+    },
+    {
+      "path": "formats/corpora/release-impact/e1/invalid/unknown-field.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "ac56b6b03b24a7f1fd8db7ffde70d0c016f2e17a",
+        "sha256": "8b114556a9059c0153145348b8d594a75458b461ce71e13bfd344dcec3a58c10"
+      }
+    },
+    {
+      "path": "formats/corpora/release-impact/e1/invalid/unknown-impact-state.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "65624e0dbedc01de10079907e37425697fc72445",
+        "sha256": "58809e608d4db52ab85484f38f0d796b9fc84b22f45e367b29a354998ed02c62"
+      }
+    },
+    {
+      "path": "formats/corpora/release-impact/e1/invalid/wrong-affected-paths-type.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "78665e1c92e723e7fc58b499e982f05b3d0a31f1",
+        "sha256": "dc0e0ff1956f8785f33c7d9a69daebc2879fc5f3f1d828c23b5f028b85b4db47"
+      }
+    },
+    {
+      "path": "formats/corpora/release-impact/e1/valid/internal-refactor.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "9c529a396ad8ff4a1e9d61d4c07cd581ee8be0d2",
+        "sha256": "248a26831a77b60142922097bfa9cccbf8c8cc8e7058b0d864311a4b15c574b3"
+      }
+    },
+    {
+      "path": "formats/corpora/release-impact/e1/valid/with-path-evidence.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "5d2918e246a323921629ff355e85443b07410b26",
+        "sha256": "b9aa90033ef66d3cb9199749db32add75aaffc64cf9007adcce77504d7530dc1"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/affected_source_review.jtd.json",
+      "interface_ids": [
+        "format:preview-affected-source-review"
+      ],
+      "after": {
+        "git_blob_sha1": "cf02bedbf6c23260aeadefd6ac54f47d67576cd1",
+        "sha256": "c0a66d82ce83b60ce52de537c00e5ea843c3836fe6e554913c8efedb0a08c745"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/capture.jtd.json",
+      "interface_ids": [
+        "format:preview-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "aa0c0bd72e4d6d3c6a8e9a1d07cdbc84bfd1172e",
+        "sha256": "24c9e575be3092e0a392948ae4461ec90129aad51aba6b7cb34473a78a55bd70"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/check_report.jtd.json",
+      "interface_ids": [
+        "format:preview-check-report"
+      ],
+      "after": {
+        "git_blob_sha1": "25e0b9bca3d7d5eee9a180612c0ff1580176a206",
+        "sha256": "8a6cc4489c68eb8043a4988ac0f9fad55be92a764d4dd97293ebe4abd3f6de7f"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/check_request.jtd.json",
+      "interface_ids": [
+        "format:preview-check-request"
+      ],
+      "after": {
+        "git_blob_sha1": "8981c7ff6719e2ab2951c5ee9a7281eaf9b504b5",
+        "sha256": "ed4b69931676a3a240eae263270ca052a8997008b9109a6e267e67af8024d155"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/documentation_capture.jtd.json",
+      "interface_ids": [
+        "format:preview-documentation-capture"
+      ],
+      "after": {
+        "git_blob_sha1": "13e66972ebd012247b23f01eff36f148023e11b3",
+        "sha256": "77b7a5b4b919c452d69cc91f654a7f742725cf2ffa229656907364639d5f2de5"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/documentation_map.jtd.json",
+      "interface_ids": [
+        "format:preview-documentation-map"
+      ],
+      "after": {
+        "git_blob_sha1": "8ba4277ecf491a71718a5ac1b963c28a8ac55829",
+        "sha256": "d591876de21640bf2de859ad7bf2210a4080474256df68945ada8465f3e4e05f"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/release_impact.jtd.json",
+      "interface_ids": [
+        "format:release-impact"
+      ],
+      "after": {
+        "git_blob_sha1": "a48d42f970a9571b429ea21449d0416718855daf",
+        "sha256": "56fb2c59285d2318e121612defaef0e0c7f51a3374316c6218ead9c4c454e335"
+      }
+    },
+    {
+      "path": "schemas/preview/e1/transition.jtd.json",
+      "interface_ids": [
+        "format:preview-transition"
+      ],
+      "after": {
+        "git_blob_sha1": "90414608a782966d637a09ca3bff6d89e535b658",
+        "sha256": "4c9ee060baee6411ceae444fdd7157931d5ba19cdaa3608877dcba9edb470940"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "222662ef7f0c72952e8f831d0834b67d30c01d4d",
+        "sha256": "f8471aee24d32fad007dced5da144675b3f9a9c1b40a4e4bf9a2f8f04a571d44"
+      },
+      "after": {
+        "git_blob_sha1": "1775d43d8fb080740d4b886a6e466ef674df612a",
+        "sha256": "b2f4b975dc6a5fcffc0a2152d1452e155fe1bd5b06570340789f76b2ecbd3255"
+      },
+      "user_no_impact_reason": "CANDIDATE: this touched path is proposed as traceability/generated-registration/test/index/support maintenance rather than a distinct exposed interface; root must inspect its actual delta before approving no user impact.",
+      "documentation_no_impact_reason": "CANDIDATE: no separate user-documentation topic is proposed for this support path; root must independently confirm that no documentation claim/default/workflow changed."
+    },
+    {
+      "path": "tools/preview-transition/README.md",
+      "interface_ids": [
+        "tool:preview-transition-assemble",
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "3ac4720c729243bc276f37849b43b37ca26a208b",
+        "sha256": "9f054b246d537c9caba5e909ecd886a1140a0461208b3cb12141b50c6420db0d"
+      }
+    },
+    {
+      "path": "tools/preview-transition/assemble.py",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "00f3d45861bccbc12d68f327462aa1e1dbcd91bc",
+        "sha256": "620c69c02871bd1d877cb406e8976e862b3d0fae8643253a1f3b9715d3714e35"
+      }
+    },
+    {
+      "path": "tools/preview-transition/check.py",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "8545f7472a5de3473fb6099fa512df398cf46f6e",
+        "sha256": "f0e5f1b28306b78421637d7c910080e4487e22ba2d9c2efbed693078bc05010f"
+      }
+    },
+    {
+      "path": "tools/preview-transition/tests/test_assemble.py",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "f032f93f91c97a1453ac72af69ce00ba1b6ebd87",
+        "sha256": "239fca072361528c289f022e9e8bac7f2080a8f5cab14b682b4d1eab74cbdf13"
+      }
+    },
+    {
+      "path": "tools/preview-transition/tests/test_check.py",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "8958891e96006eb9ad7b6a78fc8ac474ab37126c",
+        "sha256": "e6ac0b2e16cf9c75a708df1c2ec6ade890625cb4c222caa0a597ab1163ad6379"
+      }
+    },
+    {
+      "path": "vibe.lock",
+      "interface_ids": [
+        "config:vibe-lock:local-source-url"
+      ],
+      "before": {
+        "git_blob_sha1": "d3ce98deb7afb5c3d2ae1685093a0f937178e0ab",
+        "sha256": "cd8023b0ad43b51658fae8d9cba0400f21b8017986b61e63af9d7c65b93808a6"
+      },
+      "after": {
+        "git_blob_sha1": "5d6f4e832767fad8d8ab652c86b02539b0e7e059",
+        "sha256": "00c8b761757f64a93051eefae1eb1da88386be8c86891a30b55717a6ae76204c"
+      }
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md",
+      "interface_ids": [
+        "documentation:jtd-codegen:linux-download"
+      ],
+      "before": {
+        "git_blob_sha1": "3f0e95b47feda68398ab30e9bef2c746c58c0936",
+        "sha256": "6f2ac797e58285ac54852a28f75658d107aca014239a31ea5f03ec63f09af89c"
+      },
+      "after": {
+        "git_blob_sha1": "191bb5c05ec056c8c6c7292972bb61624d8468fc",
+        "sha256": "9476a1f1e00cf873d6764c3e6d04f5e95c9aeae55e68d826dbf29d1541302fbf"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "interface_ids": [
+        "rust:vibe-safefs:Project::publish_new_proved_in"
+      ],
+      "before": {
+        "git_blob_sha1": "f5e75aa67258620e16d608f4304c24ca8b980d0e",
+        "sha256": "cea2cc826c4001b7d75705689d56e2dede89db5703cf14f2c8cb90a9c4e19329"
+      },
+      "after": {
+        "git_blob_sha1": "67e088a9087c7f27404e971872e445a83b3e82e0",
+        "sha256": "43bb21af5f61a7e4c691df60abc98e2a1b1e3502880b3ac3bcd708adbe1d690e"
+      }
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "interface_ids": [
+        "format:preview-affected-source-review",
+        "format:preview-capture",
+        "format:preview-check-report",
+        "format:preview-check-request",
+        "format:preview-documentation-capture",
+        "format:preview-documentation-map",
+        "format:preview-transition",
+        "format:release-impact",
+        "rust:vibe-wire:preview-validators",
+        "tool:preview-transition-assemble",
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "b6837bfcec71e5512e458b9978f2af5aa21002a8",
+        "sha256": "9657564982b5613f529676bf39316cb2c5f68dd8663d6abf6c6edf12f507e9db"
+      }
+    },
+    {
+      "path": "xtask/Cargo.toml",
+      "interface_ids": [
+        "tool:preview-transition-assemble",
+        "tool:preview-transition-check"
+      ],
+      "before": {
+        "git_blob_sha1": "f4c4fb7b9a07c90bb938ec0d41fb49e780a1f7f3",
+        "sha256": "28e72f79342bdd889e36f87884e14056dfa0b656d5c64467642156877a6f7b42"
+      },
+      "after": {
+        "git_blob_sha1": "0aa62524bd1ed4341ba1d744dfae679195a40f43",
+        "sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-assemble/draft.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "87e4bdc9996a6560ef51d99f4f14752fa335282c",
+        "sha256": "82ea685828a1f02df74834ce74f897bb050ae83e044e954a5b55c3bf0506c7be"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-assemble/main.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "094e15070b481afd0d2ff9c63cbab3d5f22fc5ac",
+        "sha256": "b350c56ddeab589e6872317295facd1db4c405aec92a186d7d08384811fc419b"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-assemble/output.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "fa71a83a93c6b962a5edd1c2359f47589772659e",
+        "sha256": "c72b0d066835ef8fd721ca409b8a360860e3f9611c3174d60300c4f0b2204515"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-assemble/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-assemble"
+      ],
+      "after": {
+        "git_blob_sha1": "9c8c55fc449f86cd523b1f2e674d4d6b97eb7265",
+        "sha256": "2abb0a131b71cae219f36fd74eed0c9564982b946780f5b4af6c8a99070c18c9"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/affected_review.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "6996f6b520aaa7dca16a5ae8335253cd7090a665",
+        "sha256": "8c3b98060afefba65176a46f02d0224b5a41156979d88895fc494ab5e252d7fd"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/affected_review/contracts.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "be89bbdeec3c71c23d993e499ceba57e5e2d2fe6",
+        "sha256": "ef710ed1edd8af97927f24bf524d6bceccdb493902761beea9c2821a82caac62"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/affected_review/membership.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "a4d809595cfd5de610b85866169a9c0e0b0332c0",
+        "sha256": "acb4fd40632a5ca67e516514e722e437d3216387d21277ad739163ea53ee6886"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/affected_review/paths.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "b6979e6dca021b714239eb6d1f89720386a65aaf",
+        "sha256": "a7bf12a866c0ac69b3ab8cf268795e42c5fdc08ae2224a70ca6be5046a1c9269"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/affected_review/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "2af841c66cb9919c07d46bdb6273601678df96b4",
+        "sha256": "71ff11fdb432e0a5bd7a075ffa890b78ef18dc196c44d1d19353aaa6491ec0c4"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/capture.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "c83160710c6b9034d0a55f124d19f640007209cc",
+        "sha256": "f0aceb9de46d5ffc500fafeb107115b8bf3d50b996988837b3f31c9d5ed0164d"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/captured_git_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "76372bc226483cd58512c96a0fb5061548f507c0",
+        "sha256": "d66e63dd5af6b394df8b7f72c70aae4e08299264ae3de336bb3077a0086ec770"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/contribution.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "af8cd5a148b5b83d8aab420e3e538eb85ea3f677",
+        "sha256": "b8355c93b74c827f36dd41b0d333dd0dcc8adfa15940512c6ab0ea80b9d5a059"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/contribution_evidence.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "0fdf4a7908f24a0ab38ffc0cbfca0f0122f6b2d1",
+        "sha256": "6602881894d031bd085adb4eabeae0fbaaae0577df4c482c8651038180221407"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/contribution_git_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "4bb6d89585dc9151aa1fb46a92e6594aa7def364",
+        "sha256": "c25be5da4fc1b9e71c39669c2138aff35a8d501e60f7ce0def3836e5a4147a5d"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/contribution_history_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "58de9d503db9f65ac33d79198b842998c74f9918",
+        "sha256": "6d7cb51c1a635bc384ffbdb7d1011b023f3503bbcc7f9c03e9dfeb59adbdc6eb"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/contribution_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "c96e0288cb86ec929b7ebe4a5123a8885bee1e6d",
+        "sha256": "391ba71f25d3ab9777b1e3a1fbea17964219dfd1bb9889b7c10733ecad38361f"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/documentation.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "042c4f0066d0c9d6543895df090f9989881e74ed",
+        "sha256": "eb844e73f07815805a0f752d7c4cae5b90ea8ac80d401243675ef16889e273ad"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/documentation/artifacts.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "69da0994643e6fedfbacf4b0f328cb05751517a6",
+        "sha256": "bf9ded0d70c40b5358a6e63a20d319c0611e10b42c740e3a626f937051a97d6b"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/documentation/git.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "f5d1c7eb2cf45f38bf4f6f5401af6fbbfff39091",
+        "sha256": "1e913471aa207e17d04696b4cb1445bd44bde3e5cc78d9a3120509c64d5fd8a0"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/documentation/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "e5c1566e1e939287a110566ff06f5d0adbe00c27",
+        "sha256": "8b4ecaf252ef369a3a23f0c33e0a2444e6cc979724bc03c9ecf33c773c913454"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/documentation/xml.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "442bd276f7999ec38b796f9099627e72aa941399",
+        "sha256": "735d48312cff299c5d0733a1f9c235f2b8eb062844b6eae1be49fdfff8ca750e"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/git_entry.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "5f19ff3c1eae6fee3c33e75c716422422e5ec337",
+        "sha256": "e809c2a6681b97e4d842fc358eac76e2b34a289cf723d3e839e4a7f4086eadd5"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/main.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "a87962f46d5db764268cdfe809cbf80e4cecf359",
+        "sha256": "9de246c1512207a7277942394d585006a4d0b8c4c90f12306f7667c1c00a3a6a"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "43419f0991dadbe14c01727219a5edfb3aff09e7",
+        "sha256": "02c49a1e5b3fef539849b055fb35fb6d5e22b1e28037c675866fdf4e835f63be"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/readiness_tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "1a120df5f5ecdcecfa8f1ceb282934ac0a16fafc",
+        "sha256": "1a524b79e7df79fc38e278ab4a56bf80f44d7b533e1cead2f234a2a02ae5c20f"
+      }
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/tests.rs",
+      "interface_ids": [
+        "tool:preview-transition-check"
+      ],
+      "after": {
+        "git_blob_sha1": "05e95dd3f5955063a67c312ed75dba0a35777e3a",
+        "sha256": "3a4deae08a8c789a3d3f8a834e910094135fb8c65a7004492d32bcd13ea264ba"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "tool:preview-transition-check",
+      "capability_id": "preview-accounting-inspection",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No preview-transition-check entrypoint in DP1.",
+      "after": "Source declares capture/contribution and staged prerequisite checking, retained documentation inspection and finite affected-source joins; outcomes require actual selected inputs.",
+      "source_paths": [
+        "Cargo.lock",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/bin/preview-transition-check/capture.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/contribution.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/contribution_evidence.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/contribution_git_tests.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/contribution_history_tests.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/contribution_tests.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/main.rs",
+        "crates/vibe-wire/src/bin/preview-transition-check/tests.rs",
+        "tools/preview-transition/README.md",
+        "tools/preview-transition/check.py",
+        "tools/preview-transition/tests/test_check.py",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+        "xtask/Cargo.toml",
+        "xtask/src/bin/preview-transition-check/affected_review.rs",
+        "xtask/src/bin/preview-transition-check/affected_review/contracts.rs",
+        "xtask/src/bin/preview-transition-check/affected_review/membership.rs",
+        "xtask/src/bin/preview-transition-check/affected_review/paths.rs",
+        "xtask/src/bin/preview-transition-check/affected_review/tests.rs",
+        "xtask/src/bin/preview-transition-check/capture.rs",
+        "xtask/src/bin/preview-transition-check/captured_git_tests.rs",
+        "xtask/src/bin/preview-transition-check/contribution.rs",
+        "xtask/src/bin/preview-transition-check/contribution_evidence.rs",
+        "xtask/src/bin/preview-transition-check/contribution_git_tests.rs",
+        "xtask/src/bin/preview-transition-check/contribution_history_tests.rs",
+        "xtask/src/bin/preview-transition-check/contribution_tests.rs",
+        "xtask/src/bin/preview-transition-check/documentation.rs",
+        "xtask/src/bin/preview-transition-check/documentation/artifacts.rs",
+        "xtask/src/bin/preview-transition-check/documentation/git.rs",
+        "xtask/src/bin/preview-transition-check/documentation/tests.rs",
+        "xtask/src/bin/preview-transition-check/documentation/xml.rs",
+        "xtask/src/bin/preview-transition-check/git_entry.rs",
+        "xtask/src/bin/preview-transition-check/main.rs",
+        "xtask/src/bin/preview-transition-check/readiness.rs",
+        "xtask/src/bin/preview-transition-check/readiness_tests.rs",
+        "xtask/src/bin/preview-transition-check/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+      ],
+      "topic_ids": [
+        "preview-checker-use"
+      ]
+    },
+    {
+      "interface_id": "tool:preview-transition-assemble",
+      "capability_id": "preview-guidance-drafts",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No preview-transition-assemble entrypoint in DP1.",
+      "after": "Source declares two draft outputs through no-replace publication; drafts do not confer acceptance.",
+      "source_paths": [
+        "Cargo.lock",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/bin/preview-transition-assemble/draft.rs",
+        "crates/vibe-wire/src/bin/preview-transition-assemble/main.rs",
+        "crates/vibe-wire/src/bin/preview-transition-assemble/output.rs",
+        "crates/vibe-wire/src/bin/preview-transition-assemble/tests.rs",
+        "tools/preview-transition/README.md",
+        "tools/preview-transition/assemble.py",
+        "tools/preview-transition/tests/test_assemble.py",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+        "xtask/Cargo.toml",
+        "xtask/src/bin/preview-transition-assemble/draft.rs",
+        "xtask/src/bin/preview-transition-assemble/main.rs",
+        "xtask/src/bin/preview-transition-assemble/output.rs",
+        "xtask/src/bin/preview-transition-assemble/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DRAFT-OUTPUT-OWNERSHIP"
+      ],
+      "topic_ids": [
+        "preview-draft-use"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-wire:preview-validators",
+      "capability_id": "preview-declaration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No registered preview validators in DP1.",
+      "after": "Source declares generated-record consistency validators and strict staged request grammar; no actual source acceptance inferred.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
+        "crates/vibe-wire/src/behaviour/preview_affected_source_review/tests.rs",
+        "crates/vibe-wire/src/behaviour/preview_capture.rs",
+        "crates/vibe-wire/src/behaviour/preview_check.rs",
+        "crates/vibe-wire/src/behaviour/preview_documentation_capture.rs",
+        "crates/vibe-wire/src/behaviour/preview_documentation_capture/tests.rs",
+        "crates/vibe-wire/src/behaviour/preview_transition.rs",
+        "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+        "crates/vibe-wire/src/behaviour/release_impact.rs",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+        "crates/vibe-wire/src/behaviour/mod.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ],
+      "topic_ids": [
+        "preview-record-authoring"
+      ]
+    },
+    {
+      "interface_id": "format:preview-transition",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/transition/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-transition/e1/invalid/unknown-field.json",
+        "formats/corpora/preview-transition/e1/invalid/wrong-affected-source-review-type.json",
+        "formats/corpora/preview-transition/e1/invalid/wrong-catalogue-type.json",
+        "formats/corpora/preview-transition/e1/invalid/wrong-contribution-scope-type.json",
+        "formats/corpora/preview-transition/e1/invalid/wrong-documentation-map-type.json",
+        "formats/corpora/preview-transition/e1/invalid/wrong-epoch-type.json",
+        "formats/corpora/preview-transition/e1/valid/captured.json",
+        "formats/corpora/preview-transition/e1/valid/with-affected-source-review.json",
+        "formats/corpora/preview-transition/e1/valid/with-catalogue.json",
+        "formats/corpora/preview-transition/e1/valid/with-contribution-scope.json",
+        "formats/corpora/preview-transition/e1/valid/with-documentation-inputs.json",
+        "schemas/preview/e1/transition.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#TRANSITION-INDEX"
+      ],
+      "topic_ids": [
+        "format-preview-transition"
+      ]
+    },
+    {
+      "interface_id": "format:release-impact",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/release_impact/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/release-impact/e1/invalid/unknown-field.json",
+        "formats/corpora/release-impact/e1/invalid/unknown-impact-state.json",
+        "formats/corpora/release-impact/e1/invalid/wrong-affected-paths-type.json",
+        "formats/corpora/release-impact/e1/valid/internal-refactor.json",
+        "formats/corpora/release-impact/e1/valid/with-path-evidence.json",
+        "schemas/preview/e1/release_impact.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING"
+      ],
+      "topic_ids": [
+        "format-release-impact"
+      ]
+    },
+    {
+      "interface_id": "format:preview-capture",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/capture/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-capture/e1/valid/dp1.json",
+        "schemas/preview/e1/capture.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-BEFORE-EDIT"
+      ],
+      "topic_ids": [
+        "format-preview-capture"
+      ]
+    },
+    {
+      "interface_id": "format:preview-check-request",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/check_request/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-check-request/e1/invalid/wrong-repository-roots-type.json",
+        "formats/corpora/preview-check-request/e1/valid/minimal.json",
+        "formats/corpora/preview-check-request/e1/valid/with-repository-roots.json",
+        "schemas/preview/e1/check_request.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ],
+      "topic_ids": [
+        "format-preview-check-request"
+      ]
+    },
+    {
+      "interface_id": "format:preview-check-report",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/check_report/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-check-report/e1/valid/minimal.json",
+        "schemas/preview/e1/check_report.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ],
+      "topic_ids": [
+        "format-preview-check-report"
+      ]
+    },
+    {
+      "interface_id": "format:preview-documentation-capture",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/documentation_capture/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-documentation-capture/e1/invalid/unknown-source-kind.json",
+        "formats/corpora/preview-documentation-capture/e1/invalid/wrong-pages-type.json",
+        "formats/corpora/preview-documentation-capture/e1/valid/content.json",
+        "formats/corpora/preview-documentation-capture/e1/valid/git.json",
+        "schemas/preview/e1/documentation_capture.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK"
+      ],
+      "topic_ids": [
+        "format-preview-documentation-capture"
+      ]
+    },
+    {
+      "interface_id": "format:preview-documentation-map",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/documentation_map/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-documentation-map/e1/valid/minimal.json",
+        "schemas/preview/e1/documentation_map.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK"
+      ],
+      "topic_ids": [
+        "format-preview-documentation-map"
+      ]
+    },
+    {
+      "interface_id": "format:preview-affected-source-review",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "source_paths": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/affected_source_review/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/preview-affected-source-review/e1/invalid/unknown-effect-kind.json",
+        "formats/corpora/preview-affected-source-review/e1/invalid/unknown-field.json",
+        "formats/corpora/preview-affected-source-review/e1/invalid/wrong-documents-type.json",
+        "formats/corpora/preview-affected-source-review/e1/invalid/wrong-endpoint-type.json",
+        "formats/corpora/preview-affected-source-review/e1/invalid/wrong-epoch-type.json",
+        "formats/corpora/preview-affected-source-review/e1/valid/internal.json",
+        "formats/corpora/preview-affected-source-review/e1/valid/introduced.json",
+        "formats/corpora/preview-affected-source-review/e1/valid/transient.json",
+        "schemas/preview/e1/affected_source_review.jtd.json",
+        "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+      ],
+      "topic_ids": [
+        "format-preview-affected-source-review"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-safefs:Project::publish_new_proved_in",
+      "capability_id": "originating-file-publication-ownership",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "publish_new_in returns unit; no originating-proof publication seam is declared.",
+      "after": "New public method returns EntryProof from originating stage; old publication method delegates; identical-byte replacement is refused by source identity check.",
+      "source_paths": [
+        "crates/vibe-safefs/src/file/create_new.rs",
+        "crates/vibe-safefs/src/file/create_new_tests.rs",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-safefs/src/proof.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ],
+      "topic_ids": [
+        "proved-publication-use"
+      ]
+    },
+    {
+      "interface_id": "config:vibe-lock:local-source-url",
+      "capability_id": "local-checkout-source-retrieval",
+      "kind": "changed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Local lock source_url declarations name the prior Windows checkout.",
+      "after": "Local lock source_url declarations name the Linux checkout; content_hash values remain historical claims.",
+      "source_paths": [
+        "vibe.lock"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ],
+      "topic_ids": [
+        "local-lock-retrieval"
+      ]
+    },
+    {
+      "interface_id": "repository:materialized-web-slot-ignore",
+      "capability_id": "authored-versus-materialized-source",
+      "kind": "changed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No explicit materialized web application slot ignore row.",
+      "after": "Source declares an explicit ignore for derived web application materialization; not removal of canonical package source.",
+      "source_paths": [
+        ".gitignore"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ],
+      "topic_ids": [
+        "derived-web-slot"
+      ]
+    },
+    {
+      "interface_id": "documentation:jtd-codegen:linux-download",
+      "capability_id": "linux-generator-retrieval",
+      "kind": "fixed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Linux installation instructions request a tar.gz archive.",
+      "after": "Changed instructions request the published zip, unzip and executable permission; download was not executed here.",
+      "source_paths": [
+        "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-OBSERVATION"
+      ],
+      "topic_ids": [
+        "linux-codegen-install"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "derived-web-slot",
+      "obligation": "CANDIDATE documentation obligation: describe derived-web-slot from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-affected-source-review",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-affected-source-review from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-capture",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-capture from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-check-report",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-check-report from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-check-request",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-check-request from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-documentation-capture",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-documentation-capture from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-documentation-map",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-documentation-map from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-preview-transition",
+      "obligation": "CANDIDATE documentation obligation: describe format-preview-transition from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "format-release-impact",
+      "obligation": "CANDIDATE documentation obligation: describe format-release-impact from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "linux-codegen-install",
+      "obligation": "CANDIDATE documentation obligation: describe linux-codegen-install from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "local-lock-retrieval",
+      "obligation": "CANDIDATE documentation obligation: describe local-lock-retrieval from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "preview-checker-use",
+      "obligation": "CANDIDATE documentation obligation: describe preview-checker-use from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "preview-draft-use",
+      "obligation": "CANDIDATE documentation obligation: describe preview-draft-use from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "preview-record-authoring",
+      "obligation": "CANDIDATE documentation obligation: describe preview-record-authoring from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    },
+    {
+      "topic_id": "proved-publication-use",
+      "obligation": "CANDIDATE documentation obligation: describe proved-publication-use from exact accepted source facts; actual page/anchor/build and editorial proof remain unbound."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "2c680f587ec25ce40959251b965d9e2692c0f6748b4e718bd933f4c3c89d38b4",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+          "git_blob_sha1": "b6837bfcec71e5512e458b9978f2af5aa21002a8",
+          "sha256": "9657564982b5613f529676bf39316cb2c5f68dd8663d6abf6c6edf12f507e9db"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "git_blob_sha1": "67e088a9087c7f27404e971872e445a83b3e82e0",
+          "sha256": "43bb21af5f61a7e4c691df60abc98e2a1b1e3502880b3ac3bcd708adbe1d690e"
+        }
+      ]
+    }
+  ]
+}

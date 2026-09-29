@@ -1,0 +1,460 @@
+{
+  "schema": 1,
+  "change_id": "preview-accounting-foundation",
+  "before_capture_id": "dp1-30d217bfce47bca",
+  "after_capture_id": "bootstrap-4cec12cd3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "16dd60e83eb0910ca9a3875e7eeba5ab52a973ba"
+    },
+    {
+      "kind": "commit",
+      "identity": "7d8a0bdcc0dfd04ce1d79e27773f0866558950fb"
+    },
+    {
+      "kind": "commit",
+      "identity": "448d5770f8b08efe3fb96e8f2c10944684f09a8c"
+    },
+    {
+      "kind": "commit",
+      "identity": "ccf1f4e44677350c746db9543d3f6d7489842bba"
+    },
+    {
+      "kind": "commit",
+      "identity": "784d972c84b86cc360dd5e3131f7f9ad1c8d905e"
+    },
+    {
+      "kind": "commit",
+      "identity": "e130799f4338c8e3ed8777383348b14f96b783f4"
+    },
+    {
+      "kind": "commit",
+      "identity": "0097ef64e637cfba0d22e7da12074c274f477739"
+    },
+    {
+      "kind": "commit",
+      "identity": "c1d432254fe9b0424ca15c7d220dc8e6263b23b8"
+    },
+    {
+      "kind": "commit",
+      "identity": "792ad203587f27cc6ec3a1522c1aaa4a43701f06"
+    },
+    {
+      "kind": "commit",
+      "identity": "add493455a7fa536ca74d3373ad6352b33261568"
+    },
+    {
+      "kind": "commit",
+      "identity": "4c1694d1f0f2f373f72cb5dcb8479b84592b0b91"
+    },
+    {
+      "kind": "commit",
+      "identity": "a7942d300ffefa4788cb17ab611974e79f346ee0"
+    },
+    {
+      "kind": "commit",
+      "identity": "be7fc6933e848456d97cd5756ee5c7580be0238c"
+    },
+    {
+      "kind": "commit",
+      "identity": "9c8e55827967d6ef55c7078cc7ae654c2ce0be40"
+    },
+    {
+      "kind": "commit",
+      "identity": "db29ee46f5313c88354c1a83246b3b5b7ba4d574"
+    },
+    {
+      "kind": "commit",
+      "identity": "c337811bb00865dad847a94332a39d397e3aaada"
+    },
+    {
+      "kind": "commit",
+      "identity": "d74eba0284885baa359e6874a6214dc300040375"
+    },
+    {
+      "kind": "commit",
+      "identity": "47211d7458dda6210039dec8770ecda0ff14c8ff"
+    },
+    {
+      "kind": "commit",
+      "identity": "4079737a1c4c5716c39efece066f7cf2fa490554"
+    },
+    {
+      "kind": "commit",
+      "identity": "2387e346fea865fffda378ee42f1d1238ffd638a"
+    },
+    {
+      "kind": "commit",
+      "identity": "c279d6410c83248e8dca870e5d410887f56d3d31"
+    },
+    {
+      "kind": "commit",
+      "identity": "9ccd39edf24f782222d066d75a1903ac3ac9f88f"
+    },
+    {
+      "kind": "commit",
+      "identity": "bb494af610cabcdcd5663780d636821ec68c553b"
+    },
+    {
+      "kind": "commit",
+      "identity": "8f2810868d8d1e2c8e16778e9eef828b3c530c88"
+    },
+    {
+      "kind": "commit",
+      "identity": "05edcccc76220302bd17559a09875d6bec425618"
+    },
+    {
+      "kind": "commit",
+      "identity": "49276b25a7e1c895a7f37e3e207d94477fc0c936"
+    },
+    {
+      "kind": "commit",
+      "identity": "d4d8af1e69ddff140e67461784a20f9a4b6dacaf"
+    },
+    {
+      "kind": "commit",
+      "identity": "041789ae687db26157810b1458400b8d2df792ab"
+    },
+    {
+      "kind": "commit",
+      "identity": "2cfdabd30ee65f18a0b01c3ba0e5d60de8996cc1"
+    },
+    {
+      "kind": "commit",
+      "identity": "a81a91fe9606f1aa3ea88049906b0aa722b414d7"
+    },
+    {
+      "kind": "commit",
+      "identity": "d4f9e7a09ef36b5f1ed5ea9f5ac522d33e05842e"
+    },
+    {
+      "kind": "commit",
+      "identity": "ceec317ebbdf1f837ca4e135ff0502caa2d78753"
+    },
+    {
+      "kind": "commit",
+      "identity": "e32abf8e68a6e29d5415f9a634feb874aad96b38"
+    },
+    {
+      "kind": "commit",
+      "identity": "6c2a59ef9820b12d985d39527a0c86ea817379b4"
+    },
+    {
+      "kind": "commit",
+      "identity": "94632374b68b2ba09cf166563a73ea6e089e6314"
+    },
+    {
+      "kind": "commit",
+      "identity": "6488f4fd5af78650558de1e19134401c9c0e0b8f"
+    },
+    {
+      "kind": "commit",
+      "identity": "b9e913919be4456d008dbad9c99b184bfb9bd086"
+    },
+    {
+      "kind": "commit",
+      "identity": "57cd361a20c584bfee2e89d1559ffd988c9fec13"
+    },
+    {
+      "kind": "commit",
+      "identity": "c8d759bd3e7966e531106a277d86b7432b33ea7a"
+    },
+    {
+      "kind": "commit",
+      "identity": "4cec12cd358c4ee58fb0a53180e4f3d4df868fb8"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "crates/vibe-wire/Cargo.toml",
+    "crates/vibe-wire/src/behaviour/mod.rs",
+    "crates/vibe-wire/src/behaviour/preview_affected_source_review.rs",
+    "crates/vibe-wire/src/behaviour/preview_affected_source_review/tests.rs",
+    "crates/vibe-wire/src/behaviour/preview_capture.rs",
+    "crates/vibe-wire/src/behaviour/preview_check.rs",
+    "crates/vibe-wire/src/behaviour/preview_documentation_capture.rs",
+    "crates/vibe-wire/src/behaviour/preview_documentation_capture/tests.rs",
+    "crates/vibe-wire/src/behaviour/preview_transition.rs",
+    "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+    "crates/vibe-wire/src/behaviour/release_impact.rs",
+    "crates/vibe-wire/src/bin/preview-transition-assemble/draft.rs",
+    "crates/vibe-wire/src/bin/preview-transition-assemble/main.rs",
+    "crates/vibe-wire/src/bin/preview-transition-assemble/output.rs",
+    "crates/vibe-wire/src/bin/preview-transition-assemble/tests.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/capture.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/contribution.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/contribution_evidence.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/contribution_git_tests.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/contribution_history_tests.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/contribution_tests.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/main.rs",
+    "crates/vibe-wire/src/bin/preview-transition-check/tests.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/affected_source_review/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/capture/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/check_report/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/check_request/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/documentation_capture/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/documentation_map/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/release_impact/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/transition/mod.rs",
+    "crates/vibe-wire/src/generated/preview/mod.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/preview-affected-source-review/e1/invalid/unknown-effect-kind.json",
+    "formats/corpora/preview-affected-source-review/e1/invalid/unknown-field.json",
+    "formats/corpora/preview-affected-source-review/e1/invalid/wrong-documents-type.json",
+    "formats/corpora/preview-affected-source-review/e1/invalid/wrong-endpoint-type.json",
+    "formats/corpora/preview-affected-source-review/e1/invalid/wrong-epoch-type.json",
+    "formats/corpora/preview-affected-source-review/e1/valid/internal.json",
+    "formats/corpora/preview-affected-source-review/e1/valid/introduced.json",
+    "formats/corpora/preview-affected-source-review/e1/valid/transient.json",
+    "formats/corpora/preview-capture/e1/valid/dp1.json",
+    "formats/corpora/preview-check-report/e1/valid/minimal.json",
+    "formats/corpora/preview-check-request/e1/invalid/wrong-repository-roots-type.json",
+    "formats/corpora/preview-check-request/e1/valid/minimal.json",
+    "formats/corpora/preview-check-request/e1/valid/with-repository-roots.json",
+    "formats/corpora/preview-documentation-capture/e1/invalid/unknown-source-kind.json",
+    "formats/corpora/preview-documentation-capture/e1/invalid/wrong-pages-type.json",
+    "formats/corpora/preview-documentation-capture/e1/valid/content.json",
+    "formats/corpora/preview-documentation-capture/e1/valid/git.json",
+    "formats/corpora/preview-documentation-map/e1/valid/minimal.json",
+    "formats/corpora/preview-transition/e1/invalid/unknown-field.json",
+    "formats/corpora/preview-transition/e1/invalid/wrong-affected-source-review-type.json",
+    "formats/corpora/preview-transition/e1/invalid/wrong-catalogue-type.json",
+    "formats/corpora/preview-transition/e1/invalid/wrong-contribution-scope-type.json",
+    "formats/corpora/preview-transition/e1/invalid/wrong-documentation-map-type.json",
+    "formats/corpora/preview-transition/e1/invalid/wrong-epoch-type.json",
+    "formats/corpora/preview-transition/e1/valid/captured.json",
+    "formats/corpora/preview-transition/e1/valid/with-affected-source-review.json",
+    "formats/corpora/preview-transition/e1/valid/with-catalogue.json",
+    "formats/corpora/preview-transition/e1/valid/with-contribution-scope.json",
+    "formats/corpora/preview-transition/e1/valid/with-documentation-inputs.json",
+    "formats/corpora/release-impact/e1/invalid/unknown-field.json",
+    "formats/corpora/release-impact/e1/invalid/unknown-impact-state.json",
+    "formats/corpora/release-impact/e1/invalid/wrong-affected-paths-type.json",
+    "formats/corpora/release-impact/e1/valid/internal-refactor.json",
+    "formats/corpora/release-impact/e1/valid/with-path-evidence.json",
+    "schemas/preview/e1/affected_source_review.jtd.json",
+    "schemas/preview/e1/capture.jtd.json",
+    "schemas/preview/e1/check_report.jtd.json",
+    "schemas/preview/e1/check_request.jtd.json",
+    "schemas/preview/e1/documentation_capture.jtd.json",
+    "schemas/preview/e1/documentation_map.jtd.json",
+    "schemas/preview/e1/release_impact.jtd.json",
+    "schemas/preview/e1/transition.jtd.json",
+    "tools/preview-transition/README.md",
+    "tools/preview-transition/assemble.py",
+    "tools/preview-transition/check.py",
+    "tools/preview-transition/tests/test_assemble.py",
+    "tools/preview-transition/tests/test_check.py",
+    "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+    "xtask/Cargo.toml",
+    "xtask/src/bin/preview-transition-assemble/draft.rs",
+    "xtask/src/bin/preview-transition-assemble/main.rs",
+    "xtask/src/bin/preview-transition-assemble/output.rs",
+    "xtask/src/bin/preview-transition-assemble/tests.rs",
+    "xtask/src/bin/preview-transition-check/affected_review.rs",
+    "xtask/src/bin/preview-transition-check/affected_review/contracts.rs",
+    "xtask/src/bin/preview-transition-check/affected_review/membership.rs",
+    "xtask/src/bin/preview-transition-check/affected_review/paths.rs",
+    "xtask/src/bin/preview-transition-check/affected_review/tests.rs",
+    "xtask/src/bin/preview-transition-check/capture.rs",
+    "xtask/src/bin/preview-transition-check/captured_git_tests.rs",
+    "xtask/src/bin/preview-transition-check/contribution.rs",
+    "xtask/src/bin/preview-transition-check/contribution_evidence.rs",
+    "xtask/src/bin/preview-transition-check/contribution_git_tests.rs",
+    "xtask/src/bin/preview-transition-check/contribution_history_tests.rs",
+    "xtask/src/bin/preview-transition-check/contribution_tests.rs",
+    "xtask/src/bin/preview-transition-check/documentation.rs",
+    "xtask/src/bin/preview-transition-check/documentation/artifacts.rs",
+    "xtask/src/bin/preview-transition-check/documentation/git.rs",
+    "xtask/src/bin/preview-transition-check/documentation/tests.rs",
+    "xtask/src/bin/preview-transition-check/documentation/xml.rs",
+    "xtask/src/bin/preview-transition-check/git_entry.rs",
+    "xtask/src/bin/preview-transition-check/main.rs",
+    "xtask/src/bin/preview-transition-check/readiness.rs",
+    "xtask/src/bin/preview-transition-check/readiness_tests.rs",
+    "xtask/src/bin/preview-transition-check/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "tool:preview-transition-check",
+      "capability_id": "preview-accounting-inspection",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No preview-transition-check entrypoint in DP1.",
+      "after": "Source declares capture/contribution and staged prerequisite checking, retained documentation inspection and finite affected-source joins; outcomes require actual selected inputs.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CONTRIBUTION-SCOPE-PROOF",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+      ]
+    },
+    {
+      "interface_id": "tool:preview-transition-assemble",
+      "capability_id": "preview-guidance-drafts",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No preview-transition-assemble entrypoint in DP1.",
+      "after": "Source declares two draft outputs through no-replace publication; drafts do not confer acceptance.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DRAFT-OUTPUT-OWNERSHIP"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-wire:preview-validators",
+      "capability_id": "preview-declaration-consistency",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "No registered preview validators in DP1.",
+      "after": "Source declares generated-record consistency validators and strict staged request grammar; no actual source acceptance inferred.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING",
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ]
+    },
+    {
+      "interface_id": "format:preview-transition",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#TRANSITION-INDEX"
+      ]
+    },
+    {
+      "interface_id": "format:release-impact",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#RECORD-MEANING"
+      ]
+    },
+    {
+      "interface_id": "format:preview-capture",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#CAPTURE-BEFORE-EDIT"
+      ]
+    },
+    {
+      "interface_id": "format:preview-check-request",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ]
+    },
+    {
+      "interface_id": "format:preview-check-report",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#STAGED-PROOF"
+      ]
+    },
+    {
+      "interface_id": "format:preview-documentation-capture",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK"
+      ]
+    },
+    {
+      "interface_id": "format:preview-documentation-map",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK"
+      ]
+    },
+    {
+      "interface_id": "format:preview-affected-source-review",
+      "capability_id": "preview-accounting-declarations",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Format is absent from DP1 format registry.",
+      "after": "Epoch1 format is registered with generated reader and retained corpus; compatibility/runtime proof remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-081#AFFECTED-SOURCE-REVIEW"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "The selected source exposes the reviewed tooling/library or operator-reproduction changes described in its scoped effects.",
+    "migration_action": "manual"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document the reviewed commands/formats/library ownership or operator setup and explicit limitations.",
+    "documentation_action": "create"
+  },
+  "evidence": [
+    {
+      "claim_id": "captured-bootstrap-source-identities",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-4cec12cd3-capture-check.json",
+      "verdict": "passed",
+      "sha256": "dd1dd6a4326c0995cf6d88f4a168c174f957a9629b50e8a2e9eabe59656661b4"
+    },
+    {
+      "claim_id": "reviewed-bootstrap-source-delta",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-affected-source-review.md",
+      "verdict": "passed",
+      "sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb"
+    },
+    {
+      "claim_id": "selected-bootstrap-verification-observations",
+      "subject_id": "bootstrap-4cec12cd3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-verification-inventory.md",
+      "verdict": "passed",
+      "sha256": "ef3f847ff2cbece82cef35ac188908f518bc7d8f4c93e32e2624245d498c126b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "",
+    "review_evidence": ""
+  }
+}
