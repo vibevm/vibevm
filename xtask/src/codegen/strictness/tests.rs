@@ -1,9 +1,9 @@
 //! Unit tests for the strictness pass — one per behaviour the pass
 //! owes the registry and the driver: the stamping itself (every
 //! struct, no enum), the byte-for-byte pass-through of every other
-//! role, the named skip of a record whose schema no phase has built
+//! legacy default policy, the named skip of a record whose schema no phase has built
 //! yet, the silence around legal duplicates and schema-less records,
-//! and the loud refusals — two roles on one schema, a schema no
+//! and the loud refusals — conflicting policies on one schema, a schema no
 //! record claims, a struct the pinned emission shape cannot explain.
 //! The registry samples are written to a scratch root and read through
 //! the real loader: the pass exists to be exact about the registry, so
@@ -104,12 +104,12 @@ fn a_none_role_stamps_every_struct_and_no_enum() -> Result<()> {
     Ok(())
 }
 
-/// A4.2 — two records claiming one schema with different roles refuse,
-/// the message naming the schema and both records with their roles.
+/// A4.2 — records with conflicting effective default policies refuse,
+/// naming the schema, both records and their policies.
 /// The site does not exist in today's registry; the branch exists in
 /// the machine and is proven here.
 #[test]
-fn two_roles_on_one_schema_refuse_naming_both() -> Result<()> {
+fn two_effective_policies_on_one_schema_refuse_naming_both() -> Result<()> {
     let root = scratch_root(
         &format!(
             "{}\n{}",
@@ -120,19 +120,19 @@ fn two_roles_on_one_schema_refuse_naming_both() -> Result<()> {
     )?;
     let err = Strictness::read(root.path())
         .map(|_| ())
-        .expect_err("two roles on one schema have no single policy");
+        .expect_err("two effective policies on one schema have no single policy");
     let msg = err.to_string();
     assert!(
         msg.contains("schemas/index/e1/entry.jtd.json"),
         "names the schema: {msg}"
     );
     assert!(
-        msg.contains("index-entry") && msg.contains("many"),
-        "names the first record with its role: {msg}"
+        msg.contains("index-entry") && msg.contains("allow"),
+        "names the first record with its effective policy: {msg}"
     );
     assert!(
-        msg.contains("index-primary") && msg.contains("none"),
-        "names the second record with its role: {msg}"
+        msg.contains("index-primary") && msg.contains("deny"),
+        "names the second record with its effective policy: {msg}"
     );
     assert!(
         msg.contains("cargo xtask codegen"),

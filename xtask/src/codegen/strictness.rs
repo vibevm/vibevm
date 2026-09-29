@@ -8,39 +8,14 @@
 //! snake_casing, map ordering, the empty-collection policy and the
 //! optional-shape pass, and before the vocabularies open).
 //!
-//! What it enforces: whether a generated struct refuses unknown fields
-//! is a property of the FORMAT, and the format's home is the registry.
-//! `formats/REGISTRY.toml` (PROP-044 §4.1) carries the
-//! `foreign_parsers` axis for every record; `none` — read only by our
-//! own code, never a published surface — takes
-//! `#[serde(deny_unknown_fields)]` on every struct of the format's
-//! generated output, so a field the schema does not name fails at the
-//! reader instead of silently vanishing; `ours` and `many` keep the
-//! permissive reading byte for byte (a foreign parser may be newer
-//! than this build, and permissiveness is that reader's forward
-//! compatibility — the argument `vibe-wire`'s header carries in full).
-//! The rule could not live in the schema: JTD has no key for it
-//! (`additionalProperties` opens a form rather than stricting one),
-//! which is why the generator could never emit it and this pass does.
-//! Enums are never stamped — `deny_unknown_fields` is a container
-//! attribute a struct's fields answer to; on an enum it is meaningless.
+//! Effective `unknown_fields` comes from the existing registry loader. Explicit
+//! deny/allow overrides parser population; absent legacy policy still defaults
+//! to deny for none and allow for ours/many. Struct payloads (including empty
+//! discriminator wrappers) own unknown-field refusal; enums are not stamped.
 //!
-//! The map is built ONCE per run, next to `Vocabularies::load`, from
-//! the one registry loader — a second parser of `REGISTRY.toml` would
-//! be the duplication G9 forbids. Two registry shapes are refused or
-//! named rather than absorbed: two records claiming one schema must
-//! agree on the role (strictness is a property of the format, and a
-//! schema feeding `none` and `many` at once has no single policy — a
-//! loud refusal naming both records, never "first one wins"; today
-//! `index-entry` and `index-primary` share `entry.jtd.json` with the
-//! same `many` role, legal and silent), and a record naming a schema
-//! no phase has built yet (`handshake`'s plan-assigned path) is
-//! skipped BY NAME with a line in the run output — the schema scanner
-//! never sees the file, so silence there would read as checked when
-//! nothing was. A schema the scanner DOES see but no record claims
-//! refuses the same way: an unregistered format is inexpressible by
-//! design (PROP-044 §4.1), and a silent skip would be a hole exactly
-//! where the registry exists.
+//! One map is built per run. Duplicate owners must agree on effective policy;
+//! schema-less formats are silent, future schema paths are named skips, and
+//! unregistered schemas refuse. Registry parsing is never duplicated here.
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -60,16 +35,16 @@ const DENY_LINE: &str = "#[serde(deny_unknown_fields)]";
 
 /// The registry read as one map for the whole run: schema path (in the
 /// registry's own spelling — repo-relative, forward slashes) → the
-/// role that decides the generated structs' reader strictness, plus
+/// effective policy that decides generated structs' reader strictness, plus
 /// the id of the record that first claimed the path, which the
-/// role-divergence refusal names alongside the challenger. Built once
+/// policy-divergence refusal names alongside the challenger. Built once
 /// per run beside `Vocabularies::load`; every schema the driver rules
 /// on goes through it, never around it.
 pub(crate) struct Strictness {
     /// The repo root the record paths resolve against.
     root: PathBuf,
-    /// Schema path → (claiming record id, `foreign_parsers` role).
-    roles: BTreeMap<String, (String, String)>,
+    /// Schema path → (claiming record id, effective unknown_fields policy).
+    policies: BTreeMap<String, (String, String)>,
 }
 
 impl Strictness {
@@ -85,11 +60,11 @@ impl Strictness {
 
     /// The pure half of [`Strictness::load`]: parse the registry
     /// through the one loader, skip what has nothing to rule on,
-    /// refuse a role divergence, and hand the skip lines back as data
+    /// refuse a policy divergence, and hand the skip lines back as data
     /// so the tests assert exactly what the operator reads.
     fn read(root: &Path) -> Result<(Self, Vec<String>)> {
         let entries = load_format_registry(root)?;
-        let mut roles: BTreeMap<String, (String, String)> = BTreeMap::new();
+        let mut policies: BTreeMap<String, (String, String)> = BTreeMap::new();
         let mut skips: Vec<String> = Vec::new();
         for entry in &entries {
             // `schema = "none"`: an authored format the generator never
@@ -111,55 +86,55 @@ impl Strictness {
                 ));
                 continue;
             }
-            if let Some((first_id, role)) = roles.get(&entry.schema) {
-                if *role != entry.foreign_parsers {
+            if let Some((first_id, policy)) = policies.get(&entry.schema) {
+                if *policy != entry.unknown_fields {
                     bail!(
                         "formats/REGISTRY.toml: `[format.{first_id}]` \
-                         (`foreign_parsers = \"{role}\"`) and `[format.{}]` \
-                         (`foreign_parsers = \"{}\"`) share the schema `{}` — \
+                         (`unknown_fields = \"{policy}\"`) and `[format.{}]` \
+                         (`unknown_fields = \"{}\"`) share the schema `{}` — \
                          reader strictness is a property of the FORMAT, and one \
                          schema claimed by records that disagree has no single \
                          policy. The registry refuses to pick a winner.\n\
-                         Fix: give both records the same `foreign_parsers` \
-                         role, or point one at a schema of its own, then run \
+                         Fix: give both records the same `unknown_fields` \
+                         policy, or point one at a schema of its own, then run \
                          `cargo xtask codegen`.",
                         entry.id,
-                        entry.foreign_parsers,
+                        entry.unknown_fields,
                         entry.schema
                     );
                 }
-                // Same schema, same role (the `index-entry` /
+                // Same schema, same policy (the `index-entry` /
                 // `index-primary` shape): legal and silent.
                 continue;
             }
-            roles.insert(
+            policies.insert(
                 entry.schema.clone(),
-                (entry.id.clone(), entry.foreign_parsers.clone()),
+                (entry.id.clone(), entry.unknown_fields.clone()),
             );
         }
         Ok((
             Self {
                 root: root.to_path_buf(),
-                roles,
+                policies,
             },
             skips,
         ))
     }
 
-    /// The role the registry assigns to `schema`, or `None` when no
+    /// The effective policy the registry assigns to `schema`, or `None` when no
     /// record claims it. The key is normalised to the registry's own
     /// spelling — repo-relative, forward slashes — so the lookup is the
     /// same act on Windows and POSIX.
-    fn role_for(&self, schema: &Path) -> Option<&str> {
+    fn policy_for(&self, schema: &Path) -> Option<&str> {
         let rel = schema.strip_prefix(&self.root).unwrap_or(schema);
         let key = rel.display().to_string().replace('\\', "/");
-        self.roles.get(&key).map(|(_, role)| role.as_str())
+        self.policies.get(&key).map(|(_, policy)| policy.as_str())
     }
 }
 
 /// The pass entry the driver calls: rule on the schema through the
-/// registry, then stamp or copy. Returning `src` unchanged for a role
-/// other than `none` is the contract, not a shortcut — those bytes do
+/// registry, then stamp or copy. Returning `src` unchanged for a policy
+/// other than `deny` is the contract, not a shortcut — those bytes do
 /// not move.
 pub(super) fn apply_strictness(
     src: &str,
@@ -167,11 +142,11 @@ pub(super) fn apply_strictness(
     schema: &Path,
     strictness: &Strictness,
 ) -> Result<String> {
-    let Some(role) = strictness.role_for(schema) else {
+    let Some(policy) = strictness.policy_for(schema) else {
         bail!(
             "schema {}: no `[format.*]` record in formats/REGISTRY.toml \
-             names it, so its generated output has no `foreign_parsers` \
-             role and no reader strictness can be computed. An \
+             names it, so its generated output has no effective \
+             unknown-field policy and no reader strictness can be computed. An \
              unregistered format is inexpressible by design (PROP-044 §4.1 \
              `##M-FORMAT-REGISTRY`); skipping it silently would be a hole \
              exactly where the registry exists.\n\
@@ -180,7 +155,7 @@ pub(super) fn apply_strictness(
             schema.display()
         );
     };
-    if role != "none" {
+    if policy != "deny" {
         return Ok(src.to_string());
     }
     stamp_deny_unknown_fields(src, file)
@@ -243,7 +218,7 @@ fn stamp_deny_unknown_fields(src: &str, file: &str) -> Result<String> {
             bail!(
                 "{file}:{line}: `pub struct` with no `{DERIVE_LINE}` line \
                  directly above — the strictness pass stamps every struct of \
-                 a `foreign_parsers = \"none\"` format by inserting \
+                 a `unknown_fields = \"deny\"` format by inserting \
                  `{DENY_LINE}` right after the derive line, and the emission \
                  shape of jtd-codegen this pass is pinned to has moved, so \
                  the pass refuses to guess which struct is which.\n\
