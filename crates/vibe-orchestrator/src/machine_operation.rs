@@ -325,6 +325,7 @@ impl MachineOperationService {
 
 mod coverage;
 mod discovery;
+pub mod exchange;
 mod publication;
 pub use coverage::*;
 pub use publication::MachineEnvelopeValidationError;
