@@ -386,6 +386,11 @@ absent in the two absent profiles and integer 1 in the epoch-1 profile.
 Requires admits only `packages`, whose owner-qualified keys map to string
 constraints or tables with required string `version` and optional string
 `link`, one of `static`, `dynamic`, `static-transitive`, `static-hard`.
+The frozen structural key shape is `[kind:]group/name`: exactly one slash,
+nonempty group and name, no `@`, and at most one optional colon prefix whose
+kind is in the six-token package vocabulary above. The current naming owner
+still checks group/name and constraint semantics; it cannot remove this
+structural qualification requirement from a frozen profile.
 Normal and inline TOML tables are equivalent shapes. Every other key, shape
 or vocabulary is refused. Legacy materialization is required and exactly
 `snapshot`; current materialization is absent or `copy`, `hardlink`,
