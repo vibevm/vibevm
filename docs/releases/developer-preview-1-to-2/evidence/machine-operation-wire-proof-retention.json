@@ -1,0 +1,467 @@
+{
+  "schema": 1,
+  "authoring_scope": "Two new epoch-1 machine descriptor/envelope formats; generated reader shape only. No implemented service, runtime dispatch, owner validation or native extension claim.",
+  "codegen": [
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-codegen.log",
+      "sha256": "437128b8793386abdbd8a57356ed73f44daf75c52fc36380c66f27b65c9752c6",
+      "exit_code": 0
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-codegen-r2.log",
+      "sha256": "5e366ecfa4d6c0d45ccd19a414925ba337eb6c42b36b7bb0745b7fd7299faf09",
+      "exit_code": 0
+    }
+  ],
+  "generated_diff_review": "Root inspected existing generated changes: format-id additions and machine module exports are functional; the other existing module wrappers only refresh the auto-generated schema-directory comment after machine/e1 appears. No generated file was edited by hand.",
+  "reader_tests": {
+    "target": "cargo test --locked --offline -p vibe-wire --test machine_operation_contract",
+    "initial_old_schema": {
+      "exit_code": 0,
+      "passed": 3
+    },
+    "corrected_descriptor_run1": {
+      "exit_code": 101,
+      "passed": 2,
+      "failed": 1,
+      "reason": "Stale expected operation ID in the new test after Root separated operation from capability ID."
+    },
+    "corrected_descriptor_final": {
+      "exit_code": 0,
+      "passed": 3,
+      "failed": 0,
+      "filtered": 0
+    },
+    "scope": "Outer generated strict/null/discriminator reading; semantic IDs, epoch, inner domain JSON and service/extension proof remain open."
+  },
+  "authored_and_generated_inputs": [
+    {
+      "path": "formats/REGISTRY.toml",
+      "sha256": "3763be171144eed80866e9b216390d9cc4e936eac4f76f2adf03cfad10f497ac",
+      "bytes": 46159
+    },
+    {
+      "path": "schemas/machine/e1/operation_descriptor.jtd.json",
+      "sha256": "85143a01da42f0012ed2b2c21bcd3c062844f8837b4fe12e0cb5bd81ae071679",
+      "bytes": 2023
+    },
+    {
+      "path": "schemas/machine/e1/operation_envelope.jtd.json",
+      "sha256": "e8a4b8a53643f65803adaa75e9e607a492540cf3fa528bc6f0189379d56b30bf",
+      "bytes": 5293
+    },
+    {
+      "path": "crates/vibe-wire/tests/machine_operation_contract.rs",
+      "sha256": "180754ecb3989f9678a4b6cb01bc822631eb0b0ec4363c58cf1ec723913947d6",
+      "bytes": 7089
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/semantic-invalid/no-domain-identity.json",
+      "sha256": "94b70175c4ebce71787d6350e3fcdeac5681f15165c1f3c335fce1e2999db410",
+      "bytes": 540
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/semantic-invalid/unsupported-epoch.json",
+      "sha256": "d54b926967ebc547b0f74bb0b76f2ffdf76bca839b4ba3611465b5236a4aa694",
+      "bytes": 592
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/structural-invalid/missing-required-nullable.json",
+      "sha256": "37138f70125ba2bc413a6452f4acb01e1e4c5678d7ecd4a7346cc577ffc34b7b",
+      "bytes": 572
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/structural-invalid/unknown-root.json",
+      "sha256": "ebcbe492557b80fb8de673018f101ff24d1b4b270339f53cf9757ff42311778a",
+      "bytes": 614
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/structural-invalid/wrong-type.json",
+      "sha256": "7718b375bf5b673c32ae66426858a21ba93240010a6905b57877225ae3787de5",
+      "bytes": 583
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/valid/model-only-source-gap.json",
+      "sha256": "1625ea380e184ad91c988eebaa769709d4aa071e76db8a2b13ffaeb835db48ca",
+      "bytes": 561
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/valid/source-bound-migration-shape.json",
+      "sha256": "86a19abe59f6d7573e882ca5cc630225c715dd4778a121c92be372c8a986dab5",
+      "bytes": 598
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/semantic-invalid/malformed-embedded-domain-json.json",
+      "sha256": "a1e906bcc5623ac395b588c1fab2d06818da2e1c9bd9d5bfbc5d6fcdabfe000e",
+      "bytes": 330
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/semantic-invalid/unsupported-epoch.json",
+      "sha256": "cf77c62a0c3caff07b97f6ba99f6ea584fd07e9582357938d9a79779fcfebc52",
+      "bytes": 342
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/structural-invalid/missing-required-nullable.json",
+      "sha256": "1a5cbfb85fd843935e389e430b8e3847faa7e43c294e0fa30b613a7cc46b19ad",
+      "bytes": 319
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-arm-field.json",
+      "sha256": "496398c767acf0956a084adf6cf3eeb81b2cb8357e3a354de13d3058d5452fe2",
+      "bytes": 358
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-root.json",
+      "sha256": "7e556fffbcbe65c70b76493c27583940512cc22f1b0f25653c644997a83f5785",
+      "bytes": 356
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/structural-invalid/wrong-type.json",
+      "sha256": "5e56ef9dcc0e83336593a3dd50ea80adc3c1d19397a42c2db2ae751ed3cbc64e",
+      "bytes": 330
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/admission.json",
+      "sha256": "463ad71d7a9912e706ac9b9b360f315293ec5adcf8c0c92a8d7e01fce2ccf0e0",
+      "bytes": 342
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/error.json",
+      "sha256": "fed8fb9f833368a5180c10950f1dce90229d2f0845e4f945dadaec22622e9078",
+      "bytes": 395
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/event.json",
+      "sha256": "b05efe81d76627ec79b75f78bc1569df65d05c94389208b7f88d5e0e6fd10618",
+      "bytes": 434
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/explicit-null-unavailable.json",
+      "sha256": "ed1b9d95fe1d9b5a02538c58964fb5b3016c51ca74221725a0d8fa27654c2817",
+      "bytes": 240
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/input.json",
+      "sha256": "fb330020563173c7dfcfe152be4b15897061175ed2ec8e86c1d349715d4634f4",
+      "bytes": 384
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/prepared.json",
+      "sha256": "3f7a913294c7d4b5887c49d8c9e86b4c7e9eef8295faa79eabedcd20e81c8188",
+      "bytes": 436
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/result.json",
+      "sha256": "36f46293f4c38ff8c5eb230d0eb3f47c53bf40cecd6274d9193411d50c831820",
+      "bytes": 858
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "sha256": "c0e4422570f7ab58b1c416f237fd8f5fb847afb624d2cf56255d2c2f57ad282c",
+      "bytes": 795
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+      "sha256": "ba00c8146447b342c766bfc3f4c9d75800f871941bb75f15f786db83bf45b4e7",
+      "bytes": 2754
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
+      "sha256": "d04eac0685ec1be524c2d197660d9fddcbf2a824238abfa4860d24331f057aa0",
+      "bytes": 6390
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "sha256": "d7f70a224a01b6d82721326c8f5bf6d5f94ef49c7bec814324a22ed6c50ece94",
+      "bytes": 857
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "sha256": "95f9ed02ca6969f46f4c101a359ac998ac7a6d4cef80df0e725627dbcc76d42c",
+      "bytes": 755
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "sha256": "fa1d341df39e409c553446a4bfd1e8936d388cc4414f775ce433847d9fa54ca0",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "sha256": "11c23ef2db54b9f4ea07ca7e4cd47d716aabfe1b63110e7919473c9972486163",
+      "bytes": 752
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "sha256": "a2d78da63d04810a01af6bbe3f5ec968775a8721461b6d4114b34433adf5ddb0",
+      "bytes": 778
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "sha256": "25a52cb6254ac1ba412ae9e6a66c57647de99997af6125b0a97b736a860b20ef",
+      "bytes": 4526
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "sha256": "2cc303a0adfae72d8dc8a774ce7c19577d04df9f53d56d748efefa3d12351dd4",
+      "bytes": 41726
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "sha256": "58fd3b3d4328a0f343e4203889b8f8306a2816767c77ebbe4ed4f04e4ccfda64",
+      "bytes": 752
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "sha256": "4e578619e32a65cc918ecd9699c1598648fbbed11010eb8cbced6716817a0c2b",
+      "bytes": 818
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "sha256": "04851d8402eb953b0826311819f927f6bb6262ff14ceaaa556a8eba113428c22",
+      "bytes": 900
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "sha256": "7e9db4966a7c037fed88d52eebe57345a5b79e3c53790c104341a050a08af02d",
+      "bytes": 1037
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "sha256": "c11794991db2e0bfa1e8cac11cda81482e4c0f63486ad3231ec58a920473062b",
+      "bytes": 754
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "sha256": "3311462607ceb3e4612e2ccad4cf8f4a8dd23b5fa6947dc11f362bd17e53fa81",
+      "bytes": 769
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "sha256": "a29001a8a613957520ffd9822349b8deab13907bc9ae3cb08cebd4ea416f3fa9",
+      "bytes": 764
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "sha256": "f96a7d5826ed0fd222fb35183dc3b6a5857c225a99f058432e4055f2aa653561",
+      "bytes": 804
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "sha256": "04321765b9b8b5c84b1ccfddc9de0c36b6c5f4b6b022902d252af1a9f22dc738",
+      "bytes": 882
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "sha256": "64a8dc3e8701a7718f41808b6ba450fa97499b0eb0d173c15662f01d8383613b",
+      "bytes": 2269
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "sha256": "0ddc9c6dc853aec8790eb1cd28e222f38c6708006716106837fe4d0236eaa709",
+      "bytes": 1024
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "sha256": "fdb95722b8ab69d22fa15a6c4e39cfd9efe460d7d8cb47170d7ba07c81ff05bc",
+      "bytes": 933
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "sha256": "347c6dfb8a50af7473237cc160354e6d656c15e3b3cf8f7a12f5f38d963efee8",
+      "bytes": 749
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "sha256": "e65bc874062665f797fde39e2ff3924acc7f53051555e5df09da73ea85b50006",
+      "bytes": 790
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "sha256": "cc6742b99e98c424bea575a1419983605941dba3d19668a565aa8e0f3ce9bbaf",
+      "bytes": 869
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "sha256": "ac3e65d25f151956705300ce07a6b4fa581fad8460a43c5510649a9c86c4a80e",
+      "bytes": 764
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "sha256": "f771e4c9f4292948cacdfccd53ed03c8f72f27691b4cbdf70040d200aacac0ee",
+      "bytes": 773
+    }
+  ],
+  "raw_artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-codegen.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-codegen.log",
+      "sha256": "437128b8793386abdbd8a57356ed73f44daf75c52fc36380c66f27b65c9752c6",
+      "bytes": 126468
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-codegen-r2.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-codegen-r2.log",
+      "sha256": "5e366ecfa4d6c0d45ccd19a414925ba337eb6c42b36b7bb0745b7fd7299faf09",
+      "bytes": 126468
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-schema-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-schema-review.md",
+      "sha256": "e269aa1627e9017833f105b569181d2add006300a8937d8f577b7860dc934e32",
+      "bytes": 4546
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-schema-correction-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/vibevm-next-M16-B1-schema-correction-review.md",
+      "sha256": "a45c8721063f7691730546a2d114e7af2457c75c52217fadfcd07fd03efc0b44",
+      "bytes": 2915
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-final-rustfmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-final-rustfmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-report.md",
+      "sha256": "8ded75fc9635dd31e1ee05bf560c43fd4daeaf22546460728e8f0c3156862481",
+      "bytes": 1866
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-result.json",
+      "sha256": "9aa0f38f3e0770177182e3d79a3ecc1b609c330ab7637f6fcd3842681c64b8de",
+      "bytes": 3279
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-run1.log",
+      "sha256": "ce8a697a91fc70fdbf2fb52ce384ff3f027526b299441d0e8bb4a2b9e3c17f78",
+      "bytes": 1293
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run2.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-run2.log",
+      "sha256": "967434ed2e90bb7e6566fe6b610ae043072ddbd4a022a78c7fc03bdc76430a2b",
+      "bytes": 718
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-rustfmt-after-fix.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-rustfmt-after-fix.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/r2-rustfmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/r2-rustfmt-check.log",
+      "sha256": "4e332e8e589735cc04eac6bb64209775df3785e62ded1842e92458054ffbca18",
+      "bytes": 1227
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/report.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/report.md",
+      "sha256": "756a941e733bcdca6f46b2dd4fdd00cdb3897a973dbd1889747bbdac33e36fe3",
+      "bytes": 2005
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/result.json",
+      "sha256": "caa1d6fd7d1bce290b5bed9e2568f4f086c5ad5265892e7e288c458d9e1b0c5d",
+      "bytes": 2059
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/run1.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/run1.log",
+      "sha256": "d1075a846370d3b1b718951b1de188d3ade43e3c19f140ddaa1557a4defba5cc",
+      "bytes": 801
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/rustfmt-after-fix.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/rustfmt-after-fix.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-wire-checks/rustfmt-initial.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-wire-raw/rustfmt-initial.log",
+      "sha256": "2fd857183f3e92b63cc528324700c4e0564098866b28890904f5de874cbd507a",
+      "bytes": 3868
+    }
+  ]
+}

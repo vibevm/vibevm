@@ -1,0 +1,26 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:71:
+ 
+     let model_path = fixture("descriptor", "valid", "model-only-source-gap");
+     let model: OperationDescriptor = wire_support::round_trip(&model_path);
+-    assert!(model.operation_id.is_none(), "model has no invented operation");
++    assert!(
++        model.operation_id.is_none(),
++        "model has no invented operation"
++    );
+     assert_eq!(model.model_id.as_deref(), Some("model.action-invocation"));
+     assert!(model.capability_id.is_none());
+     assert_eq!(model.source_id, "source:crates/vibe-actions/src/invoke.rs");
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:78:
+-    assert_eq!(model.implementation, OperationDescriptorImplementation::SourceObserved);
+-    assert_eq!(serde_json::to_value(model).unwrap(), wire_support::read_json(&model_path));
++    assert_eq!(
++        model.implementation,
++        OperationDescriptorImplementation::SourceObserved
++    );
++    assert_eq!(
++        serde_json::to_value(model).unwrap(),
++        wire_support::read_json(&model_path)
++    );
+ 
+     for (name, expected_stage) in [
+         ("prepared", "prepared"),

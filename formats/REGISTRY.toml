@@ -1289,3 +1289,23 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-application-journal/e1"
 sunset = "none"
+
+# Source-bound machine operation descriptor and lifecycle-independent value envelope (PROP-080).
+
+[format.machine-operation-descriptor]
+epoch = 1
+schema = "schemas/machine/e1/operation_descriptor.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-operation-descriptor/e1"
+sunset = "none"
+
+[format.machine-operation-envelope]
+epoch = 1
+schema = "schemas/machine/e1/operation_envelope.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-operation-envelope/e1"
+sunset = "none"

@@ -97,6 +97,8 @@ pub enum FormatId {
     LlmOpenaiCompatibleChatResponse,
     Llms,
     Lockfile,
+    MachineOperationDescriptor,
+    MachineOperationEnvelope,
     Manifest,
     McpLifecycleTasks,
     McpTools,

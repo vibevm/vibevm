@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-workspace:migration_planning",
+  "domain_owner": "rust:vibe-workspace:migration_planning",
+  "source_id": "pure-migration-transport-adapter",
+  "evidence_id": null,
+  "body": {
+    "stage": "event",
+    "event_id": "planning-observation",
+    "format_id": null,
+    "payload_json": null,
+    "effect_state": "uncertain",
+    "completeness": "unavailable",
+    "provenance_id": null
+  }
+}

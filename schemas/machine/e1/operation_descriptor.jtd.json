@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "description": "Epoch-1 source-bound operation or model descriptor DATA. JTD checks shape; the owning registry validator must require at least one non-null operation/model ID and join coverage identity, registered format IDs, evidence and independent states. A model-only row never needs a fabricated operation ID. A row never grants invocation or authorization.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::operation_descriptor"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "operation_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "domain_owner": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "capability_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "model_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "input_format_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "result_format_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "error_format_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "event_format_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "implementation": {
+      "enum": [
+        "validated",
+        "source_observed",
+        "gap"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "availability": {
+      "enum": [
+        "available",
+        "unavailable",
+        "not_observed"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "authorization": {
+      "enum": [
+        "admitted",
+        "denied",
+        "not_evaluated"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "reason": {
+      "type": "string",
+      "nullable": true
+    },
+    "implementation_evidence_id": {
+      "type": "string",
+      "nullable": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-workspace:migration_planning",
+  "domain_owner": "rust:vibe-workspace:migration_planning",
+  "source_id": "pure-migration-transport-adapter",
+  "evidence_id": null,
+  "body": {
+    "stage": "admission",
+    "decision": 123,
+    "reason": null,
+    "authority_evidence_id": null
+  }
+}

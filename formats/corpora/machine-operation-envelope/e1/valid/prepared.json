@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-workspace:migration_planning",
+  "domain_owner": "rust:vibe-workspace:migration_planning",
+  "source_id": "pure-migration-transport-adapter",
+  "evidence_id": null,
+  "body": {
+    "stage": "prepared",
+    "schema_ref": "migration-plan-request",
+    "format_id": null,
+    "payload_json": null,
+    "readiness": "unavailable",
+    "reason": "No validated prepared value is retained."
+  }
+}

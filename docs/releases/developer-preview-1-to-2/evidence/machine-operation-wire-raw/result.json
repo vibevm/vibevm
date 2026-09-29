@@ -1,0 +1,63 @@
+{
+  "kind": "bounded-generated-machine-operation-reader-regression",
+  "target": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-wire",
+    "--test",
+    "machine_operation_contract"
+  ],
+  "environment": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "exit": 0,
+  "passed": 3,
+  "failed": 0,
+  "ignored": 0,
+  "filtered": 0,
+  "cases": [
+    "descriptor_and_six_envelope_arms_roundtrip",
+    "unknown_root_and_arm_fields_refuse",
+    "required_nullable_omission_refuses_but_explicit_null_survives"
+  ],
+  "raw_log": "/tmp/vibevm-next-M16-B1-wire-checks/run1.log",
+  "source_file": "crates/vibe-wire/tests/machine_operation_contract.rs",
+  "source_lines": 154,
+  "files": [
+    {
+      "path": "crates/vibe-wire/tests/machine_operation_contract.rs",
+      "sha256": "46842b587877917a0bf051ef6dd076724fe15424b1d508161fb398b7522e6ade",
+      "bytes": 5544
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/run1.log",
+      "sha256": "d1075a846370d3b1b718951b1de188d3ade43e3c19f140ddaa1557a4defba5cc",
+      "bytes": 801
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/rustfmt-initial.log",
+      "sha256": "2fd857183f3e92b63cc528324700c4e0564098866b28890904f5de874cbd507a",
+      "bytes": 3868
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/rustfmt-after-fix.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/result.json",
+      "sha256": "d99fe24940693b4248db13577db7cba0952fb4a4c7b18704388b6b5efc5f86e1",
+      "bytes": 855
+    }
+  ],
+  "limits": [
+    "structural generated serde readers only",
+    "schema u8=2, descriptor registry identity/state joins, domain payload_json contents, owner/effect coherence, transport/service admission and runtime publication remain semantic validator obligations",
+    "no task/native/full product acceptance"
+  ]
+}
