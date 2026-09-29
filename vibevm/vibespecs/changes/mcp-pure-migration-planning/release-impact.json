@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "change_id": "mcp-pure-migration-planning",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "0b76721ae57f73705eb92b97b1188f4ce08e6bd8"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-mcp/src/lib.rs",
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-mcp/src/tools/migration_plan.rs",
+    "crates/vibe-mcp/src/tools/migration_plan/tests.rs",
+    "crates/vibe-mcp/src/tools/output.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "mcp:plan_manifest_migration",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "Twelve MCP declarations; no text-only migration-planning tool or generic owning structured-preflight error carrier.",
+      "after": "One new MCP cell gives exact generated structured reports/questions/refusals and generic typed preflight while ignoring ServerContext; ordinary legacy errors stay text-only.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Actual scoped source/API/codec/reader/transport effect; no automatic apply, product bump or distribution grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Final developer/guide documentation for the scoped positive interface remains due; no complete documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "0b76721ae57f73705eb92b97b1188f4ce08e6bd8",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "0b76721ae57f73705eb92b97b1188f4ce08e6bd8",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}

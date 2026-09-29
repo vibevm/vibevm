@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "change_id": "migration-planning-wire-types",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "d14eb9af142fd9375cc9b2044f3c60f7482d0bcc"
+    },
+    {
+      "kind": "commit",
+      "identity": "4048ad5438d9850fc92ecd487915075d7aee0362"
+    },
+    {
+      "kind": "commit",
+      "identity": "01fc44a0f9f2343bf9d0499a8285fb3e351983c3"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-wire/src/generated/application/e1/mod.rs",
+    "crates/vibe-wire/src/generated/application/mod.rs",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+    "crates/vibe-wire/src/generated/capability/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+    "crates/vibe-wire/src/generated/hello/mod.rs",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/mod.rs",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+    "crates/vibe-wire/src/generated/journal/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+    "crates/vibe-wire/src/generated/llm/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_error/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs",
+    "crates/vibe-wire/src/generated/migration/mod.rs",
+    "crates/vibe-wire/src/generated/mod.rs",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs",
+    "crates/vibe-wire/src/generated/native/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+    "crates/vibe-wire/src/generated/preview/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/mod.rs",
+    "crates/vibe-wire/src/generated/shared/mod.rs",
+    "crates/vibe-wire/tests/migration_wire_corpus.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/migration-plan-error/e1/semantic-invalid/planner-code-in-preflight.json",
+    "formats/corpora/migration-plan-error/e1/structural-invalid/schema-string.json",
+    "formats/corpora/migration-plan-error/e1/structural-invalid/shared-extra-field.json",
+    "formats/corpora/migration-plan-error/e1/structural-invalid/shared-unknown-code.json",
+    "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-plan-error/e1/structural-invalid/unknown-stage.json",
+    "formats/corpora/migration-plan-error/e1/valid/input-read.json",
+    "formats/corpora/migration-plan-error/e1/valid/invalid-request.json",
+    "formats/corpora/migration-plan-error/e1/valid/unsupported-schema.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/noncanonical-offset.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/offset-out-of-bounds.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/preflight-code-in-planner.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/profile-epoch-mismatch.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/absent-extra.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/before-end-number.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/before-start-number.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/epoch-one-extra.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/question-choices-number.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/question-extra.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/question-unknown-field.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/schema-string.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/shared-extra-field.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/shared-unknown-code.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-edit-field.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-outcome.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-plan-field.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/unknown-stage.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-branch-payload.json",
+    "formats/corpora/migration-plan-report/e1/structural-invalid/wrong-epoch-tag.json",
+    "formats/corpora/migration-plan-report/e1/valid/needs-input.json",
+    "formats/corpora/migration-plan-report/e1/valid/no-op-epoch-one.json",
+    "formats/corpora/migration-plan-report/e1/valid/planned-golden.json",
+    "formats/corpora/migration-plan-report/e1/valid/refused.json",
+    "formats/corpora/migration-plan-request/e1/presence-invalid/recipe-null.json",
+    "formats/corpora/migration-plan-request/e1/presence-invalid/source-profile-null.json",
+    "formats/corpora/migration-plan-request/e1/presence-invalid/target-profile-null.json",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/profile-number.json",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/schema-string.json",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/source-text-number.json",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/migration-plan-request/e1/valid/current-epoch-one.json",
+    "formats/corpora/migration-plan-request/e1/valid/legacy-selection.json",
+    "formats/corpora/migration-plan-request/e1/valid/missing-selection.json",
+    "formats/vocabularies.json",
+    "schemas/migration/e1/plan_error.jtd.json",
+    "schemas/migration/e1/plan_report.jtd.json",
+    "schemas/migration/e1/plan_request.jtd.json",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated/mod.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:migration-planning-e1",
+      "capability_id": "strict-text-only-migration-planning",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "No registered migration-plan-request/report/error frame trio or shared planning-error object.",
+      "after": "Epoch1 request/report/error codecs, one shared nine-code error, strict nested/empty payloads and registered FormatId/corpora carry exact source data; owned semantic guards remain distinct from derived shape.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Actual scoped source/API/codec/reader/transport effect; no automatic apply, product bump or distribution grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Final developer/guide documentation for the scoped positive interface remains due; no complete documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "01fc44a0f9f2343bf9d0499a8285fb3e351983c3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "01fc44a0f9f2343bf9d0499a8285fb3e351983c3",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}

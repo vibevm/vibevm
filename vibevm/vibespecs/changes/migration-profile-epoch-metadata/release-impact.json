@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "change_id": "migration-profile-epoch-metadata",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "ec28130d73ad192daa930af8604a6b7c75c53c8d"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-core/src/manifest/migration.rs",
+    "crates/vibe-core/src/manifest/migration/tests.rs",
+    "crates/vibe-core/src/manifest/mod.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-core:manifest:manifest_migration_profile_epoch",
+      "capability_id": "authored-profile-epoch-provenance",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "bounded GNU/Linux selected proof; no full platform/facade, private ABI, historical corpus or release claim",
+      "before": "No exported core lookup for the transport projection of frozen-profile epoch provenance.",
+      "after": "The pure core lookup exposes exactly three profile epoch meanings and unknown=None, retaining absent versus epoch1 without product-version inference.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Actual scoped source/API/codec/reader/transport effect; no automatic apply, product bump or distribution grant."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Final developer/guide documentation for the scoped positive interface remains due; no complete documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "ec28130d73ad192daa930af8604a6b7c75c53c8d",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "ec28130d73ad192daa930af8604a6b7c75c53c8d",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}

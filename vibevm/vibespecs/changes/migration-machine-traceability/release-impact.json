@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "change_id": "migration-machine-traceability",
+  "before_capture_id": "migration-machine-baseline-cdee6f284",
+  "after_capture_id": "migration-machine-after-ccddf879b",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "11f7a91abff2294e1522957fe83af3b59b229eaf"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Trace index alone introduces no executable user operation."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Derived index is not a guide; positive source/runtime guidance remains separately due."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-migration-machine-contribution-review",
+      "subject_id": "11f7a91abff2294e1522957fe83af3b59b229eaf",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md",
+      "verdict": "passed",
+      "sha256": "29f9b35ce7d2af39a84eb2f9bda461451d857403101aece430ad1207613201e3"
+    },
+    {
+      "claim_id": "reviewed-migration-machine-source-delta",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-source-review.md",
+      "verdict": "passed",
+      "sha256": "fefedeeb89089abcf29398f2e22b330fc0fcc3362d7337cabdb5095edd2c81f7"
+    },
+    {
+      "claim_id": "selected-migration-machine-verification",
+      "subject_id": "migration-machine-after-ccddf879b",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-verification.md",
+      "verdict": "passed",
+      "sha256": "0da83f50eb8bcab7696efe21951ff0566478b468798965ebe63227e5c7f950e8"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "11f7a91abff2294e1522957fe83af3b59b229eaf",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/migration-machine-central-review.md"
+  }
+}
