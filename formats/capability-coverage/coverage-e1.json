@@ -805,9 +805,14 @@
       "sha256": "2f95345b1c502a2c54d471eb2cd893fcb1ffd3cc7f1a84ed15799ee96b152708"
     },
     {
+      "source_id": "source:xtask/src/capability_coverage.rs",
+      "path": "xtask/src/capability_coverage.rs",
+      "sha256": "c7044fb82ec576607bac69974f89bc92cd75ee45a73a6ac533e8878f6ab9498f"
+    },
+    {
       "source_id": "source:xtask/src/main.rs",
       "path": "xtask/src/main.rs",
-      "sha256": "3bdc8354f9cf521dbb0b98000b0909e81443c717aa16d7a472a3065f72d6c07e"
+      "sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c"
     }
   ],
   "surfaces": [
@@ -7167,6 +7172,942 @@
       "disposition": "dynamic-registration",
       "reason": "Public caller-defined registration seam is distinct from 12 default tools and from executing a tool; descriptor invocation effects belong to each supplied implementation. Evidence: crates/vibe-mcp/src/lib.rs:196 Server::register_tool Explicit unresolved bindings: authority, schema_ref. Registration DataRole distinguishes actual catalogue registration from direct surface/dynamic seam; it is not execution or authorization.",
       "registered": false
+    },
+    {
+      "surface_id": "surface.developer.xtask.batch-review",
+      "kind": "developer-tool",
+      "name": "batch-review",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_batch_review; source declaration BatchReview at line56",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe mechanical scope/word-stream/gate/markup checks and optional landed-history replay; no semantic judgment or observed handler execution."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.batch-review"
+    },
+    {
+      "surface_id": "surface.developer.xtask.bridge",
+      "kind": "developer-tool",
+      "name": "bridge",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_bridge; source declaration Bridge at line88",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe author/verify reference-backed package input tooling; dispatch delegates to run_bridge. pin handler body is outside the approved read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "group",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented. Parent has required non-Option subcommand field in main.rs; no meaningful independent default handler is declared in the inspected parent."
+    },
+    {
+      "surface_id": "surface.developer.xtask.bridge.pin",
+      "kind": "developer-tool",
+      "name": "pin",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_bridge; source declaration Bridge at line88",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe author/verify reference-backed package input tooling; dispatch delegates to run_bridge. pin handler body is outside the approved read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.bridge",
+      "operation_id": "operation.developer.xtask.bridge.pin"
+    },
+    {
+      "surface_id": "surface.developer.xtask.capability-coverage",
+      "kind": "developer-tool",
+      "name": "capability-coverage",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to capability_coverage::run; source declaration CapabilityCoverage at line81; xtask/src/capability_coverage.rs pub(crate) fn run(root:&Path,selected_inventory:Option<&Path>)->Result<()>",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Observed helper body reads/canonicalizes inventory, uses generated Coverage decoder/pure validator, compares native xtask CommandFactory metadata, and invokes three selected owning Cargo tests with inventory environment; those handler effects were NOT executed by this data authoring."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Generated Coverage input plus native metadata comparison and exact selected owning Cargo harness outputs; helper prints native table, child stdout/stderr and conclusion; no complete semantic result frame",
+      "schema_ref": "schemas/capability/e1/coverage.jtd.json (inventory input only, not operation/result frame)",
+      "implementation": "source-observed",
+      "external_access": "legacy",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.capability-coverage"
+    },
+    {
+      "surface_id": "surface.developer.xtask.check-codegen",
+      "kind": "developer-tool",
+      "name": "check-codegen",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_check_codegen; source declaration CheckCodegen at line100",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare codegen followed by Git generated-directory drift check; handler not invoked."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.check-codegen"
+    },
+    {
+      "surface_id": "surface.developer.xtask.codegen",
+      "kind": "developer-tool",
+      "name": "codegen",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_codegen; source declaration Codegen at line95",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare local jtd-codegen process and regeneration under owning generated directories; handler not invoked."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.codegen"
+    },
+    {
+      "surface_id": "surface.developer.xtask.codemod",
+      "kind": "developer-tool",
+      "name": "codemod",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_codemod_add_cell; source declaration Codemod at line154",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare multi-file module/registration/test edits with post Cargo check/rollback; dispatch to packaged add-cell owner, not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "group",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented. Parent has required non-Option subcommand field in main.rs; no meaningful independent default handler is declared in the inspected parent."
+    },
+    {
+      "surface_id": "surface.developer.xtask.codemod.add-cell",
+      "kind": "developer-tool",
+      "name": "add-cell",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_codemod_add_cell; source declaration Codemod at line154",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare multi-file module/registration/test edits with post Cargo check/rollback; dispatch to packaged add-cell owner, not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.codemod",
+      "operation_id": "operation.developer.xtask.codemod.add-cell"
+    },
+    {
+      "surface_id": "surface.developer.xtask.conform",
+      "kind": "developer-tool",
+      "name": "conform",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_conform_check / run_conform_freeze; source declaration Conform at line143",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs distinguish check facts/SARIF/ratchet from freeze rewriting baseline; exact delegated bodies not read or executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "group",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented. Parent has required non-Option subcommand field in main.rs; no meaningful independent default handler is declared in the inspected parent."
+    },
+    {
+      "surface_id": "surface.developer.xtask.conform.check",
+      "kind": "developer-tool",
+      "name": "check",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_conform_check; source declaration Conform at line143",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs distinguish check facts/SARIF/ratchet from freeze rewriting baseline; exact delegated bodies not read or executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.conform",
+      "operation_id": "operation.developer.xtask.conform.check"
+    },
+    {
+      "surface_id": "surface.developer.xtask.conform.freeze",
+      "kind": "developer-tool",
+      "name": "freeze",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_conform_freeze; source declaration Conform at line143",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs distinguish check facts/SARIF/ratchet from freeze rewriting baseline; exact delegated bodies not read or executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.conform",
+      "operation_id": "operation.developer.xtask.conform.freeze"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist",
+      "kind": "developer-tool",
+      "name": "dist",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "group",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented. Parent has required non-Option subcommand field in main.rs; no meaningful independent default handler is declared in the inspected parent."
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.build",
+      "kind": "developer-tool",
+      "name": "build",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.build"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.finalize",
+      "kind": "developer-tool",
+      "name": "finalize",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.finalize"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.prepare",
+      "kind": "developer-tool",
+      "name": "prepare",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.prepare"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.status",
+      "kind": "developer-tool",
+      "name": "status",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.status"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.upload",
+      "kind": "developer-tool",
+      "name": "upload",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.upload"
+    },
+    {
+      "surface_id": "surface.developer.xtask.dist.upload-built",
+      "kind": "developer-tool",
+      "name": "upload-built",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_dist; source declaration Dist at line263",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe native bundle build/inspect/publication family; exact six child handler effects/authority remain unbound because dist.rs was not read."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.dist",
+      "operation_id": "operation.developer.xtask.dist.upload-built"
+    },
+    {
+      "surface_id": "surface.developer.xtask.embed-doc-shell",
+      "kind": "developer-tool",
+      "name": "embed-doc-shell",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_embed_doc_shell; source declaration EmbedDocShell at line254",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare optional pnpm embedded build, shell asset/index copy and doc-shell.lock repin; not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.embed-doc-shell"
+    },
+    {
+      "surface_id": "surface.developer.xtask.fast-loop",
+      "kind": "developer-tool",
+      "name": "fast-loop",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_fast_loop; source declaration FastLoop at line164",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare per-cell build/test measurement, optional budget enforcement; not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.fast-loop"
+    },
+    {
+      "surface_id": "surface.developer.xtask.health",
+      "kind": "developer-tool",
+      "name": "health",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_health + optional mirror_health_section; source declaration Health at line186",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare local health snapshot writing; mirrors flag adds a network sync probe through mirror_health_section; no probe or write executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.health"
+    },
+    {
+      "surface_id": "surface.developer.xtask.mirror",
+      "kind": "developer-tool",
+      "name": "mirror",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_mirror; source declaration Mirror at line236",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare mirror check/push, optional source fast-forward and explicitly authorized leased rewrite fields; dispatch only observed, no Git/network handler run."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.mirror"
+    },
+    {
+      "surface_id": "surface.developer.xtask.rebuild",
+      "kind": "developer-tool",
+      "name": "rebuild",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_rebuild; source declaration Rebuild at line300",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe scratch journal reprojection and catalog byte comparison, no repair mode; not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.rebuild"
+    },
+    {
+      "surface_id": "surface.developer.xtask.specmap",
+      "kind": "developer-tool",
+      "name": "specmap",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_specmap; source declaration Specmap at line104",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe canonical index regeneration or check/byte-diff; no source/index write executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.specmap"
+    },
+    {
+      "surface_id": "surface.developer.xtask.sync-engines",
+      "kind": "developer-tool",
+      "name": "sync-engines",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_sync_engines; source declaration SyncEngines at line242",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe vendor mirror copying or check-only comparison; not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.sync-engines"
+    },
+    {
+      "surface_id": "surface.developer.xtask.test-gate",
+      "kind": "developer-tool",
+      "name": "test-gate",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_test_gate; source declaration TestGate at line114",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare nextest/workspace test gate versus selected baseline; not run."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.test-gate"
+    },
+    {
+      "surface_id": "surface.developer.xtask.trace",
+      "kind": "developer-tool",
+      "name": "trace",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_trace_explain; source declaration Trace at line134",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare subgraph text/JSON, optional ledger provenance/cache prose; run_trace_explain handler not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "group",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented. Parent has required non-Option subcommand field in main.rs; no meaningful independent default handler is declared in the inspected parent."
+    },
+    {
+      "surface_id": "surface.developer.xtask.trace.explain",
+      "kind": "developer-tool",
+      "name": "explain",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_trace_explain; source declaration Trace at line134",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs declare subgraph text/JSON, optional ledger provenance/cache prose; run_trace_explain handler not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Declared text or raw subgraph JSON, optional prose/cache; request/report epoch unbound",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "legacy",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "parent_surface_id": "surface.developer.xtask.trace",
+      "operation_id": "operation.developer.xtask.trace.explain"
+    },
+    {
+      "surface_id": "surface.developer.xtask.tripwire",
+      "kind": "developer-tool",
+      "name": "tripwire",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to rust_ai_native_cli::run_tripwire; source declaration Tripwire at line123",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe diff/debt warning collector; worktree or supplied-base behavior not executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.tripwire"
+    },
+    {
+      "surface_id": "surface.developer.xtask.wire-diff",
+      "kind": "developer-tool",
+      "name": "wire-diff",
+      "registered": true,
+      "aliases": [],
+      "owner": "xtask/src/main.rs private owning Cli/Cmd and dispatch to run_wire_diff; source declaration WireDiff at line336",
+      "target": "xtask argument-selected repository, path, baseline, target or input; repo_root derives CARGO_MANIFEST_DIR parent in source, actual target/availability unexercised",
+      "effects": [
+        "Source docs describe registered corpus/journal/Git/epoch evidence check; no epoch/producer/window/publication result executed."
+      ],
+      "authority": "Source command/dispatch only; invoker authorization, destructive/publication/network admission and target-root proof remain unverified",
+      "carrier": "Owning clap declaration and anyhow Result<()> dispatch; exact external request/result/error/event carrier unbound; not a runtime facade",
+      "schema_ref": "unbound schema: this developer command does not declare a complete external operation exchange epoch in the inspected owner",
+      "implementation": "source-observed",
+      "external_access": "unknown",
+      "completeness": "Native registration table observed by root worker; no handler execution, semantic/model conformance or whole-operation completeness claimed",
+      "retention": "Source-doc-described output/change/cache/baseline distinctions only; exact durable invocation outcome/preservation unverified",
+      "conformance_cases": [
+        "source-case:capability_coverage::tests::observes_native_xtask_registration_table",
+        "source-case:capability_coverage::tests::native_aliases_are_scoped_to_their_parent",
+        "source-case:capability_coverage::tests::owner_result_requires_real_nonzero_selected_case"
+      ],
+      "source_ids": [
+        "source:xtask/src/main.rs",
+        "source:xtask/src/capability_coverage.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root worker observed three selected xtask metadata/parser tests exit0 and30canonical nodes, aliases empty. Metadata observation never invokes this handler. Source docs and dispatch are read; delegated module/engine body, authorization and runtime outcome are not invented.",
+      "operation_id": "operation.developer.xtask.wire-diff"
     }
   ],
   "models": [
