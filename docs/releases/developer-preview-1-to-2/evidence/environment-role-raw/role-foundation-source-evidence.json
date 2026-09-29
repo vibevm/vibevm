@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "contract_subject": "123688b24",
+  "scope": "M-14-A.1 desired permanent source and exact native reader/unit checks; no executable or task acceptance",
+  "root_structure_correction": "15 exact normative bodies preserved, each promoted to named reqr1 unit; moved source-reference parent prose before nested sections after closed dialect rejection",
+  "source_review": "role-foundation-source-review.md",
+  "artifacts": [
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-PROP-076-proposal.xml",
+      "sha256": "6977ea586bff4804dfb5d62a75e2429eae9bbd9bacf3a728da717844323223ff"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-consumer-trace.md",
+      "sha256": "097d2ab43108fbaee69c55db7dfaaa3777dff37e25f562ecf2568cab67221890"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-source-review.md",
+      "sha256": "d84e925eb1370a195cdc657f14a4f7fc0bcbeeb4e60d2f693e871b3e68af6a49"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-reader-attempts.json",
+      "sha256": "ac57f13f573d09783982dbaaa1cec4101a5709bf297e06a700827e6cbe654218"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-closed-reader.log",
+      "sha256": "918c25002ff66524a6eadfe700802cd1a50d6d2be1e1b9fde4bb853c2c73b462"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-rule-reader.log",
+      "sha256": "98aa9b724cf93ed2ef85e96aaa976b752e5dd83515b9e39dc36098328205f421"
+    },
+    {
+      "path": "campaigns/next/evidence/M-14-A/role-foundation-rule-results.json",
+      "sha256": "e1b199c1f3a62f295a250b473592d1323276c5180b77b041f6a7972c266f4697"
+    }
+  ],
+  "final_closed_loader_exit": 0,
+  "final_req_unit_checks": 15,
+  "final_req_unit_failures": 0,
+  "whole_campaign_or_native_execution_claim": false
+}

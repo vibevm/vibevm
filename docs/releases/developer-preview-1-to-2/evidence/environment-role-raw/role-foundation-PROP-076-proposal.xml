@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-076 — Environment roles and explicit target binding</title>
+  <status stage="spec" state="plan"/>
+  <p>This is the desired domain contract. Existing local package, artifact,
+  native-extension and deployment behavior is the compatibility baseline;
+  these clauses do not claim that a new environment operation is implemented.</p>
+  <scope title="1. One package system, separate environment roles">
+    <p>`req r1`</p>
+    <p><ENVIRONMENT-ROLE-SEPARATION fact="true" status="spec/plan">An environment is
+    a deployable consumer context for the existing package identities, requires,
+    choices and features. It may be authored in a coding project, image repository
+    or user directory without Git. It adds no package kind, change type or personal
+    stewardship database. Definition, exact lock, operation executor, admitted
+    target binding and realized generation are five different identity roles.
+    Sharing content or equal field spellings does not collapse their authority.</ENVIRONMENT-ROLE-SEPARATION></p>
+    <p>Code-bearing package source identity remains the shippable tree under
+    [PROP-024](PROP-024-code-bearing-packages.xml#SHIPPABLE-TREE-DEF).
+    Existing package build and binary delivery remain governed by
+    [PROP-025](../modules/vibe-workspace/PROP-025-binary-delivery.xml#BINARY-MECHANISM-LOWERING).
+    An environment does not replace Cargo/npm resolution of their internals.</p>
+  </scope>
+  <definition title="2. Portable desired composition">
+    <p>`req r1`</p>
+    <p><ENVIRONMENT-DEFINITION fact="true" status="spec/plan">EnvironmentDefinition
+    owns portable desired composition: existing package/root selections,
+    feature/choice selections, target compatibility constraints, named tool/service
+    exports and named runtime bindings. Its identity is supplied by its authored
+    definition owner. Named roots here are desired resources, not machine absolute
+    paths. Credentials, discovered HOME/PATH and physical destination identities
+    are excluded. Construction does not resolve, install or activate packages.</ENVIRONMENT-DEFINITION></p>
+  </definition>
+  <lock title="3. Exact selected closure">
+    <p>`req r1`</p>
+    <p><ENVIRONMENT-LOCK fact="true" status="spec/plan">EnvironmentLock binds one
+    definition to its exact selected Vibe captures/configuration, external backend
+    closure references, explicit build/runtime dependency roles and target
+    OS/architecture/ABI/libc constraints. Its identity and exact closure evidence
+    belong to the resolving/lock owner. A package version, source URL or physical
+    root cannot substitute for this selected closure. It is derived once for its
+    environment domain, not a machine-global or stewardship lock.</ENVIRONMENT-LOCK></p>
+  </lock>
+  <execution title="4. Where an operation executes">
+    <p>`req r1`</p>
+    <p><EXECUTION-CONTEXT fact="true" status="spec/plan">ExecutionContext names the
+    executor facts supplied for a particular operation: its OS/architecture/ABI,
+    admitted tool/provider identity, principal and explicit network/mount/process
+    capabilities. The admitting surface owns those facts and capabilities; a pure
+    value describes them but does not grant an effect or prove admission. A local
+    Windows process and a Linux build worker are distinct executors even when
+    they participate in one environment operation.</EXECUTION-CONTEXT></p>
+  </execution>
+  <target title="5. Destination instance and physical authority">
+    <p>`req r1`</p>
+    <p><TARGET-BINDING fact="true" status="spec/plan">TargetBinding owns the stable
+    environment instance reference, selected generation reference when established,
+    target OS/architecture/ABI/libc, target mode, admitted filesystem roots/prefix,
+    target principal/home and storage-backend reference. Workspace projection,
+    user profile, offline Linux rootfs/image and future live Linux system are
+    target modes, not package kinds. Physical root/capability evidence belongs to
+    the admitting storage owner and is separate from portable definition content.
+    A pathname, same username or a copied receipt is not physical authority.</TARGET-BINDING></p>
+    <p><TARGET-INSTANCE-CONTINUITY fact="true" status="spec/plan">Cloning a definition
+    or instantiating image content requires a new admitted instance binding;
+    immutable generation content may be reused. Reused pathname spellings do not
+    transfer old instance receipts. Move, relocate and adopt need their own
+    explicit validated operations. Constructors neither discover aliases nor
+    claim that two roots are physically disjoint.</TARGET-INSTANCE-CONTINUITY></p>
+  </target>
+  <generation title="6. Realized immutable generation">
+    <p>`req r1`</p>
+    <p><ENVIRONMENT-GENERATION fact="true" status="spec/plan">EnvironmentGeneration
+    binds its producing lock/recipes to realized payload inventory and metadata,
+    dependency closure, generated boot/adapters/service catalog and activation
+    references. Its identity and evidence belong to the producing generation
+    owner. It does not itself authorize activation. Mutable application data,
+    secrets and per-user stewardship state are outside immutable generation
+    content. A desired definition or lock is not a realization receipt.</ENVIRONMENT-GENERATION></p>
+  </generation>
+  <abi title="7. Executor, produced-tool runtime and emitted-code target">
+    <p>`req r1`</p>
+    <p><ABI-ROLE-SEPARATION fact="true" status="spec/plan">Keep three machine roles
+    distinct: the machine executing a build, the machine on which the produced
+    tool will run, and, when that tool is a compiler, its emitted-code target.
+    None is inferred from another role. Native Vibe extension/library ABI belongs
+    to the executor that loads it; an installable Linux payload belongs to its
+    produced-tool runtime target. Compiler output constraints are separately
+    selected and are absent when that role is not applicable.</ABI-ROLE-SEPARATION></p>
+    <p><COMPATIBILITY-FACTS fact="true" status="spec/plan">Compatibility decisions
+    consume explicit role-labelled facts and admitted capabilities. OS-only
+    equality or a when.os match does not establish architecture, libc or ABI
+    compatibility, prefix relocatability or operation support. Missing required
+    facts produce an explicit unresolved/refused compatibility result; an
+    unsupported operation names its target mode or unsatisfied constraint before
+    effectful dispatch. Describing Windows executor plus Linux target is legal
+    data and cannot select a Windows launcher for that Linux payload.</COMPATIBILITY-FACTS></p>
+  </abi>
+  <legacy title="8. Explicit legacy host interpretation">
+    <p>`req r1`</p>
+    <p><LEGACY-HOST-INTERPRETATION fact="true" status="spec/plan">Existing TargetWhen
+    and TargetApplicability retain their strict OS-set grammar and explicit
+    legacy executor-host interpretation. Package and deploy projections continue
+    receiving the same injected current command-process OS, with absence
+    unconditional, existing active/skipped decisions and inactive-dependency
+    refusals unchanged. A new target value does not silently retarget old guards.
+    Later target-aware predicates and world/boot consumers require explicit
+    adoption and separately bound evidence.</LEGACY-HOST-INTERPRETATION></p>
+    <p><LOCAL-WORKSPACE-COMPATIBILITY fact="true" status="spec/plan">The first pure
+    compatibility result supports an explicitly injected existing local workspace
+    binding with legacy local semantics. The surface may explicitly bind its
+    local destination to the observed local executor; this is a named mapping,
+    not an inference usable for remote/image targets. Bare install still
+    materializes package source; constructing these values never starts a build,
+    native load, provider, deployment or activation.</LOCAL-WORKSPACE-COMPATIBILITY></p>
+    <p><UNSUPPORTED-TARGET-OPERATIONS fact="true" status="spec/plan">User-profile,
+    offline rootfs/image and live-system targets are describable domain data but
+    the initial role foundation returns explicit unsupported-operation results
+    for their execution. Existing user-scoped deploy fields are not evidence of
+    full environment-operation support. User HOME/rootfs/OCI delivery is a later
+    commissioned implementation; a live distribution remains a design direction.
+    No provider is assumed to implement every target mode.</UNSUPPORTED-TARGET-OPERATIONS></p>
+  </legacy>
+  <construction title="9. Pure construction and existing identity owners">
+    <p>`req r1`</p>
+    <p><INJECTED-CONSTRUCTION-AUTHORITY fact="true" status="spec/plan">Pure
+    constructors validate role-specific inputs, required nonblank references and
+    cross-reference consistency without HOME/PATH lookup, filesystem probing,
+    Docker, registry/configuration reads or execution. Root/principal/provider
+    selection arrives from the trusted admitting surface and is not reselected
+    below it. The existing project vibevm layout stays in place; root/prefix
+    layout policy is separately centralized rather than invented per provider.</INJECTED-CONSTRUCTION-AUTHORITY></p>
+    <p><IDENTITY-OWNER-REUSE fact="true" status="spec/plan">This role foundation
+    introduces no identity hash recipe, machine serializer/parser or wire epoch.
+    Reuse existing package/content/capture references through their current owners;
+    ContentHash stays a package-content reference, not an environment hasher.
+    Where an environment-specific content-ID producer is not yet implemented,
+    explicitly injected opaque role references support binding/equality only,
+    never a claim of independently authenticated content. A future producer or
+    durable format requires its own existing-owner justification and source
+    contract before emission. Preserve role distinctions even when underlying
+    reference strings happen to be equal.</IDENTITY-OWNER-REUSE></p>
+  </construction>
+  <proof title="10. Desired contract versus observed implementation">
+    <p>`req r1`</p>
+    <p><ENVIRONMENT-PROOF-BOUNDARY fact="true" status="spec/plan">The observed
+    baseline has pure OS applicability values, Cargo binary-to-artifact lowering,
+    current-process native platform selection and injected deployment roots.
+    That is not evidence that these five environment objects, target ABI checks,
+    cross-target launcher selection or HOME/rootfs/live operations are implemented.
+    Later executable constructors and compatibility tests must cite these anchors;
+    consumer migration and native execution proofs remain separate claims.</ENVIRONMENT-PROOF-BOUNDARY></p>
+  </proof>
+</spec>

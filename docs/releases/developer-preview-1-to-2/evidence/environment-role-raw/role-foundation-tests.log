@@ -1,0 +1,19 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.69s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 8 tests
+test environment::tests::role_ids_preserve_producers_and_do_not_conflate_equal_reference_text ... ok
+test environment::tests::windows_executor_linux_payload_and_compiler_output_keep_three_roles ... ok
+test environment::tests::os_match_does_not_hide_abi_libc_mismatch_or_missing_facts ... ok
+test environment::tests::constructors_reject_blank_inputs_and_need_no_ambient_state ... ok
+test environment::tests::future_target_modes_are_describable_but_operations_unsupported ... ok
+test environment::tests::generation_and_target_reject_cross_reference_tampering ... ok
+test environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings ... ok
+test environment::tests::explicit_local_workspace_mapping_preserves_legacy_guard_behavior ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 533 filtered out; finished in 0.00s
+

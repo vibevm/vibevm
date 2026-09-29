@@ -1,0 +1,90 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "vibe-core",
+    "--lib",
+    "--locked",
+    "environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings",
+    "--",
+    "--exact"
+  ],
+  "environment": {
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "exit": 0,
+  "raw_log": "/tmp/vibevm-next-M14-A1-export-namespace-test.log",
+  "raw_log_sha256": "a706ed53eeec8d9a39f1c272d433f58c73a268158b67fdb961d43ea7d8a4273d",
+  "source_files": [
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/lib.rs",
+      "sha256": "5734dcbc3bb2f20d4284e015e26269ff1496b3acc41555d7587c69abbefc30b8",
+      "bytes": 1697,
+      "lines": 47,
+      "hash_provenance": "carried from unchanged original receipt; outside correction write scope"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/compatibility.rs",
+      "sha256": "1dee080849d8f75fe5f183ee5352aa7c0fe954b68bb95140a20bf7867401afc4",
+      "bytes": 6612,
+      "lines": 182,
+      "hash_provenance": "carried from unchanged original receipt; outside correction write scope"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/identity.rs",
+      "sha256": "45032df8619a02fd9547d884a7dbd4a1dc3388b8a1dae2182db5986841dbff4f",
+      "bytes": 1766,
+      "lines": 45,
+      "hash_provenance": "carried from unchanged original receipt; outside correction write scope"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/mod.rs",
+      "sha256": "b8bffdc11346a5dc4fe9de2cb35b85887acf7a69f3215330041a09e873fe940c",
+      "bytes": 1190,
+      "lines": 38,
+      "hash_provenance": "remeasured current bound owner"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/platform.rs",
+      "sha256": "3bba3560b4b677112f0a1eb2b53775447e4f094b27441f4befcbb9eb4dcc9b08",
+      "bytes": 5034,
+      "lines": 188,
+      "hash_provenance": "carried from unchanged original receipt; outside correction write scope"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/roles.rs",
+      "sha256": "0ebeca4ff938556db689552c375b56a8f82209835c9aa1358b62d65cacbe5792",
+      "bytes": 16962,
+      "lines": 536,
+      "hash_provenance": "remeasured current bound owner"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/tests.rs",
+      "sha256": "9c01e27e60ccb68686ae1897fb0fc2b314058b7f564bd951aff35b1946a1d3a5",
+      "bytes": 19796,
+      "lines": 599,
+      "hash_provenance": "remeasured current bound owner"
+    },
+    {
+      "path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/src/environment/export_assertions.rs",
+      "sha256": "81d9339ee1b706460bceed48cec093490addfdc03f989273a05faa8aa3860cb6",
+      "bytes": 1142,
+      "lines": 32,
+      "hash_provenance": "remeasured new bound owner"
+    }
+  ],
+  "original_receipts_preserved": {
+    "vibevm-next-M14-A1-tests.log": "b2c4190a802ba4437ceb3c4d8430e64d22cba77afa6d31f5ac4dc1bc84c59a66",
+    "vibevm-next-M14-A1-result.json": "ba6585ba3bc8d4f1ead55cdda38f2a61f887d893a4089fbaba42568d95398d0d"
+  },
+  "observed_harness": {
+    "passed": 1,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered": 540
+  }
+}
