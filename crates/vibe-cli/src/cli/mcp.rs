@@ -205,6 +205,10 @@ pub struct McpUpgradeArgs {
 }
 
 #[derive(Debug, clap::Args)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+    r = 1
+)]
 pub struct McpServeArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
     /// The server reloads the lockfile fresh on every tool call so a
@@ -212,4 +216,14 @@ pub struct McpServeArgs {
     /// restart.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+
+    /// Explicit absolute recovery store for manifest migration authority.
+    /// Omission leaves migration tools ungranted; no store is inferred.
+    #[arg(long)]
+    pub migration_recovery_store: Option<PathBuf>,
+
+    /// Grant one portable relative authored-file operand; repeat for members.
+    /// With an explicit store and no file flags, only root vibe.toml is granted.
+    #[arg(long = "migration-file", requires = "migration_recovery_store")]
+    pub migration_file: Vec<String>,
 }

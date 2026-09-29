@@ -101,6 +101,10 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
     }
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+    r = 1
+)]
 fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // `vibe mcp serve` is the one place where path is *required*: the
     // server needs a project root to load the lockfile from. When
@@ -118,6 +122,13 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         runtime.embedded_registry_root,
         runtime.seed_default_registry,
     );
+    let server_ctx = if let Some(store) = args.migration_recovery_store {
+        server_ctx
+            .with_manifest_migration_authority(store, args.migration_file)
+            .context("MCP manifest migration authority refused (governed by spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES; fix: select an absolute disjoint recovery store and portable owned authored files within the trusted server project)")?
+    } else {
+        server_ctx
+    };
     let mut server = Server::stdio(server_ctx);
     server.run().context("MCP server I/O error")?;
     Ok(())
