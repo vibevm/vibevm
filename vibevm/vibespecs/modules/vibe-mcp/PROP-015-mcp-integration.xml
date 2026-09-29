@@ -53,7 +53,7 @@ close that loop:</close-the-loop></p>
   the server name/version surface in the handshake.</SERVER-HANDSHAKE-IDENTITY>
         <SERVER-TRANSPORT-TRAIT fact="true" status="impl/done">Transport is a trait (`Transport`) — production uses `StdioTransport`,
   tests inject `MemoryTransport` for deterministic round-trips.</SERVER-TRANSPORT-TRAIT>
-        <SERVER-FRESH-LOCKFILE fact="true" status="impl/done">Each `tools/call` reloads the project lockfile fresh, so a concurrent
+        <SERVER-FRESH-LOCKFILE fact="true" status="impl/done">Each lockfile-derived tool call reloads the project lockfile fresh, so a concurrent
   `vibe install` surfaces on the next call without a server restart.</SERVER-FRESH-LOCKFILE>
         <SERVER-MISSING-LOCK fact="true" status="impl/done">A missing `vibe.lock` is an empty lockfile, not an error — the agent
   sees empty state through the normal tool response.</SERVER-MISSING-LOCK>
@@ -215,6 +215,22 @@ lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-
   and a fix surface (the Class-F product-error grammar), so a failing tool
   call is navigable back to this PROP without source access.</ERROR-CITES-REQ>
       </facts>
+      <STRUCTURED-TOOL-PREFLIGHT title="Structured preflight without domain execution">
+        <p>`req r1`</p>
+        <p><STRUCTURED-PREFLIGHT-LAW fact="true" status="spec/done">A tool may carry an owning typed report in a ToolError preflight
+variant. The generic dispatcher preserves that value in structuredContent,
+its required text projection and isError true; it does not turn the error
+into an executed ToolOutput, invoke the domain or inspect a tool name.
+Ordinary errors without a report retain their existing text-only rendering.
+Display still carries the governing spec address and repair surface.
+Structured planner-entered refusal remains the distinct executed-result
+channel. Report ownership, schema validation and caller-data disclosure belong
+to the tool's domain contract, not to a new server-wide domain engine.
+The pure manifest planning cell is governed by
+[PROP-044 migration transport](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-TRANSPORT)
+and ignores ServerContext; opening that plan does not load the lockfile or
+initialize state.</STRUCTURED-PREFLIGHT-LAW></p>
+      </STRUCTURED-TOOL-PREFLIGHT>
     </errors>
     <agent-detection title="2.4 Agent detection">
       <p><req-agent-detection fact="true" status="impl/done">`req r1`</req-agent-detection></p>
@@ -324,8 +340,11 @@ include = ["SKILL.md", "references/**/*.md"]   # omit → whole tree (§2.6)</fe
   </decisions>
   <out-of-scope title="3. Out of scope">
     <facts ordered="false">
-      <OOS-NO-WIRE-CHANGES fact="true" status="spec/done">**No new wire formats or lockfile changes.** The server reads the
-  existing lockfile schema; the tools surface existing fields.</OOS-NO-WIRE-CHANGES>
+      <OOS-NO-WIRE-CHANGES fact="true" status="spec/done">**The original M1.7 slice introduced no wire formats or lockfile changes.**
+  Its server reads the existing lockfile schema and its three tools surface
+  existing fields. Later tool-owned request/report/error documents are
+  registered under their own format contract; they do not change the MCP
+  JSON-RPC protocol or the lockfile.</OOS-NO-WIRE-CHANGES>
       <OOS-AGENT-SEMANTICS fact="true" status="spec/done">**No agent-specific behaviour beyond config shape.** The integration
   knows each agent's *file format and paths*, not its runtime semantics.</OOS-AGENT-SEMANTICS>
       <OOS-HTTP-SSE fact="true" status="spec/done">**HTTP / SSE transports.** Stdio is the shipped transport; the

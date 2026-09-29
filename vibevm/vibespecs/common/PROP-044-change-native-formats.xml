@@ -423,6 +423,67 @@ token. Digests are lowercase hexadecimal without a prefix. A fixed
 independently computed golden vector binds this recipe; changing domains,
 framing or ordering requires a distinct recipe revision.</MIGRATION-PLAN-LAW></p>
     </MANIFEST-MIGRATION-PLAN>
+    <MANIFEST-MIGRATION-TRANSPORT title="Strict text-only migration planning transports">
+      <p>`req r1`</p>
+      <p><MIGRATION-TRANSPORT-LAW fact="true" status="spec/done">**One pure domain owner, strict generated transports.** Register
+`migration-plan-request`, `migration-plan-report` and `migration-plan-error`
+at wire epoch 1, under `schemas/migration/e1/`, with explicit
+`unknown_fields = "deny"`. Product 1.1.0, the authored manifest epoch and
+these wire epochs remain independent. A request has `schema = 1`, exact
+`source_text` and optional string selections `source_profile`, `target_profile`
+and `recipe`. Missing selections reach the domain's typed questions; an
+unrecognized string reaches its typed refusal. Wrong primitive types,
+unknown fields or unsupported request schema fail preflight without calling
+the planner. There are no path, provider, apply, project or authority fields.
+
+A report has `schema = 1`, stage `planner`, and a discriminated outcome:
+`planned`, `no_op`, `needs_input` or `refused`. Planned and no-op outcomes
+carry selected profiles/recipe, exact before/after text, ordered byte-span
+token edits and the three existing identities. Their source and target epoch
+markers are explicit `absent` or `epoch_1` discriminators with empty payloads,
+derived from the selected frozen profiles by the core owner; absent is never
+numeric zero or an inferred epoch 1. Questions carry their selected field and
+named choices. Refusal carries a typed error. No checked Manifest struct is
+serialized into this transport, and no unobserved epoch is invented for
+questions or refusals.
+
+The standalone error document has `schema = 1`, stage `preflight` and a typed
+error; it is distinct from a planner-entered refusal. One shared JTD error
+fragment owns closed codes `invalid_request`, `unsupported_schema`,
+`input_read`, `unknown_selection`, `incompatible_edge`, `malformed_syntax`,
+`unrecognized_shape`, `invalid_current_manifest`, `unprovable_edit`, plus
+field and fixed reason strings. Preflight uses the first three codes; domain
+refusal uses the last six. Generated readers check structural shape; the
+pure adapter checks schema/stage/code and result invariants before emission.
+The common error object is shared through the existing vocabulary resolver,
+not a primitive alias pretending to be an object or a second error codec.
+All nested payloads, empty epoch markers and the shared error reject unknown
+fields. Shared and consumer generation use the registry's effective
+`unknown_fields` policy; parser population cannot override explicit deny.
+Conflicting shared reader policies refuse rather than emitting divergent
+types or choosing the first consumer.
+
+CLI `vibe refactor plan-migration` consumes JSON stdin by default or the
+explicit `--request-json` string, then emits exactly one registered report
+or error document. Its entry runs before configuration promotion, tracing,
+context, registry and other state initialization. Planned/no-op exit 0;
+input-required and invalid request/schema exit 2; domain refusal and stdin
+failure exit 1. The existing exit taxonomy is reused. MCP tool
+`plan_manifest_migration` invokes the same pure adapter and does not inspect
+ServerContext. Planner results survive in structuredContent; missing choices
+are a nonerror question report, domain refusal is a structured tool error,
+and malformed transport retains a typed preflight report through the
+ToolError channel without pretending the planner ran. No tool-name logic
+belongs in the dispatcher.
+
+Exact text and authored diagnostic keys are caller-supplied data deliberately
+carried in this response; parser diagnostics and external/private context are
+not added. One-shot planning creates no files, cache, lock or provider work.
+CLI/MCP parity, actual isolated startup, strict nested decoder failures and
+selected profile/epoch/identity preservation must be verified on these surfaces;
+the final facade, mutation/apply, broad historical corpus and public
+publication remain separate obligations.</MIGRATION-TRANSPORT-LAW></p>
+    </MANIFEST-MIGRATION-TRANSPORT>
   </placement>
   <our-formats title="6. The formats of this project, by name">
     <p><FMT-CATALOG fact="true" status="spec/plan">**6.1 The catalog is three things with three fates.** The
