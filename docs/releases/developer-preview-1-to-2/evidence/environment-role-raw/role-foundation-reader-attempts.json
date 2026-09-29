@@ -1,0 +1,13 @@
+{
+  "initial_proposal": {
+    "closed_loader_exit": 0,
+    "anchor_checker_exit": 101,
+    "failure": "ENVIRONMENT-ROLE-SEPARATION had no bound req revision"
+  },
+  "root_first_wrapper_edit": {
+    "closed_loader_exit": 101,
+    "failure": "Root left a parent prose paragraph after a nested section; closed Markdown/XML dialect rejected line19",
+    "rule_reader_failed": true
+  },
+  "correction": "Move existing source-reference paragraph before child sections; normative bodies unchanged"
+}

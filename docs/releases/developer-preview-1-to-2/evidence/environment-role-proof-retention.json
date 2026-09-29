@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "scope": "Exact byte retention for accepted pure role evidence before eventual campaign scaffold retirement. Original campaign paths in reviews are provenance, joined here to permanent copies.",
+  "code_subject": "40ef38d10b969082bab028c6b49621af11289946",
+  "task_acceptance": "environment-role-task-acceptance.md",
+  "artifacts": [
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-PROP-076-proposal.xml",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-PROP-076-proposal.xml",
+      "sha256": "6977ea586bff4804dfb5d62a75e2429eae9bbd9bacf3a728da717844323223ff",
+      "bytes": 10800
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-capture-after-author.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-capture-after-author.log",
+      "sha256": "12863c5ec865a3fd975209034541666fe74b19af791d33dfc493e3ecb020fb8a",
+      "bytes": 159
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-capture-author-results.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-capture-author-results.json",
+      "sha256": "6dca005422dab7374a2020fb37f5806b14cd9b814d4b2a2e1b8b375011b3e069",
+      "bytes": 187
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-capture-before-author.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-capture-before-author.log",
+      "sha256": "ec8728f06d8096e886c08d7b07946140f0af0921e45579c0d1d81962d5922d0a",
+      "bytes": 159
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-capture-early-author-dispatch-failure.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-capture-early-author-dispatch-failure.json",
+      "sha256": "f32b07d8ad02fa4d3ee20a45ab1918f139376067f5b9d824ab86d9bbe8864a84",
+      "bytes": 327
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-capture-permanent-copy-manifest.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-capture-permanent-copy-manifest.json",
+      "sha256": "ddaf36d883f1563994f9187495ffc6c44b4f131903d22001339d1ca0ab9a0e28",
+      "bytes": 1192
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-closed-reader-final.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-closed-reader-final.log",
+      "sha256": "de3aea491274a902fdc47932c49207707af404f206b5a0890f2b706425ea5a5d",
+      "bytes": 48
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-closed-reader.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-closed-reader.log",
+      "sha256": "918c25002ff66524a6eadfe700802cd1a50d6d2be1e1b9fde4bb853c2c73b462",
+      "bytes": 48
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-code-review.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-code-review.md",
+      "sha256": "40554e5b534ba3cf6453778612bc64c6e2c4447b905ca0a075c80297462247e3",
+      "bytes": 3693
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-consumer-trace.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-consumer-trace.md",
+      "sha256": "097d2ab43108fbaee69c55db7dfaaa3777dff37e25f562ecf2568cab67221890",
+      "bytes": 6317
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-export-formatter-check.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-export-formatter-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-export-namespace-result.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-export-namespace-result.json",
+      "sha256": "13bcdab6bb63f0d9567da338b69d4e3bf50691ce6dcb4992b1e1e41568fa3c39",
+      "bytes": 3396
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-export-namespace-test.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-export-namespace-test.log",
+      "sha256": "a706ed53eeec8d9a39f1c272d433f58c73a268158b67fdb961d43ea7d8a4273d",
+      "bytes": 600
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-export-review-close.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-export-review-close.md",
+      "sha256": "70dc13d9e151c321e0a095352f0dca8032eea7b5f8693e53fdb92f465a8ecc73",
+      "bytes": 1965
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-formatter-check.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-formatter-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-implementation-evidence.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-implementation-evidence.json",
+      "sha256": "f02aafe23013158c9b47a032a3baf4a03d8ba22842bb3d5a9f0cd233eeec0cdf",
+      "bytes": 3478
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-implementation-plan.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-implementation-plan.md",
+      "sha256": "99e78aa79801b1652c35bcd76bf14e4762c6b89e6ffbf85a9546153912a16920",
+      "bytes": 8466
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-plan-review.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-plan-review.md",
+      "sha256": "78d0b76d08d6bd7a74dfe137b977cc6a72481cd150bb69f1b11a989d47feb181",
+      "bytes": 2354
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-proof-rule-final.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-proof-rule-final.log",
+      "sha256": "d5332cd9c648b758146d5319032fe16b2a6008a48834a460b3a948d1674d96a2",
+      "bytes": 72
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-reader-attempts.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-reader-attempts.json",
+      "sha256": "ac57f13f573d09783982dbaaa1cec4101a5709bf297e06a700827e6cbe654218",
+      "bytes": 493
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-result.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-result.json",
+      "sha256": "ba6585ba3bc8d4f1ead55cdda38f2a61f887d893a4089fbaba42568d95398d0d",
+      "bytes": 2233
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-rule-reader.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-rule-reader.log",
+      "sha256": "98aa9b724cf93ed2ef85e96aaa976b752e5dd83515b9e39dc36098328205f421",
+      "bytes": 1025
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-rule-results.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-rule-results.json",
+      "sha256": "e1b199c1f3a62f295a250b473592d1323276c5180b77b041f6a7972c266f4697",
+      "bytes": 961
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-source-evidence.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-source-evidence.json",
+      "sha256": "20b0442c8cf536982996643db0136f4c5fd95dde8e8a97a8aa603ecfe73cb6e3",
+      "bytes": 1842
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-source-review.md",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-source-review.md",
+      "sha256": "d84e925eb1370a195cdc657f14a4f7fc0bcbeeb4e60d2f693e871b3e68af6a49",
+      "bytes": 3133
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-specmap-result.json",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-specmap-result.json",
+      "sha256": "2e9c72add93be24ef86594d7b84675c11eb505180c98a8836f1148fc13820d61",
+      "bytes": 347
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-specmap.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-specmap.log",
+      "sha256": "b2a927c0f30363b188f7e77d900a1850c1f18ddf42cae185e1c0e375c69b5f07",
+      "bytes": 1978
+    },
+    {
+      "original_source": "campaigns/next/evidence/M-14-A/role-foundation-tests.log",
+      "permanent_source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-raw/role-foundation-tests.log",
+      "sha256": "b2c4190a802ba4437ceb3c4d8430e64d22cba77afa6d31f5ac4dc1bc84c59a66",
+      "bytes": 1262
+    }
+  ],
+  "fresh_execution_claim": false
+}

@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "code_subject": "40ef38d10b969082bab028c6b49621af11289946",
+  "source_observation_subject": "5df8c4ca4",
+  "state": "scoped-implementation-proof-not-task-acceptance",
+  "ordinary_selected_cases": 8,
+  "exact_correction_rerun": {
+    "case": "environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings",
+    "passed": 1,
+    "filtered": 540,
+    "distinct_extra_cases": 0
+  },
+  "formatter_checks": {
+    "initial_seven_owners_exit": 0,
+    "changed_three_owners_exit": 0
+  },
+  "review": "Initial namespace blocker retained; independent closure confirms separate tool/service uniqueness and current byte identities.",
+  "source_proof": "Final closed SpecDoc loader exit0; unchanged proof requirement remains reqr1.",
+  "limits": [
+    "No authenticated producer/root identity or write/native admission",
+    "No existing consumer rewiring",
+    "No HOME/rootfs/live environment execution",
+    "No new schema/hash/codec",
+    "No broad tests, mutations, clippy, codegen or wire-diff"
+  ],
+  "artifacts": [
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-implementation-plan.md",
+      "sha256": "99e78aa79801b1652c35bcd76bf14e4762c6b89e6ffbf85a9546153912a16920",
+      "bytes": 8466
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-plan-review.md",
+      "sha256": "78d0b76d08d6bd7a74dfe137b977cc6a72481cd150bb69f1b11a989d47feb181",
+      "bytes": 2354
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-code-review.md",
+      "sha256": "40554e5b534ba3cf6453778612bc64c6e2c4447b905ca0a075c80297462247e3",
+      "bytes": 3693
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-tests.log",
+      "sha256": "b2c4190a802ba4437ceb3c4d8430e64d22cba77afa6d31f5ac4dc1bc84c59a66",
+      "bytes": 1262
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-result.json",
+      "sha256": "ba6585ba3bc8d4f1ead55cdda38f2a61f887d893a4089fbaba42568d95398d0d",
+      "bytes": 2233
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-formatter-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-export-namespace-test.log",
+      "sha256": "a706ed53eeec8d9a39f1c272d433f58c73a268158b67fdb961d43ea7d8a4273d",
+      "bytes": 600
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-export-namespace-result.json",
+      "sha256": "13bcdab6bb63f0d9567da338b69d4e3bf50691ce6dcb4992b1e1e41568fa3c39",
+      "bytes": 3396
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-export-review-close.md",
+      "sha256": "70dc13d9e151c321e0a095352f0dca8032eea7b5f8693e53fdb92f465a8ecc73",
+      "bytes": 1965
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-export-formatter-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-closed-reader-final.log",
+      "sha256": "de3aea491274a902fdc47932c49207707af404f206b5a0890f2b706425ea5a5d",
+      "bytes": 48
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/role-foundation-proof-rule-final.log",
+      "sha256": "d5332cd9c648b758146d5319032fe16b2a6008a48834a460b3a948d1674d96a2",
+      "bytes": 72
+    }
+  ]
+}
