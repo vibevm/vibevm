@@ -1884,6 +1884,48 @@ pub struct MediaEntry {
     pub preview: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MigrationPlanningErrorCode {
+    #[serde(rename = "incompatible_edge")]
+    IncompatibleEdge,
+
+    #[serde(rename = "input_read")]
+    InputRead,
+
+    #[serde(rename = "invalid_current_manifest")]
+    InvalidCurrentManifest,
+
+    #[serde(rename = "invalid_request")]
+    InvalidRequest,
+
+    #[serde(rename = "malformed_syntax")]
+    MalformedSyntax,
+
+    #[serde(rename = "unknown_selection")]
+    UnknownSelection,
+
+    #[serde(rename = "unprovable_edit")]
+    UnprovableEdit,
+
+    #[serde(rename = "unrecognized_shape")]
+    UnrecognizedShape,
+
+    #[serde(rename = "unsupported_schema")]
+    UnsupportedSchema,
+}
+
+/// One shared migration planning error object. Root stage and the owning
+/// adapter distinguish preflight from planner refusal codes.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MigrationPlanningError {
+    pub code: MigrationPlanningErrorCode,
+
+    pub field: String,
+
+    pub reason: String,
+}
+
 /// Repository naming convention mapping a pkgref to a repo name (PROP-008
 /// §2.5). Closed vocabulary: repository paths are built from these values, so
 /// an unfamiliar one has no safe behaviour. The four wire strings are explicit
