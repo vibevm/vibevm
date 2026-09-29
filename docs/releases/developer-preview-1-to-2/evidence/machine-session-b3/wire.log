@@ -1,0 +1,17 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running tests/machine_session_contract.rs (target/debug/deps/machine_session_contract-652576b861f4fe26)
+
+running 3 tests
+test unsupported_api_version_is_reader_valid_for_later_negotiation_refusal ... ok
+test structural_unknown_missing_and_wrong_type_refuse ... ok
+test seven_closed_arms_roundtrip_as_generated_values ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,68 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (target/debug/deps/vibe_mcp-b18fd079ca4d4e68)
+
+running 11 tests
+test machine_session::framing::tests::zero_partial_and_over_limit_refuse_before_body_allocation ... ok
+test machine_session::state::tests::preinit_foreign_unavailable_duplicate_and_closed_requests_refuse ... ok
+test machine_session::framing::tests::utf8_json_shape_and_epoch_refuse_before_dispatch ... ok
+test machine_session::state::tests::two_clients_get_distinct_private_contexts_and_no_false_capabilities ... ok
+test machine_session::state::tests::unsupported_offers_name_actual_supported_sets_without_initializing ... ok
+test machine_session::framing::tests::two_frames_roundtrip_exact_bytes_and_eof ... ok
+test machine_session::runner::tests::output_failure_retains_response_and_closes_before_next_request ... ok
+test machine_session::runner::tests::body_path_and_over_limit_byte_frame_stop_before_dispatch ... ok
+test machine_session::runner::tests::wrong_optional_target_and_domain_refusal_keep_truthful_channels ... ok
+test machine_session::runner::tests::two_fake_clients_publish_same_direct_plan_under_distinct_contexts ... ok
+test machine_session::framing::tests::writer_flushes_and_rejects_unsupported_or_oversized_values ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 93 filtered out; finished in 0.34s
+
