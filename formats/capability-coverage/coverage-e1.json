@@ -2,7 +2,7 @@
   "schema": 1,
   "inventory_id": "capability-source-coverage-candidate-4a3f80a34",
   "baseline_capture_id": "capability-baseline-4a3f80a34",
-  "observation_capture_id": "capability-baseline-4a3f80a34",
+  "observation_capture_id": "capability-after-dd7d05e4c",
   "sources": [
     {
       "source_id": "source:campaigns/next/manifest.json",
@@ -37,7 +37,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli.rs",
       "path": "crates/vibe-cli/src/cli.rs",
-      "sha256": "a1d09a81affcaeb2b43a3a9b8c96f83e4b46d895d298cf296f881a7c793e6a95"
+      "sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/agentic.rs",
@@ -53,6 +53,11 @@
       "source_id": "source:crates/vibe-cli/src/cli/cache.rs",
       "path": "crates/vibe-cli/src/cli/cache.rs",
       "sha256": "67aa574b408ee7a5a38779581741a0df73e55605247abe785e56e317969e320f"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "path": "crates/vibe-cli/src/cli/capability_coverage_tests.rs",
+      "sha256": "b97e47923f76d441226f665ae79cf5eca81847933c36c347b230520cd148ab5f"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/doc.rs",
@@ -517,7 +522,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
       "path": "crates/vibe-cli/src/commands/tree/tui/search/catalogue.rs",
-      "sha256": "cdc6470050c5024461a457bfa4d05ce41d96ae27d470e4efd7b38770f9b143a0"
+      "sha256": "e1cac60d0c0a03c4a6abce0ae71212e1ca9033a748fdbea2f809cd879eb5c676"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
@@ -655,6 +660,11 @@
       "sha256": "46f38239f4ab0bff274853de896d702ae18c85cec0bd781a89617e7d3983ee27"
     },
     {
+      "source_id": "source:crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "path": "crates/vibe-mcp/src/capability_coverage_tests.rs",
+      "sha256": "faab3a0f66d4441400c3c78b74cb46bf7b8e2cf387c490ce2d5430c2226871d2"
+    },
+    {
       "source_id": "source:crates/vibe-mcp/src/context.rs",
       "path": "crates/vibe-mcp/src/context.rs",
       "sha256": "2a337c5a9099d1be8b15ffe412625644bce17241c3372e76c83a5380e637f401"
@@ -667,7 +677,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/lib.rs",
       "path": "crates/vibe-mcp/src/lib.rs",
-      "sha256": "e15d13d408a921729b706b501bc71970a96d9236f840598f9d8b6028cf5acd98"
+      "sha256": "8bb8a5772eed9389b5fedc758d32cc2eecbbcdb8e9851ea9d53dafebfee9456e"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/pkg_servers.rs",
@@ -775,6 +785,21 @@
       "sha256": "5f0d9a36c94d7f1400c6e95bee6f0d6446b594e6cb0670745f70cb07508b01c5"
     },
     {
+      "source_id": "source:crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage.rs",
+      "sha256": "9cb1d137afb3bf17c0bf98d49be74f0cacff4c2113fd39f18f3cb5551f6de5e3"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "path": "crates/vibe-wire/src/behaviour/capability_coverage/tests.rs",
+      "sha256": "2dcf6cdc47b7609bd2f1f177417fa27512d37dcb670920d5a2420b74cba476a9"
+    },
+    {
+      "source_id": "source:crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+      "path": "crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+      "sha256": "7f2f169fb552f761ffd147fb908f2a64e74bfc3ee1b98c56b09579bc4aead37d"
+    },
+    {
       "source_id": "source:crates/vibe-workspace/src/bins.rs",
       "path": "crates/vibe-workspace/src/bins.rs",
       "sha256": "f8e503081594cd73f987e0a1d2db1ab1c2fa1adfcd3c3b63c75646f66964a896"
@@ -792,12 +817,22 @@
     {
       "source_id": "source:formats/REGISTRY.toml",
       "path": "formats/REGISTRY.toml",
-      "sha256": "e42ef4badc058c16a4775b022488593a08d989379b64ef89eb857a7c5b7173f8"
+      "sha256": "c44f2d377c33690738f77dbfaa8771a4de9b4c1adac93efac9a47aa797166776"
+    },
+    {
+      "source_id": "source:schemas/capability/e1/coverage.jtd.json",
+      "path": "schemas/capability/e1/coverage.jtd.json",
+      "sha256": "396cd97f09e629c8a54a211b841a69fe16c086410824798b0f78c516c3299b60"
     },
     {
       "source_id": "source:vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
       "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
       "sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2"
+    },
+    {
+      "source_id": "source:vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "sha256": "1f23c7a4776270592065bf3680f2f03c794d0d750d7ac4b8b182c06b8d5ebd7d"
     },
     {
       "source_id": "source:xtask/Cargo.toml",
@@ -807,7 +842,7 @@
     {
       "source_id": "source:xtask/src/capability_coverage.rs",
       "path": "xtask/src/capability_coverage.rs",
-      "sha256": "c7044fb82ec576607bac69974f89bc92cd75ee45a73a6ac533e8878f6ab9498f"
+      "sha256": "1748e9d705527e9aa65bf4eb3a565fc22bda7858d375445a1e125f61009560c3"
     },
     {
       "source_id": "source:xtask/src/main.rs",
@@ -8112,6 +8147,50 @@
   ],
   "models": [
     {
+      "model_id": "model.action-invocation",
+      "name": "action-invocation",
+      "owner": "crates/vibe-actions/src/invoke.rs#action-invocation",
+      "carrier": "invoke checks cancellation/lookup/parameter schema/capability then Action.call; Done or Value(String); observed type names: InvokeOutcome, InvokeError, GrantedScope, CancellationToken",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family action-invocation; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: coarse capability scope and execution result, not target-root/principal/retained external-effect proof; operation effects not inferred from type existence"
+      ],
+      "authority": "coarse capability scope and execution result, not target-root/principal/retained external-effect proof; no caller authorization proof",
+      "completeness": "owner-bound; no unified domain request frame created; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "coarse capability scope and execution result, not target-root/principal/retained external-effect proof",
+      "source_ids": [
+        "source:crates/vibe-actions/src/invoke.rs"
+      ],
+      "conformance_cases": [
+        "proposed:action-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.actions",
+      "name": "actions",
+      "owner": "crates/vibe-actions/src/action.rs#actions",
+      "carrier": "Action contains address/presentation/params/enablement/callback/capability/search; callbacks stay opaque; observed type names: Msg, Presentation, SearchMeta, Capability, Action, ResolvedAction, ActionBuilder",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family actions; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: behavior object, not persistent product model or stable private callback ABI; operation effects not inferred from type existence"
+      ],
+      "authority": "behavior object, not persistent product model or stable private callback ABI; no caller authorization proof",
+      "completeness": "owner-bound; tree generic callbacks Done-only as separately observed; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "behavior object, not persistent product model or stable private callback ABI",
+      "source_ids": [
+        "source:crates/vibe-actions/src/action.rs"
+      ],
+      "conformance_cases": [
+        "proposed:action-refusal"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
       "model_id": "model.applications",
       "name": "applications",
       "owner": "crates/vibe-cli/src/commands/application/model.rs#applications",
@@ -8134,20 +8213,42 @@
       "external_access": "structured"
     },
     {
-      "model_id": "model.version-manager",
-      "name": "version-manager",
-      "owner": "crates/vibe-cli/src/commands/vvm/model.rs#version-manager",
-      "carrier": "serde types/local validation; State install array vs derived selectors/profile/path identities; observed type names: Kind, VersionId, InstanceId, Profile, Selector, Origin, InstallRecord, State",
+      "model_id": "model.authored-adoption",
+      "name": "authored-adoption",
+      "owner": "crates/vibe-facts/src/report.rs#authored-adoption",
+      "carrier": "address/optional terminal requirements/authored status vs adoption counts; observed type names: AuthoredFact, AdoptionCounts",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family version-manager; contextual input/target closure unexercised",
+      "target": "semantic owner family authored-adoption; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: retained installation state and provenance; derived identity/view fields remain distinct; operation effects not inferred from type existence"
+        "Source-declared family boundary: authoring/adoption observations, not verification execution proof; operation effects not inferred from type existence"
       ],
-      "authority": "retained installation state and provenance; derived identity/view fields remain distinct; no caller authorization proof",
-      "completeness": "owner-bound; no runtime serialization or retention test run; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "retained installation state and provenance; derived identity/view fields remain distinct",
+      "authority": "authoring/adoption observations, not verification execution proof; no caller authorization proof",
+      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "authoring/adoption observations, not verification execution proof",
       "source_ids": [
-        "source:crates/vibe-cli/src/commands/vvm/model.rs"
+        "source:crates/vibe-facts/src/report.rs"
+      ],
+      "conformance_cases": [
+        "proposed:adoption-snapshot"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.binary-tools",
+      "name": "binary-tools",
+      "owner": "crates/vibe-workspace/src/bins.rs#binary-tools",
+      "carrier": "Manifest/lock-derived declaration slot identity + artifact paths; build APIs reexport build owner; observed type names: DeclaredBinary, DeclaredMcpServer",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family binary-tools; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: declared binary/model and physical artifacts are distinct; operation effects not inferred from type existence"
+      ],
+      "authority": "declared binary/model and physical artifacts are distinct; no caller authorization proof",
+      "completeness": "owner-bound; actual build/runtime result unverified; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "declared binary/model and physical artifacts are distinct",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/bins.rs"
       ],
       "conformance_cases": [
         "proposed:registration-accounting"
@@ -8156,20 +8257,112 @@
       "external_access": "unknown"
     },
     {
-      "model_id": "model.report-carriage",
-      "name": "report-carriage",
-      "owner": "crates/vibe-cli/src/commands/compile_trace/draft.rs#report-carriage",
-      "carrier": "Install/Update/Reinstall/Lifecycle draft variants join the existing root families and carry notices/trace; observed type names: RegisteredReportDraft",
+      "model_id": "model.cache-check",
+      "name": "cache-check",
+      "owner": "crates/vibe-cli/src/commands/cache/check.rs#cache-check",
+      "carrier": "CLI-local verdict/JSON; repair branch110 may remove/refetch/recompute/record store hash194–347; observed type names: Verdict, Kind",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family report-carriage; contextual input/target closure unexercised",
+      "target": "semantic owner family cache-check; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: projection draft not separate authoritative domain state; operation effects not inferred from type existence"
+        "Source-declared family boundary: read sweep vs real repair mutation are separate operation modes; operation effects not inferred from type existence"
       ],
-      "authority": "projection draft not separate authoritative domain state; no caller authorization proof",
-      "completeness": "owner-bound; exact adapter drafts private bodies not recursively chased; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "projection draft not separate authoritative domain state",
+      "authority": "read sweep vs real repair mutation are separate operation modes; no caller authorization proof",
+      "completeness": "owner-bound; --repair effect source-confirmed, runtime unverified; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "read sweep vs real repair mutation are separate operation modes",
       "source_ids": [
-        "source:crates/vibe-cli/src/commands/compile_trace/draft.rs"
+        "source:crates/vibe-cli/src/commands/cache/check.rs"
+      ],
+      "conformance_cases": [
+        "proposed:cache-repair"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.capability-coverage",
+      "name": "Coverage source/registration inventory",
+      "owner": "vibe-wire generated capability::e1::coverage and pure behaviour::capability_coverage",
+      "carrier": "Registered strict capability-coverage epoch 1 generated reader",
+      "schema_ref": "format:capability-coverage@1",
+      "target": "Selected source/registration observation capture; data does not authorize runtime targets",
+      "effects": [],
+      "authority": "Source declarations and native metadata only; independent central review, domain and runtime authority remain separate",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Exact declared source/surface/model references; native denominator proof and semantic completeness are separate",
+      "retention": "Retained inventory and immutable capture/evidence references; source edits require rebinding",
+      "conformance_cases": [
+        "behaviour::capability_coverage::tests::",
+        "behaviour::capability_coverage::tests::authored_inventory_has_valid_declarations"
+      ],
+      "source_ids": [
+        "source:vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "source:schemas/capability/e1/coverage.jtd.json",
+        "source:crates/vibe-wire/src/generated/capability/e1/coverage/mod.rs",
+        "source:crates/vibe-wire/src/behaviour/capability_coverage.rs",
+        "source:crates/vibe-wire/src/behaviour/capability_coverage/tests.rs"
+      ]
+    },
+    {
+      "model_id": "model.compiler",
+      "name": "compiler",
+      "owner": "crates/vibe-spec/src/compiler/ir.rs#IR owner/private SourceIr→DocumentIr→Documents→ClosureIr; observed crates/vibe-spec/src/compiler/observer.rs#CompileObserver/EmissionContribution/EmissionEvent/StageDeltaEvent line74",
+      "carrier": "sealed crate-private SourceIr/DocumentIr/ClosureIr; public artifact/target/emitted carrier reexports17–29 and observer getter-only contribution/event/delta definitions185–381; observed type names: ArtifactContext, ArtifactInput, ArtifactPlan, EmittedArtifact, CompilePlans, TransformPlan, CompilerNativeOutcome, CompilerPendingArtifact, CompileObserver, EmissionEvent, StageDeltaEvent, DocTree",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family compiler; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: semantic IR/plan/output/observations remain compiler-owned; no private debug ABI; operation effects not inferred from type existence"
+      ],
+      "authority": "semantic IR/plan/output/observations remain compiler-owned; no private debug ABI; no caller authorization proof",
+      "completeness": "concrete IR/observer owner bound; public artifact field layouts delegated to owner cells but not required for family census; no private debug ABI or generic graph facade; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "semantic IR/plan/output/observations remain compiler-owned; no private debug ABI",
+      "source_ids": [
+        "source:crates/vibe-spec/src/compiler/ir.rs",
+        "source:crates/vibe-spec/src/compiler/observer.rs"
+      ],
+      "conformance_cases": [
+        "proposed:registration-accounting"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.compiler-trace",
+      "name": "compiler-trace",
+      "owner": "crates/vibe-workspace/src/compile_trace.rs#compiler-trace",
+      "carrier": "generated CompilerTraceIndex and public sink/scope/run APIs; retained private RunState is behind owner; observed type names: TraceLimits, RunOutcome, ScopeDescriptor, TraceSummary, TraceRun, TraceScope",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family compiler-trace; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary; operation effects not inferred from type existence"
+      ],
+      "authority": "retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary; no caller authorization proof",
+      "completeness": "public owner-bound; private open/retention/storage implementation not census prerequisite; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/compile_trace.rs"
+      ],
+      "conformance_cases": [
+        "proposed:registration-accounting"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.facts-registry",
+      "name": "facts-registry",
+      "owner": "crates/vibe-facts/src/store.rs#facts-registry",
+      "carrier": "load_with_witnesses source witnesses; upsert/remove retained registry writes; strict RegistryFile; observed type names: Registry, RegistrySnapshot",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family facts-registry; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: retained consumer registry and one-read witnessed snapshot separate from source authored claims; operation effects not inferred from type existence"
+      ],
+      "authority": "retained consumer registry and one-read witnessed snapshot separate from source authored claims; no caller authorization proof",
+      "completeness": "owner-bound; no blanket safety/atomicity claim from snapshot type; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "retained consumer registry and one-read witnessed snapshot separate from source authored claims",
+      "source_ids": [
+        "source:crates/vibe-facts/src/store.rs"
       ],
       "conformance_cases": [
         "proposed:registration-accounting"
@@ -8200,20 +8393,42 @@
       "external_access": "structured"
     },
     {
-      "model_id": "model.compiler-trace",
-      "name": "compiler-trace",
-      "owner": "crates/vibe-workspace/src/compile_trace.rs#compiler-trace",
-      "carrier": "generated CompilerTraceIndex and public sink/scope/run APIs; retained private RunState is behind owner; observed type names: TraceLimits, RunOutcome, ScopeDescriptor, TraceSummary, TraceRun, TraceScope",
+      "model_id": "model.preferences",
+      "name": "preferences",
+      "owner": "crates/vibe-settings/src/resolver/mod.rs#preferences",
+      "carrier": "layered merged/config/origin/diagnostics inspection; typed source values separate from persistence; observed type names: Origin, InspectValue, ResolvedPrefs",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family compiler-trace; contextual input/target closure unexercised",
+      "target": "semantic owner family preferences; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary; operation effects not inferred from type existence"
+        "Source-declared family boundary: derived resolved view over retained layers, not new settings authority; operation effects not inferred from type existence"
       ],
-      "authority": "retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary; no caller authorization proof",
-      "completeness": "public owner-bound; private open/retention/storage implementation not census prerequisite; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "retained run/index/store and snapshot/timing/warnings metadata, separate from CLI summary",
+      "authority": "derived resolved view over retained layers, not new settings authority; no caller authorization proof",
+      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "derived resolved view over retained layers, not new settings authority",
       "source_ids": [
-        "source:crates/vibe-workspace/src/compile_trace.rs"
+        "source:crates/vibe-settings/src/resolver/mod.rs"
+      ],
+      "conformance_cases": [
+        "proposed:settings-origin"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.progress-grounding",
+      "name": "progress-grounding",
+      "owner": "crates/vibe-cli/src/commands/progress/grounding.rs#progress-grounding",
+      "carrier": "ParsedDoc/cache/payload/exclusion/projection source context; refresh writes cache/state/terminal projections; observed type names: Ground, Refresh, VocabularyByPackage",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family progress-grounding; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: source parse state and retained progress/evidence projections distinct; no neutral synthesized verification; operation effects not inferred from type existence"
+      ],
+      "authority": "source parse state and retained progress/evidence projections distinct; no neutral synthesized verification; no caller authorization proof",
+      "completeness": "owner-bound; no universal graph/scheduler introduced; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "source parse state and retained progress/evidence projections distinct; no neutral synthesized verification",
+      "source_ids": [
+        "source:crates/vibe-cli/src/commands/progress/grounding.rs"
       ],
       "conformance_cases": [
         "proposed:registration-accounting"
@@ -8222,20 +8437,42 @@
       "external_access": "unknown"
     },
     {
-      "model_id": "model.binary-tools",
-      "name": "binary-tools",
-      "owner": "crates/vibe-workspace/src/bins.rs#binary-tools",
-      "carrier": "Manifest/lock-derived declaration slot identity + artifact paths; build APIs reexport build owner; observed type names: DeclaredBinary, DeclaredMcpServer",
+      "model_id": "model.report-carriage",
+      "name": "report-carriage",
+      "owner": "crates/vibe-cli/src/commands/compile_trace/draft.rs#report-carriage",
+      "carrier": "Install/Update/Reinstall/Lifecycle draft variants join the existing root families and carry notices/trace; observed type names: RegisteredReportDraft",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family binary-tools; contextual input/target closure unexercised",
+      "target": "semantic owner family report-carriage; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: declared binary/model and physical artifacts are distinct; operation effects not inferred from type existence"
+        "Source-declared family boundary: projection draft not separate authoritative domain state; operation effects not inferred from type existence"
       ],
-      "authority": "declared binary/model and physical artifacts are distinct; no caller authorization proof",
-      "completeness": "owner-bound; actual build/runtime result unverified; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "declared binary/model and physical artifacts are distinct",
+      "authority": "projection draft not separate authoritative domain state; no caller authorization proof",
+      "completeness": "owner-bound; exact adapter drafts private bodies not recursively chased; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "projection draft not separate authoritative domain state",
       "source_ids": [
-        "source:crates/vibe-workspace/src/bins.rs"
+        "source:crates/vibe-cli/src/commands/compile_trace/draft.rs"
+      ],
+      "conformance_cases": [
+        "proposed:registration-accounting"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.resolver",
+      "name": "resolver",
+      "owner": "crates/vibe-resolver/src/lib.rs#resolver",
+      "carrier": "chosen package/version/direct deps/root model and solver/provider public seams; observed type names: ResolvedNode, ResolvedGraph, DepProvider, DepSolver",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family resolver; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: resolution model distinct from requested features/fixpoint/state private SolverState414+; operation effects not inferred from type existence"
+      ],
+      "authority": "resolution model distinct from requested features/fixpoint/state private SolverState414+; no caller authorization proof",
+      "completeness": "public owner-bound; concrete solver semantics not inferred; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "resolution model distinct from requested features/fixpoint/state private SolverState414+",
+      "source_ids": [
+        "source:crates/vibe-resolver/src/lib.rs"
       ],
       "conformance_cases": [
         "proposed:registration-accounting"
@@ -8266,23 +8503,68 @@
       "external_access": "unknown"
     },
     {
-      "model_id": "model.visibility-query",
-      "name": "visibility-query",
-      "owner": "crates/vibe-core/src/visibility/query.rs#visibility-query",
-      "carrier": "typed domain verdict/circle models over installed-world graph; CLI text not whole public graph facade; observed type names: InstalledWorld, WhyVerdict, BlockedEdge, BlockReason, AllowFriendsState, FriendsReport",
+      "model_id": "model.settings-schema",
+      "name": "settings-schema",
+      "owner": "crates/vibe-settings/src/schema/types.rs#KeyMeta/Scope/KeyType/Applies/MergeStrategy; observed crates/vibe-settings/src/schema/registry.rs#Schema register/get/keys/paths_in line37",
+      "carrier": "KeyMeta path/type/default/description/scope/applies/merge/deprecation/restricted fields327–350; Schema owns registration and native key iteration, duplicates refuse52–63; observed type names: Schema, KeyMeta, KeyType, MergeStrategy, Scope, Applies, Deprecation, Diagnostic",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family visibility-query; contextual input/target closure unexercised",
+      "target": "semantic owner family settings-schema; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: read model derived from manifest/lock; unread node participation stays explicit; operation effects not inferred from type existence"
+        "Source-declared family boundary: registration/schema vs interpreted layered values distinct; operation effects not inferred from type existence"
       ],
-      "authority": "read model derived from manifest/lock; unread node participation stays explicit; no caller authorization proof",
-      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "read model derived from manifest/lock; unread node participation stays explicit",
+      "authority": "registration/schema vs interpreted layered values distinct; no caller authorization proof",
+      "completeness": "concrete public definitions bound; registration metadata is not persistence/runtime semantic acceptance; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "registration/schema vs interpreted layered values distinct",
       "source_ids": [
-        "source:crates/vibe-core/src/visibility/query.rs"
+        "source:crates/vibe-settings/src/schema/registry.rs",
+        "source:crates/vibe-settings/src/schema/types.rs"
       ],
       "conformance_cases": [
-        "proposed:visibility-inspection"
+        "proposed:settings-origin"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.version-manager",
+      "name": "version-manager",
+      "owner": "crates/vibe-cli/src/commands/vvm/model.rs#version-manager",
+      "carrier": "serde types/local validation; State install array vs derived selectors/profile/path identities; observed type names: Kind, VersionId, InstanceId, Profile, Selector, Origin, InstallRecord, State",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family version-manager; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: retained installation state and provenance; derived identity/view fields remain distinct; operation effects not inferred from type existence"
+      ],
+      "authority": "retained installation state and provenance; derived identity/view fields remain distinct; no caller authorization proof",
+      "completeness": "owner-bound; no runtime serialization or retention test run; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "retained installation state and provenance; derived identity/view fields remain distinct",
+      "source_ids": [
+        "source:crates/vibe-cli/src/commands/vvm/model.rs"
+      ],
+      "conformance_cases": [
+        "proposed:registration-accounting"
+      ],
+      "implementation": "source-observed",
+      "external_access": "unknown"
+    },
+    {
+      "model_id": "model.visibility-graph",
+      "name": "visibility-graph",
+      "owner": "crates/vibe-core/src/visibility/graph.rs#visibility-graph",
+      "carrier": "domain access/friend/exclusion/override relationships keyed by NodeId; observed type names: EdgeDecl, NodeDecl, VisibilityGraph",
+      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
+      "target": "semantic owner family visibility-graph; contextual input/target closure unexercised",
+      "effects": [
+        "Source-declared family boundary: manifest-derived graph; not a universal graph replacing engines; operation effects not inferred from type existence"
+      ],
+      "authority": "manifest-derived graph; not a universal graph replacing engines; no caller authorization proof",
+      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
+      "retention": "manifest-derived graph; not a universal graph replacing engines",
+      "source_ids": [
+        "source:crates/vibe-core/src/visibility/graph.rs"
+      ],
+      "conformance_cases": [
+        "proposed:registration-accounting"
       ],
       "implementation": "source-observed",
       "external_access": "legacy"
@@ -8310,248 +8592,26 @@
       "external_access": "legacy"
     },
     {
-      "model_id": "model.visibility-graph",
-      "name": "visibility-graph",
-      "owner": "crates/vibe-core/src/visibility/graph.rs#visibility-graph",
-      "carrier": "domain access/friend/exclusion/override relationships keyed by NodeId; observed type names: EdgeDecl, NodeDecl, VisibilityGraph",
+      "model_id": "model.visibility-query",
+      "name": "visibility-query",
+      "owner": "crates/vibe-core/src/visibility/query.rs#visibility-query",
+      "carrier": "typed domain verdict/circle models over installed-world graph; CLI text not whole public graph facade; observed type names: InstalledWorld, WhyVerdict, BlockedEdge, BlockReason, AllowFriendsState, FriendsReport",
       "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family visibility-graph; contextual input/target closure unexercised",
+      "target": "semantic owner family visibility-query; contextual input/target closure unexercised",
       "effects": [
-        "Source-declared family boundary: manifest-derived graph; not a universal graph replacing engines; operation effects not inferred from type existence"
+        "Source-declared family boundary: read model derived from manifest/lock; unread node participation stays explicit; operation effects not inferred from type existence"
       ],
-      "authority": "manifest-derived graph; not a universal graph replacing engines; no caller authorization proof",
+      "authority": "read model derived from manifest/lock; unread node participation stays explicit; no caller authorization proof",
       "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "manifest-derived graph; not a universal graph replacing engines",
+      "retention": "read model derived from manifest/lock; unread node participation stays explicit",
       "source_ids": [
-        "source:crates/vibe-core/src/visibility/graph.rs"
+        "source:crates/vibe-core/src/visibility/query.rs"
       ],
       "conformance_cases": [
-        "proposed:registration-accounting"
+        "proposed:visibility-inspection"
       ],
       "implementation": "source-observed",
       "external_access": "legacy"
-    },
-    {
-      "model_id": "model.resolver",
-      "name": "resolver",
-      "owner": "crates/vibe-resolver/src/lib.rs#resolver",
-      "carrier": "chosen package/version/direct deps/root model and solver/provider public seams; observed type names: ResolvedNode, ResolvedGraph, DepProvider, DepSolver",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family resolver; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: resolution model distinct from requested features/fixpoint/state private SolverState414+; operation effects not inferred from type existence"
-      ],
-      "authority": "resolution model distinct from requested features/fixpoint/state private SolverState414+; no caller authorization proof",
-      "completeness": "public owner-bound; concrete solver semantics not inferred; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "resolution model distinct from requested features/fixpoint/state private SolverState414+",
-      "source_ids": [
-        "source:crates/vibe-resolver/src/lib.rs"
-      ],
-      "conformance_cases": [
-        "proposed:registration-accounting"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.compiler",
-      "name": "compiler",
-      "owner": "crates/vibe-spec/src/compiler/ir.rs#IR owner/private SourceIr→DocumentIr→Documents→ClosureIr; observed crates/vibe-spec/src/compiler/observer.rs#CompileObserver/EmissionContribution/EmissionEvent/StageDeltaEvent line74",
-      "carrier": "sealed crate-private SourceIr/DocumentIr/ClosureIr; public artifact/target/emitted carrier reexports17–29 and observer getter-only contribution/event/delta definitions185–381; observed type names: ArtifactContext, ArtifactInput, ArtifactPlan, EmittedArtifact, CompilePlans, TransformPlan, CompilerNativeOutcome, CompilerPendingArtifact, CompileObserver, EmissionEvent, StageDeltaEvent, DocTree",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family compiler; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: semantic IR/plan/output/observations remain compiler-owned; no private debug ABI; operation effects not inferred from type existence"
-      ],
-      "authority": "semantic IR/plan/output/observations remain compiler-owned; no private debug ABI; no caller authorization proof",
-      "completeness": "concrete IR/observer owner bound; public artifact field layouts delegated to owner cells but not required for family census; no private debug ABI or generic graph facade; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "semantic IR/plan/output/observations remain compiler-owned; no private debug ABI",
-      "source_ids": [
-        "source:crates/vibe-spec/src/compiler/ir.rs",
-        "source:crates/vibe-spec/src/compiler/observer.rs"
-      ],
-      "conformance_cases": [
-        "proposed:registration-accounting"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.authored-adoption",
-      "name": "authored-adoption",
-      "owner": "crates/vibe-facts/src/report.rs#authored-adoption",
-      "carrier": "address/optional terminal requirements/authored status vs adoption counts; observed type names: AuthoredFact, AdoptionCounts",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family authored-adoption; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: authoring/adoption observations, not verification execution proof; operation effects not inferred from type existence"
-      ],
-      "authority": "authoring/adoption observations, not verification execution proof; no caller authorization proof",
-      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "authoring/adoption observations, not verification execution proof",
-      "source_ids": [
-        "source:crates/vibe-facts/src/report.rs"
-      ],
-      "conformance_cases": [
-        "proposed:adoption-snapshot"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.facts-registry",
-      "name": "facts-registry",
-      "owner": "crates/vibe-facts/src/store.rs#facts-registry",
-      "carrier": "load_with_witnesses source witnesses; upsert/remove retained registry writes; strict RegistryFile; observed type names: Registry, RegistrySnapshot",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family facts-registry; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: retained consumer registry and one-read witnessed snapshot separate from source authored claims; operation effects not inferred from type existence"
-      ],
-      "authority": "retained consumer registry and one-read witnessed snapshot separate from source authored claims; no caller authorization proof",
-      "completeness": "owner-bound; no blanket safety/atomicity claim from snapshot type; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "retained consumer registry and one-read witnessed snapshot separate from source authored claims",
-      "source_ids": [
-        "source:crates/vibe-facts/src/store.rs"
-      ],
-      "conformance_cases": [
-        "proposed:registration-accounting"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.actions",
-      "name": "actions",
-      "owner": "crates/vibe-actions/src/action.rs#actions",
-      "carrier": "Action contains address/presentation/params/enablement/callback/capability/search; callbacks stay opaque; observed type names: Msg, Presentation, SearchMeta, Capability, Action, ResolvedAction, ActionBuilder",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family actions; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: behavior object, not persistent product model or stable private callback ABI; operation effects not inferred from type existence"
-      ],
-      "authority": "behavior object, not persistent product model or stable private callback ABI; no caller authorization proof",
-      "completeness": "owner-bound; tree generic callbacks Done-only as separately observed; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "behavior object, not persistent product model or stable private callback ABI",
-      "source_ids": [
-        "source:crates/vibe-actions/src/action.rs"
-      ],
-      "conformance_cases": [
-        "proposed:action-refusal"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.action-invocation",
-      "name": "action-invocation",
-      "owner": "crates/vibe-actions/src/invoke.rs#action-invocation",
-      "carrier": "invoke checks cancellation/lookup/parameter schema/capability then Action.call; Done or Value(String); observed type names: InvokeOutcome, InvokeError, GrantedScope, CancellationToken",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family action-invocation; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: coarse capability scope and execution result, not target-root/principal/retained external-effect proof; operation effects not inferred from type existence"
-      ],
-      "authority": "coarse capability scope and execution result, not target-root/principal/retained external-effect proof; no caller authorization proof",
-      "completeness": "owner-bound; no unified domain request frame created; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "coarse capability scope and execution result, not target-root/principal/retained external-effect proof",
-      "source_ids": [
-        "source:crates/vibe-actions/src/invoke.rs"
-      ],
-      "conformance_cases": [
-        "proposed:action-refusal"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.preferences",
-      "name": "preferences",
-      "owner": "crates/vibe-settings/src/resolver/mod.rs#preferences",
-      "carrier": "layered merged/config/origin/diagnostics inspection; typed source values separate from persistence; observed type names: Origin, InspectValue, ResolvedPrefs",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family preferences; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: derived resolved view over retained layers, not new settings authority; operation effects not inferred from type existence"
-      ],
-      "authority": "derived resolved view over retained layers, not new settings authority; no caller authorization proof",
-      "completeness": "owner-bound; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "derived resolved view over retained layers, not new settings authority",
-      "source_ids": [
-        "source:crates/vibe-settings/src/resolver/mod.rs"
-      ],
-      "conformance_cases": [
-        "proposed:settings-origin"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.settings-schema",
-      "name": "settings-schema",
-      "owner": "crates/vibe-settings/src/schema/types.rs#KeyMeta/Scope/KeyType/Applies/MergeStrategy; observed crates/vibe-settings/src/schema/registry.rs#Schema register/get/keys/paths_in line37",
-      "carrier": "KeyMeta path/type/default/description/scope/applies/merge/deprecation/restricted fields327–350; Schema owns registration and native key iteration, duplicates refuse52–63; observed type names: Schema, KeyMeta, KeyType, MergeStrategy, Scope, Applies, Deprecation, Diagnostic",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family settings-schema; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: registration/schema vs interpreted layered values distinct; operation effects not inferred from type existence"
-      ],
-      "authority": "registration/schema vs interpreted layered values distinct; no caller authorization proof",
-      "completeness": "concrete public definitions bound; registration metadata is not persistence/runtime semantic acceptance; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "registration/schema vs interpreted layered values distinct",
-      "source_ids": [
-        "source:crates/vibe-settings/src/schema/registry.rs",
-        "source:crates/vibe-settings/src/schema/types.rs"
-      ],
-      "conformance_cases": [
-        "proposed:settings-origin"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.cache-check",
-      "name": "cache-check",
-      "owner": "crates/vibe-cli/src/commands/cache/check.rs#cache-check",
-      "carrier": "CLI-local verdict/JSON; repair branch110 may remove/refetch/recompute/record store hash194–347; observed type names: Verdict, Kind",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family cache-check; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: read sweep vs real repair mutation are separate operation modes; operation effects not inferred from type existence"
-      ],
-      "authority": "read sweep vs real repair mutation are separate operation modes; no caller authorization proof",
-      "completeness": "owner-bound; --repair effect source-confirmed, runtime unverified; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "read sweep vs real repair mutation are separate operation modes",
-      "source_ids": [
-        "source:crates/vibe-cli/src/commands/cache/check.rs"
-      ],
-      "conformance_cases": [
-        "proposed:cache-repair"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
-    },
-    {
-      "model_id": "model.progress-grounding",
-      "name": "progress-grounding",
-      "owner": "crates/vibe-cli/src/commands/progress/grounding.rs#progress-grounding",
-      "carrier": "ParsedDoc/cache/payload/exclusion/projection source context; refresh writes cache/state/terminal projections; observed type names: Ground, Refresh, VocabularyByPackage",
-      "schema_ref": "unbound schema: exact complete external model exchange epoch is not supplied by this family declaration",
-      "target": "semantic owner family progress-grounding; contextual input/target closure unexercised",
-      "effects": [
-        "Source-declared family boundary: source parse state and retained progress/evidence projections distinct; no neutral synthesized verification; operation effects not inferred from type existence"
-      ],
-      "authority": "source parse state and retained progress/evidence projections distinct; no neutral synthesized verification; no caller authorization proof",
-      "completeness": "owner-bound; no universal graph/scheduler introduced; exact source family only, no complete callable/runtime/serialization proof. Unresolved external schema/layout/carriage stays explicit.",
-      "retention": "source parse state and retained progress/evidence projections distinct; no neutral synthesized verification",
-      "source_ids": [
-        "source:crates/vibe-cli/src/commands/progress/grounding.rs"
-      ],
-      "conformance_cases": [
-        "proposed:registration-accounting"
-      ],
-      "implementation": "source-observed",
-      "external_access": "unknown"
     }
   ],
   "planned_families": [
