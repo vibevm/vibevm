@@ -1,0 +1,15 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.72s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 4 tests
+test manifest::extension::machine_schema_tests::duplicate_machine_identity_and_programmatic_invalid_values_refuse ... ok
+test manifest::extension::machine_schema_tests::absent_table_stays_absent_and_handler_config_cannot_promote_it ... ok
+test manifest::extension::machine_schema_tests::authored_operation_and_model_tables_roundtrip_without_authentication ... ok
+test manifest::extension::machine_schema_tests::unknown_type_epoch_missing_ids_and_whitespace_refuse_locally ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 549 filtered out; finished in 0.00s
+

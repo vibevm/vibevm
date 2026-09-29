@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "change_id": "mcp-query-input-refusal",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-mcp/src/tools/query.rs",
+    "crates/vibe-mcp/src/tools/query/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "mcp:query",
+      "capability_id": "strict-query-argument-admission",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "Wrong optional filter types could silently disappear and malformed limit values could fall back to a default before a trace-map build.",
+      "after": "The query tool now rejects null/wrong-type filters, unknown members and non-integer/out-of-range limit before calling the trace owner; omitted arguments retain the documented default and valid filter semantics remain unchanged.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Clients sending malformed query arguments now receive explicit refusal instead of a potentially broader/default search; valid calls need no migration."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Update tool/client documentation to state exact optional types, 1–200 limit and unknown-field refusal."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "selected-b1-verification",
+      "subject_id": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-verification.md",
+      "verdict": "passed",
+      "sha256": "26f05cb618b4ac3fae90e45c3fed3edabc93b677079247de4ea7336d842452dc"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "e23cd7d54e3ba2569382bcde6a1208c6b8b969a4",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

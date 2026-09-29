@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "change_id": "machine-operation-traceability",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "bd04990defd982257bdfc2bc34105c52447d51ca"
+    },
+    {
+      "kind": "commit",
+      "identity": "6ca32463a480efa92977629f4dda1697b137bcfe"
+    },
+    {
+      "kind": "commit",
+      "identity": "fd545b361c90b53afefdcf0aa5cfde0754b64c9b"
+    },
+    {
+      "kind": "commit",
+      "identity": "2292501f353bb3dde00e2777b8b4b652dff6480c"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Only the specmap index changed; no product interface, execution, request, reply or user migration changed."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Index regeneration changes no authored developer or user documentation claim."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "2292501f353bb3dde00e2777b8b4b652dff6480c",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "2292501f353bb3dde00e2777b8b4b652dff6480c",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2292501f353bb3dde00e2777b8b4b652dff6480c",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

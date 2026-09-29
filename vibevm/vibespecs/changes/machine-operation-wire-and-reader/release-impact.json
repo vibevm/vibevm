@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "change_id": "machine-operation-wire-and-reader",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "4259c23f08eceba95a19eab438eb0707a99a00b1"
+    },
+    {
+      "kind": "commit",
+      "identity": "0a5d512d35d2816339482d17f73641d18f3fe297"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-wire/src/generated/application/e1/mod.rs",
+    "crates/vibe-wire/src/generated/application/mod.rs",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+    "crates/vibe-wire/src/generated/capability/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+    "crates/vibe-wire/src/generated/hello/mod.rs",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/mod.rs",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+    "crates/vibe-wire/src/generated/journal/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+    "crates/vibe-wire/src/generated/llm/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/operation_envelope/mod.rs",
+    "crates/vibe-wire/src/generated/machine/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+    "crates/vibe-wire/src/generated/migration/mod.rs",
+    "crates/vibe-wire/src/generated/mod.rs",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs",
+    "crates/vibe-wire/src/generated/native/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+    "crates/vibe-wire/src/generated/preview/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/mod.rs",
+    "crates/vibe-wire/tests/machine_operation_contract.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/machine-operation-descriptor/e1/semantic-invalid/no-domain-identity.json",
+    "formats/corpora/machine-operation-descriptor/e1/semantic-invalid/unsupported-epoch.json",
+    "formats/corpora/machine-operation-descriptor/e1/structural-invalid/missing-required-nullable.json",
+    "formats/corpora/machine-operation-descriptor/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/machine-operation-descriptor/e1/structural-invalid/wrong-type.json",
+    "formats/corpora/machine-operation-descriptor/e1/valid/model-only-source-gap.json",
+    "formats/corpora/machine-operation-descriptor/e1/valid/source-bound-migration-shape.json",
+    "formats/corpora/machine-operation-envelope/e1/semantic-invalid/malformed-embedded-domain-json.json",
+    "formats/corpora/machine-operation-envelope/e1/semantic-invalid/unsupported-epoch.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/missing-input-evidence-id.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/missing-required-nullable.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-arm-field.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-input-arm-field.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/machine-operation-envelope/e1/structural-invalid/wrong-type.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/admission.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/error.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/event.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/explicit-null-unavailable.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/input.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/prepared.json",
+    "formats/corpora/machine-operation-envelope/e1/valid/result.json",
+    "schemas/machine/e1/operation_descriptor.jtd.json",
+    "schemas/machine/e1/operation_envelope.jtd.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:machine-operation-descriptor:e1",
+      "capability_id": "strict-machine-operation-descriptor",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "No registered generated machine-operation descriptor epoch existed.",
+      "after": "Registered epoch-1 strict descriptor JTD, finite shape/semantic corpus and generated Rust reader distinguish source, formats, implementation, availability and authorization; JTD shape alone does not authenticate or admit a route.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE"
+      ]
+    },
+    {
+      "interface_id": "format:machine-operation-envelope:e1",
+      "capability_id": "strict-machine-operation-envelope",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "No registered six-arm machine operation envelope epoch existed.",
+      "after": "Registered epoch-1 strict prepared/input/admission/result/error/event envelope with generated reader and corpus; embedded JSON strings still require owning domain decode/semantic validation before dispatch/publication.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Structured clients and Rust consumers gain new strict epoch-1 value shapes; existing unrelated formats and epochs are not redefined."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document outer-shape versus domain-semantic boundary and the new format IDs; generated module-wrapper churn does not imply unrelated format behavior changed."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "0a5d512d35d2816339482d17f73641d18f3fe297",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "selected-b1-verification",
+      "subject_id": "0a5d512d35d2816339482d17f73641d18f3fe297",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-verification.md",
+      "verdict": "passed",
+      "sha256": "26f05cb618b4ac3fae90e45c3fed3edabc93b677079247de4ea7336d842452dc"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "0a5d512d35d2816339482d17f73641d18f3fe297",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "0a5d512d35d2816339482d17f73641d18f3fe297",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

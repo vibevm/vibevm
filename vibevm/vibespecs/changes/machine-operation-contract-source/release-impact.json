@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "change_id": "machine-operation-contract-source",
+  "before_capture_id": "machine-operation-baseline-77f6767f3",
+  "after_capture_id": "machine-operation-b1-after-2292501f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "dfd5d93a60c7985b941f08087096e1d0f95a25f8"
+    },
+    {
+      "kind": "commit",
+      "identity": "911ce39eb053a5d8c2b02afefdd779bbe6cf8a14"
+    },
+    {
+      "kind": "commit",
+      "identity": "2ffe5656383517ff45a37c565e4ba3c4ffd91eec"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:PROP-080:machine-operation-contract",
+      "capability_id": "machine-operation-source-law",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "PROP-080 bound source coverage and model authority, without the six explicit B.1 registry/envelope/validation/service/discovery/state laws.",
+      "after": "PROP-080 now states finite identity/status, typed lifecycle-independent values, strict admission/publication, shared owner delegation and descriptor-only discovery as desired spec/plan; this source text alone executes no service.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-VALIDATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STATE"
+      ]
+    },
+    {
+      "interface_id": "spec:PROP-054:extension-operation-schema",
+      "capability_id": "authored-extension-schema-contract",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Source and selected GNU/Linux proof only; no native macOS/Windows, provider or public-release claim",
+      "before": "Extension contribution law had no optional typed machine-operation-schema declaration.",
+      "after": "A new desired req r1 names strict optional authored format/epoch refs and a selected-world source join; parsed metadata remains noncallable and never grants native authority.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EXTENSION-OPERATION-SCHEMA",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Developer and maintainer source contracts changed; no automatic runtime effect or 1.1 migration follows from source law alone."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Developer contract documentation must describe the new desired status and its implemented limits."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b1-source-delta",
+      "subject_id": "2ffe5656383517ff45a37c565e4ba3c4ffd91eec",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-source-review.md",
+      "verdict": "passed",
+      "sha256": "a0d79b56839b6375e0e1ef36ec4544ebd31f8706c2e3743b4c2b6a121f220699"
+    },
+    {
+      "claim_id": "selected-b1-verification",
+      "subject_id": "2ffe5656383517ff45a37c565e4ba3c4ffd91eec",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-verification.md",
+      "verdict": "passed",
+      "sha256": "26f05cb618b4ac3fae90e45c3fed3edabc93b677079247de4ea7336d842452dc"
+    },
+    {
+      "claim_id": "central-b1-review",
+      "subject_id": "2ffe5656383517ff45a37c565e4ba3c4ffd91eec",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md",
+      "verdict": "passed",
+      "sha256": "d56efee80e5dbecbb9029c02647565b1bfe2bd7bd8976c24ab5dd30dd0cdc907"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2ffe5656383517ff45a37c565e4ba3c4ffd91eec",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-b1-central-review.md"
+  }
+}

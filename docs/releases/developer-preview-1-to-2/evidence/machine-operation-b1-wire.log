@@ -1,0 +1,15 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.93s
+     Running tests/machine_operation_contract.rs (target/debug/deps/machine_operation_contract-1ac27fd50aef5c65)
+
+running 3 tests
+test unknown_root_and_arm_fields_refuse ... ok
+test required_nullable_omission_refuses_but_explicit_null_survives ... ok
+test descriptor_and_six_envelope_arms_roundtrip ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
