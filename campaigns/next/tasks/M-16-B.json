@@ -141,6 +141,10 @@
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
         "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
+        "formats/REGISTRY.toml",
+        "formats/EPOCHS.toml",
+        "schemas/machine/e1/operation_descriptor.jtd.json",
+        "schemas/machine/e1/operation_envelope.jtd.json",
         "xtask/src/main.rs",
         ".cargo/config.toml",
         "crates/vibe-core/Cargo.toml",
@@ -152,6 +156,7 @@
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "schemas/",
         "crates/vibe-core/src/",
         "crates/vibe-orchestrator/src/",
         "crates/vibe-wire/src/",
@@ -195,6 +200,7 @@
       "commit_subject": "feat(api): model captured entities and source locations",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+        "B.2 standalone client values may use four new registered epoch-one roots for entity reference, composite snapshot, bound page and source location. Preserve existing machine envelope and preview capture meanings; generated readers/codegen only, with exact focused structural and semantic cases. Recoverability must reflect an actual owner, not a copied flag.",
         "Proposed shared-model modules must remain in a dependency-safe existing crate; do not make parser crates depend on lifecycle.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
