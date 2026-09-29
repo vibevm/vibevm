@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "operation_id": null,
+  "domain_owner": null,
+  "source_id": null,
+  "evidence_id": null,
+  "body": {
+    "stage": "admission",
+    "decision": "not_evaluated",
+    "reason": null,
+    "authority_evidence_id": null
+  }
+}

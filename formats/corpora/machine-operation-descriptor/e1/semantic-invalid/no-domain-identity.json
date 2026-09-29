@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "operation_id": null,
+  "domain_owner": "rust:vibe-actions:invocation",
+  "source_id": "source:crates/vibe-actions/src/invoke.rs",
+  "capability_id": null,
+  "model_id": null,
+  "input_format_id": null,
+  "result_format_id": null,
+  "error_format_id": null,
+  "event_format_id": null,
+  "implementation": "source_observed",
+  "availability": "not_observed",
+  "authorization": "not_evaluated",
+  "reason": "Source-observed model only; external schema and service are unvalidated.",
+  "implementation_evidence_id": null
+}

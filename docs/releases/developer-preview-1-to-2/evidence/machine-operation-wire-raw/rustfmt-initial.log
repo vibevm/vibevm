@@ -1,0 +1,81 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:38:
+     let descriptor_path = fixture("descriptor", "valid", "source-bound-migration-shape");
+     let descriptor: OperationDescriptor = wire_support::round_trip(&descriptor_path);
+     assert_eq!(descriptor.schema, 1);
+-    assert_eq!(descriptor.operation_id, "strict-text-only-migration-planning");
+-    assert_eq!(descriptor.input_format_id.as_deref(), Some("migration-plan-request"));
+-    assert_eq!(descriptor.result_format_id.as_deref(), Some("migration-plan-report"));
+-    assert_eq!(descriptor.error_format_id.as_deref(), Some("migration-plan-error"));
+-    assert_eq!(descriptor.implementation, OperationDescriptorImplementation::SourceObserved);
+     assert_eq!(
++        descriptor.operation_id,
++        "strict-text-only-migration-planning"
++    );
++    assert_eq!(
++        descriptor.input_format_id.as_deref(),
++        Some("migration-plan-request")
++    );
++    assert_eq!(
++        descriptor.result_format_id.as_deref(),
++        Some("migration-plan-report")
++    );
++    assert_eq!(
++        descriptor.error_format_id.as_deref(),
++        Some("migration-plan-error")
++    );
++    assert_eq!(
++        descriptor.implementation,
++        OperationDescriptorImplementation::SourceObserved
++    );
++    assert_eq!(
+         serde_json::to_value(&descriptor).unwrap(),
+         wire_support::read_json(&descriptor_path),
+         "all descriptor states, source identities and nullable fields survive"
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:60:
+         let path = fixture("envelope", "valid", name);
+         let envelope: OperationEnvelope = wire_support::round_trip(&path);
+         assert_eq!(envelope.schema, 1, "{path}");
+-        assert_eq!(envelope.operation_id.as_deref(), Some("strict-text-only-migration-planning"));
++        assert_eq!(
++            envelope.operation_id.as_deref(),
++            Some("strict-text-only-migration-planning")
++        );
+         let observed_stage = match &envelope.body {
+             Body::Prepared(_) => "prepared",
+             Body::Input(_) => "input",
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:100:
+     reject::<OperationDescriptor>("descriptor", "missing-required-nullable");
+     reject::<OperationEnvelope>("envelope", "missing-required-nullable");
+ 
+-    let descriptor: OperationDescriptor =
+-        wire_support::round_trip(&fixture("descriptor", "valid", "source-bound-migration-shape"));
++    let descriptor: OperationDescriptor = wire_support::round_trip(&fixture(
++        "descriptor",
++        "valid",
++        "source-bound-migration-shape",
++    ));
+     assert!(descriptor.model_id.is_none());
+     assert!(descriptor.reason.is_none());
+     assert!(descriptor.implementation_evidence_id.is_none());
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:117:
+     };
+     assert!(admission.reason.is_none());
+     assert!(admission.authority_evidence_id.is_none());
+-    assert_eq!(serde_json::to_value(&envelope).unwrap(), wire_support::read_json(&path));
++    assert_eq!(
++        serde_json::to_value(&envelope).unwrap(),
++        wire_support::read_json(&path)
++    );
+ 
+     // The arm's nullable properties are required too; removing them is a
+     // structural error even though explicit JSON null becomes Rust None.
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-wire/tests/machine_operation_contract.rs:124:
+     let mut missing_arm = wire_support::read_json(&path);
+-    missing_arm["body"].as_object_mut().unwrap().remove("reason");
++    missing_arm["body"]
++        .as_object_mut()
++        .unwrap()
++        .remove("reason");
+     assert!(serde_json::from_value::<OperationEnvelope>(missing_arm).is_err());
+ }
+ 

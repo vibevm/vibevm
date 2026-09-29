@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-workspace:migration_planning",
+  "domain_owner": "rust:vibe-workspace:migration_planning",
+  "source_id": "pure-migration-transport-adapter",
+  "model_id": null,
+  "input_format_id": "migration-plan-request",
+  "result_format_id": "migration-plan-report",
+  "error_format_id": "migration-plan-error",
+  "event_format_id": null,
+  "implementation": 42,
+  "availability": "not_observed",
+  "authorization": "not_evaluated",
+  "reason": null,
+  "implementation_evidence_id": null,
+  "capability_id": "strict-text-only-migration-planning"
+}

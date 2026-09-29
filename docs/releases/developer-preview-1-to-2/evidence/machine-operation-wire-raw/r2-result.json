@@ -1,0 +1,94 @@
+{
+  "kind": "M16-B1-machine-generated-reader-r2",
+  "status": "selected-case-proof-only",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-wire",
+    "--test",
+    "machine_operation_contract"
+  ],
+  "environment": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/home/olegchir/git/v/vibevm-next/target"
+  },
+  "r1_historical": {
+    "log": "/tmp/vibevm-next-M16-B1-wire-checks/run1.log",
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "scope": "old operation-descriptor schema before root identity split"
+  },
+  "r2_first": {
+    "log": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run1.log",
+    "exit": 101,
+    "passed": 2,
+    "failed": 1,
+    "reason": "worker test retained old capability string as envelope operation ID; fixture now uses rust:vibe-workspace:migration_planning"
+  },
+  "r2_final": {
+    "log": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run2.log",
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "ignored": 0,
+    "filtered": 0,
+    "cases": [
+      "descriptor_and_six_envelope_arms_roundtrip",
+      "unknown_root_and_arm_fields_refuse",
+      "required_nullable_omission_refuses_but_explicit_null_survives"
+    ]
+  },
+  "input_output_byte_sha": [
+    {
+      "path": "crates/vibe-wire/tests/machine_operation_contract.rs",
+      "sha256": "180754ecb3989f9678a4b6cb01bc822631eb0b0ec4363c58cf1ec723913947d6",
+      "bytes": 7089
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/run1.log",
+      "sha256": "d1075a846370d3b1b718951b1de188d3ade43e3c19f140ddaa1557a4defba5cc",
+      "bytes": 801
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run1.log",
+      "sha256": "ce8a697a91fc70fdbf2fb52ce384ff3f027526b299441d0e8bb4a2b9e3c17f78",
+      "bytes": 1293
+    },
+    {
+      "path": "/tmp/vibevm-next-M16-B1-wire-checks/r2-run2.log",
+      "sha256": "967434ed2e90bb7e6566fe6b610ae043072ddbd4a022a78c7fc03bdc76430a2b",
+      "bytes": 718
+    },
+    {
+      "path": "schemas/machine/e1/operation_descriptor.jtd.json",
+      "sha256": "85143a01da42f0012ed2b2c21bcd3c062844f8837b4fe12e0cb5bd81ae071679",
+      "bytes": 2023
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/operation_descriptor/mod.rs",
+      "sha256": "ba00c8146447b342c766bfc3f4c9d75800f871941bb75f15f786db83bf45b4e7",
+      "bytes": 2754
+    },
+    {
+      "path": "formats/corpora/machine-operation-descriptor/e1/valid/model-only-source-gap.json",
+      "sha256": "1625ea380e184ad91c988eebaa769709d4aa071e76db8a2b13ffaeb835db48ca",
+      "bytes": 561
+    },
+    {
+      "path": "formats/corpora/machine-operation-envelope/e1/valid/result.json",
+      "sha256": "36f46293f4c38ff8c5eb230d0eb3f47c53bf40cecd6274d9193411d50c831820",
+      "bytes": 858
+    }
+  ],
+  "new_test_lines": 188,
+  "semantic_limits": [
+    "outer JTD preserves source_id versus capability_id and an explicit null operation_id for model-only data; at least one non-null domain identity remains owning-service admission",
+    "schema epoch2 and malformed embedded JSON payload remain later semantic/domain validation; reader does not refuse them as shape-invalid",
+    "no handler, domain owner, authorization, effect/result/event coherence or product acceptance proven"
+  ]
+}

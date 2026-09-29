@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "description": "Epoch-1 operation value envelope. JTD validates each payload_json member as a string only, not its embedded JSON. The facade must use the referenced domain generated reader and semantic validator before dispatch or publication, and enforce schema exactly 1 plus identity/owner/effect coherence.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-ENVELOPE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::operation_envelope"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "operation_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "domain_owner": {
+      "type": "string",
+      "nullable": true
+    },
+    "source_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "evidence_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "body": {
+      "ref": "body"
+    }
+  },
+  "definitions": {
+    "body": {
+      "discriminator": "stage",
+      "mapping": {
+        "prepared": {
+          "properties": {
+            "schema_ref": {
+              "type": "string"
+            },
+            "format_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "payload_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "readiness": {
+              "enum": [
+                "ready",
+                "unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "reason": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "input": {
+          "properties": {
+            "format_id": {
+              "type": "string"
+            },
+            "payload_json": {
+              "type": "string"
+            }
+          }
+        },
+        "admission": {
+          "properties": {
+            "decision": {
+              "enum": [
+                "admitted",
+                "denied",
+                "not_evaluated"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "reason": {
+              "type": "string",
+              "nullable": true
+            },
+            "authority_evidence_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "result": {
+          "properties": {
+            "format_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "payload_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "completeness": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "provenance_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "error": {
+          "properties": {
+            "format_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "payload_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "completeness": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "provenance_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "event": {
+          "properties": {
+            "event_id": {
+              "type": "string"
+            },
+            "format_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "payload_json": {
+              "type": "string",
+              "nullable": true
+            },
+            "effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "completeness": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "provenance_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

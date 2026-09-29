@@ -1,0 +1,29 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.88s
+     Running tests/machine_operation_contract.rs (target/debug/deps/machine_operation_contract-1ac27fd50aef5c65)
+
+running 3 tests
+test unknown_root_and_arm_fields_refuse ... ok
+test descriptor_and_six_envelope_arms_roundtrip ... FAILED
+test required_nullable_omission_refuses_but_explicit_null_survives ... ok
+
+failures:
+
+---- descriptor_and_six_envelope_arms_roundtrip stdout ----
+
+thread 'descriptor_and_six_envelope_arms_roundtrip' (832523) panicked at crates/vibe-wire/tests/machine_operation_contract.rs:101:9:
+assertion `left == right` failed
+  left: Some("rust:vibe-workspace:migration_planning")
+ right: Some("strict-text-only-migration-planning")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    descriptor_and_six_envelope_arms_roundtrip
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p vibe-wire --test machine_operation_contract`
