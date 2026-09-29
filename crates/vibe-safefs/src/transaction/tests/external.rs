@@ -1,5 +1,178 @@
 macro_rules! external_tests {
     () => {
+fn existing_external_fixture() -> (tempfile::TempDir, Project, std::path::PathBuf) {
+    let scope = tempfile::tempdir().unwrap();
+    let project_path = scope.path().join("project");
+    fs::create_dir(&project_path).unwrap();
+    fs::write(project_path.join("keep"), b"unchanged").unwrap();
+    let project = Project::open(&project_path).unwrap();
+    let store_path = scope.path().join("store");
+    (scope, project, store_path)
+}
+
+fn external_namespace_snapshot(
+    root: &Path,
+) -> Vec<(std::path::PathBuf, &'static str, Vec<u8>)> {
+    fn walk(
+        root: &Path,
+        current: &Path,
+        rows: &mut Vec<(std::path::PathBuf, &'static str, Vec<u8>)>,
+    ) {
+        for entry in fs::read_dir(current).unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            let relative = path.strip_prefix(root).unwrap().to_owned();
+            let kind = entry.file_type().unwrap();
+            if kind.is_symlink() {
+                rows.push((
+                    relative,
+                    "link",
+                    fs::read_link(&path)
+                        .unwrap()
+                        .to_string_lossy()
+                        .as_bytes()
+                        .to_vec(),
+                ));
+            } else if kind.is_dir() {
+                rows.push((relative, "directory", Vec::new()));
+                walk(root, &path, rows);
+            } else {
+                rows.push((relative, "file", fs::read(&path).unwrap()));
+            }
+        }
+    }
+    let mut rows = Vec::new();
+    walk(root, root, &mut rows);
+    rows.sort();
+    rows
+}
+
+#[test]
+fn existing_store_absence_has_no_creation() {
+    let (scope, project, store_path) = existing_external_fixture();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(
+        ExternalStore::open_existing_disjoint(&store_path.join("nested"), &project)
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+    assert!(!store_path.exists());
+}
+
+#[test]
+fn existing_disjoint_store_opens_and_invalid_scope_refuses() {
+    let (scope, project, store_path) = existing_external_fixture();
+    fs::create_dir(&store_path).unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    let store = ExternalStore::open_existing_disjoint(&store_path, &project)
+        .unwrap()
+        .unwrap();
+    store.prove_disjoint_from(&project).unwrap();
+    assert!(store.bootstrap_durability().is_empty());
+    assert!(ExternalStore::open_existing_disjoint(project.root_path(), &project).is_err());
+    assert!(
+        ExternalStore::open_existing_disjoint(
+            &project.root_path().join("missing/suffix"),
+            &project
+        )
+        .is_err()
+    );
+    assert!(ExternalStore::open_existing_disjoint(scope.path(), &project).is_err());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+
+    let file = scope.path().join("file-store");
+    fs::write(&file, b"not a directory").unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(ExternalStore::open_existing_disjoint(&file, &project).is_err());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+    let alias = scope.path().join("store-link");
+    if link_directory(&store_path, &alias) {
+        let before = external_namespace_snapshot(scope.path());
+        assert!(ExternalStore::open_existing_disjoint(&alias, &project).is_err());
+        assert_eq!(external_namespace_snapshot(scope.path()), before);
+    }
+}
+
+#[test]
+fn existing_project_lock_absence_has_no_creation() {
+    let (scope, project, store_path) = existing_external_fixture();
+    fs::create_dir(&store_path).unwrap();
+    let store = ExternalStore::open_existing_disjoint(&store_path, &project)
+        .unwrap()
+        .unwrap();
+    let key = project.identity_token().unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(store.lock_existing_project(&key).unwrap().is_none());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+    fs::create_dir(store_path.join("locks")).unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(store.lock_existing_project(&key).unwrap().is_none());
+    assert!(store.lock_existing_project("").is_err());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+}
+
+#[test]
+fn existing_project_lock_reacquires_rechecks_and_store_token_is_stable() {
+    let (scope, project, store_path) = existing_external_fixture();
+    let store = ExternalStore::open_or_create_disjoint(&store_path, &project).unwrap();
+    let key = project.identity_token().unwrap();
+    drop(store.open_and_lock_project(&key).unwrap());
+    let before = external_namespace_snapshot(scope.path());
+    let identity = store.identity_token().unwrap();
+    let reopened = ExternalStore::open_existing_disjoint(&store_path, &project)
+        .unwrap()
+        .unwrap();
+    assert_eq!(reopened.identity_token().unwrap(), identity);
+    assert_eq!(identity.len(), 71);
+    assert!(identity.starts_with("sha256:"));
+    assert!(identity[7..].bytes().all(|byte| byte.is_ascii_hexdigit()));
+    let same_root_project = Project::open(&store_path).unwrap();
+    assert_ne!(
+        same_root_project.identity_token().unwrap(),
+        identity,
+        "store and project domains differ even on the same object"
+    );
+    let attempts = std::rc::Rc::new(std::cell::Cell::new(0));
+    let observed = attempts.clone();
+    crate::arm_lock_identity_check(Some(Box::new(move |actual| {
+        assert!(actual);
+        let count = observed.get();
+        observed.set(count + 1);
+        count > 0
+    })));
+    let lock = reopened.lock_existing_project(&key).unwrap().unwrap();
+    crate::arm_lock_identity_check(None);
+    assert_eq!(
+        attempts.get(),
+        2,
+        "rejected first handle re-contends for the named barrier"
+    );
+    lock.require_still_named().unwrap();
+    drop(lock);
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+
+    let lock_path = fs::read_dir(store_path.join("locks"))
+        .unwrap()
+        .next()
+        .unwrap()
+        .unwrap()
+        .path();
+    fs::remove_file(&lock_path).unwrap();
+    let target = scope.path().join("target");
+    fs::write(&target, b"foreign lock payload").unwrap();
+    fs::hard_link(&target, &lock_path).unwrap();
+    let before = external_namespace_snapshot(scope.path());
+    assert!(reopened.lock_existing_project(&key).is_err());
+    assert_eq!(external_namespace_snapshot(scope.path()), before);
+    fs::remove_file(&lock_path).unwrap();
+    if link_file(&target, &lock_path) {
+        let before = external_namespace_snapshot(scope.path());
+        assert!(reopened.lock_existing_project(&key).is_err());
+        assert_eq!(external_namespace_snapshot(scope.path()), before);
+    }
+}
+
 #[test]
 fn project_identity_is_stable_and_never_exposes_raw_os_numbers() {
     let (_root, project) = project();
