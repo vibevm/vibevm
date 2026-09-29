@@ -42,7 +42,7 @@ pub enum MigrationRefusalKind {
     UnprovableEdit,
 }
 
-/// Fixed diagnosis and an owning field; never raw parser/source contents.
+/// Fixed reason; field paths may include authored keys, without parser diagnostics.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MigrationRefusal {
     pub kind: MigrationRefusalKind,
