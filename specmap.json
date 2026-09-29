@@ -84299,7 +84299,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3f9f484d00d56065c732e2ce130550a79f6119185580c4f6fa6a67d230792abe",
+      "content_hash": "sha256:e34ec51aa86dc02f6c831547943c17ea81e922c0991af14617768400a0134e16",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -84350,6 +84350,60 @@
       "heading": "Check the selected actual registration denominator against the inventory and reject missing, orphan, duplicate or contradictory mappings. Source-shape and registration consistency do not establish domain effects, semantic adequacy, native role linkage or central acceptance. Review the actual operation and model delta independently. Select meaningful nonzero cases and owning targets for the changed inputs, preserve applicable negative and invariant proof, and reuse matching evidence. Mutation testing requires a concrete suspicious signal and a bounded useful case; workstream completion does not itself justify a broad product panel. @status:spec/plan",
       "line": 10,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-VERIFICATION"
+    },
+    {
+      "anchor": "DOMAIN-AUTHORITY",
+      "content_hash": "sha256:3df158bb149d5ed1e8dde22409825c2837dce1d38b37c5bffe769d04b4601349",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Each operation and semantic view retains its existing resolver, compiler, registry, settings, lifecycle, journal, receipt or other domain owner. A shared application service delegates to those owners; it does not create a second universal graph, parser, requirements engine or scheduler. Retained records, derived projections and CLI-local extraction seams are identified separately. All public operation and model families, including administrative and source conversion effects, receive explicit extraction and conformance owners before a client adapter is designed. IDE plugins, LSP/DAP adapters and an MVP are outside this architecture work. @status:spec/plan",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY"
+    },
+    {
+      "anchor": "OBSERVABILITY-CLOSURE",
+      "content_hash": "sha256:77e76998b148068cb63ade92058beaf9116295038e1d512d3b63eec292228b50",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Every meaningful state, decision, transformation, action and refusal has an owned machine-readable inspection or explanation with provenance and explicit incompleteness. Views distinguish selected source and domain identity, requested scope, participating and unread sources, observation outcome, truncation and omitted data. A descriptor, source count, callback completion or absent optional field does not prove execution, semantic absence or complete observation. Proposed executable conformance obligations remain unrun until evidence from their owning target is retained. @status:spec/plan",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE"
+    },
+    {
+      "anchor": "VIEW-CONTRACT-EPOCHS",
+      "content_hash": "sha256:6043511353852df1aa1f2b9c4db87810929f7bc01e05d8c342827f19396e5c69",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Semantic public views and diagnostic projections have separately owned serialized contracts and compatibility decisions. Existing retained format epochs remain interpretable; this separation neither increments an epoch nor freezes a new numeric version. Private memory layouts, pointers, opaque internal replay tokens and Rust ABI are not external schema contracts. Debug payloads carry their source or retained record identity and completeness; redaction and unavailable reasons remain visible without exposing secrets or unbounded private state. @status:spec/plan",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#VIEW-CONTRACT-EPOCHS"
+    },
+    {
+      "anchor": "OBSERVATION-AXES",
+      "content_hash": "sha256:125307ddf81b799a9f2cbdb226f3c513a8c47aacb92785e75a21510ec996f9c7",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Keep implementation or external-carrier gaps, contextual participation or applicability, observation outcome and completeness, effect authorization and deliberate redaction independent. Unsupported in a selected context does not conceal a supported feature's missing API. Unavailable means an owned safe observation was not established; redacted means policy withheld supported data; truncated means only part of the observed scope was returned. None silently becomes a complete empty result or a grant of effect authority. @status:spec/plan",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVATION-AXES"
+    },
+    {
+      "anchor": "TRANSPORT-OWNER-SEAMS",
+      "content_hash": "sha256:76fabfc0f6f86c2f31d8e31af988b28b894e8ef548d5843849df1ed385276afd",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Discovery, capture, query, prepare, admit, submit, observe and recover name boundaries delegated to existing domain owners, not new lifecycle phases or an automatic sequence. Discovery inspects retained declarations without executing providers. Capture and query publish exact observation identities and declare their effects; an existing trace recorder opener that can create a lock is not a zero-write reader. Preparation retains exact before-state identity; admission remains scoped owner authority; submission and recovery retain domain run, journal, lease or receipt identities. External orchestration remains external. @status:spec/plan",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#TRANSPORT-OWNER-SEAMS"
+    },
+    {
+      "anchor": "AUTHORITY-MAP-CONSISTENCY",
+      "content_hash": "sha256:3f20c99afa6a7b4c0b05829a290d514ad49642310584f281d916d0189e965282",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Retain a finite authority map joining every inventoried semantic model and planned family to existing sources, domain owners, extraction gaps and proposed conformance obligations. Mechanically reject missing or duplicate identities, unknown references and mismatched owner or source bindings. Temporary implementation task routing is separate from permanent domain semantics. A successful map check proves these finite joins only; independent semantic review and later executed domain conformance are still required. @status:spec/plan",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY"
     },
     {
       "anchor": "root",
