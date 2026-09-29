@@ -11,15 +11,11 @@ use vibe_wire::generated::{
         Body, BodyError, BodyErrorCompleteness, BodyErrorEffectState, BodyResult,
         BodyResultCompleteness, BodyResultEffectState, OperationEnvelope,
     },
-    migration::e1::{
-        plan_error::PlanError,
-        plan_report::{Outcome, PlanReport},
-        plan_request::PlanRequest,
-    },
+    migration::e1::{plan_error::PlanError, plan_report::Outcome, plan_request::PlanRequest},
 };
 use vibe_workspace::migration_planning::{
     MigrationPlanningResponse, decode_migration_request, plan_migration_json,
-    validate_preflight_error, validate_report_for_request,
+    validate_preflight_error,
 };
 
 use super::{McpTool, ToolOutput};
@@ -91,10 +87,27 @@ fn invalid(message: &'static str, error: Option<&PlanError>) -> ToolError {
         },
         None => empty_error(),
     };
-    // The fixed preflight shape is checked before exposing structuredContent.
-    if validate_output(&document, None).is_err() {
-        return ToolError::Internal("machine preflight envelope invariant failed".to_owned());
-    }
+    // Preflight has no admitted request. The shared owner checks its fixed
+    // null-identity or typed error shape before structured publication.
+    let service = match MachineOperationService::pure_text_planner(
+        PurePlannerAdmission::Unavailable,
+    ) {
+        Ok(service) => service,
+        Err(error) => {
+            return ToolError::Internal(format!(
+                "INTERNAL MACHINE PREFLIGHT SERVICE FAILURE: UNVALIDATED original envelope; {error}: {document:?}"
+            ));
+        }
+    };
+    let document = match service.validate_pure_planner_publication(None, document) {
+        Ok(document) => document,
+        Err(error) => {
+            return ToolError::Internal(format!(
+                "INTERNAL MACHINE PREFLIGHT VALIDATION FAILURE: UNVALIDATED original envelope, not a normal report: {:?}",
+                error.original
+            ));
+        }
+    };
     match serde_json::to_value(document) {
         Ok(report) => ToolError::StructuredPreflight {
             report,
@@ -104,104 +117,23 @@ fn invalid(message: &'static str, error: Option<&PlanError>) -> ToolError {
     }
 }
 
-/// Local publication law for this ONE pure route; the domain owner separately
-/// replays the entire report against the admitted request.
-fn validate_output(
-    value: &OperationEnvelope,
-    request: Option<&PlanRequest>,
-) -> Result<(), &'static str> {
-    if value.schema != 1 || value.evidence_id.is_some() {
-        return Err("machine envelope identity or epoch mismatch");
-    }
-    let unknown_preflight = matches!(
-        (&value.body, request),
-        (Body::Error(row), None)
-            if row.format_id.is_none() && row.payload_json.is_none()
-    );
-    if unknown_preflight {
-        if value.operation_id.is_some() || value.domain_owner.is_some() || value.source_id.is_some()
-        {
-            return Err("unestablished preflight identity must be null");
-        }
-    } else if value.operation_id.as_deref() != Some(OPERATION)
-        || value.domain_owner.as_deref() != Some(OPERATION)
-        || value.source_id.as_deref() != Some(SOURCE)
-    {
-        return Err("machine envelope identity mismatch");
-    }
-    match &value.body {
-        Body::Result(row) => {
-            let request = request.ok_or("result has no admitted request")?;
-            if row.format_id.as_deref() != Some(REPORT)
-                || row.effect_state != BodyResultEffectState::NoEffects
-                || row.provenance_id.is_some()
-            {
-                return Err("result owner, format or effect mismatch");
-            }
-            let report: PlanReport = serde_json::from_str(
-                row.payload_json
-                    .as_deref()
-                    .ok_or("result has no domain bytes")?,
-            )
-            .map_err(|_| "result does not carry the generated domain root")?;
-            validate_report_for_request(request, &report)
-                .map_err(|_| "result differs from owning replay")?;
-            match (&report.outcome, &row.completeness) {
-                (Outcome::Planned(_) | Outcome::NoOp(_), BodyResultCompleteness::Complete)
-                | (Outcome::NeedsInput(_), BodyResultCompleteness::Partial) => Ok(()),
-                _ => Err("result status and completeness mismatch"),
-            }
-        }
-        Body::Error(row) => {
-            if row.effect_state != BodyErrorEffectState::NoEffects || row.provenance_id.is_some() {
-                return Err("error effect or provenance mismatch");
-            }
-            match (
-                row.format_id.as_deref(),
-                row.payload_json.as_deref(),
-                request,
-            ) {
-                (None, None, None) if row.completeness == BodyErrorCompleteness::Unavailable => {
-                    Ok(())
-                }
-                (Some(ERROR), Some(payload), None)
-                    if row.completeness == BodyErrorCompleteness::Complete =>
-                {
-                    let error: PlanError =
-                        serde_json::from_str(payload).map_err(|_| "error has wrong domain root")?;
-                    validate_preflight_error(&error).map_err(|_| "error has wrong domain code")
-                }
-                (Some(REPORT), Some(payload), Some(request))
-                    if row.completeness == BodyErrorCompleteness::Complete =>
-                {
-                    let report: PlanReport =
-                        serde_json::from_str(payload).map_err(|_| "error has wrong report root")?;
-                    validate_report_for_request(request, &report)
-                        .map_err(|_| "error differs from owning replay")?;
-                    if matches!(report.outcome, Outcome::Refused(_)) {
-                        Ok(())
-                    } else {
-                        Err("error arm does not carry refusal")
-                    }
-                }
-                _ => Err("error format, payload and completeness mismatch"),
-            }
-        }
-        _ => Err("only result/error are published by pure planner"),
-    }
-}
 fn publish(
+    service: &MachineOperationService,
     value: OperationEnvelope,
     request: &PlanRequest,
     is_error: bool,
     message: &'static str,
 ) -> Result<ToolOutput, ToolError> {
-    if validate_output(&value, Some(request)).is_err() {
-        let evidence = serde_json::to_string(&value).unwrap_or_else(|_| format!("{value:?}"));
-        return Ok(ToolOutput::executed_failure_text(format!(
-            "INTERNAL MACHINE RESULT VALIDATION FAILURE: UNVALIDATED original envelope (not a normal report or replay authority): {evidence}"
-        )));
-    }
+    let value = match service.validate_pure_planner_publication(Some(request), value) {
+        Ok(value) => value,
+        Err(error) => {
+            let evidence = serde_json::to_string(&error.original)
+                .unwrap_or_else(|_| format!("{:?}", error.original));
+            return Ok(ToolOutput::executed_failure_text(format!(
+                "INTERNAL MACHINE RESULT VALIDATION FAILURE: UNVALIDATED original envelope (not a normal report or replay authority): {evidence}"
+            )));
+        }
+    };
     let structured = serde_json::to_value(value)
         .map_err(|_| ToolError::Internal("machine envelope serialization failed".to_owned()))?;
     Ok(if is_error {
@@ -361,7 +293,7 @@ impl McpTool for PlanManifestMigrationEnvelopeMcpTool {
                         "Pure migration planning refused; exact owning report is retained without effects.",
                     ),
                 };
-                publish(envelope(body), &request, is_error, message)
+                publish(&service, envelope(body), &request, is_error, message)
             }
             MigrationPlanningResponse::Preflight(error) => {
                 // A validated typed service can still return its owning preflight.
