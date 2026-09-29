@@ -100,6 +100,7 @@ impl Declared {
             compiler_internals: self.compiler_internals,
             pass: None,
             when: None,
+            machine_operation_schema: None,
         }
     }
 }

@@ -1,0 +1,24 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.45
+   Compiling syn v2.0.117
+   Compiling core-ai-native-specmark-grammar v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar)
+   Compiling serde_derive v1.0.228
+   Compiling tracing-attributes v0.1.31
+   Compiling thiserror-impl v2.0.18
+   Compiling core-ai-native-specmark v1.1.0 (/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark)
+   Compiling thiserror v2.0.18
+   Compiling tracing v0.1.44
+   Compiling serde v1.0.228
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling vibe-extension-registry v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.10s
+     Running unittests src/lib.rs (target/debug/deps/vibe_extension_registry-8a847c2d6ca89bf8)
+
+running 1 test
+test tests::view::exhaustive_view_is_lossless_effective_order_with_closed_state_precedence ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 0.00s
+

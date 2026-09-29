@@ -117,6 +117,7 @@ fn declaration(id: &str, pass: ExtensionPass) -> ExtensionDecl {
         compiler_internals: Some(true),
         pass: Some(pass),
         when: None,
+        machine_operation_schema: None,
     }
 }
 

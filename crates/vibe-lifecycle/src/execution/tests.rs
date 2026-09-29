@@ -30,6 +30,7 @@ fn builtin(id: &str, name: &str, message: Option<&str>) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     }
 }
 

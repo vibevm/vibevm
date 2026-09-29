@@ -44,6 +44,7 @@ fn staged(id: &str, point: &str) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     }
 }
 
@@ -89,6 +90,7 @@ fn pass(id: &str, declaration: Option<ExtensionPass>) -> ExtensionDecl {
         compiler_internals: Some(true),
         pass: declaration,
         when: None,
+        machine_operation_schema: None,
     }
 }
 

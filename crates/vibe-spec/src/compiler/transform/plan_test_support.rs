@@ -88,6 +88,7 @@ fn selector_declaration(id: &str, shape: SelectorShape) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     };
     if let SelectorShape::Dimensions { packages, paths } = shape {
         declaration.applies_to = Some(ExtensionAppliesTo {

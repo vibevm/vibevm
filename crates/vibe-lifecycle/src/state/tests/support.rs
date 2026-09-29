@@ -110,6 +110,7 @@ pub(super) fn row(
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     };
     let registry = collect_extensions(ExtensionWorld {
         installed: vec![],
@@ -148,6 +149,7 @@ pub(super) fn dependency_row(
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     };
     let registry = collect_extensions(ExtensionWorld {
         installed: vec![DependencyExtensionSource {

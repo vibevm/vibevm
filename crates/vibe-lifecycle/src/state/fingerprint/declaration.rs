@@ -76,6 +76,10 @@ pub(super) fn declaration_fingerprint(
         applies_to: _applies_to,
         compiler_internals,
         pass,
+        // Excluded: a schema advertised for descriptor-only discovery does
+        // not shape the handler's executable request or delivered config.
+        // The authored manifest/source witness still owns its byte changes.
+        machine_operation_schema: _machine_operation_schema,
         // Excluded: an opaque pre-selection applicability guard.
         when: _when,
     } = row.declaration();

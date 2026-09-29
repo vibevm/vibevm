@@ -56,6 +56,7 @@ fn declaration(id: &str, point: CompilePoint, pass: Option<ExtensionPass>) -> Ex
         compiler_internals: (point == CompilePoint::Pass).then_some(true),
         pass,
         when: None,
+        machine_operation_schema: None,
     }
 }
 

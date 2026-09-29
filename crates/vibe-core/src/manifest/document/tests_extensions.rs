@@ -589,6 +589,7 @@ fn programmatic_declarations_revalidate_before_validation_and_serialization() {
         compiler_internals: None,
         pass: None,
         when: None,
+        machine_operation_schema: None,
     });
 
     let validation = manifest.validate().unwrap_err().to_string();

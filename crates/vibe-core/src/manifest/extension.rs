@@ -16,9 +16,11 @@ use crate::lifecycle::{CompilePoint, ExtensionPoint};
 use crate::manifest::declarant_path::{declarant_path, declarant_path_error};
 
 mod control;
+mod machine_schema;
 mod pass;
 mod wire;
 pub use control::{ExtensionKey, ExtensionUse, ExtensionsControl};
+pub use machine_schema::MachineOperationSchemaDecl;
 pub(crate) use wire::{ExtensionDeclWire, ExtensionHandlerWire, ExtensionsControlWire};
 
 const CONTRIB_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR";
@@ -232,6 +234,7 @@ impl ExtensionWhen {
 ///     handler: ExtensionHandler::Builtin { name: "log".into() },
 ///     config: None, auto: None, inputs: None, applies_to: None,
 ///     compiler_internals: None, pass: None, when: None,
+///     machine_operation_schema: None,
 /// };
 /// assert!(declaration.validate().is_ok());
 /// ```
@@ -248,6 +251,7 @@ pub struct ExtensionDecl {
     pub compiler_internals: Option<bool>,
     pub pass: Option<ExtensionPass>,
     pub when: Option<ExtensionWhen>,
+    pub machine_operation_schema: Option<MachineOperationSchemaDecl>,
 }
 
 impl ExtensionDecl {
@@ -316,6 +320,9 @@ impl ExtensionDecl {
         }
         if let Some(pass) = &self.pass {
             pass.validate(&self.id)?;
+        }
+        if let Some(schema) = &self.machine_operation_schema {
+            schema.validate()?;
         }
         Ok(())
     }
@@ -406,6 +413,7 @@ pub(crate) fn validate_extension_declarations(
     }
 
     let mut ids = BTreeSet::new();
+    let mut machine_ids = BTreeSet::new();
     for extension in extensions {
         if extension.id.starts_with(RESERVED_EXTENSION_ID_PREFIX) {
             return Err(format!(
@@ -428,6 +436,18 @@ pub(crate) fn validate_extension_declarations(
                 "duplicate [[extension]] field `id` value `{}`; ids are unique within the declaring manifest ({CONTRIB_GRAMMAR})",
                 extension.id,
             ));
+        }
+        if let Some(schema) = &extension.machine_operation_schema {
+            for id in [schema.operation_id.as_deref(), schema.model_id.as_deref()]
+                .into_iter()
+                .flatten()
+            {
+                if !machine_ids.insert(id) {
+                    return Err(format!(
+                        "duplicate `machine_operation_schema` operation/model identity `{id}` within one manifest (spec://org.vibevm.core/vibevm/common/PROP-054#EXTENSION-OPERATION-SCHEMA)"
+                    ));
+                }
+            }
         }
     }
     Ok(())
@@ -479,3 +499,7 @@ fn float_key(value: f64) -> u64 {
 #[cfg(test)]
 #[path = "extension/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "extension/machine_schema_tests.rs"]
+mod machine_schema_tests;
