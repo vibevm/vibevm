@@ -1141,6 +1141,16 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# Finite source/registration coverage declarations; not runtime proof.
+[format.capability-coverage]
+epoch = 1
+schema = "schemas/capability/e1/coverage.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/capability-coverage/e1"
+sunset = "none"
+
 # Developer Preview transition index. The index includes reviewed evidence
 # state and cannot be reconstructed from product bytes alone.
 [format.preview-transition]
