@@ -59,9 +59,10 @@ pub use mechanism::{
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub use migration::{
-    CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationOutcome,
-    ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal, MigrationRefusalKind,
-    MigrationSelection, MigrationTokenEdit, SNAPSHOT_TO_COPY, plan_manifest_migration,
+    CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationEpoch,
+    ManifestMigrationOutcome, ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal,
+    MigrationRefusalKind, MigrationSelection, MigrationTokenEdit, SNAPSHOT_TO_COPY,
+    manifest_migration_profile_epoch, plan_manifest_migration,
 };
 pub use package::application::{
     ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,

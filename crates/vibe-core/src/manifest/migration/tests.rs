@@ -411,3 +411,35 @@ fn independently_fixed_r1_identity_and_token_vector() {
         "42faf5376728e4649c80657e6b0f93e9910a107261413a5d0c7f019bf5ab27e0"
     );
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+    r = 1
+)]
+fn frozen_profile_epoch_metadata_is_explicit_and_unknown_is_unrecognized() {
+    assert_ne!(
+        ManifestMigrationEpoch::Absent,
+        ManifestMigrationEpoch::Epoch1
+    );
+    for profile in [LEGACY_ABSENT, CURRENT_ABSENT] {
+        assert_eq!(
+            manifest_migration_profile_epoch(profile),
+            Some(ManifestMigrationEpoch::Absent)
+        );
+    }
+    assert_eq!(
+        manifest_migration_profile_epoch(CURRENT_EPOCH1),
+        Some(ManifestMigrationEpoch::Epoch1)
+    );
+    for profile in [
+        "",
+        "unknown",
+        "1.1.0",
+        "epoch0",
+        "materialization-current-absent-r2",
+        "materialization-current-epoch1-r2",
+    ] {
+        assert_eq!(manifest_migration_profile_epoch(profile), None);
+    }
+}

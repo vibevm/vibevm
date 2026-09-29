@@ -18,6 +18,27 @@ pub const CURRENT_EPOCH1: &str = "materialization-current-epoch1-r1";
 pub const SNAPSHOT_TO_COPY: &str = "snapshot-to-copy-r1";
 pub const IDENTITY: &str = "identity-r1";
 
+/// Authored profile epoch provenance, independent of product and wire versions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ManifestMigrationEpoch {
+    Absent,
+    Epoch1,
+}
+
+/// Canonical metadata for the three frozen profiles; unknown revisions have
+/// no recognized epoch, and absence is never guessed to mean epoch one.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
+    r = 1
+)]
+pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrationEpoch> {
+    match profile {
+        LEGACY_ABSENT | CURRENT_ABSENT => Some(ManifestMigrationEpoch::Absent),
+        CURRENT_EPOCH1 => Some(ManifestMigrationEpoch::Epoch1),
+        _ => None,
+    }
+}
+
 /// Caller choices; absence asks for input and never selects a default.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct MigrationSelection<'a> {
