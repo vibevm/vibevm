@@ -7,13 +7,14 @@ and tooling require a new observation capture and affected source rebinding.
 
 The current candidate accounts for 172 CLI command forms, 12 default MCP tools,
 nine registered TUI actions, 12 direct TUI effect routes and one dynamic MCP
-registration seam. Twenty model families and 15 planned families are separate.
+registration seam, plus 30 observed developer-tool command nodes. Twenty model
+families and 15 planned families are separate.
 `registered` distinguishes native registrations from other meaningful routes.
 Command names and aliases are local tokens; parent identities define hierarchy.
 
 The generated reader and pure validator checked this candidate's declarations.
-Native registration comparison, complete semantic/API coverage, runtime effects
-and central acceptance remain due. Unknown carrier, schema, effect or authority
+Native CLI/MCP/TUI and developer registration comparison has passed on the
+selected inputs. Complete semantic/API coverage, runtime effects, source
+observation rebinding and central acceptance remain due. Unknown carrier, schema, effect or authority
 claims retain explicit reasons; proposed conformance cases are unexecuted.
-Developer-tool registrations added by the coverage checker still need their
-native owner observation and inventory rows before acceptance.
+The registration check compares native owners without running their handlers.
