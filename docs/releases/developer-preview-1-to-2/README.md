@@ -44,3 +44,13 @@ selected bytes, Git identities and declaration linkage; contribution accounting,
 complete capability/topic membership, documentation, runtime and final product
 proof remain separate obligations. Recorded toolchains are Linux-session
 observations; historical Windows claims were not copied into this capture.
+
+The later intermediate subject `bootstrap-4cec12cd3` binds the implemented finite
+source-review consumer at commit `4cec12cd358c4ee58fb0a53180e4f3d4df868fb8`:
+[raw observation](evidence/bootstrap-4cec12cd3-source-capture.json),
+[epoch-1 capture](evidence/bootstrap-4cec12cd3-capture-e1.json) and
+[actual capture-check report](evidence/bootstrap-4cec12cd3-capture-check.json).
+It retains 48 package slots and 149 selected current files; copied exclusion
+reasons explicitly identify their historical template basis. The report passed
+the selected capture-byte/Git predicates (exit 0); it is not contribution,
+documentation, native-adoption or final-product acceptance. DP2 remains pending.

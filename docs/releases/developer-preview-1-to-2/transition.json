@@ -1,6 +1,13 @@
 {
   "captures": [
     {
+      "capture_file_sha256": "48baac9654179f167e859c84f421e3e740737e5795e7bcba0a8df80afd25f5ba",
+      "capture_id": "bootstrap-4cec12cd3",
+      "commit_sha1": "4cec12cd358c4ee58fb0a53180e4f3d4df868fb8",
+      "git_tree_sha1": "9ba4a5ee14eaec87c612714ecd79910b1801b38f",
+      "source": "evidence/bootstrap-4cec12cd3-capture-e1.json"
+    },
+    {
       "capture_file_sha256": "5be669c4fdd99de85ceb56bb2639096b341b0c4db0f1eaa4a8ed2a150a5b0251",
       "capture_id": "bootstrap-6c2a59ef9",
       "commit_sha1": "6c2a59ef9820b12d985d39527a0c86ea817379b4",
