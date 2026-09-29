@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "needs_input",
+    "questions": [
+      {
+        "field": "source_profile",
+        "choices": [
+          "materialization-legacy-absent-r1",
+          "materialization-current-absent-r1",
+          "materialization-current-epoch1-r1"
+        ]
+      },
+      {
+        "field": "target_profile",
+        "choices": [
+          "materialization-current-absent-r1",
+          "materialization-current-epoch1-r1"
+        ]
+      },
+      {
+        "field": "recipe",
+        "choices": [
+          "snapshot-to-copy-r1",
+          "identity-r1"
+        ]
+      }
+    ]
+  }
+}

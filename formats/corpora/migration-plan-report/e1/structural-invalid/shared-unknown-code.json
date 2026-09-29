@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "refused",
+    "error": {
+      "code": "future",
+      "field": "source_profile",
+      "reason": "unknown profile or recipe revision"
+    }
+  }
+}

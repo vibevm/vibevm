@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "planned",
+    "plan": {
+      "source_profile": "materialization-legacy-absent-r1",
+      "target_profile": "materialization-current-absent-r1",
+      "recipe": "snapshot-to-copy-r1",
+      "before": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"snapshot\"\n",
+      "after": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"copy\"\n",
+      "edits": [
+        {
+          "field": "package.materialization",
+          "before_start": "86",
+          "before_end": "96",
+          "before_token": "\"snapshot\"",
+          "after_token": "\"copy\""
+        }
+      ],
+      "before_identity": "905cf0b4eb7376819f47c9f7da02fecb8920d91dd9b76b4cb3454da77fa81887",
+      "after_identity": "6798d562a0ff899a5afd793054821fc6a114f8cd55fc53118d7772e9167a44df",
+      "diff_identity": "42faf5376728e4649c80657e6b0f93e9910a107261413a5d0c7f019bf5ab27e0",
+      "source_epoch": {
+        "kind": "epoch_2"
+      },
+      "target_epoch": {
+        "kind": "absent"
+      }
+    }
+  }
+}

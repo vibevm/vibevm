@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "source_text": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nepoch=1\nmaterialization=\"copy\"\n",
+  "source_profile": "materialization-current-epoch1-r1",
+  "target_profile": "materialization-current-epoch1-r1",
+  "recipe": "identity-r1"
+}

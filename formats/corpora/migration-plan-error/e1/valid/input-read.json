@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "stage": "preflight",
+  "error": {
+    "code": "input_read",
+    "field": "stdin",
+    "reason": "request input could not be read"
+  }
+}
