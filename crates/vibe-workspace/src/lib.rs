@@ -42,6 +42,7 @@ pub mod freshness;
 pub mod hooks;
 pub mod install;
 pub mod materialization;
+pub mod migration_planning;
 pub mod publish;
 pub mod tools;
 pub mod vibedeps;
