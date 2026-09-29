@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "change_id": "machine-entity-view-capability-catalogue",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "e73b73881dfe5fc028054d8c622a828a53d403a4"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+    "formats/capability-coverage/README.md",
+    "formats/capability-coverage/coverage-e1.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:capability-coverage:e1:entity-view-catalogue",
+      "capability_id": "current-entity-view-extraction-account",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "The retained candidate catalogue did not include the newly authored entity-view source/model owners.",
+      "after": "Coverage JSON, README and its owning test now cite 217 source files and 35 model families against the selected c2a observation; 214 operation identities persist, with one separately reviewed planner binding and the other 213 operations plus all 35 models still explicit extraction gaps. Source-observed rows do not become callable.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Developer-facing inventory and gap inspection changed; it does not implement the listed models or grant new execution authority."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Update capability README/accounting with the selected observation, model denominator and explicit semantic/proof limits."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "e73b73881dfe5fc028054d8c622a828a53d403a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "e73b73881dfe5fc028054d8c622a828a53d403a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "e73b73881dfe5fc028054d8c622a828a53d403a4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "e73b73881dfe5fc028054d8c622a828a53d403a4",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}

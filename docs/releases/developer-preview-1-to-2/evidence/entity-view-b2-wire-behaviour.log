@@ -1,0 +1,17 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.35s
+     Running unittests src/lib.rs (target/debug/deps/vibe_wire-9221fbf31b9088df)
+
+running 6 tests
+test behaviour::machine_view::tests::repeated_logical_entity_retains_two_distinct_occurrences ... ok
+test behaviour::machine_view::tests::projected_position_never_becomes_original_without_reverse_map ... ok
+test behaviour::machine_view::tests::non_utf8_resource_and_exact_original_byte_bounds_survive ... ok
+test behaviour::machine_view::tests::forged_uri_and_scope_metadata_refuse_without_interpreting_paths ... ok
+test behaviour::machine_view::tests::client_uri_declaration_syntax_preserves_resource_without_grant ... ok
+test behaviour::machine_view::tests::mismatched_observation_epoch_and_bad_ordinals_refuse ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 222 filtered out; finished in 0.00s
+

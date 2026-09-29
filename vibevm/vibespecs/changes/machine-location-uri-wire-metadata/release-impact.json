@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "change_id": "machine-location-uri-wire-metadata",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-wire/src/behaviour/machine_view.rs",
+    "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+    "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+    "crates/vibe-wire/tests/machine_view_contract.rs",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/forged-uri-while-unavailable.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/fragment-resource-token.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/mapped-null-uri.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-client-uri.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-resource-token.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-scope.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/missing-required-client-uri.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/missing-uri-mapping.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/octet-out-of-range.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/machine-source-location/e1/valid/mapped-client-uri.json",
+    "formats/corpora/machine-source-location/e1/valid/non-utf8-original.json",
+    "formats/corpora/machine-source-location/e1/valid/projected-text.json",
+    "formats/corpora/machine-source-location/e1/valid/unavailable-client-uri.json",
+    "formats/corpora/machine-source-location/e1/valid/unavailable-reverse-map.json",
+    "schemas/machine/e1/source_location.jtd.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:machine-source-location:e1:client-uri",
+      "capability_id": "scoped-client-uri-metadata",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "The newly introduced source-location epoch-one root had no client URI declaration or typed mapping-unavailable reason.",
+      "after": "Within the still-unpublished epoch-one window, the source-location root gained required-nullable client_uri and closed owner_declared_unverified/unavailable mapping; wire behavior rejects pathlike/file/fragment tokens, blank or pathlike scope, and null/status contradictions. A matching string is not an authorization grant.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Structured location clients can receive bounded URI declaration or typed unavailability; no live file resolver or path access is exposed."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Update source-location wire guidance with required-nullable semantics, portable token/scope syntax and owner-authentication limits."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}

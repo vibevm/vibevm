@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "change_id": "machine-entity-view-source-contract",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "aa34969920a72ee29a8be5fb01333409aba2b07c"
+    },
+    {
+      "kind": "commit",
+      "identity": "1fa6b91f32f8c3f0131d511bdf5dcb8bcf501b8d"
+    },
+    {
+      "kind": "commit",
+      "identity": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826"
+    }
+  ],
+  "affected_paths": [
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:PROP-080:captured-entity-views",
+      "capability_id": "captured-entity-view-contract",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No explicit B.2 source law distinguished four entity identities, cross-owner snapshot claims, bound page cursors and raw versus projected locations.",
+      "after": "PROP-080 now states desired four-axis entity, composite snapshot, bound paging and source-location laws; entity provenance/occurrence joins were substantively revised to req r2. The source text itself does not authenticate a capture or execute a client view.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Developer and maintainer contracts for future navigable views changed; no automatic migration or runtime admission follows from source law alone."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Developer design/guide text must name four axes, typed incompleteness and the r2 occurrence/capture join without claiming completed transport."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}

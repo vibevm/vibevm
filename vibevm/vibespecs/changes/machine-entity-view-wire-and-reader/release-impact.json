@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "change_id": "machine-entity-view-wire-and-reader",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "e09837a8bb76246ba0d6b4d6ed70dfa5cf155734"
+    },
+    {
+      "kind": "commit",
+      "identity": "eac578fa77f28502b61adeb244d2b73308dc358f"
+    },
+    {
+      "kind": "commit",
+      "identity": "6aaa0493e4a84b820280c37208dcbf9a531b13dd"
+    },
+    {
+      "kind": "commit",
+      "identity": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-wire/src/behaviour/machine_view.rs",
+    "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+    "crates/vibe-wire/src/behaviour/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+    "crates/vibe-wire/tests/machine_view_contract.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/machine-bound-page/e1/semantic-invalid/false-complete-redacted.json",
+    "formats/corpora/machine-bound-page/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/machine-bound-page/e1/structural-invalid/missing-required-nullable.json",
+    "formats/corpora/machine-bound-page/e1/structural-invalid/unknown-row-field.json",
+    "formats/corpora/machine-bound-page/e1/valid/final-page.json",
+    "formats/corpora/machine-bound-page/e1/valid/first-page.json",
+    "formats/corpora/machine-bound-page/e1/valid/partial-children.json",
+    "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/conflicting-claim-outcome.json",
+    "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/machine-composite-snapshot/e1/structural-invalid/missing-required-nullable.json",
+    "formats/corpora/machine-composite-snapshot/e1/structural-invalid/unknown-witness-field.json",
+    "formats/corpora/machine-composite-snapshot/e1/valid/missing-required-refusal.json",
+    "formats/corpora/machine-composite-snapshot/e1/valid/single-owner.json",
+    "formats/corpora/machine-composite-snapshot/e1/valid/two-owner-unverified.json",
+    "formats/corpora/machine-entity-reference/e1/semantic-invalid/mismatched-observation.json",
+    "formats/corpora/machine-entity-reference/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/machine-entity-reference/e1/structural-invalid/missing-occurrence-id.json",
+    "formats/corpora/machine-entity-reference/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/machine-entity-reference/e1/structural-invalid/wrong-ordinal-type.json",
+    "formats/corpora/machine-entity-reference/e1/valid/first-occurrence.json",
+    "formats/corpora/machine-entity-reference/e1/valid/missing-owner-gap.json",
+    "formats/corpora/machine-entity-reference/e1/valid/repeated-logical-distinct-occurrence.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json",
+    "formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/octet-out-of-range.json",
+    "formats/corpora/machine-source-location/e1/structural-invalid/unknown-root.json",
+    "formats/corpora/machine-source-location/e1/valid/non-utf8-original.json",
+    "formats/corpora/machine-source-location/e1/valid/projected-text.json",
+    "formats/corpora/machine-source-location/e1/valid/unavailable-reverse-map.json",
+    "schemas/machine/e1/bound_page.jtd.json",
+    "schemas/machine/e1/composite_snapshot.jtd.json",
+    "schemas/machine/e1/entity_reference.jtd.json",
+    "schemas/machine/e1/source_location.jtd.json"
+  ],
+  "effects": [
+    {
+      "interface_id": "format:machine-entity-reference:e1",
+      "capability_id": "captured-entity-reference-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered generated four-axis entity-reference epoch existed.",
+      "after": "Strict epoch-one JTD/generated reader and corpus carry a projection-local reference ID, owner identity or gap, captured revision, observation and occurrence; wire behavior checks semantic joins through core constructors.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ]
+    },
+    {
+      "interface_id": "format:machine-composite-snapshot:e1",
+      "capability_id": "composite-snapshot-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered value root represented four independently participating snapshot axes and typed composition outcomes.",
+      "after": "Strict epoch-one shape carries source/world/target/operation witnesses and missing, stale, conflict or unverified outcomes; an owning pure adapter must replay claims before publication.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT"
+      ]
+    },
+    {
+      "interface_id": "format:machine-bound-page:e1",
+      "capability_id": "bound-page-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered page value root carried projection/filter/scope/revision stamps and typed final/incomplete states.",
+      "after": "Strict epoch-one shape carries rows, parent occurrences, scoped cursor IDs and explicit incomplete reasons; JTD alone cannot make a process-local cursor durable or prove reconstruction.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ]
+    },
+    {
+      "interface_id": "format:machine-source-location:e1",
+      "capability_id": "opaque-source-location-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered location root preserved arbitrary resource bytes and raw versus projected basis.",
+      "after": "Initial strict epoch-one root carries resource octets, captured revision and original/projected/unavailable position arms; owning behavior validates decimal bounds and refuses projected-to-original fabrication.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Structured clients gain four new strict value shapes; generated decoding is not source authentication, URI access or a complete API facade."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document each root, independent epoch-one format ID, generated-reader versus semantic-owner checks and nonrecoverable observation limits."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}
