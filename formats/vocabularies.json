@@ -114,5 +114,38 @@
   "lane_ir": {"metadata": {"description": "One complete artifact after linking and before backend serialisation (`LaneIr`)."},"properties": {"context": {"ref": "artifact_context"},"source_node_count": {"type": "uint32"},"source_link_digest": {"type": "string","metadata": {"description": "SHA-256 of the link input, 64 lowercase hex chars; validated at conversion."}},"frame": {"ref": "lane_frame"},"contributions": {"elements": {"ref": "lane_contribution"},"metadata": {"x-empty": "emit"}}}},
   "emission_contribution_witness": {"metadata": {"description": "One contribution's emission witness (`EmissionContributionWitness`)."},"discriminator": "kind","mapping": {"normal": {"properties": {"meta": {"ref": "contribution_meta"},"seed": {"type": "uint32"},"seed_address": {"ref": "spec_address"},"chunk_digest": {"type": "string","metadata": {"description": "SHA-256, 64 lowercase hex chars; validated at conversion."}}}},"simple": {"properties": {"meta": {"ref": "contribution_meta"},"address": {"ref": "document_address"},"chunk_digest": {"type": "string","metadata": {"description": "SHA-256, 64 lowercase hex chars; validated at conversion."}}}},"elided": {"properties": {"meta": {"ref": "contribution_meta"}}},"hoisted": {"properties": {"meta": {"ref": "contribution_meta"},"target": {"ref": "spec_address"}}}}},
   "emission_provenance": {"metadata": {"description": "Immutable evidence created by the manager at the backend boundary (`EmissionProvenance`)."},"properties": {"context": {"ref": "artifact_context"},"backend": {"type": "string","metadata": {"description": "Backend identity (`BackendId`), e.g. `static-xml`; conversion validates the id charset."}},"producer": {"type": "string","metadata": {"description": "Stable name of the emit pass that produced the bytes (`PassName`), e.g. `emit:static-xml`."}},"source_lane_digest": {"type": "string","metadata": {"description": "SHA-256, 64 lowercase hex chars; validated at conversion."}},"renames": {"elements": {"ref": "origin_rename"},"metadata": {"x-empty": "emit"}},"contributions": {"elements": {"ref": "emission_contribution_witness"},"metadata": {"x-empty": "emit"}},"emitted_transforms": {"elements": {"type": "string"},"metadata": {"x-empty": "emit","description": "Schedule pass names of the emitted-position transforms that rewrote these bytes, in application order (`transform:emitted:<key>`, a `PassName`); empty means no emitted transform changed the artifact. Conversion validates every element through the same non-blank scalar law `producer` obeys."}},"bytes_digest": {"type": "string","metadata": {"description": "SHA-256 of the emitted bytes, 64 lowercase hex chars; validated at conversion. Recomputed after an emitted transform, so it is always the digest of the bytes actually carried."}}}},
-  "emitted_artifact": {"metadata": {"description": "Final artifact bytes plus manager-owned immutable provenance (`EmittedArtifact`)."},"properties": {"provenance": {"ref": "emission_provenance"},"bytes_b64": {"type": "string","metadata": {"description": "Canonical standard base64 with padding (`A-Za-z0-9+/`, `=` padding), no whitespace; opaque bytes, never assumed UTF-8. Validated at conversion and by the corpus reader."}}}}
+  "emitted_artifact": {"metadata": {"description": "Final artifact bytes plus manager-owned immutable provenance (`EmittedArtifact`)."},"properties": {"provenance": {"ref": "emission_provenance"},"bytes_b64": {"type": "string","metadata": {"description": "Canonical standard base64 with padding (`A-Za-z0-9+/`, `=` padding), no whitespace; opaque bytes, never assumed UTF-8. Validated at conversion and by the corpus reader."}}}},
+  "migration_planning_error": {
+    "metadata": {
+      "description": "One shared migration planning error object. Root stage and the owning adapter distinguish preflight from planner refusal codes.",
+      "spec": {
+        "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+        "r": 1
+      }
+    },
+    "properties": {
+      "code": {
+        "enum": [
+          "invalid_request",
+          "unsupported_schema",
+          "input_read",
+          "unknown_selection",
+          "incompatible_edge",
+          "malformed_syntax",
+          "unrecognized_shape",
+          "invalid_current_manifest",
+          "unprovable_edit"
+        ],
+        "metadata": {
+          "x-vocabulary": "closed"
+        }
+      },
+      "field": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      }
+    }
+  }
 }

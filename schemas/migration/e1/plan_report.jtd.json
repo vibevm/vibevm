@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "description": "Epoch-1 pure migration planner report. The owning adapter requires schema exactly 1, validates profile/epoch and stage/code coherence, canonical source-bound offsets and plan invariants; JTD enforces structural shape only.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "r": 1
+    },
+    "x-vocabularies": [
+      "migration_planning_error"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::plan_report"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "stage": {
+      "enum": [
+        "planner"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "ref": "outcome"
+    }
+  },
+  "definitions": {
+    "outcome": {
+      "discriminator": "status",
+      "mapping": {
+        "planned": {
+          "properties": {
+            "plan": {
+              "ref": "plan"
+            }
+          }
+        },
+        "no_op": {
+          "properties": {
+            "plan": {
+              "ref": "plan"
+            }
+          }
+        },
+        "needs_input": {
+          "properties": {
+            "questions": {
+              "elements": {
+                "ref": "question"
+              },
+              "metadata": {
+                "x-empty": "emit",
+                "description": "Named input questions in the owning planner order; choices are preserved, not sorted or normalized."
+              }
+            }
+          }
+        },
+        "refused": {
+          "properties": {
+            "error": {
+              "ref": "migration_planning_error"
+            }
+          }
+        }
+      }
+    },
+    "plan": {
+      "properties": {
+        "source_profile": {
+          "type": "string"
+        },
+        "target_profile": {
+          "type": "string"
+        },
+        "recipe": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "edits": {
+          "elements": {
+            "ref": "token_edit"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Ordered exact token edits. Identity plans retain an explicitly empty list."
+          }
+        },
+        "before_identity": {
+          "type": "string"
+        },
+        "after_identity": {
+          "type": "string"
+        },
+        "diff_identity": {
+          "type": "string"
+        },
+        "source_epoch": {
+          "ref": "epoch"
+        },
+        "target_epoch": {
+          "ref": "epoch"
+        }
+      }
+    },
+    "token_edit": {
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "before_start": {
+          "type": "string",
+          "metadata": {
+            "description": "Original UTF-8 byte start as canonical unsigned decimal: nonempty ASCII digits, no leading zero except 0; the owning adapter checks canonical spelling and source bounds."
+          }
+        },
+        "before_end": {
+          "type": "string",
+          "metadata": {
+            "description": "Exclusive original UTF-8 byte end as canonical unsigned decimal: nonempty ASCII digits, no leading zero except 0; the owning adapter checks canonical spelling and source bounds."
+          }
+        },
+        "before_token": {
+          "type": "string"
+        },
+        "after_token": {
+          "type": "string"
+        }
+      }
+    },
+    "epoch": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "epoch_1": {
+          "properties": {}
+        }
+      }
+    },
+    "question": {
+      "properties": {
+        "field": {
+          "enum": [
+            "source_profile",
+            "target_profile",
+            "recipe"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "choices": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Exact named choices in owning planner order."
+          }
+        }
+      }
+    }
+  }
+}
