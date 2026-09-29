@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "resource_id_octets": [
+    255,
+    0,
+    47,
+    92
+  ],
+  "captured_revision": "raw-rev",
+  "location": {
+    "basis": "original_bytes",
+    "encoding": "iso-8859-1",
+    "start": "9",
+    "end": "19"
+  },
+  "client_uri": null,
+  "uri_mapping": {
+    "status": "unavailable",
+    "reason": "wrong_scope"
+  }
+}

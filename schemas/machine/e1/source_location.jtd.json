@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Opaque resource octets and explicit original/projected/unavailable position basis.",
+    "description": "Opaque resource octets, explicit original/projected/unavailable position basis, and owner-declared client URI metadata. URI syntax and scope are validated but never grant resource access or authenticate source bytes.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
       "r": 1
@@ -24,11 +24,48 @@
     "captured_revision": {
       "type": "string"
     },
+    "client_uri": {
+      "type": "string",
+      "nullable": true
+    },
+    "uri_mapping": {
+      "ref": "uri_mapping"
+    },
     "location": {
       "ref": "location"
     }
   },
   "definitions": {
+    "uri_unavailable_reason": {
+      "enum": [
+        "no_owner_mapping",
+        "wrong_scope",
+        "wrong_revision",
+        "absent_resource"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "uri_mapping": {
+      "discriminator": "status",
+      "mapping": {
+        "owner_declared_unverified": {
+          "properties": {
+            "authorized_scope_id": {
+              "type": "string"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "ref": "uri_unavailable_reason"
+            }
+          }
+        }
+      }
+    },
     "reason": {
       "enum": [
         "unknown_encoding",

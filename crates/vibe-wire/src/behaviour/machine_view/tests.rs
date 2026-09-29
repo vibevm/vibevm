@@ -20,6 +20,14 @@ fn entity_fixture(name: &str) -> EntityReference {
 
 fn location_fixture(name: &str) -> SourceLocation {
     let text = match name {
+        "mapped" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/valid/mapped-client-uri.json"
+        )),
+        "unavailable_uri" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/valid/unavailable-client-uri.json"
+        )),
         "offset" => include_str!(concat!(
             env!("CARGO_MANIFEST_DIR"),
             "/../../formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json"
@@ -27,6 +35,37 @@ fn location_fixture(name: &str) -> SourceLocation {
         "epoch" => include_str!(concat!(
             env!("CARGO_MANIFEST_DIR"),
             "/../../formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json"
+        )),
+        _ => unreachable!(),
+    };
+    serde_json::from_str(text).unwrap()
+}
+
+fn invalid_uri_fixture(name: &str) -> SourceLocation {
+    let text = match name {
+        "file" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-client-uri.json"
+        )),
+        "path_token" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-resource-token.json"
+        )),
+        "fragment" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/fragment-resource-token.json"
+        )),
+        "null_mapped" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/mapped-null-uri.json"
+        )),
+        "forged_unavailable" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/forged-uri-while-unavailable.json"
+        )),
+        "scope" => include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-scope.json"
         )),
         _ => unreachable!(),
     };
@@ -163,4 +202,55 @@ fn projected_position_never_becomes_original_without_reverse_map() {
         panic!("unavailable bytes were fabricated as a location")
     };
     assert_eq!(resource.bytes(), &[255, 0, 47, 92]);
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+    r = 1
+)]
+fn client_uri_declaration_syntax_preserves_resource_without_grant() {
+    let mapped = location_fixture("mapped");
+    assert_eq!(
+        mapped.client_uri.as_deref(),
+        Some("vibevm-resource:sample_1")
+    );
+    let LocationObservation::Available(location) =
+        mapped.validate_machine_source_location().unwrap()
+    else {
+        panic!("valid mapped location became unavailable")
+    };
+    assert_eq!(location.resource().bytes(), &[255, 0, 47, 92]);
+    let unavailable = location_fixture("unavailable_uri");
+    assert!(unavailable.client_uri.is_none());
+    let LocationObservation::Available(location) =
+        unavailable.validate_machine_source_location().unwrap()
+    else {
+        panic!("unavailable URI was confused with unavailable source position")
+    };
+    assert_eq!(location.resource().bytes(), &[255, 0, 47, 92]);
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
+    r = 1
+)]
+fn forged_uri_and_scope_metadata_refuse_without_interpreting_paths() {
+    for (name, field) in [
+        ("file", "client_uri"),
+        ("path_token", "client_uri"),
+        ("fragment", "client_uri"),
+        ("null_mapped", "client_uri"),
+        ("forged_unavailable", "uri_mapping"),
+        ("scope", "uri_mapping.authorized_scope_id"),
+    ] {
+        let row = invalid_uri_fixture(name);
+        assert_eq!(
+            row.validate_machine_source_location().unwrap_err().field,
+            field,
+            "{name}"
+        );
+        assert_eq!(row.resource_id_octets, [255, 0, 47, 92]);
+    }
 }
