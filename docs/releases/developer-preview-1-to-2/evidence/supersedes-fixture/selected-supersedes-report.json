@@ -1,0 +1,67 @@
+{
+  "checked_claims": [
+    "capture:after:capture-shape-and-meaning",
+    "capture:after:original-observation-digest",
+    "capture:after:package-subtree-and-manifest-identities",
+    "capture:after:repository-tree",
+    "capture:after:source-blob-and-byte-identities",
+    "capture:after:source-declared-surface-linkage",
+    "capture:before:capture-shape-and-meaning",
+    "capture:before:original-observation-digest",
+    "capture:before:package-subtree-and-manifest-identities",
+    "capture:before:repository-tree",
+    "capture:before:source-blob-and-byte-identities",
+    "capture:before:source-declared-surface-linkage",
+    "capture:middle:capture-shape-and-meaning",
+    "capture:middle:original-observation-digest",
+    "capture:middle:package-subtree-and-manifest-identities",
+    "capture:middle:repository-tree",
+    "capture:middle:source-blob-and-byte-identities",
+    "capture:middle:source-declared-surface-linkage",
+    "evidence-bytes:fixture-original:ordinary-fixture-marker",
+    "evidence-bytes:fixture-replacement:ordinary-fixture-marker",
+    "git-commit-paths:4bb332e90573fdba12c8d41be16b360dfa726086",
+    "git-commit-paths:b52cce9fce7f62ef25272f9d5734baba71ff673a",
+    "record-bytes:fixture-original",
+    "record-bytes:fixture-replacement",
+    "selected-local-git-coverage"
+  ],
+  "findings": [
+    {
+      "code": "affected-source-review-missing",
+      "reason": "No exact finite affected-source review is selected. Bounded contribution byte/delta proof does not establish BASE.3 central affected-source review.",
+      "state": "pending",
+      "subject": "affected-source-review"
+    },
+    {
+      "code": "interface-linkage-later",
+      "reason": "Contribution mode does not verify the complete interface or topic census",
+      "state": "pending",
+      "subject": "interfaces"
+    },
+    {
+      "code": "native-linkage-later",
+      "reason": "Contribution mode does not verify native role adoption or linkage",
+      "state": "pending",
+      "subject": "bindings"
+    },
+    {
+      "code": "semantic-review-later",
+      "reason": "Byte and Git coverage does not confer central semantic acceptance",
+      "state": "pending",
+      "subject": "contribution"
+    }
+  ],
+  "mode": "contribution",
+  "schema": 1,
+  "subject_ids": [
+    "4bb332e90573fdba12c8d41be16b360dfa726086",
+    "after",
+    "b52cce9fce7f62ef25272f9d5734baba71ff673a",
+    "before",
+    "fixture-original",
+    "fixture-replacement",
+    "middle"
+  ],
+  "verdict": "passed"
+}

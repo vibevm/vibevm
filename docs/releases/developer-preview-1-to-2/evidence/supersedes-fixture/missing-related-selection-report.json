@@ -1,0 +1,40 @@
+{
+  "checked_claims": [
+    "capture:after:capture-shape-and-meaning",
+    "capture:after:original-observation-digest",
+    "capture:after:package-subtree-and-manifest-identities",
+    "capture:after:repository-tree",
+    "capture:after:source-blob-and-byte-identities",
+    "capture:after:source-declared-surface-linkage",
+    "capture:before:capture-shape-and-meaning",
+    "capture:before:original-observation-digest",
+    "capture:before:package-subtree-and-manifest-identities",
+    "capture:before:repository-tree",
+    "capture:before:source-blob-and-byte-identities",
+    "capture:before:source-declared-surface-linkage",
+    "capture:middle:capture-shape-and-meaning",
+    "capture:middle:original-observation-digest",
+    "capture:middle:package-subtree-and-manifest-identities",
+    "capture:middle:repository-tree",
+    "capture:middle:source-blob-and-byte-identities",
+    "capture:middle:source-declared-surface-linkage",
+    "record-bytes:fixture-replacement"
+  ],
+  "findings": [
+    {
+      "code": "record-relation",
+      "reason": "Related impact ID is not selected",
+      "state": "failed",
+      "subject": "fixture-replacement"
+    }
+  ],
+  "mode": "contribution",
+  "schema": 1,
+  "subject_ids": [
+    "after",
+    "before",
+    "fixture-replacement",
+    "middle"
+  ],
+  "verdict": "failed"
+}

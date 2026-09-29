@@ -1,0 +1,126 @@
+{
+  "binary": "/home/olegchir/git/v/vibevm-next/target/debug/preview-transition-check",
+  "binary_sha256": "5470a3353afe0c98d4dc165361a69f2af79fdba4b15ce3f41aef0c9c5cd4b66c",
+  "commits": {
+    "baseline": "e049e8398c02385e833b25f31a2b7654c963f116",
+    "original": "b52cce9fce7f62ef25272f9d5734baba71ff673a",
+    "replacement": "4bb332e90573fdba12c8d41be16b360dfa726086"
+  },
+  "fixture_evidence_is_mock_data": true,
+  "fixture_files": [
+    {
+      "path": "missing-related-selection-report.json",
+      "sha256": "7a9f1d42da0926a7059d416c2aaf12f8fcdb548b0a91cbf8226963a3e8488d91"
+    },
+    {
+      "path": "missing-related-selection-request.json",
+      "sha256": "fbcdc5cdf3dbd101cb4b9450ebe13231f26fd0047a036b02208a4782ef790802"
+    },
+    {
+      "path": "missing-related-selection-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "missing-related-selection-transition.json",
+      "sha256": "d6111dbac1f3e5b24772d64494f5edc3e48ea669d6a66c94620b40ea20e94cdb"
+    },
+    {
+      "path": "repo/cli.rs",
+      "sha256": "9d550fc92f56c827e3647d280dcaa3017b95b426ec569025c6e36df721217da8"
+    },
+    {
+      "path": "repo/pkg/vibe.toml",
+      "sha256": "259619b26c2c9ade1be887bb008e24ca04f27a687f7cc1bd2474af5622603eec"
+    },
+    {
+      "path": "repo/proof/fixture.txt",
+      "sha256": "04abcd5d2da2a464657a52472b28c405cc67e3d58e346ec0c5bb28480ead7a63"
+    },
+    {
+      "path": "repo/release/after.json",
+      "sha256": "606a5ac04a349d2b60b107ad28e1c362d223dbf8986f0485cee44d96072179a5"
+    },
+    {
+      "path": "repo/release/before.json",
+      "sha256": "e466433395b30b8f86287bd5f0505d83948e2c923de7596153f6aee46b147ded"
+    },
+    {
+      "path": "repo/release/middle.json",
+      "sha256": "6400d39029e70e612801608f34083ded2a3d6478374c0a65b7333625cefb8dc2"
+    },
+    {
+      "path": "repo/release/raw.json",
+      "sha256": "876d27a1a4cfc9e2c3d025d9189bcf2a690f1431dfdfddcd66239998ae482ad4"
+    },
+    {
+      "path": "repo/release/transition.json",
+      "sha256": "d6111dbac1f3e5b24772d64494f5edc3e48ea669d6a66c94620b40ea20e94cdb"
+    },
+    {
+      "path": "repo/vibe.toml",
+      "sha256": "b375602553d350a595cf326f7f4839f78e425ffe8b75bf55fd57e839c09de618"
+    },
+    {
+      "path": "repo/vibevm/vibespecs/changes/fixture-original/release-impact.json",
+      "sha256": "f7d64c066ea8ede6062146b4c64ee51a8b5421f8fa6e90739c28c109a2d77b97"
+    },
+    {
+      "path": "repo/vibevm/vibespecs/changes/fixture-replacement/release-impact.json",
+      "sha256": "f3cd0491a305eaa9383aa208efd56e07eaaa3beca1b75a0ade516ba7c75b874d"
+    },
+    {
+      "path": "run_fixture.py",
+      "sha256": "a9b3676c055a25b45a9f392932f872082d2d8e40b8090f955ea2b435e8ba5602"
+    },
+    {
+      "path": "selected-supersedes-report.json",
+      "sha256": "192e274f22aa7e1d738a040983fbc78c7d62e6afa2c206960b5e7266a1e835d8"
+    },
+    {
+      "path": "selected-supersedes-request.json",
+      "sha256": "fbcdc5cdf3dbd101cb4b9450ebe13231f26fd0047a036b02208a4782ef790802"
+    },
+    {
+      "path": "selected-supersedes-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "selected-supersedes-transition.json",
+      "sha256": "8db39eb4b3b9a08e0576e2b98f1afdcbaf79c41a2c5f3619d54d8ef3793412d4"
+    }
+  ],
+  "ordinary_fixture_only": true,
+  "product_acceptance": false,
+  "relation": {
+    "change_id": "fixture-original",
+    "kind": "supersedes"
+  },
+  "results": [
+    {
+      "case": "selected-supersedes",
+      "checked_claim_count": 25,
+      "exit_code": 0,
+      "finding_codes": [
+        "affected-source-review-missing",
+        "interface-linkage-later",
+        "native-linkage-later",
+        "semantic-review-later"
+      ],
+      "report_sha256": "192e274f22aa7e1d738a040983fbc78c7d62e6afa2c206960b5e7266a1e835d8",
+      "transition_sha256": "8db39eb4b3b9a08e0576e2b98f1afdcbaf79c41a2c5f3619d54d8ef3793412d4",
+      "verdict": "passed"
+    },
+    {
+      "case": "missing-related-selection",
+      "checked_claim_count": 19,
+      "exit_code": 1,
+      "finding_codes": [
+        "record-relation"
+      ],
+      "report_sha256": "7a9f1d42da0926a7059d416c2aaf12f8fcdb548b0a91cbf8226963a3e8488d91",
+      "transition_sha256": "d6111dbac1f3e5b24772d64494f5edc3e48ea669d6a66c94620b40ea20e94cdb",
+      "verdict": "failed"
+    }
+  ],
+  "scratch_repository": "/tmp/vibevm-next-supersedes-proof/repo"
+}

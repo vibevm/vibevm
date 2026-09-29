@@ -1,0 +1,58 @@
+{
+  "captures": [
+    {
+      "capture_file_sha256": "6400d39029e70e612801608f34083ded2a3d6478374c0a65b7333625cefb8dc2",
+      "capture_id": "middle",
+      "commit_sha1": "b52cce9fce7f62ef25272f9d5734baba71ff673a",
+      "git_tree_sha1": "190b5c21eb7c314571bb438b1a214e3a3130c336",
+      "source": "middle.json"
+    }
+  ],
+  "change_records": [
+    "fixture-replacement"
+  ],
+  "contribution_scope": {
+    "after_capture_id": "after",
+    "before_capture_id": "before",
+    "record_digests": [
+      {
+        "change_id": "fixture-replacement",
+        "required_claim_ids": [
+          "ordinary-fixture-marker"
+        ],
+        "sha256": "f3cd0491a305eaa9383aa208efd56e07eaaa3beca1b75a0ade516ba7c75b874d"
+      }
+    ]
+  },
+  "documentation": {
+    "state": "pending-owner-binding"
+  },
+  "dp1": {
+    "capture_file_sha256": "e466433395b30b8f86287bd5f0505d83948e2c923de7596153f6aee46b147ded",
+    "capture_id": "before",
+    "commit_sha1": "e049e8398c02385e833b25f31a2b7654c963f116",
+    "git_tree_sha1": "8dde04f4814bd66ffaa5001942295389d3f68d4b",
+    "source": "before.json"
+  },
+  "dp2": {
+    "capture_file_sha256": "606a5ac04a349d2b60b107ad28e1c362d223dbf8986f0485cee44d96072179a5",
+    "capture_id": "after",
+    "commit_sha1": "4bb332e90573fdba12c8d41be16b360dfa726086",
+    "git_tree_sha1": "23855f606e8bc0836c4fc32986b69942b71fd34e",
+    "source": "after.json",
+    "state": "candidate"
+  },
+  "migration_guide": {
+    "state": "pending"
+  },
+  "proof": {
+    "capture_validated": false,
+    "contributions_verified": false,
+    "documentation_verified": false,
+    "final_product_panel_passed": false,
+    "migration_rehearsed": false
+  },
+  "record_kind": "preview-transition",
+  "schema": 1,
+  "schema_status": "ordinary supersedes fixture; no central acceptance"
+}
