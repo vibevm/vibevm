@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "mode": "temporary-bridge-structure",
+  "bridge_references_validated": true,
+  "scope": {
+    "before_capture_id": "bootstrap-4cec12cd3",
+    "after_capture_id": "bootstrap-0adc39a38"
+  },
+  "record_ids": [
+    "bootstrap-accounting-record-maintenance"
+  ],
+  "task_ids": [
+    "NEXT-PREVIEW-BASE.3"
+  ],
+  "unplanned_contribution_ids": [],
+  "task_rows": 1,
+  "bound_task_rows": 1,
+  "unplanned_rows": 0,
+  "selected_record_count": 1,
+  "product_gates_executed": false,
+  "preview_change_records_verified": false,
+  "central_acceptance": false,
+  "supplied_scope_and_record_ids_verified": false
+}

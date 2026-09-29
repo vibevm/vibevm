@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "review_id": "bootstrap-accounting-record-maintenance-0adc39a38",
+  "before_capture_id": "bootstrap-4cec12cd3",
+  "after_capture_id": "bootstrap-0adc39a38",
+  "source_record": "evidence/bootstrap-accounting-record-maintenance-review.md",
+  "source_record_sha256": "d16e3aaacb41d485a8909e157b83e49c47c83ed7f76f1c571002202c3e5c9967",
+  "paths": [
+    {
+      "path": "vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+      "interface_ids": [],
+      "after": {
+        "git_blob_sha1": "4da70855fba7e82426dd8a6aa2a375416c728fb2",
+        "sha256": "01600b85ade7b4f5d41d7e10bd741acc19623e284246b30f5665c267c2a08687"
+      },
+      "user_no_impact_reason": "Adds retained accounting records of prior bootstrap contributions only; no executable command/API/wire registration, runtime/default behavior or migration is delivered by these metadata files.",
+      "documentation_no_impact_reason": "Adds accounting metadata rather than user guidance or product claims; no guide/page/example/editorial correction is delivered, and original documentation obligations remain separate."
+    },
+    {
+      "path": "vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+      "interface_ids": [],
+      "after": {
+        "git_blob_sha1": "88ca946a6af56f0083b726143ed6965ce6f60d76",
+        "sha256": "15a2450440a4146f94921bbcb72cb94a16da351b1d978e3fc297b51712ecb697"
+      },
+      "user_no_impact_reason": "Adds retained accounting records of prior bootstrap contributions only; no executable command/API/wire registration, runtime/default behavior or migration is delivered by these metadata files.",
+      "documentation_no_impact_reason": "Adds accounting metadata rather than user guidance or product claims; no guide/page/example/editorial correction is delivered, and original documentation obligations remain separate."
+    },
+    {
+      "path": "vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+      "interface_ids": [],
+      "after": {
+        "git_blob_sha1": "8c55e60b7aafe1d547545d188395d700babc82fc",
+        "sha256": "38c6ec96f07fe5c672685a67c6016ffb0a17fe11f95bdc8f7c95c844d4a4d442"
+      },
+      "user_no_impact_reason": "Adds retained accounting records of prior bootstrap contributions only; no executable command/API/wire registration, runtime/default behavior or migration is delivered by these metadata files.",
+      "documentation_no_impact_reason": "Adds accounting metadata rather than user guidance or product claims; no guide/page/example/editorial correction is delivered, and original documentation obligations remain separate."
+    },
+    {
+      "path": "vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json",
+      "interface_ids": [],
+      "after": {
+        "git_blob_sha1": "ae92eddaffee37bdb8a1b11307501ffd9297a78c",
+        "sha256": "abbac25896a4c6406124e19ba0911b72b79a5712f7aede4d5e220b065ef6a159"
+      },
+      "user_no_impact_reason": "Adds retained accounting records of prior bootstrap contributions only; no executable command/API/wire registration, runtime/default behavior or migration is delivered by these metadata files.",
+      "documentation_no_impact_reason": "Adds accounting metadata rather than user guidance or product claims; no guide/page/example/editorial correction is delivered, and original documentation obligations remain separate."
+    }
+  ],
+  "interfaces": [],
+  "topics": [],
+  "contract_sources": []
+}

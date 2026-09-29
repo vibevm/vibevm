@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": {
+    "before_capture_id": "bootstrap-4cec12cd3",
+    "after_capture_id": "bootstrap-0adc39a38"
+  },
+  "tasks": [
+    {
+      "task_id": "NEXT-PREVIEW-BASE.3",
+      "change_ids": [
+        "bootstrap-accounting-record-maintenance"
+      ]
+    }
+  ],
+  "unplanned": []
+}

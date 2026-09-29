@@ -1,0 +1,77 @@
+{
+  "checked_claims": [
+    "affected-path-endpoint-absence:bootstrap-accounting-record-maintenance-0adc39a38:before:vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+    "affected-path-endpoint-absence:bootstrap-accounting-record-maintenance-0adc39a38:before:vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+    "affected-path-endpoint-absence:bootstrap-accounting-record-maintenance-0adc39a38:before:vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+    "affected-path-endpoint-absence:bootstrap-accounting-record-maintenance-0adc39a38:before:vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json",
+    "affected-path-endpoint-bytes:bootstrap-accounting-record-maintenance-0adc39a38:after:vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+    "affected-path-endpoint-bytes:bootstrap-accounting-record-maintenance-0adc39a38:after:vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+    "affected-path-endpoint-bytes:bootstrap-accounting-record-maintenance-0adc39a38:after:vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+    "affected-path-endpoint-bytes:bootstrap-accounting-record-maintenance-0adc39a38:after:vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json",
+    "affected-review-bytes:bootstrap-accounting-record-maintenance-0adc39a38",
+    "affected-review-product-path-census:bootstrap-accounting-record-maintenance-0adc39a38",
+    "affected-review-source-bytes:bootstrap-accounting-record-maintenance-0adc39a38",
+    "capture:bootstrap-0adc39a38:capture-shape-and-meaning",
+    "capture:bootstrap-0adc39a38:original-observation-digest",
+    "capture:bootstrap-0adc39a38:package-subtree-and-manifest-identities",
+    "capture:bootstrap-0adc39a38:repository-tree",
+    "capture:bootstrap-0adc39a38:source-blob-and-byte-identities",
+    "capture:bootstrap-0adc39a38:source-declared-surface-linkage",
+    "capture:bootstrap-4cec12cd3:capture-shape-and-meaning",
+    "capture:bootstrap-4cec12cd3:original-observation-digest",
+    "capture:bootstrap-4cec12cd3:package-subtree-and-manifest-identities",
+    "capture:bootstrap-4cec12cd3:repository-tree",
+    "capture:bootstrap-4cec12cd3:source-blob-and-byte-identities",
+    "capture:bootstrap-4cec12cd3:source-declared-surface-linkage",
+    "evidence-bytes:bootstrap-accounting-record-maintenance:central-accounting-record-publication-review",
+    "git-commit-paths:0adc39a38d05cd8bffceeceadbb27c1e2b980b61",
+    "git-commit-paths:5d3e6f0b30d3205f80e57baba55e633b153f3984",
+    "record-bytes:bootstrap-accounting-record-maintenance",
+    "selected-local-git-coverage"
+  ],
+  "findings": [
+    {
+      "code": "affected-review-canonical-native-docs-runtime-later",
+      "reason": "Finite review subclaims do not establish complete canonical capability/topic census, native/migration joins, actual documentation pages or runtime/release proof.",
+      "state": "pending",
+      "subject": "bootstrap-accounting-record-maintenance-0adc39a38"
+    },
+    {
+      "code": "affected-review-central-adequacy-later",
+      "reason": "Exact retained bytes and finite declared membership do not authenticate a reviewer or establish semantic adequacy/new API completeness; central actual-delta review remains required.",
+      "state": "pending",
+      "subject": "bootstrap-accounting-record-maintenance-0adc39a38"
+    },
+    {
+      "code": "interface-linkage-later",
+      "reason": "Contribution mode does not verify the complete interface or topic census",
+      "state": "pending",
+      "subject": "interfaces"
+    },
+    {
+      "code": "native-linkage-later",
+      "reason": "Contribution mode does not verify native role adoption or linkage",
+      "state": "pending",
+      "subject": "bindings"
+    },
+    {
+      "code": "semantic-review-later",
+      "reason": "Byte and Git coverage does not confer central semantic acceptance",
+      "state": "pending",
+      "subject": "contribution"
+    }
+  ],
+  "mode": "contribution",
+  "schema": 1,
+  "subject_ids": [
+    "0adc39a38d05cd8bffceeceadbb27c1e2b980b61",
+    "5d3e6f0b30d3205f80e57baba55e633b153f3984",
+    "bootstrap-0adc39a38",
+    "bootstrap-4cec12cd3",
+    "bootstrap-6c2a59ef9",
+    "bootstrap-accounting-record-maintenance",
+    "bootstrap-accounting-record-maintenance-0adc39a38",
+    "dp1-30d217bfce47bca"
+  ],
+  "verdict": "passed"
+}
