@@ -1,0 +1,18 @@
+# M-16-B.2 scoped central review
+
+Review scope: local mutable 1.1.0 `next` from `75d6c6416b41a53dfd3a2ab1345da71adb9aa311` to `e73b73881dfe5fc028054d8c622a828a53d403a4`. The finite affected-source review binds all 79 nonexcluded changed product paths to exact Git endpoint bytes. Selected test logs are retained in this evidence directory. This is the B.2 pure-model and projection safe stop, not acceptance of live source authentication, durable transport, full M-16 external coverage or Developer Preview 2 publication.
+
+| Change record | Own last implementation subject | Scoped decision |
+| --- | --- | --- |
+| `machine-entity-view-source-contract` | `b96d07ec1e94ebeccddbf2427bc21f3fa6992826` | Accept four desired source laws and the substantive r2 entity provenance join; source law alone performs no runtime action. |
+| `machine-entity-location-core-model` | `b96d07ec1e94ebeccddbf2427bc21f3fa6992826` | Accept pure logical/content/observation/occurrence values, exact opaque resource octets and tagged location basis; no reverse source map. |
+| `machine-entity-view-wire-and-reader` | `b96d07ec1e94ebeccddbf2427bc21f3fa6992826` | Accept four registered generated epoch-one value roots, finite strict reader corpus and entity/location owner validation; no format publication switch. |
+| `machine-location-uri-wire-metadata` | `2ba20cbe7ab21b5dc38a9eef59d7c0444c1a0564` | Accept required-nullable URI and closed mapping status under still-mutable epoch one; syntax does not grant a resource read. |
+| `machine-composite-page-projection` | `b96d07ec1e94ebeccddbf2427bc21f3fa6992826` | Accept declared-axis composition, exact source-to-capture and row-to-occurrence joins, generated claim replay and process-local fixed-row paging; no global atomicity or persistent cursor. |
+| `machine-resource-uri-adapter` | `bc3a0a023584b35de21cd6689a67e760e9829307` | Accept a scope-bound owner-declared URI token and exact publication checker with typed unavailable/refusal; bytes and live URI resolution remain unverified. |
+| `machine-entity-view-capability-catalogue` | `e73b73881dfe5fc028054d8c622a828a53d403a4` | Accept six additional source-observed model families and affected source rebinding; no new callable route. |
+| `machine-entity-view-traceability` | `c2a31e642737a29486dc69d0f444407df778fc67` | Accept mechanical specmap refresh with no new runtime or public documentation effect. |
+
+At the final checkout, the selected core family passed 5 cases, generated wire contract 3, wire semantic behavior 6, orchestrator machine-view family 18 and catalogue family 4, each with zero failures. Earlier focused negative receipts are retained in scratch, including corrected generator annotation/test-borrow failures and the earlier B.2 page provenance counterexamples. The final specmap run exited 0 with the entity rule r1→r2 revision, zero suspects, zero gated orphans and 35 warnings. No mutation suite or broad workspace gate was needed for the changed families.
+
+The 214 inventory operations are not all delivered external actions; 213 remain gaps, and all 35 models remain source-observed or extraction gaps for broader access. B.2 publishes value contracts and a bounded process-local session over caller-supplied authorized rows. A `vibevm-resource:` URI is owner-declared navigation data, not an authenticated resolver or host path grant. Source bytes, live source-to-URI resolution, reversible projected Markdown→original XML mapping, durable cross-request cursors, native platform execution and final release documentation remain later work. The scoped contribution checker may retain those wider findings as pending without upgrading this B.2 decision into a whole-campaign verdict.

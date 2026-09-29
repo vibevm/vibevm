@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "change_id": "machine-resource-uri-adapter",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "b6e7855204b5bfd7591ffc285d8d44396aa420fa"
+    },
+    {
+      "kind": "commit",
+      "identity": "bc3a0a023584b35de21cd6689a67e760e9829307"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+    "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+    "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+    "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap",
+      "capability_id": "owner-declared-resource-navigation",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No pure adapter mapped exact opaque resource bytes and revision to a scoped client URI token.",
+      "after": "An in-memory owner-declared map and source-location binding match exact resource octets, revision and scope and return typed wrong-scope/revision/absent reasons; the token does not authenticate physical bytes or grant an unrestricted live resolver.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Rust callers can carry scoped navigation metadata for an already supplied resource observation; host paths and live file reads remain outside this atom."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Document declared-token provenance, exact scope/revision matching and the absence of physical source authentication."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "bc3a0a023584b35de21cd6689a67e760e9829307",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "bc3a0a023584b35de21cd6689a67e760e9829307",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "bc3a0a023584b35de21cd6689a67e760e9829307",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "bc3a0a023584b35de21cd6689a67e760e9829307",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "change_id": "machine-composite-page-projection",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "59dd6f80b22860b516a448c250019d2b8f543811"
+    },
+    {
+      "kind": "commit",
+      "identity": "1e3eeef86ed8600714e4a784f08d33a7bfd8af09"
+    },
+    {
+      "kind": "commit",
+      "identity": "b6e7855204b5bfd7591ffc285d8d44396aa420fa"
+    },
+    {
+      "kind": "commit",
+      "identity": "27d589ac6abcf6238222bf085c5a0bff7d7f2042"
+    },
+    {
+      "kind": "commit",
+      "identity": "bc3a0a023584b35de21cd6689a67e760e9829307"
+    },
+    {
+      "kind": "commit",
+      "identity": "6aaa0493e4a84b820280c37208dcbf9a531b13dd"
+    },
+    {
+      "kind": "commit",
+      "identity": "f20622cf4e9c7bd5973dbe2ec1575d8176c3892b"
+    },
+    {
+      "kind": "commit",
+      "identity": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-orchestrator/src/lib.rs",
+    "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+    "crates/vibe-orchestrator/src/machine_view/mod.rs",
+    "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+    "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+    "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+    "crates/vibe-orchestrator/src/machine_view/paging.rs",
+    "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+    "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+    "crates/vibe-orchestrator/src/machine_view/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+      "capability_id": "declared-cross-owner-snapshot",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No neutral pure join recorded source, selected world, target and operation observations with explicit participation and claim conflicts.",
+      "after": "A pure composer/adapter checks supplied freshness, revision and compatibility claims and reports typed missing/stale/conflicting/unverified results; it does not assert a single atomic read across owners.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::PageSession",
+      "capability_id": "bound-in-memory-page-projection",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No fixed authorized projection/session bound page, child and chunk navigation to one filter, scope and source-observation set.",
+      "after": "Pure paging/session owners issue process-local cursor identities, check page row/parent occurrence and selected-capture joins, refuse mixed projections and expose partial/redacted endings; no durable portable cursor or unattended re-read is established.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "migration_action": "none",
+    "reason": "Rust clients can inspect bounded supplied snapshots/pages with explicit incompleteness; no durable transport or universal live graph is implied."
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "documentation_action": "update",
+    "reason": "Developer guidance must distinguish supplied in-memory projection/session claims from authenticated multi-owner capture and durable paging protocol."
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-b2-source-delta",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-source-review.md",
+      "verdict": "passed",
+      "sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb"
+    },
+    {
+      "claim_id": "selected-b2-verification",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-verification.md",
+      "verdict": "passed",
+      "sha256": "8cb9fbcec01b7ff8f14d673a6987a49cbb0d569c87768b9dced38e0e154bb539"
+    },
+    {
+      "claim_id": "central-b2-review",
+      "subject_id": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md",
+      "verdict": "passed",
+      "sha256": "be33efb1ef2fb78ec0f5a0de6fe31fd7fecf4093bf3ecac1e4d57655734b422f"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "b96d07ec1e94ebeccddbf2427bc21f3fa6992826",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/entity-view-b2-central-review.md"
+  }
+}

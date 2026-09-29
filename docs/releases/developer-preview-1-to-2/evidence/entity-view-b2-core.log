@@ -1,0 +1,15 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 5 tests
+test machine_view::tests::missing_owner_and_foreign_occurrence_are_typed_not_minted ... ok
+test machine_view::tests::opaque_non_utf8_resource_and_original_byte_basis_survive ... ok
+test machine_view::tests::projected_markdown_cannot_be_reported_as_original_xml_without_owner_map ... ok
+test machine_view::tests::repeated_inclusion_shares_owner_address_but_not_occurrence ... ok
+test machine_view::tests::unknown_encoding_missing_bytes_and_invalid_text_ranges_are_explicit ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 553 filtered out; finished in 0.00s
+

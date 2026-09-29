@@ -1,0 +1,1288 @@
+{
+  "schema": 1,
+  "review_id": "entity-view-b2-finite-affected-source-review",
+  "before_capture_id": "entity-view-baseline-75d6c6416",
+  "after_capture_id": "entity-view-final-e73b73881",
+  "source_record": "evidence/entity-view-b2-source-review.md",
+  "source_record_sha256": "0e36eb071e4c253cf85a10d28deb8ccc760cd063263b1f90aecd338e456f45eb",
+  "paths": [
+    {
+      "path": "crates/vibe-core/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-core:machine_view::EntityReference",
+        "rust:vibe-core:machine_view::SourceLocation"
+      ],
+      "before": {
+        "git_blob_sha1": "3eb59dd75288d380d58a83fc9483175384d2055f",
+        "sha256": "5734dcbc3bb2f20d4284e015e26269ff1496b3acc41555d7587c69abbefc30b8"
+      },
+      "after": {
+        "git_blob_sha1": "9dc80fb3806a8246aa47ebd553cdc8f8e8670064",
+        "sha256": "7841582b794288cea92c12911b99a3a6de67fd1ff41b255732a6803960ffc9f5"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/machine_view/identity.rs",
+      "interface_ids": [
+        "rust:vibe-core:machine_view::EntityReference"
+      ],
+      "after": {
+        "git_blob_sha1": "5fcfdd37094ef3796688873847fff967f9c9a457",
+        "sha256": "f6356c7fc3d2dad8d0a0cbc842861c41c5598247bfb41bc36408bce9376c5f4d"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/machine_view/location.rs",
+      "interface_ids": [
+        "rust:vibe-core:machine_view::SourceLocation"
+      ],
+      "after": {
+        "git_blob_sha1": "25ee972d90dab5637c8bd76d2b72dc441e2d0e73",
+        "sha256": "35acbd45736fe30a844057aac05d35bceffd5ef8d10778659e9ff2a02d9dd79c"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/machine_view/mod.rs",
+      "interface_ids": [
+        "rust:vibe-core:machine_view::EntityReference",
+        "rust:vibe-core:machine_view::SourceLocation"
+      ],
+      "after": {
+        "git_blob_sha1": "d6bbac5cefa26b15bc8ddc6c369f0a438b1ddb9c",
+        "sha256": "6380e38535196a3aad7ece0b9d665b235558bfc7722ef028877bcd3dd26c21ff"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/machine_view/tests.rs",
+      "interface_ids": [
+        "rust:vibe-core:machine_view::EntityReference",
+        "rust:vibe-core:machine_view::SourceLocation"
+      ],
+      "after": {
+        "git_blob_sha1": "c538c06bcbd62661de46c0687ce7c21d385b4d5c",
+        "sha256": "31b76ebe4a0675227e37ff2997d1a0ad9a31feded71b19a33c29a3b8e0c7ccfd"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "before": {
+        "git_blob_sha1": "68227127aff3604b2ad216695ec687984235a8f8",
+        "sha256": "83aaff25515979a193eadcb828fcb6daaebb4a450d3eaf4803e42025326b7aa6"
+      },
+      "after": {
+        "git_blob_sha1": "c7ff1416dfcad82a52ccc76870e613b7c72fdb26",
+        "sha256": "8426b9a51f69816fa97e5260ab0176857c4e31414b9e95bab4cdb4ac4fb420b4"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+      "interface_ids": [
+        "format:capability-coverage:e1:entity-view-catalogue"
+      ],
+      "before": {
+        "git_blob_sha1": "37a6de1404ccf4b881b7f2517eb156b0ce2bbfc2",
+        "sha256": "593305cd5ca15296c075026205bb723ba410096b4b83ea762c13cb22cf3097b3"
+      },
+      "after": {
+        "git_blob_sha1": "c485a5f5f5ad2f304b456e6da6ca590f85f57657",
+        "sha256": "fa91d33d36d9d8fdd53daab6a756ef4742b312cbdc752ff3f4d70c9f975cb63d"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "9cb64331f77d2dc9a8412cc53f4d2fc704c314e3",
+        "sha256": "8cb424546a320c662a3437921fe9ea9b905c196b629ea5824eca408a123be0c2"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/mod.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "854263dc5052495bbd1fd9c8d6fb1ae66668b923",
+        "sha256": "bcd24661748dc4db43a6af11c504089e587ba1ac678467e17b5454c54584e6ab"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "0a84e96453bac084a0d07d75386e953b13287756",
+        "sha256": "21e13563ae6744fe4593b5a14c51ae02d4029540489e643039061a491c2120e3"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "c314709d97c7d43ced7ff53bb658ee11ba47f02a",
+        "sha256": "3c4fa63587a784dc9f38755734b0ece3146217630bafbde6682ca341a63da084"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "09fb7ef7bff607fce62323c34d60eaf30af91892",
+        "sha256": "8f22ece486104353078a8531a4ed3c87413b23a2790b3abb171d34d12c84a648"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/paging.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "a21a54658c1670cb292b67bdbf695e6ec1e237c4",
+        "sha256": "237bfb9ea9e9b6c7731be03b09a36e437354c45cbac8ae917deebf0e809c8ce8"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap"
+      ],
+      "after": {
+        "git_blob_sha1": "0a9b66fdbe871ccf5028ae6d922efdb9f9420a60",
+        "sha256": "0093b8ad127a5f76d31941bd96c68c489edf8eda6df9750d6c95de798c8c3e88"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap"
+      ],
+      "after": {
+        "git_blob_sha1": "c3b7dc8403b434a9766e67aacfa1699f8e01c8d9",
+        "sha256": "4ffc7db652a6238eaef0728efde2c3dc939f78af724ee0ad393f08eeff81b214"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot"
+      ],
+      "after": {
+        "git_blob_sha1": "7a930b4b7ab9fab0bfb0adee633bb611914f3e2b",
+        "sha256": "77a77851a6f3ebd90edd45e9d1d5152478128e1afeb3f02e95e27cebe6bcc70a"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot"
+      ],
+      "after": {
+        "git_blob_sha1": "d6398ae147d679084981a5121bb1211efd900276",
+        "sha256": "cc1ac1f6fbcb2d2d6ff2da96a7f919b584fe025cdab8935f3d70611b7171c8ed"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap"
+      ],
+      "after": {
+        "git_blob_sha1": "da047dbd6b9994f3432db92b7b071e2f3efef1d6",
+        "sha256": "03ee78e8418e4a8c1d103ad7aafdec314ee58580a3e075b2e3e6f43ca785be4b"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap"
+      ],
+      "after": {
+        "git_blob_sha1": "f269ef5e3c5ed848ed4cef84e2fcb23396108965",
+        "sha256": "de56354b2369781a36b30afadee626f8eb3a00fe818703ea6b5ab6b523bafd4a"
+      }
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_view/tests.rs",
+      "interface_ids": [
+        "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+        "rust:vibe-orchestrator:machine_view::PageSession"
+      ],
+      "after": {
+        "git_blob_sha1": "4fdf73d59feaf5fe5c51789d7733b28ce2adee63",
+        "sha256": "10df4f42ad86f9deeca421c943a8ab6de1c8e0580e39277e931fffd9907c3b63"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/machine_view.rs",
+      "interface_ids": [
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "f2a23a2ef9c0d52e48dec9ff6e644422a87f058c",
+        "sha256": "43defb3b053f0c3b6f81745a0faa8b6c62e9121e907b12198008c05a6aa16401"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+      "interface_ids": [
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "ea98b0f1a025a3c9938824e1d149ad16987f459c",
+        "sha256": "eda7ffb0fdfe6a2eb010a7190a5832f539b75a99752123b634c3da5c640fc34b"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/mod.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1"
+      ],
+      "before": {
+        "git_blob_sha1": "d1eec4bded49553a3a4c6f20f7cd9f16cd9618ef",
+        "sha256": "87af099103ec1a2be79ccd45552edb106d838f439d3acbae55809d741dcac047"
+      },
+      "after": {
+        "git_blob_sha1": "2fbb838b139fe603ba281cc3c26621d401941291",
+        "sha256": "8b3d0e8d065afb9830220c73bca95821a1a5f46a0a2d079842b8984da3971fe1"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1"
+      ],
+      "before": {
+        "git_blob_sha1": "e3e4cb8f1d199810dbf3ce45b150c11541bb7af1",
+        "sha256": "25a52cb6254ac1ba412ae9e6a66c57647de99997af6125b0a97b736a860b20ef"
+      },
+      "after": {
+        "git_blob_sha1": "974a3fcc8abb28313ccde6c2cc007f028949963c",
+        "sha256": "6892496aab4dbd3c741cdc6a9ba2327752746f38bb8a3f6384723eb03fa13ce9"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1"
+      ],
+      "before": {
+        "git_blob_sha1": "5805c2855aa66676de2e313b36b5ce56495d1999",
+        "sha256": "2cc303a0adfae72d8dc8a774ce7c19577d04df9f53d56d748efefa3d12351dd4"
+      },
+      "after": {
+        "git_blob_sha1": "c07d432fd1601e46665752b800c40f6305d2403c",
+        "sha256": "3d36aaf3350e6fd3a28555042fc3acc3bffbcba0cdadd6b72097879cb3edadcd"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "9c0474585b961faafa1285d9c177bd00552ebe03",
+        "sha256": "30c4d9ee5be2c2c19e1e77f83b043782c81400efff697f571fd5e0b5c05fe56b"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "6350776e191615b58b5e800da43e50fced763d01",
+        "sha256": "3b9e6118d46737c4b31e3227eb69b10b812d2b2ec19dbc788e1e99042f445f0d"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "450021074e7765b513992edd8ae1bfd976a7d70a",
+        "sha256": "5926373baf5cdf2e3a7c90f9c74a65cf525cb2a7ef562efa7fe8df0604abe3dc"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1"
+      ],
+      "before": {
+        "git_blob_sha1": "5abf171e73d2a75cc5649f82440d116759bb9357",
+        "sha256": "c0e4422570f7ab58b1c416f237fd8f5fb847afb624d2cf56255d2c2f57ad282c"
+      },
+      "after": {
+        "git_blob_sha1": "effd5257235dcdd4cbcabdc8cfb22517f1bedb27",
+        "sha256": "84883ed815953ead0474988d5c19c33558954722970e606578cb9eb4a2bce8a5"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "6dc13a0f4ae3e8c0948e555d533f2aaebd7240a4",
+        "sha256": "b3fb86b73723bff8c03d11ce50cda45ba9d075778e8254a77cf8eb11a9141d80"
+      }
+    },
+    {
+      "path": "crates/vibe-wire/tests/machine_view_contract.rs",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "0c4930b359ff8d2c4158b72af9d6237b5f65a4ad",
+        "sha256": "67da69c9c44ec30c2e0a4ad72746b8b31d5807769a643916954dc0d5b828ef29"
+      }
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "interface_ids": [
+        "format:machine-bound-page:e1",
+        "format:machine-composite-snapshot:e1",
+        "format:machine-entity-reference:e1",
+        "format:machine-source-location:e1"
+      ],
+      "before": {
+        "git_blob_sha1": "63906682036eebe31e0ba13adc6dde56508934d6",
+        "sha256": "3763be171144eed80866e9b216390d9cc4e936eac4f76f2adf03cfad10f497ac"
+      },
+      "after": {
+        "git_blob_sha1": "f88c5017f863a3905324da6a8fbe338ebf09ed19",
+        "sha256": "58f65e94211ef1f44a650be92bb504768badc478a64dd62c4ae6134a41e717af"
+      }
+    },
+    {
+      "path": "formats/capability-coverage/README.md",
+      "interface_ids": [
+        "format:capability-coverage:e1:entity-view-catalogue"
+      ],
+      "before": {
+        "git_blob_sha1": "6d9bb27fcb9a652ca1a34fb1aaddb25e54827c98",
+        "sha256": "f508aebbb8dc51869d2c96795328ac5bdb71323f99c20c4aba28e1c1b5d99e0a"
+      },
+      "after": {
+        "git_blob_sha1": "be1aab97f6003b31a9fb7da7c199997fa77fc212",
+        "sha256": "527f49f2ec61e2e161e861b512882c8ed59dc7455edd2bd6a8dac9033a779a6f"
+      }
+    },
+    {
+      "path": "formats/capability-coverage/coverage-e1.json",
+      "interface_ids": [
+        "format:capability-coverage:e1:entity-view-catalogue"
+      ],
+      "before": {
+        "git_blob_sha1": "032c028a2c91e518efafd7de7eb71aa8c48ab666",
+        "sha256": "c4c597dd7e6d8a620687a59015f99dd844f11055b9fc8da35755e19adc8c95b9"
+      },
+      "after": {
+        "git_blob_sha1": "02eed510b836a1668e22bf552fb0c850fe38ebb2",
+        "sha256": "794f9428b707f83db793d2342445a441884fddd11ac86ff85d4ae0086bd5ff83"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/semantic-invalid/false-complete-redacted.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "28d1baa245099ef103cee2d672ae78f1c15323b3",
+        "sha256": "037ab2c153f9c001196f77d40df5917f72d07aabb71c9252e1309df40df9d44e"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "4287159bcaefdbf6ee19596182009c109e06cdc3",
+        "sha256": "317fa42eebf6ec7f975655cc5f19a30f076a6bfd214223001119762d3910b6fa"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/structural-invalid/missing-required-nullable.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "1b92bb30ee13a4a903f9c9ff515277e875a317f0",
+        "sha256": "5670e05fa4e1208eefee764f85730f9934db28e9ed13646d688ef1724eb6eeb9"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/structural-invalid/unknown-row-field.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "c29cb8d9bfb601f2e464a50bca9e41b2394f89f1",
+        "sha256": "4ecdddf886f95c24ed71af86be140ce3e7d10638c6cf1707d1ec88a53fc55d92"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/valid/final-page.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "b67d52b3922e4f238acb0134c87158dcfeb0f8ed",
+        "sha256": "4a0ce70dc4635b0a85c84903524e8ffdee19e7e2eddfc71e02a33911aa5bb0f3"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/valid/first-page.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "d3ef173feebb2ea30c835f0cd77d1eb62494a855",
+        "sha256": "b485c630b59660bc757961cce7e82865164354e2b67bb9474b8783b549c0aa40"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-bound-page/e1/valid/partial-children.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e4aa3123fc6c5723e9a7c4218d87c83f520221e3",
+        "sha256": "1761ab30be2452bf1aad7deee963d6599c67f5741920c41b73b1d5bdf9cb59e2"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/conflicting-claim-outcome.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "26f896954d2b208a7cb3e3f40c7996e82ab597f4",
+        "sha256": "eea855be5f50265da3e4229e35728068e1eda11e1178186ff156aae80708ec77"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0278f351cb0fc3b653eb8dc1917fedd2cb4633a1",
+        "sha256": "8a76027bee3b9b0f103d1f8bbafcdaba1f1bf6ba11b4de4a9ff48c55d79d993c"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/structural-invalid/missing-required-nullable.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "389d089484578fba913cc85efbc2e47e1d18be86",
+        "sha256": "ff2d65126dd41bef47f384080de1f65ef8c10906cdb5788d06e109fded838c49"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/structural-invalid/unknown-witness-field.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "af4877f1f62e4cf6d9fb22a52c9a6cafca7296b7",
+        "sha256": "3e8eaef5b7497bc2f7bf0bfa5b6f13eb8671ed1cc3c59cefec186d9513964c7c"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/valid/missing-required-refusal.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "b305fdd5d459f9e1d2cfd37a5ae55038c33d1041",
+        "sha256": "e4a70bf90b4850c1f0c0c28f1d362e886994b447bc6c4710beca492e3c6435d5"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/valid/single-owner.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "794fac1bfff67dc3dc8fcc51774c9ec3562202d6",
+        "sha256": "d08eba93f70b90da465dc24d7e6e4ec3f5f780ab7c7fa1718065b72e26072358"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-composite-snapshot/e1/valid/two-owner-unverified.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "a3b81fbec83d0dce00ec718b6ec33f93ad6fa3b3",
+        "sha256": "2172955f9eac577f5951d43e6075fcf80fe4237e84cba7ceab7a0127284326e9"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/semantic-invalid/mismatched-observation.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "3d240d51a13bdf4fe409021043f16145d5403887",
+        "sha256": "c053eff2a98f55d0d46240ed5d73ea820d518d6bfc3c353a6140c0c9a86f2e7a"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "8354cf91b9bb96e1f7e6a4bdc9a6cbc21f305261",
+        "sha256": "d15d091e05d23d46f5c3a5c43841cd833a888286bc0c055ea3a5be5d4cf5c9f7"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/structural-invalid/missing-occurrence-id.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e30ac7648f3ac8a95d657ccea86c20c7abb74cb6",
+        "sha256": "ea13d76c88fa1c283172afe5803a6489c4ceb1d20ad9eff7a1be597e74f4907f"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "3084ec6d0be55fb1a0e462854c2c0a19c2c8069d",
+        "sha256": "beef030eae926f5d454dd79a751749a688058282348a8c743c4eff9e327e8869"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/structural-invalid/wrong-ordinal-type.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "3ef472c666158f5c24051cc5169fab1254e5663f",
+        "sha256": "50ade7ebfa000b0f1df400ef9e3966044858fa767845ca105b4675ad9f46eb48"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/valid/first-occurrence.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "0e5b3ffd9549dcca33346f3699f266136e0ca7f0",
+        "sha256": "0caef2e3957faddbc9e70376f018358110459f8906013b078e85b0f26fe0babd"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/valid/missing-owner-gap.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "e4f81d9d2dad14786d16491923d347743ace7420",
+        "sha256": "86ce00f7af8d52c40a35ff117b0d1b5bbd47452b690b41c75c47b0ad8ac31b97"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-entity-reference/e1/valid/repeated-logical-distinct-occurrence.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "cf61f76d3abf11ccfed96310fea0c0ca9d504438",
+        "sha256": "1824cb4a663963d2183fcd2f8dcce129fdbeac45d92b1e62583bf9954aeda632"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/forged-uri-while-unavailable.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "5028bc47ff44c3da8d3d07827b044362b2efec99",
+        "sha256": "ee65311adc0ecad798db540bd1109658bb098dd8aaa61d43ce86ad5eeb82c355"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/fragment-resource-token.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "8e7b3dcaed7beb929040319bc187301f4b3a42ef",
+        "sha256": "e31981f3c2e8ae9ab015c84fc62e36a509d02e149838841ad8dba87b9cbab7e4"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/mapped-null-uri.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "51f26c028c281f21fe77085557de7e19663287ae",
+        "sha256": "de339f978be3528811fd06277a1e56f00dbcfc9281cc59ad132c0e99e03b6364"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "e3a59276e9470f324457e00ded59bd3743a9bd7d",
+        "sha256": "76acb390aa6255d28918c94c580d05fd5d2323479531070878fc8d4f3c3d7257"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-client-uri.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "b41ebc811e374269ba785585788545951e9529a1",
+        "sha256": "23f3456a897b1c760b18782049c5ee23c4885ad16ee193203956a773c97f114e"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-resource-token.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "8df8dadcf7dafec63493b93992262dfd4f3b6692",
+        "sha256": "f371b4d9ecdb2d8bb1b9d992b04eba3d86451b5eccb7e2039801bbbc40ebadef"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-scope.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "a91f8d687d2a8aaae460a75d9ad057a30ced466c",
+        "sha256": "b3162388af628028ad5787aa5ef0f8901261ed1bd5f0a1d360e0476dc21d82ef"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "516a724c9fed6c8119f22542e78898a716525f16",
+        "sha256": "ed3d1a2d55f39339b66c7bf62db4f663a8038551d558c3cb6e389aba7b70797e"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/structural-invalid/missing-required-client-uri.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "388e7860eff6f3640857daf89e5b3b672ff9a48d",
+        "sha256": "9c0be087b7825420d44f1a906d1777fe79500ba1fb997944a1707518be54709c"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/structural-invalid/missing-uri-mapping.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "22d5441bd78682aee0e4f8a22b31bb4c56ee74ef",
+        "sha256": "b77ebcc1532d5d23c818828c474a56091c6ec320d3aff19c51e1deaad9d1a991"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/structural-invalid/octet-out-of-range.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "5f52b4eaf457f76e794d45e5cf4366e9a12d5f9b",
+        "sha256": "c731242dee6b464cdacd230a73f43004733e25205893ef3af1389b4bb6a11869"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/structural-invalid/unknown-root.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "f5439daecf23e556a4cba7ea938f57cf575b080c",
+        "sha256": "9821a3bbb4b81a75db766b33692e9d79c95839748e54b5de3172b0472754469f"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/valid/mapped-client-uri.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "72cade084df64f7961695571c8e9802368bb132c",
+        "sha256": "70a6f3192c78bb9b44b362d6d6760810ca209274ae8eb1acba4b9fb6a54312b8"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/valid/non-utf8-original.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "72cade084df64f7961695571c8e9802368bb132c",
+        "sha256": "70a6f3192c78bb9b44b362d6d6760810ca209274ae8eb1acba4b9fb6a54312b8"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/valid/projected-text.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "929e5bf6bd27e6555c2da2e18f47fa671d3aa350",
+        "sha256": "29678bb88f89bd11a2c0bc1d185d20e18ae6957a23d33564877d31ee6fc36320"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/valid/unavailable-client-uri.json",
+      "interface_ids": [
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "f129f036fa33848974673fbab8205cf9a4e3a1ea",
+        "sha256": "1b137a6291d1f3c6e59f52ec12c0fedba90a3d25c0e0515681060ee67d307e09"
+      }
+    },
+    {
+      "path": "formats/corpora/machine-source-location/e1/valid/unavailable-reverse-map.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "955cc4a29d012876dcdbb9cd4e2e35c748d2be42",
+        "sha256": "c2bcf02acc0487ba6649111a1c860a5517e9f6c3f64673d7740bbe173be1430e"
+      }
+    },
+    {
+      "path": "schemas/machine/e1/bound_page.jtd.json",
+      "interface_ids": [
+        "format:machine-bound-page:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "838ce673a62b663c78eb8c28582e96a692e909e4",
+        "sha256": "8a7d16fdb767a08228b740d333121f2a81f5b9da85b260d9e41dab99b3c06625"
+      }
+    },
+    {
+      "path": "schemas/machine/e1/composite_snapshot.jtd.json",
+      "interface_ids": [
+        "format:machine-composite-snapshot:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f4101ef9cdd7a8385702743516ed42c996bd28a1",
+        "sha256": "e20d54c1f5c6384a83baa2bfacc80eae0d0934cf7d749ceafb60130a791de923"
+      }
+    },
+    {
+      "path": "schemas/machine/e1/entity_reference.jtd.json",
+      "interface_ids": [
+        "format:machine-entity-reference:e1"
+      ],
+      "after": {
+        "git_blob_sha1": "f45671968fcdabc149d1653d171539b263362900",
+        "sha256": "55d8eff82c78f78b9e54421b6d2405e8e7a49aed53dcdcb1f2a3feb54762a34e"
+      }
+    },
+    {
+      "path": "schemas/machine/e1/source_location.jtd.json",
+      "interface_ids": [
+        "format:machine-source-location:e1",
+        "format:machine-source-location:e1:client-uri"
+      ],
+      "after": {
+        "git_blob_sha1": "d85defff316a816e84b953b5014115e112080625",
+        "sha256": "a7837a25f82a33508dfb53cab11cd5fc648cbb8814f11eec4e49c7011c147d3a"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "65fd56e4745ddfba26ab2b286884df1df387db12",
+        "sha256": "3e19cc2b6574a00cc81ffc81feff064d8a16eb865b6585fded510b5d7a45f6f8"
+      },
+      "after": {
+        "git_blob_sha1": "f50b06a3de6f340485cdaf4e8121a42b4c65a0db",
+        "sha256": "00f8f737bc7d9e3da4219c5082af533c87c601c65438ef4dcd92ba6e17f45bd5"
+      },
+      "user_no_impact_reason": "Generated source-map index only; no installed user behavior or public API changed.",
+      "documentation_no_impact_reason": "Generated traceability index is not authored public product documentation."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "interface_ids": [
+        "spec:PROP-080:captured-entity-views"
+      ],
+      "before": {
+        "git_blob_sha1": "9edeb86e4daf7cbb6320d6f8bd1eb41c49e0b31c",
+        "sha256": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b"
+      },
+      "after": {
+        "git_blob_sha1": "1d53195f381ad8ec2285fe472d9ab1b73b98df9c",
+        "sha256": "3200ee60bdd5db8cc1b2015dc182424c0e72585044f921d119db6e2fb9150cb7"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "spec:PROP-080:captured-entity-views",
+      "capability_id": "captured-entity-view-contract",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No explicit B.2 source law distinguished four entity identities, cross-owner snapshot claims, bound page cursors and raw versus projected locations.",
+      "after": "PROP-080 now states desired four-axis entity, composite snapshot, bound paging and source-location laws; entity provenance/occurrence joins were substantively revised to req r2. The source text itself does not authenticate a capture or execute a client view.",
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-source-contract:1"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-core:machine_view::EntityReference",
+      "capability_id": "four-axis-entity-identity",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No shared pure value kept owner-minted logical, captured content/revision, observed projection and presentation occurrence identities separate.",
+      "after": "Core now constructs those axes separately, retains extraction gaps and refuses an occurrence whose observation differs; repeated inclusion can share logical/captured identity while retaining distinct occurrence IDs.",
+      "source_paths": [
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/machine_view/identity.rs",
+        "crates/vibe-core/src/machine_view/mod.rs",
+        "crates/vibe-core/src/machine_view/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-location-core-model:2"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-core:machine_view::SourceLocation",
+      "capability_id": "basis-tagged-source-location",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No shared pure value preserved arbitrary resource octets and distinguished original byte spans, projected text positions and typed unavailable location.",
+      "after": "Core now carries exact non-UTF8 resource bytes, captured revision, explicit position basis and unavailable reasons; projected Markdown cannot become original XML bytes without a retained reverse map.",
+      "source_paths": [
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/machine_view/location.rs",
+        "crates/vibe-core/src/machine_view/mod.rs",
+        "crates/vibe-core/src/machine_view/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-location-core-model:3"
+      ]
+    },
+    {
+      "interface_id": "format:machine-entity-reference:e1",
+      "capability_id": "captured-entity-reference-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered generated four-axis entity-reference epoch existed.",
+      "after": "Strict epoch-one JTD/generated reader and corpus carry a projection-local reference ID, owner identity or gap, captured revision, observation and occurrence; wire behavior checks semantic joins through core constructors.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/machine_view.rs",
+        "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/machine/e1/entity_reference/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/tests/machine_view_contract.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/machine-entity-reference/e1/semantic-invalid/mismatched-observation.json",
+        "formats/corpora/machine-entity-reference/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/machine-entity-reference/e1/structural-invalid/missing-occurrence-id.json",
+        "formats/corpora/machine-entity-reference/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/machine-entity-reference/e1/structural-invalid/wrong-ordinal-type.json",
+        "formats/corpora/machine-entity-reference/e1/valid/first-occurrence.json",
+        "formats/corpora/machine-entity-reference/e1/valid/missing-owner-gap.json",
+        "formats/corpora/machine-entity-reference/e1/valid/repeated-logical-distinct-occurrence.json",
+        "schemas/machine/e1/entity_reference.jtd.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-wire-and-reader:4"
+      ]
+    },
+    {
+      "interface_id": "format:machine-composite-snapshot:e1",
+      "capability_id": "composite-snapshot-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered value root represented four independently participating snapshot axes and typed composition outcomes.",
+      "after": "Strict epoch-one shape carries source/world/target/operation witnesses and missing, stale, conflict or unverified outcomes; an owning pure adapter must replay claims before publication.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/machine/e1/composite_snapshot/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/tests/machine_view_contract.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/conflicting-claim-outcome.json",
+        "formats/corpora/machine-composite-snapshot/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/machine-composite-snapshot/e1/structural-invalid/missing-required-nullable.json",
+        "formats/corpora/machine-composite-snapshot/e1/structural-invalid/unknown-witness-field.json",
+        "formats/corpora/machine-composite-snapshot/e1/valid/missing-required-refusal.json",
+        "formats/corpora/machine-composite-snapshot/e1/valid/single-owner.json",
+        "formats/corpora/machine-composite-snapshot/e1/valid/two-owner-unverified.json",
+        "schemas/machine/e1/composite_snapshot.jtd.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-wire-and-reader:5"
+      ]
+    },
+    {
+      "interface_id": "format:machine-bound-page:e1",
+      "capability_id": "bound-page-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered page value root carried projection/filter/scope/revision stamps and typed final/incomplete states.",
+      "after": "Strict epoch-one shape carries rows, parent occurrences, scoped cursor IDs and explicit incomplete reasons; JTD alone cannot make a process-local cursor durable or prove reconstruction.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/machine/e1/bound_page/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/tests/machine_view_contract.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/machine-bound-page/e1/semantic-invalid/false-complete-redacted.json",
+        "formats/corpora/machine-bound-page/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/machine-bound-page/e1/structural-invalid/missing-required-nullable.json",
+        "formats/corpora/machine-bound-page/e1/structural-invalid/unknown-row-field.json",
+        "formats/corpora/machine-bound-page/e1/valid/final-page.json",
+        "formats/corpora/machine-bound-page/e1/valid/first-page.json",
+        "formats/corpora/machine-bound-page/e1/valid/partial-children.json",
+        "schemas/machine/e1/bound_page.jtd.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-wire-and-reader:6"
+      ]
+    },
+    {
+      "interface_id": "format:machine-source-location:e1",
+      "capability_id": "opaque-source-location-wire",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No registered location root preserved arbitrary resource bytes and raw versus projected basis.",
+      "after": "Initial strict epoch-one root carries resource octets, captured revision and original/projected/unavailable position arms; owning behavior validates decimal bounds and refuses projected-to-original fabrication.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/machine_view.rs",
+        "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+        "crates/vibe-wire/tests/machine_view_contract.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/octet-out-of-range.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/machine-source-location/e1/valid/non-utf8-original.json",
+        "formats/corpora/machine-source-location/e1/valid/projected-text.json",
+        "formats/corpora/machine-source-location/e1/valid/unavailable-reverse-map.json",
+        "schemas/machine/e1/source_location.jtd.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-wire-and-reader:7"
+      ]
+    },
+    {
+      "interface_id": "format:machine-source-location:e1:client-uri",
+      "capability_id": "scoped-client-uri-metadata",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "The newly introduced source-location epoch-one root had no client URI declaration or typed mapping-unavailable reason.",
+      "after": "Within the still-unpublished epoch-one window, the source-location root gained required-nullable client_uri and closed owner_declared_unverified/unavailable mapping; wire behavior rejects pathlike/file/fragment tokens, blank or pathlike scope, and null/status contradictions. A matching string is not an authorization grant.",
+      "source_paths": [
+        "crates/vibe-wire/src/behaviour/machine_view.rs",
+        "crates/vibe-wire/src/behaviour/machine_view/tests.rs",
+        "crates/vibe-wire/src/generated/machine/e1/source_location/mod.rs",
+        "crates/vibe-wire/tests/machine_view_contract.rs",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/forged-uri-while-unavailable.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/fragment-resource-token.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/mapped-null-uri.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/noncanonical-offset.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-client-uri.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-resource-token.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/pathlike-scope.json",
+        "formats/corpora/machine-source-location/e1/semantic-invalid/unsupported-schema.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/missing-required-client-uri.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/missing-uri-mapping.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/octet-out-of-range.json",
+        "formats/corpora/machine-source-location/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/machine-source-location/e1/valid/mapped-client-uri.json",
+        "formats/corpora/machine-source-location/e1/valid/non-utf8-original.json",
+        "formats/corpora/machine-source-location/e1/valid/projected-text.json",
+        "formats/corpora/machine-source-location/e1/valid/unavailable-client-uri.json",
+        "formats/corpora/machine-source-location/e1/valid/unavailable-reverse-map.json",
+        "schemas/machine/e1/source_location.jtd.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-location-uri-wire-metadata:8"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::CompositeSnapshot",
+      "capability_id": "declared-cross-owner-snapshot",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No neutral pure join recorded source, selected world, target and operation observations with explicit participation and claim conflicts.",
+      "after": "A pure composer/adapter checks supplied freshness, revision and compatibility claims and reports typed missing/stale/conflicting/unverified results; it does not assert a single atomic read across owners.",
+      "source_paths": [
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+        "crates/vibe-orchestrator/src/machine_view/mod.rs",
+        "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+        "crates/vibe-orchestrator/src/machine_view/snapshot_wire.rs",
+        "crates/vibe-orchestrator/src/machine_view/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-composite-page-projection:9"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::PageSession",
+      "capability_id": "bound-in-memory-page-projection",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No fixed authorized projection/session bound page, child and chunk navigation to one filter, scope and source-observation set.",
+      "after": "Pure paging/session owners issue process-local cursor identities, check page row/parent occurrence and selected-capture joins, refuse mixed projections and expose partial/redacted endings; no durable portable cursor or unattended re-read is established.",
+      "source_paths": [
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-orchestrator/src/machine_view/adapter_tests.rs",
+        "crates/vibe-orchestrator/src/machine_view/mod.rs",
+        "crates/vibe-orchestrator/src/machine_view/page_session.rs",
+        "crates/vibe-orchestrator/src/machine_view/page_session/tests.rs",
+        "crates/vibe-orchestrator/src/machine_view/page_wire.rs",
+        "crates/vibe-orchestrator/src/machine_view/paging.rs",
+        "crates/vibe-orchestrator/src/machine_view/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-composite-page-projection:10"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:machine_view::OwnerResourceUriMap",
+      "capability_id": "owner-declared-resource-navigation",
+      "kind": "introduced",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "No pure adapter mapped exact opaque resource bytes and revision to a scoped client URI token.",
+      "after": "An in-memory owner-declared map and source-location binding match exact resource octets, revision and scope and return typed wrong-scope/revision/absent reasons; the token does not authenticate physical bytes or grant an unrestricted live resolver.",
+      "source_paths": [
+        "crates/vibe-orchestrator/src/machine_view/resource_uri.rs",
+        "crates/vibe-orchestrator/src/machine_view/resource_uri/tests.rs",
+        "crates/vibe-orchestrator/src/machine_view/source_location_uri.rs",
+        "crates/vibe-orchestrator/src/machine_view/source_location_uri/tests.rs"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-resource-uri-adapter:11"
+      ]
+    },
+    {
+      "interface_id": "format:capability-coverage:e1:entity-view-catalogue",
+      "capability_id": "current-entity-view-extraction-account",
+      "kind": "changed",
+      "audience": "developer / repository maintainer / structured client",
+      "platform": "Pure/source-bound selected proof only; no cross-owner atomicity, native-platform or public-release claim",
+      "before": "The retained candidate catalogue did not include the newly authored entity-view source/model owners.",
+      "after": "Coverage JSON, README and its owning test now cite 217 source files and 35 model families against the selected c2a observation; 214 operation identities persist, with one separately reviewed planner binding and the other 213 operations plus all 35 models still explicit extraction gaps. Source-observed rows do not become callable.",
+      "source_paths": [
+        "crates/vibe-orchestrator/src/machine_operation/coverage/tests.rs",
+        "formats/capability-coverage/README.md",
+        "formats/capability-coverage/coverage-e1.json"
+      ],
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION"
+      ],
+      "topic_ids": [
+        "b2-guidance:machine-entity-view-capability-catalogue:12"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "b2-guidance:machine-entity-view-source-contract:1",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for spec:PROP-080:captured-entity-views; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-location-core-model:2",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for rust:vibe-core:machine_view::EntityReference; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-location-core-model:3",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for rust:vibe-core:machine_view::SourceLocation; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-view-wire-and-reader:4",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:machine-entity-reference:e1; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-view-wire-and-reader:5",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:machine-composite-snapshot:e1; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-view-wire-and-reader:6",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:machine-bound-page:e1; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-view-wire-and-reader:7",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:machine-source-location:e1; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-location-uri-wire-metadata:8",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:machine-source-location:e1:client-uri; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-composite-page-projection:9",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for rust:vibe-orchestrator:machine_view::CompositeSnapshot; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-composite-page-projection:10",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for rust:vibe-orchestrator:machine_view::PageSession; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-resource-uri-adapter:11",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for rust:vibe-orchestrator:machine_view::OwnerResourceUriMap; this finite source review is not that documentation."
+    },
+    {
+      "topic_id": "b2-guidance:machine-entity-view-capability-catalogue:12",
+      "obligation": "Pending final canonical developer/user documentation and live source/transport examples for format:capability-coverage:e1:entity-view-catalogue; this finite source review is not that documentation."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "git_blob_sha1": "1d53195f381ad8ec2285fe472d9ab1b73b98df9c",
+          "sha256": "3200ee60bdd5db8cc1b2015dc182424c0e72585044f921d119db6e2fb9150cb7"
+        }
+      ]
+    }
+  ]
+}

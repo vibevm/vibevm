@@ -1,0 +1,13 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running tests/machine_view_contract.rs (target/debug/deps/machine_view_contract-461f25c517491d1a)
+
+running 3 tests
+test strict_structural_cases_refuse_unknown_missing_and_wrong_primitive ... ok
+test semantic_invalid_inputs_remain_reader_valid_for_later_owner_refusal ... ok
+test four_roots_roundtrip_exact_shapes_and_non_utf8_octets ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
