@@ -1,6 +1,6 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 14
+revision = 15
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
 updated_at = "2026-09-29T14:56:02Z"
@@ -901,7 +901,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Versioned registry/facade/context/entity/snapshot/location/error/event contracts and generated validation; strict schema/effect/applicability discovery, local framed API protocol negotiation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json"
-contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
+contract_sha256 = "930f1f275855ef9c45d082ebfd80218c1b7a6ef61a491cf8c943bebe1f3fad6c"
 
 [[node]]
 id = "M-16-B.1"
@@ -916,7 +916,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.1","Capability implementation status, contextual availability and authorization are separate fields.","No eval/shell endpoint or duplicate domain engine appears."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.1"
-contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
+contract_sha256 = "930f1f275855ef9c45d082ebfd80218c1b7a6ef61a491cf8c943bebe1f3fad6c"
 
 [[node]]
 id = "M-16-B.2"
@@ -931,7 +931,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.2","A client can navigate provenance without unrestricted host paths or false atomicity claims.","Every incomplete/inconsistent mapping has a typed reason."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.2"
-contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
+contract_sha256 = "930f1f275855ef9c45d082ebfd80218c1b7a6ef61a491cf8c943bebe1f3fad6c"
 
 [[node]]
 id = "M-16-B.3"
@@ -946,7 +946,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-B.json#M-16-B.3","Framing and handshake are documented from executable behavior.","No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-B.json#M-16-B.3"
-contract_sha256 = "6f5542b9bef9db6fba2cd12e6b24232ddb7a9e32e2a66ffb1ea82f4941b0fa0a"
+contract_sha256 = "930f1f275855ef9c45d082ebfd80218c1b7a6ef61a491cf8c943bebe1f3fad6c"
 
 [[node]]
 id = "M-16-C"

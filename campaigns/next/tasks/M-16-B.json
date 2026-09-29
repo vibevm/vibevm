@@ -19,7 +19,14 @@
         "crates/vibe-orchestrator/Cargo.toml",
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-core/src/manifest/extension.rs",
+        "crates/vibe-core/src/manifest/extension/wire.rs",
+        "crates/vibe-core/src/manifest/extension/tests.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-extension-registry/src/lib.rs",
+        "crates/vibe-extension-registry/src/model.rs",
+        "formats/capability-coverage/coverage-e1.json"
       ],
       "write_paths": [
         "formats/",
@@ -35,7 +42,41 @@
         "crates/vibe-orchestrator/Cargo.toml",
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-extension-registry/src/lib.rs",
+        "crates/vibe-extension-registry/src/model.rs",
+        "crates/vibe-workspace/src/extension_world.rs",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+        "crates/vibe-core/src/manifest/extension.rs",
+        "crates/vibe-core/src/manifest/extension/tests.rs",
+        "crates/vibe-core/src/manifest/extension/wire.rs",
+        "crates/vibe-extension-registry/src/tests/support.rs",
+        "crates/vibe-install/src/lifecycle/plan.rs",
+        "crates/vibe-lifecycle/src/agent/tests/support.rs",
+        "crates/vibe-lifecycle/src/execution/tests.rs",
+        "crates/vibe-lifecycle/src/handlers/native_tests.rs",
+        "crates/vibe-lifecycle/src/handlers/tests.rs",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/native/compiler_backend_admission_tests.rs",
+        "crates/vibe-lifecycle/src/native/compiler_facts_tests.rs",
+        "crates/vibe-lifecycle/src/native/compiler_tests.rs",
+        "crates/vibe-lifecycle/src/native/tests.rs",
+        "crates/vibe-lifecycle/src/state/fingerprint/declaration.rs",
+        "crates/vibe-lifecycle/src/state/tests/declaration.rs",
+        "crates/vibe-lifecycle/src/state/tests/support.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs",
+        "crates/vibe-orchestrator/src/world/package_skill.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/backend_execution_tests.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/catalog_tests.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/execution_tests.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs",
+        "crates/vibe-spec/src/compiler/pass_tier/tests.rs",
+        "crates/vibe-spec/src/compiler/transform/lowering_worlds.rs",
+        "crates/vibe-spec/src/compiler/transform/plan_test_support.rs"
       ],
       "steps": [
         "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
@@ -71,7 +112,8 @@
         "Write perimeter is limited to the new shared facade and registered schemas; preserve unrelated wire epochs and legacy adapters.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Exact extension-schema producer amendment: after source-first PROP-054/PROP-080 law, B.1 may add an optional typed authored operation-schema declaration to the existing ExtensionDecl/strict wire and carry it through the already retained workspace/registry projection without native load. The 29 current ExtensionDecl literal owners are enumerated as exact paths in this packet; edits outside those names require another explicit perimeter amendment. Arbitrary config, native ABI manifest loading, provider fetch/build and synthetic callable status are forbidden. Retained package/source identity and registered format/epoch validation must precede positive descriptor-only discovery; source-observed catalogue rows remain noncallable. The current capability catalogue must be reconciled against actual CLI/MCP additions before claiming a complete denominator."
       ]
     },
     {
