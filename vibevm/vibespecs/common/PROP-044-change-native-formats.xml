@@ -557,7 +557,7 @@ authored format epoch, wire epoch and journal protocol revision remain
 independent.</MIGRATION-APPLY-LAW></p>
     </MANIFEST-MIGRATION-APPLY>
     <MANIFEST-MIGRATION-APPLICATION-WIRE title="Bounded application wire and journal protocol">
-      <p>`req r1`</p>
+      <p>`req r2`</p>
       <p><MIGRATION-APPLICATION-WIRE-LAW fact="true" status="spec/plan">**One bounded migration protocol.** Register generated strict formats
 `migration-operation-request`, `migration-operation-report` and
 `migration-application-journal` at wire epoch 1 under `schemas/migration/e1/`.
