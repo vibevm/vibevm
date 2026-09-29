@@ -28,6 +28,18 @@
       "contract_anchors": [
         "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
       ]
+    },
+    {
+      "interface_id": "rust:vibe-safefs:Project::publish_new_in",
+      "capability_id": "originating-file-publication-ownership",
+      "kind": "fixed",
+      "audience": "developer / repository maintainer (candidate scope)",
+      "platform": "source-declared; native platform support not established",
+      "before": "Existing publication returns success when the final bounded read has equal bytes, without proving the originating staging identity.",
+      "after": "Existing unit-returning publication delegates to the originating-proof seam and refuses a rebound object even with identical bytes.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ]
     }
   ],
   "user_impact": {
@@ -53,7 +65,7 @@
       "subject_id": "bootstrap-4cec12cd3",
       "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-affected-source-review.md",
       "verdict": "passed",
-      "sha256": "9101c3c076e9b632aa6ce3d36eafe6d5fa1b5889734e6f445446df2f3f77ebcb"
+      "sha256": "8d358fa00e94ed5bc5d1d51a8b14428115839b609ddd3543dabb212a241c1cb1"
     },
     {
       "claim_id": "selected-bootstrap-verification-observations",
@@ -61,12 +73,19 @@
       "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-verification-inventory.md",
       "verdict": "passed",
       "sha256": "ef3f847ff2cbece82cef35ac188908f518bc7d8f4c93e32e2624245d498c126b"
+    },
+    {
+      "claim_id": "central-bootstrap-contribution-review",
+      "subject_id": "2f01b6540bb0118c0a55497d38bf8c6a60d2865d",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-central-review.md",
+      "verdict": "passed",
+      "sha256": "cead150366c81e042b0ef7a57a849f25e800d0858d8b3ff69dd5c250736d6a36"
     }
   ],
   "relations": [],
   "acceptance": {
-    "state": "candidate",
-    "review_subject": "",
-    "review_evidence": ""
+    "state": "accepted",
+    "review_subject": "2f01b6540bb0118c0a55497d38bf8c6a60d2865d",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/bootstrap-central-review.md"
   }
 }
