@@ -1,9 +1,9 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 3
+revision = 4
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-09-12T13:55:14Z"
+updated_at = "2026-09-29T06:29:50Z"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
@@ -99,7 +99,7 @@ nodes = ["M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M
 [[mandate]]
 id = "D-013"
 source = "refined-plan:revision-4:decision:D-013"
-text = "Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют"
+text = "Historical owner ruling: Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют. Current owner amendment: Developer Preview 1 has been released and already has users; the earlier no-users description is historical. Prototype exit remains an explicit owner decision and must not be inferred from publication, users, version or format flags. The next active-owned cohort is mutable 1.1.0 in one increment. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
 disposition = "owned"
 nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2"]
 
@@ -141,7 +141,7 @@ nodes = ["M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M
 [[mandate]]
 id = "D-019"
 source = "refined-plan:revision-4:decision:D-019"
-text = "Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0"
+text = "Historical owner ruling: Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0. Current owner amendment: the next active-owned product and repository-package cohort is mutable 1.1.0 in one increment; the prior current-1.0.0 introduction is historical. Redbook composition remains owner-controlled, with future keep/new-version offer unless already explicitly chosen. Exact historical captures and foreign/upstream/fixture/epoch identities remain unchanged. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
 disposition = "owned"
 nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2"]
 
@@ -687,30 +687,30 @@ id = "M-13-B"
 parent = "M-13"
 order = 30
 kind = "group"
-title = "Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/current 1.0.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A"
+title = "Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/historical 1.0.0 / effective current 1.1.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A | D-002/D-005/D-006/D-013/D-019 |"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-A","M-16-A"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Meet baseline work-package scope: Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/current 1.0.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
+acceptance = ["Meet effective work-package scope: Update governing source rules: D-002 separation, D-013 prototype, D-019 Redbook mutable roster/historical 1.0.0 / effective current 1.1.0, no global WAL/MUP ban, no boot quotas, D-025/D-026 universal service/ETO law from M-16-A | D-002/D-005/D-006/D-013/D-019 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-B.json"
-contract_sha256 = "5fca73b585a72b2ac8baaf1a51f8bc6b43d46dc6761a36876c57a60c57e08a50"
+contract_sha256 = "b537bd515d73127aca95a1bc1fda2802064eb4926c17236fd3e6b54c46ea2390"
 
 [[node]]
 id = "M-13-B.1"
 parent = "M-13-B"
 order = 31
 kind = "atom"
-title = "Reconcile version, prototype and Redbook source policies"
+title = "Reconcile source policy and apply the bounded active-owned 1.1.0 floor"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-A","M-16-A","NEXT-P0-GATE","NEXT-PREVIEW-BASE.3"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-13-B.json#M-13-B.1","Permanent source anchors state each accepted policy and its exact scope.","No generated STATIC/INDEX or instruction mirror is manually edited."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-13-B.json#M-13-B.1", "Permanent source anchors state each accepted policy and its exact scope.", "No generated STATIC/INDEX or standing-rule semantics is manually edited. Root may correct only verified operational slot paths in instruction mirrors, kept byte-identical across AGENTS/CLAUDE/GEMINI.", "The separately bounded 1.1.0 metadata/path subatom has exact before/after and exclusion evidence under full parent accountability; no migration engine, graduation or public activation is inferred.", "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-B.json#M-13-B.1"
-contract_sha256 = "5fca73b585a72b2ac8baaf1a51f8bc6b43d46dc6761a36876c57a60c57e08a50"
+contract_sha256 = "b537bd515d73127aca95a1bc1fda2802064eb4926c17236fd3e6b54c46ea2390"
 
 [[node]]
 id = "M-13-B.2"
@@ -722,10 +722,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-13-B.1"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-13-B.json#M-13-B.2","Source rules align with all retained decisions, including D-025/D-026 and open D-022.","Later feature atoms can cite permanent governing anchors rather than campaign prose."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-13-B.json#M-13-B.2", "Source rules align with all retained decisions, including D-025/D-026 and open D-022.", "Later feature atoms can cite permanent governing anchors rather than campaign prose."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-B.json#M-13-B.2"
-contract_sha256 = "5fca73b585a72b2ac8baaf1a51f8bc6b43d46dc6761a36876c57a60c57e08a50"
+contract_sha256 = "b537bd515d73127aca95a1bc1fda2802064eb4926c17236fd3e6b54c46ea2390"
 
 [[node]]
 id = "M-13-C"
@@ -777,15 +777,15 @@ id = "M-13-D"
 parent = "M-13"
 order = 50
 kind = "group"
-title = "Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.0.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B"
+title = "Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.1.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B | D-003/D-014/D-019 |"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-C"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Meet baseline work-package scope: Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.0.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
+acceptance = ["Meet effective work-package scope: Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.1.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B | D-003/D-014/D-019 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-D.json"
-contract_sha256 = "e6719ef1e93778fceb0d75a0b231b2c16ab927cb39a8dca811e793a4e72a8c13"
+contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
 
 [[node]]
 id = "M-13-D.1"
@@ -797,25 +797,25 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-13-C","NEXT-P0-GATE","NEXT-PREVIEW-BASE.3"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.1","Runnable fixtures cover real before→after reader behavior, preservation and recovery.","Generated report/errors retain exact source/target/effect state across process exit."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.1", "Runnable fixtures cover real before→after reader behavior, preservation and recovery.", "Generated report/errors retain exact source/target/effect state across process exit."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-D.json#M-13-D.1"
-contract_sha256 = "e6719ef1e93778fceb0d75a0b231b2c16ab927cb39a8dca811e793a4e72a8c13"
+contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
 
 [[node]]
 id = "M-13-D.2"
 parent = "M-13-D"
 order = 52
 kind = "atom"
-title = "Reconcile active own 1.0.0 metadata within the accepted census"
+title = "Reconcile current active-owned 1.1.0 metadata within the refreshed census"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-D.1"]
 mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.2","Per-file before/after census proves exactly which active-owned items changed.","Foreign/history/fixture/epoch exclusion checks show no collateral version edits."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.2", "Per-file before/after census proves exactly which active-owned items changed.", "Foreign/history/fixture/epoch exclusion checks show no collateral version edits."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-D.json#M-13-D.2"
-contract_sha256 = "e6719ef1e93778fceb0d75a0b231b2c16ab927cb39a8dca811e793a4e72a8c13"
+contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
 
 [[node]]
 id = "NEXT-GATE-M-13"
@@ -3171,30 +3171,30 @@ id = "M-05-F"
 parent = "M-05"
 order = 380
 kind = "group"
-title = "Redbook existing 1.0.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps"
+title = "Redbook current 1.1.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps | D-004/D-005/D-019; F-009 |"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-05-E"]
 mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
-acceptance = ["Meet baseline work-package scope: Redbook existing 1.0.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
+acceptance = ["Meet effective work-package scope: Redbook current 1.1.0 exact-one MUP default/WAL alternative + global/branch addons; migrate manual exclusions preserving intent/shared deps | D-004/D-005/D-019; F-009 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-F.json"
-contract_sha256 = "fa17a9d29724a33069c6e87fbc6eddd2eac9d03d403bb928c202e69f5d557783"
+contract_sha256 = "57df97692a1d5735d24983d1afe233d361d5573a8dc86b1e982d29814ea42ecd"
 
 [[node]]
 id = "M-05-F.1"
 parent = "M-05-F"
 order = 381
 kind = "atom"
-title = "Express Redbook variants in its existing 1.0.0"
+title = "Express Redbook variants in its existing 1.1.0"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-05-E","NEXT-P0-GATE","NEXT-PREVIEW-BASE.3"]
 mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-05-F.json#M-05-F.1","Local graph shows exactly one continuity branch with preserved addon semantics.","No version bump or external publication occurs in this task."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-05-F.json#M-05-F.1", "Local graph shows exactly one continuity branch with preserved addon semantics.", "No version bump or external publication occurs in this task."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-F.json#M-05-F.1"
-contract_sha256 = "fa17a9d29724a33069c6e87fbc6eddd2eac9d03d403bb928c202e69f5d557783"
+contract_sha256 = "57df97692a1d5735d24983d1afe233d361d5573a8dc86b1e982d29814ea42ecd"
 
 [[node]]
 id = "M-05-F.2"
@@ -3206,10 +3206,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-05-F.1"]
 mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-05-F.json#M-05-F.2","Before/after graph and comments demonstrate preserved consumer meaning.","Current consumer migration does not manufacture future version or publication approval."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-05-F.json#M-05-F.2", "Before/after graph and comments demonstrate preserved consumer meaning.", "Current consumer migration does not manufacture future version or publication approval."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-F.json#M-05-F.2"
-contract_sha256 = "fa17a9d29724a33069c6e87fbc6eddd2eac9d03d403bb928c202e69f5d557783"
+contract_sha256 = "57df97692a1d5735d24983d1afe233d361d5573a8dc86b1e982d29814ea42ecd"
 
 [[node]]
 id = "M-05-G"
@@ -4025,15 +4025,15 @@ id = "M-09-A"
 parent = "M-09"
 order = 590
 kind = "group"
-title = "Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table"
+title = "Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table | F-015 |"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-D"]
 mandates = ["D-001","F-015","F-020","F-021"]
-acceptance = ["Meet baseline work-package scope: Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
+acceptance = ["Meet effective work-package scope: Audit current five and clarify/checklist/analyze/converge exact resources; effects/layout/platform table | F-015 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json"
-contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
+contract_sha256 = "58bafe973700f047ef89fdebda701047eba13a6d13442bcbd6a2969c4b64674a"
 
 [[node]]
 id = "M-09-A.1"
@@ -4045,10 +4045,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-13-D","NEXT-P0-GATE","NEXT-EXTERNAL-CHECKOUTS","NEXT-PREVIEW-BASE.3"]
 mandates = ["D-001","F-015","F-020","F-021"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.1","Inventory ties every selected file to its exact capture and required effect.","Unknown dynamic references remain visible acceptance debt."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.1", "Inventory ties every selected file to its exact capture and required effect.", "Unknown dynamic references remain visible acceptance debt."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json#M-09-A.1"
-contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
+contract_sha256 = "58bafe973700f047ef89fdebda701047eba13a6d13442bcbd6a2969c4b64674a"
 
 [[node]]
 id = "M-09-A.2"
@@ -4060,10 +4060,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-09-A.1"]
 mandates = ["D-001","F-015","F-020","F-021"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.2","The expanded matrix maps each required action to M-08 or existing lifecycle ownership.","All original five rows survive unchanged."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-09-A.json#M-09-A.2", "The expanded matrix maps each required action to M-08 or existing lifecycle ownership.", "All original five rows survive unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-09-A.json#M-09-A.2"
-contract_sha256 = "61056bfd77657a85e70010538bc99770a2077f1339a7397d2ea6e1b9fac0e6ea"
+contract_sha256 = "58bafe973700f047ef89fdebda701047eba13a6d13442bcbd6a2969c4b64674a"
 
 [[node]]
 id = "M-09-B"
@@ -4542,15 +4542,15 @@ id = "M-12-A"
 parent = "M-12"
 order = 690
 kind = "group"
-title = "Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.0.0 and offline exact reproduction"
+title = "Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.1.0 and offline exact reproduction | D-001/D-008/D-009/D-012/D-019 |"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-01-E","M-02-D","M-03-E","M-04-E","M-05-G","M-06-F","M-07-E","M-08-E","M-09-E","M-10-D","M-11-E","M-13-D","M-14-C","M-17-A"]
 mandates = ["F-009","F-015","F-020"]
-acceptance = ["Meet baseline work-package scope: Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.0.0 and offline exact reproduction","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
+acceptance = ["Meet effective work-package scope: Full local graph Redbook/bridges/adapters/derivatives/native examples, active own 1.1.0 and offline exact reproduction | D-001/D-008/D-009/D-012/D-019 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json"
-contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
+contract_sha256 = "c4b836f417cc2354263b4b95243d8fa86b5e01831dec74e5f9c76564f28f51fe"
 
 [[node]]
 id = "M-12-A.1"
@@ -4562,10 +4562,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-01-E","M-02-D","M-03-E","M-04-E","M-05-G","M-06-F","M-07-E","M-08-E","M-09-E","M-10-D","M-11-E","M-13-D","M-14-C","M-17-A","NEXT-P0-GATE","NEXT-PREVIEW-BASE.3"]
 mandates = ["F-009","F-015","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.1","A reviewable graph/capability/evidence matrix has no unexplained mandatory gap.","Declared selected state matches actual installed/projection subjects."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.1", "A reviewable graph/capability/evidence matrix has no unexplained mandatory gap.", "Declared selected state matches actual installed/projection subjects."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json#M-12-A.1"
-contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
+contract_sha256 = "c4b836f417cc2354263b4b95243d8fa86b5e01831dec74e5f9c76564f28f51fe"
 
 [[node]]
 id = "M-12-A.2"
@@ -4577,10 +4577,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-12-A.1"]
 mandates = ["F-009","F-015","F-020"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.2","Offline replay evidence includes zero network attempts and exact output/ownership joins.","Bound check results include every executed step. If a justified full panel runs, record all executed and unrun steps; an unrun tail is never claimed green."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-12-A.json#M-12-A.2", "Offline replay evidence includes zero network attempts and exact output/ownership joins.", "Bound check results include every executed step. If a justified full panel runs, record all executed and unrun steps; an unrun tail is never claimed green."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-12-A.json#M-12-A.2"
-contract_sha256 = "383c60eda1754c2c9249b04485f5990dd8ede3e5ad0ede6389b5eab6d34a05fc"
+contract_sha256 = "c4b836f417cc2354263b4b95243d8fa86b5e01831dec74e5f9c76564f28f51fe"
 
 [[node]]
 id = "M-12-B"

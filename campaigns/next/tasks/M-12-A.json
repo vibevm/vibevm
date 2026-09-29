@@ -6,7 +6,7 @@
       "title": "Verify the complete initial package and capability graph",
       "goal": "Reconcile all accepted initial-route captures, versions and external coverage before integration.",
       "read_paths": [
-        "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
         "vibe.toml",
         "Cargo.toml",
         "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
@@ -22,7 +22,7 @@
       ],
       "steps": [
         "Collect accepted M-01…M-11, M-13, M-14-C and M-17-A evidence, exact source captures and actual supported capability rows.",
-        "Resolve a composed local fixture containing Redbook choices, both bridges, four external adapters, local derivatives and native examples; verify every incoming edge and active owned 1.0.0 identity.",
+        "Resolve a composed local fixture containing Redbook choices, both bridges, four external adapters, local derivatives and native examples; verify every incoming edge and active owned 1.1.0 identity.",
         "Join initial ETO/API coverage with real domain cases, recording missing results as open instead of substituting a supported-but-unimplemented row."
       ],
       "positive_cases": [
@@ -51,7 +51,9 @@
       "commit_subject": "test(integration): reconcile initial package and capability closure",
       "notes": [
         "External bridge roots require root-bound isolated checkouts for external:org.speckit.speckit / external:skills-bridge-to-select. Never modify the currently existing sibling source trees. Root binds actual external validation/publication commands after inspecting those checkouts.",
-        "fixtures/next/integration is a proposed controlled fixture subtree."
+        "fixtures/next/integration is a proposed controlled fixture subtree.",
+        "Current local integration uses the next active-owned mutable 1.1.0 cohort while preserving released DP1 users/captures and foreign/fixture/epoch identities. Local readiness does not authorize publication.",
+        "Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required."
       ]
     },
     {
