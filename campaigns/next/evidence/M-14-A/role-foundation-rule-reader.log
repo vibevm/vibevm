@@ -1,0 +1,15 @@
+canonical unit: ENVIRONMENT-ROLE-SEPARATION kind=req revision=1 line=14
+canonical unit: ENVIRONMENT-DEFINITION kind=req revision=1 line=26
+canonical unit: ENVIRONMENT-LOCK kind=req revision=1 line=38
+canonical unit: EXECUTION-CONTEXT kind=req revision=1 line=50
+canonical unit: TARGET-BINDING kind=req revision=1 line=62
+canonical unit: TARGET-INSTANCE-CONTINUITY kind=req revision=1 line=73
+canonical unit: ENVIRONMENT-GENERATION kind=req revision=1 line=84
+canonical unit: ABI-ROLE-SEPARATION kind=req revision=1 line=96
+canonical unit: COMPATIBILITY-FACTS kind=req revision=1 line=106
+canonical unit: LEGACY-HOST-INTERPRETATION kind=req revision=1 line=119
+canonical unit: LOCAL-WORKSPACE-COMPATIBILITY kind=req revision=1 line=130
+canonical unit: UNSUPPORTED-TARGET-OPERATIONS kind=req revision=1 line=140
+canonical unit: INJECTED-CONSTRUCTION-AUTHORITY kind=req revision=1 line=152
+canonical unit: IDENTITY-OWNER-REUSE kind=req revision=1 line=162
+canonical unit: ENVIRONMENT-PROOF-BOUNDARY kind=req revision=1 line=177

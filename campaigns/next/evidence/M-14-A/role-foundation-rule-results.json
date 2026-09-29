@@ -1,0 +1,62 @@
+[
+  {
+    "anchor": "ENVIRONMENT-ROLE-SEPARATION",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-DEFINITION",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-LOCK",
+    "exit": 0
+  },
+  {
+    "anchor": "EXECUTION-CONTEXT",
+    "exit": 0
+  },
+  {
+    "anchor": "TARGET-BINDING",
+    "exit": 0
+  },
+  {
+    "anchor": "TARGET-INSTANCE-CONTINUITY",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-GENERATION",
+    "exit": 0
+  },
+  {
+    "anchor": "ABI-ROLE-SEPARATION",
+    "exit": 0
+  },
+  {
+    "anchor": "COMPATIBILITY-FACTS",
+    "exit": 0
+  },
+  {
+    "anchor": "LEGACY-HOST-INTERPRETATION",
+    "exit": 0
+  },
+  {
+    "anchor": "LOCAL-WORKSPACE-COMPATIBILITY",
+    "exit": 0
+  },
+  {
+    "anchor": "UNSUPPORTED-TARGET-OPERATIONS",
+    "exit": 0
+  },
+  {
+    "anchor": "INJECTED-CONSTRUCTION-AUTHORITY",
+    "exit": 0
+  },
+  {
+    "anchor": "IDENTITY-OWNER-REUSE",
+    "exit": 0
+  },
+  {
+    "anchor": "ENVIRONMENT-PROOF-BOUNDARY",
+    "exit": 0
+  }
+]
