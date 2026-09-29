@@ -4,7 +4,7 @@
     {
       "id": "M-13-D.1",
       "title": "Implement guarded migration apply and recovery",
-      "goal": "Apply a validated migration with retained before-state, exact CAS and truthful interrupted-state recovery.",
+      "goal": "Apply a validated migration on Linux, macOS and Windows with retained before-state, explicitly scoped coordinated concurrency guarantees and truthful interrupted-state recovery.",
       "read_paths": [
         "crates/vibe-safefs/src/file/bounded.rs",
         "crates/vibe-safefs/src/component.rs",
@@ -24,7 +24,8 @@
         "crates/vibe-cli/Cargo.toml",
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "campaigns/next/owner-rulings/2026-09-29-portable-migration.md"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -49,16 +50,17 @@
         "crates/vibe-mcp/src/lib.rs"
       ],
       "steps": [
-        "Implement explicit apply for .C plans: verify input/target epoch and exact source digest, retain before-images, then publish through existing safe filesystem/journal primitives.",
+        "Implement explicit apply for .C plans: verify input/target epoch and exact source bytes/digest under the declared participating-client barrier, retain before-images and durable intent, then publish through portable safe filesystem/journal primitives. Do not claim unconditional content-CAS against uncooperating writers.",
         "Support a real recognized legacy authored-format transition without guessing new source classification/feature intent; validate the resulting reader-visible format.",
         "Inject interruption before/after each write and provide inspect/recover/idempotent replay; record completed/pending/unknown effects instead of assuming Err means no write."
       ],
       "positive_cases": [
         "A known legacy document migrates preserving comments, values and selected intent.",
-        "Repeated exact apply is idempotent; supported interrupted recovery restores/completes the owned prefix."
+        "Repeated exact apply is idempotent; supported interrupted recovery restores/completes the owned prefix.",
+        "Linux, macOS and Windows each have a usable implementation under the declared contract; missing unrestricted CAS alone does not disable Linux."
       ],
       "negative_cases": [
-        "Concurrent source change, unknown third state or ambiguous input refuses.",
+        "Observed concurrent source change, unknown third state or ambiguous input refuses; document unexcluded external races and report actual guarantee, warning and effect state rather than claiming unrestricted CAS.",
         "A failed migration cannot silently lose source, rewrite fixtures/upstreams or fabricate successful rollback."
       ],
       "checks": [
@@ -81,14 +83,16 @@
       ],
       "acceptance": [
         "Runnable fixtures cover real before→after reader behavior, preservation and recovery.",
-        "Generated report/errors retain exact source/target/effect state across process exit."
+        "Generated report/errors retain exact source/target/effect state across process exit.",
+        "Product documentation and generated reports distinguish coordinated guarantees, external-writer limits and measured native-platform proof; all three platforms have working implementation paths."
       ],
       "safe_stop": "Migration apply/recovery foundation passes; source/feature converters remain their own atoms.",
       "commit_subject": "feat(migrate): apply exact format transitions with recovery",
       "notes": [
         "Do not make this early foundation depend on completed M-16 editing services. Preserve an explicit adapter seam; M-16 later adds participating-buffer barriers to these same domain operations.",
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Owner ruling 2026-09-29 accepts weaker platform concurrency guarantees where necessary, requires Linux/macOS/Windows usability and truthful documentation/warnings. See campaigns/next/owner-rulings/2026-09-29-portable-migration.md. This supersedes the unrestricted exact-CAS assumption without waiving preservation, durable recovery or owned-path authority."
       ]
     },
     {

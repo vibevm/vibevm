@@ -1,9 +1,9 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 10
+revision = 11
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-09-29T09:48:49Z"
+updated_at = "2026-09-29T10:46:02Z"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
@@ -633,7 +633,7 @@ title = "Foundation, accepted source rules and migration runtime"
 state = "planned"
 zoom = "summary"
 depends_on = []
-mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020","NEXT-PREVIEW-MIGRATION-DOCS","NEXT-VERIFICATION-ECONOMY"]
+mandates = ["D-003", "D-013", "D-019", "F-004", "F-007", "F-009", "F-020", "NEXT-PREVIEW-MIGRATION-DOCS", "NEXT-VERIFICATION-ECONOMY", "NEXT-OWNER-PORTABLE-MIGRATION-2026-09-29"]
 acceptance = ["Complete every required child work package and its exact permanent-source/test contracts.","Reconcile actual accepted contributions and interface/capability deltas with permanent release-impact evidence and separate justified user/documentation dispositions; carry unresolved documentation updates explicitly to the final documentation gate.","Review the actual workstream delta and affected contract consumers; bind and execute sufficient targeted integration checks, preserving applicable negative/invariant/wire/codegen proof. Reuse only matching-subject evidence. Workstream completion alone does not require the full product panel; record any concrete reason to broaden and the actual checked scope."]
 evidence = []
 
@@ -781,11 +781,11 @@ title = "Executable migration apply/recovery with before-state/CAS, preservation
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-C"]
-mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
+mandates = ["D-003", "D-013", "D-019", "F-004", "F-007", "F-009", "F-020", "NEXT-OWNER-PORTABLE-MIGRATION-2026-09-29"]
 acceptance = ["Meet effective work-package scope: Executable migration apply/recovery with before-state/CAS, preservation/ambiguity/idempotence fixtures and active own 1.1.0 reconciliation; concrete SourceDescriptor converter lands with its reader in M-06-A, feature converter with M-05-B | D-003/D-014/D-019 |", "All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-D.json"
-contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
+contract_sha256 = "f091b28f72b2c766c8a710a17cf16fb880dae5d1583dd488a780ea5567996bd0"
 
 [[node]]
 id = "M-13-D.1"
@@ -796,11 +796,11 @@ title = "Implement guarded migration apply and recovery"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-13-C","NEXT-P0-GATE","NEXT-PREVIEW-BASE.3"]
-mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
+mandates = ["D-003", "D-013", "D-019", "F-004", "F-007", "F-009", "F-020", "NEXT-OWNER-PORTABLE-MIGRATION-2026-09-29"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.1", "Runnable fixtures cover real before→after reader behavior, preservation and recovery.", "Generated report/errors retain exact source/target/effect state across process exit."]
-evidence = []
+evidence = ["owner:campaigns/next/owner-rulings/2026-09-29-portable-migration.md:weaker-coordinated-contract-accepted;Linux-macOS-Windows-required", "next:promote-portable-apply-and-recovery-law-before-code;bind-actual-barrier-and-durable-platform-seams;no-unrestricted-CAS-claim"]
 contract = "repo:campaigns/next/tasks/M-13-D.json#M-13-D.1"
-contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
+contract_sha256 = "f091b28f72b2c766c8a710a17cf16fb880dae5d1583dd488a780ea5567996bd0"
 
 [[node]]
 id = "M-13-D.2"
@@ -815,7 +815,7 @@ mandates = ["D-003","D-013","D-019","F-004","F-007","F-009","F-020"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-13-D.json#M-13-D.2", "Per-file before/after census proves exactly which active-owned items changed.", "Foreign/history/fixture/epoch exclusion checks show no collateral version edits."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-13-D.json#M-13-D.2"
-contract_sha256 = "c3ad0329d7f29b448bf2318ad6e67fd10abd7dcb43326b831efe0d57bdb66db9"
+contract_sha256 = "f091b28f72b2c766c8a710a17cf16fb880dae5d1583dd488a780ea5567996bd0"
 
 [[node]]
 id = "NEXT-GATE-M-13"
@@ -6585,3 +6585,10 @@ depends_on = ["NEXT-PREVIEW-RELEASE"]
 mandates = ["NEXT-PREVIEW-MIGRATION-DOCS"]
 acceptance = ["Promote all twelve NEXT-A26 clauses and meaningful capture/change/migration/documentation proof to accepted permanent homes.","Bind target/evidence hashes and semantic review to actual acceptance commits; run python -B campaigns/next/campaign.py retirement-check --context <context> --unit NEXT-A26.","Explicitly remove only vibevm/vibespecs/terraforms/next/contracts/NEXT-A26.xml after proof, mark its unit retired and retarget later packets. Permanent tools and release records remain.","The transition is still a candidate before scaffold removal; final DP2 capture and proof remain required in NEXT-CLOSE.3."]
 evidence = []
+
+[[mandate]]
+id = "NEXT-OWNER-PORTABLE-MIGRATION-2026-09-29"
+source = "owner-chat:2026-09-29:portable-migration-concurrency"
+text = "Migration must work on Linux, macOS and Windows. Weaker coordinated guarantees are accepted where required; document limits and truthful warnings/effects. Lack of unrestricted CAS must not disable Linux. Preservation, durable recovery and authority remain required."
+disposition = "owned"
+nodes = ["M-13", "M-13-D", "M-13-D.1"]
