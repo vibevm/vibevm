@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "change_id": "environment-role-traceability",
+  "before_capture_id": "environment-role-baseline-94e50b4b7",
+  "after_capture_id": "environment-role-after-1568af9f3",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "1568af9f3542f791d77246d5b5b8c9214e06dde2"
+    }
+  ],
+  "affected_paths": [
+    "specmap.json"
+  ],
+  "effects": [],
+  "user_impact": {
+    "state": "no-impact",
+    "migration_action": "none",
+    "reason": "Derived source unit/item/edge projection adds no executable behavior or user operation."
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "documentation_action": "none",
+    "reason": "Source traceability metadata update is not a guide/workflow semantic change; positive role/interface guidance remains separately due."
+  },
+  "evidence": [
+    {
+      "claim_id": "central-environment-role-contribution-review",
+      "subject_id": "1568af9f3542f791d77246d5b5b8c9214e06dde2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-central-review.md",
+      "verdict": "passed",
+      "sha256": "9d3f9a636b9cd133632653a2d8024090e2247c2c67fac66a6ba2cf973346156b"
+    },
+    {
+      "claim_id": "reviewed-environment-role-source-delta",
+      "subject_id": "environment-role-after-1568af9f3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-source-review.md",
+      "verdict": "passed",
+      "sha256": "2fe9ad2c91a401f1b896974171d383444b2495f0f06696fc208db709c2f6d7bb"
+    },
+    {
+      "claim_id": "selected-environment-role-verification",
+      "subject_id": "environment-role-after-1568af9f3",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/environment-role-verification.md",
+      "verdict": "passed",
+      "sha256": "762497a58c675b61c1d781a51d04da93b98f55cc0f10c036fc13a3bbcf94541b"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "1568af9f3542f791d77246d5b5b8c9214e06dde2",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/environment-role-central-review.md"
+  }
+}
