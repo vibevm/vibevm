@@ -7,7 +7,7 @@ specmark::scope!(
 );
 
 use std::path::{Component, Path, PathBuf};
-use vibe_safefs::{Project, ensure_safe_component, split_relative};
+use vibe_safefs::{ExternalStore, Project, ensure_safe_component, paths_overlap, split_relative};
 use vibe_wire::generated::migration::e1::{
     operation_report::{ApplicationError, ApplicationErrorCode, OperationReportOperation},
     operation_request::{OperationRequestApply, OperationRequestInspect, OperationRequestRecover},
@@ -33,6 +33,7 @@ pub struct OwnedManifestMigrationFile {
     pub(crate) recovery_store: PathBuf,
     pub(crate) store_spelling: String,
     pub(crate) journal_read_limit: usize,
+    protected_machine_cache: Option<PathBuf>,
 }
 
 impl OwnedManifestMigrationFile {
@@ -64,7 +65,63 @@ impl OwnedManifestMigrationFile {
             recovery_store: recovery_store.to_owned(),
             store_spelling,
             journal_read_limit: 8 * 1024 * 1024,
+            protected_machine_cache: None,
         })
+    }
+
+    /// Optional server-composed cache exclusion. Direct trusted callers carry
+    /// no global/environment-derived policy. Admission and rechecks create nothing.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        r = 1
+    )]
+    pub fn with_protected_machine_cache_root(
+        mut self,
+        cache: &Path,
+    ) -> Result<Self, ApplicationValidationError> {
+        absolute_spelling(cache)?;
+        self.protected_machine_cache = Some(cache.to_owned());
+        self.validate_recovery_store_policy()?;
+        Ok(self)
+    }
+
+    /// Recheck immediately before a creating store open and EVERY store
+    /// mutation. This read-only policy is not an unconditional external-race
+    /// exclusion; filesystem capabilities and the runtime own actual writes.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        r = 1
+    )]
+    pub fn validate_recovery_store_policy(&self) -> Result<(), ApplicationValidationError> {
+        let Some(cache) = &self.protected_machine_cache else {
+            return Ok(());
+        };
+        let refused = || {
+            ApplicationValidationError::new(
+                ApplicationErrorCode::AuthorityRefused,
+                "authority.recovery_store_root",
+                "recovery store intersects or cannot exclude the protected machine cache",
+            )
+        };
+        if paths_overlap(&self.recovery_store, cache) {
+            return Err(refused());
+        }
+        let cache_project = match Project::open(cache) {
+            Ok(project) => project,
+            Err(error) => {
+                let absent = error
+                    .chain()
+                    .filter_map(|cause| cause.downcast_ref::<std::io::Error>())
+                    .any(|cause| cause.kind() == std::io::ErrorKind::NotFound);
+                if absent {
+                    return Ok(());
+                }
+                return Err(refused());
+            }
+        };
+        ExternalStore::open_existing_disjoint(&self.recovery_store, &cache_project)
+            .map_err(|_| refused())?;
+        Ok(())
     }
 
     /// Configurable allocation ceiling, not a boot quota or OS exclusion.

@@ -1,9 +1,9 @@
 //! The per-request server context — the read-only project snapshot every
-//! tool call sees, plus this server's PRIVATE lifecycle execution
-//! authority (R7.4 A15c3).
+//! tool call sees, plus private lifecycle execution and optional finite
+//! authored-file migration authority.
 //!
 //! The public half is unchanged from its birth in `lib.rs`: the project
-//! root and the machine store root. The private half carries exactly what
+//! root and the machine store root. The lifecycle policy carries exactly what
 //! a hosted lifecycle run needs and NOTHING a surface could pay with: the
 //! CLI-composed [`InstallPolicy`] (already-collapsed offline posture,
 //! slot-integrity, spec-format default), the embedded-registry root of a
@@ -11,7 +11,9 @@
 //! No user-configuration type, `[llm]` table, provider, model, endpoint,
 //! token path or transport ever enters — the CLI stays the configuration
 //! and environment composition root, and hands the decided answers down
-//! through [`ServerContext::with_lifecycle_execution`].
+//! through [`ServerContext::with_lifecycle_execution`]. Migration admission is
+//! separately granted through [`ServerContext::with_manifest_migration_authority`];
+//! tool arguments cannot alter its roots or finite file selection.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle");
 
@@ -22,6 +24,11 @@ use vibe_core::manifest::Lockfile;
 use vibe_orchestrator::InstallPolicy;
 
 use crate::SERVER_NAME;
+
+mod migration;
+#[cfg(test)]
+#[path = "context/migration_tests.rs"]
+mod migration_tests;
 
 /// Authority for the project the server exposes: stable project/package-store
 /// roots plus the CLI-decided lifecycle policy. Read-only tools reload their
@@ -62,6 +69,8 @@ pub struct ServerContext {
     /// root observes `VIBE_NO_DEFAULT_REGISTRY`; embedded-root discovery has
     /// its separate CI rule).
     pub(crate) seed_default_registry: bool,
+    /// One explicit finite migration grant, never supplied by tool arguments.
+    manifest_migration_authority: Option<migration::ManifestMigrationAuthority>,
 }
 
 impl ServerContext {
@@ -75,6 +84,7 @@ impl ServerContext {
             lifecycle_policy: InstallPolicy::default(),
             embedded_registry_root: None,
             seed_default_registry: false,
+            manifest_migration_authority: None,
         }
     }
 
@@ -91,6 +101,7 @@ impl ServerContext {
             lifecycle_policy: InstallPolicy::default(),
             embedded_registry_root: None,
             seed_default_registry: false,
+            manifest_migration_authority: None,
         }
     }
 
@@ -193,6 +204,7 @@ mod tests {
                 lifecycle_policy,
                 embedded_registry_root,
                 seed_default_registry,
+                manifest_migration_authority,
             } = context;
             let _ = (
                 project_root,
@@ -200,6 +212,7 @@ mod tests {
                 lifecycle_policy,
                 embedded_registry_root,
                 seed_default_registry,
+                manifest_migration_authority,
             );
         }
         let _ = destructure;
