@@ -309,7 +309,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B105-ANCHOR **anchor** | PROP-050 `##CONCEPT-GATE-DIRECTION` |
 | @fact:B105-LOCATOR **locator** | сегодня `concepts` питает только словарь пресуппозиционного гейта; загрузочного предиката по концепту нет — только точечный `installed:<группа>/<имя>` |
 | @fact:B105-SEVERITY **severity** | P3 — фича-направление |
-| @fact:B105-DISPOSITION **disposition** | `open` — ждёт владельческого слова; реализация ляжет в WhenCondition + bootgen conditions одной малой волной |
+| @fact:B105-DISPOSITION **disposition** | `open` — ждёт владельческого слова; Fable gap review (2026-09-30) adds `agent:` and true lazy boot loading as design questions. `installed:<group>/<name>` already exists. Decide vocabulary and semantics in a separate PROP before implementation; no 1.1.0 implementation is implied. |
 | @fact:B105-FILED **filed by** | стройка PROP-050 (F7-диалог), 2026-08-23 |
 
 - @fact:B105-SUT **Суть.** Концепт как интерфейс («какой-нибудь пакет мира несёт WAL-дисциплину»), пакет — как реализация; фрагменты смогут привязываться к дисциплине, а не к имени носителя.
@@ -2329,8 +2329,8 @@ structure, and it goes when the file does.
 |---|---|
 | @fact:B211-WHAT **what** | `vibe init package … --link static` writes `link = "dynamic"`, and without `--format` the scaffold writes `format = "normal"` although `--help` says the default is `simple`. |
 | @fact:B211-EVIDENCE **evidence** | 2026-09-27, the sandbox walks of `DOCS-MD-XML-TUTORIAL` (`f-cat-link-static`, `f-cat-defaults`) and `DOCS-OBSIDIAN-TUTORIAL`. |
-| @fact:B211-SEVERITY **severity** | P3 — two flags that do not do what their help says. |
-| @fact:B211-DISPOSITION **disposition** | `open` — honour `--link`, and make the default and the help agree (see also `B-201`). The tutorials set the link in the manifest. |
+| @fact:B211-SEVERITY **severity** | P2 — the scaffold silently ignores an explicit `--link` choice; the format help also disagrees with output. |
+| @fact:B211-DISPOSITION **disposition** | `scheduled` in NEXT M-06-A.4 — honour `--link static/dynamic`, reconcile the format default/help, and update affected tutorial/reference examples (see also `B-201`). |
 | @fact:B211-FILED **filed by** | DOCS-MD-XML-TUTORIAL (M-052), 2026-09-27. |
 
 ## B-212 — PROP-035 lags the compiler it describes {#b-212}

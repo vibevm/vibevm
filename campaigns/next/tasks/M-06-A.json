@@ -92,7 +92,9 @@
         "crates/vibe-spec/src/doctree.rs",
         "Cargo.toml",
         "crates/vibe-specdoc/Cargo.toml",
-        "crates/vibe-specdoc/src/lib.rs"
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/progress-core/src/parse/blocks.rs",
+        "crates/vibe-specdoc/tests/docs_corpus.rs"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
@@ -100,16 +102,21 @@
         "crates/vibe-specdoc/Cargo.toml",
         "Cargo.toml",
         "Cargo.lock",
-        "crates/vibe-specdoc/src/lib.rs"
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/progress-core/src/parse/",
+        "crates/vibe-specdoc/tests/docs_corpus.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
       ],
       "steps": [
         "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
         "Resolve durable manifest exports against exact section selectors and captured bytes.",
-        "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text."
+        "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text.",
+        "Keep inline-code spans as quoted text in both paragraph and table-cell fact scans; pin a real @fact:X plus repeated quoted marker regression and remove any stale docs-corpus quarantine only if still present."
       ],
       "positive_cases": [
         "Nested fences and headings produce stable same-snapshot sections.",
-        "Literal @requires/#use text is retained without fact/directive effects."
+        "Literal @requires/#use text is retained without fact/directive effects.",
+        "Real @fact:X with identical inline-code quotes in paragraph and table cell passes without DuplicateId; existing current scanner behavior remains pinned."
       ],
       "negative_cases": [
         "Duplicate heading without unique export is ambiguous.",
@@ -228,7 +235,10 @@
         "crates/vibe-workspace/src/install/bootgen.rs",
         "crates/vibe-agent-projection/Cargo.toml",
         "crates/vibe-agent-projection/src/lib.rs",
-        "crates/vibe-agent-projection/src/pkgskill.rs"
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-cli/src/commands/init/package.rs",
+        "vibe.toml",
+        "BACKLOG.md"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
@@ -250,16 +260,23 @@
         "crates/vibe-workspace/src/install/bootgen.rs",
         "crates/vibe-agent-projection/Cargo.toml",
         "crates/vibe-agent-projection/src/lib.rs",
-        "crates/vibe-agent-projection/src/pkgskill.rs"
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-cli/src/commands/init/",
+        "crates/vibe-cli/src/cli.rs",
+        "vibe.toml",
+        "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml"
       ],
       "steps": [
         "Pass one descriptor view through facts/sync, lookup, materialization, compiler/boot and skill resource preparation.",
         "Require explicit loading for ordinary resources; literal embedded data cannot become managed compiler directives.",
-        "Build mixed-source fixtures that pass each consumer and record classification/provenance."
+        "Build mixed-source fixtures that pass each consumer and record classification/provenance.",
+        "Honor vibe init package --link static/dynamic rather than hard-coding dynamic; reconcile the documented --format default and scaffold output.",
+        "Correct the root vibe.toml in-tree package comment to vibevm/vibepacks and refresh affected tutorial/reference examples after behavior is proven."
       ],
       "positive_cases": [
         "Declared Vibe source retains existing facts and canonical projection.",
-        "Foreign bridge resources remain source-exact across all consumers."
+        "Foreign bridge resources remain source-exact across all consumers.",
+        "vibe init package --kind flow --link static writes link = \"static\"; default/help and generated format agree."
       ],
       "negative_cases": [
         "Any suffix-only fallback or ordinary same-stem false collision fails the matrix.",

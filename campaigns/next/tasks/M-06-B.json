@@ -85,7 +85,8 @@
         "crates/vibe-workspace/src/lib.rs",
         "crates/vibe-cli/Cargo.toml",
         "crates/vibe-cli/src/commands/mod.rs",
-        "crates/vibe-cli/src/commands/tree/mod.rs"
+        "crates/vibe-cli/src/commands/tree/mod.rs",
+        "crates/vibe-cli/src/commands/install/closure_diff.rs"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
@@ -95,16 +96,19 @@
         "crates/vibe-workspace/src/lib.rs",
         "crates/vibe-cli/Cargo.toml",
         "crates/vibe-cli/src/commands/mod.rs",
-        "crates/vibe-cli/src/commands/tree/mod.rs"
+        "crates/vibe-cli/src/commands/tree/mod.rs",
+        "crates/vibe-cli/src/commands/install/closure_diff.rs"
       ],
       "steps": [
         "Measure raw/emitted bytes, scalar counts, unique payload and actual read occurrences from the captured graph.",
         "Add tokenizer identity/version with exact/estimated/unavailable status; show unknown ambient tail separately.",
-        "Report direct/inclusive contribution only where mapping proves it; large captures use streaming/chunking rather than total-size rejection."
+        "Report direct/inclusive contribution only where mapping proves it; large captures use streaming/chunking rather than total-size rejection.",
+        "In vibe tree --json and closure diff, report each static and dynamic boot snippet byte contribution plus lane and package direct/inclusive sums from the captured graph; show unavailable attribution honestly."
       ],
       "positive_cases": [
         "Same capture and tokenizer recipe yields reproducible counts.",
-        "Repeated reads differ from unique payload size."
+        "Repeated reads differ from unique payload size.",
+        "JSON/tree and closure diff agree on per-snippet, per-package and lane byte totals, including dynamic INDEX entries and repeated occurrences."
       ],
       "negative_cases": [
         "Missing mapping cannot be replaced by proportional fake attribution.",
