@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "subject": "3d48b8ca1a2d4e44971fa0cc2d4fabbefbaae1f5",
+  "state": "desired-source-approved-before-code",
+  "new_req_units": 7,
+  "first_closed_loader_exit": 0,
+  "first_seven_unit_checks_exit": 0,
+  "independent_gap": "Required configuration/store/state applicability was ambiguous; corrected before source commit.",
+  "corrected_closed_loader_exit": 0,
+  "corrected_defaults_unit_exit": 0,
+  "independent_closure": "layout-defaults-review-close.md",
+  "existing_A1_rule_bodies": "preserved",
+  "A2_implementation_claim": false,
+  "artifacts": [
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-source-proposal.xml",
+      "sha256": "0ff7ef2d87138e528891b24c1cfd28156404d56dbf4c213c29279b56c2446cb1"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-source-plan.md",
+      "sha256": "6fa2044ab0d23b9704022f3a8462017a432e1e901226350a4479e911e1b61527"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-source-review.md",
+      "sha256": "4a3ed85c28f19b96ed4f6aa46aa6cefa423fa0641c34ffd96bbd435e32baea83"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-defaults-review-close.md",
+      "sha256": "f79778f1d7b60756bb4ec3c154dd91128981c8324ea6c1c9c6dd6ae3c78e8b07"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-closed-reader.log",
+      "sha256": "2b7a0d88052d91c5d7438a0cc9276ce1dc8b699e52c4006204539cdcb80272bb"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-rule-reader.log",
+      "sha256": "837ee6cc93a5b4958ef3c468dd7d3d3beed8be57a50533fb625f0dc7065b6ab9"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-rule-results.json",
+      "sha256": "73b6b459214c834bf4d415a1d82dc7444b1e737e1afaa29c89f7728804125aad"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-closed-reader-corrected.log",
+      "sha256": "25a0c14cb87d324ad716cee3099681920c489a6332f89a0a8c8e339bd044de5d"
+    },
+    {
+      "source": "campaigns/next/evidence/M-14-A/layout-defaults-rule-corrected.log",
+      "sha256": "7c02f2a8906a4c2d543089b0e1f6c34570f654815e434e312736010ba9b0e846"
+    }
+  ]
+}

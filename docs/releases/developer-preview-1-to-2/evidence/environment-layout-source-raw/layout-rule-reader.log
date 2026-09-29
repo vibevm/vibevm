@@ -1,0 +1,7 @@
+canonical unit: ENVIRONMENT-LAYOUT kind=req revision=1 line=204
+canonical unit: ENVIRONMENT-LAYOUT-DEFAULTS kind=req revision=1 line=208
+canonical unit: ENVIRONMENT-RESOURCE-IDENTITY kind=req revision=1 line=212
+canonical unit: TARGET-PATH-POLICY kind=req revision=1 line=216
+canonical unit: PAYLOAD-PREFIX-COMPATIBILITY kind=req revision=1 line=220
+canonical unit: RESERVED-ENVIRONMENT-RESOURCES kind=req revision=1 line=224
+canonical unit: ENVIRONMENT-LAYOUT-COMPATIBILITY-BOUNDARY kind=req revision=1 line=228
