@@ -33667,6 +33667,15 @@
     },
     {
       "crate_name": "xtask",
+      "file": "xtask/src/bin/authority-map-check/main.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::authority-map-check",
+      "end_line": 3,
+      "fingerprint": "tok1:624a56718e42891ddf4bd52a86f7c33dd405a571c78fc2efc4cff3cb2e3a0bc2"
+    },
+    {
+      "crate_name": "xtask",
       "file": "xtask/src/bin/preview-transition-assemble/main.rs",
       "item_kind": "mod",
       "line": 3,
@@ -59997,6 +60006,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/authority-map-check/main.rs",
+      "from_symbol": "xtask::bin::authority-map-check",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#AUTHORITY-MAP-CONSISTENCY",
       "verb": "implements"
     },
     {
