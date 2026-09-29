@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "description": "Epoch-1 typed preflight migration planning error. The owning adapter requires schema exactly 1 and a preflight code.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::plan_error"
+    },
+    "x-vocabularies": [
+      "migration_planning_error"
+    ]
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "stage": {
+      "enum": [
+        "preflight"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "error": {
+      "ref": "migration_planning_error"
+    }
+  }
+}

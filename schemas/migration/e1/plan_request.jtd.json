@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "description": "Epoch-1 exact-text pure migration planning request. The owning adapter requires schema exactly 1; JTD uint32 alone does not enforce that value.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e1::plan_request"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "source_text": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "source_profile": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "target_profile": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "recipe": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}
