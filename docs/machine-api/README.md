@@ -8,6 +8,11 @@ The retained map also names current bounded source and model owners. The shared
 machine service currently admits one pure migration-planner route; the other
 inventoried operations remain explicit extraction gaps.
 
+The [framed session contract](framed-session.md) documents the implemented
+on-demand library transport, its finite handshake and trusted context boundary.
+It also records how this separate transport coexists with the legacy MCP server
+and which capabilities are currently unavailable.
+
 The map binds the retained [Coverage inventory](../../formats/capability-coverage/coverage-e1.json).
 Its source identities describe the selected current source observation and 35
 model families, including explicit unbound planned families. The selected
