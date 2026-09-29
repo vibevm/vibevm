@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "inventory_id": "capability-source-coverage-candidate-c3d852805",
+  "inventory_id": "capability-source-coverage-candidate-53889e824",
   "baseline_capture_id": "capability-baseline-4a3f80a34",
-  "observation_capture_id": "machine-operation-observed-c3d852805",
+  "observation_capture_id": "machine-operation-observed-53889e824",
   "sources": [
     {
       "source_id": "source:campaigns/next/manifest.json",
@@ -817,7 +817,7 @@
     {
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation/coverage.rs",
       "path": "crates/vibe-orchestrator/src/machine_operation/coverage.rs",
-      "sha256": "983c7094d10f55552614d56af4ddc00f0f109aa069f0b01fb86710ed16dac550"
+      "sha256": "0fac2a5b8f83efcf56992f69530b13ae5f360dde251a813ac1119124ae8ff69a"
     },
     {
       "source_id": "source:crates/vibe-orchestrator/src/machine_operation/discovery.rs",

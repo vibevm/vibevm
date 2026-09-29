@@ -2,10 +2,10 @@
 
 `coverage-e1.json` uses the registered capability-coverage epoch 1 reader. Its
 baseline is `capability-baseline-4a3f80a34`; its selected source observation is
-`machine-operation-observed-c3d852805`, bound to Git subject
-`c3d852805a201635cfb66d7327d8bd85ef119ffc`. The earlier
+`machine-operation-observed-53889e824`, bound to Git subject
+`53889e824d2c55694706b3faa332f009fc2822ef`. The earlier
 `capability-after-dd7d05e4c`, `machine-operation-observed-19f200392`
-and `machine-operation-observed-e830ee297`
+`machine-operation-observed-e830ee297` and `machine-operation-observed-c3d852805`
 observations remain historical evidence.
 
 This candidate names 198 source files, 174 CLI command forms, 15 default MCP
@@ -32,7 +32,10 @@ separately bound to a retained test receipt. This inventory is a bounded current
 source and registration account, not complete semantic/API coverage.
 
 The shared machine registry projects the 214 operation identities and 29 model
-identities as typed extraction gaps while their catalogue owner and schema
+identities with typed extraction gaps while their catalogue owner and schema
 references remain prose. A repeated operation ID may retain several surface
-bindings; none becomes a callable descriptor merely by appearing here. The
-single admitted pure migration planner is validated separately by its owner.
+bindings. One exact MCP envelope row can bind to the separately admitted pure
+migration planner after its surface, schema, source and descriptor identities
+are checked; without that admission it remains a gap. This mapping never
+verifies source bytes or grants authority by itself. The other 213 operations
+and 29 models remain explicit extraction gaps.
