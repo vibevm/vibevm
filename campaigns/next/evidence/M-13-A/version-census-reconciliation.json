@@ -1,0 +1,12 @@
+{
+  "scope": "bounded-version-census-source-reconciliation",
+  "candidate_sha256": "fa67dcc11c5849b5da5a012ce1951b9ee3b2ab71c1631c5f8651189ee8a102f6",
+  "source_hashes_checked": 190,
+  "parsed_manifests": 184,
+  "exact_field_rows_checked": 632,
+  "canonical_workspace_memberships_checked": 8,
+  "derived_original_byte_matches_checked": 28,
+  "numeric_edit_paths": [],
+  "faults": [],
+  "runtime_or_installed_tree_proof": false
+}
