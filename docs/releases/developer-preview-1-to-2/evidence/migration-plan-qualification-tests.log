@@ -1,0 +1,11 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 1 test
+test manifest::migration::tests::frozen_dependency_qualification_refuses_structural_unknowns ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 0.00s
+

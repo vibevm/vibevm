@@ -1,0 +1,119 @@
+{
+  "kind": "historical-fixture-observation-not-acceptance",
+  "rename_commit": "d4d6c4754e5a07f60419e35f8d19d6adbd777352",
+  "rename_parent": "6f4b575082ceae133c3564e9920d5f6a0ea2328f",
+  "real_manifest_search": {
+    "subject": "6f4b575082ceae133c3564e9920d5f6a0ea2328f",
+    "exact_vibe_toml_paths": 172,
+    "materialization_declarations": 0,
+    "grep_exit": 1,
+    "meaning": "no explicit materialization field; no real snapshot manifest located at selected predecessor",
+    "scope": "tracked vibe.toml basename only; no wider history/corpus claim"
+  },
+  "retained_blobs": [
+    {
+      "commit": "d4d6c4754e5a07f60419e35f8d19d6adbd777352",
+      "path": "crates/vibe-core/src/manifest/package/tests.rs",
+      "git_blob_sha1": "2ff001d7c01d174191bc6c696879888e0d852d2f",
+      "sha256": "8d5342c95f97c8bc5b8bb437ab17617f94667604b3af9397be4ab01727f9ae3d",
+      "bytes": 9985,
+      "retained_file": "rename-package-tests.rs"
+    },
+    {
+      "commit": "6f4b575082ceae133c3564e9920d5f6a0ea2328f",
+      "path": "crates/vibe-core/src/manifest/package/tests.rs",
+      "git_blob_sha1": "3ce8fbad026e625c769d5c9b21c8c9315d7d2721",
+      "sha256": "233a185e967600df95e97a8ac226e00aeeff6c1cf372aad3a042b933265c0371",
+      "bytes": 9529,
+      "retained_file": "before-package-tests.rs"
+    },
+    {
+      "commit": "6f4b575082ceae133c3564e9920d5f6a0ea2328f",
+      "path": "crates/vibe-core/src/manifest/package.rs",
+      "git_blob_sha1": "60e682e0535bb96b35dd5177cd989fa31ba785af",
+      "sha256": "49fb85a628991438e2d8a8d5d3993496d46807ea3797b4c64491cc0b56c08a62",
+      "bytes": 21018,
+      "retained_file": "before-package.rs"
+    }
+  ],
+  "fixtures": [
+    {
+      "file": "snapshot-materialization.fixture.toml",
+      "fixture_kind": "historical-test-scalar",
+      "source_commit": "d4d6c4754e5a07f60419e35f8d19d6adbd777352",
+      "source_path": "crates/vibe-core/src/manifest/package/tests.rs",
+      "source_blob_sha1": "2ff001d7c01d174191bc6c696879888e0d852d2f",
+      "source_sha256": "8d5342c95f97c8bc5b8bb437ab17617f94667604b3af9397be4ab01727f9ae3d",
+      "test_case": "materialization_refuses_the_legacy_snapshot_name_with_the_recipe",
+      "sha256": "e312f6bc9eb19eba4d8938aed9cdbade86a7e1d38285d2bb9ccd0a9b6e6d71fc",
+      "bytes": 14,
+      "shape": {
+        "v": {
+          "type": "str",
+          "value": "snapshot"
+        }
+      },
+      "package_header_present": false,
+      "epoch_present": false,
+      "literal_sha256": "1052669bca966e98f22d0bd3ba5641b99ad1e9ce923e19b6d364475e61fea8c6",
+      "source_span": {
+        "start_byte": 7548,
+        "end_byte_exclusive": 7566,
+        "start_line": 246,
+        "span_kind": "Rust quoted literal lexeme"
+      }
+    },
+    {
+      "file": "in-place-package-meta.fixture.toml",
+      "fixture_kind": "historical-test-PackageMeta-body",
+      "source_commit": "d4d6c4754e5a07f60419e35f8d19d6adbd777352",
+      "source_path": "crates/vibe-core/src/manifest/package/tests.rs",
+      "source_blob_sha1": "2ff001d7c01d174191bc6c696879888e0d852d2f",
+      "source_sha256": "8d5342c95f97c8bc5b8bb437ab17617f94667604b3af9397be4ab01727f9ae3d",
+      "test_case": "package_meta_parses_materialization_and_bridge",
+      "sha256": "55c75156f7f7decd0fec15bd0975cfd1e7e1a05b81252feb95406ebf553930f1",
+      "bytes": 115,
+      "shape": {
+        "name": {
+          "type": "str",
+          "value": "chromium"
+        },
+        "group": {
+          "type": "str",
+          "value": "org.example"
+        },
+        "kind": {
+          "type": "str",
+          "value": "tool"
+        },
+        "version": {
+          "type": "str",
+          "value": "1.0.0"
+        },
+        "materialization": {
+          "type": "str",
+          "value": "in-place"
+        },
+        "bridge": {
+          "type": "bool",
+          "value": true
+        }
+      },
+      "package_header_present": false,
+      "epoch_present": false,
+      "literal_sha256": null,
+      "source_span": {
+        "start_byte": 8445,
+        "end_byte_exclusive": 8560,
+        "start_line": 272,
+        "span_kind": "Rust raw literal content"
+      }
+    }
+  ],
+  "limits": [
+    "snapshot literal exercises Materialization/MatWrap grammar, not a complete package manifest",
+    "PackageMeta body has no [package] header and uses in-place plus bridge=true, not snapshot",
+    "No header/field/value was added or removed; no current Manifest codec or migration rehearsal executed",
+    "Initial glob-shaped grep under --literal-pathspecs selected no paths and was superseded by exact172-path query"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "review_id": "migration-plan finite affected-source candidate",
+  "before_capture_id": "migration-plan-baseline-62161a91c",
+  "after_capture_id": "migration-plan-after-5b0ffde00",
+  "source_record": "evidence/migration-plan-source-review.md",
+  "source_record_sha256": "5b72627060ccc5a2e3fb08568874af29e8d9feee6d6dd2d305b0587e8b882756",
+  "paths": [
+    {
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:plan_manifest_migration"
+      ],
+      "after": {
+        "git_blob_sha1": "58ee173797ec662056665ba336234295ce378586",
+        "sha256": "3eec4d86bf5e514aea8c94b00f3d9d2ccb94fcc3405d46867f772bdbd531afca"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:plan_manifest_migration"
+      ],
+      "after": {
+        "git_blob_sha1": "72adfd1cf8817316cff616f7e0802535024d5858",
+        "sha256": "cf398b2c6839ba4458bd3fcd9748d946d8b2336786827151eb9d594b63c077fa"
+      }
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "interface_ids": [
+        "rust:vibe-core:manifest:plan_manifest_migration"
+      ],
+      "before": {
+        "git_blob_sha1": "f2fbe5d6fd443100e8325775023d38ad31388b21",
+        "sha256": "e1a34b7349f747c3a8ed5ea3a66d63ec688efe5c2ea7e751a34383b0db5ef664"
+      },
+      "after": {
+        "git_blob_sha1": "e3edabe5a0a6e31d87a02a050cdf92bb1061f55a",
+        "sha256": "d81a2e928c620641d7e786a0a32fbde0636e67028a31e3d1bfad3720fbd358cd"
+      }
+    },
+    {
+      "path": "specmap.json",
+      "interface_ids": [],
+      "before": {
+        "git_blob_sha1": "d5ac76a612c6ad9c2515456716408828f502c2a4",
+        "sha256": "78d77b42b1bbc8ec5e9c181566e54f4f2768f42b307d62a07477815a9d4d0b48"
+      },
+      "after": {
+        "git_blob_sha1": "bd5b4699e4e698ffa4e7d5dbf66bbf6cfe0e5c32",
+        "sha256": "5f6e5bc38f3d372a8ab7cb4b759ff64c3a496ea626cd230daa04de455feb8c50"
+      },
+      "user_no_impact_reason": "Derived source index alone changes no executable user operation; candidate reason for independent review.",
+      "documentation_no_impact_reason": "Index metadata alone changes no user guide; source-contract guidance is accounted separately."
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "interface_ids": [
+        "spec:manifest:explicit-migration-profile"
+      ],
+      "before": {
+        "git_blob_sha1": "473ba6bacd208c7de1b1daaff103a5ab29736309",
+        "sha256": "bf7e546565cb033c052de8cda2eeec4a29729176d04d33be28840553bd63092c"
+      },
+      "after": {
+        "git_blob_sha1": "a31a1198db459d3321b7e68f0a0b407d8d59ceb9",
+        "sha256": "216dca7839f7cfee11655a16d1674d1cd9cb7188e4bc57cacf1a3444735e310f"
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "capability_id": "explicit-profile-materialization-plan",
+      "audience": "developer / repository maintainer",
+      "platform": "bounded pure Rust feature and GNU/Linux proof; no new CLI/MCP/native ABI, apply or all-platform claim",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN"
+      ],
+      "interface_id": "spec:manifest:explicit-migration-profile",
+      "kind": "changed",
+      "before": "Historical rename recipe lacked the explicit finite-profile pure-plan contract.",
+      "after": "Explicit immutable profiles, ABSENT handling, typed selection/refusal and syntax-preserving in-memory planning law; broad historical corpus support remains unproved.",
+      "source_paths": [
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+      ],
+      "topic_ids": [
+        "manifest-profile-source-guidance"
+      ]
+    },
+    {
+      "capability_id": "explicit-profile-materialization-plan",
+      "audience": "developer / repository maintainer",
+      "platform": "bounded pure Rust feature and GNU/Linux proof; no new CLI/MCP/native ABI, apply or all-platform claim",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN"
+      ],
+      "interface_id": "rust:vibe-core:manifest:plan_manifest_migration",
+      "kind": "introduced",
+      "before": "No bounded C1 pure migration planner exposed from manifest.",
+      "after": "Public Rust source API plans exact text/token edits and identities with typed outcomes; no effectful application, public transport, complete historical reader or real-file corpus claim.",
+      "source_paths": [
+        "crates/vibe-core/src/manifest/migration.rs",
+        "crates/vibe-core/src/manifest/migration/tests.rs",
+        "crates/vibe-core/src/manifest/mod.rs"
+      ],
+      "topic_ids": [
+        "pure-manifest-planner-guidance"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "manifest-profile-source-guidance",
+      "obligation": "Candidate developer guidance: explicit finite profiles/ABSENT selection, refusal and limited historical corpus; canonical documentation proof remains due."
+    },
+    {
+      "topic_id": "pure-manifest-planner-guidance",
+      "obligation": "Candidate Rust consumer guidance: pure plan versus apply, exact text/token preservation/identities, safe diagnostics and unsupported shape boundaries; no public transport claim."
+    }
+  ],
+  "contract_sources": [
+    {
+      "group": "org.vibevm.core",
+      "name": "vibevm",
+      "spec_root_components": [
+        "vibevm",
+        "vibespecs"
+      ],
+      "source_profile": "urn:vibevm:spec:xml",
+      "manifest_path": "vibe.toml",
+      "manifest_sha256": "e3356a64a2aa537e691236d437702c4ae5f91240183482e1272a3077e324446f",
+      "documents": [
+        {
+          "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "git_blob_sha1": "a31a1198db459d3321b7e68f0a0b407d8d59ceb9",
+          "sha256": "216dca7839f7cfee11655a16d1674d1cd9cb7188e4bc57cacf1a3444735e310f"
+        }
+      ]
+    }
+  ]
+}

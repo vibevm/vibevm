@@ -1,0 +1,9 @@
+# Central scoped C1 review
+
+Root source/code semantic verdict: passed for the explicit bounded pure materialization planner at indexed subject5b0ffde00661af732213378d047d9b4e0e701983, subject to native exact-capture contribution-account validation before publication of accepted records. This document does not assert that that account has already run. The current task and complete NEXT plan remain unaccepted until their respective required checks; this review is not DP2 close.
+
+Source law subjects are cc4d9b0ff,ca94c0a94,7216ef99a,af74b641d,d882b9bdf,73ef9545c. Implementation subjects are5f930872367f19e0e0c798f2a511b00260c8afd9 and comment-only640ed8e3340971713044eb8616636968360a53f5. Traceability subject is5b0ffde00661af732213378d047d9b4e0e701983. Account source and internal Rust effects positively; public transport/ABI declarations remain unchanged. Index-only impact has separate justified user and documentation NoImpact, not a blanket erasure of new functionality.
+
+Review covers exact frozen shapes/selections, byte preservation, deterministic framed identities, typed refusal/input requirements, existing Manifest validation, narrow test evidence and absence of apply/I/O/provider authority. Both independent findings were repaired and re-reviewed. The source-revision warning and failed scratch reader are explicitly retained in verification, not hidden. Original12test completion evidence is labeled as a faithful copy with omissions. No real-file corpus, complete pre-epoch grammar, published transport, full-platform proof or automatic adoption is claimed.
+
+Positive guidance topics remain due in the final migration guide/documentation lane. Existing owner-only public hold remains:1.1 is local mutable next, all active owned package slots remain1.1, no public Git/package update or new version increment is authorized or performed. Unrelated version/epoch/freeze/history/foreign fixtures are untouched.
