@@ -19,13 +19,13 @@ verified operating facts (profiles, tokens, packet schema, build state) are the
 ledger below. The entry points between them: the launcher is
 `vibevm/vibepacks/org.vibevm.fractality/fractality.ps1` (PowerShell) / `fractality.sh`
 (Bash), built once via `cargo build -p fractality-cli` from
-`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/` against the global
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/` against the global
 `~/.fractality` home. Drive it — `./fractality.ps1 run --packet <task.toml>`
 (sync) or `spawn … ; wait <id>` (async); free `route` / `gate` helpers (no
 daemon, no spend); no-packet interim route
 `opencode run -m zai-coding-plan/glm-5.2 "<task>"`. RLM's need-gate is
 `fractality gate …`; its recursive-descent machinery is
-`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml`
 (Campaign 3 Stage B, maturing). On Claude Code, `ultracode` / the Workflow tool
 cannot spawn GLM workers directly, so a swarm under them still routes through
 fractality.
@@ -71,12 +71,12 @@ Keep it current-state; prune stale lines.
   files, resolved `gpt-5.6-sol` / `xhigh`, and left product work unstaged.
   Without the late effort override this machine's user layer reported `ultra`
   despite the launcher's earlier xhigh default.
-- **Current v1 launcher / post-clean build (updated 2026-09-10):** the
+- **Current v1 launcher / post-clean build (updated 2026-09-29):** the
   specspace-root `fractality.ps1` / `fractality.sh` launchers now target
-  `fractality/v1.0.0/target/debug/fractality.exe`; their example packet is
-  `fractality/v1.0.0/vibevm/vibespecs/examples/hello-glm.toml`. The v1 Cargo
+  `fractality/v1.1.0/target/debug/fractality.exe`; their example packet is
+  `fractality/v1.1.0/vibevm/vibespecs/examples/hello-glm.toml`. The v1 Cargo
   workspace now addresses its installed toolchain directly under
-  `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/`, so the
+  `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.1.0/`, so the
   root-`vibedeps` junction workaround verified on 2026-08-30 applied only to
   the removed layout and is retired. After derived dependencies are cleaned,
   regenerate them from the v1 slot with `<host>/target/debug/vibe.exe install
@@ -84,8 +84,8 @@ Keep it current-state; prune stale lines.
   `fractality-mission-control` and `fractality-pod` there directly.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
-  `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;
-  global home `~/.fractality`. Binaries verified built 2026-07-12.
+  `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/`; drive via the launcher;
+  global home `~/.fractality`. The 2026-07-12 binary receipt belongs to the prior 1.0.0 line; a 1.1.0 binary rebuild is not yet verified.
 - **Daemon:** `mc start` is idempotent; read-verbs auto-start it
   (`connect_or_start`); one daemon already runs live on the global home
   (2026-07-12). A different home ⇒ a separate daemon (own lock/port).

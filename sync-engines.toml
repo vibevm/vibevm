@@ -1,7 +1,7 @@
 # sync-engines.toml — the vendor-sync manifest (`cargo xtask sync-engines`,
 # DEFERRALS-CLOSEOUT-PLAN v0.1 D1).
 
-# Every surviving package slot is live at 1.0.0. No superseded vendor tree is
+# Every active next package slot is live at 1.1.0. No superseded vendor tree is
 # retained outside the sync sets below.
 frozen_targets = []
 
@@ -17,7 +17,7 @@ frozen_targets = []
 # The neutral engines: authored in flow:org.vibevm.ai-native/core-ai-native,
 # vendored into each language stack.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -25,9 +25,9 @@ crates = [
     "core-ai-native-specmark-grammar",
 ]
 targets = [
-    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/crates/vendor",
-    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/crates/vendor",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor",
 ]
 
 # The mcp packages (MCP-SOVEREIGNTY Waves 3-4) mirror their stack's
@@ -37,7 +37,7 @@ targets = [
 
 # The neutral engines + the MCP transport, into the rust mcp package.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -45,13 +45,13 @@ crates = [
     "core-ai-native-specmark-grammar",
     "core-ai-native-mcp",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/crates/vendor"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor"]
 
 # The rust stack's toolchain crates the server links, into the rust mcp
-# package (the pin `=1.0.0` in its vibe.toml holds these byte-identical
+# package (the pin `=1.1.0` in its vibe.toml holds these byte-identical
 # copies and the consumer's installed stack to ONE version).
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates"
 crates = [
     "rust-ai-native-conform-frontend",
     "rust-ai-native-conform",
@@ -60,11 +60,11 @@ crates = [
     "rust-ai-native-tcg-bridge",
     "rust-ai-native-tcg",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/crates"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates"]
 
 # The neutral engines + the MCP transport, into the typescript mcp package.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -72,12 +72,12 @@ crates = [
     "core-ai-native-specmark-grammar",
     "core-ai-native-mcp",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/crates/vendor"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor"]
 
 # The typescript stack's toolchain crates the server links, into the
-# typescript mcp package (pin `=1.0.0`).
+# typescript mcp package (pin `=1.1.0`).
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates"
 crates = [
     "typescript-ai-native-conform-frontend",
     "typescript-ai-native-conform",
@@ -88,19 +88,19 @@ crates = [
     "typescript-ai-native-tcg-bridge",
     "typescript-ai-native-tcg",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/crates"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates"]
 
 # The TS stack's embedded-source tools/ dir (ts-extract, ts-oracle) —
 # the bridge crates include_str! it from the package root, so the mcp
 # package mirrors it at the same relative place.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0"
 crates = ["tools"]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0"]
 
 # The neutral engines + the MCP transport, into the go mcp package.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -108,12 +108,12 @@ crates = [
     "core-ai-native-specmark-grammar",
     "core-ai-native-mcp",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/crates/vendor"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor"]
 
 # The go stack's toolchain crates the server links, into the go mcp
-# package (pin `=1.0.0`).
+# package (pin `=1.1.0`).
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/crates"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates"
 crates = [
     "go-ai-native-conform-frontend",
     "go-ai-native-conform",
@@ -124,12 +124,12 @@ crates = [
     "go-ai-native-tcg-bridge",
     "go-ai-native-tcg",
 ]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/crates"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates"]
 
 # The go stack's embedded-source tools/ dir (go-extract) — the bridge
 # crate include_str!s it from the package root, so the mcp package
 # mirrors it at the same relative place.
 [[sync]]
-source_root = "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0"
+source_root = "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0"
 crates = ["tools"]
-targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0"]
+targets = ["vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0"]
