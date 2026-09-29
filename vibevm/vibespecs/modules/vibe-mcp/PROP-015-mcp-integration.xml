@@ -60,7 +60,7 @@ close that loop:</close-the-loop></p>
       </facts>
     </server>
     <tools title="2.2 The tool surface: one seam, three tools">
-      <p><req-tools fact="true" status="impl/done">`req r2`</req-tools></p>
+      <p><req-tools fact="true" status="impl/done">`req r3`</req-tools></p>
       <p><TOOL-SEAM fact="true" status="impl/done">**Decision.** Every tool implements one seam (`McpTool`): it `describe`s
 itself (name, human description, JSON-Schema input shape) and `run`s
 against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
@@ -205,6 +205,10 @@ that was wrong about depth are in
 [`vibevm/vibespecs/design/map-query-language.xml`](../../design/map-query-language.xml) — the
 lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT></p>
       </map-select>
+      <MANIFEST-MIGRATION-CELL title="Context-bound migration application cell">
+        <p>`req r1`</p>
+        <p><MIGRATION-CELL-LAW fact="true" status="spec/plan">The additional `manifest_migration_operation` cell uses the generic tool seam and structured preflight/executed-result channels. Its project/file/recovery-store authority is supplied by the server composer and cannot be overridden by tool arguments. Its sole operation and admission contract is [PROP-044 application surfaces](../../common/PROP-044-change-native-formats.xml#MANIFEST-MIGRATION-SURFACES); a default context without that explicit grant refuses this cell before runtime. This does not alter existing tools or grant hosted lifecycle/provider authority.</MIGRATION-CELL-LAW></p>
+      </MANIFEST-MIGRATION-CELL>
     </tools>
     <errors title="2.3 Tool and server errors cite their REQ">
       <p><req-errors fact="true" status="impl/done">`req r2`</req-errors></p>
