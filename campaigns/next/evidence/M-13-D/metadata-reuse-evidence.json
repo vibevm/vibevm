@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "task": "M-13-D.2",
+  "accepted": false,
+  "root_selected_scope": "Historical workspace roster/version declarations, reused after exact source/configuration continuity and current633field guards; not fresh Cargo execution or resolved dependency graph.",
+  "historical_subject": "110da6f1791a40ede6e3851837ec4db386e50930",
+  "root_observed_current_diff": "Empty commit diffs through123688b24 for root/canonical Cargo manifests and locks and Cargo/toolchain configuration; later source bodies do not alter metadata graph.",
+  "observations": {
+    "root_workspace_members": 41,
+    "root_owned_at_1_1": 35,
+    "preserved_root_fixtures_at_1_0": 6,
+    "canonical_workspace_runs_historically_exit_0": 8,
+    "canonical_workspace_member_occurrences_at_1_1": 87
+  },
+  "limits": [
+    "Historical receipts lack complete argv/environment/tool binary version bindings",
+    "resolve:null is declaration projection, not resolvedgraph",
+    "root JSON embeds no process exit; prior accepted narrative is separate",
+    "M13D1 predecessor/native proof remains open"
+  ],
+  "artifacts": [
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-reuse-review.md",
+      "sha256": "ce68bffc21811722ea7cc58ea14d221787cf9919db6c329148c0cefd35c4b7c4"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-reuse-review.json",
+      "sha256": "e6d54fe8861fb1262f651809ffc71002ef10a228d85015a631cbdbb415a810b6"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-root.json",
+      "sha256": "014548c4c52f01fa6ca6163c4e55b85c0156025878694dfdfb24211549a53cb6"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-results.json",
+      "sha256": "cc60fdc00ea76b4a1b9f08686610023a209ae7e15eb087a42746487cd87f516f"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-0.json",
+      "sha256": "8072921f2067e1636f20892e817244cbbc003b1bc91b014b12e38192fcdba59e"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-1.json",
+      "sha256": "64bb0222a532c7a7c974916b9f24d41288ea022501d14fb5e6b89a63f4e30781"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-2.json",
+      "sha256": "2b9e835b86caa7400419dad7ad0a20512bfec40e3c8915d1bee05aecdeb6f9a2"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-3.json",
+      "sha256": "2c925ff89e780e951ad5de30f9467c2877e3eacfc3bd702872a379ffc2699a32"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-4.json",
+      "sha256": "9364d5b98a16044f45e335dc84b2ef341edc4b6ef81529abe2beb9fa1e6ac5b4"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-5.json",
+      "sha256": "cd625c95bf38f47007a39f809c0a1ca4bc0e314777aad513d9c6f603afe4fd7d"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-6.json",
+      "sha256": "b0ef12f854e71303e987ba1a87c6afb75347f78cbab32c969647a7121190bcd8"
+    },
+    {
+      "path": "campaigns/next/evidence/M-13-D/metadata-historical-canonical-7.json",
+      "sha256": "cb645789c3f613523d81eaa4a3d7e647a82720ba7b9804c053b45197b8891f44"
+    }
+  ]
+}
