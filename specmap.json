@@ -11617,6 +11617,249 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/mod.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::environment",
+      "end_line": 3,
+      "fingerprint": "tok1:408c0d18cdf136ce7dffaa595d64f1dcb72db39e152f3bc820c0d50bb3d974ee"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::compatibility",
+      "end_line": 2,
+      "fingerprint": "tok1:e67f829bcca2b970b43ee28adc4349ec44191a4152cc0336a24a38fec9a56f50"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "item_kind": "fn",
+      "line": 129,
+      "symbol": "vibe_core::environment::compatibility::legacy_host_applicability",
+      "end_line": 145,
+      "fingerprint": "tok1:c7aa5e9120dbed005a81aec4778df99fc7a57207cc355db9a1318b86c225ff70"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "item_kind": "fn",
+      "line": 174,
+      "symbol": "vibe_core::environment::compatibility::native_extension_platform",
+      "end_line": 182,
+      "fingerprint": "tok1:916bba0d9a2bc7634e2aa6d024c037a063c1c62dc1d747eadf1c7f9476b38d12"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_core::environment::compatibility::payload_launcher_family",
+      "end_line": 173,
+      "fingerprint": "tok1:87e9d3e0c670b6d66b9fc3f80fa98424b2bbf39691e8b7592b855d915fe3a307"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "item_kind": "fn",
+      "line": 44,
+      "symbol": "vibe_core::environment::compatibility::workspace_source_projection_compatibility",
+      "end_line": 106,
+      "fingerprint": "tok1:d96416e1faf0aac13b8e81b763a259813d481ac4d18e1a1bbf08a5e2a8910492"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/export_assertions.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::environment::export_assertions",
+      "end_line": 1,
+      "fingerprint": "tok1:e64f3fafc21761449141580db21544cf69f5266f29c84be66a85a2e0e47d0d58"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/identity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::identity",
+      "end_line": 2,
+      "fingerprint": "tok1:8834753eaff32114cb1665372153c9bb552c2f0f885e94730beddb1d75b191f0"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/identity.rs",
+      "item_kind": "fn",
+      "line": 8,
+      "symbol": "vibe_core::environment::identity::Reference::new",
+      "end_line": 18,
+      "fingerprint": "tok1:56cb26330edaa12387b5d0d03a1791ebaa1a2642785cb5189d6575a0be4b274a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::platform",
+      "end_line": 2,
+      "fingerprint": "tok1:6b599f925b39c2b033231ade32b81e2bb117e7fd30bbb3ca7370a6c36bd91ccf"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_core::environment::platform::PlatformConstraints::compare",
+      "end_line": 127,
+      "fingerprint": "tok1:aed0f8e9df127d94b331bb3cfabb1ff396ac6a15d5e515cbdf88abfd3ae537b4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "item_kind": "fn",
+      "line": 164,
+      "symbol": "vibe_core::environment::platform::ToolchainPlatforms::new",
+      "end_line": 178,
+      "fingerprint": "tok1:629a8c10a22a8e2aa93ca18f55c2d882ff646f90b861b10e1c5e85d46c0aa104"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::environment::roles",
+      "end_line": 2,
+      "fingerprint": "tok1:408c0d18cdf136ce7dffaa595d64f1dcb72db39e152f3bc820c0d50bb3d974ee"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "fn",
+      "line": 44,
+      "symbol": "vibe_core::environment::roles::EnvironmentDefinition::new",
+      "end_line": 91,
+      "fingerprint": "tok1:05c829fead5abb2572b504bd3230bd6e287f757406db985394ea56141e8e0bfb"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "fn",
+      "line": 471,
+      "symbol": "vibe_core::environment::roles::EnvironmentGeneration::new",
+      "end_line": 529,
+      "fingerprint": "tok1:02534089ef75a2a6c104e12061a20b21cc24456bcc035fa834ac94b1796de9ea"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "fn",
+      "line": 165,
+      "symbol": "vibe_core::environment::roles::EnvironmentLock::new",
+      "end_line": 246,
+      "fingerprint": "tok1:864e3466c23244a6092f3bf1730d71a7d58acef86631670b0dd58f71ee2a4db5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "fn",
+      "line": 297,
+      "symbol": "vibe_core::environment::roles::ExecutionContext::new",
+      "end_line": 315,
+      "fingerprint": "tok1:94ac6c658edf7726f96471f4c82136e731ef1819267e0be7fa054e13fa5443fb"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "item_kind": "fn",
+      "line": 401,
+      "symbol": "vibe_core::environment::roles::TargetBinding::new",
+      "end_line": 440,
+      "fingerprint": "tok1:f21f71255be38a450b48633b44b7d98523762e65c19d71a268e6c8288288b442"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::environment::tests",
+      "end_line": 1,
+      "fingerprint": "tok1:90f0db7ec79976a6e3699d377af9b14ad7157fed6c2f108b19727f544498c24c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 559,
+      "symbol": "vibe_core::environment::tests::constructors_reject_blank_inputs_and_need_no_ambient_state",
+      "end_line": 599,
+      "fingerprint": "tok1:8a6e2892d355b67262898c9d803ea212e3d40833a1ae4867695960a7e4334a88"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 458,
+      "symbol": "vibe_core::environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings",
+      "end_line": 501,
+      "fingerprint": "tok1:33259ca5b2797b06c119ab70f4d6f4703e00ae6f5e140f382a3f86cad522c3d7"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 259,
+      "symbol": "vibe_core::environment::tests::explicit_local_workspace_mapping_preserves_legacy_guard_behavior",
+      "end_line": 380,
+      "fingerprint": "tok1:6840a0c8bae519827fef63853352bb7a626d2fce8c1d314f775cd4eee556791a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 425,
+      "symbol": "vibe_core::environment::tests::future_target_modes_are_describable_but_operations_unsupported",
+      "end_line": 456,
+      "fingerprint": "tok1:2df39b1f8b0ac7d15df8a83062f0722ddc16b2d93c05cefd7b68adc908fbaa16"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 503,
+      "symbol": "vibe_core::environment::tests::generation_and_target_reject_cross_reference_tampering",
+      "end_line": 557,
+      "fingerprint": "tok1:c4f5e8b2671c789f36e760f24405a3d1227406dbf344c6d84c14704d44b5cbcb"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 382,
+      "symbol": "vibe_core::environment::tests::os_match_does_not_hide_abi_libc_mismatch_or_missing_facts",
+      "end_line": 423,
+      "fingerprint": "tok1:c111fdc7ba469171123cc7efad3051f3c8f7d4c4e13e5cdea5f825ff1b13f1db"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 197,
+      "symbol": "vibe_core::environment::tests::role_ids_preserve_producers_and_do_not_conflate_equal_reference_text",
+      "end_line": 215,
+      "fingerprint": "tok1:3a74dd17e3611bcc586cb322d34790ea6f934c1b5d726fb10dc4ca55dfc73c56"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_core::environment::tests::windows_executor_linux_payload_and_compiler_output_keep_three_roles",
+      "end_line": 257,
+      "fingerprint": "tok1:b83f945ab577364457256e4f9915df29be16e26b29109ef94262238844d1ced7"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/error.rs",
       "item_kind": "mod",
       "line": 6,
@@ -40947,6 +41190,269 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/mod.rs",
+      "from_symbol": "vibe_core::environment",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "from_symbol": "vibe_core::environment::compatibility",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "from_symbol": "vibe_core::environment::compatibility::legacy_host_applicability",
+      "line": 129,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "from_symbol": "vibe_core::environment::compatibility::native_extension_platform",
+      "line": 176,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "from_symbol": "vibe_core::environment::compatibility::payload_launcher_family",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/compatibility.rs",
+      "from_symbol": "vibe_core::environment::compatibility::workspace_source_projection_compatibility",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LOCAL-WORKSPACE-COMPATIBILITY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/export_assertions.rs",
+      "from_symbol": "vibe_core::environment::export_assertions",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/identity.rs",
+      "from_symbol": "vibe_core::environment::identity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#IDENTITY-OWNER-REUSE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/identity.rs",
+      "from_symbol": "vibe_core::environment::identity::Reference::new",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "from_symbol": "vibe_core::environment::platform",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "from_symbol": "vibe_core::environment::platform::PlatformConstraints::compare",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/platform.rs",
+      "from_symbol": "vibe_core::environment::platform::ToolchainPlatforms::new",
+      "line": 164,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles::EnvironmentDefinition::new",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles::EnvironmentGeneration::new",
+      "line": 471,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles::EnvironmentLock::new",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles::ExecutionContext::new",
+      "line": 297,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#EXECUTION-CONTEXT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/roles.rs",
+      "from_symbol": "vibe_core::environment::roles::TargetBinding::new",
+      "line": 401,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PROOF-BOUNDARY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::constructors_reject_blank_inputs_and_need_no_ambient_state",
+      "line": 560,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings",
+      "line": 459,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::definition_and_lock_reject_duplicate_or_foreign_bindings",
+      "line": 463,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::explicit_local_workspace_mapping_preserves_legacy_guard_behavior",
+      "line": 264,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::explicit_local_workspace_mapping_preserves_legacy_guard_behavior",
+      "line": 260,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LOCAL-WORKSPACE-COMPATIBILITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::future_target_modes_are_describable_but_operations_unsupported",
+      "line": 426,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#UNSUPPORTED-TARGET-OPERATIONS",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::generation_and_target_reject_cross_reference_tampering",
+      "line": 504,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::generation_and_target_reject_cross_reference_tampering",
+      "line": 508,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-INSTANCE-CONTINUITY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::os_match_does_not_hide_abi_libc_mismatch_or_missing_facts",
+      "line": 383,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::role_ids_preserve_producers_and_do_not_conflate_equal_reference_text",
+      "line": 198,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/environment/tests.rs",
+      "from_symbol": "vibe_core::environment::tests::windows_executor_linux_payload_and_compiler_output_keep_three_roles",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-core/src/error.rs",
@@ -86619,6 +87125,549 @@
       "heading": "Focused deterministic fixtures cover nesting and terminal outcomes, quiet/JSON compatibility, redirected output without ANSI, verbose redaction, progress before a delayed operation completes, finite download/materialization counts and source build output. Registry fixtures verify connection-pool reuse without changing source or freshness selection. Terminal rendering is checked against an in-memory terminal, including a narrow viewport. All probes use isolated project/settings/store roots and injected activation; no test updates the developer's real installation or durable shell environment. @status:impl/done",
       "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-060#TESTS"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:129e5846012a1b1c76c00cc8abcb86253b7237e5897c9ac2706251ca5be045f2",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "PROP-076 — Environment roles and explicit target binding",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#root"
+    },
+    {
+      "anchor": "scope",
+      "content_hash": "sha256:16851177ed1b35e6da84ab7c7a298a224740fd9d0d274b944a801141b03d482e",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "1. One package system, separate environment roles",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#scope"
+    },
+    {
+      "anchor": "ENVIRONMENT-ROLE-SEPARATION",
+      "content_hash": "sha256:54c63386219d025bbcf4135d5b0199139a063908442c276f57585604407af4f6",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Environment role separation",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-environment-role-separation",
+      "content_hash": "sha256:6dab6cccfa7658517acc091007def108b48da7edd917681ee5e1916cf8d88c70",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-environment-role-separation"
+    },
+    {
+      "anchor": "ENVIRONMENT-ROLE-SEPARATION-LAW",
+      "content_hash": "sha256:3ca2ce5aeaf7d7c443ca21e2245c68edf693d046788ed6688e55a8c749484212",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "An environment is\n    a deployable consumer context for the existing package identities, requires,\n    choices and features. It may be authored in a coding project, image repository\n    or user directory without Git. It adds no package kind, change type or personal\n    stewardship database. Definition, exact lock, operation executor, admitted\n    target binding and realized generation are five different identity roles.\n    Sharing content or equal field spellings does not collapse their authority. @status:spec/plan",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION-LAW"
+    },
+    {
+      "anchor": "definition",
+      "content_hash": "sha256:a33bd441d4569715f4d46f994006d81d94408f8bfed79d19274c0b9fc885a133",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "2. Portable desired composition",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#definition"
+    },
+    {
+      "anchor": "ENVIRONMENT-DEFINITION",
+      "content_hash": "sha256:de0456180efab39f4394f2b13650b4be21fcec838a8940b2fe8fdbdfd7aadb97",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Environment definition",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-environment-definition",
+      "content_hash": "sha256:a5214b8f979a9305c63c514f3f39dc87bbd2b8fbedfcc83eba5127a39cdb9f5c",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-environment-definition"
+    },
+    {
+      "anchor": "ENVIRONMENT-DEFINITION-LAW",
+      "content_hash": "sha256:2dded3bdd5c1137af3798d1ca552ff34adda0ca5b1833be687c762a7ae00f880",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "EnvironmentDefinition\n    owns portable desired composition: existing package/root selections,\n    feature/choice selections, target compatibility constraints, named tool/service\n    exports and named runtime bindings. Its identity is supplied by its authored\n    definition owner. Named roots here are desired resources, not machine absolute\n    paths. Credentials, discovered HOME/PATH and physical destination identities\n    are excluded. Construction does not resolve, install or activate packages. @status:spec/plan",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION-LAW"
+    },
+    {
+      "anchor": "lock",
+      "content_hash": "sha256:763c1baa2ccef29578cea00e2fda91ce11cdca4ebe872c2b240a5af0d7bd95fa",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "3. Exact selected closure",
+      "line": 37,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#lock"
+    },
+    {
+      "anchor": "ENVIRONMENT-LOCK",
+      "content_hash": "sha256:521ed62f813aeec78e8c3b46004eab971a46c92f8f247802d2efb40ef51b55c3",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Environment lock",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-environment-lock",
+      "content_hash": "sha256:f25af0be5b7d78f8440c6138e9cae886e957001ca620f0ecfa5f764c74294ec7",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 39,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-environment-lock"
+    },
+    {
+      "anchor": "ENVIRONMENT-LOCK-LAW",
+      "content_hash": "sha256:29dd2d7693f9929299dd4f5b43ef8f51821fca736212473d08b6d085832f90fd",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "EnvironmentLock binds one\n    definition to its exact selected Vibe captures/configuration, external backend\n    closure references, explicit build/runtime dependency roles and target\n    OS/architecture/ABI/libc constraints. Its identity and exact closure evidence\n    belong to the resolving/lock owner. A package version, source URL or physical\n    root cannot substitute for this selected closure. It is derived once for its\n    environment domain, not a machine-global or stewardship lock. @status:spec/plan",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LOCK-LAW"
+    },
+    {
+      "anchor": "execution",
+      "content_hash": "sha256:e97b4b1c2f7eb660d8fda3e12c7942dfda4782267bca9904aeec346243ef3992",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "4. Where an operation executes",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#execution"
+    },
+    {
+      "anchor": "EXECUTION-CONTEXT",
+      "content_hash": "sha256:581405496bd7d0cbb6b5e9503a236dc11a393a06d98adda623953bb341d7317f",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Execution context",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#EXECUTION-CONTEXT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-execution-context",
+      "content_hash": "sha256:4f5ed22ffc4254b238961c5c14badc143d8c82d5ca3edd73f2d314624f24ea30",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 51,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-execution-context"
+    },
+    {
+      "anchor": "EXECUTION-CONTEXT-LAW",
+      "content_hash": "sha256:cd763e188a395402817f83b95375d602b1f50d9cfbdfb28078006ce933d351a8",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "ExecutionContext names the\n    executor facts supplied for a particular operation: its OS/architecture/ABI,\n    admitted tool/provider identity, principal and explicit network/mount/process\n    capabilities. The admitting surface owns those facts and capabilities; a pure\n    value describes them but does not grant an effect or prove admission. A local\n    Windows process and a Linux build worker are distinct executors even when\n    they participate in one environment operation. @status:spec/plan",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#EXECUTION-CONTEXT-LAW"
+    },
+    {
+      "anchor": "target",
+      "content_hash": "sha256:0759f5ec8f29f21e52b60d5e10845846abb331da5044c2da532a9b61bcf06200",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "5. Destination instance and physical authority",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#target"
+    },
+    {
+      "anchor": "TARGET-BINDING",
+      "content_hash": "sha256:f112afa2f57382b678006025bc8ddb3f41eaf7022206b91a9da6cb44703ead21",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Target binding",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-target-binding",
+      "content_hash": "sha256:9e427c5f662c97107f37965a8c711682d7710054143443ddf7124a5d18ec49c9",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-target-binding"
+    },
+    {
+      "anchor": "TARGET-BINDING-LAW",
+      "content_hash": "sha256:f9df576cf33c72c38236e83013b15945c60654b2eafe4a6a60fad8f45bacc0aa",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "TargetBinding owns the stable\n    environment instance reference, selected generation reference when established,\n    target OS/architecture/ABI/libc, target mode, admitted filesystem roots/prefix,\n    target principal/home and storage-backend reference. Workspace projection,\n    user profile, offline Linux rootfs/image and future live Linux system are\n    target modes, not package kinds. Physical root/capability evidence belongs to\n    the admitting storage owner and is separate from portable definition content.\n    A pathname, same username or a copied receipt is not physical authority. @status:spec/plan",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-BINDING-LAW"
+    },
+    {
+      "anchor": "TARGET-INSTANCE-CONTINUITY",
+      "content_hash": "sha256:0066c98be7f777dcaaba8c29beec8471e14210020fc18cd4fa97a6a55a548450",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Target instance continuity",
+      "line": 73,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-INSTANCE-CONTINUITY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-target-instance-continuity",
+      "content_hash": "sha256:00646a8590504731df3f748270b4f87ad3d48e6c952c9401ca9ab02c962121ea",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 74,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-target-instance-continuity"
+    },
+    {
+      "anchor": "TARGET-INSTANCE-CONTINUITY-LAW",
+      "content_hash": "sha256:d4ab55631e2848408838874c5338450a8ed9a9510f08d905720e597d0ddeadde",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Cloning a definition\n    or instantiating image content requires a new admitted instance binding;\n    immutable generation content may be reused. Reused pathname spellings do not\n    transfer old instance receipts. Move, relocate and adopt need their own\n    explicit validated operations. Constructors neither discover aliases nor\n    claim that two roots are physically disjoint. @status:spec/plan",
+      "line": 75,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-INSTANCE-CONTINUITY-LAW"
+    },
+    {
+      "anchor": "generation",
+      "content_hash": "sha256:9bb95a7ea6d7146b9073df8a9d682fc72ada9de2720022866f5206379184e86a",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "6. Realized immutable generation",
+      "line": 83,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#generation"
+    },
+    {
+      "anchor": "ENVIRONMENT-GENERATION",
+      "content_hash": "sha256:c1416b8983c863add2beb4e48b42e9a58ea1623c33be7644f7d54101f04739fc",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Environment generation",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-environment-generation",
+      "content_hash": "sha256:795d96850ed41ee807089c9ed9babe84aeeb0dba1ea10d90d7378fd8191587f1",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 85,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-environment-generation"
+    },
+    {
+      "anchor": "ENVIRONMENT-GENERATION-LAW",
+      "content_hash": "sha256:69ff51f21a0052a0dabfb8ab45be7e7e93865e5cf87b7e22a7ba1d3530594198",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "EnvironmentGeneration\n    binds its producing lock/recipes to realized payload inventory and metadata,\n    dependency closure, generated boot/adapters/service catalog and activation\n    references. Its identity and evidence belong to the producing generation\n    owner. It does not itself authorize activation. Mutable application data,\n    secrets and per-user stewardship state are outside immutable generation\n    content. A desired definition or lock is not a realization receipt. @status:spec/plan",
+      "line": 86,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION-LAW"
+    },
+    {
+      "anchor": "abi",
+      "content_hash": "sha256:3fbd22e4b91bf49e26656500620502579cb3641c253cadbb262a0b7cf764778d",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "7. Executor, produced-tool runtime and emitted-code target",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#abi"
+    },
+    {
+      "anchor": "ABI-ROLE-SEPARATION",
+      "content_hash": "sha256:8b6bf8f2828c8ef3abe1c81623a853398079857fedaa78e90324706d75528b68",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Abi role separation",
+      "line": 96,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-abi-role-separation",
+      "content_hash": "sha256:74787b6f95dffb7c467aa67d60f35462a00edabc4e7a5a1815f7a4849b0bfbbb",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 97,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-abi-role-separation"
+    },
+    {
+      "anchor": "ABI-ROLE-SEPARATION-LAW",
+      "content_hash": "sha256:e7a3c9f4603fb9b7b631fb8fc9b9b9495a3575e6f1ca87e8e5baf8d634949105",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Keep three machine roles\n    distinct: the machine executing a build, the machine on which the produced\n    tool will run, and, when that tool is a compiler, its emitted-code target.\n    None is inferred from another role. Native Vibe extension/library ABI belongs\n    to the executor that loads it; an installable Linux payload belongs to its\n    produced-tool runtime target. Compiler output constraints are separately\n    selected and are absent when that role is not applicable. @status:spec/plan",
+      "line": 98,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ABI-ROLE-SEPARATION-LAW"
+    },
+    {
+      "anchor": "COMPATIBILITY-FACTS",
+      "content_hash": "sha256:96552b6e947b017b74e553e468cc781b9a3d73cc7912f4cbfd9229aa150367e1",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Compatibility facts",
+      "line": 106,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-compatibility-facts",
+      "content_hash": "sha256:cd8d8bcb27a6878441f2149ac181a1f5350702affb56da042f711f385bb1b836",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 107,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-compatibility-facts"
+    },
+    {
+      "anchor": "COMPATIBILITY-FACTS-LAW",
+      "content_hash": "sha256:2a888e089ef25dea1ada0ca1bae76647d7693bb06ab8deaf41ca8f93839c793b",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Compatibility decisions\n    consume explicit role-labelled facts and admitted capabilities. OS-only\n    equality or a when.os match does not establish architecture, libc or ABI\n    compatibility, prefix relocatability or operation support. Missing required\n    facts produce an explicit unresolved/refused compatibility result; an\n    unsupported operation names its target mode or unsatisfied constraint before\n    effectful dispatch. Describing Windows executor plus Linux target is legal\n    data and cannot select a Windows launcher for that Linux payload. @status:spec/plan",
+      "line": 108,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#COMPATIBILITY-FACTS-LAW"
+    },
+    {
+      "anchor": "legacy",
+      "content_hash": "sha256:127bd657fdfbb4125df71b1ebd59bc6297e64acc399e15f1ea1e6f65a5c3a45e",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "8. Explicit legacy host interpretation",
+      "line": 118,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#legacy"
+    },
+    {
+      "anchor": "LEGACY-HOST-INTERPRETATION",
+      "content_hash": "sha256:efbca8b7da235b75e3afdcdc02a36a8e7dc72f9a305244684d8d14c64651caa9",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Legacy host interpretation",
+      "line": 119,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-legacy-host-interpretation",
+      "content_hash": "sha256:5823ebb1c933f0e5fcdfeef35f0431427c7d8b5a8c189c91682fa414c9549955",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-legacy-host-interpretation"
+    },
+    {
+      "anchor": "LEGACY-HOST-INTERPRETATION-LAW",
+      "content_hash": "sha256:c199ca78cea3d5dbb23c3a9823873153aaa26d50434db4102c1b663b198a5ea5",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Existing TargetWhen\n    and TargetApplicability retain their strict OS-set grammar and explicit\n    legacy executor-host interpretation. Package and deploy projections continue\n    receiving the same injected current command-process OS, with absence\n    unconditional, existing active/skipped decisions and inactive-dependency\n    refusals unchanged. A new target value does not silently retarget old guards.\n    Later target-aware predicates and world/boot consumers require explicit\n    adoption and separately bound evidence. @status:spec/plan",
+      "line": 121,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LEGACY-HOST-INTERPRETATION-LAW"
+    },
+    {
+      "anchor": "LOCAL-WORKSPACE-COMPATIBILITY",
+      "content_hash": "sha256:07d014dd68a12d428661b0823b59af74cfb3f7005e92015236dfa16064d21bb7",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Local workspace compatibility",
+      "line": 130,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LOCAL-WORKSPACE-COMPATIBILITY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-local-workspace-compatibility",
+      "content_hash": "sha256:8f0e0e5768c30db74c75d4359d2f54fad25c1a7ecb8c3ee7b72d94fc278f1484",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 131,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-local-workspace-compatibility"
+    },
+    {
+      "anchor": "LOCAL-WORKSPACE-COMPATIBILITY-LAW",
+      "content_hash": "sha256:e8cca074eaa25edefa8ec6c3ab46fb2e678ff42c9eb81cbfe644194dba34ea59",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "The first pure\n    compatibility result supports an explicitly injected existing local workspace\n    binding with legacy local semantics. The surface may explicitly bind its\n    local destination to the observed local executor; this is a named mapping,\n    not an inference usable for remote/image targets. Bare install still\n    materializes package source; constructing these values never starts a build,\n    native load, provider, deployment or activation. @status:spec/plan",
+      "line": 132,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#LOCAL-WORKSPACE-COMPATIBILITY-LAW"
+    },
+    {
+      "anchor": "UNSUPPORTED-TARGET-OPERATIONS",
+      "content_hash": "sha256:bc0dcb54ea6130988b63b99122b59e21e6f765d5d9c1f45dd1f471ccdf8ee52c",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Unsupported target operations",
+      "line": 140,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#UNSUPPORTED-TARGET-OPERATIONS",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-unsupported-target-operations",
+      "content_hash": "sha256:271a351088515c38bac0e0bc22a17ad3e3fbdc871c249568c8dc86fc9d2aff06",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-unsupported-target-operations"
+    },
+    {
+      "anchor": "UNSUPPORTED-TARGET-OPERATIONS-LAW",
+      "content_hash": "sha256:7c324f88a566ac6497d860fdc15a81070ada670bf68be1b974ffcc966f14f3bd",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "User-profile,\n    offline rootfs/image and live-system targets are describable domain data but\n    the initial role foundation returns explicit unsupported-operation results\n    for their execution. Existing user-scoped deploy fields are not evidence of\n    full environment-operation support. User HOME/rootfs/OCI delivery is a later\n    commissioned implementation; a live distribution remains a design direction.\n    No provider is assumed to implement every target mode. @status:spec/plan",
+      "line": 142,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#UNSUPPORTED-TARGET-OPERATIONS-LAW"
+    },
+    {
+      "anchor": "construction",
+      "content_hash": "sha256:88c2776e68a3c6fc3ac74e70ea349d14bed37b007888c29330c93196e1af8f8a",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "9. Pure construction and existing identity owners",
+      "line": 151,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#construction"
+    },
+    {
+      "anchor": "INJECTED-CONSTRUCTION-AUTHORITY",
+      "content_hash": "sha256:ee90889751b56677c3189e04bf5954eaf606882bba119242c725398c67570ee4",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Injected construction authority",
+      "line": 152,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-injected-construction-authority",
+      "content_hash": "sha256:07273f5f563360165ca2f0e9019504e9984727ab1b54d3b29af0021352b2cb95",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 153,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-injected-construction-authority"
+    },
+    {
+      "anchor": "INJECTED-CONSTRUCTION-AUTHORITY-LAW",
+      "content_hash": "sha256:911e5de09333fdeaae0cf06f372a772fb93c6b57bb8ff42a3715b222991c4609",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Pure\n    constructors validate role-specific inputs, required nonblank references and\n    cross-reference consistency without HOME/PATH lookup, filesystem probing,\n    Docker, registry/configuration reads or execution. Root/principal/provider\n    selection arrives from the trusted admitting surface and is not reselected\n    below it. The existing project vibevm layout stays in place; root/prefix\n    layout policy is separately centralized rather than invented per provider. @status:spec/plan",
+      "line": 154,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#INJECTED-CONSTRUCTION-AUTHORITY-LAW"
+    },
+    {
+      "anchor": "IDENTITY-OWNER-REUSE",
+      "content_hash": "sha256:3293f6487d442ca31698c11094aae3835222a47c1790ff86ee2ef88b3f7b1efa",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Identity owner reuse",
+      "line": 162,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#IDENTITY-OWNER-REUSE",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-identity-owner-reuse",
+      "content_hash": "sha256:d8aef7c01c17355ad26d241767f528f9a457e0092062d0efa2741cf6fd689815",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 163,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-identity-owner-reuse"
+    },
+    {
+      "anchor": "IDENTITY-OWNER-REUSE-LAW",
+      "content_hash": "sha256:1c49dd4bc8cfd584a8bf6abeaf7bde7cb4dea8268f29b9f3d4e3187bf3a65568",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "This role foundation\n    introduces no identity hash recipe, machine serializer/parser or wire epoch.\n    Reuse existing package/content/capture references through their current owners;\n    ContentHash stays a package-content reference, not an environment hasher.\n    Where an environment-specific content-ID producer is not yet implemented,\n    explicitly injected opaque role references support binding/equality only,\n    never a claim of independently authenticated content. A future producer or\n    durable format requires its own existing-owner justification and source\n    contract before emission. Preserve role distinctions even when underlying\n    reference strings happen to be equal. @status:spec/plan",
+      "line": 164,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#IDENTITY-OWNER-REUSE-LAW"
+    },
+    {
+      "anchor": "proof",
+      "content_hash": "sha256:8645a4b4dcd4fddaf29f48f49d53a7e47639913e75e3f7ddf5d5752dd1b914c4",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "10. Desired contract versus observed implementation",
+      "line": 176,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#proof"
+    },
+    {
+      "anchor": "PURE-ROLE-FOUNDATION-OBSERVED",
+      "content_hash": "sha256:57b142b1252be69d8821378080f436a8f513191b23938322dca03f5c01ad5853",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "The pure\n    role foundation is implemented in `vibe-core::environment`, code subject\n    `40ef38d10b969082bab028c6b49621af11289946`. Five producer-labelled role\n    references and checked composition/closure joins remain supplied claims,\n    not authenticated content or physical authority. The local compatibility\n    result covers source projection only: unknown ABI/libc is allowed when\n    unrequired, while explicit missing/mismatching requirements refuse. Target\n    launcher-family descriptions and executor-native facts remain separate;\n    user/rootfs/live operations are unsupported. Eight selected GNU/Linux cases\n    passed; the independent export-namespace correction repeated only its one\n    exact case. Tool and service names are checked within their separate\n    collections. No ambient HOME/PATH, filesystem probing, Docker, provider\n    execution, new hash/wire format or existing consumer adoption was added.\n    This does not prove native deployment or the later layout/payload/service\n    programme. @status:impl/done",
+      "line": 177,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#PURE-ROLE-FOUNDATION-OBSERVED"
+    },
+    {
+      "anchor": "ENVIRONMENT-PROOF-BOUNDARY",
+      "content_hash": "sha256:151caf3c10606f676a2500b97a09f054843e396e079e4e5154d3ddf50a65cd3e",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "Environment proof boundary",
+      "line": 192,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PROOF-BOUNDARY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-environment-proof-boundary",
+      "content_hash": "sha256:d18a18b857c969375cbaea849f661d566b564f2073630f3372d46796474fa997",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 193,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#req-environment-proof-boundary"
+    },
+    {
+      "anchor": "ENVIRONMENT-PROOF-BOUNDARY-LAW",
+      "content_hash": "sha256:9fd1917eab4b0783c72f48508139f876e81ebd388ddfc0cfb6af392d784107c7",
+      "doc_path": "common/PROP-076",
+      "file": "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+      "heading": "The pre-foundation\n    baseline has pure OS applicability values, Cargo binary-to-artifact lowering,\n    current-process native platform selection and injected deployment roots.\n    That is not evidence that these five environment objects, target ABI checks,\n    cross-target launcher selection or HOME/rootfs/live operations are implemented.\n    Later executable constructors and compatibility tests must cite these anchors;\n    consumer migration and native execution proofs remain separate claims. @status:spec/plan",
+      "line": 194,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PROOF-BOUNDARY-LAW"
     },
     {
       "anchor": "root",
