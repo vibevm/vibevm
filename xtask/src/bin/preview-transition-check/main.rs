@@ -3,6 +3,7 @@
 mod capture;
 mod contribution;
 mod documentation;
+mod readiness;
 
 #[cfg(test)]
 mod captured_git_tests;
@@ -15,6 +16,8 @@ mod contribution_tests;
 #[cfg(test)]
 #[path = "documentation/tests.rs"]
 mod documentation_tests;
+#[cfg(test)]
+mod readiness_tests;
 #[cfg(test)]
 mod tests;
 
@@ -176,13 +179,9 @@ fn run(request: &CheckRequest) -> CheckReport {
             }
         }
         _ => {
-            report.verdict = CheckReportVerdict::Pending;
-            report.findings.push(Finding {
-                code: "stage-pending".into(),
-                subject: "preview-transition".into(),
-                reason: "This stage has not yet established its required domain evidence.".into(),
-                state: FindingState::Pending,
-            });
+            if let Err(error) = readiness::check(request, &transition, &mut report) {
+                fail(&mut report, error);
+            }
         }
     }
     report.subject_ids.sort();

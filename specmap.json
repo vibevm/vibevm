@@ -33573,6 +33573,33 @@
       "symbol": "xtask::bin::preview-transition-check::documentation::xml",
       "end_line": 7,
       "fingerprint": "tok1:e16564967d1c972f9d1e0b4a83707d9c36f6a98e6991b17e913821e5933538c0"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::readiness",
+      "end_line": 3,
+      "fingerprint": "tok1:908bc10eaba69694788459d4abeb63631242b46fe1a1656d31304c0600c12fd4"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "item_kind": "fn",
+      "line": 228,
+      "symbol": "xtask::bin::preview-transition-check::readiness::check",
+      "end_line": 337,
+      "fingerprint": "tok1:cb1fa240b21f62dde0c24e2226ce5b4f1993db0012011c79c430d1e302808d5e"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/bin/preview-transition-check/readiness_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "xtask::bin::preview-transition-check::readiness_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:908bc10eaba69694788459d4abeb63631242b46fe1a1656d31304c0600c12fd4"
     }
   ],
   "edges": [
@@ -59722,6 +59749,30 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#DOCUMENTATION-INPUT-CHECK",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::readiness",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#BOOTSTRAP-STAGE-READINESS",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::readiness::check",
+      "line": 229,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#BOOTSTRAP-STAGE-READINESS",
+      "verb": "implements"
+    },
+    {
+      "file": "xtask/src/bin/preview-transition-check/readiness_tests.rs",
+      "from_symbol": "xtask::bin::preview-transition-check::readiness_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-081#BOOTSTRAP-STAGE-READINESS",
       "verb": "implements"
     }
   ],
