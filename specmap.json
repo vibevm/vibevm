@@ -84091,6 +84091,60 @@
     },
     {
       "anchor": "root",
+      "content_hash": "sha256:3f9f484d00d56065c732e2ce130550a79f6119185580c4f6fa6a67d230792abe",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Machine operations and observability",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#root"
+    },
+    {
+      "anchor": "CAPABILITY-CENSUS",
+      "content_hash": "sha256:6cfe13557fa6f8eab50673674a16089cb99e8d9d15f2220d83f5666d120d1224",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Maintain a finite, source-bound denominator of public CLI names and aliases, nested command forms, meaningful TUI actions, MCP registrations, extension-registration seams and semantic model families. Distinguish actual registrations, observed adapter or library ownership, planned operations and executed evidence. A command count, descriptor name, field count or task row cannot establish a callable semantic path or complete product coverage. Existing administrative and source-conversion operations remain visible. @status:spec/plan",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#CAPABILITY-CENSUS"
+    },
+    {
+      "anchor": "COVERAGE-INVENTORY",
+      "content_hash": "sha256:a92f4684a43b76ebb18887c0698ee044a7392c22a9261372e8a82dfc52c436d6",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Retain stable operation and model identities with explicit surface mappings, domain owner, schema and source identities, target, effects, authority, completeness, retention and proposed or observed conformance evidence. Use the ordinary owned-format registry, canonical schema generation and generated readers for the machine-readable inventory. It is source and coverage data, not a requirements engine, scheduler, replacement domain graph or an authorization token. Runtime facade contracts remain separate and adopt these records without a bootstrap dependency cycle. @status:spec/plan",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY"
+    },
+    {
+      "anchor": "REGISTRATION-OBSERVATION",
+      "content_hash": "sha256:190c9542506954ac9262cd6903cf1f48db20be650b3038584022c8e4d5b3ce3a",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Observe registrations through their native owners. CLI metadata comes from the actual clap definition in its owning target; public types inside a binary do not establish an importable library. MCP factory construction, descriptor observation and operation execution are distinct effects. Registration inspection must not invoke a handler, provider, installation or schema fetch. Do not reconstruct a second command parser from help text or add a second Rust parser. Bind exact source and observer identities; unsupported observation stays explicit. @status:spec/plan",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#REGISTRATION-OBSERVATION"
+    },
+    {
+      "anchor": "COVERAGE-STATUS-DISTINCTIONS",
+      "content_hash": "sha256:0b4cc7065270aca2e488ac6827d8b8ee08a07fbc3a5ee033e94ad937db0f11c3",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Keep implementation status, contextual availability and authorization distinct. A supported operation's missing external path or structured carrier is an implementation gap, not contextual unsupported. Planned rows and uninspected ownership do not count as implemented. Presentation-only exclusions require a supported reason; settings persistence, file or clipboard writes, process execution and other real effects remain semantic rows. Expose semantic public models with explicit completeness and unavailable or redaction reasons rather than dumping private memory or secrets. @status:spec/plan",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-STATUS-DISTINCTIONS"
+    },
+    {
+      "anchor": "COVERAGE-VERIFICATION",
+      "content_hash": "sha256:793cfc683d5213ca33cda989d14d9eb3438cc19299f3c8641431eb41f46e20fb",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Check the selected actual registration denominator against the inventory and reject missing, orphan, duplicate or contradictory mappings. Source-shape and registration consistency do not establish domain effects, semantic adequacy, native role linkage or central acceptance. Review the actual operation and model delta independently. Select meaningful nonzero cases and owning targets for the changed inputs, preserve applicable negative and invariant proof, and reuse matching evidence. Mutation testing requires a concrete suspicious signal and a bounded useful case; workstream completion does not itself justify a broad product panel. @status:spec/plan",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-VERIFICATION"
+    },
+    {
+      "anchor": "root",
       "content_hash": "sha256:cc17b96286be0f428b3929deebea4bc70624ca592555435011be6f8162067550",
       "doc_path": "common/PROP-081",
       "file": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
