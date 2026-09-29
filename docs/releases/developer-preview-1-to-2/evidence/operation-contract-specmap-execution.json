@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "argv": [
+    "cargo",
+    "xtask",
+    "specmap"
+  ],
+  "environment_overrides": {
+    "CARGO_BUILD_JOBS": "4",
+    "CARGO_NET_OFFLINE": "true"
+  },
+  "exit_code": 0,
+  "source_sha256": "210c966878dc883cce94c98a6dc519fc8bfab35b11a48343cb5de0af3e1535b7",
+  "index_sha256": "a3cfe9f89cb1ef3b2d4de76be19f3ece3d8a0efd081e6db50796aa7901af26de",
+  "units": 8819,
+  "code_items": 4010,
+  "edges": 3423,
+  "suspects": 0,
+  "existing_warnings": 34,
+  "gated_orphans": 0,
+  "unresolved_host_edges": 0,
+  "outside_jurisdiction_non_host_edges": 35,
+  "raw_log": "docs/releases/developer-preview-1-to-2/evidence/operation-contract-specmap.log",
+  "raw_sha256": "d725e1c4c89ddcc087d17c3df2a2a03a80fbc4e366feed5f340799f979007255",
+  "scope": "Canonical source traceability after six desired machine-operation requirements; no schema/code runtime claims."
+}
