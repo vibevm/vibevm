@@ -19,6 +19,9 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 pub mod output;
 pub use output::ToolOutput;
 
+pub mod migration_operation;
+pub use migration_operation::ManifestMigrationOperationMcpTool;
+
 pub mod migration_plan;
 pub use migration_plan::PlanManifestMigrationMcpTool;
 
@@ -60,6 +63,10 @@ pub trait McpTool {
 
 /// The built-in tool set — the one registration point (PROP-015 §2.2).
 /// A new tool is a new cell added here, not an edit to the dispatcher.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+    r = 4
+)]
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
         Box::new(QueryPackageMcpTool),
@@ -75,6 +82,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
         Box::new(PlanManifestMigrationMcpTool),
+        Box::new(ManifestMigrationOperationMcpTool),
     ]
 }
 
