@@ -1,0 +1,65 @@
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+sync-engines: [1/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates → 3 target(s) × 4 crate(s)…
+sync-engines: [1/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates — 3 file op(s) (0s)
+sync-engines: [2/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates → 1 target(s) × 5 crate(s)…
+sync-engines: [2/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates — 1 file op(s) (0s)
+sync-engines: [3/9] vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates → 1 target(s) × 6 crate(s)…
+sync-engines: [3/9] vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates — 0 file op(s) (0s)
+sync-engines: [4/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates → 1 target(s) × 5 crate(s)…
+sync-engines: [4/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates — 1 file op(s) (0s)
+sync-engines: [5/9] vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates → 1 target(s) × 8 crate(s)…
+sync-engines: [5/9] vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates — 0 file op(s) (0s)
+sync-engines: [6/9] vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0 → 1 target(s) × 1 crate(s)…
+sync-engines: [6/9] vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0 — 0 file op(s) (0s)
+sync-engines: [7/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates → 1 target(s) × 5 crate(s)…
+sync-engines: [7/9] vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates — 1 file op(s) (0s)
+sync-engines: [8/9] vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates → 1 target(s) × 8 crate(s)…
+sync-engines: [8/9] vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates — 0 file op(s) (0s)
+sync-engines: [9/9] vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0 → 1 target(s) × 1 crate(s)…
+sync-engines: [9/9] vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0 — 0 file op(s) (0s)
+sync-engines: 6 file operation(s); 51 vendored pair(s) across 9 sync set(s) mirror their authored sources; 6 of 6 vendored engine dir(s) under vibevm/vibepacks/org.vibevm.ai-native/ are covered.

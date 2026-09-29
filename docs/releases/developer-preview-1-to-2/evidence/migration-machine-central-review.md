@@ -1,0 +1,11 @@
+# Central scoped C2 review
+
+Root semantic verdict: passed for the bounded strict planning contract, type/generator ownership, pure adapter and CLI/MCP entry paths at ccddf879b6f030e2ac959a076af66489107d3e0e. Required actual selected evidence and independent source reviews are read. Native exact-capture account has not yet run; publication of accepted contribution records and task acceptance remain conditional on its success. This is not final DP2 or all212-task acceptance.
+
+Actual range has23commits,132raw/129product paths. Only the inherited five exclusions remove planning/release/derived-cache/build bookkeeping. All17 product subjects must be assigned to reviewed records: six source-law commits, core epoch metadata, two generator fixes, three schema/type/reader commits, pure adapter, MCP, CLI, canonical copied headers and derived index. Review subjects for each record must be that record's declared implementation subject, with matching passing evidence, not an unrelated aggregate after/index commit.
+
+Finite interface/source relationships allocate actual changed implementation paths to their selected effects. Authority documents remain positively accounted as source laws and bound contract sources, without falsely requiring a Rust implementation effect on an authority path. All five declared surfaces use actual endpoint sourceSHA and identifiers; nestedCLI and MCP additions are visible. No capture claims a complete current capability census or private ABI. Schemas/errors preserve shared ownership and strict structural/semantic boundaries; external report validation replays core rather than approximating grammar or identities.
+
+Both root and independent reviews found no unresolved blocker after loader-policy correction. The21 generator,12 reader,1 epoch,10 adapter,5CLI and6MCP selected cases prove their bounded obligations. Failure/provenance limits are explicitly retained, not turned into green whole-product claims. Historical scalar/synthetic inputs do not prove broad legacy corpus; final guide topics and native/facade/full-platform release proof remain due.
+
+Product1.1 remains the mutable local next cohort. No further bump or public Git/package publication is performed or authorized. User's hold is preserved. Accepted record metadata alone cannot grant release/apply/host authority.

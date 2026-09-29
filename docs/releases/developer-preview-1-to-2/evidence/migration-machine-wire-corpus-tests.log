@@ -1,0 +1,23 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.64s
+     Running tests/migration_wire_corpus.rs (target/debug/deps/migration_wire_corpus-c64d286194fdb52b)
+
+running 11 tests
+test preflight_root_stage_and_primitive_invalids_refuse ... ok
+test optional_null_is_presence_invalid_but_direct_derived_reader_accepts ... ok
+test preflight_valid_roundtrips_share_one_error_type_and_nine_codes ... ok
+test empty_epoch_payload_markers_refuse_extra_members ... ok
+test numeric_offsets_refuse_instead_of_lossy_conversion ... ok
+test request_structural_invalids_refuse ... ok
+test shared_error_extra_members_and_unknown_codes_refuse_in_both_roots ... ok
+test request_valid_roundtrips_preserve_text_and_optional_choices ... ok
+test report_valid_roundtrips_preserve_all_outcomes_and_bound_vectors ... ok
+test report_structural_invalids_refuse_root_outcome_plan_edit_and_question ... ok
+test semantic_invalid_frames_require_later_owner_validation ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
