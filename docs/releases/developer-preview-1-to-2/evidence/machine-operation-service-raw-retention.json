@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "scope": "machine-operation-service-raw",
+  "product_code_sha256": {
+    "crates/vibe-orchestrator/src/machine_operation.rs": "c312a9a2f1cab723ec8c2c287eec488948375a2eac019a14aea61b17c894a508",
+    "crates/vibe-orchestrator/src/lib.rs": "29f669a058bee0eceb21740b711c56405d294412e913e4f7247e338432fa8eba"
+  },
+  "raw_artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-checks/final.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/final.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-checks/final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/final.log",
+      "sha256": "aa10ee21eea0a7f76398e4267f786111a946282b60d9e322c110df8e8357664e",
+      "bytes": 2581
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-checks/initial.exit",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/initial.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-checks/initial.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/initial.log",
+      "sha256": "ab382850d226f4ad798d68c00b006ef182d4b847149e494a206254b8a8f904d0",
+      "bytes": 5323
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-composition-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-composition-exact.log",
+      "sha256": "335588e4a0c2bc07ac17feceb87d934e94854df7ce2b6ac23cab52b0f2b98e1d",
+      "bytes": 2287
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-composition-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-composition-fmt-check.log",
+      "sha256": "034e87f1512ef6ad4e5d923e2ebdc8741454bc2705fde0f4caa3953dfbd917e5",
+      "bytes": 593
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-composition-fmt-final.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-composition-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-evidence-family.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-evidence-family.log",
+      "sha256": "8b72dfd9309200aced50d73c1fdea256ecef5bccac40d5453c60305e6f872ea0",
+      "bytes": 2679
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-evidence-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-evidence-fmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-query-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-query-review.md",
+      "sha256": "72770f332574add1d9c975092666e18e0461f588f070d7f41e9464bb86e250be",
+      "bytes": 3973
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-root-exact.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-root-exact.log",
+      "sha256": "0b658a9f840a38660c43343e28dc8b6c54b3d443a15e31eef0d8476daa1ee3a5",
+      "bytes": 2280
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-service-root-fmt-check.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/machine-operation-service-raw/vibevm-next-M16-B1-service-root-fmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "limits": "Selected finite compiler/test/review receipts only; complete machine catalogue/retained extension schema/native/adapters/final release unaccepted."
+}

@@ -1,0 +1,37 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation.rs:75:
+         Some(error) => match typed_error(error) {
+             Ok(document) => document,
+             Err(_) => {
+-                let original = serde_json::to_string(error)
+-                    .unwrap_or_else(|_| format!("{error:?}"));
++                let original =
++                    serde_json::to_string(error).unwrap_or_else(|_| format!("{error:?}"));
+                 return ToolError::Internal(format!(
+                     "INTERNAL MACHINE PREFLIGHT VALIDATION FAILURE: UNVALIDATED original error, not a normal report or replay authority: {original}"
+                 ));
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation/tests.rs:219:
+     r = 1
+ )]
+ fn invalid_owning_preflight_retains_original_as_diagnostic_only() {
+-    let MigrationPlanningResponse::Preflight(mut original) = plan_migration_json("{bad-json") else {
++    let MigrationPlanningResponse::Preflight(mut original) = plan_migration_json("{bad-json")
++    else {
+         panic!("expected owning preflight error")
+     };
+     original.schema = 2;
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation/tests.rs:226:
+-    let ToolError::Internal(message) = invalid("invalid generated preflight", Some(&original)) else {
++    let ToolError::Internal(message) = invalid("invalid generated preflight", Some(&original))
++    else {
+         panic!("invalid owning error became a normal structured preflight")
+     };
+     assert!(message.contains("UNVALIDATED original error"));
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation/tests.rs:230:
+-    assert!(message.contains("\"schema\":2"), "original bytes were discarded");
++    assert!(
++        message.contains("\"schema\":2"),
++        "original bytes were discarded"
++    );
+     assert!(!message.contains("normal report was produced"));
+ }
+ 

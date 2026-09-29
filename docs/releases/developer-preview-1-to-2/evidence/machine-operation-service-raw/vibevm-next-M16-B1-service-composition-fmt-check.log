@@ -1,0 +1,11 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation.rs:404:
+ 
+     #[test]
+     fn admitted_pure_planner_matches_owning_report_and_replay_validator() {
+-        let service = MachineOperationService::pure_text_planner(PurePlannerAdmission::Admitted)
+-            .unwrap();
++        let service =
++            MachineOperationService::pure_text_planner(PurePlannerAdmission::Admitted).unwrap();
+         assert_eq!(service.descriptors(), &[admitted_row()]);
+         let request = request();
+         let expected = plan_migration_request(request.clone());

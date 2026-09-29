@@ -1,0 +1,11 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation.rs:119:
+             if row.format_id.is_none() && row.payload_json.is_none()
+     );
+     if unknown_preflight {
+-        if value.operation_id.is_some()
+-            || value.domain_owner.is_some()
+-            || value.source_id.is_some()
++        if value.operation_id.is_some() || value.domain_owner.is_some() || value.source_id.is_some()
+         {
+             return Err("unestablished preflight identity must be null");
+         }

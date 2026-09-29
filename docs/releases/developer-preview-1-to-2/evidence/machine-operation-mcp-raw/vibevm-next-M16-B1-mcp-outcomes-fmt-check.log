@@ -1,0 +1,12 @@
+Diff in /home/olegchir/git/v/vibevm-next/crates/vibe-mcp/src/tools/machine_operation/tests.rs:285:
+             _ => panic!("planner outcome was not a result or refusal"),
+         };
+         let report: PlanReport = serde_json::from_str(&payload).unwrap();
+-        assert_eq!(serde_json::to_value(&report).unwrap()["outcome"]["status"], status);
++        assert_eq!(
++            serde_json::to_value(&report).unwrap()["outcome"]["status"],
++            status
++        );
+         let request = decode_migration_request(inner).unwrap();
+         validate_report_for_request(&request, &report).unwrap();
+     }
