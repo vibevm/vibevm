@@ -60213,7 +60213,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:4dbc2a6d474e796950ebffeb527168dfa36e330e75aadfd14cdc7132107e9873",
+      "content_hash": "sha256:725850ebaf70fe77fed851cc4c822383fdc5614141243ee777d533945dc4f1f7",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -60564,7 +60564,7 @@
     },
     {
       "anchor": "package-model",
-      "content_hash": "sha256:663e403925951244dd16a9fa7fe57db0b1ed73eef5d3ada91da1b58252943ad8",
+      "content_hash": "sha256:783d78cae9492223a05e482b882e1f90d8bafd1717ed7f5cfbe09742b3b5703b",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 7. The package model",
@@ -60600,7 +60600,7 @@
     },
     {
       "anchor": "lockfile-schema",
-      "content_hash": "sha256:76779bff44cf214acb37be4ac6b87188cf576499cd81bbb281ff9c4a98650eeb",
+      "content_hash": "sha256:2e7ba46a068596493fc7ceb5811a9f27bd59732a3fe08bfb15a336a5c7019be8",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.4 Lockfile schema",
@@ -138171,7 +138171,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7165b3bbf0958d74173608f7696d2425cc57770250cb0949cd3c7a33571b34f5",
+      "content_hash": "sha256:86b6c8fb0616e460f1fa3d7d9695001cc4d94523d2c81ddab70e7aebc7339bb4",
       "doc_path": "terraforms/next/contracts/NEXT-D-013",
       "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
       "heading": "NEXT owner decision D-013",
@@ -138189,10 +138189,10 @@
     },
     {
       "anchor": "NEXT-D-013-LAW",
-      "content_hash": "sha256:82994b3e02eccf44e392a24cb2e5cec2f0d83a6f0ed8c63a2abecb6420df4d9b",
+      "content_hash": "sha256:3b661a0f5ef5ddeb6c13f1435d5e7d6c52fec343c5812b7de0db7783a4033a95",
       "doc_path": "terraforms/next/contracts/NEXT-D-013",
       "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
-      "heading": "Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют @status:spec/done",
+      "heading": "Historical owner ruling: Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют. Current owner amendment: Developer Preview 1 has been released and already has users; the earlier no-users description is historical. Prototype exit remains an explicit owner decision and must not be inferred from publication, users, version or format flags. The next active-owned cohort is mutable 1.1.0 in one increment. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required. @status:spec/done",
       "line": 6,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-013#NEXT-D-013-LAW"
     },
@@ -138333,7 +138333,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:e2b77fa1dba5adb62c2b0446578f53bcd442300a29ac8a95a132dfe65cd46b20",
+      "content_hash": "sha256:1ec7113fb369e009be3a99ecd4aebdfdbe1e3211eb9100a4ebbceac2d59a220e",
       "doc_path": "terraforms/next/contracts/NEXT-D-019",
       "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
       "heading": "NEXT owner decision D-019",
@@ -138351,10 +138351,10 @@
     },
     {
       "anchor": "NEXT-D-019-LAW",
-      "content_hash": "sha256:e7010c6921617b5d80c91b333725280df40abba8edef9074344be5b2e07e3b29",
+      "content_hash": "sha256:07354d4a9e4178f5f1d42c29634f12d5dc4bc0839adcdc2788971b204115eacc",
       "doc_path": "terraforms/next/contracts/NEXT-D-019",
       "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
-      "heading": "Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0 @status:spec/done",
+      "heading": "Historical owner ruling: Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0. Current owner amendment: the next active-owned product and repository-package cohort is mutable 1.1.0 in one increment; the prior current-1.0.0 introduction is historical. Redbook composition remains owner-controlled, with future keep/new-version offer unless already explicitly chosen. Exact historical captures and foreign/upstream/fixture/epoch identities remain unchanged. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required. @status:spec/done",
       "line": 6,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-019#NEXT-D-019-LAW"
     },
