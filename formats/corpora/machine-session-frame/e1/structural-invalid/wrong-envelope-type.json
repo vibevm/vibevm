@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "request",
+    "context_id": "context-a",
+    "target_id": "target-a",
+    "envelope_json": {}
+  }
+}

@@ -102,6 +102,7 @@ pub enum FormatId {
     MachineEntityReference,
     MachineOperationDescriptor,
     MachineOperationEnvelope,
+    MachineSessionFrame,
     MachineSourceLocation,
     Manifest,
     McpLifecycleTasks,

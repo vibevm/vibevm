@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "initialized",
+    "api_version": "1",
+    "selected_schemas": [
+      {
+        "format_id": "machine-operation-envelope",
+        "epoch": 1
+      }
+    ],
+    "position_encoding": "utf-8-bytes",
+    "actual_capabilities": {
+      "streaming": false,
+      "replay": false,
+      "control": false
+    },
+    "contexts": [
+      {
+        "context_id": "context-a",
+        "kind": "workspace",
+        "availability": "available",
+        "target_ids": [
+          "target-a"
+        ],
+        "reason": null,
+        "path": "/tmp/forbidden"
+      },
+      {
+        "context_id": "context-b",
+        "kind": "container",
+        "availability": "unavailable",
+        "target_ids": [],
+        "reason": "owner-not-bound"
+      }
+    ],
+    "legacy_mcp_observed_version": "2024-11-05"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "initialize_offer",
+    "api_versions": [
+      "1"
+    ],
+    "schema_offers": [
+      {
+        "format_id": "machine-operation-envelope",
+        "epoch": 1
+      }
+    ],
+    "position_encodings": [
+      "utf-8-bytes"
+    ],
+    "requested_capabilities": {
+      "streaming": false,
+      "replay": false,
+      "control": false
+    }
+  }
+}

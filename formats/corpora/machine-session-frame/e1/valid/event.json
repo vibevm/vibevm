@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "event",
+    "event_id": "event-a",
+    "envelope_json": null,
+    "outcome": {
+      "effect_state": "uncertain",
+      "completeness": "partial",
+      "provenance_id": "source-event-a"
+    }
+  }
+}

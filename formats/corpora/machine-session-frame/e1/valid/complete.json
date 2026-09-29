@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "complete",
+    "envelope_json": null,
+    "outcome": {
+      "effect_state": "no_effects",
+      "completeness": "complete",
+      "provenance_id": null
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "initialization_refused",
+    "reason": "no_common_api_version",
+    "supported_api_versions": [
+      "1"
+    ],
+    "supported_schemas": [
+      {
+        "format_id": "machine-operation-envelope",
+        "epoch": 1
+      }
+    ],
+    "supported_position_encodings": [
+      "utf-8-bytes"
+    ]
+  }
+}

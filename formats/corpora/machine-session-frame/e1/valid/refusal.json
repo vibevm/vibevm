@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "session_id": "session-a",
+  "request_id": "request-a",
+  "body": {
+    "kind": "refusal",
+    "reason": "unknown_context",
+    "envelope_json": null,
+    "outcome": {
+      "effect_state": "no_effects",
+      "completeness": "unavailable",
+      "provenance_id": null
+    }
+  }
+}
