@@ -24,6 +24,7 @@ pub mod compile_trace_report;
 pub mod compiler_trace_index;
 pub mod deploy_records;
 pub mod extensions_analyze;
+pub mod machine_view;
 pub mod native_backend;
 pub mod native_build;
 pub mod native_compile;
