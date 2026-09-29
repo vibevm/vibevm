@@ -649,7 +649,13 @@ preservation `bytes_and_unix_mode` or `bytes_only`. The aggregate never exceeds
 the weakest observed boundary; preflight and uncertain synchronization must
 not fabricate an achieved guarantee. Nullable report fields deliberately
 represent unavailable evidence, unlike the nonnullable optional choices of
-the existing planning request.
+the existing planning request. `journal_recoverable` does not assert
+persistent-media directory synchronization: a power/system failure may lose
+namespace entries, including retained images or intent. Process-interruption
+recovery is supported only when its required retained evidence survives;
+missing evidence requires explicit resolution and never fabricated rollback.
+Document this persistence limit and report its reduced tier without disabling
+the platform solely for lack of a stronger namespace flush.
 
 Errors carry code, field and reason strings. Codes are `invalid_request`,
 `unsupported_schema`, `authority_refused`, `store_not_disjoint`,
