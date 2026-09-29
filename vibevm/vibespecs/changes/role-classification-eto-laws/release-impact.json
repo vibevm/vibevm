@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "change_id": "role-classification-eto-laws",
+  "before_capture_id": "architecture-baseline-2145ec8d1",
+  "after_capture_id": "architecture-after-3ffb13b29",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "fdab4da0c7b12113cd5c6b9bb8ee2e6d08a1cadf"
+    },
+    {
+      "kind": "commit",
+      "identity": "fa9cb0bf05bf892854789a509a5dd40ff45efca8"
+    }
+  ],
+  "affected_paths": [
+    "VIBEVM-SPEC.md",
+    "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+    "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+    "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+    "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+    "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+  ],
+  "effects": [
+    {
+      "interface_id": "spec:lifecycle:invocation-role",
+      "capability_id": "causal-role-separation",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior lifecycle/agent text retained inclusive role and relay/revision ambiguities.",
+      "after": "Required policy separates admitted create, deterministic build and ordinary/scoped verify, with separately explicit full composition checking exact produced source and causal evidence. Predecessors, credentials and phase order grant no producer authority; historical dispatcher guard implementation is not claimed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#INVOCATION-ROLE-LAW"
+      ]
+    },
+    {
+      "interface_id": "spec:source:classification",
+      "capability_id": "classified-native-ordinary-source",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior native-source text lacked the new explicit classification-before-dispatch law.",
+      "after": "Desired policy distinguishes native Vibe, structured ordinary CommonMark, ordinary XML data and opaque foreign contents, canonical parser reuse and source/projection/refusal provenance. No caller-wide runtime classification implementation or schema change is claimed.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-045#SOURCE-CLASSIFICATION-LAW"
+      ]
+    },
+    {
+      "interface_id": "spec:boot:diagnostic-cost",
+      "capability_id": "boot-calculator-without-admission",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Prior boot/token text lacked the new no-admission-quota/calculator obligation.",
+      "after": "Desired policy forbids boot size/token admission ceilings while requiring diagnostic costs with measured/estimated basis, provenance, omissions, incompleteness and pre-install marginal what-if. No implemented calculator/runtime quota guard or worker-budget change is asserted.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-048#BOOT-NO-ADMISSION-QUOTAS"
+      ]
+    },
+    {
+      "interface_id": "spec:model:domain-authority",
+      "capability_id": "typed-external-eto-domain-boundaries",
+      "kind": "changed",
+      "audience": "developer / repository maintainer",
+      "platform": "desired source law and bounded GNU/Linux proof; runtime guards and all-platform conformance not established",
+      "before": "Model/refactoring/agentic source proposals lacked the explicit reconciled domain-authority/observability boundary.",
+      "after": "Desired law retains existing domain owners, pure inspection versus effectful preparation and typed external/ETO explanations with independent privacy/authorization/observation axes; private ABI/secret dumping, duplicate universal engine, scheduler and IDE/plugin/MVP remain excluded. Source proposals do not prove runtime/API delivery.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#DOMAIN-AUTHORITY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#OBSERVABILITY-CLOSURE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Developer-required source law changes; runtime feature/guard/API delivery and public1.1 distribution permission remain separate.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Update developer role/classification/boot-cost/domain observability guidance; final canonical docs proof remains pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "reviewed-architecture-source-delta",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-source-review.md",
+      "verdict": "passed",
+      "sha256": "1454a38e90d3503e973a30fbd4084f0531fb521afabb022c3f6c5c81faa23682"
+    },
+    {
+      "claim_id": "selected-architecture-verification",
+      "subject_id": "architecture-after-3ffb13b29",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-verification.md",
+      "verdict": "passed",
+      "sha256": "9c29069d1cc78960082ce70f364cb82bbf9ba14e052bdc7bdb30b0cc573ea054"
+    },
+    {
+      "claim_id": "central-architecture-contribution-review",
+      "subject_id": "fa9cb0bf05bf892854789a509a5dd40ff45efca8",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md",
+      "verdict": "passed",
+      "sha256": "ccf2704e0071612d1423fe638bd12bbb9e2dac5b2ce4138081e6e8877035693c"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "accepted",
+    "review_subject": "fa9cb0bf05bf892854789a509a5dd40ff45efca8",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md"
+  }
+}
