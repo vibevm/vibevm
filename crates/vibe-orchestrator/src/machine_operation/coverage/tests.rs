@@ -96,3 +96,102 @@ fn shared_surface_mapping_stays_unbound_and_cross_kind_collision_refuses() {
         Err(MachineCoverageError::InvalidInventory { .. })
     ));
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+    r = 1
+)]
+fn only_reviewed_mcp_planner_row_binds_with_separate_service_admission() {
+    let coverage = authored();
+    let registry = MachineCoverageRegistry::from_coverage(&coverage).unwrap();
+    let admitted =
+        MachineOperationService::pure_text_planner(PurePlannerAdmission::Admitted).unwrap();
+    let PlannerCoverageBinding::Bound {
+        coverage_identity,
+        mapping,
+        descriptor,
+        source_bytes_verified,
+    } = registry.reviewed_planner_binding(&admitted).unwrap()
+    else {
+        panic!("reviewed planner route was not bound")
+    };
+    assert_eq!(coverage_identity, REVIEWED_COVERAGE_ID);
+    assert_eq!(mapping.surface_id.as_deref(), Some(REVIEWED_SURFACE_ID));
+    assert_eq!(mapping.source_ids.len(), 4);
+    assert_eq!(descriptor.operation_id.as_deref(), Some(PLANNER_ID));
+    assert!(!source_bytes_verified);
+    assert_eq!(
+        registry
+            .operations()
+            .iter()
+            .filter(|gap| gap.identity != REVIEWED_COVERAGE_ID)
+            .count(),
+        213
+    );
+    assert_eq!(registry.models().len(), 29);
+
+    let unavailable =
+        MachineOperationService::pure_text_planner(PurePlannerAdmission::Unavailable).unwrap();
+    let PlannerCoverageBinding::Gap {
+        coverage: unbound,
+        service_descriptor,
+        admission,
+    } = registry.reviewed_planner_binding(&unavailable).unwrap()
+    else {
+        panic!("unadmitted descriptor became a route")
+    };
+    assert_eq!(unbound.identity, REVIEWED_COVERAGE_ID);
+    assert_eq!(admission, PurePlannerAdmission::Unavailable);
+    assert!(service_descriptor.is_some());
+
+    let no_service =
+        MachineOperationService::new(Vec::new(), PurePlannerAdmission::Admitted).unwrap();
+    assert!(matches!(
+        registry.reviewed_planner_binding(&no_service),
+        Ok(PlannerCoverageBinding::Gap {
+            service_descriptor: None,
+            ..
+        })
+    ));
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+    r = 1
+)]
+fn reviewed_mapping_mismatch_refuses_without_fallback() {
+    let service =
+        MachineOperationService::pure_text_planner(PurePlannerAdmission::Admitted).unwrap();
+    for mismatch in ["schema", "source", "surface", "duplicate"] {
+        let mut coverage = authored();
+        let index = coverage
+            .surfaces
+            .iter()
+            .position(|row| row.operation_id.as_deref() == Some(REVIEWED_COVERAGE_ID))
+            .unwrap();
+        match mismatch {
+            "schema" => coverage.surfaces[index].schema_ref = "unbound".to_owned(),
+            "source" => {
+                coverage.surfaces[index].source_ids.pop();
+            }
+            "surface" => coverage.surfaces[index].registered = false,
+            "duplicate" => {
+                let other = coverage
+                    .surfaces
+                    .iter_mut()
+                    .find(|row| {
+                        row.disposition == Disposition::Operation
+                            && row.operation_id.as_deref() != Some(REVIEWED_COVERAGE_ID)
+                    })
+                    .unwrap();
+                other.operation_id = Some(REVIEWED_COVERAGE_ID.to_owned());
+            }
+            _ => unreachable!(),
+        }
+        let result = MachineCoverageRegistry::from_coverage(&coverage)
+            .and_then(|registry| registry.reviewed_planner_binding(&service));
+        assert!(result.is_err(), "{mismatch} unexpectedly bound");
+    }
+}

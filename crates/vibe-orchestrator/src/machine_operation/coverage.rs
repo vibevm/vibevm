@@ -6,7 +6,24 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATIO
 use std::collections::BTreeMap;
 use std::fmt;
 
-use vibe_wire::generated::capability::e1::coverage::{Coverage, Disposition, Source};
+use vibe_wire::generated::capability::e1::coverage::{Coverage, Disposition, Source, SurfaceKind};
+use vibe_wire::generated::machine::e1::operation_descriptor::OperationDescriptor;
+
+use super::{
+    MachineOperationService, PLANNER_ID, PurePlannerAdmission, recognized_planner,
+    recognized_planner_identity,
+};
+
+const REVIEWED_COVERAGE_ID: &str = "operation.mcp.plan_manifest_migration_envelope";
+const REVIEWED_SURFACE_ID: &str = "surface.mcp.plan_manifest_migration_envelope";
+const REVIEWED_NAME: &str = "plan_manifest_migration_envelope";
+const REVIEWED_SCHEMA: &str = "schemas/machine/e1/operation_envelope.jtd.json";
+const REVIEWED_SOURCES: [&str; 4] = [
+    "source:crates/vibe-mcp/src/tools.rs",
+    "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+    "source:crates/vibe-orchestrator/src/machine_operation.rs",
+    "source:schemas/machine/e1/operation_envelope.jtd.json",
+];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeclaredSource {
@@ -18,6 +35,9 @@ pub struct DeclaredSource {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CoverageBinding {
     pub surface_id: Option<String>,
+    pub surface_kind: Option<SurfaceKind>,
+    pub surface_name: Option<String>,
+    pub registered: Option<bool>,
     pub owner_prose: String,
     pub schema_ref_prose: String,
     pub source_ids: Vec<String>,
@@ -43,6 +63,23 @@ pub struct MachineCoverageRegistry {
     models: Vec<ExtractionGap>,
 }
 
+/// This one reviewed row is an interface mapping, not source-byte evidence.
+/// Only an independently admitted, recognized planner service can bind it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PlannerCoverageBinding {
+    Bound {
+        coverage_identity: String,
+        mapping: CoverageBinding,
+        descriptor: OperationDescriptor,
+        source_bytes_verified: bool,
+    },
+    Gap {
+        coverage: ExtractionGap,
+        service_descriptor: Option<OperationDescriptor>,
+        admission: PurePlannerAdmission,
+    },
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MachineCoverageError {
     InvalidInventory {
@@ -52,6 +89,7 @@ pub enum MachineCoverageError {
     },
     MalformedIdentity(String),
     OperationModelCollision(String),
+    ReviewedPlannerMapping(&'static str),
 }
 
 impl fmt::Display for MachineCoverageError {
@@ -67,6 +105,9 @@ impl fmt::Display for MachineCoverageError {
             Self::MalformedIdentity(id) => write!(f, "malformed machine identity: {id}"),
             Self::OperationModelCollision(id) => {
                 write!(f, "operation and model identities collide: {id}")
+            }
+            Self::ReviewedPlannerMapping(reason) => {
+                write!(f, "reviewed pure planner coverage mapping: {reason}")
             }
         }
     }
@@ -84,6 +125,9 @@ fn namespaced(id: &str) -> bool {
 
 fn binding(
     surface_id: Option<&str>,
+    surface_kind: Option<SurfaceKind>,
+    surface_name: Option<&str>,
+    registered: Option<bool>,
     owner: &str,
     schema_ref: &str,
     source_ids: &[String],
@@ -91,6 +135,9 @@ fn binding(
 ) -> CoverageBinding {
     CoverageBinding {
         surface_id: surface_id.map(str::to_owned),
+        surface_kind,
+        surface_name: surface_name.map(str::to_owned),
+        registered,
         owner_prose: owner.to_owned(),
         schema_ref_prose: schema_ref.to_owned(),
         source_ids: source_ids.to_vec(),
@@ -146,6 +193,9 @@ impl MachineCoverageRegistry {
             }
             let row = binding(
                 Some(&surface.surface_id),
+                Some(surface.kind.clone()),
+                Some(&surface.name),
+                Some(surface.registered),
                 &surface.owner,
                 &surface.schema_ref,
                 &surface.source_ids,
@@ -178,6 +228,9 @@ impl MachineCoverageRegistry {
                 identity: id.to_owned(),
                 bindings: vec![binding(
                     None,
+                    None,
+                    None,
+                    None,
                     &model.owner,
                     &model.schema_ref,
                     &model.source_ids,
@@ -197,6 +250,72 @@ impl MachineCoverageRegistry {
     #[must_use]
     pub fn models(&self) -> &[ExtractionGap] {
         &self.models
+    }
+
+    /// Bind only the reviewed MCP envelope route to the separately admitted
+    /// pure planner. The catalogue remains source-observed; every other ID is
+    /// still an extraction gap and declared hashes are never checked here.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-REGISTRY",
+        r = 1
+    )]
+    pub fn reviewed_planner_binding(
+        &self,
+        service: &MachineOperationService,
+    ) -> Result<PlannerCoverageBinding, MachineCoverageError> {
+        let gap = self
+            .operations
+            .iter()
+            .find(|gap| gap.identity == REVIEWED_COVERAGE_ID)
+            .ok_or(MachineCoverageError::ReviewedPlannerMapping(
+                "reviewed operation identity is absent",
+            ))?;
+        let [mapping] = gap.bindings.as_slice() else {
+            return Err(MachineCoverageError::ReviewedPlannerMapping(
+                "reviewed operation has an ambiguous surface mapping",
+            ));
+        };
+        if mapping.surface_id.as_deref() != Some(REVIEWED_SURFACE_ID)
+            || mapping.surface_kind != Some(SurfaceKind::Mcp)
+            || mapping.surface_name.as_deref() != Some(REVIEWED_NAME)
+            || mapping.registered != Some(true)
+            || mapping.schema_ref_prose != REVIEWED_SCHEMA
+            || !mapping
+                .source_ids
+                .iter()
+                .map(String::as_str)
+                .eq(REVIEWED_SOURCES)
+            || mapping
+                .declared_sources
+                .iter()
+                .any(|source| source.source_id != format!("source:{}", source.path))
+        {
+            return Err(MachineCoverageError::ReviewedPlannerMapping(
+                "surface kind, name, schema or source binding differs from reviewed route",
+            ));
+        }
+        let service_descriptor = service
+            .descriptors()
+            .iter()
+            .find(|row| row.operation_id.as_deref() == Some(PLANNER_ID))
+            .cloned();
+        if let Some(descriptor) = service_descriptor.as_ref().filter(|row| {
+            service.planner_admission == PurePlannerAdmission::Admitted
+                && recognized_planner_identity(row)
+                && recognized_planner(row)
+        }) {
+            return Ok(PlannerCoverageBinding::Bound {
+                coverage_identity: gap.identity.clone(),
+                mapping: mapping.clone(),
+                descriptor: descriptor.clone(),
+                source_bytes_verified: false,
+            });
+        }
+        Ok(PlannerCoverageBinding::Gap {
+            coverage: gap.clone(),
+            service_descriptor,
+            admission: service.planner_admission,
+        })
     }
 }
 
