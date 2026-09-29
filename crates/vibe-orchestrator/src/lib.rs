@@ -33,6 +33,7 @@ use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 
 pub mod failure;
 pub mod machine_operation;
+pub mod machine_view;
 pub mod ports;
 pub mod trace;
 pub mod values;
