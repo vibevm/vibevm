@@ -469,6 +469,8 @@ not a primitive alias pretending to be an object or a second error codec.
 All nested payloads, empty epoch markers and the shared error reject unknown
 fields. Shared and consumer generation use the registry's effective
 `unknown_fields` policy; parser population cannot override explicit deny.
+Only an absent policy takes the loader's legacy default; an explicitly
+present non-string or unknown policy is a typed authoring refusal.
 Conflicting shared reader policies refuse rather than emitting divergent
 types or choosing the first consumer.
 
