@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "checks": [
+    {
+      "source": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "source_sha256": "c6f89d91727d7c6ee9c3abad80665e250387417aaf4074b262f9bb7315027374",
+      "anchor": "EXTENSION-OPERATION-SCHEMA",
+      "kind": "unit",
+      "command": [
+        "/tmp/vibevm-next-M13-C1-unit-reader/read",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "EXTENSION-OPERATION-SCHEMA"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-corrected.log",
+      "log_sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d"
+    },
+    {
+      "source": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "source_sha256": "c6f89d91727d7c6ee9c3abad80665e250387417aaf4074b262f9bb7315027374",
+      "anchor": "EXTENSION-OPERATION-SCHEMA",
+      "kind": "specdoc",
+      "command": [
+        "/tmp/vibevm-next-M16-A2-source-reader/read",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-corrected.log",
+      "log_sha256": "c6d680374622af376cc01a6f35f5fdd9883b745848c9200ffb53bd9efee1ade3"
+    },
+    {
+      "source": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "source_sha256": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b",
+      "anchor": "MACHINE-EXTENSION-SCHEMA-SOURCE",
+      "kind": "unit",
+      "command": [
+        "/tmp/vibevm-next-M13-C1-unit-reader/read",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "MACHINE-EXTENSION-SCHEMA-SOURCE"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/machine-unit-corrected.log",
+      "log_sha256": "5d919d8764e33f4b2d92d53cbf3655f8637aeac1adefa62aca65fc5305478f91"
+    },
+    {
+      "source": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "source_sha256": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b",
+      "anchor": "MACHINE-EXTENSION-SCHEMA-SOURCE",
+      "kind": "specdoc",
+      "command": [
+        "/tmp/vibevm-next-M16-A2-source-reader/read",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/machine-specdoc-corrected.log",
+      "log_sha256": "da3f18c7a270653f1b0a953c30ff8cbd9c676df9a0e8fdceec4344e22c987e09"
+    }
+  ],
+  "scope": "Two source-only desired req r1 anchors; initial extension unit/SpecDoc structural failures preserved, no manifest parser or native proof."
+}
