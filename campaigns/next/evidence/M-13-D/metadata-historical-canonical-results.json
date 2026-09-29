@@ -1,0 +1,66 @@
+[
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 5,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 12,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 14,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 11,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 12,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 12,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 14,
+    "versions": [
+      "1.1.0"
+    ]
+  },
+  {
+    "manifest": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/Cargo.toml",
+    "exit": 0,
+    "packages": 7,
+    "versions": [
+      "1.1.0"
+    ]
+  }
+]

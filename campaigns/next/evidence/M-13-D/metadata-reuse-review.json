@@ -1,0 +1,1069 @@
+{
+  "kind": "readonly-D2-metadata-reuse-review",
+  "root_review_pending": true,
+  "predecessor_D1_accepted": false,
+  "D2_accepted": false,
+  "counts": {
+    "root_workspace_members": 41,
+    "root_own_1_1": 35,
+    "root_fixture_1_0": 6,
+    "canonical_runs": 8,
+    "canonical_recorded_exit0": 8,
+    "canonical_member_occurrences": 87,
+    "canonical_local_1_1": 87
+  },
+  "root_metadata": {
+    "receipt": "/tmp/vibevm-next-1.1-root-cargo-metadata.json",
+    "workspace_root": "/home/olegchir/git/v/vibevm-next",
+    "metadata_version": 1,
+    "resolve_null": true,
+    "members": [
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/progress-core#1.1.0",
+        "name": "progress-core",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/progress-core/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-actions#1.1.0",
+        "name": "vibe-actions",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-actions/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-agent-projection#1.1.0",
+        "name": "vibe-agent-projection",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-agent-projection/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-core#1.1.0",
+        "name": "vibe-core",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-core/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-registry#1.1.0",
+        "name": "vibe-registry",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-registry/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-wire#1.1.0",
+        "name": "vibe-wire",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-wire/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-safefs#1.1.0",
+        "name": "vibe-safefs",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-safefs/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-workspace#1.1.0",
+        "name": "vibe-workspace",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-workspace/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry#1.1.0",
+        "name": "vibe-extension-registry",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-extension-registry/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-facts#1.1.0",
+        "name": "vibe-facts",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-facts/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-spec#1.1.0",
+        "name": "vibe-spec",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-spec/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-specdoc#1.1.0",
+        "name": "vibe-specdoc",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-specdoc/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-settings#1.1.0",
+        "name": "vibe-settings",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-settings/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-cli#1.1.0",
+        "name": "vibe-cli",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-cli/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-check#1.1.0",
+        "name": "vibe-check",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-check/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-doc#1.1.0",
+        "name": "vibe-doc",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-doc/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-resolver#1.1.0",
+        "name": "vibe-resolver",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-resolver/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-doc-server#1.1.0",
+        "name": "vibe-doc-server",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-doc-server/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-doc-shell#1.1.0",
+        "name": "vibe-doc-shell",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-doc-shell/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-graph#1.1.0",
+        "name": "vibe-graph",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-graph/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-install#1.1.0",
+        "name": "vibe-install",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-install/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle#1.1.0",
+        "name": "vibe-lifecycle",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader#1.1.0",
+        "name": "vibe-native-loader",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-compiler-plugin#vibe-native-loader-compiler-fixture@1.0.0",
+        "name": "vibe-native-loader-compiler-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-compiler-plugin/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-ext#1.1.0",
+        "name": "vibe-ext",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-ext/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-plugin#vibe-native-loader-fixture@1.0.0",
+        "name": "vibe-native-loader-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-plugin/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-mechanism-plugin#vibe-native-loader-mechanism-fixture@1.0.0",
+        "name": "vibe-native-loader-mechanism-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-mechanism-plugin/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-llm#1.1.0",
+        "name": "vibe-llm",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-llm/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-mcp#1.1.0",
+        "name": "vibe-mcp",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-mcp/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator#1.1.0",
+        "name": "vibe-orchestrator",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-build-provider#vibe-native-loader-build-provider-fixture@1.0.0",
+        "name": "vibe-native-loader-build-provider-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-build-provider/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-package-provider#vibe-native-loader-package-provider-fixture@1.0.0",
+        "name": "vibe-native-loader-package-provider-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-package-provider/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-test-support#1.1.0",
+        "name": "vibe-test-support",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-test-support/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-package-source#1.1.0",
+        "name": "vibe-package-source",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-package-source/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-requirements#1.1.0",
+        "name": "vibe-requirements",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-requirements/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-trace#1.1.0",
+        "name": "vibe-trace",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-trace/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-publish#1.1.0",
+        "name": "vibe-publish",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-publish/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-scrape#1.1.0",
+        "name": "vibe-scrape",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-scrape/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-json-backend#vibe-native-loader-json-backend-fixture@1.0.0",
+        "name": "vibe-native-loader-json-backend-fixture",
+        "version": "1.0.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-json-backend/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/crates/vibe-index#1.1.0",
+        "name": "vibe-index",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/crates/vibe-index/Cargo.toml",
+        "source": null
+      },
+      {
+        "id": "path+file:///home/olegchir/git/v/vibevm-next/xtask#1.1.0",
+        "name": "xtask",
+        "version": "1.1.0",
+        "manifest_path": "/home/olegchir/git/v/vibevm-next/xtask/Cargo.toml",
+        "source": null
+      }
+    ],
+    "recorded_process_exit": "not present in this JSON; historical permanent proof/root receipt supplied externally"
+  },
+  "canonical_metadata": [
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/0.json",
+      "receipt_sha256": "8072921f2067e1636f20892e817244cbbc003b1bc91b014b12e38192fcdba59e",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-mcp#1.1.0",
+          "name": "core-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 5,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/1.json",
+      "receipt_sha256": "64bb0222a532c7a7c974916b9f24d41288ea022501d14fb5e6b89a63f4e30781",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-cli#1.1.0",
+          "name": "go-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform#1.1.0",
+          "name": "go-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform-frontend#1.1.0",
+          "name": "go-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-extract-bridge#1.1.0",
+          "name": "go-ai-native-extract-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-extract-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap#1.1.0",
+          "name": "go-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap-scan#1.1.0",
+          "name": "go-ai-native-specmap-scan",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-specmap-scan/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg#1.1.0",
+          "name": "go-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg-bridge#1.1.0",
+          "name": "go-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/go-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 12,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/2.json",
+      "receipt_sha256": "2b9e835b86caa7400419dad7ad0a20512bfec40e3c8915d1bee05aecdeb6f9a2",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-mcp#1.1.0",
+          "name": "go-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-cli#1.1.0",
+          "name": "go-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform#1.1.0",
+          "name": "go-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform-frontend#1.1.0",
+          "name": "go-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-extract-bridge#1.1.0",
+          "name": "go-ai-native-extract-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-extract-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap#1.1.0",
+          "name": "go-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap-scan#1.1.0",
+          "name": "go-ai-native-specmap-scan",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-specmap-scan/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg#1.1.0",
+          "name": "go-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg-bridge#1.1.0",
+          "name": "go-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/go-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp#1.1.0",
+          "name": "core-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 14,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/3.json",
+      "receipt_sha256": "2c925ff89e780e951ad5de30f9467c2877e3eacfc3bd702872a379ffc2699a32",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform-frontend#1.1.0",
+          "name": "rust-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform#1.1.0",
+          "name": "rust-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-cli#1.1.0",
+          "name": "rust-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-specmap#1.1.0",
+          "name": "rust-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-env-audit#1.1.0",
+          "name": "rust-ai-native-env-audit",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-env-audit/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg-bridge#1.1.0",
+          "name": "rust-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg#1.1.0",
+          "name": "rust-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-tcg/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 11,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/4.json",
+      "receipt_sha256": "9364d5b98a16044f45e335dc84b2ef341edc4b6ef81529abe2beb9fa1e6ac5b4",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-mcp#1.1.0",
+          "name": "rust-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp#1.1.0",
+          "name": "core-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-cli#1.1.0",
+          "name": "rust-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform#1.1.0",
+          "name": "rust-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform-frontend#1.1.0",
+          "name": "rust-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-specmap#1.1.0",
+          "name": "rust-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg#1.1.0",
+          "name": "rust-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg-bridge#1.1.0",
+          "name": "rust-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/rust-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 12,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/5.json",
+      "receipt_sha256": "cd625c95bf38f47007a39f809c0a1ca4bc0e314777aad513d9c6f603afe4fd7d",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform#1.1.0",
+          "name": "typescript-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform-frontend#1.1.0",
+          "name": "typescript-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-extract-bridge#1.1.0",
+          "name": "typescript-ai-native-extract-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-extract-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-cli#1.1.0",
+          "name": "typescript-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap#1.1.0",
+          "name": "typescript-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap-scan#1.1.0",
+          "name": "typescript-ai-native-specmap-scan",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-specmap-scan/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg#1.1.0",
+          "name": "typescript-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg-bridge#1.1.0",
+          "name": "typescript-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/typescript-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 12,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/6.json",
+      "receipt_sha256": "b0ef12f854e71303e987ba1a87c6afb75347f78cbab32c969647a7121190bcd8",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-mcp#1.1.0",
+          "name": "typescript-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp#1.1.0",
+          "name": "core-ai-native-mcp",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-mcp/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark#1.1.0",
+          "name": "core-ai-native-specmark",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar#1.1.0",
+          "name": "core-ai-native-specmark-grammar",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-cli#1.1.0",
+          "name": "typescript-ai-native-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform#1.1.0",
+          "name": "core-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap#1.1.0",
+          "name": "core-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform#1.1.0",
+          "name": "typescript-ai-native-conform",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform-frontend#1.1.0",
+          "name": "typescript-ai-native-conform-frontend",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-conform-frontend/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-extract-bridge#1.1.0",
+          "name": "typescript-ai-native-extract-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-extract-bridge/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap#1.1.0",
+          "name": "typescript-ai-native-specmap",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap-scan#1.1.0",
+          "name": "typescript-ai-native-specmap-scan",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-specmap-scan/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg#1.1.0",
+          "name": "typescript-ai-native-tcg",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg-bridge#1.1.0",
+          "name": "typescript-ai-native-tcg-bridge",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/typescript-ai-native-tcg-bridge/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 14,
+      "all_local_1_1": true
+    },
+    {
+      "manifest": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/Cargo.toml",
+      "recorded_exit": 0,
+      "receipt": "/tmp/vibevm-next-1.1-workspace-metadata/7.json",
+      "receipt_sha256": "cb645789c3f613523d81eaa4a3d7e647a82720ba7b9804c053b45197b8891f44",
+      "workspace_root": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0",
+      "metadata_version": 1,
+      "resolve_null": true,
+      "members": [
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-core#1.1.0",
+          "name": "fractality-core",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-core/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mission-control#1.1.0",
+          "name": "fractality-mission-control",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mission-control/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mc-client#1.1.0",
+          "name": "fractality-mc-client",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-mc-client/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-pod#1.1.0",
+          "name": "fractality-pod",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-pod/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-backend-claude-code#1.1.0",
+          "name": "fractality-backend-claude-code",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-backend-claude-code/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-cli#1.1.0",
+          "name": "fractality-cli",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-cli/Cargo.toml",
+          "source": null
+        },
+        {
+          "id": "path+file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-initiative#1.1.0",
+          "name": "fractality-initiative",
+          "version": "1.1.0",
+          "manifest_path": "/home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0/crates/fractality-initiative/Cargo.toml",
+          "source": null
+        }
+      ],
+      "member_count": 7,
+      "all_local_1_1": true
+    }
+  ],
+  "reuse_scope": "historical GNU/Linux source roster/version/inheritance and preserved fixture identities for unchanged scoped Cargo metadata inputs; not a fresh invocation or full resolution/runtime/native-platform proof",
+  "matching_subject_evidence": {
+    "source_subject": "110da6f1791a40ede6e3851837ec4db386e50930",
+    "root_reported_diff_scope": "110da6f17..HEAD root Cargo.toml/Cargo.lock; crates/*/Cargo.toml; canonical **/Cargo.toml/Cargo.lock and scoped .cargo/config.toml/rust-toolchain*",
+    "root_reported_diff_exit": 0,
+    "root_reported_diff_empty": true,
+    "independent_preparation": "151targets+95inheritance+387protected guards no-op,0faults; eight owning workspaces1.1; no source reads repeated here"
+  },
+  "command_and_environment_limits": [
+    "Receipt report contains exact eight manifest paths/exit codes, but neither report nor metadata outputs record complete argv or environment; do not infer --locked/--offline/no-deps flags from resolve:null.",
+    "Metadata JSON version1 with resolve:null observes local package/member declaration projection, not a full resolved dependency graph.",
+    "Root JSON does not itself retain process exit; proof summary/root historical review supports its successful roster observation.",
+    "Scoped tracked config/toolchain files are unchanged by Root observation; global/ancestor/untracked Cargo config, CARGO_HOME/CARGO_* variables, tool executable/version, cwd/features/target switches and registry/cache state are not independently rebounded by these receipts.",
+    "Reuse declares historical source-level result only; if Root wants fresh operational/resolver behavior or observes one of those effective input changes, bind one affected command rather than automatically repeat nine unchanged gates."
+  ],
+  "input_bytes": [
+    {
+      "path": "/tmp/vibevm-next-1.1-root-cargo-metadata.json",
+      "sha256": "014548c4c52f01fa6ca6163c4e55b85c0156025878694dfdfb24211549a53cb6"
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-workspace-metadata/report.json",
+      "sha256": "cc60fdc00ea76b4a1b9f08686610023a209ae7e15eb087a42746487cd87f516f"
+    },
+    {
+      "path": "/tmp/vibevm-next-1.1-proof-summary.json",
+      "sha256": "c4a64ca8a2ab6f0e1ad9d097fb535b3750079a7eea7567bf1ae9aca57275e568"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D2-reconciliation-preparation.md",
+      "sha256": "2ccb1c5a5adbe81af5ad3845d0f2f0d648786c600d540f1dae35c73cbebf537e"
+    },
+    {
+      "path": "/tmp/vibevm-next-M13-D2-reconciliation-preparation.json",
+      "sha256": "c049527231125c68a99a546e685bd7e262db691e7be08931f742d4592ad37fd0"
+    }
+  ],
+  "execution": {
+    "git": false,
+    "cargo": false,
+    "tests": false,
+    "source_writes": false
+  }
+}
