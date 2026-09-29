@@ -23,7 +23,7 @@
   ],
   "contribution_scope": {
     "affected_source_review": {
-      "sha256": "0179f9534e1c154530f7e9d1f00731998a32d464bd90ce7549f38539279e7387",
+      "sha256": "a5bcf5ca104e9b48381c3e9087eaa2415ac84b5dda8726ab46404e6e25321fb3",
       "source": "evidence/bootstrap-affected-source-review.json"
     },
     "after_capture_id": "bootstrap-4cec12cd3",
@@ -33,37 +33,41 @@
         "change_id": "local-source-retrieval",
         "required_claim_ids": [
           "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
           "reviewed-bootstrap-source-delta",
           "selected-bootstrap-verification-observations"
         ],
-        "sha256": "01600b85ade7b4f5d41d7e10bd741acc19623e284246b30f5665c267c2a08687"
+        "sha256": "c1ffa190c2188472018cae6af7f08c3a773188f9b13c049d784fb50812c09627"
       },
       {
         "change_id": "originating-publication-ownership",
         "required_claim_ids": [
           "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
           "reviewed-bootstrap-source-delta",
           "selected-bootstrap-verification-observations"
         ],
-        "sha256": "15a2450440a4146f94921bbcb72cb94a16da351b1d978e3fc297b51712ecb697"
+        "sha256": "e9a13e55ccaf80edc6a70ff25eba422183b4c6e8faad579898961d530e075a35"
       },
       {
         "change_id": "preview-accounting-foundation",
         "required_claim_ids": [
           "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
           "reviewed-bootstrap-source-delta",
           "selected-bootstrap-verification-observations"
         ],
-        "sha256": "38c6ec96f07fe5c672685a67c6016ffb0a17fe11f95bdc8f7c95c844d4a4d442"
+        "sha256": "06896526f9e58e80f7488a3fee8f4e3bde3382a4a4e7776b4e8c48c972ee8bb3"
       },
       {
         "change_id": "source-traceability-maintenance",
         "required_claim_ids": [
           "captured-bootstrap-source-identities",
+          "central-bootstrap-contribution-review",
           "reviewed-bootstrap-source-delta",
           "selected-bootstrap-verification-observations"
         ],
-        "sha256": "abbac25896a4c6406124e19ba0911b72b79a5712f7aede4d5e220b065ef6a159"
+        "sha256": "ca39c1101cd326d49b7607f9fe5e98e671352cb87e4e71b6e4509b59e0de2604"
       }
     ]
   },
