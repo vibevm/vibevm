@@ -1,0 +1,293 @@
+{
+  "metadata": {
+    "description": "Finite source-bound surface/model coverage inventory. Retained registrations and declarations do not establish a callable API, runtime effects, authorization, conformance or semantic acceptance.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::capability::e1::coverage"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "inventory_id": {
+      "type": "string"
+    },
+    "baseline_capture_id": {
+      "type": "string"
+    },
+    "observation_capture_id": {
+      "type": "string"
+    },
+    "sources": {
+      "elements": {
+        "ref": "source"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "surfaces": {
+      "elements": {
+        "ref": "surface"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "models": {
+      "elements": {
+        "ref": "model"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "planned_families": {
+      "elements": {
+        "ref": "planned_family"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "source": {
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    },
+    "surface": {
+      "properties": {
+        "surface_id": {
+          "type": "string"
+        },
+        "kind": {
+          "ref": "surface_kind"
+        },
+        "name": {
+          "type": "string"
+        },
+        "aliases": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "owner": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "effects": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "authority": {
+          "type": "string"
+        },
+        "carrier": {
+          "type": "string"
+        },
+        "schema_ref": {
+          "type": "string"
+        },
+        "implementation": {
+          "ref": "implementation"
+        },
+        "external_access": {
+          "ref": "external_access"
+        },
+        "completeness": {
+          "type": "string"
+        },
+        "retention": {
+          "type": "string"
+        },
+        "conformance_cases": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "source_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "disposition": {
+          "ref": "disposition"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "parent_surface_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "operation_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "model": {
+      "properties": {
+        "model_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "carrier": {
+          "type": "string"
+        },
+        "schema_ref": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "effects": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "authority": {
+          "type": "string"
+        },
+        "completeness": {
+          "type": "string"
+        },
+        "retention": {
+          "type": "string"
+        },
+        "source_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "conformance_cases": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "implementation": {
+          "ref": "implementation"
+        },
+        "external_access": {
+          "ref": "external_access"
+        }
+      }
+    },
+    "planned_family": {
+      "properties": {
+        "family_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "source_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "surface_kind": {
+      "enum": [
+        "cli",
+        "mcp",
+        "tui",
+        "extension-registration",
+        "developer-tool"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "implementation": {
+      "enum": [
+        "source-observed",
+        "planned",
+        "gap"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "external_access": {
+      "enum": [
+        "structured",
+        "legacy",
+        "unimplemented",
+        "unknown"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "disposition": {
+      "enum": [
+        "operation",
+        "group",
+        "presentation",
+        "dynamic-registration"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

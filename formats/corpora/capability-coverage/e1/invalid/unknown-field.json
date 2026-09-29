@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "inventory_id": "shape-only empty coverage",
+  "baseline_capture_id": "shape-only baseline",
+  "observation_capture_id": "shape-only observation",
+  "sources": [],
+  "surfaces": [],
+  "models": [],
+  "planned_families": [],
+  "accepted": true
+}
