@@ -1,0 +1,4 @@
+
+thread 'main' (847744) panicked at /tmp/vibevm-next-M16-A2-source-reader/main.rs:1:142:
+canonical closed-dialect loader: LoadError { path: "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml", message: "line 89: <facts> accepts only fact elements; mixed lists stay in <list> — found <EXTENSION-OPERATION-SCHEMA> (line 89, column 91)" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,20 @@
+{
+  "source": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+  "sha256": "39f270d313c61dcad58c9d04f976807fb110fdb9dccf1ae9f72ebb51db2ce1b3",
+  "ruling": "Optional operation-schema metadata is excluded from frozen execution-declaration fingerprint; authored manifest/source witness still changes.",
+  "checks": [
+    {
+      "kind": "unit",
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-fingerprint-ruling.log",
+      "exit_code": 0,
+      "log_sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d"
+    },
+    {
+      "kind": "specdoc",
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-fingerprint-ruling.log",
+      "exit_code": 0,
+      "log_sha256": "90d34163b7a37f72ce4e38a03b07db077842fe5685e5941428da300f31608790"
+    }
+  ],
+  "scope": "Desired source rule only; no lifecycle code or renderer acceptance."
+}

@@ -1,0 +1,20 @@
+{
+  "source": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+  "source_sha256": "f69790bc6430b3e917bf03b074c8a9c0e62b8c61ed4854a5097ec77eb511c550",
+  "ruling": "Descriptor metadata has no separate execution-declaration frame; existing provider content pin may still change fingerprint indirectly, while manifest/source witness identifies authored bytes.",
+  "checks": [
+    {
+      "kind": "unit",
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-provider-pin-clarified.log",
+      "exit_code": 0,
+      "log_sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d"
+    },
+    {
+      "kind": "specdoc",
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-provider-pin-clarified.log",
+      "exit_code": 0,
+      "log_sha256": "2fbf14b0b4cc7c6a727d0a8c0004851790bb250cf78772bc0e86d0676be34c9c"
+    }
+  ],
+  "scope": "Desired source only; no provider schema admission proof."
+}

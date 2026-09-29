@@ -1,0 +1,29 @@
+{
+  "source": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+  "sha256": "9ae91f10afda0b4ac5135561d5310ec3f17c0574ee2a991f194ec0220b7febd2",
+  "exact_member_names_and_stages": "schema_epoch required1; operation_id/model_id optional-at-least-one; four optional format IDs at-least-one; core shape/local identity then selected-world FormatId/provider join",
+  "checks": [
+    {
+      "kind": "unit",
+      "command": [
+        "/tmp/vibevm-next-M13-C1-unit-reader/read",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "EXTENSION-OPERATION-SCHEMA"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-fielded.log",
+      "log_sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d"
+    },
+    {
+      "kind": "specdoc",
+      "command": [
+        "/tmp/vibevm-next-M16-A2-source-reader/read",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-fielded.log",
+      "log_sha256": "7f94a26c33638b0f24de1584c2b267670d860b609b145ab0ff72409213755321"
+    }
+  ],
+  "limits": "Desired source law only; no parser or retained extension schema implementation"
+}

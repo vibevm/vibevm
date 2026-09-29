@@ -40,5 +40,9 @@
       <p><req-machine-operation-discovery fact="true" status="spec/plan">`req r1`</req-machine-operation-discovery></p>
       <p><MACHINE-OPERATION-DISCOVERY-LAW fact="true" status="spec/plan">Discovery reads retained, validated descriptor and schema identities from their owning source, including extension declarations, without invoking a handler, loading a native library, starting a provider or fetching/building a schema. Unknown, absent or unvalidated contributed schema remains unavailable with a reason. Retained metadata cannot promote an extension to an executable or authorized service; its later owner must separately prove that path.</MACHINE-OPERATION-DISCOVERY-LAW></p>
     </MACHINE-OPERATION-DISCOVERY>
+    <MACHINE-EXTENSION-SCHEMA-SOURCE title="Authored retained extension schema source">
+      <p><req-machine-extension-schema-source fact="true" status="spec/plan">`req r1`</req-machine-extension-schema-source></p>
+      <p><MACHINE-EXTENSION-SCHEMA-SOURCE-LAW fact="true" status="spec/plan">PROP-054's optional authored extension operation-schema declaration is the source for descriptor-only extension discovery. Validate its registered host-owned format IDs and epochs, bind the selected provider/declaration to the retained manifest or content capture, and keep source authenticity, implementation status, contextual availability and authorization separate. A parsed table without its owning retained-source evidence may be listed only with an explicit unverified or unavailable reason. A validated schema may be discoverable without loading the native handler, but is not a validated callable service until its domain owner and admission are separately proven. An arbitrary handler config or a schema inferred from a native ABI call is never this source.</MACHINE-EXTENSION-SCHEMA-SOURCE-LAW></p>
+    </MACHINE-EXTENSION-SCHEMA-SOURCE>
   </machine-operation-contracts>
 </spec>

@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "current_source_sha256": {
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": "f69790bc6430b3e917bf03b074c8a9c0e62b8c61ed4854a5097ec77eb511c550",
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml": "0a84d33bc574da2b1d486fc6aab24b17ed7bbfa3a532a77a0d8755d0c6bdf91b"
+  },
+  "final_native_readers": {
+    "P054-unit": "extension-unit-provider-pin-clarified.log",
+    "P054-SpecDoc": "extension-specdoc-provider-pin-clarified.log",
+    "P080-unit": "machine-unit-corrected.log",
+    "P080-SpecDoc": "machine-specdoc-corrected.log"
+  },
+  "historical_failures": [
+    "extension-unit.log",
+    "extension-specdoc-preliminary.log"
+  ],
+  "review_outcome": "desired source accepted after correcting closed-dialect nesting, literal field/validation-owner gap and provider-pin overstatement",
+  "implementation_task_accepted": false,
+  "native_extension_executed": false,
+  "artifacts": [
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-final-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/vibevm-next-M16-B1-extension-source-final-review.md",
+      "sha256": "7ad7327e7fa19bce68b398f42308f4c7282ed9997bbcc758e90a8628ab167288",
+      "bytes": 1779
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-fingerprint-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/vibevm-next-M16-B1-extension-source-fingerprint-review.md",
+      "sha256": "ae8538e9cad991a5e2ed6007e7c7d438dc88acce7107c8df2dbab93a00d4ad2c",
+      "bytes": 2151
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-corrected.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-specdoc-corrected.log",
+      "sha256": "c6d680374622af376cc01a6f35f5fdd9883b745848c9200ffb53bd9efee1ade3",
+      "bytes": 49
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-fielded.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-specdoc-fielded.log",
+      "sha256": "7f94a26c33638b0f24de1584c2b267670d860b609b145ab0ff72409213755321",
+      "bytes": 49
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-fingerprint-ruling.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-specdoc-fingerprint-ruling.log",
+      "sha256": "90d34163b7a37f72ce4e38a03b07db077842fe5685e5941428da300f31608790",
+      "bytes": 49
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-preliminary.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-specdoc-preliminary.log",
+      "sha256": "7606082f0cdf6370e78e265019a8c7cfa35d083b5fafa5c58a1b576000da8562",
+      "bytes": 428
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-specdoc-provider-pin-clarified.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-specdoc-provider-pin-clarified.log",
+      "sha256": "2fbf14b0b4cc7c6a727d0a8c0004851790bb250cf78772bc0e86d0676be34c9c",
+      "bytes": 49
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-corrected.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-unit-corrected.log",
+      "sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-fielded.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-unit-fielded.log",
+      "sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-fingerprint-ruling.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-unit-fingerprint-ruling.log",
+      "sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit-provider-pin-clarified.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-unit-provider-pin-clarified.log",
+      "sha256": "5290a77144b56f546e0c068ef19e41506d86fae45a585a298838b79685bea43d",
+      "bytes": 71
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/extension-unit.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/extension-unit.log",
+      "sha256": "f3875c42125d780f26f0017bbe894043cb7fd9d48627ab88eee73e83562a0941",
+      "bytes": 202
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/fielded-result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/fielded-result.json",
+      "sha256": "8fd3c2b350764a5c1ef72bb8fd439faa7872a3ae8084111870ad99ddd256e98c",
+      "bytes": 1305
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/fingerprint-result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/fingerprint-result.json",
+      "sha256": "e9c96477bdf0c174fa037ace5eae602485f0dcfc86842fc3ae3d63aaba997a1a",
+      "bytes": 913
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/machine-specdoc-corrected.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/machine-specdoc-corrected.log",
+      "sha256": "da3f18c7a270653f1b0a953c30ff8cbd9c676df9a0e8fdceec4344e22c987e09",
+      "bytes": 48
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/machine-unit-corrected.log",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/machine-unit-corrected.log",
+      "sha256": "5d919d8764e33f4b2d92d53cbf3655f8637aeac1adefa62aca65fc5305478f91",
+      "bytes": 76
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/provider-pin-result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/provider-pin-result.json",
+      "sha256": "e5945e97514a628f9f905a89cc71c962e29b70cb099e518c66ba4bce898254f7",
+      "bytes": 968
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-proof/result.json",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/result.json",
+      "sha256": "917f255e0470867ee67dada907b6356023274374a63b643416a5144554da4b3c",
+      "bytes": 2763
+    },
+    {
+      "source": "/tmp/vibevm-next-M16-B1-extension-source-review.md",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-raw/vibevm-next-M16-B1-extension-source-review.md",
+      "sha256": "195cebcab3528b7ad1d12fd09100eae9e149e070025e99360da0a7c123224783",
+      "bytes": 3083
+    },
+    {
+      "source": "Root-reviewed source-law verdict",
+      "path": "docs/releases/developer-preview-1-to-2/evidence/extension-machine-source-root-review.md",
+      "sha256": "d6025ddf9912c593fd79ce45598f9529f225e4c8e29e216f69a7779d52e6ee15",
+      "bytes": 1985
+    }
+  ]
+}
