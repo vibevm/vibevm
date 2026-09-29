@@ -461,7 +461,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#relay", r = 4)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#vibevm-dir", r = 4)]
     fn park_then_drain_is_a_one_shot_mailbox() {
         let proj = tempfile::tempdir().unwrap();
         let dir = relay_dir(proj.path());
