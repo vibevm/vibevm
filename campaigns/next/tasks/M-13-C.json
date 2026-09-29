@@ -105,7 +105,8 @@
         "crates/vibe-cli/tests/migration_plan.rs",
         "xtask/src/codegen/strictness.rs",
         "xtask/src/codegen/strictness/tests.rs",
-        "xtask/src/codegen/shared_module/policy_tests.rs"
+        "xtask/src/codegen/shared_module/policy_tests.rs",
+        "crates/vibe-cli/src/command_progress.rs"
       ],
       "write_paths": [
         "crates/vibe-core/src/manifest/",
@@ -137,7 +138,8 @@
         "xtask/src/codegen/strictness.rs",
         "xtask/src/codegen/strictness/tests.rs",
         "xtask/src/codegen/shared_module/policy_tests.rs",
-        "xtask/src/codegen/format_id.rs"
+        "xtask/src/codegen/format_id.rs",
+        "crates/vibe-cli/src/command_progress.rs"
       ],
       "steps": [
         "Register migration request/report/error schemas, exact source/target epochs, diff/preconditions and typed input questions.",
@@ -180,7 +182,8 @@
         "Text-only CLI planning may add one early main.rs dispatch before configuration/tracing/context/registry startup. The pure plan surface may read supplied JSON stdin/literal and write its structured response, but cannot discover arbitrary paths, initialize state or invoke providers. Permanent transport/source law belongs to PROP-044 before implementation.",
         "Structured preflight transport uses the existing ToolError channel with an optional typed report carried to structuredContent; it must not pretend the planner executed. Source ownership belongs to PROP-015 before dispatcher/type changes. Real CLI binary integration tests live at the exact migration_plan.rs test owner and use isolated child-process homes, not a global environment change.",
         "Effective-policy prerequisite also covers the existing consumer Strictness map, so explicit none+allow and ours/many+deny agree with shared generation; duplicate-schema policy conflicts still refuse. Only strictness.rs and its targeted test owner may change, with large new shared-policy tests split into the exact policy_tests.rs owner to respect600lines. No general generator redesign or registry-parser fork.",
-        "Owning registry-loader prerequisite: explicitly present non-string unknown_fields must refuse; only absent fields take the historical default. Fix the existing format_id.rs loader and add one real-loader regression case in the already bound shared policy_tests.rs owner, without a second parser or weakened refusal."
+        "Owning registry-loader prerequisite: explicitly present non-string unknown_fields must refuse; only absent fields take the historical default. Fix the existing format_id.rs loader and add one real-loader regression case in the already bound shared policy_tests.rs owner, without a second parser or weakened refusal.",
+        "CLI exhaustive-policy prerequisite: add only PlanMigration => SilentMetadata to command_progress.rs. The pure early branch still bypasses this policy at runtime; preserve all existing command classifications and re-run only the new CLI integration target after the observed E0004 compilation failure."
       ]
     }
   ]
