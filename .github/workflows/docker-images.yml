@@ -122,7 +122,7 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: printf '%s' "$DOCKERHUB_TOKEN" | docker login --username vibevm --password-stdin
 
-      - name: Publish mutable 1.0.0 and latest tags
+      - name: Publish the mutable release tag and latest
         shell: bash
         run: |
           set -euo pipefail

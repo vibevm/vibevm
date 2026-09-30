@@ -1967,7 +1967,7 @@ structure, and it goes when the file does.
 | @fact:B175-WHAT **what** | `crates/vibe-wire/tests/requirements_report_wire.rs:102` counts the `cli-*` rows of `formats/REGISTRY.toml` and asserts 13, to prove that the requirements report did not join the CLI report family. `53f1521a5` (2026-09-17) registered `[format.cli-application-report]`, the fourteenth such row, and did not move the count. The test `the_format_is_inventoried_under_a_surface_neutral_id` has failed since. |
 | @fact:B175-EVIDENCE **evidence** | 2026-09-25 on `main` at `13da768aa`: `cargo test -p vibe-wire --test requirements_report_wire` gives 6 passed, 1 failed, `left: 14, right: 13`. The count was last set in `9cac46d13` (2026-09-09), an ancestor of `53f1521a5`. The distribution workflow does not run tests by default, so a release is not blocked. |
 | @fact:B175-SEVERITY **severity** | P3 — every run of the whole `vibe-wire` suite is red for a reason that no product behaviour carries; the property that the test protects still holds. |
-| @fact:B175-DISPOSITION **disposition** | `open` — make the assertion independent of the family's size: check that `requirements-report` has no `cli-` prefix and sits in its own registry section, instead of counting a family that grows with every new command. |
+| @fact:B175-DISPOSITION **disposition** | `closed` — 2026-09-30, ported from the 1.0.1 hotfix to `next`: the test now checks the requirements row's own registry section rather than counting the growing `cli-*` family; its focused case passes. |
 | @fact:B175-FILED **filed by** | DOCS-LEARNING-ORDER (M-015), 2026-09-25. |
 
 ## B-176 — a translation's borrowed examples render as empty frames {#b-176}

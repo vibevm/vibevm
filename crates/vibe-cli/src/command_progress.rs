@@ -47,6 +47,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "registry",
     "reinstall",
     "requirements",
+    "run",
     "scrape",
     "search",
     "select",

@@ -85,9 +85,11 @@ fn sidecar_absent_runs_cold() {
     fixture(root);
 
     let scan = || {
+        // Generic liveness lines are not what this test judges; it checks
+        // that the store is absent from stderr.
         scratch
             .vibe()
-            .args(["progress", "scan", "--path"])
+            .args(["--no-progress", "progress", "scan", "--path"])
             .arg(root)
             .output()
             .expect("run vibe progress scan")
