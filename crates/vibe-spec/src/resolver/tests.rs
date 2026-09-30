@@ -377,7 +377,7 @@ fn descriptor_map_indexes_only_selected_vibe_and_refuses_forged_or_ambiguous_row
         .unwrap();
     let selected_xml = xml_resolver.resolve_source_file(&address, &[]).unwrap();
     assert_eq!(selected_xml.path, slot.join("spec/common/guide.xml"));
-    assert_eq!(selected_xml.format, "xml");
+    assert_eq!(selected_xml.format, "markdown");
     let unsupported = DescriptorOutputRow {
         output: "spec/common/guide.txt".into(),
         source: "spec/common/guide.txt".into(),

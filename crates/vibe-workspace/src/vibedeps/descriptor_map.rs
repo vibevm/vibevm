@@ -38,6 +38,27 @@ pub fn read_validated_descriptor_map(
     expected_source_hash: &ContentHash,
     expected_format: SpecFormat,
 ) -> Result<Option<ValidatedDescriptorMap>, String> {
+    read_validated_descriptor_map_optional_hash(
+        slot,
+        group,
+        name,
+        version,
+        Some(expected_source_hash),
+        expected_format,
+    )
+}
+
+/// Boot-only reconstruction may have no independently selected source hash.
+/// That is acceptable for a legacy package, but a descriptor-owned slot must
+/// refuse rather than treating its own record as the expected witness.
+pub fn read_validated_descriptor_map_optional_hash(
+    slot: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    expected_source_hash: Option<&ContentHash>,
+    expected_format: SpecFormat,
+) -> Result<Option<ValidatedDescriptorMap>, String> {
     read_validated_descriptor_map_with_limits(
         slot,
         group,
@@ -61,7 +82,7 @@ pub(super) fn read_validated_descriptor_map_with_limits(
     group: &Group,
     name: &str,
     version: &semver::Version,
-    expected_source_hash: &ContentHash,
+    expected_source_hash: Option<&ContentHash>,
     expected_format: SpecFormat,
     limits: DescriptorMapLimits,
 ) -> Result<Option<ValidatedDescriptorMap>, String> {
@@ -84,6 +105,9 @@ pub(super) fn read_validated_descriptor_map_with_limits(
     if !authored {
         return Ok(None);
     }
+    let expected_source_hash = expected_source_hash.ok_or_else(|| {
+        "descriptor-owned slot has no independent selected source hash".to_owned()
+    })?;
     let package = Manifest::parse_str(text)
         .map_err(|error| format!("installed descriptor manifest: {error}"))?
         .package

@@ -53,6 +53,9 @@ use crate::boot::EffectiveBoot;
 use crate::compile_trace::{ScopeAcquisition, TraceRun};
 use crate::{WorkspaceError, layout_paths};
 
+mod descriptor_reader;
+pub(crate) use descriptor_reader::{SelectedSlotWitness, render_static_observed_selected};
+
 /// `normal + static` compilation — the branch that compiles a `normal`
 /// package's closure rather than concatenating it (PROP-035 §8).
 mod normal;
@@ -275,6 +278,7 @@ pub(crate) fn render_static_observed(
         workspace_root,
         self_coord,
         spec_format,
+        None,
         acquisition,
         plans,
         None,
@@ -319,6 +323,7 @@ pub(crate) fn compile_static_artifact_with(
         workspace_root,
         self_coord,
         spec_format,
+        None,
         acquisition,
         CompilePlans::transforms_only(transforms),
         observer,
@@ -332,6 +337,7 @@ fn compile_static_artifact_with_plans(
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
+    selected_slots: Option<&[SelectedSlotWitness]>,
     acquisition: Option<&ScopeAcquisition<'_>>,
     plans: CompilePlans,
     observer: Option<std::sync::Arc<dyn vibe_spec::CompileObserver>>,
@@ -361,7 +367,13 @@ fn compile_static_artifact_with_plans(
             reason: error.to_string(),
         })?,
     );
-    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+    let resolver = match selected_slots {
+        Some(witnesses) => {
+            descriptor_reader::selected_resolver(workspace_root, self_coord, witnesses)?
+        }
+        None => FileResolver::new(workspace_root, self_coord.clone()),
+    };
+    let source = FsSectionSource::new(resolver);
     // THE COMPILE BOUNDARY. Every fallible preparation above has completed;
     // the next thing that happens is the compiler. Only now is the occurrence
     // acquired — and a refusal to declare it simply compiles untraced.
@@ -522,6 +534,7 @@ fn write_boot_artifacts_inner(
         workspace_root,
         self_coord,
         spec_format,
+        None,
         acquisition,
         plans,
         None,
