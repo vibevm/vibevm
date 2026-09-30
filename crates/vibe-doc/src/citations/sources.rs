@@ -35,8 +35,8 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
-use vibe_core::Group;
-use vibe_core::manifest::Lockfile;
+use vibe_core::manifest::{Lockfile, SpecFormat};
+use vibe_core::{ContentHash, Group};
 use vibe_registry::{LocalRegistry, store};
 use vibe_spec::{Authority, FileResolver, SelectedPackage, SelfCoordinate, SpecAddress};
 
@@ -80,6 +80,10 @@ pub struct Instance {
     /// checkout is whatever is on disk right now.
     pub version: String,
     pub root: PathBuf,
+    /// Independent lock identity when this is a materialized selected slot.
+    pub source_hash: Option<ContentHash>,
+    /// In-place legacy sources can predate the materialized slot record.
+    pub in_place: bool,
 }
 
 /// A located document: the file, which source held it, and the language
@@ -187,6 +191,8 @@ impl SpecSources {
                 source: Source::Checkout,
                 version: String::new(),
                 root: root.clone(),
+                source_hash: None,
+                in_place: false,
             });
         }
         let parsed = Group::parse(group).ok()?;
@@ -230,7 +236,7 @@ impl SpecSources {
                 self.describe()
             )
         })?;
-        let resolver = self.resolver_for(&group, &name, &instance);
+        let resolver = self.resolver_for(&group, &name, &instance)?;
         let path = resolver
             .resolve_file(address)
             .map_err(|e| format!("{e} (source: {}, {})", instance.source, fwd(&instance.root)))?;
@@ -244,19 +250,24 @@ impl SpecSources {
     /// A resolver pinned to exactly the instance the chain chose, so no
     /// «freshest installed» search inside `vibe-spec` can substitute an
     /// instance this chain did not pick.
-    fn resolver_for(&self, group: &str, name: &str, instance: &Instance) -> FileResolver {
+    fn resolver_for(
+        &self,
+        group: &str,
+        name: &str,
+        instance: &Instance,
+    ) -> Result<FileResolver, String> {
         let coord = SelfCoordinate::new(Some(group.to_owned()), name.to_owned());
         if instance.source == Source::Checkout {
             // The self coordinate is unversioned by law, so it resolves
             // through the self arm rather than the selected world.
-            return FileResolver::new(instance.root.clone(), coord);
+            return Ok(FileResolver::new(instance.root.clone(), coord));
         }
         let mut selected: BTreeMap<(String, String), SelectedPackage> = BTreeMap::new();
         selected.insert(
             (group.to_owned(), name.to_owned()),
             SelectedPackage::new(instance.version.clone(), instance.root.clone()),
         );
-        FileResolver::with_selected_world(
+        let mut resolver = FileResolver::with_selected_world(
             instance.root.clone(),
             instance.root.clone(),
             selected,
@@ -265,7 +276,50 @@ impl SpecSources {
             // it carries one, is CHECKED against what the chain found
             // rather than silently dropped.
             SelfCoordinate::new(None, String::new()),
-        )
+        );
+        let group = Group::parse(group).map_err(|error| error.to_string())?;
+        let version = instance
+            .version
+            .parse::<semver::Version>()
+            .map_err(|error| format!("selected citation version: {error}"))?;
+        let map = match instance.source {
+            Source::Lock => {
+                let hash = instance.source_hash.as_ref().ok_or_else(|| {
+                    "lock-selected citation has no independent content hash".to_owned()
+                })?;
+                vibe_workspace::vibedeps::read_validated_descriptor_map_for_citation(
+                    &instance.root,
+                    &group,
+                    name,
+                    &version,
+                    hash,
+                    !instance.in_place,
+                )
+            }
+            Source::InTree | Source::Store => {
+                vibe_workspace::vibedeps::read_validated_descriptor_map_optional_hash(
+                    &instance.root,
+                    &group,
+                    name,
+                    &version,
+                    None,
+                    SpecFormat::Mixed,
+                )
+            }
+            Source::Checkout => unreachable!("checkout returned above"),
+        }
+        .map_err(|reason| {
+            format!(
+                "{} citation source `{group}/{name}`: {reason}",
+                instance.source
+            )
+        })?;
+        if let Some(map) = map {
+            resolver = resolver
+                .with_descriptor_source_map(map.spec_root().to_owned(), Some(map))
+                .map_err(|error| error.to_string())?;
+        }
+        Ok(resolver)
     }
 
     /// The chain, named — so a refusal says where the resolver looked
@@ -308,6 +362,8 @@ fn registry_instance(root: &Path, source: Source, group: &Group, name: &str) -> 
         source,
         version: newest.to_string(),
         root: dir,
+        source_hash: None,
+        in_place: false,
     })
 }
 
@@ -321,12 +377,18 @@ fn locked_instance(workspace_root: &Path, group: &Group, name: &str) -> Option<I
         .packages
         .iter()
         .find(|p| p.group == *group && p.name.as_str() == name)?;
-    let slot =
-        vibe_workspace::vibedeps::slot_abs_path(workspace_root, group, name, &locked.version);
+    let in_place = locked.materialization.is_in_place();
+    let slot = if in_place {
+        vibe_workspace::vibedeps::in_place_slot_abs_path(workspace_root, group, name)
+    } else {
+        vibe_workspace::vibedeps::slot_abs_path(workspace_root, group, name, &locked.version)
+    };
     slot.is_dir().then(|| Instance {
         source: Source::Lock,
         version: locked.version.to_string(),
         root: slot,
+        source_hash: Some(locked.content_hash.clone()),
+        in_place,
     })
 }
 
