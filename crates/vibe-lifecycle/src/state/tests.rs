@@ -49,6 +49,10 @@ mod publication;
 mod recovery;
 
 #[cfg(test)]
+#[path = "tests/run_journal.rs"]
+mod run_journal;
+
+#[cfg(test)]
 #[path = "tests/safety.rs"]
 mod safety;
 
