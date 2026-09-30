@@ -31,8 +31,8 @@ pub(crate) use fingerprint::{
 pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
 pub use store::LifecycleStateStore;
 pub use submission::{
-    ReservationDecision, SubmissionError, SubmissionNamespace, SubmissionReservations,
-    SubmissionScope,
+    JournalAdmission, ReservationDecision, SubmissionError, SubmissionNamespace,
+    SubmissionReservations, SubmissionScope,
 };
 pub use tasks::{LifecycleTasksError, pending_hosted_tasks};
 
