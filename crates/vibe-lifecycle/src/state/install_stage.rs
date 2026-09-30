@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 use vibe_safefs::PublishStage;
+use vibe_wire::generated::lifecycle_state::LifecycleState;
 
 use super::run_journal::{LifecycleRunJournalObservation, inspect_reserved_lifecycle_run};
 use super::submission::{
@@ -24,7 +25,7 @@ const STAGE_CAP: usize = 16 * 1024;
 const REQUEST_PLAN_CAP: usize = 1024 * 1024;
 
 #[derive(Debug, Error)]
-pub(crate) enum InstallStageError {
+pub enum InstallStageError {
     #[error("invalid install-entered input: {0}")]
     InvalidInput(&'static str),
     #[error("install-entered source refused: {0}")]
@@ -49,7 +50,7 @@ struct StageRecord {
 /// Evidence that this invocation published one exact entry record. This value
 /// is not an effect permit, nor proof of an install result.
 #[derive(Debug)]
-pub(crate) struct InstallEnteredStage {
+pub struct InstallEnteredStage {
     pub(crate) run_id: String,
     pub(crate) reservation_ref: String,
     pub(crate) pre_effect_plan_sha256: String,
@@ -59,7 +60,7 @@ pub(crate) struct InstallEnteredStage {
 /// header are ready. Root-only for now: a member run needs a separate proven
 /// relationship between its selected node and the leased workspace root.
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn publish_install_entered_stage(
+pub fn publish_install_entered_stage(
     lease: &LifecycleLease,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
@@ -112,12 +113,10 @@ pub(crate) fn publish_install_entered_stage(
             .map_err(|error| InstallStageError::RecoveryRequired(error.to_string()))?;
     match inspect_reserved_lifecycle_run(lease, run_id) {
         Ok(LifecycleRunJournalObservation::RecoveryRequired { state })
-            if state.run.requested == "generate"
-                && state.run.chain == ["validate", "install", "generate"]
-                && state.run.selected.as_deref() == Some(".") => {}
+            if matches_root_install_header(&state) => {}
         Ok(_) => {
             return Err(InstallStageError::RecoveryRequired(
-                "matching root Generate lifecycle header is absent".into(),
+                "matching root Install or Generate lifecycle header is absent".into(),
             ));
         }
         Err(error) => return Err(InstallStageError::RecoveryRequired(error.to_string())),
@@ -197,6 +196,19 @@ pub(crate) fn publish_install_entered_stage(
         reservation_ref,
         pre_effect_plan_sha256,
     })
+}
+
+fn matches_root_install_header(state: &LifecycleState) -> bool {
+    if state.run.selected.as_deref() != Some(".") {
+        return false;
+    }
+    match (state.run.requested.as_str(), state.run.chain.as_slice()) {
+        ("install", [validate, install]) => validate == "validate" && install == "install",
+        ("generate", [validate, install, generate]) => {
+            validate == "validate" && install == "install" && generate == "generate"
+        }
+        _ => false,
+    }
 }
 
 #[cfg(test)]

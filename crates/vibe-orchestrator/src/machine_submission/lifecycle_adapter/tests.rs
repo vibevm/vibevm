@@ -54,6 +54,160 @@ fn call(
     )
 }
 
+fn install_request() -> DefaultLifecycleRequest {
+    let mut asked = request();
+    asked.requested = Phase::Install;
+    asked
+}
+
+fn call_install(
+    root: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_empty_world_install(
+        root,
+        namespace,
+        scope,
+        key,
+        install_request(),
+        TargetOs::Linux,
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+}
+
+#[test]
+fn empty_world_install_writes_boot_after_stage_and_replays_exact_result() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let manifest_before = std::fs::read(dir.path().join("vibe.toml")).unwrap();
+    assert!(!dir.path().join("vibe.lock").exists());
+    let first = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first empty-world install must invoke");
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+    assert!(
+        dir.path()
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    let boot = dir.path().join("vibevm/vibespecs/boot/INDEX.md");
+    assert!(boot.is_file(), "empty-world install must regenerate boot");
+    assert_eq!(
+        std::fs::read(dir.path().join("vibe.toml")).unwrap(),
+        manifest_before
+    );
+    assert!(!dir.path().join("vibe.lock").exists());
+    std::fs::write(&boot, b"sentinel after completed install").unwrap();
+    let second = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
+    assert_eq!(second, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(
+        std::fs::read(&boot).unwrap(),
+        b"sentinel after completed install"
+    );
+}
+
+#[test]
+fn empty_install_marker_loss_requires_recovery_and_never_regenerates_boot() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, .. } = first else {
+        panic!("first install must invoke");
+    };
+    let boot = dir.path().join("vibevm/vibespecs/boot/INDEX.md");
+    std::fs::write(&boot, b"sentinel after interrupted report").unwrap();
+    std::fs::remove_file(
+        dir.path()
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.marker.json")),
+    )
+    .unwrap();
+    assert_eq!(
+        call_install(dir.path(), &namespace, &scope, "install-one").unwrap(),
+        SubmissionOutcome::RecoveryRequired { run_id }
+    );
+    assert_eq!(
+        std::fs::read(&boot).unwrap(),
+        b"sentinel after interrupted report"
+    );
+}
+
+#[test]
+fn empty_install_changed_plan_and_foreign_header_refuse_second_boot_write() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
+    assert!(matches!(first, SubmissionOutcome::Invoked { .. }));
+    let boot = dir.path().join("vibevm/vibespecs/boot/INDEX.md");
+    std::fs::write(&boot, b"sentinel after first install").unwrap();
+    let state_before = std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap();
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        "[project]\nname = 'changed'\nversion = '1.1.0'\n",
+    )
+    .unwrap();
+    let same_key = call_install(dir.path(), &namespace, &scope, "install-one")
+        .unwrap_err()
+        .to_string();
+    assert!(same_key.contains("different request or plan"), "{same_key}");
+    let new_key = call_install(dir.path(), &namespace, &scope, "install-two")
+        .unwrap_err()
+        .to_string();
+    assert!(new_key.contains("uncertain"), "{new_key}");
+    assert_eq!(
+        std::fs::read(&boot).unwrap(),
+        b"sentinel after first install"
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap(),
+        state_before
+    );
+}
+
+#[test]
+fn empty_install_refuses_declared_package_before_stage_or_boot() {
+    let dir = project();
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        "[project]\nname = 'demo'\nversion = '1.1.0'\n[requires.packages]\n'org.demo/missing' = '=1.1.0'\n",
+    )
+    .unwrap();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let error = call_install(dir.path(), &namespace, &scope, "install-one")
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("refuses requirements"), "{error}");
+    assert!(!dir.path().join(".vibe/lifecycle-outcomes").exists());
+    assert!(!dir.path().join("vibevm/vibespecs/boot/INDEX.md").exists());
+}
+
+#[test]
+fn empty_install_refuses_lock_dependencies_before_stage_or_boot() {
+    let dir = project();
+    let mut lock = vibe_core::manifest::Lockfile::empty("vibe 1.1.0", "2026-09-30T00:00:00Z");
+    lock.meta
+        .root_dependencies
+        .push(vibe_core::PackageRef::parse("org.demo/missing@=1.1.0").unwrap());
+    lock.write(dir.path().join("vibe.lock")).unwrap();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let error = call_install(dir.path(), &namespace, &scope, "install-one")
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("preexisting lock dependencies"), "{error}");
+    assert!(!dir.path().join(".vibe/lifecycle-outcomes").exists());
+    assert!(!dir.path().join("vibevm/vibespecs/boot/INDEX.md").exists());
+}
+
 #[test]
 fn validate_result_is_retained_and_lost_response_replays_exact_bytes() {
     let dir = project();
@@ -220,9 +374,14 @@ fn ready_header_check_refuses_a_different_start_for_the_proposed_run() {
     )
     .unwrap();
     drop(store);
-    let error = ValidateJournal::header(&lease, &run_id, Some("2026-09-30T00:00:00Z"))
-        .unwrap_err()
-        .to_string();
+    let error = ProtectedJournal::header(
+        &lease,
+        &run_id,
+        Some("2026-09-30T00:00:00Z"),
+        Phase::Validate,
+    )
+    .unwrap_err()
+    .to_string();
     assert!(error.contains("differs"), "{error}");
     assert!(!dir.path().join(".vibe/lifecycle").exists());
 }

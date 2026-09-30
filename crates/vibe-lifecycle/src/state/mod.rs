@@ -36,13 +36,7 @@ pub(crate) use fingerprint::{
 pub use identity::{
     RunIdentity, SupersededTrace, select_run_identity, select_run_identity_for_reservation,
 };
-#[allow(
-    unused_imports,
-    reason = "protected Generate activation follows this owner stage"
-)]
-pub(crate) use install_stage::{
-    InstallEnteredStage, InstallStageError, publish_install_entered_stage,
-};
+pub use install_stage::{InstallEnteredStage, InstallStageError, publish_install_entered_stage};
 #[allow(
     unused_imports,
     reason = "C.2 pure validator; owner persistence follows"
