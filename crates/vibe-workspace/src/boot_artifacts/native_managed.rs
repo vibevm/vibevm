@@ -216,8 +216,9 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             workspace_root,
             self_coord,
             Some(overlay),
+            selected_slots,
         )?,
-        None => inputs::build_with_providers(entries, workspace_root, self_coord)?,
+        None => inputs::build_with_providers(entries, workspace_root, self_coord, selected_slots)?,
     };
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml

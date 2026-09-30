@@ -16,12 +16,15 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+use vibe_core::manifest::SourceInterpretation;
 use vibe_core::{Group, PackageName};
+use vibe_safefs::Project;
 use vibe_spec::{ArtifactInput, DocumentProvider, SelfCoordinate};
 
 use crate::boot::{BootEntry, BootProvenance};
-use crate::{WorkspaceError, layout_paths};
+use crate::{WorkspaceError, layout_paths, vibedeps};
 
+use super::SelectedSlotWitness;
 use super::normal::{hoisted_seed, normal_seed};
 
 /// Build one artifact's inputs from the lane's static entries, in order,
@@ -41,8 +44,9 @@ pub(super) fn build_with_providers(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
+    selected_slots: Option<&[SelectedSlotWitness]>,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
-    build_with_providers_overlay(entries, workspace_root, self_coord, None)
+    build_with_providers_overlay(entries, workspace_root, self_coord, None, selected_slots)
 }
 
 pub(super) fn build_with_providers_overlay(
@@ -50,6 +54,7 @@ pub(super) fn build_with_providers_overlay(
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
+    selected_slots: Option<&[SelectedSlotWitness]>,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
     let mut inputs = Vec::with_capacity(entries.len());
     let mut providers = Vec::with_capacity(entries.len());
@@ -106,26 +111,39 @@ pub(super) fn build_with_providers_overlay(
                 )
             } else {
                 let absolute = workspace_root.join(&entry.path);
-                let markdown = match overlay.and_then(|overlay| overlay.get(&absolute)) {
-                    Some(bytes) => {
-                        let raw =
-                            std::str::from_utf8(bytes).map_err(|error| WorkspaceError::Io {
-                                path: absolute.clone(),
-                                reason: format!("overlay is not UTF-8: {error}"),
-                            })?;
-                        vibe_specdoc::project_spec_text(&absolute, raw)
+                let selected = match selected_slots {
+                    Some(witnesses) => selected_simple_markdown(
+                        entry,
+                        workspace_root,
+                        &absolute,
+                        witnesses,
+                        overlay,
+                    )?,
+                    None => None,
+                };
+                let markdown = match selected {
+                    Some(markdown) => markdown,
+                    None => match overlay.and_then(|overlay| overlay.get(&absolute)) {
+                        Some(bytes) => {
+                            let raw =
+                                std::str::from_utf8(bytes).map_err(|error| WorkspaceError::Io {
+                                    path: absolute.clone(),
+                                    reason: format!("overlay is not UTF-8: {error}"),
+                                })?;
+                            vibe_specdoc::project_spec_text(&absolute, raw)
+                                .map(|(markdown, _)| markdown)
+                                .map_err(|error| WorkspaceError::Io {
+                                    path: absolute.clone(),
+                                    reason: error.to_string(),
+                                })?
+                        }
+                        None => vibe_specdoc::load_spec_text(&absolute)
                             .map(|(markdown, _)| markdown)
                             .map_err(|error| WorkspaceError::Io {
                                 path: absolute.clone(),
                                 reason: error.to_string(),
-                            })?
-                    }
-                    None => vibe_specdoc::load_spec_text(&absolute)
-                        .map(|(markdown, _)| markdown)
-                        .map_err(|error| WorkspaceError::Io {
-                            path: absolute.clone(),
-                            reason: error.to_string(),
-                        })?,
+                            })?,
+                    },
                 };
                 (
                     ArtifactInput::simple_declared_by(
@@ -145,6 +163,96 @@ pub(super) fn build_with_providers_overlay(
         providers.push(seat);
     }
     Ok((inputs, providers))
+}
+
+/// The selected resolver normally sees a boot path only after inputs have
+/// already projected it. Classify this exact output first, using the same
+/// lock-selected slot witness as the resolver, then read the recorded bytes
+/// through a held no-follow project. Ordinary data cannot become a boot
+/// document merely because its suffix looks like a Vibe serialization.
+fn selected_simple_markdown(
+    entry: &BootEntry,
+    workspace_root: &Path,
+    absolute: &Path,
+    witnesses: &[SelectedSlotWitness],
+    overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
+) -> Result<Option<String>, WorkspaceError> {
+    let BootProvenance::Dependency { group, name } = &entry.provenance else {
+        return Ok(None);
+    };
+    let witness = witnesses
+        .iter()
+        .find(|witness| &witness.group == group && &witness.name == name)
+        .ok_or_else(|| boot_refusal("simple boot dependency has no selected slot witness"))?;
+    if !witness.root.is_absolute() || !witness.root.starts_with(workspace_root) {
+        return Err(boot_refusal(
+            "selected simple boot slot is outside the workspace",
+        ));
+    }
+    let relative = absolute
+        .strip_prefix(&witness.root)
+        .map_err(|_| boot_refusal("simple boot entry is outside its selected slot"))?
+        .to_string_lossy()
+        .replace('\\', "/");
+    let map = vibedeps::read_validated_descriptor_map_optional_hash(
+        &witness.root,
+        &witness.group,
+        &witness.name,
+        &witness.version,
+        witness.source_hash.as_ref(),
+        witness.spec_format,
+    )
+    .map_err(|reason| boot_refusal(&format!("selected simple boot slot: {reason}")))?;
+    let Some(map) = map else {
+        return Ok(None);
+    };
+    let row = map.output_row(&relative).ok_or_else(|| {
+        boot_refusal(&format!(
+            "simple boot path `{relative}` has no validated output row"
+        ))
+    })?;
+    if row.interpretation != Some(SourceInterpretation::VibeSpec) {
+        return Err(boot_refusal(&format!(
+            "simple boot path `{relative}` is not a selected VibeSpec source"
+        )));
+    }
+    let pinned = Project::open(&witness.root)
+        .map_err(|error| boot_refusal(&format!("pinning selected simple boot slot: {error}")))?;
+    let captured = pinned
+        .read_file_snapshot_bounded(&relative, 64 * 1024 * 1024)
+        .map_err(|error| boot_refusal(&format!("capturing `{relative}`: {error}")))?
+        .ok_or_else(|| boot_refusal(&format!("simple boot source `{relative}` is absent")))?;
+    if captured.sha256 != row.output_sha256 {
+        return Err(boot_refusal(&format!(
+            "simple boot source `{relative}` differs from recorded output"
+        )));
+    }
+    if overlay
+        .and_then(|overlay| overlay.get(absolute))
+        .is_some_and(|bytes| bytes.as_ref() != captured.bytes)
+    {
+        return Err(boot_refusal(&format!(
+            "simple boot overlay for `{relative}` differs from selected output"
+        )));
+    }
+    let raw = std::str::from_utf8(&captured.bytes).map_err(|error| {
+        boot_refusal(&format!(
+            "selected simple boot source `{relative}` is not UTF-8: {error}"
+        ))
+    })?;
+    vibe_specdoc::project_spec_text(absolute, raw)
+        .map(|(markdown, _)| Some(markdown))
+        .map_err(|error| {
+            boot_refusal(&format!(
+                "selected simple boot source `{relative}`: {error}"
+            ))
+        })
+}
+
+fn boot_refusal(reason: &str) -> WorkspaceError {
+    WorkspaceError::InlineCompile {
+        reason: reason.to_owned(),
+    }
 }
 
 /// The typed provider that DECLARED one document-producing boot entry.

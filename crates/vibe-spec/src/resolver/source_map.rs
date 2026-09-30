@@ -35,6 +35,7 @@ pub struct ValidatedDescriptorMap {
     source_witness: String,
     manifest_sha256: String,
     by_address: BTreeMap<String, DescriptorOutputRow>,
+    by_output: BTreeMap<String, DescriptorOutputRow>,
 }
 
 impl ValidatedDescriptorMap {
@@ -60,6 +61,7 @@ impl ValidatedDescriptorMap {
         let mut outputs = BTreeSet::new();
         let mut folded_outputs = BTreeMap::new();
         let mut by_address = BTreeMap::new();
+        let mut by_output = BTreeMap::new();
         for row in rows {
             if !relative(&row.output) || !relative(&row.source) || !sha256(&row.output_sha256) {
                 return Err(invalid("output/source path or output digest is invalid"));
@@ -76,6 +78,7 @@ impl ValidatedDescriptorMap {
                     "two source rows claim portable-case output aliases",
                 ));
             }
+            by_output.insert(row.output.clone(), row.clone());
             let is_vibe = matches!(
                 row.interpretation,
                 Some(SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc)
@@ -114,6 +117,7 @@ impl ValidatedDescriptorMap {
             source_witness,
             manifest_sha256,
             by_address,
+            by_output,
         })
     }
 
@@ -127,6 +131,12 @@ impl ValidatedDescriptorMap {
 
     pub fn manifest_sha256(&self) -> &str {
         &self.manifest_sha256
+    }
+
+    /// One exact recorded output, including ordinary raw resources. A row
+    /// without a Vibe interpretation is never a document for the resolver.
+    pub fn output_row(&self, output: &str) -> Option<&DescriptorOutputRow> {
+        self.by_output.get(output)
     }
 
     pub(super) fn resolve(&self, doc_path: &str) -> Option<ResolvedSourceFile> {
