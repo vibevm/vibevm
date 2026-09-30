@@ -38,7 +38,10 @@ pub use identity::{
     unused_imports,
     reason = "C.2 pure validator; owner persistence follows"
 )]
-pub use outcome_marker::{LifecycleOutcomeMarkerError, validate_lifecycle_outcome_marker};
+pub use outcome_marker::{
+    LifecycleOutcomeMarkerError, LifecycleReportPayload, create_lifecycle_outcome_marker,
+    validate_lifecycle_outcome_marker,
+};
 #[allow(unused_imports, reason = "C.2 owner adapter follows retention seam")]
 pub use outcome_store::{
     LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleOutcomeStoreError,
