@@ -462,7 +462,7 @@ impl SubmissionReservations {
     /// response cannot be relabeled after namespace expiry or collection.
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
-        r = 5
+        r = 6
     )]
     pub fn reservation_ref(
         lease: &LifecycleLease,

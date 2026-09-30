@@ -69,7 +69,7 @@
     {
       "id": "M-16-C.2",
       "title": "Link short-lived operation owners to domain recovery",
-      "goal": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes.",
+      "goal": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes; add missing pre-effect owner journals for direct build, package and remote publication before those domains are protected machine submissions.",
       "read_paths": [
         "crates/vibe-lifecycle/src/runner.rs",
         "crates/vibe-lifecycle/src/runner/hosted.rs",
@@ -98,7 +98,20 @@
         "crates/vibe-wire/src/generated/lifecycle_report/mod.rs",
         "crates/vibe-orchestrator/src/values.rs",
         "crates/vibe-orchestrator/src/failure.rs",
-        "formats/EPOCHS.toml"
+        "formats/EPOCHS.toml",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/record.rs",
+        "crates/vibe-publish/src/lib.rs",
+        "crates/vibe-publish/src/orchestrator.rs",
+        "crates/vibe-publish/src/git_publish.rs",
+        "crates/vibe-publish/src/github_release.rs",
+        "crates/vibe-index/src/journal/mod.rs",
+        "crates/vibe-index/src/journal/store.rs",
+        "crates/vibe-index/src/journal/record.rs",
+        "crates/vibe-cli/src/commands/registry/publish.rs",
+        "crates/vibe-cli/src/commands/workspace/publish.rs"
       ],
       "write_paths": [
         "crates/vibe-orchestrator/src/",
@@ -122,13 +135,20 @@
         "formats/",
         "crates/vibe-wire/",
         "crates/vibe-orchestrator/src/values.rs",
-        "crates/vibe-orchestrator/src/failure.rs"
+        "crates/vibe-orchestrator/src/failure.rs",
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-publish/src/",
+        "crates/vibe-publish/Cargo.toml"
       ],
       "steps": [
         "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
         "Advertise connection-loss policy; implement continue-to-completion or explicit safe-stop ownership and protected local attach/control for a still-running owner.",
         "On owner crash recover from domain journals, preserving existing one-writer/one-parked limits and completed/pending/uncertain effects; do not synthesize success from EOF.",
-        "Adopt C.1 reservation/journal-ready fence for actual lifecycle/build/deploy/publication owners; handle reservation-present/journal-absent and post-effect uncertain outcomes under the same run identity."
+        "Adopt C.1 reservation/journal-ready fence for actual lifecycle, build, package, deploy and publication owners under the same domain run identity. Build/package artifact records and registry Published facts are post-effect evidence, not pre-effect operation journals; add missing owner journals and retained results before enabling their submits.",
+        "Advertise an operation as unavailable until its domain owner proves pre-effect identity, journal-ready, terminal/partial result retention and safe retry. Keep current one-writer/one-parked limits; no fixture or shape-only handler grants a real effect."
       ],
       "positive_cases": [
         "An operation remains inspectable after the originating API process exits.",
@@ -137,7 +157,8 @@
       ],
       "negative_cases": [
         "Connection loss silently restarts a provider.",
-        "A second client bypasses the domain's existing execution limit."
+        "A second client bypasses the domain's existing execution limit.",
+        "A build/package artifact record or registry Published fact is accepted as an operation journal, or package is silently omitted from effectful machine coverage."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -159,7 +180,8 @@
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "C.2 must keep the ordinary default-lifecycle path byte/behavior compatible while a separate machine path reserves a pure run ID, proves its matching lifecycle journal and ready marker, then permits scratch/prerequisite/provider effects. A matching lifecycle freshness header is not a terminal result; per-run owner-retained outcomes and cross-domain recovery remain separate work.",
-        "A lifecycle freshness header is not a terminal result. The lifecycle owner must retain a registered per-run marker and validated report payload (or typed unavailable partial evidence) under its own lease-pinned state, before replying. A displaced header without that owner record remains recovery-required; no result is copied into the reservation index."
+        "A lifecycle freshness header is not a terminal result. The lifecycle owner must retain a registered per-run marker and validated report payload (or typed unavailable partial evidence) under its own lease-pinned state, before replying. A displaced header without that owner record remains recovery-required; no result is copied into the reservation index.",
+        "Source audit found direct build/package apply before artifact records and remote publication before any local run journal; these are owner-journal implementation gaps, not evidence that C.1 protects them. Registry fact log is not a remote publication operation journal. All publication tests in this campaign use isolated fixture remotes; no next/1.1.0 public Git action."
       ]
     },
     {
