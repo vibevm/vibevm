@@ -152,14 +152,7 @@ fn validate_report(
             }
         }
         Outcome::Failed => {
-            if report.ok
-                || report.delegation.is_some()
-                || !steps_match_prefix(report)
-                || report.steps.last().is_none_or(|step| step.status != "fail")
-                || report.steps[..report.steps.len() - 1]
-                    .iter()
-                    .any(|step| !successful_status(&step.status))
-            {
+            if report.ok || report.delegation.is_some() || !failed_steps_match(report) {
                 return Err(LifecycleOutcomeMarkerError::OutcomeMismatch(
                     "failed requires a failed nondelegated report",
                 ));
@@ -171,6 +164,31 @@ fn validate_report(
         }
     }
     Ok(())
+}
+
+fn failed_steps_match(report: &LifecycleReport) -> bool {
+    // The existing failure projection retains exactly the stopped phase, not
+    // invented success rows for earlier phases. A longer measured prefix is
+    // valid only when it follows the declared chain in order.
+    if report.steps.last().is_none_or(|step| step.status != "fail")
+        || report
+            .chain
+            .iter()
+            .enumerate()
+            .any(|(index, phase)| report.chain[..index].iter().any(|earlier| earlier == phase))
+    {
+        return false;
+    }
+    if report.steps.len() == 1 {
+        return report
+            .chain
+            .iter()
+            .any(|phase| phase == &report.steps[0].phase);
+    }
+    steps_match_prefix(report)
+        && report.steps[..report.steps.len() - 1]
+            .iter()
+            .all(|step| successful_status(&step.status))
 }
 
 fn steps_match_prefix(report: &LifecycleReport) -> bool {
