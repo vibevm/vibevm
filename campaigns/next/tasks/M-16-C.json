@@ -84,7 +84,14 @@
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/state/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-orchestrator/src/command.rs",
+        "crates/vibe-orchestrator/src/prelude.rs",
+        "crates/vibe-orchestrator/src/phase.rs",
+        "crates/vibe-lifecycle/src/state/identity.rs",
+        "crates/vibe-lifecycle/src/process/scratch.rs",
+        "crates/vibe-lifecycle/src/state/run_journal.rs",
+        "crates/vibe-lifecycle/src/runner/tests.rs"
       ],
       "write_paths": [
         "crates/vibe-orchestrator/src/",
@@ -99,7 +106,11 @@
         "crates/vibe-lifecycle/src/runner.rs",
         "crates/vibe-lifecycle/src/state/mod.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-orchestrator/src/command.rs",
+        "crates/vibe-orchestrator/src/prelude.rs",
+        "crates/vibe-lifecycle/src/state/identity.rs",
+        "crates/vibe-lifecycle/src/process/scratch.rs"
       ],
       "steps": [
         "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
@@ -134,7 +145,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "C.2 must keep the ordinary default-lifecycle path byte/behavior compatible while a separate machine path reserves a pure run ID, proves its matching lifecycle journal and ready marker, then permits scratch/prerequisite/provider effects. A matching lifecycle freshness header is not a terminal result; per-run owner-retained outcomes and cross-domain recovery remain separate work."
       ]
     },
     {
