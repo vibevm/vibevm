@@ -35,6 +35,7 @@ use vibe_safefs::Project;
 
 mod error;
 mod inputs;
+pub(crate) mod journal;
 mod native;
 pub(crate) mod protocol;
 mod record;
