@@ -16,9 +16,11 @@ specmark = { workspace = true }
 # both the event reader the frontend walks and the Writer with correct
 # escaping — one new workspace dependency, pinned here. MIT.
 quick-xml.workspace = true
-# The Markdown frontend is an ADAPTER over progress-core's own scanner
-# (PROP-045 ##PIVOT-MODEL): this crate never parses Markdown itself.
+# The Vibe Markdown frontend remains an ADAPTER over progress-core's scanner
+# (PROP-045 ##PIVOT-MODEL); the ordinary CommonMark reader below is separate.
 progress-core.workspace = true
+# Separate ordinary CommonMark reader; never feeds the Vibe fact/directive IR.
+pulldown-cmark.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

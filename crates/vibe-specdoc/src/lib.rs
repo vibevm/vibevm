@@ -6,7 +6,7 @@
 //! formats is always parse → pivot → emit, never direct text rewriting
 //! (PROP-045 ##PIVOT-MODEL). This crate owns the IR and all four edges:
 //!
-//! * [`from_markdown`] — an ADAPTER over `progress-core`'s own scanner
+//! * [`from_markdown`] — the Vibe ADAPTER over `progress-core`'s own scanner
 //!   (`parse_document`), not a fifth Markdown parser: it re-uses that
 //!   crate's blocks, facts, markers and fence bindings and rebuilds
 //!   section/block structure over them.
@@ -20,7 +20,9 @@
 //!   with `{#id}`, facts → `@fact:<ID> … @status:<stage>/<state>` units,
 //!   fences/tables/quotes/lists in their MD forms, `@fact/code:` + fence
 //!   for typed facts.
-//! * [`load_spec_text`] — the consumers' one dispatch (PROP-045
+//! * [`commonmark::CommonMarkDoc`] — a separate, pure ordinary-Markdown
+//!   structure reader. It never constructs Vibe facts, directives or SpecDoc.
+//! * [`load_spec_text`] — the Vibe consumers' one dispatch (PROP-045
 //!   ##PROJECTION-READ): `.md` verbatim, `.xml` as its canonical MD
 //!   projection, with the [`SourceKind`] that marks projection-relative
 //!   diagnostics; [`project_spec_text`] is its pure sibling for a caller
@@ -71,14 +73,15 @@
 //! ```
 //!
 //! Separability follows progress-core's own law: this crate depends on no
-//! vibevm subsystem — only on `progress-core` (the scanner and the status
-//! vocabulary) and `quick-xml`.
+//! vibevm subsystem. The Vibe adapter uses `progress-core`, XML uses
+//! `quick-xml`, and the ordinary Markdown reader uses `pulldown-cmark`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 
 pub mod doc;
 pub mod load;
 
+pub mod commonmark;
 mod convert;
 mod md_in;
 mod md_out;
