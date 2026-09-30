@@ -34,6 +34,7 @@ use thiserror::Error;
 
 mod creator;
 pub mod direct_git;
+pub mod distribution_smoke_report;
 pub mod git_publish;
 pub mod github;
 pub mod github_release;
