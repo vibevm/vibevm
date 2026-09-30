@@ -128,6 +128,9 @@
         "Cargo.lock",
         "crates/vibe-core/src/manifest/package/",
         "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-facts/src/scan/declared.rs",
+        "crates/vibe-facts/src/scan/declared/",
+        "crates/vibe-facts/src/lib.rs",
         "crates/vibe-specdoc/src/lib.rs",
         "crates/progress-core/src/parse/",
         "crates/vibe-specdoc/tests/docs_corpus.rs",
@@ -166,6 +169,7 @@
         "TO CREATE: m_06_a_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Any new parser dependency is an implementation decision within the listed manifests; do not claim a library is already installed.",
         "Permanent PROP-072 SOURCE-EXPORT-SELECTOR now fixes the conservative export grammar: package-unique name, exact file and root-to-section headings array. The vibe-core manifest owner parses authored rows; vibe-specdoc resolves only the pure captured-byte view, keeping snapshot NodeId separate from durable export identity. These two owners do not require a dependency cycle or an ambient filesystem read.",
+        "The existing descriptor-selected vibe-facts read seam is the host join for ordinary CommonMark. It may retain a structural observation and resolve a package source export from that same witnessed byte snapshot, but must never mint Vibe facts or claim directory census completeness from a supplied-file inventory.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
