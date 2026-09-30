@@ -11,10 +11,12 @@ use semver::Version;
 use vibe_publish::publication_capture::{
     CommittedInputBytes, capture_distribution, subject_from_captured,
 };
-use vibe_safefs::Project;
+use vibe_publish::sha256_digest;
+use vibe_safefs::{Project, StableFileState};
 use vibe_wire::generated::publication_subject::{PublicationSmoke, PublicationSubject};
 
 use super::build;
+use super::release;
 use super::snapshot::{self, GitIdentity};
 
 const INSTALLER_MAX_BYTES: u64 = 1024 * 1024;
@@ -55,6 +57,38 @@ pub(crate) fn capture_prepared_subject(
         .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
     let captured = capture_distribution(&output, "1.1.0")
         .context("capturing five exact local distribution outputs")?;
+    // The compact stable witnesses alone do not prove what each ZIP embeds.
+    // Re-read only through the same pinned root, join each byte string to its
+    // exact captured digest/length, then reuse the existing closed ZIP and
+    // embedded-manifest verifier before constructing the subject.
+    for (fragment, fragment_state, bundle_state, bootstrap_state) in captured.exact_targets() {
+        let fragment_name = build::fragment_asset_name(&version, &fragment.target);
+        let fragment_bytes = reread_exact(
+            &output,
+            &fragment_name,
+            vibe_publish::DISTRIBUTION_MANIFEST_MAX_BYTES,
+            fragment_state,
+        )?;
+        let rechecked_fragment =
+            vibe_publish::PlatformDistributionFragment::from_json_slice(&fragment_bytes)?;
+        if &rechecked_fragment != fragment {
+            bail!("fragment `{fragment_name}` changed after its stable capture");
+        }
+        let bundle = reread_exact(
+            &output,
+            &fragment.asset.name,
+            vibe_publish::DISTRIBUTION_BUNDLE_MAX_BYTES,
+            bundle_state,
+        )?;
+        let bootstrap = reread_exact(
+            &output,
+            &fragment.bootstrap.name,
+            vibe_publish::DISTRIBUTION_BOOTSTRAP_MAX_BYTES,
+            bootstrap_state,
+        )?;
+        release::verify_platform_bytes(fragment, &bundle, &bootstrap)
+            .with_context(|| format!("verifying embedded bytes for `{}`", fragment.target))?;
+    }
     let subject = subject_from_captured(
         &captured,
         CommittedInputBytes {
@@ -74,6 +108,25 @@ pub(crate) fn capture_prepared_subject(
         subject_digest: subject.subject_digest,
         aggregate_bytes: subject.aggregate_bytes,
     })
+}
+
+fn reread_exact(
+    project: &Project,
+    name: &str,
+    cap: u64,
+    captured: &StableFileState,
+) -> Result<Vec<u8>> {
+    let cap = usize::try_from(cap).context("distribution byte cap exceeds this host's usize")?;
+    let bytes = project
+        .read_file_bounded(name, cap)
+        .with_context(|| format!("re-reading captured distribution asset `{name}`"))?
+        .with_context(|| format!("captured distribution asset `{name}` disappeared"))?;
+    if u64::try_from(bytes.len()).ok() != Some(captured.bytes)
+        || sha256_digest(&bytes) != format!("sha256:{}", captured.sha256)
+    {
+        bail!("captured distribution asset `{name}` changed on re-read");
+    }
+    Ok(bytes)
 }
 
 #[cfg(test)]
