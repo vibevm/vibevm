@@ -65,7 +65,7 @@ name = "review-lab"</fence>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
   </create-project>
   <scaffold title="Step 2: scaffold the package">
-    <p>1. Add a package to the project. It is a `flow`, a package of working rules for an agent, and it asks for the `normal` format, whose meaning step 4 explains:</p>
+    <p>1. Add a package to the project. It is a `flow`, a package of working rules for an agent, and it asks for the `normal` format, whose meaning step 4 explains. The scaffold also writes `normal` when `--format` is omitted:</p>
     <example id="init-package" fixture="xml-lab">
       <run>vibe init package org.acme/review --kind flow --format normal</run>
       <expect>Creating package `org.acme/review` in `&lt;TMP&gt;/work/review-lab`
@@ -194,7 +194,7 @@ fact with a status.&lt;/p&gt;
   <headers title="A header and its implementation">
     <p>A contract that says everything is expensive. Every word in the boot lane is read by every agent at every session start. So the text that must always be present wants to be short, and the reasoning behind it wants to sit where an agent can reach it when it asks. C solved a problem of this shape in the 1970s with two files, and C++ kept the answer. A header, `.h`, declares in a few lines what a library offers; a translation unit, `.c` or `.cpp`, carries the implementation. Everyone who uses the library includes the header, and nobody pastes the implementation into their own code.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#hpp-cpp-inspiration"/>
-    <p>VibeVM borrows the split for text. A package in the `normal` format keeps two folders under `vibevm/vibespecs/`. `contract/` is the header: small, cheap to load, the surface other packages and agents see. `source/` is the implementation: the heavy body, pulled in only when something asks for it. A C compiler sees the whole program and matches declarations to definitions itself; vibe has no such view of your text, so the contract names its implementation with a `#source` directive. The default format, `simple`, has none of this: such a package is carried whole and read because it is present.</p>
+    <p>VibeVM borrows the split for text. A package in the `normal` format keeps two folders under `vibevm/vibespecs/`. `contract/` is the header: small, cheap to load, the surface other packages and agents see. `source/` is the implementation: the heavy body, pulled in only when something asks for it. A C compiler sees the whole program and matches declarations to definitions itself; vibe has no such view of your text, so the contract names its implementation with a `#source` directive. If an authored package manifest omits `format`, its format is `simple`; that format has none of this machinery, and such a package is carried whole and read because it is present. The `vibe init package` scaffold writes `format = "normal"` explicitly by default.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-HACK"/>
@@ -499,7 +499,7 @@ org.acme/review  static   .  .  x</expect>
     <p>Under `spec_format = "xml"`, a source section must not reuse an anchor of the contract, and the note's title carries no anchor. The compiler merges sections that share an anchor, and the merged result does not compile into `STATIC.xml` today. The install stops with `fact id … is defined twice`; the copy of the package is already on disk, and the lock is not written. Two documents whose titles are both `{#root}` collide the same way. Under the default `spec_format` the same package compiles.</p>
     <p>A dot inside an anchor is a path, not a character. `{#verification.timeout}` cannot be addressed, while `#verification.timeout` reaches a section `timeout` nested under a section `verification`. An anchor is a letter followed by letters, digits, `_` and `-`.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-TREE-PATH"/>
-    <p>`vibe init package` writes `link = "dynamic"` whatever `--link` you pass. Set the link in the manifest, as step 2 does.</p>
+    <p>`vibe init package` writes `link = "dynamic"` by default and honors `--link static` or `--link dynamic`. This walkthrough changes the default to `static` in the manifest at step 2; you can request `static` when scaffolding instead.</p>
     <p>With `link = "dynamic"` there is no compiled file. `INDEX.md` names the note itself, and the agent that opens it meets the `#use` line and must follow it on its own.</p>
     <p>`vibe explain` answers only for a package that carries a [traceability map](../glossary/index.xml#traceability-map). For this one it says so and stops.</p>
     <p>`vibe facts check` catches a misspelt state in the element form, `state="finished"`, and names the value. In the shorthand, `@status:spec/finished` is not read as a marker at all, and the file passes as clean. The states are `plan`, `work`, `done`, `hold` and `void`; the stages are `idea`, `spec`, `impl`, `test`, `doc`, `freeze` and `unknown`.</p>
