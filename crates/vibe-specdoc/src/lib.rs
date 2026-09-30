@@ -22,6 +22,8 @@
 //!   for typed facts.
 //! * [`commonmark::CommonMarkDoc`] — a separate, pure ordinary-Markdown
 //!   structure reader. It never constructs Vibe facts, directives or SpecDoc.
+//! * [`xml_data::inspect_xml_data`] — optional bounded inspection of ordinary
+//!   XML data while retaining exact captured bytes even when inspection fails.
 //! * [`load_spec_text`] — the Vibe consumers' one dispatch (PROP-045
 //!   ##PROJECTION-READ): `.md` verbatim, `.xml` as its canonical MD
 //!   projection, with the [`SourceKind`] that marks projection-relative
@@ -87,6 +89,7 @@ mod md_in;
 mod md_out;
 mod xml_blocks;
 mod xml_comment;
+pub mod xml_data;
 mod xml_doc;
 mod xml_doc_callouts;
 mod xml_doc_citations;
