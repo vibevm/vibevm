@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "run_id": "dddddddddddddddddddddddddddddddd",
+  "reservation_ref": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "outcome": "uncertain",
+  "effect_state": "uncertain",
+  "report": {
+    "availability": "unavailable",
+    "reason": "publication_uncertain"
+  }
+}
