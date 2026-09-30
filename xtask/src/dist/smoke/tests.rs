@@ -248,6 +248,59 @@ fn traversal_zip_with_rebound_digest_refuses_before_staging() {
     assert!(!outside.exists());
 }
 
+/// Manual native proof against a real committed `dist build` output. It is
+/// ignored in ordinary test runs because no artifact path is implicit.
+#[test]
+#[ignore = "requires VIBEVM_SMOKE_OUTPUT and VIBEVM_SMOKE_TARGET from a real native dist build"]
+fn real_distribution_bundle_native_smoke_from_env() {
+    let output = std::path::PathBuf::from(
+        std::env::var_os("VIBEVM_SMOKE_OUTPUT").expect("name the exact dist output directory"),
+    );
+    let target = std::env::var("VIBEVM_SMOKE_TARGET").expect("name the exact native target");
+    let project = vibe_safefs::Project::open(&output).unwrap();
+    let fragment_name = format!("vibevm-1.1.0-{target}.fragment.json");
+    let fragment_bytes = project
+        .read_file_bounded(
+            &fragment_name,
+            vibe_publish::DISTRIBUTION_MANIFEST_MAX_BYTES as usize,
+        )
+        .unwrap()
+        .expect("exact fragment exists");
+    let fragment = PlatformDistributionFragment::from_json_slice(&fragment_bytes).unwrap();
+    let bundle = project
+        .read_file_bounded(
+            &fragment.asset.name,
+            vibe_publish::DISTRIBUTION_BUNDLE_MAX_BYTES as usize,
+        )
+        .unwrap()
+        .expect("exact bundle exists");
+    let bootstrap = project
+        .read_file_bounded(
+            &fragment.bootstrap.name,
+            vibe_publish::DISTRIBUTION_BOOTSTRAP_MAX_BYTES as usize,
+        )
+        .unwrap()
+        .expect("exact bootstrap exists");
+    assert_eq!(bootstrap.len() as u64, fragment.bootstrap.size);
+    assert_eq!(sha256_digest(&bootstrap), fragment.bootstrap.digest);
+    let subject_target = subject_target(&fragment);
+    let stage = stage_verified_bundle(&bundle, &target, &fragment, &subject_target).unwrap();
+    let result = run_native_probe(&stage, std::time::Duration::from_secs(30));
+    assert_eq!(
+        result.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Passed,
+        "{result:?}"
+    );
+    assert_eq!(
+        result.tested_sha256.as_deref(),
+        Some(stage.bundle_digest.as_str())
+    );
+    assert_eq!(
+        result.executable_sha256.as_deref(),
+        Some(subject_target.components[0].sha256.as_str())
+    );
+}
+
 #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
 #[test]
 fn real_native_child_reports_pass_and_writes_only_isolated_home() {
