@@ -89,6 +89,264 @@ fn agent_request() -> DefaultLifecycleRequest {
     asked
 }
 
+fn agent_call(
+    root: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    resolves: &Arc<AtomicUsize>,
+    completes: &Arc<AtomicUsize>,
+    before_run: Option<&dyn Fn()>,
+    after_effect: Option<&dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_agent_validate_fixture(
+        root,
+        namespace,
+        scope,
+        key,
+        agent_request(),
+        TargetOs::current().expect("supported fixture platform"),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+        resolves.clone(),
+        completes.clone(),
+        before_run,
+        after_effect,
+    )
+}
+
+#[test]
+fn one_agent_park_retains_task_and_report_then_replays_without_backend() {
+    let dir = agent_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let resolves = Arc::new(AtomicUsize::new(0));
+    let completes = Arc::new(AtomicUsize::new(0));
+    let first = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        None,
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first hosted run must park")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Parked);
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(outcome.report_bytes.as_ref().unwrap()).unwrap();
+    assert!(report.ok);
+    assert_eq!(report.steps.last().unwrap().status, "delegated");
+    let handoff = report.delegation.as_ref().unwrap();
+    assert_eq!(handoff.run_id, run_id);
+    assert_eq!(handoff.tasks.len(), 1);
+    assert!(dir.path().join(&handoff.tasks[0]).is_file());
+    assert_eq!(resolves.load(Ordering::SeqCst), 1);
+    assert_eq!(completes.load(Ordering::SeqCst), 0);
+    std::fs::write(
+        dir.path().join(".vibe/lifecycle.toml"),
+        b"later unrelated header",
+    )
+    .unwrap();
+    let replay = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        None,
+    )
+    .unwrap();
+    assert_eq!(replay, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(resolves.load(Ordering::SeqCst), 1);
+    assert_eq!(completes.load(Ordering::SeqCst), 0);
+    assert!(dir.path().join(&handoff.tasks[0]).is_file());
+}
+
+#[test]
+fn one_agent_changed_prompt_or_foreign_scope_cannot_repark() {
+    let dir = agent_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let resolves = Arc::new(AtomicUsize::new(0));
+    let completes = Arc::new(AtomicUsize::new(0));
+    let first = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        None,
+    )
+    .unwrap();
+    assert!(matches!(first, SubmissionOutcome::Invoked { .. }));
+    let foreign = SubmissionScope {
+        principal: "other".into(),
+        ..scope.clone()
+    };
+    assert!(
+        agent_call(
+            dir.path(),
+            &namespace,
+            &foreign,
+            "agent",
+            &resolves,
+            &completes,
+            None,
+            None
+        )
+        .is_err()
+    );
+    std::fs::write(
+        dir.path().join(ONE_AGENT_PROMPT_PATH),
+        b"# Prompt {#root}\n\nChanged work.\n",
+    )
+    .unwrap();
+    let error = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        None,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("different request or plan"), "{error}");
+    assert_eq!(resolves.load(Ordering::SeqCst), 1);
+    assert_eq!(completes.load(Ordering::SeqCst), 0);
+}
+
+#[test]
+fn one_agent_missing_marker_after_park_never_republishes_task() {
+    let dir = agent_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let resolves = Arc::new(AtomicUsize::new(0));
+    let completes = Arc::new(AtomicUsize::new(0));
+    let fail = || anyhow::bail!("injected response loss before marker");
+    let first = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        Some(&fail),
+    )
+    .unwrap();
+    assert!(matches!(first, SubmissionOutcome::RecoveryRequired { .. }));
+    assert_eq!(resolves.load(Ordering::SeqCst), 1);
+    let task_count = std::fs::read_dir(dir.path().join(".vibe/agentic/outbox"))
+        .unwrap()
+        .count();
+    assert_eq!(task_count, 1);
+    let second = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        None,
+        None,
+    )
+    .unwrap();
+    assert!(matches!(second, SubmissionOutcome::RecoveryRequired { .. }));
+    assert_eq!(resolves.load(Ordering::SeqCst), 1);
+    assert_eq!(completes.load(Ordering::SeqCst), 0);
+    assert_eq!(
+        std::fs::read_dir(dir.path().join(".vibe/agentic/outbox"))
+            .unwrap()
+            .count(),
+        task_count
+    );
+}
+
+#[test]
+fn one_agent_prompt_drift_or_foreign_header_before_run_publishes_no_task() {
+    for header in [false, true] {
+        let dir = agent_project();
+        let scope = scope();
+        let namespace = issue(dir.path(), &scope);
+        let resolves = Arc::new(AtomicUsize::new(0));
+        let completes = Arc::new(AtomicUsize::new(0));
+        let before = || {
+            if header {
+                std::fs::write(dir.path().join(".vibe/lifecycle.toml"), b"foreign header").unwrap();
+            } else {
+                std::fs::write(
+                    dir.path().join(ONE_AGENT_PROMPT_PATH),
+                    b"# Prompt {#root}\n\nDrift.\n",
+                )
+                .unwrap();
+            }
+        };
+        let first = agent_call(
+            dir.path(),
+            &namespace,
+            &scope,
+            "agent",
+            &resolves,
+            &completes,
+            Some(&before),
+            None,
+        );
+        assert!(
+            !matches!(first, Ok(SubmissionOutcome::Invoked { .. })),
+            "{first:?}"
+        );
+        assert_eq!(resolves.load(Ordering::SeqCst), 0);
+        assert_eq!(completes.load(Ordering::SeqCst), 0);
+        assert!(!dir.path().join(".vibe/agentic/outbox").exists());
+    }
+}
+
+#[test]
+fn one_agent_missing_ready_before_run_publishes_no_task() {
+    let dir = agent_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let resolves = Arc::new(AtomicUsize::new(0));
+    let completes = Arc::new(AtomicUsize::new(0));
+    let index = dir.path().join(".vibe/machine-submissions.json");
+    let demote = || {
+        let mut value: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&index).unwrap()).unwrap();
+        let ready = &mut value["namespaces"][namespace.id()]["keys"]["agent"]["journal_ready"];
+        assert_eq!(ready, &serde_json::Value::Bool(true));
+        *ready = serde_json::Value::Bool(false);
+        std::fs::write(&index, serde_json::to_vec(&value).unwrap()).unwrap();
+    };
+    let result = agent_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "agent",
+        &resolves,
+        &completes,
+        Some(&demote),
+        None,
+    );
+    assert!(
+        !matches!(result, Ok(SubmissionOutcome::Invoked { .. })),
+        "{result:?}"
+    );
+    assert_eq!(resolves.load(Ordering::SeqCst), 0);
+    assert_eq!(completes.load(Ordering::SeqCst), 0);
+    assert!(!dir.path().join(".vibe/agentic/outbox").exists());
+}
+
 #[test]
 fn one_agent_preflight_binds_exact_local_prompt_without_effect() {
     let dir = agent_project();

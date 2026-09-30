@@ -6,11 +6,15 @@
 
 use std::path::Path;
 use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use anyhow::{Context, Result, bail, ensure};
 use vibe_core::manifest::TargetOs;
 use vibe_core::manifest::{ExtensionHandler, Manifest};
 use vibe_core::user_config::SlotIntegrity;
+use vibe_lifecycle::agent::{
+    AgentCompletion, AgentRequest, PromptRequest, ResolvedPrompt, SelectedWorldPromptResolver,
+};
 use vibe_lifecycle::process::{
     PackageTreeWitness, SelectedManifestLockWitness, capture_package_tree_witness,
     recheck_package_tree_witness, recheck_selected_manifest_lock,
@@ -116,6 +120,44 @@ struct ScriptFixturePort<'a> {
     after_effect: Option<&'a dyn Fn() -> Result<()>>,
 }
 
+struct AgentFixturePort<'a> {
+    admitted: OneAgentValidateAdmission,
+    backend: Arc<WitnessedAgentBackend>,
+    before_run: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+}
+
+/// Test-controlled, credential-free resolver that serves only the preflight
+/// prompt bytes. The paid half is a canary and must never run on a park.
+struct WitnessedAgentBackend {
+    source: PromptSourceWitness,
+    resolved: ResolvedPrompt,
+    address: String,
+    resolves: Arc<AtomicUsize>,
+    completes: Arc<AtomicUsize>,
+}
+
+impl AgentBackend for WitnessedAgentBackend {
+    fn resolve_prompt(&self, request: &PromptRequest) -> Result<ResolvedPrompt, String> {
+        self.resolves.fetch_add(1, Ordering::SeqCst);
+        if request.address != self.address
+            || request.provider_root != self.source.provider_root
+            || request.provider_group != "org.demo"
+            || request.provider_name != "demo"
+            || !request.selected_world.is_empty()
+        {
+            return Err("protected prompt request differs from the fixed source".into());
+        }
+        recheck_prompt_source_witness(&self.source).map_err(|error| error.to_string())?;
+        Ok(self.resolved.clone())
+    }
+
+    fn complete(&self, _: &AgentRequest) -> Result<AgentCompletion, String> {
+        self.completes.fetch_add(1, Ordering::SeqCst);
+        Err("protected hosted fixture must park before provider completion".into())
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RetainedLifecycleResult {
     pub marker: LifecycleOutcomeMarker,
@@ -170,12 +212,22 @@ pub(crate) struct OneAgentValidateAdmission {
     pub execution_key: String,
     pub provider: String,
     pub address: String,
+    pub resolved_prompt: ResolvedPrompt,
 }
 
 pub(crate) fn admit_one_agent_validate_fixture(
     path: &Path,
     request: &DefaultLifecycleRequest,
     target_os: TargetOs,
+) -> Result<OneAgentValidateAdmission> {
+    admit_one_agent_validate_fixture_inner(path, request, target_os, true)
+}
+
+fn admit_one_agent_validate_fixture_inner(
+    path: &Path,
+    request: &DefaultLifecycleRequest,
+    target_os: TargetOs,
+    fresh_only: bool,
 ) -> Result<OneAgentValidateAdmission> {
     ensure!(
         request.requested == Phase::Validate
@@ -217,10 +269,12 @@ pub(crate) fn admit_one_agent_validate_fixture(
         selected_under_lease(&selection, &lease)? == ".",
         "agent fixture requires root node"
     );
-    ensure!(
-        LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
-        "agent fixture refuses prior lifecycle header"
-    );
+    if fresh_only {
+        ensure!(
+            LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+            "agent fixture refuses prior lifecycle header"
+        );
+    }
     let manifest = selection
         .parsed_ref()
         .context("agent fixture manifest did not parse")?;
@@ -273,6 +327,19 @@ pub(crate) fn admit_one_agent_validate_fixture(
     let execution_key = HandlerExecution::from_row(row).key();
     let provider = row.provider().to_string();
     let address = prompt.clone();
+    let resolved_prompt = SelectedWorldPromptResolver::new(lease.root())
+        .resolve(&PromptRequest {
+            address: address.clone(),
+            provider_root: source.provider_root.clone(),
+            provider_group: "org.demo".into(),
+            provider_name: "demo".into(),
+            selected_world: Default::default(),
+        })
+        .map_err(anyhow::Error::msg)?;
+    ensure!(
+        resolved_prompt.unsupported.is_empty(),
+        "agent fixture prompt has unsupported composition"
+    );
     let prompt_source = PromptPlanSource {
         witness: &source,
         execution_key: &execution_key,
@@ -307,6 +374,7 @@ pub(crate) fn admit_one_agent_validate_fixture(
         execution_key,
         provider,
         address,
+        resolved_prompt,
     })
 }
 
@@ -468,6 +536,52 @@ pub(crate) fn submit_one_script_validate_fixture<'a>(
             after_stage,
             after_effect,
         }),
+        None,
+    )
+}
+
+/// Internal test-only hosted park with a resolver confined to the witnessed
+/// local prompt. The engine, not this backend, publishes the task and parks.
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn submit_one_agent_validate_fixture<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    resolves: Arc<AtomicUsize>,
+    completes: Arc<AtomicUsize>,
+    before_run: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    let admitted = admit_one_agent_validate_fixture_inner(path, &request, target_os, false)?;
+    let backend = Arc::new(WitnessedAgentBackend {
+        source: admitted.source.clone(),
+        resolved: admitted.resolved_prompt.clone(),
+        address: admitted.address.clone(),
+        resolves,
+        completes,
+    });
+    submit_protected_lifecycle_inner(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Phase::Validate,
+        None,
+        None,
+        Some(AgentFixturePort {
+            admitted,
+            backend,
+            before_run,
+            after_effect,
+        }),
     )
 }
 
@@ -491,6 +605,7 @@ pub(super) fn submit_protected_lifecycle(
         target_os,
         observed_at,
         phase,
+        None,
         None,
         None,
     )
@@ -519,6 +634,7 @@ fn submit_protected_lifecycle_with_fixture<'a>(
         Phase::Install,
         fixture,
         None,
+        None,
     )
 }
 
@@ -534,9 +650,13 @@ fn submit_protected_lifecycle_inner<'a>(
     phase: Phase,
     fixture: Option<FixtureSourcePort<'a>>,
     script: Option<ScriptFixturePort<'a>>,
+    agent: Option<AgentFixturePort<'a>>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
-        fixture.is_none() || script.is_none(),
+        usize::from(fixture.is_some())
+            + usize::from(script.is_some())
+            + usize::from(agent.is_some())
+            <= 1,
         "protected fixture sources cannot be combined"
     );
     ensure!(
@@ -548,8 +668,13 @@ fn submit_protected_lifecycle_inner<'a>(
         "protected slice request differs from its fixed phase"
     );
     ensure!(
-        request.agent_mode == RunAgentMode::Cli,
-        "protected slice only supports CLI mode"
+        request.agent_mode
+            == if agent.is_some() {
+                RunAgentMode::Agent
+            } else {
+                RunAgentMode::Cli
+            },
+        "protected slice agent mode differs from fixed route"
     );
     ensure!(
         !request.force && !request.trace_flag,
@@ -592,7 +717,9 @@ fn submit_protected_lifecycle_inner<'a>(
             })
         })
         .transpose()?;
-    let canonical_request = if let Some(script) = &script {
+    let canonical_request = if let Some(agent) = &agent {
+        agent.admitted.canonical_request.clone()
+    } else if let Some(script) = &script {
         script.admitted.canonical_request.clone()
     } else if let Some(fixture) = &fixture {
         canonical_one_package_fixture_request(&fixture.witness, target_os)?
@@ -623,7 +750,34 @@ fn submit_protected_lifecycle_inner<'a>(
     );
     let selected = selected_under_lease(&selection, &lease)?;
     ensure!(selected == ".", "protected slice requires root node");
-    if let Some(script) = &script {
+    if let Some(agent) = &agent {
+        ensure!(
+            LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+            "fresh agent fixture refuses prior lifecycle header"
+        );
+        let manifest = selection
+            .parsed_ref()
+            .context("agent fixture manifest did not parse")?;
+        ensure!(
+            manifest == &Manifest::parse_str(ONE_AGENT_VALIDATE_MANIFEST)?,
+            "agent fixture manifest changed"
+        );
+        install::require_empty_lock(&witness)?;
+        let world = selection
+            .loaded_workspace()
+            .context("agent fixture workspace did not load")?;
+        let ritual =
+            crate::world::plan_default_prepared(&selected_root, world, &[Phase::Validate])?;
+        ensure!(ritual.executions().len() == 1, "agent fixture plan changed");
+        let row = &ritual.executions()[0].row;
+        ensure!(
+            matches!(&row.declaration().handler, ExtensionHandler::Agent { prompt } if prompt == &agent.admitted.address)
+                && HandlerExecution::from_row(row).key() == agent.admitted.execution_key
+                && row.provider().to_string() == agent.admitted.provider,
+            "agent fixture execution identity changed"
+        );
+        recheck_prompt_source_witness(&agent.admitted.source)?;
+    } else if let Some(script) = &script {
         let manifest = selection
             .parsed_ref()
             .context("script fixture manifest did not parse")?;
@@ -694,7 +848,12 @@ fn submit_protected_lifecycle_inner<'a>(
             execution_key: &script.admitted.execution_key,
             provider: &script.admitted.provider,
         }),
-        prompt_source: None,
+        prompt_source: agent.as_ref().map(|agent| PromptPlanSource {
+            witness: &agent.admitted.source,
+            execution_key: &agent.admitted.execution_key,
+            provider: &agent.admitted.provider,
+            address: &agent.admitted.address,
+        }),
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
@@ -708,6 +867,12 @@ fn submit_protected_lifecycle_inner<'a>(
         ensure!(
             plan == script.admitted.canonical_plan,
             "script fixture pre-effect plan changed"
+        );
+    }
+    if let Some(agent) = &agent {
+        ensure!(
+            plan == agent.admitted.canonical_plan,
+            "agent fixture pre-effect plan changed"
         );
     }
     recheck_selected_manifest_lock(&selected_root, &witness)?;
@@ -727,6 +892,7 @@ fn submit_protected_lifecycle_inner<'a>(
         canonical_request: canonical_request.clone(),
         fixture,
         script,
+        agent,
     };
     submit(
         lease,
@@ -856,6 +1022,7 @@ struct ProtectedJournal<'a> {
     canonical_request: Vec<u8>,
     fixture: Option<FixtureRuntime<'a>>,
     script: Option<ScriptFixturePort<'a>>,
+    agent: Option<AgentFixturePort<'a>>,
 }
 
 impl ProtectedJournal<'_> {
@@ -1091,6 +1258,33 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 }
                 recheck_package_tree_witness(&fixture.witness)?;
             }
+            if let Some(agent) = &self.agent {
+                if let Some(before_run) = agent.before_run {
+                    before_run();
+                }
+                Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                ensure!(
+                    matches!(
+                        SubmissionReservations::reserve(
+                            &lease, self.namespace, self.scope, self.key,
+                            &self.canonical_request, self.canonical_plan, run_id,
+                        )?,
+                        vibe_lifecycle::ReservationDecision::Existing { domain_run_id } if domain_run_id == run_id
+                    ),
+                    "agent fixture reservation changed before task publication"
+                );
+                ensure!(
+                    SubmissionReservations::journal_admission(
+                        &lease,
+                        self.namespace,
+                        self.scope,
+                        self.key,
+                        run_id,
+                    )? == JournalAdmission::Ready,
+                    "agent fixture journal is not ready before task publication"
+                );
+                recheck_prompt_source_witness(&agent.admitted.source)?;
+            }
             let leased = self.leased.take().context("leased stage consumed twice")?;
             let selection = self.selection.take().context("selection consumed twice")?;
             let prepared = prepare_default_lifecycle_with_identity(
@@ -1104,7 +1298,7 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 .as_ref()
                 .map(|fixture| AttestingFactory::new(fixture.factory, &fixture.witness))
                 .transpose()?;
-            let ports = if self.phase == Phase::Validate {
+            let mut ports = if self.phase == Phase::Validate {
                 validate_ports()
             } else if let Some(factory) = attested_factory.as_ref() {
                 install::one_package_fixture_ports(
@@ -1114,6 +1308,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             } else {
                 install::empty_install_ports()
             };
+            if let Some(agent) = &self.agent {
+                ports.agent = agent.backend.clone();
+            }
             let outcome = if let (Some(script), Some(stage)) = (&self.script, &script_stage) {
                 prepared.run_protected_script(
                     ports,
@@ -1130,6 +1327,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             };
             if let Some(after_effect) = self.script.as_ref().and_then(|script| script.after_effect)
             {
+                after_effect()?;
+            }
+            if let Some(after_effect) = self.agent.as_ref().and_then(|agent| agent.after_effect) {
                 after_effect()?;
             }
             match outcome {
