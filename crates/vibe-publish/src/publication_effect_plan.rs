@@ -12,8 +12,11 @@ use sha2::{Digest, Sha256};
 use vibe_wire::generated::publication_effect_plan::{
     PublicationAssetEffect, PublicationEffectPlan, PublicationObservedAsset,
     PublicationObservedRelease, PublicationObservedTag, PublicationPartition,
+    PublicationPartitionCleanup, PublicationPartitionFinalAssets, PublicationPartitionFinalize,
     PublicationPartitionFinalizeAction, PublicationPartitionFinalizeMakeLatest,
-    PublicationPartitionReleaseAction, PublicationPartitionTagAction, PublicationPriorAsset,
+    PublicationPartitionPlatformAssets, PublicationPartitionRelease,
+    PublicationPartitionReleaseAction, PublicationPartitionTag, PublicationPartitionTagAction,
+    PublicationPriorAsset, PublicationPriorAssetAbsent, PublicationRemoteTarget,
 };
 use vibe_wire::generated::publication_subject::{PublicationAsset, PublicationSubject};
 
@@ -31,6 +34,26 @@ pub struct PublicationEffectPlanExpectations<'a> {
     pub repository: &'a str,
     /// `true` is a requested visibility change, not an authorization grant.
     pub publish: bool,
+    /// Owner-selected willingness to plan replacement of a known published
+    /// mutable 1.1.0 release. The plan is still data; Mode A approval is
+    /// separate and required before any remote deletion.
+    pub allow_replace_published: bool,
+}
+
+/// Complete remote evidence captured by its owner before any plan mutation.
+/// This is supplied data, not a network-reading capability or an effect grant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CapturedPublicationRemote {
+    pub generation_ref: String,
+    pub tag: PublicationObservedTag,
+    pub release: PublicationObservedRelease,
+}
+
+/// Pure construction result. Its digest is identity data, not authorization.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PreparedPublicationEffectPlan {
+    pub plan: PublicationEffectPlan,
+    pub digest: String,
 }
 
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
@@ -121,6 +144,179 @@ fn desired_asset(
     }
 }
 
+fn validate_remote_observation(
+    subject: &PublicationSubject,
+    allow_replace_published: bool,
+    generation_ref: &str,
+    observed_tag: &PublicationObservedTag,
+    observed_release: &PublicationObservedRelease,
+) -> Result<(), PublicationEffectPlanError> {
+    nonblank("remote_generation_ref", generation_ref)?;
+    let tag = format!("v{}", subject.version);
+    match observed_tag {
+        PublicationObservedTag::Absent(_) => {}
+        PublicationObservedTag::Present(value) => {
+            if value.reference != format!("refs/tags/{tag}")
+                || value.object_kind != "commit"
+                || value.object_sha != subject.source.commit
+            {
+                return Err(invalid(
+                    "observed_tag",
+                    "tag is not the exact source commit ref",
+                ));
+            }
+        }
+    }
+    match observed_release {
+        PublicationObservedRelease::Absent(_) => {}
+        PublicationObservedRelease::Present(value) => {
+            decimal("observed_release.release_id", &value.release_id, true)?;
+            nonblank("observed_release.generation_ref", &value.generation_ref)?;
+            if (!value.draft && !allow_replace_published)
+                || value.tag != tag
+                || !value.inventory_complete
+            {
+                return Err(invalid(
+                    "observed_release",
+                    "published replacement was not selected, or exact tag/complete inventory is absent",
+                ));
+            }
+            let mut names = BTreeSet::new();
+            let mut ids = BTreeSet::new();
+            for (index, asset) in value.assets.iter().enumerate() {
+                observed_asset(&format!("observed_release.assets[{index}]"), asset)?;
+                if !names.insert(&asset.name) || !ids.insert(&asset.asset_id) {
+                    return Err(invalid(
+                        "observed_release.assets",
+                        "duplicate name or remote ID",
+                    ));
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn fresh_asset(asset: &PublicationAsset) -> PublicationAssetEffect {
+    PublicationAssetEffect {
+        name: asset.name.clone(),
+        media_type: asset.media_type.clone(),
+        desired_size_bytes: asset.size_bytes.clone(),
+        desired_sha256: asset.sha256.clone(),
+        // The release partition creates a NEW draft after deleting the old
+        // one. Its prior asset IDs cannot become occupants of this draft.
+        prior: PublicationPriorAsset::Absent(Box::new(PublicationPriorAssetAbsent {})),
+    }
+}
+
+/// Construct the entire initial prepare→finalize plan from a validated local
+/// subject and a complete owner-supplied remote observation. Temporary final
+/// assets created after platform upload are not in this initial snapshot, so
+/// cleanup remains explicitly empty until a later observation/replan exists.
+pub fn plan_from_captured_remote(
+    subject: &PublicationSubject,
+    expected: &PublicationEffectPlanExpectations<'_>,
+    captured: &CapturedPublicationRemote,
+) -> Result<PreparedPublicationEffectPlan, PublicationEffectPlanError> {
+    validate_publication_subject(subject, &expected.subject)
+        .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
+    validate_remote_observation(
+        subject,
+        expected.allow_replace_published,
+        &captured.generation_ref,
+        &captured.tag,
+        &captured.release,
+    )?;
+    let subject_sha256 = publication_subject_digest(subject, &expected.subject)
+        .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
+    let tag = format!("v{}", subject.version);
+    let release_ref = "created:draft-release".to_owned();
+    let mut partitions = vec![
+        PublicationPartition::Tag(Box::new(PublicationPartitionTag {
+            action: match captured.tag {
+                PublicationObservedTag::Absent(_) => PublicationPartitionTagAction::Create,
+                PublicationObservedTag::Present(_) => PublicationPartitionTagAction::Retain,
+            },
+            tag: tag.clone(),
+            desired_commit: subject.source.commit.clone(),
+            recovery_ref: "tag-ref".into(),
+        })),
+        PublicationPartition::Release(Box::new(PublicationPartitionRelease {
+            action: match captured.release {
+                PublicationObservedRelease::Absent(_) => PublicationPartitionReleaseAction::Create,
+                PublicationObservedRelease::Present(_) => {
+                    PublicationPartitionReleaseAction::Replace
+                }
+            },
+            desired_tag: tag,
+            desired_draft: true,
+            recovery_ref: "draft-release".into(),
+        })),
+    ];
+    for target in &subject.targets {
+        partitions.push(PublicationPartition::PlatformAssets(Box::new(
+            PublicationPartitionPlatformAssets {
+                target: target.target.clone(),
+                target_release_ref: release_ref.clone(),
+                assets: [&target.bundle, &target.bootstrap, &target.fragment]
+                    .into_iter()
+                    .map(fresh_asset)
+                    .collect(),
+                recovery_ref: format!("platform:{}", target.target),
+            },
+        )));
+    }
+    partitions.push(PublicationPartition::Cleanup(Box::new(
+        PublicationPartitionCleanup {
+            target_release_ref: release_ref.clone(),
+            assets: Vec::new(),
+            recovery_ref: "cleanup-final".into(),
+        },
+    )));
+    partitions.push(PublicationPartition::FinalAssets(Box::new(
+        PublicationPartitionFinalAssets {
+            target_release_ref: release_ref.clone(),
+            assets: std::iter::once(&subject.aggregate)
+                .chain(subject.installers.iter().map(|installer| &installer.asset))
+                .map(fresh_asset)
+                .collect(),
+            recovery_ref: "final-assets".into(),
+        },
+    )));
+    partitions.push(PublicationPartition::Finalize(Box::new(
+        PublicationPartitionFinalize {
+            action: if expected.publish {
+                PublicationPartitionFinalizeAction::Publish
+            } else {
+                PublicationPartitionFinalizeAction::RetainDraft
+            },
+            make_latest: if expected.publish {
+                PublicationPartitionFinalizeMakeLatest::Legacy
+            } else {
+                PublicationPartitionFinalizeMakeLatest::Unchanged
+            },
+            target_release_ref: release_ref,
+            recovery_ref: "visibility".into(),
+        },
+    )));
+    let plan = PublicationEffectPlan {
+        schema: 1,
+        subject_sha256,
+        target: PublicationRemoteTarget {
+            host: expected.host.into(),
+            owner: expected.owner.into(),
+            repository: expected.repository.into(),
+        },
+        remote_generation_ref: captured.generation_ref.clone(),
+        observed_tag: captured.tag.clone(),
+        observed_release: captured.release.clone(),
+        smoke_policy_id: subject.smoke.policy_id.clone(),
+        partitions,
+    };
+    let digest = publication_effect_plan_digest(&plan, subject, expected)?;
+    Ok(PreparedPublicationEffectPlan { plan, digest })
+}
+
 /// Validate a plan against the exact already-validated local subject and a
 /// separately selected destination. The observed release inventory must be
 /// complete before replacing its draft because deletion implicitly removes
@@ -166,52 +362,20 @@ pub fn validate_publication_effect_plan(
             "this distribution plan supports only the selected GitHub repository",
         ));
     }
-    nonblank("remote_generation_ref", &plan.remote_generation_ref)?;
     if plan.smoke_policy_id != subject.smoke.policy_id {
         return Err(invalid(
             "smoke_policy_id",
             "plan and subject use different smoke policy",
         ));
     }
+    validate_remote_observation(
+        subject,
+        expected.allow_replace_published,
+        &plan.remote_generation_ref,
+        &plan.observed_tag,
+        &plan.observed_release,
+    )?;
     let tag = format!("v{}", subject.version);
-    match &plan.observed_tag {
-        PublicationObservedTag::Absent(_) => {}
-        PublicationObservedTag::Present(value) => {
-            if value.reference != format!("refs/tags/{tag}")
-                || value.object_kind != "commit"
-                || value.object_sha != subject.source.commit
-            {
-                return Err(invalid(
-                    "observed_tag",
-                    "tag is not the exact source commit ref",
-                ));
-            }
-        }
-    }
-    match &plan.observed_release {
-        PublicationObservedRelease::Absent(_) => {}
-        PublicationObservedRelease::Present(value) => {
-            decimal("observed_release.release_id", &value.release_id, true)?;
-            nonblank("observed_release.generation_ref", &value.generation_ref)?;
-            if !value.draft || value.tag != tag || !value.inventory_complete {
-                return Err(invalid(
-                    "observed_release",
-                    "only an exact draft with a complete asset inventory may be replaced",
-                ));
-            }
-            let mut names = BTreeSet::new();
-            let mut ids = BTreeSet::new();
-            for (index, asset) in value.assets.iter().enumerate() {
-                observed_asset(&format!("observed_release.assets[{index}]"), asset)?;
-                if !names.insert(&asset.name) || !ids.insert(&asset.asset_id) {
-                    return Err(invalid(
-                        "observed_release.assets",
-                        "duplicate name or remote ID",
-                    ));
-                }
-            }
-        }
-    }
     if plan.partitions.len() != 2 + SUPPORTED_DISTRIBUTION_TARGETS.len() + 3 {
         return Err(invalid(
             "partitions",
