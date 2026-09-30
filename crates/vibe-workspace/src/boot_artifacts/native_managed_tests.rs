@@ -470,6 +470,7 @@ fn bound_analyzer_returns_final_pending_evidence_and_writes_nothing() {
         ".",
         Some(&mut provider),
         Some(observer.clone()),
+        &[],
     )
     .expect("analyzer")
     .expect("artifact");

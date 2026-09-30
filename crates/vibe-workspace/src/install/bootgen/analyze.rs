@@ -66,6 +66,36 @@ pub struct AnalyzedBoundLane {
     pub identities: Vec<(String, String)>,
 }
 
+fn selected_slot_witnesses(
+    root: &std::path::Path,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+) -> Vec<boot_artifacts::SelectedSlotWitness> {
+    resolution
+        .iter()
+        .map(|dep| {
+            let in_place = dep
+                .manifest
+                .package
+                .as_ref()
+                .is_some_and(|package| package.materialization.is_in_place());
+            let slot = if in_place {
+                vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
+            } else {
+                vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+            };
+            boot_artifacts::SelectedSlotWitness {
+                group: dep.group.clone(),
+                name: dep.name.clone(),
+                version: dep.version.clone(),
+                root: root.join(slot),
+                source_hash: dep.source_hash.clone(),
+                spec_format,
+            }
+        })
+        .collect()
+}
+
 /// Compose and compile ONE selected node's static lane under an analyzer
 /// observer, writing nothing.
 ///
@@ -162,13 +192,15 @@ pub fn analyze_node_lane(
     // host seats over this same exact parsed package epoch.
     let transforms = runtimes.node(node_rel)?.transform_plan().clone();
 
-    let compiled = boot_artifacts::compile_static_analyzed(
+    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
+    let compiled = boot_artifacts::compile_static_analyzed_selected(
         &effective,
         &root,
         &self_coord,
         spec_format,
         transforms,
         observer,
+        &selected,
     )?;
     Ok(compiled.map(|compiled| AnalyzedLane {
         artifact: compiled.artifact,
@@ -239,6 +271,7 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
+    let selected = selected_slot_witnesses(&root, resolution, spec_format);
     analyze_effective_bound_native(
         &effective,
         &root,
@@ -248,6 +281,7 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         node_rel,
         provider,
         observer,
+        &selected,
     )
 }
 
@@ -318,29 +352,7 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
-    let selected = resolution
-        .iter()
-        .map(|dep| {
-            let in_place = dep
-                .manifest
-                .package
-                .as_ref()
-                .is_some_and(|package| package.materialization.is_in_place());
-            let slot = if in_place {
-                vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
-            } else {
-                vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
-            };
-            boot_artifacts::SelectedSlotWitness {
-                group: dep.group.clone(),
-                name: dep.name.clone(),
-                version: dep.version.clone(),
-                root: root.join(slot),
-                source_hash: dep.source_hash.clone(),
-                spec_format,
-            }
-        })
-        .collect::<Vec<_>>();
+    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
     boot_artifacts::native_managed::compile_backend_owner_managed_selected(
         &effective,
         &root,
@@ -362,6 +374,7 @@ pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
     node_rel: &str,
     provider: Option<&mut P>,
     observer: Option<Arc<dyn CompileObserver>>,
+    selected: &[boot_artifacts::SelectedSlotWitness],
 ) -> Result<Option<AnalyzedBoundLane>, WorkspaceError> {
     let identities = effective
         .static_entries()
@@ -373,7 +386,7 @@ pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
         }
         None => boot_artifacts::native_managed::OwnerNativeCompileMode::Plain,
     };
-    let compiled = boot_artifacts::native_managed::compile_static_owner_managed(
+    let compiled = boot_artifacts::native_managed::compile_static_owner_managed_selected(
         effective,
         workspace_root,
         self_coord,
@@ -381,6 +394,7 @@ pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
         epoch.node(node_rel)?,
         mode,
         provider,
+        selected,
     )?;
     Ok(compiled.map(|compiled| {
         let (artifact, native, providers) = compiled.into_parts();

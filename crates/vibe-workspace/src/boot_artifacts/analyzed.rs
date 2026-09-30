@@ -6,11 +6,14 @@
 use std::path::Path;
 
 use vibe_core::manifest::SpecFormat;
-use vibe_spec::{CompileObserver, DocumentProvider, EmittedArtifact, TransformPlan};
+use vibe_spec::{CompileObserver, CompilePlans, DocumentProvider, EmittedArtifact, TransformPlan};
 
 use crate::errors::WorkspaceError;
 
-use super::{EffectiveBoot, SelfCoordinate, compile_artifact, compile_static_artifact_with};
+use super::{
+    EffectiveBoot, SelectedSlotWitness, SelfCoordinate, compile_artifact,
+    compile_static_artifact_with_plans,
+};
 
 /// One static lane's compile result: the emitted artifact BESIDE the
 /// typed provider that declared each input, in input order — the
@@ -21,24 +24,24 @@ pub(crate) struct StaticCompile {
     pub(crate) providers: Vec<Option<DocumentProvider>>,
 }
 
-/// [`compile_static_artifact_with`] under one analyzer observer and no
-/// trace, no injected compiler — the R4.3 analyzer entry's one call:
-/// untraced, unmocked, observed, writing nothing.
-pub(crate) fn compile_static_analyzed(
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn compile_static_analyzed_selected(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
     transforms: TransformPlan,
     observer: Option<std::sync::Arc<dyn CompileObserver>>,
+    witnesses: &[SelectedSlotWitness],
 ) -> Result<Option<StaticCompile>, WorkspaceError> {
-    compile_static_artifact_with(
+    compile_static_artifact_with_plans(
         boot,
         workspace_root,
         self_coord,
         spec_format,
+        Some(witnesses),
         None,
-        transforms,
+        CompilePlans::transforms_only(transforms),
         observer,
         compile_artifact,
     )

@@ -38,7 +38,6 @@ use super::{
     INDEX_FILE, WrittenArtifacts, inputs, redirect, render_index_with_spec_format,
     stale_static_file, static_file, static_path, transaction,
 };
-
 #[path = "native_managed/replay.rs"]
 mod replay;
 pub(crate) use replay::compile_static_owner_managed_with_source;
@@ -46,7 +45,7 @@ mod explicit;
 pub(crate) use explicit::compile_backend_owner_managed_selected;
 mod selected;
 pub(crate) use selected::compile_static_owner_managed_selected;
-
+pub(crate) use selected::write_boot_artifacts_owner_managed_selected;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OwnerNativeCompileStatus {
     Ready,
@@ -168,8 +167,8 @@ pub(crate) enum OwnerNativeCompileMode<'a> {
     Traced(&'a ScopeAcquisition<'a>),
     Observed(Arc<dyn CompileObserver>),
 }
-
 #[allow(clippy::too_many_arguments)]
+#[cfg(test)]
 pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
     boot: &EffectiveBoot,
     workspace_root: &Path,
@@ -193,7 +192,6 @@ pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
         finalize_compiler_pending_artifact,
     )
 }
-
 #[allow(clippy::too_many_arguments)]
 fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     boot: &EffectiveBoot,
@@ -478,6 +476,7 @@ fn finish_artifact_scope(
 }
 
 #[allow(clippy::too_many_arguments)]
+#[cfg(test)]
 pub(crate) fn write_boot_artifacts_owner_managed<P: OwnerNativeCompileProvider>(
     node_dir: &Path,
     node_rel: &str,
@@ -500,9 +499,9 @@ pub(crate) fn write_boot_artifacts_owner_managed<P: OwnerNativeCompileProvider>(
         owner,
         provider,
         finalize_compiler_pending_artifact,
+        None,
     )
 }
-
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn write_boot_artifacts_owner_managed_with_finalizer<P: OwnerNativeCompileProvider>(
@@ -528,9 +527,9 @@ pub(crate) fn write_boot_artifacts_owner_managed_with_finalizer<P: OwnerNativeCo
         owner,
         provider,
         finalizer,
+        None,
     )
 }
-
 #[allow(clippy::too_many_arguments)]
 fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     node_dir: &Path,
@@ -543,6 +542,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     owner: OwnerRuntimeView<'_>,
     provider: Option<&mut P>,
     finalizer: PendingFinalizer,
+    selected_slots: Option<&[super::SelectedSlotWitness]>,
 ) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
     let has_static = boot.static_entries().next().is_some();
     let acquisition = trace
@@ -563,7 +563,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         provider,
         None,
         None,
-        None,
+        selected_slots,
         finalizer,
     )?;
     let boot_dir = node_dir.join(layout::current_boot_dir());

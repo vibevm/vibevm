@@ -53,7 +53,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
-    let selected_slots = resolution
+    let selected_slots: Vec<boot_artifacts::SelectedSlotWitness> = resolution
         .iter()
         .map(|dep| {
             let in_place = dep
@@ -76,8 +76,11 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             }
         })
         .collect();
-    let mut replay_candidates =
-        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone(), selected_slots);
+    let mut replay_candidates = BootReplayCandidates::new(
+        workspace.root.clone(),
+        self_coord.clone(),
+        selected_slots.clone(),
+    );
     let table = build_unit_table(&workspace.root, resolution);
     let versions: HashMap<UnitId, String> = resolution
         .iter()
@@ -180,17 +183,19 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         let node_runtime = epoch.node(rel)?;
         let native_intersection = node_runtime.runtime().has_compiler_native_intersection()?;
         let replay_dependencies = node_generated_dependencies(&effective, &emitted_units);
-        let (_, continuation) = boot_artifacts::native_managed::write_boot_artifacts_owner_managed(
-            &node_dir,
-            rel,
-            &workspace.root,
-            &self_coord,
-            &effective,
-            spec_format,
-            trace,
-            node_runtime,
-            provider.as_deref_mut(),
-        )?;
+        let (_, continuation) =
+            boot_artifacts::native_managed::write_boot_artifacts_owner_managed_selected(
+                &node_dir,
+                rel,
+                &workspace.root,
+                &self_coord,
+                &effective,
+                spec_format,
+                trace,
+                node_runtime,
+                provider.as_deref_mut(),
+                &selected_slots,
+            )?;
         if let Some(continuation) = continuation {
             native.insert(owner, continuation);
         }
