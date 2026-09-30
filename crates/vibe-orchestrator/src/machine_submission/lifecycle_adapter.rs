@@ -21,8 +21,8 @@ use vibe_lifecycle::process::{
 };
 use vibe_lifecycle::process::{
     ProcessRunner, PromptSourceWitness, ScriptSourceWitness, SourceSnapshotError,
-    capture_prompt_source_witness, capture_script_source_witness, recheck_prompt_source_witness,
-    recheck_script_source_witness,
+    SystemProcessRunner, capture_prompt_source_witness, capture_script_source_witness,
+    recheck_prompt_source_witness, recheck_script_source_witness,
 };
 use vibe_lifecycle::{
     AgentBackend, ExistingSubmissionInspection, JournalAdmission, LifecycleLease,
@@ -41,7 +41,7 @@ use vibe_wire::generated::lifecycle_outcome_marker::{
 };
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::shared::Timestamp;
-use vibe_workspace::hooks::InterpreterProbe;
+use vibe_workspace::hooks::{InterpreterProbe, SystemProbe};
 
 use super::lifecycle_plan::{
     LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan,
@@ -501,11 +501,68 @@ pub(crate) fn admit_one_script_validate_fixture(
     })
 }
 
-/// Test-only counted effect route. The caller's process is an observation
-/// port, not a production authorization to execute arbitrary handlers.
+/// Internal fixed-script entry. It admits only the exact root manifest and
+/// selected source; callers cannot supply a process or interpreter probe.
+#[allow(dead_code, clippy::too_many_arguments)]
+pub(crate) fn submit_fixed_one_script_validate(
+    path: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    static PROCESS: SystemProcessRunner = SystemProcessRunner;
+    static PROBE: SystemProbe = SystemProbe;
+    submit_one_script_validate_internal(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        &PROCESS,
+        &PROBE,
+        None,
+        None,
+    )
+}
+
+/// Test-only counted process seam; the shipped entry above fixes both ports.
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn submit_one_script_validate_fixture<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    process: &'a dyn ProcessRunner,
+    probe: &'a dyn InterpreterProbe,
+    after_stage: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_script_validate_internal(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        process,
+        probe,
+        after_stage,
+        after_effect,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn submit_one_script_validate_internal<'a>(
     path: &Path,
     namespace: &'a SubmissionNamespace,
     scope: &'a SubmissionScope,
@@ -540,11 +597,66 @@ pub(crate) fn submit_one_script_validate_fixture<'a>(
     )
 }
 
-/// Internal test-only hosted park with a resolver confined to the witnessed
-/// local prompt. The engine, not this backend, publishes the task and parks.
+/// Internal fixed-agent entry. The only backend is the credential-free
+/// witnessed prompt resolver; no paid provider can be supplied by callers.
+#[allow(dead_code, clippy::too_many_arguments)]
+pub(crate) fn submit_fixed_one_agent_validate(
+    path: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_agent_validate_internal(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Arc::new(AtomicUsize::new(0)),
+        Arc::new(AtomicUsize::new(0)),
+        None,
+        None,
+    )
+}
+
+/// Test-only counted resolver seam; the shipped entry owns its own counters.
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn submit_one_agent_validate_fixture<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    resolves: Arc<AtomicUsize>,
+    completes: Arc<AtomicUsize>,
+    before_run: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_agent_validate_internal(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        resolves,
+        completes,
+        before_run,
+        after_effect,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn submit_one_agent_validate_internal<'a>(
     path: &Path,
     namespace: &'a SubmissionNamespace,
     scope: &'a SubmissionScope,

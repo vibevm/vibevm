@@ -169,6 +169,46 @@ fn one_agent_park_retains_task_and_report_then_replays_without_backend() {
 }
 
 #[test]
+fn fixed_agent_internal_entry_parks_and_replays() {
+    let dir = agent_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = submit_fixed_one_agent_validate(
+        dir.path(),
+        &namespace,
+        &scope,
+        "fixed-agent",
+        agent_request(),
+        TargetOs::current().unwrap(),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("fixed agent must park")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Parked);
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(outcome.report_bytes.as_ref().unwrap()).unwrap();
+    let task = dir
+        .path()
+        .join(&report.delegation.as_ref().unwrap().tasks[0]);
+    assert!(task.is_file());
+    let task_bytes = std::fs::read(&task).unwrap();
+    let second = submit_fixed_one_agent_validate(
+        dir.path(),
+        &namespace,
+        &scope,
+        "fixed-agent",
+        agent_request(),
+        TargetOs::current().unwrap(),
+        "2026-10-01T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap();
+    assert_eq!(second, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(std::fs::read(task).unwrap(), task_bytes);
+}
+
+#[test]
 fn one_agent_changed_prompt_or_foreign_scope_cannot_repark() {
     let dir = agent_project();
     let scope = scope();
@@ -573,6 +613,46 @@ fn one_script_validate_runs_once_after_stage_and_replays_retained_report() {
     .unwrap();
     assert_eq!(second, SubmissionOutcome::Replayed { run_id, outcome });
     assert_eq!(process.count(), 1);
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn fixed_script_real_linux_process_runs_once_after_stage_and_replays() {
+    let dir = script_project();
+    std::fs::write(
+        dir.path().join("run.sh"),
+        b"set -- .vibe/lifecycle-outcomes/*.script-source.json\n[ -f \"$1\" ] || exit 23\nprintf 'once\\n' >> sentinel.txt\n",
+    ).unwrap();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = submit_fixed_one_script_validate(
+        dir.path(),
+        &namespace,
+        &scope,
+        "real-script",
+        request(),
+        TargetOs::Linux,
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first real script must invoke")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    let sentinel = dir.path().join("sentinel.txt");
+    assert_eq!(std::fs::read(&sentinel).unwrap(), b"once\n");
+    let second = submit_fixed_one_script_validate(
+        dir.path(),
+        &namespace,
+        &scope,
+        "real-script",
+        request(),
+        TargetOs::Linux,
+        "2026-10-01T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap();
+    assert_eq!(second, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(std::fs::read(&sentinel).unwrap(), b"once\n");
 }
 
 #[test]
