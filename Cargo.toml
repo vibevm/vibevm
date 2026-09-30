@@ -168,6 +168,9 @@ rust-ai-native-specmap = { path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai
 specmark = { package = "core-ai-native-specmark", path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
+# Pure CommonMark structure for explicitly declared ordinary Markdown. Offset
+# events keep source byte coordinates without passing through Vibe fact markup.
+pulldown-cmark = "=0.13.4"
 # The XML reader/writer of the PROP-045 spec-source dialect (vibe-specdoc).
 # MIT. One new dependency, decided on the record: PROP-045
 # ##XML-PARSER-DEPENDENCY (alternatives — roxmltree, xml-rs, hand-rolling —
