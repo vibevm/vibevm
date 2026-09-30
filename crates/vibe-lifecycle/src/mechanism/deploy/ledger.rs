@@ -35,6 +35,7 @@ impl<'a> CheckpointLedger<'a> {
             .read_checkpoints(home, plan_hash)?
             .unwrap_or_else(|| CheckpointRecord {
                 schema: CHECKPOINT_EPOCH,
+                operation_binding: home.operation_binding().cloned(),
                 plan_hash: plan_hash.to_owned(),
                 completed: Vec::new(),
             });

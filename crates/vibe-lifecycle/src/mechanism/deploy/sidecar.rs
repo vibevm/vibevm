@@ -5,7 +5,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 use std::collections::BTreeMap;
 use std::path::Path;
 
+use vibe_wire::behaviour::deploy_records::validate_operation_binding;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
+use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 use super::error::DeployError;
 use super::protocol::{DeployPlan, NativeProviderBinding};
@@ -140,6 +142,8 @@ pub(crate) struct LockResources {
 /// as the checkpoint ledger cannot.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct LockBinding {
+    /// Host-issued bound identity, absent for legacy local deployments.
+    pub(crate) operation_binding: Option<EnvironmentOperationBinding>,
     /// The deployment generation this binding belongs to.
     pub(crate) generation: u32,
     /// The 64-hex hash of the plan that declared these locks.
@@ -208,6 +212,16 @@ impl LockBinding {
     /// One binding's own laws: a real plan hash, and a resource list whose
     /// every spelling is usable and names a distinct physical destination.
     fn validate(&self, slot: &str) -> Result<(), DeployError> {
+        if let Some(binding) = &self.operation_binding {
+            validate_operation_binding(binding).map_err(|error| {
+                invalid(format!("the {slot} operation binding is invalid: {error}"))
+            })?;
+            if self.native.is_some() {
+                return Err(invalid(format!(
+                    "the {slot} bound builtin lock also names a native provider"
+                )));
+            }
+        }
         if self.plan_hash.len() != 64
             || !self
                 .plan_hash
@@ -317,10 +331,23 @@ pub(crate) fn stage_pending(
     resources: &[String],
     native: Option<&NativeProviderBinding>,
 ) -> Result<(), DeployError> {
+    stage_pending_with_binding(state, home, generation, plan_hash, resources, native, None)
+}
+
+pub(crate) fn stage_pending_with_binding(
+    state: &DeployState,
+    home: &DeploymentHome,
+    generation: u32,
+    plan_hash: &str,
+    resources: &[String],
+    native: Option<&NativeProviderBinding>,
+    operation_binding: Option<&EnvironmentOperationBinding>,
+) -> Result<(), DeployError> {
     let mut record = state
         .read_lock_resources(home)?
         .unwrap_or(LockResources::empty());
     record.pending = Some(LockBinding {
+        operation_binding: operation_binding.cloned(),
         generation,
         plan_hash: plan_hash.to_owned(),
         resources: resources.to_vec(),
@@ -446,14 +473,16 @@ pub(crate) fn settle_bindings(
         .as_ref()
         .filter(|pending| pending.matches(intent.target.generation, &intent.plan_hash))
     {
-        if pending.native.as_ref() != native {
+        if pending.native.as_ref() != native
+            || pending.operation_binding.as_ref() != intent.operation_binding.as_ref()
+        {
             return Err(invalid(
-                "the interrupted native provider binding changed".to_owned(),
+                "the interrupted provider or operation binding changed".to_owned(),
             ));
         }
         return Ok(record);
     }
-    if owner.reference || native.is_some() {
+    if owner.reference || native.is_some() || intent.operation_binding.is_some() {
         return Err(DeployError::LockSidecarMissing {
             target: owner.target.to_owned(),
             pin: owner.pin.to_owned(),
@@ -467,6 +496,7 @@ pub(crate) fn settle_bindings(
     // settlement perform the same pending-to-committed transition every new
     // deployment uses instead of retiring with an unrecorded inverse lock.
     record.pending = Some(LockBinding {
+        operation_binding: None,
         generation: intent.target.generation,
         plan_hash: intent.plan_hash.clone(),
         resources: intent
@@ -500,7 +530,7 @@ pub(crate) fn inverse_locks(
     owner: Ownership<'_>,
 ) -> Result<Vec<String>, DeployError> {
     let Some(record) = record else {
-        if owner.reference {
+        if owner.reference || receipt.operation_binding.is_some() {
             return Err(DeployError::LockSidecarMissing {
                 target: owner.target.to_owned(),
                 pin: owner.pin.to_owned(),
@@ -518,6 +548,15 @@ pub(crate) fn inverse_locks(
             .collect());
     };
 
+    if record
+        .committed
+        .as_ref()
+        .is_some_and(|binding| binding.operation_binding != receipt.operation_binding)
+    {
+        return Err(DeployError::BindingMismatch {
+            record: LOCK_RESOURCES_FILE,
+        });
+    }
     let mut locks = match record.committed.as_ref() {
         Some(binding) if binding.generation == receipt.generation => binding.resources.clone(),
         Some(binding) => {
@@ -529,7 +568,7 @@ pub(crate) fn inverse_locks(
                 wanted: receipt.generation,
             });
         }
-        None if receipt.resources.is_empty() => Vec::new(),
+        None if receipt.resources.is_empty() && receipt.operation_binding.is_none() => Vec::new(),
         None => {
             return Err(DeployError::RecordInvalid {
                 record: LOCK_RESOURCES_FILE,
@@ -546,6 +585,11 @@ pub(crate) fn inverse_locks(
     // committed plus pending. Holding only committed would let a sibling
     // deployment edit the in-flight destination while this one reverses.
     if let Some(pending) = record.pending.as_ref() {
+        if pending.operation_binding != receipt.operation_binding {
+            return Err(invalid(
+                "pending inverse lock belongs to another operation binding".into(),
+            ));
+        }
         locks.extend(pending.resources.iter().cloned());
     }
     Ok(locks)

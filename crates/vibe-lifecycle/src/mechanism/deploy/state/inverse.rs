@@ -2,6 +2,8 @@
 
 use super::{DeployState, DeploymentHome};
 use crate::mechanism::deploy::error::DeployError;
+use vibe_wire::behaviour::deploy_records::validate_operation_binding;
+use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 const FILE: &str = "inverse.json";
 const EPOCH: u32 = 1;
@@ -9,6 +11,7 @@ const EPOCH: u32 = 1;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct InverseRecord {
     pub(crate) schema: u32,
+    pub(crate) operation_binding: Option<EnvironmentOperationBinding>,
     pub(crate) generation: u32,
     pub(crate) provider_pin: String,
     pub(crate) resource: String,
@@ -26,6 +29,7 @@ impl InverseRecord {
     ) -> Self {
         Self {
             schema: EPOCH,
+            operation_binding: None,
             generation,
             provider_pin: provider_pin.to_owned(),
             resource: resource.to_owned(),
@@ -35,6 +39,12 @@ impl InverseRecord {
     }
 
     fn validate(&self) -> Result<(), DeployError> {
+        if let Some(binding) = &self.operation_binding {
+            validate_operation_binding(binding).map_err(|error| DeployError::RecordInvalid {
+                record: FILE,
+                reason: error.to_string(),
+            })?;
+        }
         if self.schema != EPOCH
             || self.provider_pin.is_empty()
             || self.resource.is_empty()
@@ -58,6 +68,7 @@ impl DeployState {
         marker: &InverseRecord,
     ) -> Result<(), DeployError> {
         marker.validate()?;
+        home.ensure_binding(FILE, marker.operation_binding.as_ref())?;
         self.publish(&home.member(FILE), marker)
     }
 
@@ -69,6 +80,7 @@ impl DeployState {
             return Ok(None);
         };
         marker.validate()?;
+        home.ensure_binding(FILE, marker.operation_binding.as_ref())?;
         Ok(Some(marker))
     }
 

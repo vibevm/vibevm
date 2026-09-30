@@ -63,6 +63,7 @@ impl StateRecord for CheckpointRecord {
             schema: self.schema,
             plan_hash: self.plan_hash.clone(),
             completed: self.completed.clone(),
+            operation_binding: self.operation_binding.clone(),
         })
         .map_err(|error| error.to_string())
     }
@@ -73,6 +74,7 @@ impl StateRecord for CheckpointRecord {
                 schema: value.schema,
                 plan_hash: value.plan_hash,
                 completed: value.completed,
+                operation_binding: value.operation_binding,
             })
             .map_err(|error| error.to_string())
     }
@@ -87,6 +89,7 @@ impl StateRecord for InverseRecord {
             resource: self.resource.clone(),
             receipt_post_digest: self.receipt_post_digest.clone(),
             prior_state_handle: self.prior_state_handle.clone(),
+            operation_binding: self.operation_binding.clone(),
         })
         .map_err(|error| error.to_string())
     }
@@ -100,6 +103,7 @@ impl StateRecord for InverseRecord {
                 resource: value.resource,
                 receipt_post_digest: value.receipt_post_digest,
                 prior_state_handle: value.prior_state_handle,
+                operation_binding: value.operation_binding,
             })
             .map_err(|error| error.to_string())
     }
@@ -113,6 +117,7 @@ mod tests {
     fn checkpoint_domain_conversion_keeps_exact_bytes_and_strict_reading() {
         let value = CheckpointRecord {
             schema: 1,
+            operation_binding: None,
             plan_hash: "a".repeat(64),
             completed: vec!["bin/one".to_owned(), "bin/two".to_owned()],
         };
