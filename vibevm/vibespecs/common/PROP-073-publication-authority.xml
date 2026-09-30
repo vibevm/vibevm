@@ -55,7 +55,7 @@
 
   <effects title="2. Pure remote effect partitions">
     <PUBLICATION-EFFECT-PLAN title="Complete prepared mutation plan">
-      <p><req-publication-effect-plan fact="true" status="spec/plan">`req r1`</req-publication-effect-plan></p>
+      <p><req-publication-effect-plan fact="true" status="spec/plan">`req r2`</req-publication-effect-plan></p>
       <p><PUBLICATION-EFFECT-PLAN-LAW fact="true" status="spec/plan">A pure
       planner consumes the validated local subject, an explicitly selected
       destination owner/repository and a separately captured remote
@@ -69,7 +69,7 @@
       visibility and latest-release posture. Existing release/tag identity,
       draft state, source commit, asset names, IDs, sizes and digests, including
       explicit absence, are plan inputs, not facts inferred after approval.
-      Deleting a release implicitly deletes its assets, so a prior release
+      Replacing a draft deletes the old release before a new draft is created: old asset IDs belong only to that deletion, while assets in the new draft start absent. A cleanup step for assets observed only after upload requires a new bounded observation and plan rather than invented prior IDs. Deleting a release implicitly deletes its assets, so a prior release
       whose complete asset inventory cannot be observed has an unknown effect
       set and refuses an apply-ready plan. Cleanup of temporary assets is also
       an explicit delete partition, never a hidden preparation step. The plan
