@@ -1,0 +1,23 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (target/debug/deps/vibe_wire-9221fbf31b9088df)
+
+running 14 tests
+test behaviour::deploy_records::tests::a_newer_epoch_refuses_on_both_records ... ok
+test behaviour::deploy_records::tests::a_short_plan_hash_refuses ... ok
+test behaviour::deploy_records::tests::legacy_none_omits_binding_and_preserves_pair ... ok
+test behaviour::deploy_records::tests::the_identity_members_refuse_blank_and_grammar_breaks ... ok
+test behaviour::deploy_records::tests::the_intent_timestamps_are_typed_end_to_end ... ok
+test behaviour::deploy_records::tests::the_full_intent_and_finalised_receipt_validate ... ok
+test behaviour::deploy_records::tests::the_minimal_intent_and_receipt_validate ... ok
+test behaviour::deploy_records::tests::bound_intent_receipt_and_native_copy_agree_without_granting_effects ... ok
+test behaviour::deploy_records::tests::the_receipt_digests_and_provider_refuse_bad_spellings ... ok
+test behaviour::deploy_records::tests::every_resource_row_refuses_its_own_break ... ok
+test behaviour::deploy_records::tests::the_finalisation_matrix_holds_in_all_four_rows ... ok
+test behaviour::deploy_records::tests::bound_root_epoch_and_required_nullable_fields_refuse ... ok
+test behaviour::deploy_records::tests::registered_binding_corpus_distinguishes_shape_and_semantic_refusals ... ok
+test behaviour::deploy_records::tests::native_six_arms_share_one_bound_invocation_identity ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 219 filtered out; finished in 0.01s
