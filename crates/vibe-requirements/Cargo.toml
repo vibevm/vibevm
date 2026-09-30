@@ -21,6 +21,8 @@ vibe-core.workspace = true
 vibe-facts.workspace = true
 # Workspace discovery + materialised slot location (never a reverse edge).
 vibe-workspace.workspace = true
+vibe-safefs.workspace = true
+toml.workspace = true
 # The generated RequirementsReport root and its relational validator —
 # the wire owner; this crate never re-decides its grammar.
 vibe-wire.workspace = true

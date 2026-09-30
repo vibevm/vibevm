@@ -12,9 +12,11 @@
 //! The library is read-only and credential-free by construction: it
 //! enumerates the selected host source and the lock-selected
 //! materialised package slots through public `vibe-workspace` /
-//! `vibe-core` APIs, reads each authored source exactly once through
-//! the A2a `vibe-facts` one-read seams (`observe_authored_source`,
-//! `Registry::load_with_witnesses`), joins adoption through the A1
+//! `vibe-core` APIs, captures declared Mixed-slot originals through a
+//! pinned no-follow reader and `observe_declared_source`, and keeps the
+//! legacy `observe_authored_source` route for validated packages without
+//! descriptors. It reads registry witnesses through
+//! `Registry::load_with_witnesses`, then joins adoption through the A1
 //! `join_adoption`, and never syncs, writes, re-walks or re-reads a
 //! source. `observed_at` is injected, never clocked inside; the
 //! selected root is a trusted constructor input, never a wire member;
@@ -82,5 +84,7 @@ mod tests_followup;
 mod tests_provider;
 #[cfg(test)]
 mod tests_query;
+#[cfg(test)]
+mod tests_query_declared;
 #[cfg(test)]
 mod tests_requirements;

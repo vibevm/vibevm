@@ -12,6 +12,9 @@ use vibe_wire::generated::shared::Timestamp;
 use crate::text::render;
 use crate::{QueryContext, QueryError, RequirementsQuery, query};
 
+#[path = "tests_query/slot_fixture.rs"]
+mod slot_fixture;
+
 const FIXED_AT: &str = "2026-01-01T00:00:00Z";
 pub(crate) const RUN_ID: &str = "0123456789abcdef0123456789abcdef";
 
@@ -82,7 +85,13 @@ pub(crate) fn make_slot(root: &Path, body: &str) {
     let slot = slot(root);
     let specs = slot.join(vibe_core::layout::current_specs_root());
     fs::create_dir_all(&specs).unwrap();
+    fs::write(
+        slot.join("vibe.toml"),
+        "[package]\ngroup = 'org.example'\nname = 'pkg'\nkind = 'feat'\nversion = '1.0.0'\n",
+    )
+    .unwrap();
     fs::write(specs.join("RULE.md"), body).unwrap();
+    slot_fixture::write_legacy_record(&slot, body);
 }
 
 /// One adoption entry for a package address, through the crate's own
