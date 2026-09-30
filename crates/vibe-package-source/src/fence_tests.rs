@@ -29,9 +29,11 @@ fn the_composition_has_exactly_its_accepted_lower_dependencies() {
         "specmark",
         "vibe-core",
         "vibe-install",
+        "vibe-lifecycle",
         "vibe-orchestrator",
         "vibe-registry",
         "vibe-resolver",
+        "vibe-safefs",
     ]);
     assert_eq!(
         actual, expected,
