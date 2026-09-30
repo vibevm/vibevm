@@ -57,6 +57,8 @@ pub mod migration;
 pub mod native;
 pub mod package_skill_receipt;
 pub mod preview;
+pub mod publication_effect_plan;
+pub mod publication_subject;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
 pub mod reinstall_report;

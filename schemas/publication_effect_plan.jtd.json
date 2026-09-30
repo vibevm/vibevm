@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "description": "Epoch-one pure partition plan for exact remote publication effects. Remote observations are comparison inputs, not an atomic cross-object CAS or an effect grant.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-EFFECT-PLAN" },
+    "rustOptions": { "package": "vibe_wire::publication_effect_plan" }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "subject_sha256": { "type": "string" },
+    "target": { "ref": "publication_remote_target" },
+    "remote_generation_ref": {
+      "type": "string",
+      "metadata": { "description": "Opaque owner-observed generation for recheck; its presence does not claim atomic CAS across remote objects." }
+    },
+    "observed_tag": { "ref": "publication_observed_tag" },
+    "observed_release": { "ref": "publication_observed_release" },
+    "smoke_policy_id": { "type": "string" },
+    "partitions": {
+      "elements": { "ref": "publication_partition" },
+      "metadata": { "x-empty": "emit", "description": "Ordered tag, release, platform, cleanup, final-assets and finalize effects; exact order and completeness are semantic laws." }
+    }
+  },
+  "definitions": {
+    "publication_remote_target": {
+      "properties": {
+        "host": { "type": "string" },
+        "owner": { "type": "string" },
+        "repository": { "type": "string" }
+      }
+    },
+    "publication_observed_tag": {
+      "discriminator": "state",
+      "mapping": {
+        "absent": { "properties": {} },
+        "present": {
+          "properties": {
+            "reference": { "type": "string" },
+            "object_kind": { "type": "string" },
+            "object_sha": { "type": "string" }
+          }
+        }
+      }
+    },
+    "publication_observed_asset": {
+      "properties": {
+        "name": { "type": "string" },
+        "asset_id": { "type": "string", "metadata": { "description": "Canonical decimal u64 remote ID." } },
+        "size_bytes": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "publication_observed_release": {
+      "discriminator": "state",
+      "mapping": {
+        "absent": { "properties": {} },
+        "present": {
+          "properties": {
+            "release_id": { "type": "string", "metadata": { "description": "Canonical decimal u64 remote ID." } },
+            "draft": { "type": "boolean" },
+            "tag": { "type": "string" },
+            "generation_ref": { "type": "string" },
+            "inventory_complete": { "type": "boolean" },
+            "assets": { "elements": { "ref": "publication_observed_asset" }, "metadata": { "x-empty": "emit" } }
+          }
+        }
+      }
+    },
+    "publication_prior_asset": {
+      "discriminator": "state",
+      "mapping": {
+        "absent": { "properties": {} },
+        "present": { "properties": { "asset_id": { "type": "string" }, "sha256": { "type": "string" } } }
+      }
+    },
+    "publication_asset_effect": {
+      "properties": {
+        "name": { "type": "string" },
+        "media_type": { "type": "string" },
+        "desired_size_bytes": { "type": "string" },
+        "desired_sha256": { "type": "string" },
+        "prior": { "ref": "publication_prior_asset" }
+      }
+    },
+    "publication_partition": {
+      "discriminator": "kind",
+      "mapping": {
+        "tag": {
+          "properties": {
+            "action": { "enum": ["create", "retain"], "metadata": { "x-vocabulary": "closed" } },
+            "tag": { "type": "string" },
+            "desired_commit": { "type": "string" },
+            "recovery_ref": { "type": "string" }
+          }
+        },
+        "release": {
+          "properties": {
+            "action": { "enum": ["create", "replace"], "metadata": { "x-vocabulary": "closed" } },
+            "desired_tag": { "type": "string" },
+            "desired_draft": { "type": "boolean" },
+            "recovery_ref": { "type": "string" }
+          }
+        },
+        "platform_assets": {
+          "properties": {
+            "target": { "type": "string" },
+            "target_release_ref": { "type": "string" },
+            "assets": { "elements": { "ref": "publication_asset_effect" }, "metadata": { "x-empty": "emit" } },
+            "recovery_ref": { "type": "string" }
+          }
+        },
+        "cleanup": {
+          "properties": {
+            "target_release_ref": { "type": "string" },
+            "assets": { "elements": { "ref": "publication_observed_asset" }, "metadata": { "x-empty": "emit" } },
+            "recovery_ref": { "type": "string" }
+          }
+        },
+        "final_assets": {
+          "properties": {
+            "target_release_ref": { "type": "string" },
+            "assets": { "elements": { "ref": "publication_asset_effect" }, "metadata": { "x-empty": "emit" } },
+            "recovery_ref": { "type": "string" }
+          }
+        },
+        "finalize": {
+          "properties": {
+            "action": { "enum": ["retain_draft", "publish"], "metadata": { "x-vocabulary": "closed" } },
+            "target_release_ref": { "type": "string" },
+            "make_latest": { "enum": ["unchanged", "legacy"], "metadata": { "x-vocabulary": "closed" } },
+            "recovery_ref": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

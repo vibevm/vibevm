@@ -938,6 +938,27 @@ unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
 
+# Exact pre-effect publication evidence. The subject can be rebuilt only
+# while all captured bytes remain; the remote plan's observed generation and
+# prior object IDs cannot be reconstructed after replacement.
+[format.publication-subject]
+epoch = 1
+schema = "schemas/publication_subject.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/publication_subject/e1"
+sunset = "none"
+
+[format.publication-effect-plan]
+epoch = 1
+schema = "schemas/publication_effect_plan.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/publication_effect_plan/e1"
+sunset = "none"
+
 # ── Documentation pipeline (2 records, 1 JTD), PROP-057 §10 ────────────────
 # What the documentation pipeline publishes for machines. Both are read by
 # parsers nobody here controls — the Qwik shell, search crawlers, and the
