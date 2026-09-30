@@ -382,3 +382,103 @@ fn an_exclusive_lock_admits_one_holder_at_a_time() {
         "and admitted once it drops",
     );
 }
+
+#[test]
+fn pinned_directory_handles_contend_on_one_physical_lock_file() {
+    let dir = tempfile::tempdir().unwrap();
+    let first = Project::open(dir.path()).unwrap();
+    let second = Project::open(dir.path()).unwrap();
+    let a = first.root_dir().unwrap();
+    let b = second.root_dir().unwrap();
+    assert_eq!(a.identity().unwrap(), b.identity().unwrap());
+    assert_eq!(
+        first.root_identity().unwrap(),
+        second.root_identity().unwrap()
+    );
+    let guard = a.try_lock_file("physical.lock").unwrap().unwrap();
+    assert!(b.try_lock_file("physical.lock").unwrap().is_none());
+    drop(guard);
+    assert!(b.try_lock_file("physical.lock").unwrap().is_some());
+}
+
+#[test]
+fn invalid_project_lock_name_refuses_before_creating_vibe_directory() {
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    assert!(project.try_lock("../outside.lock").is_err());
+    assert!(!dir.path().join(".vibe").exists());
+}
+
+#[test]
+fn pinned_disjoint_roots_take_same_spelling_independently() {
+    let first = tempfile::tempdir().unwrap();
+    let second = tempfile::tempdir().unwrap();
+    let a = Project::open(first.path()).unwrap().root_dir().unwrap();
+    let b = Project::open(second.path()).unwrap().root_dir().unwrap();
+    assert_ne!(a.identity().unwrap(), b.identity().unwrap());
+    let left = a.try_lock_file("physical.lock").unwrap().unwrap();
+    let right = b.try_lock_file("physical.lock").unwrap().unwrap();
+    drop((left, right));
+}
+
+#[test]
+fn pinned_lock_replacement_retries_then_covers_current_name() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    let a = project.root_dir().unwrap();
+    let b = project.root_dir().unwrap();
+    drop(a.try_lock_file("physical.lock").unwrap().unwrap());
+    let path = dir.path().join("physical.lock");
+    let replaced = Arc::new(AtomicBool::new(false));
+    let flag = Arc::clone(&replaced);
+    crate::arm_before_lock(Some(Box::new(move |_, _| {
+        let changed = fs::remove_file(&path).and_then(|_| fs::write(&path, b"replacement"));
+        flag.store(changed.is_ok(), Ordering::SeqCst);
+    })));
+    let guard = a.try_lock_file("physical.lock");
+    crate::arm_before_lock(None);
+    let guard = guard.unwrap().unwrap();
+    if replaced.load(Ordering::SeqCst) {
+        assert_eq!(
+            fs::metadata(dir.path().join("physical.lock"))
+                .unwrap()
+                .len(),
+            11
+        );
+    }
+    assert!(b.try_lock_file("physical.lock").unwrap().is_none());
+    drop(guard);
+}
+
+#[test]
+fn pinned_lock_repeated_identity_mismatch_refuses_without_guard() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    let pinned = project.root_dir().unwrap();
+    let attempts = Arc::new(AtomicUsize::new(0));
+    let seen = Arc::clone(&attempts);
+    crate::arm_lock_identity_check(Some(Box::new(move |actual| {
+        assert!(actual);
+        seen.fetch_add(1, Ordering::SeqCst);
+        false
+    })));
+    let result = pinned.try_lock_file("physical.lock");
+    crate::arm_lock_identity_check(None);
+    assert!(
+        result
+            .unwrap_err()
+            .to_string()
+            .contains("replaced under every one")
+    );
+    assert_eq!(
+        attempts.load(Ordering::SeqCst),
+        super::LOCK_ATTEMPTS as usize
+    );
+    assert!(pinned.try_lock_file("physical.lock").unwrap().is_some());
+}
