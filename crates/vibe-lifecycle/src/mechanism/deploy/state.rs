@@ -55,6 +55,7 @@ use vibe_wire::generated::deploy_receipt::DeployReceipt;
 use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 use super::error::DeployError;
+use super::model::DEPLOY_STATE_DIR;
 use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
 
 mod inverse;
@@ -230,6 +231,53 @@ impl DeployState {
             project,
             root: root.to_path_buf(),
         })
+    }
+
+    /// Open/create the deployment state below an already-admitted settings
+    /// capability. No ambient pathname is reopened; the returned Project
+    /// retains the actual child directory even if its display name moves.
+    pub(crate) fn open_bound(settings: &Project) -> Result<Self, DeployError> {
+        let root = settings.root_path().join(DEPLOY_STATE_DIR);
+        let project = settings
+            .ensure_subproject(&bound_state_components())
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(&root),
+                reason: format!("{error:#}"),
+            })?;
+        Ok(Self { project, root })
+    }
+
+    /// Compare the currently named child with this held state capability.
+    /// A mismatch refuses; the caller decides whether any earlier effect
+    /// makes the overall operation partial or uncertain.
+    pub(crate) fn verify_bound_home(&self, settings: &Project) -> Result<(), DeployError> {
+        let named = settings
+            .subproject(&bound_state_components())
+            .map_err(|error| DeployError::BoundStateHomeChanged {
+                path: rendered(&self.root),
+                reason: format!("{error:#}"),
+            })?;
+        let held =
+            self.project
+                .root_identity()
+                .map_err(|error| DeployError::BoundStateHomeChanged {
+                    path: rendered(&self.root),
+                    reason: format!("{error:#}"),
+                })?;
+        let current =
+            named
+                .root_identity()
+                .map_err(|error| DeployError::BoundStateHomeChanged {
+                    path: rendered(&self.root),
+                    reason: format!("{error:#}"),
+                })?;
+        if held != current {
+            return Err(DeployError::BoundStateHomeChanged {
+                path: rendered(&self.root),
+                reason: "the named directory no longer matches the held state capability".into(),
+            });
+        }
+        Ok(())
     }
 
     /// Take the per-destination lock over every resource one plan touches,
@@ -598,6 +646,10 @@ impl DeployState {
             })?;
         Ok(())
     }
+}
+
+pub(super) fn bound_state_components() -> Vec<&'static str> {
+    DEPLOY_STATE_DIR.split('/').collect()
 }
 
 /// Read and decode one JSON record through a pinned capability, or `None`

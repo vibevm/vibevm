@@ -199,6 +199,12 @@ pub enum DeployError {
     )]
     StateHome { path: String, reason: String },
 
+    /// The path now named as bound state differs from the pinned capability.
+    #[error(
+        "bound deployment state home `{path}` changed: {reason}; refusing to redirect retained state I/O"
+    )]
+    BoundStateHomeChanged { path: String, reason: String },
+
     /// A durable state file could not be published.
     #[error(
         "the deployment state file `{path}` could not be written: {reason} \

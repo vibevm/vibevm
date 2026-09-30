@@ -10,7 +10,9 @@ use super::protocol::{DeployPlan, DeployTargetRequest};
 use super::state::{DeployState, DeploymentHome};
 use super::support::{Fixture, FixtureProvider, selected, selection, target};
 use super::transaction::{bound_plan_hash, plan_hash};
+use super::view::DeployStateView;
 use super::{DeployError, apply_selection, execute_bound_deploy_targets};
+use vibe_safefs::Project;
 
 fn binding(instance: &str) -> EnvironmentOperationBinding {
     EnvironmentOperationBinding {
@@ -266,4 +268,101 @@ fn bound_home_refuses_unbound_intent_before_it_is_written() {
         Err(DeployError::BindingMismatch { .. })
     ));
     assert!(!home.directory().join("intent.json").exists());
+}
+
+#[test]
+fn bound_state_home_from_two_held_settings_handles_shares_records() {
+    use vibe_wire::generated::deploy_intent::{DeployIntent, DeployTargetIdentity};
+    let settings_dir = tempfile::tempdir().unwrap();
+    let first = Project::open(settings_dir.path()).unwrap();
+    let alias = Project::open(settings_dir.path()).unwrap();
+    let state = DeployState::open_bound(&first).unwrap();
+    state.verify_bound_home(&alias).unwrap();
+    let state_root = settings_dir.path().join("state/deployments");
+    let owner = binding("one");
+    let home = DeploymentHome::new_bound(
+        &state_root,
+        "org.example/demo",
+        None,
+        "local-helper",
+        &owner,
+    )
+    .unwrap();
+    let intent = DeployIntent {
+        schema: 1,
+        plan_hash: "a".repeat(64),
+        resources: vec![],
+        started_at: "2026-09-30T00:00:00Z".parse().unwrap(),
+        target: DeployTargetIdentity {
+            generation: 0,
+            profile: "local".into(),
+            project: "org.example/demo".into(),
+            target: "local-helper".into(),
+            package: None,
+        },
+        prior_generation: None,
+        operation_binding: Some(owner),
+    };
+    state.write_intent(&home, &intent).unwrap();
+    let view = DeployStateView::open_bound(&alias).unwrap();
+    assert_eq!(view.read_intent(&home).unwrap(), Some(intent));
+}
+
+#[test]
+fn bound_read_view_absent_is_no_create_and_malformed_refuses() {
+    let settings_dir = tempfile::tempdir().unwrap();
+    let settings = Project::open(settings_dir.path()).unwrap();
+    let state_root = settings_dir.path().join("state/deployments");
+    let view = DeployStateView::open_bound(&settings).unwrap();
+    let home = DeploymentHome::new(&state_root, "org.example/demo", None, "local-helper");
+    assert!(view.read_intent(&home).unwrap().is_none());
+    assert!(!settings_dir.path().join("state").exists());
+    std::fs::write(settings_dir.path().join("state"), b"foreign file").unwrap();
+    assert!(DeployStateView::open_bound(&settings).is_err());
+    assert!(DeployState::open_bound(&settings).is_err());
+}
+
+#[test]
+fn retargeted_bound_state_name_refuses_and_held_write_stays_on_original() {
+    use vibe_wire::generated::deploy_intent::{DeployIntent, DeployTargetIdentity};
+    let settings_dir = tempfile::tempdir().unwrap();
+    let settings = Project::open(settings_dir.path()).unwrap();
+    let state = DeployState::open_bound(&settings).unwrap();
+    let original = settings_dir.path().join("state/deployments");
+    let moved = settings_dir.path().join("state/old-deployments");
+    if std::fs::rename(&original, &moved).is_err() {
+        // A host that prevents renaming an open directory prevents this
+        // retargeting path while the held capability exists.
+        state.verify_bound_home(&settings).unwrap();
+        return;
+    }
+    std::fs::create_dir(&original).unwrap();
+    assert!(matches!(
+        state.verify_bound_home(&settings),
+        Err(DeployError::BoundStateHomeChanged { .. })
+    ));
+    let owner = binding("one");
+    let home =
+        DeploymentHome::new_bound(&original, "org.example/demo", None, "local-helper", &owner)
+            .unwrap();
+    let intent = DeployIntent {
+        schema: 1,
+        plan_hash: "b".repeat(64),
+        resources: vec![],
+        started_at: "2026-09-30T00:00:00Z".parse().unwrap(),
+        target: DeployTargetIdentity {
+            generation: 0,
+            profile: "local".into(),
+            project: "org.example/demo".into(),
+            target: "local-helper".into(),
+            package: None,
+        },
+        prior_generation: None,
+        operation_binding: Some(owner),
+    };
+    // Production must stop at verify_bound_home; this write proves the held
+    // capability itself cannot be redirected by changing its display path.
+    state.write_intent(&home, &intent).unwrap();
+    assert!(moved.join(home.id()).join("intent.json").exists());
+    assert!(!original.join(home.id()).join("intent.json").exists());
 }

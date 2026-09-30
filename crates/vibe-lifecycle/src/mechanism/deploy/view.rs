@@ -34,6 +34,7 @@ use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 
 use super::error::DeployError;
+use super::model::DEPLOY_STATE_DIR;
 use super::sidecar::LockResources;
 use super::state::{
     DeploymentHome, INTENT_FILE, RECEIPT_FILE, checked_receipt, read_record, rendered,
@@ -81,6 +82,51 @@ impl DeployStateView {
             Ok(_) => {}
         }
         let project = Project::open(root).map_err(|error| refuse(format!("{error:#}")))?;
+        Ok(Self {
+            project: Some(project),
+        })
+    }
+
+    /// Inspect the state home below an already-held settings capability.
+    /// An absent home stays absent and creates nothing. A replacement between
+    /// the first no-create observation and the retained subproject refuses.
+    pub(crate) fn open_bound(settings: &Project) -> Result<Self, DeployError> {
+        let root = settings.root_path().join(DEPLOY_STATE_DIR);
+        let components = super::state::bound_state_components();
+        let observed =
+            settings
+                .dir_if_present(&components)
+                .map_err(|error| DeployError::StateHome {
+                    path: rendered(&root),
+                    reason: format!("{error:#}"),
+                })?;
+        let Some(observed) = observed else {
+            return Ok(Self { project: None });
+        };
+        let project = settings.subproject(&components).map_err(|error| {
+            DeployError::BoundStateHomeChanged {
+                path: rendered(&root),
+                reason: format!("{error:#}"),
+            }
+        })?;
+        let before = observed
+            .identity()
+            .map_err(|error| DeployError::BoundStateHomeChanged {
+                path: rendered(&root),
+                reason: format!("{error:#}"),
+            })?;
+        let held = project
+            .root_identity()
+            .map_err(|error| DeployError::BoundStateHomeChanged {
+                path: rendered(&root),
+                reason: format!("{error:#}"),
+            })?;
+        if before != held {
+            return Err(DeployError::BoundStateHomeChanged {
+                path: rendered(&root),
+                reason: "state home changed between observation and held open".into(),
+            });
+        }
         Ok(Self {
             project: Some(project),
         })
