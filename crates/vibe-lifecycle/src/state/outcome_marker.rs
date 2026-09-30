@@ -8,7 +8,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSI
 
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::lifecycle_outcome_marker::{
-    LifecycleOutcomeMarker, LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence,
+    LifecycleOutcomeMarker, LifecycleOutcomeMarkerEffectState,
+    LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence, ReportEvidenceAvailable,
+    ReportEvidenceUnavailable, ReportEvidenceUnavailableReason,
 };
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
 
@@ -30,10 +32,59 @@ pub enum LifecycleOutcomeMarkerError {
     UnexpectedReport,
     #[error("lifecycle outcome marker report byte count or SHA-256 differs")]
     ReportMismatch,
+    #[error("lifecycle outcome marker report exceeds its 8 MiB owner cap")]
+    ReportOverLimit,
     #[error("lifecycle outcome marker report is not a generated lifecycle report: {0}")]
     InvalidReport(String),
     #[error("lifecycle outcome marker report and recorded outcome disagree: {0}")]
     OutcomeMismatch(&'static str),
+}
+
+/// The owner's actual retained report bytes, or a typed reason it cannot
+/// furnish them. Neither arm inspects the mutable freshness header.
+pub enum LifecycleReportPayload<'a> {
+    Available(&'a [u8]),
+    Unavailable(ReportEvidenceUnavailableReason),
+}
+
+/// Construct and validate the exact owner marker without asking an adapter to
+/// duplicate SHA-256, report-size, or outcome semantics.
+pub fn create_lifecycle_outcome_marker(
+    run_id: &str,
+    reservation_ref: &str,
+    outcome: Outcome,
+    effect_state: LifecycleOutcomeMarkerEffectState,
+    payload: LifecycleReportPayload<'_>,
+) -> Result<LifecycleOutcomeMarker, LifecycleOutcomeMarkerError> {
+    let (report, report_bytes) = match payload {
+        LifecycleReportPayload::Available(bytes) => {
+            if bytes.len() > 8 * 1024 * 1024 {
+                return Err(LifecycleOutcomeMarkerError::ReportOverLimit);
+            }
+            (
+                ReportEvidence::Available(Box::new(ReportEvidenceAvailable {
+                    bytes: u32::try_from(bytes.len())
+                        .map_err(|_| LifecycleOutcomeMarkerError::ReportOverLimit)?,
+                    sha256: format!("{:x}", Sha256::digest(bytes)),
+                })),
+                Some(bytes),
+            )
+        }
+        LifecycleReportPayload::Unavailable(reason) => (
+            ReportEvidence::Unavailable(Box::new(ReportEvidenceUnavailable { reason })),
+            None,
+        ),
+    };
+    let marker = LifecycleOutcomeMarker {
+        schema: 1,
+        run_id: run_id.to_owned(),
+        reservation_ref: reservation_ref.to_owned(),
+        outcome,
+        effect_state,
+        report,
+    };
+    validate_lifecycle_outcome_marker(&marker, run_id, reservation_ref, report_bytes)?;
+    Ok(marker)
 }
 
 /// Validate a marker against the owner's reservation and exact persisted

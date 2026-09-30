@@ -7,8 +7,41 @@ use vibe_wire::generated::lifecycle_outcome_marker::{
 };
 
 use super::super::outcome_marker::{
-    LifecycleOutcomeMarkerError, validate_lifecycle_outcome_marker,
+    LifecycleOutcomeMarkerError, LifecycleReportPayload, create_lifecycle_outcome_marker,
+    validate_lifecycle_outcome_marker,
 };
+
+#[test]
+fn owner_constructor_hashes_actual_report_bytes_and_refuses_false_completion() {
+    let run_id = "a".repeat(32);
+    let reservation_ref = format!("sha256:{}", "c".repeat(64));
+    let bytes = report(&run_id, false);
+    let marker = create_lifecycle_outcome_marker(
+        &run_id,
+        &reservation_ref,
+        Outcome::Completed,
+        EffectState::Uncertain,
+        LifecycleReportPayload::Available(&bytes),
+    )
+    .unwrap();
+    validate_lifecycle_outcome_marker(&marker, &run_id, &reservation_ref, Some(&bytes)).unwrap();
+    let ReportEvidence::Available(evidence) = marker.report else {
+        panic!("completed marker must carry available report");
+    };
+    assert_eq!(evidence.sha256, format!("{:x}", Sha256::digest(&bytes)));
+    assert!(matches!(
+        create_lifecycle_outcome_marker(
+            &run_id,
+            &reservation_ref,
+            Outcome::Completed,
+            EffectState::Uncertain,
+            LifecycleReportPayload::Unavailable(
+                vibe_wire::generated::lifecycle_outcome_marker::ReportEvidenceUnavailableReason::NotProduced
+            ),
+        ),
+        Err(LifecycleOutcomeMarkerError::OutcomeMismatch(_))
+    ));
+}
 
 fn corpus(category: &str, name: &str) -> Vec<u8> {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
