@@ -31,6 +31,9 @@ use super::{
 };
 use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
 use crate::dist::smoke::prepare::prepare_local_with;
+
+#[path = "tests_smoke.rs"]
+mod tests_smoke;
 use crate::dist::snapshot;
 
 fn run_git(root: &Path, args: &[&str]) {

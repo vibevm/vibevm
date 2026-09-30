@@ -3,6 +3,7 @@
 //! It may persist a machine report locally. It never contacts a release host
 //! and unavailable native platforms remain unavailable in the final subject.
 
+use std::collections::BTreeSet;
 use std::path::Path;
 use std::time::Duration;
 
@@ -30,6 +31,44 @@ const REPORT_MAX_BYTES: usize = 256 * 1024;
 pub(crate) struct PreparedLocalSmoke {
     pub(crate) capture: PreparedSubjectCapture,
     pub(crate) report: StoredSmokeReport,
+    pub(crate) report_bytes: Vec<u8>,
+}
+
+#[derive(Debug, Default)]
+pub(crate) struct SmokeSelection {
+    skipped: BTreeSet<String>,
+    reason: Option<String>,
+}
+
+impl SmokeSelection {
+    /// Validate the entire skip request before opening any output path.
+    pub(crate) fn new(targets: Vec<String>, reason: Option<String>) -> Result<Self> {
+        if targets.is_empty() != reason.is_none() {
+            bail!("--skip-smoke-target and --skip-reason must be supplied together");
+        }
+        if let Some(reason) = reason.as_deref()
+            && (reason.is_empty()
+                || reason.len() > 480
+                || reason.trim() != reason
+                || reason.chars().any(char::is_control))
+        {
+            bail!("--skip-reason must be nonblank, unpadded and at most 480 bytes");
+        }
+        let mut skipped = BTreeSet::new();
+        for target in targets {
+            if !SUPPORTED_DISTRIBUTION_TARGETS.contains(&target.as_str()) {
+                bail!("--skip-smoke-target `{target}` is unsupported");
+            }
+            if !skipped.insert(target.clone()) {
+                bail!("--skip-smoke-target `{target}` is duplicated");
+            }
+        }
+        Ok(Self { skipped, reason })
+    }
+
+    fn skips(&self, target: &str) -> bool {
+        self.skipped.contains(target)
+    }
 }
 
 fn provisional_smoke() -> PublicationSmoke {
@@ -73,10 +112,18 @@ pub(crate) fn prepare_local_subject(
     repo_root: &Path,
     out_dir: &Path,
 ) -> Result<PreparedLocalSmoke> {
+    prepare_local_subject_selected(repo_root, out_dir, &SmokeSelection::default())
+}
+
+pub(crate) fn prepare_local_subject_selected(
+    repo_root: &Path,
+    out_dir: &Path,
+    selection: &SmokeSelection,
+) -> Result<PreparedLocalSmoke> {
     let output_root = build::absolute_out_dir(repo_root, out_dir);
     let output = Project::open(&output_root)
         .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
-    prepare_local_with(repo_root, &output, || Ok(()))
+    prepare_local_with_selection(repo_root, &output, selection, || Ok(()))
 }
 
 /// Hook is internal and only a deterministic test seam. It runs after the
@@ -84,6 +131,18 @@ pub(crate) fn prepare_local_subject(
 pub(crate) fn prepare_local_with<F>(
     repo_root: &Path,
     output: &Project,
+    after_store: F,
+) -> Result<PreparedLocalSmoke>
+where
+    F: FnOnce() -> Result<()>,
+{
+    prepare_local_with_selection(repo_root, output, &SmokeSelection::default(), after_store)
+}
+
+pub(crate) fn prepare_local_with_selection<F>(
+    repo_root: &Path,
+    output: &Project,
+    selection: &SmokeSelection,
     after_store: F,
 ) -> Result<PreparedLocalSmoke>
 where
@@ -118,7 +177,29 @@ where
         )?;
         let stage = stage_verified_bundle(&bundle, target, &fragment, subject_target)
             .with_context(|| format!("staging exact bundle `{target}`"))?;
-        records.push(run_native_probe(&stage, Duration::from_secs(30)));
+        if selection.skips(target) {
+            records.push(super::NativeProbeRecord {
+                target: (*target).into(),
+                host: host_identity(),
+                status: PublicationSmokeProbeStatus::Skipped,
+                bundle_digest: stage.bundle_digest.clone(),
+                tested_sha256: None,
+                runner_ref: None,
+                executable_sha256: None,
+                reason: format!(
+                    "explicit operator skip: {}",
+                    selection.reason.as_deref().unwrap()
+                ),
+                stdout: String::new(),
+                stderr: String::new(),
+                exit_code: None,
+                elapsed_ms: 0,
+                timed_out: false,
+                output_truncated: false,
+            });
+        } else {
+            records.push(run_native_probe(&stage, Duration::from_secs(30)));
+        }
     }
     let prepared = prepare_report(&provisional.subject, records)
         .context("assembling five truthful local smoke rows")?;
@@ -146,5 +227,6 @@ where
     Ok(PreparedLocalSmoke {
         capture: final_capture,
         report: stored,
+        report_bytes: prepared.bytes,
     })
 }

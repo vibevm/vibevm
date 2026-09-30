@@ -1,10 +1,11 @@
 //! `cargo xtask dist` — native bundle production and mutable release assembly.
 
 use std::ffi::OsStr;
+use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-use anyhow::Result;
+use anyhow::{Result, bail};
 use clap::Subcommand;
 
 mod archive;
@@ -43,6 +44,20 @@ pub(crate) enum DistCommand {
     Prepare {
         #[arg(long)]
         version: String,
+    },
+
+    /// Inspect exact 1.1.0 artifacts and save a local native smoke report.
+    PrepareLocal {
+        #[arg(long, default_value = "1.1.0")]
+        version: String,
+        #[arg(long, default_value = "dist")]
+        out_dir: PathBuf,
+        /// Explicitly skip only the named target; repeat for multiple targets.
+        #[arg(long = "skip-smoke-target", requires = "skip_reason")]
+        skip_targets: Vec<String>,
+        /// Bounded operator reason shared by the explicitly skipped targets.
+        #[arg(long = "skip-reason", requires = "skip_targets")]
+        skip_reason: Option<String>,
     },
 
     /// Upload one previously built platform bundle, bootstrap and fragment.
@@ -139,6 +154,23 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
             Ok(())
         }
         DistCommand::Prepare { version } => release::prepare(repo_root, &version),
+        DistCommand::PrepareLocal {
+            version,
+            out_dir,
+            skip_targets,
+            skip_reason,
+        } => {
+            let stdout = io::stdout();
+            let mut locked = stdout.lock();
+            run_prepare_local_into(
+                repo_root,
+                &version,
+                &out_dir,
+                skip_targets,
+                skip_reason,
+                &mut locked,
+            )
+        }
         DistCommand::Upload { asset, fragment } => release::upload(repo_root, &asset, &fragment),
         DistCommand::UploadBuilt { target, out_dir } => {
             release::upload_built(repo_root, &target, &out_dir)
@@ -150,6 +182,28 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
     }
 }
 
+fn run_prepare_local_into(
+    repo_root: &Path,
+    version: &str,
+    out_dir: &Path,
+    skip_targets: Vec<String>,
+    skip_reason: Option<String>,
+    output: &mut dyn Write,
+) -> Result<()> {
+    if version != "1.1.0" {
+        bail!("local distribution preparation requires the mutable 1.1.0 version");
+    }
+    let selection = smoke::prepare::SmokeSelection::new(skip_targets, skip_reason)?;
+    let prepared = smoke::prepare::prepare_local_subject_selected(repo_root, out_dir, &selection)?;
+    output.write_all(&prepared.report_bytes)?;
+    output.flush()?;
+    Ok(())
+}
+
 #[cfg(test)]
 #[path = "credential_tests.rs"]
 mod credential_tests;
+
+#[cfg(test)]
+#[path = "prepare_local_cli_tests.rs"]
+mod prepare_local_cli_tests;
