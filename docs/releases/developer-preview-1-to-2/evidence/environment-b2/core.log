@@ -1,0 +1,13 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 4 tests
+test environment::legacy::tests::existence_only_artifact_never_becomes_verified ... ok
+test environment::legacy::tests::prefix_bound_change_refuses_and_relocatable_requires_owner_proof ... ok
+test environment::legacy::tests::old_recipe_and_empty_dependency_list_keep_legacy_meaning ... ok
+test environment::legacy::tests::same_content_mirror_retains_both_locators_and_original_recipe ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 569 filtered out; finished in 0.00s
