@@ -59,7 +59,7 @@ fn six_registered_roots_roundtrip_and_reject_unknown_or_missing_fields() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-EXACT-LOCK-IDENTITY",
-    r = 1
+    r = 2
 )]
 fn exact_recipe_and_produced_output_have_distinct_carriers() {
     let lock: ExactLock = valid("environment-exact-lock");
