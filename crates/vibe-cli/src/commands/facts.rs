@@ -234,6 +234,7 @@ struct SelectedFactsSlot {
     path: PathBuf,
     version: String,
     source_hash: vibe_core::ContentHash,
+    in_place: bool,
 }
 
 /// Explicit descriptors are opt-in. An old package with no declarations keeps
@@ -241,11 +242,11 @@ struct SelectedFactsSlot {
 fn authored_for_selected(slot: &SelectedFactsSlot, package: &str) -> Result<Vec<AuthoredFact>> {
     let pinned = Project::open(&slot.path)
         .with_context(|| format!("pinning package slot `{}`", slot.path.display()))?;
-    let manifest_bytes = pinned
-        .read_file_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
+    let manifest_before = pinned
+        .read_file_snapshot_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
         .context("installed package has no vibe.toml")?;
-    let manifest_text =
-        std::str::from_utf8(&manifest_bytes).context("installed package manifest is not UTF-8")?;
+    let manifest_text = std::str::from_utf8(&manifest_before.bytes)
+        .context("installed package manifest is not UTF-8")?;
     let manifest = Manifest::parse_str(manifest_text)?;
     let meta = manifest.require_package()?;
     ensure_package_coordinate(meta, package)?;
@@ -256,7 +257,35 @@ fn authored_for_selected(slot: &SelectedFactsSlot, package: &str) -> Result<Vec<
             slot.version
         );
     }
+    let record_before = pinned
+        .read_file_snapshot_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?;
+    let Some(record_before) = record_before else {
+        if slot.in_place && meta.sources.is_empty() {
+            // An in-place package has no immutable materialized slot record.
+            // Its current pinned manifest is live authority under the weaker
+            // cooperative contract; removing descriptors may select legacy.
+            let after = pinned
+                .read_file_snapshot_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
+                .context("in-place manifest disappeared during facts selection")?;
+            if after != manifest_before {
+                bail!("in-place manifest changed during facts selection");
+            }
+            return scan_authored_facts(&slot.path, package, SourceKind::Package)
+                .map_err(Into::into);
+        }
+        bail!("materialized package has no slot provenance record");
+    };
+    let record = vibedeps::read_slot_record_bytes(
+        &slot.path.join(vibedeps::SLOT_RECORD_FILENAME),
+        &record_before.bytes,
+    )
+    .map_err(|reason| anyhow::anyhow!(reason))?;
+    if record.source_hash != slot.source_hash {
+        bail!("facts slot source hash differs from lock-selected source hash");
+    }
+    verify_slot_source(&record, "vibe.toml", &manifest_before.bytes)?;
     if meta.sources.is_empty() {
+        recheck_facts_slot(&pinned, &manifest_before, &record_before)?;
         return scan_authored_facts(&slot.path, package, SourceKind::Package).map_err(Into::into);
     }
     if meta
@@ -266,23 +295,11 @@ fn authored_for_selected(slot: &SelectedFactsSlot, package: &str) -> Result<Vec<
     {
         bail!("declared directory sources need a complete captured census before facts adopt");
     }
-    let record_before = pinned
-        .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
-        .context("declared package has no slot provenance record")?;
-    let record =
-        vibedeps::read_slot_record(&slot.path).map_err(|reason| anyhow::anyhow!(reason))?;
-    let record_after = pinned
-        .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
-        .context("declared package slot record disappeared")?;
-    if record_before != record_after || record.spec_format != SpecFormat::Mixed {
+    if record.spec_format != SpecFormat::Mixed {
         bail!(
             "declared facts adopt requires an unchanged Mixed slot record and original source bytes"
         );
     }
-    if record.source_hash != slot.source_hash {
-        bail!("declared facts slot source hash differs from lock-selected source hash");
-    }
-    verify_slot_source(&record, "vibe.toml", &manifest_bytes)?;
     let mut held = Vec::with_capacity(meta.sources.len());
     let mut captured_paths = BTreeSet::new();
     for descriptor in &meta.sources {
@@ -325,7 +342,25 @@ fn authored_for_selected(slot: &SelectedFactsSlot, package: &str) -> Result<Vec<
             .unwrap_or("<unknown>");
         bail!("declared source `{path}` is incomplete; facts adopt made no registry change");
     }
+    recheck_facts_slot(&pinned, &manifest_before, &record_before)?;
     Ok(observed.facts)
+}
+
+fn recheck_facts_slot(
+    pinned: &Project,
+    manifest_before: &vibe_safefs::StableFileSnapshot,
+    record_before: &vibe_safefs::StableFileSnapshot,
+) -> Result<()> {
+    let manifest_after = pinned
+        .read_file_snapshot_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
+        .context("installed package manifest disappeared during facts selection")?;
+    let record_after = pinned
+        .read_file_snapshot_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
+        .context("installed package slot record disappeared during facts selection")?;
+    if manifest_before != &manifest_after || record_before != &record_after {
+        bail!("installed package manifest or slot record changed during facts selection");
+    }
+    Ok(())
 }
 
 fn ensure_package_coordinate(
@@ -497,6 +532,7 @@ fn materialised_slot(root: &Path, package: &str) -> Result<Option<SelectedFactsS
         path: slot,
         version: locked.version.to_string(),
         source_hash: locked.content_hash.clone(),
+        in_place: locked.materialization.is_in_place(),
     }))
 }
 
