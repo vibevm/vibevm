@@ -157,6 +157,50 @@ impl Project {
         self.root_dir()?.identity()
     }
 
+    /// Retain an existing descendant as its own project capability. This
+    /// walks from the held root without an ambient path reopen and records
+    /// each added ancestor identity for explicit later comparisons. Holding
+    /// the handle does not itself detect a changed pathname.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PHYSICAL-TARGET-FENCE",
+        r = 1
+    )]
+    pub fn subproject(&self, components: &[&str]) -> Result<Self> {
+        self.descendant_project(components, false)
+    }
+
+    /// Create missing descendants through pinned parents, then retain the
+    /// final directory as its own project capability. All components are
+    /// validated first, so an invalid suffix creates nothing.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PHYSICAL-TARGET-FENCE",
+        r = 1
+    )]
+    pub fn ensure_subproject(&self, components: &[&str]) -> Result<Self> {
+        self.descendant_project(components, true)
+    }
+
+    fn descendant_project(&self, components: &[&str], create: bool) -> Result<Self> {
+        for component in components {
+            ensure_safe_component(component)?;
+        }
+        let mut pinned = self.root_dir()?;
+        let mut ancestor_identities = self.ancestor_identities.clone();
+        for component in components {
+            pinned = if create {
+                pinned.ensure_child(component)?
+            } else {
+                pinned.open_child(component)?
+            };
+            ancestor_identities.push(pinned.identity()?);
+        }
+        Ok(Self {
+            root: pinned.dir,
+            root_path: pinned.path,
+            ancestor_identities,
+        })
+    }
+
     /// Walk to a descendant directory one component at a time, refusing
     /// links/reparse points; create missing components when `create`.
     pub fn dir(&self, components: &[&str], create: bool) -> Result<Pinned> {

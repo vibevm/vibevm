@@ -482,3 +482,91 @@ fn pinned_lock_repeated_identity_mismatch_refuses_without_guard() {
     );
     assert!(pinned.try_lock_file("physical.lock").unwrap().is_some());
 }
+
+#[test]
+fn subproject_from_held_root_retains_descendant_identity() {
+    let dir = tempfile::tempdir().unwrap();
+    let first = Project::open(dir.path()).unwrap();
+    let second = Project::open(dir.path()).unwrap();
+    let child = first.ensure_subproject(&["state", "deployments"]).unwrap();
+    let alias = second.subproject(&["state", "deployments"]).unwrap();
+    assert_eq!(child.root_path(), dir.path().join("state/deployments"));
+    assert_eq!(
+        child.root_identity().unwrap(),
+        alias.root_identity().unwrap()
+    );
+    assert_eq!(
+        child.ancestor_identities.len(),
+        first.ancestor_identities.len() + 2
+    );
+    assert_eq!(
+        child.ancestor_identities.last().copied(),
+        Some(child.root_identity().unwrap())
+    );
+    let reread = first.subproject(&["state", "deployments"]).unwrap();
+    assert_eq!(
+        reread.root_identity().unwrap(),
+        child.root_identity().unwrap()
+    );
+}
+
+#[test]
+fn subproject_refuses_link_or_reparse_child() {
+    let dir = tempfile::tempdir().unwrap();
+    let foreign = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    plant_link(&dir.path().join("state"), foreign.path());
+    assert!(project.subproject(&["state"]).is_err());
+    assert!(project.ensure_subproject(&["state"]).is_err());
+    assert!(fs::read_dir(foreign.path()).unwrap().next().is_none());
+}
+
+#[test]
+fn invalid_subproject_suffix_creates_nothing() {
+    let dir = tempfile::tempdir().unwrap();
+    let project = Project::open(dir.path()).unwrap();
+    assert!(
+        project
+            .ensure_subproject(&["state", "..", "deployments"])
+            .is_err()
+    );
+    assert!(!dir.path().join("state").exists());
+}
+
+#[test]
+fn explicit_ancestor_identity_check_distinguishes_retargeted_child() {
+    let dir = tempfile::tempdir().unwrap();
+    let parent = Project::open(dir.path()).unwrap();
+    let held = parent.ensure_subproject(&["state"]).unwrap();
+    fs::write(dir.path().join("state/witness.bin"), b"before").unwrap();
+    let witness = Project::pin_absolute_file(&dir.path().join("state/witness.bin")).unwrap();
+    assert_eq!(
+        witness.relative_to(&held).unwrap().as_deref(),
+        Some("witness.bin")
+    );
+    // Windows may refuse renaming an open directory; that is itself a safe
+    // no-retarget outcome. Unix normally permits the rebind and exercises
+    // the explicit identity comparison against a fresh named child.
+    if fs::rename(dir.path().join("state"), dir.path().join("old-state")).is_ok() {
+        fs::create_dir(dir.path().join("state")).unwrap();
+        let named_now = parent.subproject(&["state"]).unwrap();
+        assert_ne!(
+            held.root_identity().unwrap(),
+            named_now.root_identity().unwrap()
+        );
+        assert_eq!(
+            witness.relative_to(&held).unwrap().as_deref(),
+            Some("witness.bin")
+        );
+        assert!(witness.relative_to(&named_now).unwrap().is_none());
+    } else {
+        assert_eq!(
+            parent
+                .subproject(&["state"])
+                .unwrap()
+                .root_identity()
+                .unwrap(),
+            held.root_identity().unwrap()
+        );
+    }
+}
