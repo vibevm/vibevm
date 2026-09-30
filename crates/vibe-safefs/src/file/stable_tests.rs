@@ -73,6 +73,62 @@ fn bounded_stable_observation_refuses_symlink_and_hardlink_aliases() {
 
 #[cfg(unix)]
 #[test]
+fn opt_in_linked_regular_snapshot_keeps_cap_and_default_refusal() {
+    let root = tempfile::tempdir().unwrap();
+    let bytes = b"cargo output";
+    std::fs::write(root.path().join("program"), bytes).unwrap();
+    std::fs::hard_link(
+        root.path().join("program"),
+        root.path().join("program-deps"),
+    )
+    .unwrap();
+    let project = Project::open(root.path()).unwrap();
+    assert!(
+        project
+            .read_file_snapshot_bounded("program", bytes.len())
+            .is_err()
+    );
+    let linked = project
+        .read_linked_regular_snapshot_bounded("program", bytes.len())
+        .unwrap()
+        .unwrap();
+    assert_eq!(linked.bytes, bytes);
+    assert_eq!(linked.sha256, format!("{:x}", Sha256::digest(bytes)));
+    assert!(
+        project
+            .read_linked_regular_snapshot_bounded("program", bytes.len() - 1)
+            .is_err()
+    );
+    assert_eq!(
+        project
+            .read_linked_regular_snapshot_bounded("missing", 16)
+            .unwrap(),
+        None
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn opt_in_linked_regular_snapshot_still_refuses_symlink_and_directory() {
+    let root = tempfile::tempdir().unwrap();
+    std::fs::write(root.path().join("actual"), b"payload").unwrap();
+    std::os::unix::fs::symlink("actual", root.path().join("link")).unwrap();
+    std::fs::create_dir(root.path().join("directory")).unwrap();
+    let project = Project::open(root.path()).unwrap();
+    assert!(
+        project
+            .read_linked_regular_snapshot_bounded("link", 16)
+            .is_err()
+    );
+    assert!(
+        project
+            .read_linked_regular_snapshot_bounded("directory", 16)
+            .is_err()
+    );
+}
+
+#[cfg(unix)]
+#[test]
 fn exact_unix_mode_is_published_before_the_destination_becomes_visible() {
     use std::os::unix::fs::PermissionsExt;
 

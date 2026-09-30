@@ -86,6 +86,32 @@ impl Project {
         relative: &str,
         cap: usize,
     ) -> Result<Option<StableFileSnapshot>> {
+        self.read_snapshot_bounded_in(directory, relative, cap, false)
+    }
+
+    /// Explicit opt-in for a regular output with legitimate hard-link aliases
+    /// (for example Cargo's release binary and its `deps/` name). The held
+    /// no-follow file is read twice under `cap`, its link count and metadata
+    /// must stay stable, and the final name must still identify that handle.
+    /// It proves this named file's bytes, not exclusive ownership of every
+    /// alias: an alias outside the pinned tree can mutate the same object
+    /// after the observation and remains a detection-bound host risk.
+    pub fn read_linked_regular_snapshot_bounded(
+        &self,
+        relative: &str,
+        cap: usize,
+    ) -> Result<Option<StableFileSnapshot>> {
+        let root = self.root_dir()?;
+        self.read_snapshot_bounded_in(&root, relative, cap, true)
+    }
+
+    fn read_snapshot_bounded_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        cap: usize,
+        allow_hardlinks: bool,
+    ) -> Result<Option<StableFileSnapshot>> {
         let limit = cap
             .checked_add(1)
             .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))?;
@@ -103,7 +129,12 @@ impl Project {
                 );
             }
         };
-        verify_regular_single_link(&file, &display)?;
+        let opening_links = if allow_hardlinks {
+            Some(verify_regular_allow_hardlinks(&file, &display)?)
+        } else {
+            verify_regular_single_link(&file, &display)?;
+            None
+        };
         let before = file
             .metadata()
             .with_context(|| format!("inspecting `{}`", display.display()))?;
@@ -123,7 +154,17 @@ impl Project {
                 display.display()
             );
         }
-        verify_regular_single_link(&file, &display)?;
+        if let Some(expected) = opening_links {
+            let found = verify_regular_allow_hardlinks(&file, &display)?;
+            if found != expected {
+                bail!(
+                    "`{}` changed hard-link count during its stable read",
+                    display.display()
+                );
+            }
+        } else {
+            verify_regular_single_link(&file, &display)?;
+        }
         let after = file
             .metadata()
             .with_context(|| format!("re-inspecting `{}`", display.display()))?;
@@ -138,7 +179,7 @@ impl Project {
             );
         }
         let held = crate::file::identity::file_identity(&file, &display)?;
-        ensure_still_final_name(&holder, &name, held, &display)?;
+        ensure_still_final_name_with_links(&holder, &name, held, &display, opening_links)?;
         Ok(Some(StableFileSnapshot {
             sha256: format!("{:x}", sha2::Sha256::digest(&second)),
             size: second.len() as u64,
@@ -370,16 +411,50 @@ pub(crate) fn ensure_still_final_name(
     held: crate::file::identity::FileIdentity,
     display: &Path,
 ) -> Result<()> {
+    ensure_still_final_name_with_links(holder, name, held, display, None)
+}
+
+fn verify_regular_allow_hardlinks(file: &std::fs::File, display: &Path) -> Result<u64> {
+    let metadata = file
+        .metadata()
+        .with_context(|| format!("inspecting `{}`", display.display()))?;
+    if !metadata.file_type().is_file() {
+        bail!("`{}` is not a regular file", display.display());
+    }
+    let links = crate::file::identity::number_of_links(file, &metadata, display)?;
+    if links == 0 {
+        bail!("`{}` has no live directory name", display.display());
+    }
+    Ok(links)
+}
+
+fn ensure_still_final_name_with_links(
+    holder: &Pinned,
+    name: &str,
+    held: crate::file::identity::FileIdentity,
+    display: &Path,
+    expected_links: Option<u64>,
+) -> Result<()> {
     let mut options = cap_options();
     match holder.dir.open_with(name, options.read(true)) {
         Ok(current) => {
             let current = current.into_std();
-            verify_regular_single_link(&current, display).with_context(|| {
-                format!(
-                    "rechecking `{}` after the bounded read (final-name race)",
-                    display.display()
-                )
-            })?;
+            if let Some(expected) = expected_links {
+                let found = verify_regular_allow_hardlinks(&current, display)?;
+                if found != expected {
+                    bail!(
+                        "`{}` changed hard-link count before final-name proof",
+                        display.display()
+                    );
+                }
+            } else {
+                verify_regular_single_link(&current, display).with_context(|| {
+                    format!(
+                        "rechecking `{}` after the bounded read (final-name race)",
+                        display.display()
+                    )
+                })?;
+            }
             let named_id =
                 crate::file::identity::file_identity(&current, display).with_context(|| {
                     format!(
