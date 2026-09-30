@@ -4,10 +4,17 @@ use std::process::Command;
 
 use sha2::{Digest, Sha256};
 use vibe_publish::publication_effect_plan::CapturedPublicationRemote;
+use vibe_publish::publication_subject::{
+    PublicationSubjectExpectations, require_apply_ready_default_smoke,
+};
 use vibe_publish::release_manifest::{
     BundleDistributionManifest, DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DistributionAsset,
     DistributionComponent, DistributionComponentName, DistributionSourceArchive,
     PlatformDistributionFragment, SUPPORTED_DISTRIBUTION_TARGETS,
+};
+use vibe_safefs::Project;
+use vibe_wire::generated::distribution_smoke_report::{
+    DistributionSmokeReport, DistributionSmokeTargetStatus,
 };
 use vibe_wire::generated::publication_effect_plan::{
     PublicationObservedAsset, PublicationObservedRelease, PublicationObservedReleaseAbsent,
@@ -23,6 +30,7 @@ use super::{
     capture_prepared_subject, plan_captured_subject,
 };
 use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
+use crate::dist::smoke::prepare::prepare_local_with;
 use crate::dist::snapshot;
 
 fn run_git(root: &Path, args: &[&str]) {
@@ -458,6 +466,87 @@ fn changed_bundle_and_missing_fragment_refuse_without_mutating_output() {
         assert!(world.capture().is_err(), "{change}");
         assert_eq!(output_bytes(&world.out), before);
     }
+}
+
+#[test]
+fn local_smoke_preparation_persists_five_honest_rows_and_report_bound_subject() {
+    let world = World::new();
+    let output = Project::open(&world.out).unwrap();
+    let prepared = prepare_local_with(world.repo.path(), &output, || Ok(())).unwrap();
+    let bytes = output
+        .read_file_bounded(&prepared.report.relative_path, 256 * 1024)
+        .unwrap()
+        .unwrap();
+    assert_eq!(sha(&bytes), prepared.report.digest);
+    let report: DistributionSmokeReport = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(report.targets.len(), 5);
+    assert_eq!(
+        report
+            .targets
+            .iter()
+            .map(|row| row.target.as_str())
+            .collect::<Vec<_>>(),
+        SUPPORTED_DISTRIBUTION_TARGETS
+    );
+    // World bundles contain fixture text, not a runnable vibe binary. Even
+    // Linux-native rows may not claim a successful installed launch.
+    assert!(
+        report
+            .targets
+            .iter()
+            .all(|row| row.status == DistributionSmokeTargetStatus::Unavailable)
+    );
+    assert!(
+        report
+            .targets
+            .iter()
+            .all(|row| row.tested_sha256.is_none() && row.runner_ref.is_none())
+    );
+    assert!(prepared.capture.subject.smoke.probes.iter().all(|row| {
+        row.evidence_ref
+            .as_ref()
+            .unwrap()
+            .contains(&prepared.report.digest)
+    }));
+    let expected = PublicationSubjectExpectations {
+        version: "1.1.0",
+        repository: "vibevm/vibevm",
+        smoke_policy_id: "distribution-smoke/e1",
+        smoke_policy_epoch: 1,
+    };
+    assert!(require_apply_ready_default_smoke(&prepared.capture.subject, &expected).is_err());
+}
+
+#[test]
+fn changed_asset_between_smoke_report_and_final_capture_refuses() {
+    let world = World::new();
+    let output = Project::open(&world.out).unwrap();
+    let target = SUPPORTED_DISTRIBUTION_TARGETS[0];
+    let bundle = world.out.join(format!("vibevm-1.1.0-{target}.zip"));
+    let error = prepare_local_with(world.repo.path(), &output, || {
+        std::fs::write(&bundle, b"changed after report")?;
+        Ok(())
+    })
+    .err()
+    .expect("changed bundle must refuse final capture");
+    assert!(
+        format!("{error:#}").contains("bundle") || format!("{error:#}").contains("distribution")
+    );
+}
+
+#[test]
+fn dirty_source_refuses_before_missing_output_is_opened() {
+    let world = World::new();
+    std::fs::write(
+        world.repo.path().join("Cargo.lock"),
+        b"dirty tracked lock\n",
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&world.out).unwrap();
+    let error = capture_prepared_subject(world.repo.path(), &world.out, smoke())
+        .err()
+        .unwrap();
+    assert!(format!("{error:#}").contains("fully committed HEAD"));
 }
 
 #[test]

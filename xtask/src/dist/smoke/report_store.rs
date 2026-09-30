@@ -13,10 +13,10 @@ const REPORT_MAX_BYTES: usize = 256 * 1024;
 const EVIDENCE_DIR: [&str; 2] = ["smoke", "e1"];
 
 #[derive(Debug, PartialEq, Eq)]
-pub(super) struct StoredSmokeReport {
-    pub(super) digest: String,
+pub(crate) struct StoredSmokeReport {
+    pub(crate) digest: String,
     /// Relative to the supplied, held output project.
-    pub(super) relative_path: String,
+    pub(crate) relative_path: String,
 }
 
 #[derive(Debug, PartialEq, Eq)]

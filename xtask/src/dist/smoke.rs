@@ -22,6 +22,7 @@ use vibe_wire::generated::publication_subject::PublicationTarget;
 
 use super::build::verified_bundle_entries;
 
+pub(crate) mod prepare;
 mod report;
 mod report_store;
 
