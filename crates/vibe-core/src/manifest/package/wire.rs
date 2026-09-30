@@ -14,6 +14,7 @@ use crate::error::{Error, Result};
 use crate::manifest::SpecFormat;
 use crate::manifest::project::AuthKind;
 use crate::manifest::purl::Purl;
+use crate::manifest::source_descriptor::SourceDescriptor;
 use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
 use super::application::{
@@ -79,6 +80,8 @@ struct PackageMetaWire {
     epoch: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     spec_format: Option<SpecFormat>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    sources: Vec<SourceDescriptor>,
     #[serde(default, skip_serializing_if = "is_false")]
     frozen: bool,
     #[serde(default)]
@@ -268,6 +271,7 @@ impl From<PackageMeta> for PackageMetaWire {
             version: value.version,
             epoch: value.epoch,
             spec_format: value.spec_format,
+            sources: value.sources,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,
@@ -296,6 +300,7 @@ impl From<PackageMetaWire> for PackageMeta {
             version: value.version,
             epoch: value.epoch,
             spec_format: value.spec_format,
+            sources: value.sources,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,

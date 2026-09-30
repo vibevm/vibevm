@@ -28,6 +28,7 @@ mod project;
 pub mod purl;
 mod redirect;
 mod run_command;
+mod source_descriptor;
 mod subskill;
 mod target_when;
 
@@ -86,6 +87,10 @@ pub use project::{
 };
 pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
 pub use run_command::{RunCommandDecl, RunCommandHandler};
+pub use source_descriptor::{
+    SelectedSource, SourceDescriptor, SourceInterpretation, SourceLoading, SourceRole,
+    SourceSelectionError, SourceSelector,
+};
 pub use subskill::{
     ActivationRules, DeliveryMode, SubskillConflicts, SubskillContent, SubskillManifest,
     SubskillMeta, SubskillRecommends,
