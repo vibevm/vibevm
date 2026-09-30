@@ -13,6 +13,40 @@ fn run_id_and_key_components_are_fixed_hex_lengths() {
 }
 
 #[test]
+fn proposed_run_id_is_pure_and_reserved_scratch_is_explicit() {
+    let dir = tempfile::tempdir().unwrap();
+    let id = propose_run_id(dir.path()).unwrap();
+    assert!(is_valid_run_id(&id));
+    assert!(!dir.path().join(".vibe").exists());
+    let scratch = ensure_reserved_run_scratch(dir.path(), &id).unwrap();
+    assert_eq!(scratch, dir.path().join(".vibe/lifecycle").join(&id));
+    assert!(scratch.is_dir());
+    assert_eq!(
+        ensure_reserved_run_scratch(dir.path(), &id).unwrap(),
+        scratch
+    );
+}
+
+#[test]
+fn reserved_run_scratch_refuses_invalid_id_and_foreign_shape() {
+    let dir = tempfile::tempdir().unwrap();
+    assert!(ensure_reserved_run_scratch(dir.path(), &"A".repeat(32)).is_err());
+    assert!(!dir.path().join(".vibe").exists());
+    let id = propose_run_id(dir.path()).unwrap();
+    let base = dir.path().join(".vibe/lifecycle");
+    std::fs::create_dir_all(&base).unwrap();
+    std::fs::write(base.join(&id), b"foreign file").unwrap();
+    assert!(ensure_reserved_run_scratch(dir.path(), &id).is_err());
+    std::fs::remove_file(base.join(&id)).unwrap();
+    #[cfg(unix)]
+    {
+        let outside = tempfile::tempdir().unwrap();
+        std::os::unix::fs::symlink(outside.path(), base.join(&id)).unwrap();
+        assert!(ensure_reserved_run_scratch(dir.path(), &id).is_err());
+    }
+}
+
+#[test]
 fn captured_stream_reader_stops_at_cap_plus_one() {
     let dir = tempfile::tempdir().unwrap();
     let stream = dir.path().join("stream");

@@ -8,6 +8,7 @@ use serde::Serialize;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
+use vibe_safefs::Project;
 
 pub const CONTEXT_CAP: usize = 8 * 1024 * 1024;
 
@@ -96,15 +97,7 @@ pub enum ScratchError {
 pub fn allocate_run_id(project_root: &Path) -> Result<String, ScratchError> {
     let base = safe_base(project_root)?;
     for _ in 0..16 {
-        let mut random = [0u8; 16];
-        getrandom::fill(&mut random).map_err(|error| ScratchError::Unsafe {
-            path: base.clone(),
-            reason: format!("OS CSPRNG unavailable: {error}"),
-        })?;
-        let id = random
-            .iter()
-            .map(|byte| format!("{byte:02x}"))
-            .collect::<String>();
+        let id = propose_run_id(&base)?;
         let run = base.join(&id);
         match fs::create_dir(&run) {
             Ok(()) => return Ok(id),
@@ -116,6 +109,58 @@ pub fn allocate_run_id(project_root: &Path) -> Result<String, ScratchError> {
         path: base,
         reason: "16 CSPRNG run-id collisions".into(),
     })
+}
+
+/// Propose a CSPRNG run identity without creating a project, `.vibe`, or
+/// scratch directory. The caller must reserve it durably before any effect.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION")]
+pub fn propose_run_id(diagnostic_root: &Path) -> Result<String, ScratchError> {
+    random_hex(diagnostic_root)
+}
+
+/// Materialize a run's scratch only after its owner has durably reserved the
+/// identity and established the matching domain journal under its lease.
+/// This function checks the selected root and each child through no-follow
+/// held capabilities; it does not prove the journal-ready precondition itself.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION")]
+pub fn ensure_reserved_run_scratch(
+    project_root: &Path,
+    run_id: &str,
+) -> Result<PathBuf, ScratchError> {
+    if !is_valid_run_id(run_id) {
+        return Err(ScratchError::Unsafe {
+            path: project_root.to_path_buf(),
+            reason: "run id must be 32 lowercase hex characters".into(),
+        });
+    }
+    let project = Project::open(project_root).map_err(|error| ScratchError::Unsafe {
+        path: project_root.to_path_buf(),
+        reason: format!("selected root is not an existing no-follow directory: {error:#}"),
+    })?;
+    let run = project
+        .ensure_subproject(&[".vibe", "lifecycle", run_id])
+        .map_err(|error| ScratchError::Unsafe {
+            path: project_root.join(".vibe/lifecycle").join(run_id),
+            reason: format!("reserved run is not a no-follow directory: {error:#}"),
+        })?;
+    let identity = run.root_identity().map_err(|error| ScratchError::Unsafe {
+        path: run.root_path().to_path_buf(),
+        reason: format!("cannot identify reserved run directory: {error:#}"),
+    })?;
+    let named = project
+        .subproject(&[".vibe", "lifecycle", run_id])
+        .and_then(|candidate| candidate.root_identity())
+        .map_err(|error| ScratchError::Unsafe {
+            path: run.root_path().to_path_buf(),
+            reason: format!("reserved run name changed after opening: {error:#}"),
+        })?;
+    if named != identity {
+        return Err(ScratchError::Unsafe {
+            path: run.root_path().to_path_buf(),
+            reason: "reserved run name changed after opening".into(),
+        });
+    }
+    Ok(run.root_path().to_path_buf())
 }
 
 /// The shape every durable run identity has: 32 lowercase hex characters.
