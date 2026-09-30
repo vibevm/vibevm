@@ -20,7 +20,17 @@
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-lifecycle/src/native/mod.rs",
         "crates/vibe-workspace/Cargo.toml",
-        "crates/vibe-workspace/src/lib.rs"
+        "crates/vibe-workspace/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "schemas/deploy_intent.jtd.json",
+        "schemas/deploy_receipt.jtd.json",
+        "schemas/native/e1/deploy_request.jtd.json",
+        "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "crates/vibe-orchestrator/src/dispatch/mechanism.rs"
       ],
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/",
@@ -33,12 +43,18 @@
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-lifecycle/src/native/mod.rs",
         "crates/vibe-workspace/Cargo.toml",
-        "crates/vibe-workspace/src/lib.rs"
+        "crates/vibe-workspace/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "schemas/",
+        "crates/vibe-wire/",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "crates/vibe-orchestrator/src/dispatch/mechanism.rs"
       ],
       "steps": [
         "Trace the existing deploy/native and extension request carriers and add the M-14 bindings without changing legacy operation meaning.",
         "Use trusted root registration from M-16; providers receive bound roots and requested capabilities, while the host issues exact effect grants.",
-        "Propagate instance/generation/platform/principal through plans, before-images, journals and retained inspection; reject mismatched replay before provider invocation."
+        "Propagate instance/generation/platform/principal through plans, before-images, journals and retained inspection; reject mismatched replay before provider invocation.",
+        "Use opt-in optional typed target binding in existing epoch-one intent/receipt/native request, with all-or-none continuity and a distinct instance-keyed bound state namespace; absent binding preserves legacy local bytes and key semantics."
       ],
       "positive_cases": [
         "The same source package deployed into two injected homes gets distinct receipts.",
@@ -46,7 +62,8 @@
       ],
       "negative_cases": [
         "Changing only a body path redirects a valid grant to another root.",
-        "A package descriptor grants itself new filesystem or execution authority."
+        "A package descriptor grants itself new filesystem or execution authority.",
+        "A bound intent or receipt borrows a legacy deployment key/receipt, or one carrier silently drops the target binding."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -64,7 +81,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "The expanded schema/wire/CLI/orchestrator perimeter is limited to the opt-in target-binding carrier and its mechanically required codegen/constructor/validation changes. M-14-C.2 owns physical alias/root-handle fencing."
       ]
     },
     {
