@@ -14,9 +14,36 @@ fn selected_manifest_lock_witness_reads_exact_bytes_without_writing() {
     assert_eq!(witness.manifest.size, manifest.len() as u64);
     assert_eq!(witness.manifest.sha256.len(), "sha256:".len() + 64);
     assert_eq!(witness.lock.as_ref().unwrap().bytes, lock);
+    witness.validate().unwrap();
     recheck_selected_manifest_lock(dir.path(), &witness).unwrap();
     assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
     assert!(!dir.path().join(".vibe").exists());
+}
+
+#[test]
+fn selected_witness_validation_refuses_same_shape_wrong_digest_and_size() {
+    let mut witness = SelectedManifestLockWitness {
+        manifest: SelectedFileWitness::from_bytes(b"manifest".to_vec()),
+        lock: Some(SelectedFileWitness::from_bytes(b"lock".to_vec())),
+    };
+    witness.validate().unwrap();
+    witness.manifest.sha256 = format!("sha256:{}", "a".repeat(64));
+    assert!(matches!(
+        witness.validate(),
+        Err(SourceSnapshotError::InvalidWitness {
+            name: "vibe.toml",
+            ..
+        })
+    ));
+    witness.manifest = SelectedFileWitness::from_bytes(b"manifest".to_vec());
+    witness.lock.as_mut().unwrap().size += 1;
+    assert!(matches!(
+        witness.validate(),
+        Err(SourceSnapshotError::InvalidWitness {
+            name: "vibe.lock",
+            ..
+        })
+    ));
 }
 
 #[test]

@@ -5,6 +5,7 @@
 
 use std::path::Path;
 
+use sha2::{Digest, Sha256};
 use thiserror::Error;
 use vibe_safefs::Project;
 
@@ -18,11 +19,63 @@ pub struct SelectedFileWitness {
     pub size: u64,
 }
 
+impl SelectedFileWitness {
+    /// Build a self-consistent witness from caller-owned bytes without I/O.
+    #[must_use]
+    pub fn from_bytes(bytes: Vec<u8>) -> Self {
+        Self {
+            sha256: format!("sha256:{:x}", Sha256::digest(&bytes)),
+            size: bytes.len() as u64,
+            bytes,
+        }
+    }
+
+    /// Check that public witness fields still describe these exact bytes.
+    pub fn validate(&self) -> Result<(), SourceSnapshotError> {
+        self.validate_named("file")
+    }
+
+    fn validate_named(&self, name: &'static str) -> Result<(), SourceSnapshotError> {
+        let invalid = |reason: &str| SourceSnapshotError::InvalidWitness {
+            name,
+            reason: reason.to_owned(),
+        };
+        if self.bytes.len() > SOURCE_FILE_CAP || self.size != self.bytes.len() as u64 {
+            return Err(invalid("size does not match bounded bytes"));
+        }
+        let Some(digest) = self.sha256.strip_prefix("sha256:") else {
+            return Err(invalid("digest must use sha256 prefix"));
+        };
+        if digest.len() != 64
+            || !digest
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+        {
+            return Err(invalid("digest must be 64 lowercase hex characters"));
+        }
+        if digest != format!("{:x}", Sha256::digest(&self.bytes)) {
+            return Err(invalid("digest does not match bytes"));
+        }
+        Ok(())
+    }
+}
+
 /// The selected project's `vibe.toml` and optionally present `vibe.lock`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelectedManifestLockWitness {
     pub manifest: SelectedFileWitness,
     pub lock: Option<SelectedFileWitness>,
+}
+
+impl SelectedManifestLockWitness {
+    /// Validate both present file witnesses without consulting the filesystem.
+    pub fn validate(&self) -> Result<(), SourceSnapshotError> {
+        self.manifest.validate_named("vibe.toml")?;
+        if let Some(lock) = &self.lock {
+            lock.validate_named("vibe.lock")?;
+        }
+        Ok(())
+    }
 }
 
 #[derive(Debug, Error)]
@@ -35,6 +88,8 @@ pub enum SourceSnapshotError {
     MissingManifest,
     #[error("selected `{name}` changed since its manifest/lock witness")]
     Drift { name: &'static str },
+    #[error("selected `{name}` has an invalid manifest/lock witness: {reason}")]
+    InvalidWitness { name: &'static str, reason: String },
 }
 
 /// Capture both selected files without creating a directory or state file.
