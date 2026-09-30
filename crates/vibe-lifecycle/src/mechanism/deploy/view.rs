@@ -177,6 +177,23 @@ impl DeployStateView {
             return Ok(None);
         };
         record.validate()?;
+        if home.operation_binding().is_some()
+            && record.committed.is_none()
+            && record.pending.is_none()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: super::sidecar::LOCK_RESOURCES_FILE,
+            });
+        }
+        for binding in [record.committed.as_ref(), record.pending.as_ref()]
+            .into_iter()
+            .flatten()
+        {
+            home.ensure_binding(
+                super::sidecar::LOCK_RESOURCES_FILE,
+                binding.operation_binding.as_ref(),
+            )?;
+        }
         Ok(Some(record))
     }
 
