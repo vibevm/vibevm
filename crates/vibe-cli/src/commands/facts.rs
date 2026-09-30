@@ -192,7 +192,7 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
 
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     let slot = installed_slot(root, package)?;
-    let authored = authored_for_adopt(&slot, package)?;
+    let authored = authored_for_selected(&slot, package)?;
 
     let mut registry = Registry::load(root)?;
     let mut added = 0usize;
@@ -228,11 +228,19 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
 const ADOPT_MANIFEST_MAX_BYTES: usize = 1024 * 1024;
 const ADOPT_SOURCE_MAX_BYTES: usize = 16 * 1024 * 1024;
 
+/// The lock, rather than a slot-controlled record, supplies the expected
+/// source identity and version for both facts consumers.
+struct SelectedFactsSlot {
+    path: PathBuf,
+    version: String,
+    source_hash: vibe_core::ContentHash,
+}
+
 /// Explicit descriptors are opt-in. An old package with no declarations keeps
 /// the original suffix scanner; a declared package never falls back to it.
-fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
-    let pinned = Project::open(slot)
-        .with_context(|| format!("pinning package slot `{}`", slot.display()))?;
+fn authored_for_selected(slot: &SelectedFactsSlot, package: &str) -> Result<Vec<AuthoredFact>> {
+    let pinned = Project::open(&slot.path)
+        .with_context(|| format!("pinning package slot `{}`", slot.path.display()))?;
     let manifest_bytes = pinned
         .read_file_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
         .context("installed package has no vibe.toml")?;
@@ -241,8 +249,15 @@ fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
     let manifest = Manifest::parse_str(manifest_text)?;
     let meta = manifest.require_package()?;
     ensure_package_coordinate(meta, package)?;
+    if meta.version.to_string() != slot.version {
+        bail!(
+            "installed package version `{}` differs from lock-selected `{}`",
+            meta.version,
+            slot.version
+        );
+    }
     if meta.sources.is_empty() {
-        return scan_authored_facts(slot, package, SourceKind::Package).map_err(Into::into);
+        return scan_authored_facts(&slot.path, package, SourceKind::Package).map_err(Into::into);
     }
     if meta
         .sources
@@ -254,7 +269,8 @@ fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
     let record_before = pinned
         .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
         .context("declared package has no slot provenance record")?;
-    let record = vibedeps::read_slot_record(slot).map_err(|reason| anyhow::anyhow!(reason))?;
+    let record =
+        vibedeps::read_slot_record(&slot.path).map_err(|reason| anyhow::anyhow!(reason))?;
     let record_after = pinned
         .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
         .context("declared package slot record disappeared")?;
@@ -262,6 +278,9 @@ fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
         bail!(
             "declared facts adopt requires an unchanged Mixed slot record and original source bytes"
         );
+    }
+    if record.source_hash != slot.source_hash {
+        bail!("declared facts slot source hash differs from lock-selected source hash");
     }
     verify_slot_source(&record, "vibe.toml", &manifest_bytes)?;
     let mut held = Vec::with_capacity(meta.sources.len());
@@ -299,6 +318,7 @@ fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
                     row,
                     vibe_facts::DeclaredDocumentObservation::Facts { .. }
                         | vibe_facts::DeclaredDocumentObservation::Raw { .. }
+                        | vibe_facts::DeclaredDocumentObservation::Structure { .. }
                 )
             })
             .map(|(path, _)| path.as_str())
@@ -388,7 +408,7 @@ fn report(root: &Path, selected: Option<&str>) -> Result<()> {
     for package in &packages {
         let authored = if installed.contains(package) {
             materialised_slot(root, package)?
-                .map(|slot| scan_authored_facts(&slot, package, SourceKind::Package))
+                .map(|slot| authored_for_selected(&slot, package))
                 .transpose()?
         } else {
             None
@@ -439,12 +459,12 @@ fn project_relative(root: &Path, path: &Path) -> String {
         .replace('\\', "/")
 }
 
-fn installed_slot(root: &Path, package: &str) -> Result<PathBuf> {
+fn installed_slot(root: &Path, package: &str) -> Result<SelectedFactsSlot> {
     materialised_slot(root, package)?
         .with_context(|| format!("package `{package}` has no materialised installed slot"))
 }
 
-fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
+fn materialised_slot(root: &Path, package: &str) -> Result<Option<SelectedFactsSlot>> {
     let Some((group, name)) = package.split_once('/') else {
         bail!("package must use the `<group>/<name>` form: {package}");
     };
@@ -473,7 +493,11 @@ fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
             &locked.version,
         )
     };
-    Ok(slot.is_dir().then_some(slot))
+    Ok(slot.is_dir().then(|| SelectedFactsSlot {
+        path: slot,
+        version: locked.version.to_string(),
+        source_hash: locked.content_hash.clone(),
+    }))
 }
 
 fn sync_command(root: &Path, write: bool) -> Result<()> {
