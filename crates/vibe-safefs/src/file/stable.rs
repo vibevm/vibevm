@@ -51,6 +51,23 @@ impl Project {
         read_stable_in(self, &root, relative, None)
     }
 
+    /// The same held no-follow, single-link, two-pass observation with a
+    /// caller-selected byte ceiling. It checks the opened file's metadata
+    /// before hashing and enforces the ceiling during each streaming pass,
+    /// retaining only one fixed-size window rather than the file content.
+    /// A zero ceiling is an invalid request, not an empty-file probe.
+    pub fn stable_file_state_bounded(
+        &self,
+        relative: &str,
+        max_bytes: u64,
+    ) -> Result<Option<StableFileState>> {
+        if max_bytes == 0 {
+            bail!("stable file read cap must be nonzero");
+        }
+        let root = self.root_dir()?;
+        read_stable_in(self, &root, relative, Some(max_bytes))
+    }
+
     /// Observe stable content together with the opaque identity proved by the
     /// same held-handle and final-name-recheck epoch.
     pub fn stable_file_state_with_identity(
