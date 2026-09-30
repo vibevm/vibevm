@@ -14,7 +14,7 @@ use vibe_core::lifecycle::Phase;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::inclusive_chain;
 use vibe_lifecycle::process::{
-    PackageTreeWitness, SelectedFileWitness, SelectedManifestLockWitness,
+    PackageTreeWitness, ScriptSourceWitness, SelectedFileWitness, SelectedManifestLockWitness,
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
@@ -22,6 +22,7 @@ use crate::install::{InstallInputs, InstallPolicy};
 
 const FORMAT_V2: &str = "vibevm.lifecycle.pre-effect-plan/2";
 const FORMAT_SOURCE_V3: &str = "vibevm.lifecycle.pre-effect-plan/3";
+const FORMAT_SCRIPT_V4: &str = "vibevm.lifecycle.pre-effect-plan/4";
 const FILE_CAP: u64 = 8 * 1024 * 1024;
 const PATH_CAP: usize = 128 * 1024;
 const SELECTED_CAP: usize = 128 * 1024;
@@ -30,6 +31,13 @@ const INPUT_STRING_CAP: usize = 4096;
 const LANGUAGE_CAP: usize = 256;
 // C.1 reserves at most 1 MiB of canonical plan bytes.
 const PLAN_CAP: usize = 1024 * 1024;
+
+/// Authored handler identity plus host-observed exact script bytes.
+pub(crate) struct ScriptPlanSource<'a> {
+    pub witness: &'a ScriptSourceWitness,
+    pub execution_key: &'a str,
+    pub provider: &'a str,
+}
 
 /// Exact values the owner has already selected under its workspace lease.
 /// There is deliberately no run ID or start clock: retries of the same key
@@ -45,6 +53,8 @@ pub(crate) struct LifecyclePreEffectPlanInput<'a> {
     /// Present only for a separately captured and later rechecked local
     /// package fixture. Opaque filesystem identity stays outside wire bytes.
     pub package_source: Option<&'a PackageTreeWitness>,
+    /// Present only for the separate one-script Validate fixture.
+    pub script_source: Option<ScriptPlanSource<'a>>,
     pub requested: Phase,
     pub agent_mode: &'a RunAgentMode,
     pub trace_flag: bool,
@@ -103,7 +113,9 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
         SlotIntegrity::Verify => "verify",
     };
     let mut value = json!({
-        "format": if input.package_source.is_some() { FORMAT_SOURCE_V3 } else { FORMAT_V2 },
+        "format": if input.script_source.is_some() { FORMAT_SCRIPT_V4 }
+            else if input.package_source.is_some() { FORMAT_SOURCE_V3 }
+            else { FORMAT_V2 },
         "lease_root": lease_root,
         "selected_root": selected_root,
         "selected_node": input.selected_node,
@@ -143,9 +155,67 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
             .expect("fixed pre-effect plan is a JSON object")
             .insert("source".into(), package_source_value(source)?);
     }
+    if let Some(source) = &input.script_source {
+        ensure!(
+            input.package_source.is_none(),
+            "script and package source cannot be combined"
+        );
+        ensure!(
+            input.requested == Phase::Validate,
+            "script source is only valid for Validate"
+        );
+        value
+            .as_object_mut()
+            .expect("fixed plan object")
+            .insert("script_source".into(), script_source_value(source)?);
+    }
     let mut bytes = Vec::new();
     write_canonical(&value, &mut bytes)?;
     bounded("canonical_plan", bytes.len(), PLAN_CAP)?;
+    Ok(bytes)
+}
+
+fn script_source_value(source: &ScriptPlanSource<'_>) -> Result<Value> {
+    source.witness.validate()?;
+    bounded(
+        "script.execution_key",
+        source.execution_key.len(),
+        INPUT_STRING_CAP,
+    )?;
+    bounded("script.provider", source.provider.len(), INPUT_STRING_CAP)?;
+    bounded(
+        "script.path",
+        source.witness.script_relative.len(),
+        INPUT_STRING_CAP,
+    )?;
+    ensure!(
+        !source.execution_key.is_empty() && !source.provider.is_empty(),
+        "script identity is empty"
+    );
+    Ok(json!({
+        "provider_root": path_value(&source.witness.provider_root, "script.provider_root")?,
+        "path": source.witness.script_relative,
+        "size": source.witness.source.size,
+        "sha256": format!("sha256:{}", source.witness.source.sha256),
+        "execution_key": source.execution_key,
+        "provider": source.provider,
+    }))
+}
+
+/// Fixture-only source-bound request; the stage will later match these bytes.
+pub(crate) fn canonical_one_script_fixture_request(
+    source: &ScriptPlanSource<'_>,
+    target_os: vibe_core::manifest::TargetOs,
+) -> Result<Vec<u8>> {
+    let value = json!({
+        "operation": "lifecycle.validate-one-script-fixture",
+        "schema": 1,
+        "target_os": target_os.as_str(),
+        "script_source": script_source_value(source)?,
+    });
+    let mut bytes = Vec::new();
+    write_canonical(&value, &mut bytes)?;
+    bounded("canonical_request", bytes.len(), PLAN_CAP)?;
     Ok(bytes)
 }
 

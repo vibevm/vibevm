@@ -24,8 +24,9 @@ pub use scratch::{
     write_atomic_json,
 };
 pub use source_snapshot::{
-    SelectedFileWitness, SelectedManifestLockWitness, SourceSnapshotError,
-    capture_selected_manifest_lock, recheck_selected_manifest_lock,
+    ScriptSourceWitness, SelectedFileWitness, SelectedManifestLockWitness, SourceSnapshotError,
+    capture_script_source_witness, capture_selected_manifest_lock, recheck_script_source_witness,
+    recheck_selected_manifest_lock,
 };
 
 pub const STREAM_CAP: usize = 1024 * 1024;

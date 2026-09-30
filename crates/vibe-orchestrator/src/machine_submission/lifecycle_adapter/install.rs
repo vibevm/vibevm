@@ -186,7 +186,7 @@ pub(super) fn require_empty_install_world(
     require_empty_lock(witness)
 }
 
-fn require_empty_lock(witness: &SelectedManifestLockWitness) -> Result<()> {
+pub(super) fn require_empty_lock(witness: &SelectedManifestLockWitness) -> Result<()> {
     if let Some(lock) = &witness.lock {
         let text = std::str::from_utf8(&lock.bytes).context("selected lock is not UTF-8")?;
         let parsed: Lockfile = toml::from_str(text).context("selected lock is malformed")?;

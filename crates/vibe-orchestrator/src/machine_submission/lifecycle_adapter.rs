@@ -9,11 +9,15 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result, bail, ensure};
 use vibe_core::manifest::TargetOs;
+#[cfg(test)]
+use vibe_core::manifest::{ExtensionHandler, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::{
     PackageTreeWitness, SelectedManifestLockWitness, capture_package_tree_witness,
     recheck_package_tree_witness, recheck_selected_manifest_lock,
 };
+#[cfg(test)]
+use vibe_lifecycle::process::{ScriptSourceWitness, capture_script_source_witness};
 use vibe_lifecycle::{
     AgentBackend, ExistingSubmissionInspection, JournalAdmission, LifecycleLease,
     LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleReportPayload,
@@ -22,6 +26,8 @@ use vibe_lifecycle::{
     inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome,
     publish_install_entered_stage, retain_lifecycle_outcome, select_run_identity_for_reservation,
 };
+#[cfg(test)]
+use vibe_lifecycle::{ExtensionProvider, HandlerExecution};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_outcome_marker::{
     LifecycleOutcomeMarker, LifecycleOutcomeMarkerEffectState as EffectState,
@@ -34,6 +40,8 @@ use super::lifecycle_plan::{
     LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan,
     canonical_one_package_fixture_request,
 };
+#[cfg(test)]
+use super::lifecycle_plan::{ScriptPlanSource, canonical_one_script_fixture_request};
 use super::{JournalState, SubmissionFailure, SubmissionJournal, SubmissionOutcome, submit};
 use crate::RitualPlan;
 
@@ -120,6 +128,141 @@ pub(crate) fn submit_validate_lifecycle(
         observed_at,
         Phase::Validate,
     )
+}
+
+/// Fixed, effect-free admission for the future one-script protected Validate.
+/// It deliberately does not reserve or dispatch: the runner has no staged
+/// source port yet, so admitting an effect here would be unsafe.
+#[cfg(test)]
+pub(crate) struct OneScriptValidateAdmission {
+    pub canonical_request: Vec<u8>,
+    pub canonical_plan: Vec<u8>,
+    pub source: ScriptSourceWitness,
+    pub execution_key: String,
+    pub provider: String,
+}
+
+#[cfg(test)]
+const ONE_SCRIPT_VALIDATE_MANIFEST: &str = "[project]\nname = 'demo'\nversion = '1.1.0'\n[[extension]]\nid = 'once'\npoint = 'phase:validate'\nhandler = { kind = 'script', base = 'run' }\n";
+
+#[cfg(test)]
+pub(crate) fn admit_one_script_validate_fixture(
+    path: &Path,
+    request: &DefaultLifecycleRequest,
+    target_os: TargetOs,
+) -> Result<OneScriptValidateAdmission> {
+    ensure!(
+        request.requested == Phase::Validate
+            && request.agent_mode == RunAgentMode::Cli
+            && !request.force
+            && !request.trace_flag
+            && request.assume_yes
+            && request.install_inputs.packages.is_empty()
+            && request.install_inputs.features.is_empty()
+            && !request.install_inputs.no_default_features
+            && !request.install_inputs.all_features
+            && request.install_inputs.language.is_none()
+            && !request.install_inputs.exact
+            && !request.policy.offline
+            && request.policy.slot_integrity == SlotIntegrity::TrustPresence
+            && request.policy.spec_format_default.is_none(),
+        "one-script fixture refuses variable command or install inputs"
+    );
+    let leased = lease_default_lifecycle(path)?;
+    let lease = leased.retain_lease();
+    let selected_root = leased.selected_root();
+    let (snapshot, witness) = SelectedManifest::read_witnessed(selected_root)?;
+    let selection = snapshot.prepare();
+    ensure!(
+        selection.loaded_root() == Some(lease.root()),
+        "fixture requires selected root"
+    );
+    ensure!(
+        selection
+            .loaded_workspace()
+            .is_some_and(|world| world.iter_nodes().count() == 1),
+        "fixture requires one workspace node"
+    );
+    ensure!(!selection.request(false), "fixture refuses manifest trace");
+    ensure!(
+        selected_under_lease(&selection, &lease)? == ".",
+        "fixture requires root node"
+    );
+    ensure!(
+        LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+        "fixture refuses prior lifecycle header"
+    );
+    let manifest = selection
+        .parsed_ref()
+        .context("fixture manifest did not parse")?;
+    ensure!(
+        manifest == &Manifest::parse_str(ONE_SCRIPT_VALIDATE_MANIFEST)?,
+        "fixture refuses unreviewed manifest declarations"
+    );
+    install::require_empty_lock(&witness)?;
+    let world = selection
+        .loaded_workspace()
+        .context("fixture workspace did not load")?;
+    let ritual = crate::world::plan_default_prepared(selected_root, world, &[Phase::Validate])?;
+    ensure!(
+        ritual.executions().len() == 1,
+        "fixture requires exactly one planned handler"
+    );
+    let planned = &ritual.executions()[0];
+    ensure!(
+        planned.phase == Phase::Validate.as_str(),
+        "fixture planned a foreign phase"
+    );
+    let row = &planned.row;
+    ensure!(
+        matches!(&row.declaration().handler, ExtensionHandler::Script { base } if base == Path::new("run")),
+        "fixture planned a nonfixed handler"
+    );
+    let ExtensionProvider::Host(host) = row.provider() else {
+        bail!("fixture planned a dependency provider")
+    };
+    ensure!(
+        host.root == selected_root,
+        "fixture provider root differs from selected root"
+    );
+    let script_relative = match target_os {
+        TargetOs::Windows => "run.ps1",
+        TargetOs::Linux | TargetOs::Macos => "run.sh",
+    };
+    let source = capture_script_source_witness(&host.root, script_relative)?;
+    let execution_key = HandlerExecution::from_row(row).key();
+    let provider = row.provider().to_string();
+    let script = ScriptPlanSource {
+        witness: &source,
+        execution_key: &execution_key,
+        provider: &provider,
+    };
+    let canonical_request = canonical_one_script_fixture_request(&script, target_os)?;
+    let canonical_plan = canonical_lifecycle_pre_effect_plan(&LifecyclePreEffectPlanInput {
+        lease_root: lease.root(),
+        selected_root,
+        selected_node: ".",
+        witness: &witness,
+        workspace_witness: &witness,
+        package_source: None,
+        script_source: Some(script),
+        requested: Phase::Validate,
+        agent_mode: &request.agent_mode,
+        trace_flag: false,
+        effective_trace: false,
+        force: false,
+        assume_yes: true,
+        policy: &request.policy,
+        install_inputs: &request.install_inputs,
+    })?;
+    recheck_selected_manifest_lock(selected_root, &witness)?;
+    Ok(OneScriptValidateAdmission {
+        canonical_request,
+        canonical_plan,
+        source,
+        execution_key,
+        provider,
+    })
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -302,6 +445,7 @@ fn submit_protected_lifecycle_inner<'a>(
         witness: &witness,
         workspace_witness: &witness,
         package_source: fixture.as_ref().map(|fixture| &fixture.witness),
+        script_source: None,
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
