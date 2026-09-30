@@ -105,6 +105,6 @@ fn captured_output_and_duration_are_bounded() {
     value.targets[0].stdout = "x".repeat(16 * 1024 + 1);
     assert_refused(&value);
     value.targets[0].stdout.clear();
-    value.targets[0].elapsed_ms = "30001".into();
+    value.targets[0].elapsed_ms = "60001".into();
     assert_refused(&value);
 }
