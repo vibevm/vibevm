@@ -1,5 +1,6 @@
 use std::fs;
 use std::io::{Cursor, Write};
+use std::time::Duration;
 
 use semver::Version;
 use vibe_publish::{
@@ -13,12 +14,18 @@ use vibe_wire::generated::publication_subject::{
 };
 
 use super::super::archive::{ArchiveEntry, write_zip};
-use super::stage_verified_bundle;
+use super::{run_native_probe, stage_verified_bundle};
 
 const TARGET: &str = "x86_64-unknown-linux-gnu";
 
 fn fixture() -> (Vec<u8>, PlatformDistributionFragment, PublicationTarget) {
-    let vibe = b"fixture-vibe".to_vec();
+    fixture_with_vibe(b"fixture-vibe")
+}
+
+fn fixture_with_vibe(
+    vibe_bytes: &[u8],
+) -> (Vec<u8>, PlatformDistributionFragment, PublicationTarget) {
+    let vibe = vibe_bytes.to_vec();
     let index = b"fixture-index".to_vec();
     let source = b"fixture-source".to_vec();
     let components = vec![
@@ -97,6 +104,12 @@ fn fixture() -> (Vec<u8>, PlatformDistributionFragment, PublicationTarget) {
     .unwrap();
     let subject = subject_target(&fragment);
     (bytes, fragment, subject)
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+fn staged_script(script: &str) -> super::StagedBundle {
+    let (bytes, fragment, subject) = fixture_with_vibe(script.as_bytes());
+    stage_verified_bundle(&bytes, TARGET, &fragment, &subject).unwrap()
 }
 
 fn subject_target(fragment: &PlatformDistributionFragment) -> PublicationTarget {
@@ -233,4 +246,116 @@ fn traversal_zip_with_rebound_digest_refuses_before_staging() {
         .unwrap();
     assert!(format!("{refusal:#}").contains("unsafe ZIP entry path"));
     assert!(!outside.exists());
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+#[test]
+fn real_native_child_reports_pass_and_writes_only_isolated_home() {
+    let real_home = tempfile::tempdir().unwrap();
+    let sentinel = real_home.path().join("sentinel");
+    fs::write(&sentinel, b"untouched").unwrap();
+    let stage = staged_script("#!/bin/sh\n: > \"$HOME/probe-marker\"\nprintf 'vibe 1.1.0\\n'\n");
+    let report = run_native_probe(&stage, Duration::from_secs(2));
+    assert_eq!(
+        report.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Passed,
+        "{report:?}"
+    );
+    assert_eq!(
+        report.tested_sha256.as_deref(),
+        Some(stage.bundle_digest.as_str())
+    );
+    assert_eq!(
+        report.runner_ref.as_deref(),
+        Some("system-native/linux/x86_64/gnu")
+    );
+    assert_eq!(report.stdout, "vibe 1.1.0\n");
+    assert!(stage.home.join("probe-marker").is_file());
+    assert_eq!(fs::read(&sentinel).unwrap(), b"untouched");
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+#[test]
+fn wrong_output_and_nonzero_exit_are_failed_probes() {
+    for script in [
+        "#!/bin/sh\nprintf 'wrong\\n'\n",
+        "#!/bin/sh\nprintf 'vibe 1.1.0\\n'\nexit 7\n",
+    ] {
+        let stage = staged_script(script);
+        let report = run_native_probe(&stage, Duration::from_secs(2));
+        assert_eq!(
+            report.status,
+            vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Failed,
+            "{report:?}"
+        );
+        assert_eq!(
+            report.tested_sha256.as_deref(),
+            Some(stage.bundle_digest.as_str())
+        );
+        assert!(report.runner_ref.is_some());
+    }
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+#[test]
+fn truncated_output_and_timeout_are_failed_probes() {
+    let stage = staged_script("#!/bin/sh\nprintf '%17000s\\n' x\nprintf 'vibe 1.1.0\\n'\n");
+    let report = run_native_probe(&stage, Duration::from_secs(2));
+    assert_eq!(
+        report.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Failed,
+        "{report:?}"
+    );
+    assert!(report.output_truncated);
+    assert_eq!(report.stdout.len(), 16 * 1024);
+
+    let stage = staged_script("#!/bin/sh\nwhile :; do :; done\n");
+    let report = run_native_probe(&stage, Duration::from_millis(50));
+    assert_eq!(
+        report.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Failed,
+        "{report:?}"
+    );
+    assert_eq!(report.reason, "native process timed out");
+    assert!(report.elapsed_ms < 2_000);
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+#[test]
+fn foreign_target_is_unavailable_without_starting_child() {
+    let mut stage = staged_script("#!/bin/sh\n: > \"$HOME/should-not-exist\"\n");
+    stage.target = "x86_64-pc-windows-msvc".into();
+    let report = run_native_probe(&stage, Duration::from_secs(1));
+    assert_eq!(
+        report.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Unavailable
+    );
+    assert!(report.tested_sha256.is_none());
+    assert!(report.runner_ref.is_none());
+    assert!(report.reason.contains("foreign native target"));
+    assert!(!stage.home.join("should-not-exist").exists());
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+#[test]
+fn changed_staged_executable_is_unavailable_before_child() {
+    let stage =
+        staged_script("#!/bin/sh\n: > \"$HOME/should-not-exist\"\nprintf 'vibe 1.1.0\\n'\n");
+    fs::write(&stage.executable, b"#!/bin/sh\nprintf 'wrong\\n'\n").unwrap();
+    let report = run_native_probe(&stage, Duration::from_secs(1));
+    assert_eq!(
+        report.status,
+        vibe_wire::generated::publication_subject::PublicationSmokeProbeStatus::Unavailable
+    );
+    assert_eq!(
+        report.reason,
+        "staged executable differs from verified bundle component"
+    );
+    assert!(report.tested_sha256.is_none());
+    assert!(report.runner_ref.is_none());
+    assert_ne!(
+        report.executable_sha256.as_deref(),
+        Some(stage.executable_digest.as_str())
+    );
+    assert!(!stage.home.join("should-not-exist").exists());
 }
