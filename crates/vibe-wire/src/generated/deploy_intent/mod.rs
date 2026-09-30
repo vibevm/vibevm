@@ -74,6 +74,8 @@ pub struct DeployTargetIdentity {
 
 pub use crate::generated::shared::EnvironmentOperationBindingRootBinding;
 
+pub use crate::generated::shared::EnvironmentOperationBindingTargetMode;
+
 pub use crate::generated::shared::EnvironmentOperationBindingTargetOs;
 
 pub use crate::generated::shared::EnvironmentOperationBindingTargetRole;

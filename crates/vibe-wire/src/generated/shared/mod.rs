@@ -1143,6 +1143,21 @@ pub struct EnvironmentOperationBindingRootBinding {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvironmentOperationBindingTargetMode {
+    #[serde(rename = "live_linux_system")]
+    LiveLinuxSystem,
+
+    #[serde(rename = "offline_linux_rootfs")]
+    OfflineLinuxRootfs,
+
+    #[serde(rename = "user_profile")]
+    UserProfile,
+
+    #[serde(rename = "workspace_projection")]
+    WorkspaceProjection,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EnvironmentOperationBindingTargetOs {
     #[serde(rename = "linux")]
     Linux,
@@ -1198,6 +1213,8 @@ pub struct EnvironmentOperationBinding {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub target_libc: Option<String>,
+
+    pub target_mode: EnvironmentOperationBindingTargetMode,
 
     pub target_os: EnvironmentOperationBindingTargetOs,
 

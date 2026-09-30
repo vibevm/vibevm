@@ -93,7 +93,7 @@ fn binding_base() -> EnvironmentOperationBinding {
     serde_json::from_value(serde_json::json!({
         "binding_epoch":1,"binding_id":"binding-a","host_context_id":"context-a",
         "instance_ref":"instance-a","selected_generation_ref":null,
-        "target_role":"produced_tool_runtime","target_os":"linux",
+        "target_mode":"workspace_projection","target_role":"produced_tool_runtime","target_os":"linux",
         "target_architecture":"x86_64","target_abi":"gnu","target_libc":"glibc",
         "principal_ref":"principal-a","storage_binding_ref":"storage-a",
         "root_bindings":[{"root_role":"project","capability_ref":"root-project-a"}],
@@ -105,7 +105,7 @@ fn binding_base() -> EnvironmentOperationBinding {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
-    r = 2
+    r = 3
 )]
 fn bound_intent_receipt_and_native_copy_agree_without_granting_effects() {
     let binding = binding_base();
@@ -137,7 +137,7 @@ fn bound_intent_receipt_and_native_copy_agree_without_granting_effects() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
-    r = 2
+    r = 3
 )]
 fn native_six_arms_share_one_bound_invocation_identity() {
     let path = concat!(
@@ -194,7 +194,7 @@ fn native_six_arms_share_one_bound_invocation_identity() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
-    r = 2
+    r = 3
 )]
 fn bound_root_epoch_and_required_nullable_fields_refuse() {
     let binding = binding_base();
@@ -229,7 +229,7 @@ fn bound_root_epoch_and_required_nullable_fields_refuse() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
-    r = 2
+    r = 3
 )]
 fn registered_binding_corpus_distinguishes_shape_and_semantic_refusals() {
     let base = concat!(
@@ -242,7 +242,12 @@ fn registered_binding_corpus_distinguishes_shape_and_semantic_refusals() {
     };
     let value: OperationBinding = serde_json::from_value(read("valid", "local")).unwrap();
     validate_operation_binding_root(&value).unwrap();
-    for name in ["unknown-root", "missing-selected-generation"] {
+    for name in [
+        "unknown-root",
+        "missing-selected-generation",
+        "unknown-target-mode",
+        "missing-target-mode",
+    ] {
         assert!(
             serde_json::from_value::<OperationBinding>(read("structural-invalid", name)).is_err(),
             "{name}"

@@ -23,6 +23,7 @@
         "capability_ref": "root-project-a"
       }
     ],
-    "admission_epoch": 1
+    "admission_epoch": 1,
+    "target_mode": "workspace_projection"
   }
 }
