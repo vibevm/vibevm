@@ -1834,7 +1834,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Implement explicit local target binding through provider requests/plans/grants/receipts/locks, same-root alias fencing and cross-target refusal; executable environment/schema seams for M-03/M-05/M-08","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json"
-contract_sha256 = "fec6f2989585c03764117f7b8dde63ff4b12646a112bb792c13eaef91e90a6bd"
+contract_sha256 = "9845122776e35fb9060778a912bd9c83e2908b44589f034a19b561e445ed1bfb"
 
 [[node]]
 id = "M-14-C.1"
@@ -1849,7 +1849,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.1","Target binding survives typed carriers; legacy None remains byte-compatible.","Bound effects without admitted physical roots refuse before recovery/provider."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.1"
-contract_sha256 = "fec6f2989585c03764117f7b8dde63ff4b12646a112bb792c13eaef91e90a6bd"
+contract_sha256 = "9845122776e35fb9060778a912bd9c83e2908b44589f034a19b561e445ed1bfb"
 
 [[node]]
 id = "M-14-C.2"
@@ -1864,7 +1864,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.2","One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.","First bound local builtin effect uses pinned roots and shared physical fence; disposable-root tests avoid real HOME."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.2"
-contract_sha256 = "fec6f2989585c03764117f7b8dde63ff4b12646a112bb792c13eaef91e90a6bd"
+contract_sha256 = "9845122776e35fb9060778a912bd9c83e2908b44589f034a19b561e445ed1bfb"
 
 [[node]]
 id = "NEXT-GATE-M-14"

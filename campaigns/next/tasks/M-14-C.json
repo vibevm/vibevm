@@ -112,7 +112,16 @@
         "crates/vibe-safefs/src/file/stable.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
-        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs"
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "schemas/deploy_lock_resources.jtd.json",
+        "schemas/deploy_checkpoints.jtd.json",
+        "schemas/deploy_inverse.jtd.json",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs"
       ],
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
@@ -129,13 +138,17 @@
         "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
         "crates/vibe-lifecycle/src/mechanism/vibebin/",
         "crates/vibe-cli/src/commands/deploy.rs",
-        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
       ],
       "steps": [
         "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
         "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
         "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
-        "Move the first successful bound local UserProfile vibe-bin apply behind pinned host root handles and a shared physical destination lock; provider I/O must use the admitted handles or an equivalent verified capability path, never only checked strings."
+        "Move the first successful bound local UserProfile vibe-bin apply behind pinned host root handles and a shared physical destination lock; provider I/O must use the admitted handles or an equivalent verified capability path, never only checked strings.",
+        "Carry optional binding through pending/committed lock sidecar, checkpoint and inverse markers as well as intent/receipt; absent legacy binding retains exact old bytes. Bound interrupted intent or missing sidecar never uses legacy reconstruction and keeps a recovery-required/partial result after possible publication."
       ],
       "positive_cases": [
         "Disjoint injected homes can proceed independently.",
@@ -145,7 +158,8 @@
       "negative_cases": [
         "Expired generation or changed root reuses an earlier plan.",
         "Equal file bytes transfer ownership between receipt families.",
-        "A changed request body root, unsupported target mode/OS or provider scope escalation reaches a bound provider effect after a host grant was minted."
+        "A changed request body root, unsupported target mode/OS or provider scope escalation reaches a bound provider effect after a host grant was minted.",
+        "A copied bound sidecar, checkpoint or inverse from another instance/principal is accepted through legacy fallback during recovery."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -166,7 +180,8 @@
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
-        "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock."
+        "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock.",
+        "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects."
       ]
     }
   ]
