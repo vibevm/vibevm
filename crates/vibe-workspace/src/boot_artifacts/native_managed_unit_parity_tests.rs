@@ -2,12 +2,83 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::sync::Arc;
 
+use serde_json::Value;
 use vibe_core::manifest::{LinkType, Manifest, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind};
 use vibe_extension_registry::DependencyProviderId;
+use vibe_spec::{
+    CompilerNativeCall, CompilerNativeImplementationDigest, CompilerNativeInvoker,
+    CompilerNativeInvokerError,
+};
 use vibe_wire::generated::shared::Timestamp;
 
 use super::*;
+use crate::extension_world::{
+    CompilerNativeFactBinding, CompilerNativeFactError, OwnerNativeCompileBinding,
+    OwnerNativeCompileProvider, OwnerRuntimeView, PendingBuildFact,
+};
+
+struct CatalogBinding(super::support::FakeBinding);
+
+impl CompilerNativeInvoker for CatalogBinding {
+    fn admit_backend(
+        &self,
+        _key: &vibe_core::manifest::ExtensionKey,
+        _order: u32,
+        _config: &BTreeMap<String, Option<Value>>,
+        _implementation: CompilerNativeImplementationDigest,
+        backend: &str,
+    ) -> Result<(), CompilerNativeInvokerError> {
+        assert_eq!(backend, "selected-test");
+        Ok(())
+    }
+
+    fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
+        if call.backend() == Some("selected-test") {
+            let observed = format!("{:?}", call.payload());
+            assert!(observed.contains("native-selected XML"), "{observed}");
+            let reply =
+                vibe_wire::behaviour::native_backend::ok_reply(b"selected backend ready", None)
+                    .unwrap();
+            return Ok(serde_json::to_vec(&reply).unwrap());
+        }
+        self.0.invoke(call)
+    }
+}
+
+impl CompilerNativeFactBinding for CatalogBinding {
+    fn invoker(&self) -> &dyn CompilerNativeInvoker {
+        self
+    }
+
+    fn take_pending_build_facts(
+        &self,
+        pending: &vibe_spec::CompilerPendingSet,
+    ) -> Result<Vec<PendingBuildFact>, CompilerNativeFactError> {
+        self.0.take_pending_build_facts(pending)
+    }
+
+    fn finish_ready(&self) -> Result<(), CompilerNativeFactError> {
+        self.0.finish_ready()
+    }
+}
+
+struct CatalogProvider(FakeProvider);
+
+impl OwnerNativeCompileProvider for CatalogProvider {
+    type Binding<'owner> = CatalogBinding;
+
+    fn bind<'owner>(
+        &mut self,
+        owner: OwnerRuntimeView<'owner>,
+    ) -> Result<OwnerNativeCompileBinding<Self::Binding<'owner>>, crate::WorkspaceError> {
+        let (binding, policy) = self.0.bind(owner)?.into_parts();
+        Ok(OwnerNativeCompileBinding::new(
+            CatalogBinding(binding),
+            policy,
+        ))
+    }
+}
 
 fn must<T, E: std::fmt::Debug>(result: std::result::Result<T, E>, context: &str) -> T {
     match result {
@@ -163,7 +234,8 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
         "[package]\ngroup='org.demo'\nname='selected'\nkind='tool'\nversion='1.1.0'\nformat='normal'\n\
          [[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
          [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='scan'\n\
-         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[extension]]\nid='selected-test'\npoint='compile:pass'\nhandler={{kind='native',crate_dir='native'}}\ncompiler_internals=true\npass={{kind='backend',artifact='selected-test'}}\n",
         fwd(&ordinary),
         fwd(&data),
         fwd(&rule),
@@ -261,6 +333,7 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
         source_hash: Some(hash),
         spec_format: SpecFormat::Mixed,
     };
+    let mut static_provider = CatalogProvider(FakeProvider::new(Reply::Skip));
     let selected = crate::boot_artifacts::native_managed::compile_static_owner_managed_selected(
         &boot,
         root.path(),
@@ -268,7 +341,7 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
         SpecFormat::Mixed,
         epoch.unit(&owner).unwrap(),
         OwnerNativeCompileMode::Plain,
-        None::<&mut FakeProvider>,
+        Some(&mut static_provider),
         &[witness.clone()],
     )
     .unwrap()
@@ -282,6 +355,20 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
         fs::read(slot.join(&data)).unwrap(),
         b"<data><!-- keep --> raw </data>\n"
     );
+    let mut selected_provider = CatalogProvider(FakeProvider::new(Reply::Skip));
+    let explicit_ready =
+        crate::boot_artifacts::native_managed::compile_backend_owner_managed_selected(
+            &boot,
+            root.path(),
+            &SelfCoordinate::new(Some("org.demo".into()), "host".into()),
+            vibe_spec::BackendId::new("selected-test").unwrap(),
+            epoch.unit(&owner).unwrap(),
+            &mut selected_provider,
+            &[witness.clone()],
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(explicit_ready.bytes(), b"selected backend ready");
     let mut foreign = witness.clone();
     foreign.source_hash = Some(ContentHash::parse(&format!("sha256:{}", "2".repeat(64))).unwrap());
     let error = crate::boot_artifacts::native_managed::compile_static_owner_managed_selected(
