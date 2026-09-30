@@ -27,6 +27,7 @@ mod catalog;
 mod handshake;
 mod locate;
 mod pooled;
+mod static_search;
 mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
@@ -454,16 +455,19 @@ impl IndexClient {
         Ok(parsed)
     }
 
-    /// Run a full-text search against the live-server route
+    /// Run a full-text search — against the live-server route
     /// `<server_base>/v1/packages?q=<query>[&kind=&limit=]` from
-    /// PROP-005 §2.10. Returns the structured response on 200; any
-    /// non-2xx status surfaces as [`IndexError::Status`] (or
-    /// [`IndexError::AuthIncapable`] under an HTTP-incapable regime)
-    /// so the caller can decide whether to fall through to another
-    /// registry or surface the error. A 404 here means the URL is a
-    /// raw-file mirror (no live server), not "package absent" — there
-    /// is no "package absent" case for this endpoint, since search
-    /// returns an empty `hits` array on no matches. Identity /
+    /// PROP-005 §2.10 when the index has one, and over the catalog
+    /// itself when it has not. A 404 from the route is not "package
+    /// absent" (search answers an empty `hits` array for that): it is
+    /// the honest answer of a static mirror, which serves files and no
+    /// routes, and the client then reads its `primary.jsonl` and scores
+    /// it with the server's own tokeniser and ranking (`static_search`).
+    /// Only a base that publishes neither the route nor the catalog
+    /// keeps the 404; that and every other non-2xx status surface as
+    /// [`IndexError::Status`] (or [`IndexError::AuthIncapable`] under an
+    /// HTTP-incapable regime) so the caller can decide whether to fall
+    /// through to another registry or surface the error. Identity /
     /// integrity invariants are unaffected: search is metadata-only
     /// and never resolves into a fetch without the consumer running
     /// through the regular `MultiRegistryResolver` path that
@@ -491,6 +495,11 @@ impl IndexClient {
             message: e.to_string(),
         })?;
         let status = resp.status();
+        if status.as_u16() == 404
+            && let Some(results) = self.search_catalog(query, kind, limit)?
+        {
+            return Ok(results);
+        }
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
         }

@@ -23,6 +23,15 @@ A vibe-index data directory can be consumed two ways:
 Both shapes answer the same bytes for the same file. Nothing below is
 specific to the server unless it says so.
 
+Search is the one question the two shapes answer differently in
+transport and identically in substance. A live server answers
+`/v1/packages?q=`; a static mirror answers that route with 404, and a
+vibevm client (1.0.1 and later) then reads `primary.jsonl` whole and
+scores it locally with the server's own tokeniser and ranking
+(`vibe_wire::behaviour::index_search`) — the same hits, the same
+default page of 50. A client older than 1.0.1 reports a static
+mirror's 404 as an unreachable registry and finds nothing.
+
 ## Discovery — ask the handshake first {#discovery}
 
 `hello.json` is the one file in this system that never changes meaning.

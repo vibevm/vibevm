@@ -1239,3 +1239,120 @@ fn search_errors_when_registry_name_unknown() {
         "stderr should mention the unknown registry name; got:\n{stderr}"
     );
 }
+
+// ── A static mirror — files, no routes — is searched through its catalog ──
+
+#[derive(Clone)]
+struct MirrorState {
+    primary: String,
+}
+
+async fn mirror_hello_handler() -> impl IntoResponse {
+    (
+        StatusCode::OK,
+        axum::Json(serde_json::json!({
+            "vibe": "hello/1",
+            "worlds": [{"epoch": 1, "path": "."}]
+        })),
+    )
+        .into_response()
+}
+
+async fn mirror_primary_handler(State(state): State<MirrorState>) -> impl IntoResponse {
+    (StatusCode::OK, state.primary.clone()).into_response()
+}
+
+/// The shape of every raw GitHub index, the default `vibespecs` one
+/// included: `hello.json`, `repomd.json` and `primary.jsonl` served as
+/// files, and 404 for everything else — `/v1/packages` included.
+fn spawn_static_mirror(primary: String) -> Mock {
+    let canned = Arc::new(Mutex::new(Canned::default()));
+    let state = MirrorState { primary };
+    let (tx, rx) = mpsc::channel();
+    let handle = thread::spawn(move || {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+        rt.block_on(async move {
+            let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+            let addr = listener.local_addr().unwrap();
+            let app = Router::new()
+                .route("/hello.json", get(mirror_hello_handler))
+                .route("/repomd.json", get(repomd_handler))
+                .route("/primary.jsonl", get(mirror_primary_handler))
+                .with_state(state);
+            tx.send(format!("http://{addr}")).unwrap();
+            axum::serve(listener, app).await.unwrap();
+        });
+    });
+    Mock {
+        base_url: rx.recv().unwrap(),
+        canned,
+        _thread: handle,
+    }
+}
+
+fn catalog_line(kind: &str, name: &str, version: &str, description: &str) -> String {
+    format!(
+        r#"{{"schema_version":1,"kind":"{kind}","group":"org.example","name":"{name}","version":"{version}","description":"{description}","content_hash":"sha256:0","source_url":"https://example.invalid/org.example.{name}","source_ref":"v{version}","registry":"primary","files_count":1,"indexed_at":"2026-09-30T00:00:00Z","indexed_by":"mock"}}"#
+    )
+}
+
+/// `vibe search` against the default index of a GitHub registry — a
+/// static mirror — used to report the registry unreachable on the
+/// route's 404 and answer nothing (2026-09-30). The catalog is the
+/// answer: the same hits the route would give, in the same envelope.
+#[test]
+fn search_scans_the_catalog_of_a_static_mirror_index() {
+    let mock = spawn_static_mirror(
+        [
+            catalog_line("flow", "wal", "0.1.0", "Write-ahead log."),
+            catalog_line("flow", "wal", "0.2.0", "Write-ahead log, second edition."),
+            catalog_line("feat", "audit-log", "1.0.0", "Append-only audit trail."),
+        ]
+        .join("\n")
+            + "\n",
+    );
+
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    init_project(&user, project.path());
+    write_two_registry_manifest(project.path());
+
+    let out = user
+        .vibe()
+        .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
+        .env_remove("VIBEVM_INDEX_URL_SECONDARY")
+        .arg("--json")
+        .arg("search")
+        .arg("wal")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
+    assert_eq!(v["command"], "search");
+    assert_eq!(v["hit_count"], 1);
+    let searched = v["registries_searched"].as_array().unwrap();
+    assert_eq!(searched.len(), 1);
+    assert_eq!(searched[0], "primary");
+    let unreachable = v["registries_unreachable"].as_array().unwrap();
+    assert!(
+        unreachable.is_empty(),
+        "a static mirror is not an unreachable registry: {unreachable:?}"
+    );
+    let hits = v["hits"].as_array().unwrap();
+    assert_eq!(hits.len(), 1);
+    assert_eq!(hits[0]["kind"], "flow");
+    assert_eq!(hits[0]["name"], "wal");
+    assert_eq!(hits[0]["registry"], "primary");
+    assert_eq!(hits[0]["score"], 1);
+    assert_eq!(hits[0]["latest_stable"], "0.2.0");
+    assert_eq!(hits[0]["description"], "Write-ahead log, second edition.");
+}

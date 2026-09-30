@@ -218,9 +218,11 @@ fn search_surfaces_non_2xx_as_status_error() {
 
 #[test]
 fn search_surfaces_404_when_route_absent_on_static_mirror() {
-    // A static-file mirror does not mount /v1/packages — it 404s. The
-    // CLI consumer treats this as "search not available on this
-    // registry", not "package missing".
+    // A static-file mirror does not mount /v1/packages — it 404s, and
+    // the client then reads the mirror's catalog (`index_static_search`).
+    // This mock publishes no catalog either, so it is an index of
+    // neither shape, and the route's 404 is what the caller sees —
+    // "search not available on this registry", not "package missing".
     let canned = CannedSearch {
         response: None,
         status_code: 404,
