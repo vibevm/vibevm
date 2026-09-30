@@ -1182,7 +1182,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Meet baseline work-package scope: SourceDescriptor grammar/migration + CommonMark sections/XML-data/raw handling; classification shared before scan/resolve/convert/collision/boot","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json"
-contract_sha256 = "f450493e5b52c7a2bf1ecdcf08bede08037c6567f392e3ad2a3f6bf22c27a09b"
+contract_sha256 = "443322a72c5fef310cef9c2bb153a46f2eb616e6114be1610d009c199c8beed9"
 
 [[node]]
 id = "M-06-A.1"
@@ -1197,7 +1197,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.1","Reader and executable migration land together with preserved comments/values.","One descriptor identity is available to downstream scanner/resolver/converter consumers."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.1"
-contract_sha256 = "f450493e5b52c7a2bf1ecdcf08bede08037c6567f392e3ad2a3f6bf22c27a09b"
+contract_sha256 = "443322a72c5fef310cef9c2bb153a46f2eb616e6114be1610d009c199c8beed9"
 
 [[node]]
 id = "M-06-A.2"
@@ -1212,7 +1212,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.2","Structural view and raw content point to the same captured document.","No CommonMark node acquires normative Vibe fact authority."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.2"
-contract_sha256 = "f450493e5b52c7a2bf1ecdcf08bede08037c6567f392e3ad2a3f6bf22c27a09b"
+contract_sha256 = "443322a72c5fef310cef9c2bb153a46f2eb616e6114be1610d009c199c8beed9"
 
 [[node]]
 id = "M-06-A.3"
@@ -1227,7 +1227,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.3","Install/derive/read round-trips preserve data bytes exactly.","Optional structure failure does not invalidate unrelated facts."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.3"
-contract_sha256 = "f450493e5b52c7a2bf1ecdcf08bede08037c6567f392e3ad2a3f6bf22c27a09b"
+contract_sha256 = "443322a72c5fef310cef9c2bb153a46f2eb616e6114be1610d009c199c8beed9"
 
 [[node]]
 id = "M-06-A.4"
@@ -1242,7 +1242,7 @@ mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-0
 acceptance = ["Read complete task contract campaigns/next/tasks/M-06-A.json#M-06-A.4","Consumer inventory has no unclassified semantic path.","Existing equivalent Vibe fixtures preserve canonical output and status/void meaning."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-06-A.json#M-06-A.4"
-contract_sha256 = "f450493e5b52c7a2bf1ecdcf08bede08037c6567f392e3ad2a3f6bf22c27a09b"
+contract_sha256 = "443322a72c5fef310cef9c2bb153a46f2eb616e6114be1610d009c199c8beed9"
 
 [[node]]
 id = "M-06-B"
