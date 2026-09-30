@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-ROLE-SEPARATION");
 
 mod compatibility;
+mod exact;
 mod identity;
 mod layout;
 mod platform;
@@ -11,6 +12,7 @@ mod resource;
 mod roles;
 mod target_path;
 pub use compatibility::*;
+pub use exact::*;
 pub use identity::*;
 pub use layout::*;
 pub use platform::*;

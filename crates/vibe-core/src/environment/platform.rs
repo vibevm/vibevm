@@ -77,6 +77,12 @@ impl PlatformConstraints {
             libc,
         }
     }
+    pub fn os_requirement(&self) -> &Requirement<TargetOs> {
+        &self.os
+    }
+    pub fn architecture_requirement(&self) -> &Requirement<Reference> {
+        &self.architecture
+    }
     pub fn abi_requirement(&self) -> &Requirement<Reference> {
         &self.abi
     }
