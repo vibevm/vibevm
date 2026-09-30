@@ -81,6 +81,27 @@ fn call_install(
 }
 
 #[test]
+fn validate_with_phase_handler_refuses_before_reservation_or_process() {
+    let dir = project();
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        "[project]\nname='demo'\nversion='1.1.0'\n[[extension]]\nid='once'\npoint='phase:validate'\nhandler={kind='script',base='run'}\n",
+    )
+    .unwrap();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let index = dir.path().join(".vibe/machine-submissions.json");
+    let before = std::fs::read(&index).unwrap();
+    let error = call(dir.path(), &namespace, &scope, "handler-key")
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("handler-free"), "{error}");
+    assert_eq!(std::fs::read(index).unwrap(), before);
+    assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
+    assert!(!dir.path().join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
 fn empty_world_install_writes_boot_after_stage_and_replays_exact_result() {
     let dir = project();
     let scope = scope();

@@ -261,6 +261,10 @@ fn submit_protected_lifecycle_inner<'a>(
     );
     let selected = selected_under_lease(&selection, &lease)?;
     ensure!(selected == ".", "protected slice requires root node");
+    if phase == Phase::Validate {
+        install::require_empty_install_world(&selection, &witness)
+            .context("protected Validate requires an empty handler-free world")?;
+    }
     if phase == Phase::Install {
         if let Some(fixture) = &fixture {
             install::require_one_package_fixture_world(&selection, &witness, &fixture.witness)?;
