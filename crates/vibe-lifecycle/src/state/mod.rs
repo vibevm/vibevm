@@ -7,6 +7,7 @@ mod fingerprint;
 mod identity;
 mod io;
 mod outcome_marker;
+mod outcome_store;
 mod recovery;
 mod run_journal;
 mod store;
@@ -36,6 +37,11 @@ pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
     reason = "C.2 pure validator; owner persistence follows"
 )]
 pub use outcome_marker::{LifecycleOutcomeMarkerError, validate_lifecycle_outcome_marker};
+#[allow(unused_imports, reason = "C.2 owner adapter follows retention seam")]
+pub use outcome_store::{
+    LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleOutcomeStoreError,
+    inspect_retained_lifecycle_outcome, retain_lifecycle_outcome,
+};
 #[allow(unused_imports, reason = "C.2 preparation; domain adapter follows")]
 pub use run_journal::{
     LifecycleRunJournalError, LifecycleRunJournalObservation, inspect_reserved_lifecycle_run,
