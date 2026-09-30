@@ -6,7 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-BOUND-BUILTIN");
 
-use vibe_safefs::{LockGuard, Project, PublishStage, StableFileState};
+use vibe_safefs::{FileIdentity, LockGuard, Pinned, Project, PublishStage, StableFileState};
 use vibe_wire::generated::artifact_record::{
     ArtifactKind, ArtifactRecord, ArtifactShape, DigestAlgorithm, RelativeRoot,
 };
@@ -36,6 +36,22 @@ pub(crate) enum BoundVibeBinError {
     InvalidPointer,
     #[error("the pinned physical destination already has a cooperating writer")]
     LockBusy,
+    #[error(
+        "bound lock setup may have created {created:?} infrastructure before {phase} refused: {reason}"
+    )]
+    LockSetupPartial {
+        phase: &'static str,
+        created: Vec<&'static str>,
+        reason: String,
+    },
+    #[error("declared {0} child no longer names its locked physical directory")]
+    ChildDrift(&'static str),
+    #[error(
+        "bound bin/store or lock infrastructure share one physical directory; distinct logical resource roles would alias (setup may have created {created:?})"
+    )]
+    AliasedChildRoles { created: Vec<&'static str> },
+    #[error("bound vibe-bin resource is outside its admitted bin/store child")]
+    UnadmittedResource,
 }
 
 /// The source coordinates the engine's validated artifact record named.
@@ -73,28 +89,216 @@ impl BoundProjectArtifact {
 /// accidentally pass a lock from an unrelated directory to bound I/O.
 pub(crate) struct BoundDestinationLock {
     settings: Project,
-    _guard: LockGuard,
+    bin: Project,
+    store: Project,
+    bin_identity: FileIdentity,
+    store_identity: FileIdentity,
+    _guards: Vec<LockGuard>,
 }
 
 impl BoundDestinationLock {
     pub(crate) fn acquire(settings: Project) -> Result<Self, BoundVibeBinError> {
-        let lock_home = settings
-            .dir(&[".vibe"], true)
+        let mut created = Vec::new();
+        let root = settings
+            .root_dir()
             .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?;
-        let guard = lock_home
-            .try_lock_file("bound-vibe-bin-physical.lock")
-            .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?
-            .ok_or(BoundVibeBinError::LockBusy)?;
+        let (lock_home, made) = root
+            .ensure_child_recording(".vibe")
+            .map_err(|error| setup_error("root lock home", &created, format!("{error:#}")))?;
+        if made {
+            created.push(".vibe");
+        }
+        let mut seen = Vec::new();
+        let mut guards = Vec::new();
+        let lock_home_identity =
+            acquire_child(&lock_home, "settings", &created, &mut seen, &mut guards)?;
+        // Fixed semantic order plus nonblocking acquisition: even if one
+        // process's bin is another's store, neither waits while holding its
+        // first child lock. Equal cross-role physical identities refuse.
+        let (bin_pin, made) = root
+            .ensure_child_recording(store::BIN_DIR)
+            .map_err(|error| setup_error("bin child", &created, format!("{error:#}")))?;
+        if made {
+            created.push("bin");
+        }
+        if bin_pin
+            .identity()
+            .map_err(|error| setup_error("bin identity", &created, format!("{error:#}")))?
+            == lock_home_identity
+        {
+            return Err(BoundVibeBinError::AliasedChildRoles { created });
+        }
+        let bin_identity = acquire_child(&bin_pin, "bin", &created, &mut seen, &mut guards)?;
+        let (store_pin, made) = root
+            .ensure_child_recording(store::STORE_DIR)
+            .map_err(|error| setup_error("store child", &created, format!("{error:#}")))?;
+        if made {
+            created.push("store");
+        }
+        let observed_store = store_pin
+            .identity()
+            .map_err(|error| setup_error("store identity", &created, format!("{error:#}")))?;
+        if observed_store == lock_home_identity || observed_store == bin_identity {
+            return Err(BoundVibeBinError::AliasedChildRoles { created });
+        }
+        let store_identity = acquire_child(&store_pin, "store", &created, &mut seen, &mut guards)?;
+        let bin = settings
+            .subproject(&[store::BIN_DIR])
+            .map_err(|error| setup_error("bin pin", &created, format!("{error:#}")))?;
+        let store = settings
+            .subproject(&[store::STORE_DIR])
+            .map_err(|error| setup_error("store pin", &created, format!("{error:#}")))?;
+        if bin
+            .root_identity()
+            .map_err(|error| setup_error("bin identity", &created, format!("{error:#}")))?
+            != bin_identity
+        {
+            return Err(BoundVibeBinError::ChildDrift("bin"));
+        }
+        if store
+            .root_identity()
+            .map_err(|error| setup_error("store identity", &created, format!("{error:#}")))?
+            != store_identity
+        {
+            return Err(BoundVibeBinError::ChildDrift("store"));
+        }
         Ok(Self {
             settings,
-            _guard: guard,
+            bin,
+            store,
+            bin_identity,
+            store_identity,
+            _guards: guards,
         })
     }
 
     pub(crate) fn settings(&self) -> &Project {
         &self.settings
     }
+
+    fn validate_children(&self) -> Result<(), BoundVibeBinError> {
+        for (name, wanted) in [
+            (store::BIN_DIR, self.bin_identity),
+            (store::STORE_DIR, self.store_identity),
+        ] {
+            let observed = self
+                .settings
+                .dir_if_present(&[name])
+                .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?
+                .ok_or(BoundVibeBinError::ChildDrift(name))?;
+            if observed
+                .identity()
+                .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?
+                != wanted
+            {
+                return Err(BoundVibeBinError::ChildDrift(name));
+            }
+        }
+        Ok(())
+    }
+
+    fn child<'a>(&'a self, relative: &'a str) -> Result<(&'a Project, &'a str), BoundVibeBinError> {
+        self.validate_children()?;
+        if let Some(name) = direct_child(relative, "bin/") {
+            return Ok((&self.bin, name));
+        }
+        if let Some(name) = direct_child(relative, "store/") {
+            return Ok((&self.store, name));
+        }
+        Err(BoundVibeBinError::UnadmittedResource)
+    }
+
+    fn bin_child<'a>(
+        &'a self,
+        relative: &'a str,
+    ) -> Result<(&'a Project, &'a str), BoundVibeBinError> {
+        self.validate_children()?;
+        direct_child(relative, "bin/")
+            .map(|name| (&self.bin, name))
+            .ok_or(BoundVibeBinError::UnadmittedResource)
+    }
+
+    fn store_child(&self) -> Result<&Project, BoundVibeBinError> {
+        self.validate_children()?;
+        Ok(&self.store)
+    }
 }
+
+const PHYSICAL_LOCK: &str = "bound-vibe-bin-physical.lock";
+
+fn acquire_child(
+    pinned: &Pinned,
+    phase: &'static str,
+    created: &[&'static str],
+    seen: &mut Vec<FileIdentity>,
+    guards: &mut Vec<LockGuard>,
+) -> Result<FileIdentity, BoundVibeBinError> {
+    let identity = pinned
+        .identity()
+        .map_err(|error| setup_error(phase, created, format!("{error:#}")))?;
+    if seen.contains(&identity) {
+        return Ok(identity);
+    }
+    let guard = pinned
+        .try_lock_file(PHYSICAL_LOCK)
+        .map_err(|error| setup_error(phase, created, format!("{error:#}")))?
+        .ok_or_else(|| {
+            if created.is_empty() {
+                BoundVibeBinError::LockBusy
+            } else {
+                setup_error(
+                    phase,
+                    created,
+                    "another cooperating writer holds this child".into(),
+                )
+            }
+        })?;
+    seen.push(identity);
+    guards.push(guard);
+    Ok(identity)
+}
+
+fn setup_error(phase: &'static str, created: &[&'static str], reason: String) -> BoundVibeBinError {
+    if created.is_empty() {
+        BoundVibeBinError::Destination(reason)
+    } else {
+        BoundVibeBinError::LockSetupPartial {
+            phase,
+            created: created.to_vec(),
+            reason,
+        }
+    }
+}
+
+fn direct_child<'a>(relative: &'a str, prefix: &str) -> Option<&'a str> {
+    let tail = relative.strip_prefix(prefix)?;
+    (!tail.is_empty() && !tail.contains('/')).then_some(tail)
+}
+
+// Test seam between one held read and its final named-child check. Shipped
+// builds have no hook and inspect no ambient process state here.
+#[cfg(test)]
+thread_local! {
+    static AFTER_READ: std::cell::RefCell<Option<Box<dyn FnOnce()>>> =
+        std::cell::RefCell::new(None);
+}
+
+#[cfg(test)]
+pub(super) fn arm_after_read(hook: Option<Box<dyn FnOnce()>>) {
+    AFTER_READ.with(|slot| *slot.borrow_mut() = hook);
+}
+
+#[cfg(test)]
+fn after_read_observation() {
+    AFTER_READ.with(|slot| {
+        if let Some(hook) = slot.borrow_mut().take() {
+            hook();
+        }
+    });
+}
+
+#[cfg(not(test))]
+const fn after_read_observation() {}
 
 /// Exactly the two roots the host pinned. The destination lock stays live
 /// through the last observation because this store borrows its owner.
@@ -109,10 +313,6 @@ impl<'a> BoundVibeBinStore<'a> {
             project,
             destination,
         }
-    }
-
-    fn settings(&self) -> &Project {
-        self.destination.settings()
     }
 
     /// Reprove source, then publish one immutable payload only when absent.
@@ -132,6 +332,8 @@ impl<'a> BoundVibeBinStore<'a> {
             return Err(BoundVibeBinError::SourceChanged);
         }
         let relative = store::payload_relative(flavour, &artifact.digest);
+        let filename =
+            direct_child(&relative, "store/").ok_or(BoundVibeBinError::UnadmittedResource)?;
         let mode = executable_mode(flavour);
         if let Some(observed) = self.state(&relative)? {
             if matches_payload(&observed, artifact, mode) {
@@ -142,8 +344,8 @@ impl<'a> BoundVibeBinStore<'a> {
         self.project
             .copy_stable_file_to_expected(
                 &artifact.relative,
-                self.settings(),
-                &relative,
+                self.destination.store_child()?,
+                filename,
                 mode,
                 &artifact.digest,
                 artifact.bytes,
@@ -164,6 +366,11 @@ impl<'a> BoundVibeBinStore<'a> {
         })?;
         match visible {
             Some(observed) if matches_payload(&observed, artifact, mode) => {
+                self.destination.validate_children().map_err(|error| {
+                    BoundVibeBinError::PublicationUncertain(format!(
+                        "published CAS payload but named child changed: {error}"
+                    ))
+                })?;
                 Ok(PayloadPlacement::Written)
             }
             _ => Err(BoundVibeBinError::PublicationUncertain(
@@ -174,10 +381,12 @@ impl<'a> BoundVibeBinStore<'a> {
 
     /// Bounded launcher classification through the same pinned settings root.
     pub(crate) fn classify_launcher(&self, relative: &str) -> Result<Occupant, BoundVibeBinError> {
-        let bytes = self
-            .settings()
-            .read_file_bounded(relative, 64 * 1024)
+        let (bin, name) = self.destination.bin_child(relative)?;
+        let bytes = bin
+            .read_file_bounded(name, 64 * 1024)
             .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?;
+        after_read_observation();
+        self.destination.validate_children()?;
         Ok(bytes
             .as_deref()
             .map_or(Occupant::Vacant, launcher::classify_bytes))
@@ -188,10 +397,12 @@ impl<'a> BoundVibeBinStore<'a> {
         &self,
         relative: &str,
     ) -> Result<Option<String>, BoundVibeBinError> {
-        let bytes = self
-            .settings()
-            .read_file_bounded(relative, 128)
+        let (bin, name) = self.destination.bin_child(relative)?;
+        let bytes = bin
+            .read_file_bounded(name, 128)
             .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?;
+        after_read_observation();
+        self.destination.validate_children()?;
         match bytes {
             None => Ok(None),
             Some(bytes) => launcher::pointer_digest(&bytes)
@@ -207,8 +418,8 @@ impl<'a> BoundVibeBinStore<'a> {
         bytes: &[u8],
         executable: bool,
     ) -> Result<(), BoundVibeBinError> {
-        self.settings()
-            .write_atomic_with_mode(relative, bytes, resource_mode(executable))
+        let (bin, name) = self.destination.bin_child(relative)?;
+        bin.write_atomic_with_mode(name, bytes, resource_mode(executable))
             .map(|_| ())
             .map_err(|error| {
                 let uncertain = error.stage == PublishStage::PossiblyPublished;
@@ -218,22 +429,40 @@ impl<'a> BoundVibeBinStore<'a> {
                 } else {
                     BoundVibeBinError::Destination(rendered)
                 }
-            })
+            })?;
+        self.destination.validate_children().map_err(|error| {
+            BoundVibeBinError::PublicationUncertain(format!(
+                "published bin resource but child path drifted: {error}"
+            ))
+        })
     }
 
     pub(crate) fn state(
         &self,
         relative: &str,
     ) -> Result<Option<StableFileState>, BoundVibeBinError> {
-        self.settings()
-            .stable_file_state(relative)
-            .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))
+        let (child, name) = self.destination.child(relative)?;
+        let observed = child
+            .stable_file_state(name)
+            .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?;
+        after_read_observation();
+        self.destination.validate_children()?;
+        Ok(observed)
     }
 
     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
-        self.settings()
-            .remove_file(relative)
-            .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))
+        let (bin, name) = self.destination.bin_child(relative)?;
+        let removed = bin
+            .remove_file(name)
+            .map_err(|error| BoundVibeBinError::Destination(format!("{error:#}")))?;
+        if removed {
+            self.destination.validate_children().map_err(|error| {
+                BoundVibeBinError::PublicationUncertain(format!(
+                    "removed bin resource but child path drifted: {error}"
+                ))
+            })?;
+        }
+        Ok(removed)
     }
 }
 
