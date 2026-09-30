@@ -1,0 +1,101 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+warning: method `user_home` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:386:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+386 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: `vibe-lifecycle` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (target/debug/deps/vibe_lifecycle-1f5a78475863519a)
+
+running 12 tests
+test mechanism::deploy::transaction_tests::the_state_home_is_created_under_the_settings_directory_it_was_given ... ok
+test mechanism::deploy::transaction_tests::bound_transaction_refuses_prior_intent_before_provider_or_effect ... ok
+test mechanism::deploy::transaction_tests::the_intent_is_durable_before_the_first_external_write ... ok
+test mechanism::deploy::transaction_tests::apply_checkpoints_each_completed_operation ... ok
+test mechanism::deploy::transaction_tests::an_independent_verify_that_disagrees_is_never_a_verified_receipt ... ok
+test mechanism::deploy::transaction_tests::the_provider_is_asked_to_verify_only_after_it_applied ... ok
+test mechanism::deploy::transaction_tests::verify_precedes_the_finalized_receipt_and_the_intent_then_retires ... ok
+test mechanism::deploy::transaction_tests::a_receipt_carries_exactly_the_members_the_law_lists_and_no_secret ... ok
+test mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources ... ok
+test mechanism::deploy::transaction_tests::recover_rolls_an_interrupted_deployment_forward_and_finalises_it ... ok
+test mechanism::deploy::transaction_tests::recovery_refuses_a_deleted_resource_the_intent_was_updating ... ok
+test mechanism::deploy::transaction_tests::a_receipt_with_its_matching_intent_is_benign_and_the_intent_retires ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 720 filtered out; finished in 0.03s
