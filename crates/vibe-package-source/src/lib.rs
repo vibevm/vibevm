@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+mod bound_local;
 mod builder;
 pub(crate) mod cells;
 mod options;
@@ -34,6 +35,7 @@ mod project_local;
 mod qualified;
 mod source;
 
+pub use bound_local::{CheckedLocalServingRoot, PinnedLocalFactory};
 pub use builder::{
     any_package_source, build_install_resolver, build_install_resolver_with_progress,
 };
