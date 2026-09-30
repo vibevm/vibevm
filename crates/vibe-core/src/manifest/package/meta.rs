@@ -5,6 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#g
 use super::super::purl::Purl;
 use super::{Authorship, Materialization, PackageFormat, PublishPosture};
 use crate::manifest::SpecFormat;
+use crate::manifest::source_descriptor::SourceDescriptor;
 use crate::package_ref::{Group, PackageKind};
 
 /// `[package]` — the identity of a publishable artifact.
@@ -53,6 +54,9 @@ pub struct PackageMeta {
     /// `[project]` does (the role-equipotence law, PROP-024
     /// ##MANIFEST-ROLES-ARE-EQUIPOTENT).
     pub spec_format: Option<SpecFormat>,
+    /// Authored per-resource interpretation declarations. Absence grants no
+    /// source semantics; consumers select one descriptor before dispatch.
+    pub sources: Vec<SourceDescriptor>,
     /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
     /// (`false`) means the version is a **snapshot**: its content may
     /// still flow under the same version string, and a hash mismatch is

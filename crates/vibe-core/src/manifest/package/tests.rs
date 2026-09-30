@@ -81,6 +81,7 @@ fn package_meta_as_package_ref_pins_exact() {
         version: semver::Version::parse("0.3.0").unwrap(),
         epoch: None,
         spec_format: None,
+        sources: vec![],
         frozen: false,
         authors: vec![],
         license: None,
