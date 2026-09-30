@@ -282,7 +282,10 @@ fn role(role: DependencyRole) -> &'static str {
         DependencyRole::BuildAndRuntime => "build_and_runtime",
     }
 }
-fn tree_recipe_one(files: &[CapturedFile<'_>]) -> Result<String, EnvironmentError> {
+/// Recompute the selected recipe-one shippable-tree digest from an owner-
+/// supplied complete file inventory. This proves internal byte consistency,
+/// not that the owner omitted no files from the physical source tree.
+pub fn exact_shippable_tree_digest(files: &[CapturedFile<'_>]) -> Result<String, EnvironmentError> {
     let mut ordered = BTreeMap::new();
     for file in files {
         let normalized = file.relative_path.replace('\\', "/");
@@ -432,7 +435,7 @@ pub fn exact_lock_digest(
         let evidence = captures
             .get(row.capture.as_str())
             .ok_or_else(|| invalid("exact.packages", "selected package lacks captured bytes"))?;
-        let observed_tree = tree_recipe_one(&evidence.files)?;
+        let observed_tree = exact_shippable_tree_digest(&evidence.files)?;
         if row.content.as_str() != observed_tree {
             return Err(invalid(
                 "exact.packages",
@@ -813,7 +816,7 @@ mod tests {
         .unwrap()
     }
     fn tree(bytes: &[u8]) -> String {
-        tree_recipe_one(&[CapturedFile {
+        exact_shippable_tree_digest(&[CapturedFile {
             relative_path: "payload.bin".into(),
             bytes,
         }])
