@@ -76,6 +76,8 @@
         "crates/vibe-lifecycle/src/mechanism/build/",
         "crates/vibe-lifecycle/src/mechanism/cargo.rs",
         "crates/vibe-lifecycle/src/mechanism/cargo/",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/file/stable_tests.rs",
         "crates/vibe-lifecycle/src/mechanism/package.rs",
         "crates/vibe-lifecycle/src/mechanism/package/",
         "crates/vibe-lifecycle/src/state/",
@@ -89,6 +91,8 @@
         "crates/vibe-lifecycle/src/mechanism/build/",
         "crates/vibe-lifecycle/src/mechanism/cargo.rs",
         "crates/vibe-lifecycle/src/mechanism/cargo/",
+        "crates/vibe-safefs/src/file/bounded.rs",
+        "crates/vibe-safefs/src/file/stable_tests.rs",
         "crates/vibe-lifecycle/src/mechanism/package.rs",
         "crates/vibe-lifecycle/src/mechanism/package/",
         "crates/vibe-lifecycle/src/state/",
@@ -128,7 +132,8 @@
       "notes": [
         "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
         "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
-        "The builtin Cargo owner is in scope to bind a fixed offline one-bin build to its first command effect. Journal the workspace output and explicit Cargo cache home before command spawn; keep any ambient toolchain/home side effects and cross-process guarantees truthful in typed partial/uncertain observations rather than claiming unrestricted CAS."
+        "The builtin Cargo owner is in scope to bind a fixed offline one-bin build to its first command effect. Journal the workspace output and explicit Cargo cache home before command spawn; keep any ambient toolchain/home side effects and cross-process guarantees truthful in typed partial/uncertain observations rather than claiming unrestricted CAS.",
+        "A real Cargo release output may be hardlinked to its deps entry. An explicit opt-in safefs bounded snapshot may allow regular hardlinks only for the protected Cargo output while retaining nofollow held handle, two-pass bytes, cap and final-name identity. Default single-link readers stay strict; document detection-bound alias mutation as a weaker cooperative contract."
       ]
     },
     {
