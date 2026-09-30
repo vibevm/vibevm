@@ -30,6 +30,9 @@ const GITHUB_OWNER: &str = "vibevm";
 const GITHUB_REPO: &str = "vibevm";
 
 mod local;
+#[cfg(test)]
+#[path = "release/offline_ready.rs"]
+mod offline_ready;
 mod status;
 #[cfg(test)]
 use local::{LocalPlatform, read_bounded_regular_file};
