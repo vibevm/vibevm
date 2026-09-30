@@ -115,14 +115,33 @@ fn declared_media_controls_reader_and_invalid_bytes_keep_witness() {
 }
 
 #[test]
-fn ordinary_commonmark_reports_pending_structure_with_raw_bytes() {
+fn ordinary_commonmark_is_structure_from_exact_witnessed_bytes_without_facts() {
     let meta = package(
         "[[sources]]\nfile = 'README.md'\nmedia = 'text/markdown'\ninterpretation = 'commonmark'\nrole = 'documentation'\nloading = 'scan'\n",
     );
+    let raw = b"# Title\n\n#use flow:other and @requires:plan are text. `@fact:X`\n";
+    let DeclaredDocumentObservation::Structure {
+        provenance,
+        document,
+    } = observe_declared_document(&meta, "README.md", Some(raw)).unwrap()
+    else {
+        panic!("selected CommonMark must produce structure")
+    };
+    assert_eq!(document.source().as_bytes(), raw);
+    assert_eq!(provenance.reader, Some("vibe-specdoc:commonmark"));
+    assert_eq!(
+        provenance.witness,
+        Some(SourceFileWitness::of("README.md", raw))
+    );
+    assert!(document.nodes().iter().any(|node| matches!(&node.kind,
+        vibe_specdoc::commonmark::NodeKind::Text(text)
+        if text.contains("#use flow:other") && text.contains("@requires:plan"))));
     assert!(matches!(
-        observe_declared_document(&meta, "README.md", Some(b"# Title\n")).unwrap(),
-        DeclaredDocumentObservation::Unsupported { bytes, provenance, .. }
-            if bytes == b"# Title\n" && provenance.reader.is_none()
+        observe_declared_document(&meta, "README.md", Some(&[0xff])).unwrap(),
+        DeclaredDocumentObservation::Invalid { provenance, bytes, reason }
+            if bytes == &[0xff] && reason.contains("UTF-8")
+                && provenance.witness == Some(SourceFileWitness::of("README.md", &[0xff]))
+                && provenance.reader.is_none()
     ));
 }
 

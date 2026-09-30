@@ -40,9 +40,10 @@ use crate::{AuthoredFact, FactStatus, Registry, RegistryError, authored_facts};
 
 mod declared;
 pub use declared::{
-    CapturedDeclaredDocument, DeclaredDocumentObservation, DeclaredReadProvenance,
-    DeclaredSourceDisposition, DeclaredTreeObservation, DeclaredWalkError,
-    observe_declared_document, observe_declared_source,
+    CapturedDeclaredDocument, DeclaredDocumentObservation, DeclaredExportError,
+    DeclaredExportResolution, DeclaredReadProvenance, DeclaredSourceDisposition,
+    DeclaredTreeObservation, DeclaredWalkError, observe_declared_document, observe_declared_source,
+    resolve_declared_export,
 };
 
 /// Which kind of source root a scan walks.
