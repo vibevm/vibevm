@@ -7,7 +7,9 @@ use std::path::Path;
 use specmark::spec;
 use vibe_core::manifest::{DeployTarget, ExtensionHandler, MechanismRole};
 use vibe_extension_registry::{MechanismSelection, SelectionStep, resolve_mechanism};
+use vibe_wire::behaviour::deploy_records::validate_operation_binding;
 use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt};
+use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 pub(crate) mod artifact;
 pub(crate) mod error;
@@ -64,6 +66,26 @@ pub fn execute_deploy_targets(
 ) -> Result<Vec<DeployOutcome>, DeployError> {
     let resolved = resolve_selection(execution)?;
     apply_selection(execution, &resolved)
+}
+
+/// Explicit opt-in reach for an environment-bound deploy. A shaped binding
+/// does not carry a pinned storage root or host effect grant. Refuse BEFORE
+/// resolution, inverse settlement, provider planning or state creation until
+/// the storage owner admits those capabilities. The legacy entry point above
+/// keeps its original key and behavior.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
+    r = 3
+)]
+pub fn execute_bound_deploy_targets(
+    _execution: &DeployExecution<'_>,
+    binding: &EnvironmentOperationBinding,
+) -> Result<Vec<DeployOutcome>, DeployError> {
+    validate_operation_binding(binding)
+        .map_err(|_| DeployError::BindingMismatch { record: "request" })?;
+    Err(DeployError::BoundRootAdmissionUnavailable {
+        binding: binding.binding_id.clone(),
+    })
 }
 
 pub(crate) fn execute_prepared_deploy_targets(
@@ -578,3 +600,7 @@ mod inverse_tests;
 #[cfg(test)]
 #[path = "deploy/client_gate_tests.rs"]
 mod client_gate_tests;
+
+#[cfg(test)]
+#[path = "deploy/bound_tests.rs"]
+mod bound_tests;

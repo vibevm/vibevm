@@ -41,6 +41,17 @@ use crate::mechanism::MechanismError;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 #[derive(Debug, Error)]
 pub enum DeployError {
+    /// A shaped operation binding is not physical root/effect authority.
+    #[error(
+        "bound deploy refused before effects: the host has not admitted pinned root handles and an exact effect grant for binding `{binding}`"
+    )]
+    BoundRootAdmissionUnavailable { binding: String },
+
+    /// One bound state member cannot be read under a different binding or
+    /// under the legacy namespace, even when its path was copied there.
+    #[error("{record} operation binding differs from the deployment state's expected binding")]
+    BindingMismatch { record: &'static str },
+
     /// §3.1's four-step law refused to select a provider.
     #[error(transparent)]
     Resolution(#[from] MechanismResolutionError),

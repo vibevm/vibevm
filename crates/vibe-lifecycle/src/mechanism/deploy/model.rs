@@ -381,6 +381,9 @@ pub struct DeploymentRow {
     pub resources: usize,
     pub applied_at: String,
     pub finalized_at: Option<String>,
+    /// Host-issued target identity retained for bound records. `None` is the
+    /// original local deployment meaning, not a guessed default instance.
+    pub operation_binding: Option<vibe_wire::generated::shared::EnvironmentOperationBinding>,
 }
 
 /// A receipt's final status, in the vocabulary the wire freezes.
@@ -441,6 +444,7 @@ pub(crate) fn row(deployment: String, receipt: &DeployReceipt) -> DeploymentRow 
             .finalized_at
             .as_ref()
             .map(|stamped| stamped.to_rfc3339()),
+        operation_binding: receipt.operation_binding.clone(),
     }
 }
 

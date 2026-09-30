@@ -159,6 +159,7 @@ pub(crate) fn target(client: SkillClient, id: &str, artifact: &str, name: &str) 
 /// digests — what an earlier generation of the same deployment left.
 pub(crate) fn receipt_owning(generation: u32, resources: &[(&str, &str)]) -> DeployReceipt {
     DeployReceipt {
+        operation_binding: None,
         applied_at: "2026-08-30T00:00:00Z"
             .parse()
             .expect("the fixture stamp parses"),
@@ -252,6 +253,7 @@ pub(crate) fn intent_opened_over(
     resources: &[(&str, &str)],
 ) -> DeployIntent {
     DeployIntent {
+        operation_binding: None,
         plan_hash: "1".repeat(64),
         resources: resources
             .iter()

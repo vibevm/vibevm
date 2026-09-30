@@ -99,7 +99,9 @@ impl DeployStateView {
         else {
             return Ok(None);
         };
-        checked_receipt(receipt).map(Some)
+        let receipt = checked_receipt(receipt)?;
+        home.ensure_binding(RECEIPT_FILE, receipt.operation_binding.as_ref())?;
+        Ok(Some(receipt))
     }
 
     /// One deployment's durable lock sidecar, or `None` when there is none.
@@ -157,6 +159,7 @@ impl DeployStateView {
             record: INTENT_FILE,
             reason: error.to_string(),
         })?;
+        home.ensure_binding(INTENT_FILE, intent.operation_binding.as_ref())?;
         Ok(Some(intent))
     }
 }

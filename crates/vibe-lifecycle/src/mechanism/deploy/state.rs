@@ -48,9 +48,11 @@ use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
 use vibe_safefs::{LockGuard, Project};
+use vibe_wire::behaviour::deploy_records::validate_operation_binding;
 use vibe_wire::behaviour::deploy_records::{validate_intent, validate_receipt};
 use vibe_wire::generated::deploy_intent::DeployIntent;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
+use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 use super::error::DeployError;
 use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
@@ -114,6 +116,7 @@ pub(crate) struct DeploymentHome {
     root: PathBuf,
     /// The 64-hex deployment id — this deployment's directory name.
     id: String,
+    binding: Option<EnvironmentOperationBinding>,
 }
 
 impl DeploymentHome {
@@ -129,7 +132,52 @@ impl DeploymentHome {
         Self {
             root: root.to_path_buf(),
             id: format!("{:x}", hash.finalize()),
+            binding: None,
         }
+    }
+
+    /// Bound state has a separate tagged namespace. Value validation here
+    /// does not grant a physical root or an effect; it only prevents a bound
+    /// operation from borrowing a legacy receipt or another instance's row.
+    pub(crate) fn new_bound(
+        root: &Path,
+        project: &str,
+        package: Option<&str>,
+        target: &str,
+        binding: &EnvironmentOperationBinding,
+    ) -> Result<Self, DeployError> {
+        validate_operation_binding(binding).map_err(|_| DeployError::BindingMismatch {
+            record: "deployment home",
+        })?;
+        let mut hash = Sha256::new();
+        for value in [
+            "environment-deployment/e1",
+            &binding.host_context_id,
+            &binding.instance_ref,
+            &binding.binding_id,
+            project,
+            package.unwrap_or(""),
+            target,
+        ] {
+            hash.update(value.as_bytes());
+            hash.update([0]);
+        }
+        Ok(Self {
+            root: root.to_path_buf(),
+            id: format!("{:x}", hash.finalize()),
+            binding: Some(binding.clone()),
+        })
+    }
+
+    pub(super) fn ensure_binding(
+        &self,
+        record: &'static str,
+        observed: Option<&EnvironmentOperationBinding>,
+    ) -> Result<(), DeployError> {
+        if self.binding.as_ref() != observed {
+            return Err(DeployError::BindingMismatch { record });
+        }
+        Ok(())
     }
 
     /// The deployment id — the directory name, and the join key a reader
@@ -311,6 +359,7 @@ impl DeployState {
         home: &DeploymentHome,
         intent: &DeployIntent,
     ) -> Result<(), DeployError> {
+        home.ensure_binding(INTENT_FILE, intent.operation_binding.as_ref())?;
         validate_intent(intent).map_err(|error| DeployError::RecordInvalid {
             record: INTENT_FILE,
             reason: error.to_string(),
@@ -330,6 +379,7 @@ impl DeployState {
             record: INTENT_FILE,
             reason: error.to_string(),
         })?;
+        home.ensure_binding(INTENT_FILE, intent.operation_binding.as_ref())?;
         Ok(Some(intent))
     }
 
@@ -348,6 +398,7 @@ impl DeployState {
         home: &DeploymentHome,
         receipt: &DeployReceipt,
     ) -> Result<(), DeployError> {
+        home.ensure_binding(RECEIPT_FILE, receipt.operation_binding.as_ref())?;
         validate_receipt(receipt).map_err(|error| DeployError::RecordInvalid {
             record: RECEIPT_FILE,
             reason: error.to_string(),
@@ -363,7 +414,9 @@ impl DeployState {
         let Some(receipt) = self.read::<DeployReceipt>(&home.member(RECEIPT_FILE))? else {
             return Ok(None);
         };
-        checked_receipt(receipt).map(Some)
+        let receipt = checked_receipt(receipt)?;
+        home.ensure_binding(RECEIPT_FILE, receipt.operation_binding.as_ref())?;
+        Ok(Some(receipt))
     }
 
     /// Read one deployment's checkpoint ledger for a given plan, or `None`
@@ -481,7 +534,29 @@ impl DeployState {
             let Some(receipt) = self.read::<DeployReceipt>(&relative)? else {
                 continue;
             };
-            rows.push((id, checked_receipt(receipt)?));
+            let receipt = checked_receipt(receipt)?;
+            let expected = if let Some(binding) = &receipt.operation_binding {
+                DeploymentHome::new_bound(
+                    &self.root,
+                    &receipt.identity.project,
+                    receipt.identity.package.as_deref(),
+                    &receipt.target,
+                    binding,
+                )?
+            } else {
+                DeploymentHome::new(
+                    &self.root,
+                    &receipt.identity.project,
+                    receipt.identity.package.as_deref(),
+                    &receipt.target,
+                )
+            };
+            if expected.id() != id {
+                return Err(DeployError::BindingMismatch {
+                    record: RECEIPT_FILE,
+                });
+            }
+            rows.push((id, receipt));
         }
         Ok(rows)
     }

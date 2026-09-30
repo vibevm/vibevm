@@ -285,6 +285,7 @@ fn cleanup_retains_staging_while_recovery_or_inverse_is_live() {
         .write_intent(
             &intent_home,
             &DeployIntent {
+                operation_binding: None,
                 plan_hash: "a".repeat(64),
                 resources: Vec::new(),
                 schema: vibe_wire::behaviour::deploy_records::INTENT_EPOCH,
