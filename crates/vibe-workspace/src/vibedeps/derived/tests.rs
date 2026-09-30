@@ -197,6 +197,50 @@ fn descriptor_opaque_invalid_xml_stays_raw_in_markdown_slot() {
 }
 
 #[test]
+fn m_06_a_3_non_utf8_xml_data_stays_raw_while_selected_vibe_doc_survives() {
+    let workspace = TempDir::new().unwrap();
+    let source = TempDir::new().unwrap();
+    let data = crate::layout_paths::specs_path("data.xml");
+    let selected = crate::layout_paths::specs_path("rule.xml");
+    let rows = format!(
+        "[[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+        path_to_slash(&data),
+        path_to_slash(&selected),
+    );
+    write(
+        source.path(),
+        "vibe.toml",
+        &descriptor_manifest("raw-data", &rows),
+    );
+    fs::create_dir_all(source.path().join(data.parent().unwrap())).unwrap();
+    let bytes = b"\xff\0<not-closed><!-- exact raw bytes";
+    fs::write(source.path().join(&data), bytes).unwrap();
+    write(
+        source.path(),
+        &selected,
+        "<spec xmlns=\"https://vibevm.org/spec/1\"><p><RULE fact=\"true\" status=\"impl/done\">kept fact</RULE></p></spec>\n",
+    );
+    let slot = descriptor_slot(
+        workspace.path(),
+        source.path(),
+        "raw-data",
+        SpecFormat::Markdown,
+    )
+    .unwrap();
+    let raw = fs::read(slot.join(&data)).unwrap();
+    assert_eq!(raw, bytes);
+    assert!(
+        std::str::from_utf8(&raw).is_err(),
+        "optional XML view must refuse"
+    );
+    let projected = selected.with_extension("md");
+    let prose = fs::read_to_string(slot.join(projected)).unwrap();
+    assert!(prose.contains("kept fact"), "{prose}");
+    assert_eq!(fs::read(slot.join(data)).unwrap(), bytes);
+}
+
+#[test]
 fn descriptor_vibe_spec_converts_by_declared_media() {
     let workspace = TempDir::new().unwrap();
     let source = TempDir::new().unwrap();
@@ -315,6 +359,46 @@ fn descriptor_output_collision_refuses_before_slot_publication() {
             workspace.path(),
             &group("org.example"),
             "collision",
+            &version("1.1.0")
+        )
+        .exists()
+    );
+}
+
+#[test]
+fn m_06_a_3_two_declared_vibe_forms_one_address_refuse_before_publication() {
+    let workspace = TempDir::new().unwrap();
+    let source = TempDir::new().unwrap();
+    let md = crate::layout_paths::specs_path("same.md");
+    let xml = crate::layout_paths::specs_path("same.xml");
+    let rows = format!(
+        "[[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+        path_to_slash(&md),
+        path_to_slash(&xml),
+    );
+    write(
+        source.path(),
+        "vibe.toml",
+        &descriptor_manifest("split", &rows),
+    );
+    write(source.path(), &md, "# Same {#root}\n\nMD form\n");
+    write(
+        source.path(),
+        &xml,
+        "<spec xmlns=\"https://vibevm.org/spec/1\"><p>XML form</p></spec>\n",
+    );
+    let error =
+        descriptor_slot(workspace.path(), source.path(), "split", SpecFormat::Mixed).unwrap_err();
+    assert!(
+        error.to_string().contains("one document address"),
+        "{error}"
+    );
+    assert!(
+        !slot_abs_path(
+            workspace.path(),
+            &group("org.example"),
+            "split",
             &version("1.1.0")
         )
         .exists()
