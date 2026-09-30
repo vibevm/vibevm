@@ -1,6 +1,6 @@
 # M-16-C.2.1 protected lifecycle foundation, still open
 
-The current internal slice accepts only a single-node, untraced `validate`
+The initial internal slice accepts only a single-node, untraced `validate`
 command with no prior lifecycle state or install inputs. Under one workspace
 lease it captures the selected `vibe.toml` and optional `vibe.lock`, derives a
 deterministic pre-install plan (including the workspace-root witness), selects
@@ -19,9 +19,11 @@ marker 9/9, pre-install plan 7/7, and the affected legacy identity/prelude
 cases. Source rereads are cooperative-writer drift detection, not hostile-writer
 content CAS.
 
-This is not M-16-C.2.1 acceptance. It does not dispatch install or handlers,
-prove member or installed-package/handler executable bytes, retain an effectful
-partial result, or expose a public machine operation. The prior-header case
+This is not M-16-C.2.1 acceptance. This initial slice does not dispatch install or handlers;
+the later restricted empty-world Install proof is recorded in
+`machine-operation-c2-1-install-foundation.md`. The campaign still does not
+prove member or installed-package/handler executable bytes, retain detailed
+partial package effects, or expose a public machine operation. The prior-header case
 refuses before execution; a new key may leave a pending C.1 reservation, which
 is safe but requires later owner reconciliation. The generic C.1 fixture's
 freshness row is not evidence that an effectful lifecycle run completed; only
