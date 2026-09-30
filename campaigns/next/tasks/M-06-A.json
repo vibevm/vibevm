@@ -302,6 +302,9 @@
         "crates/vibe-agent-projection/src/lib.rs",
         "crates/vibe-agent-projection/src/pkgskill.rs",
         "crates/vibe-cli/src/commands/init/package.rs",
+        "crates/vibe-cli/src/commands/init/mod.rs",
+        "crates/vibe-cli/src/cli/pkg.rs",
+        "crates/vibe-cli/tests/cli_init.rs",
         "vibe.toml",
         "BACKLOG.md"
       ],
@@ -332,6 +335,8 @@
         "crates/vibe-agent-projection/src/lib.rs",
         "crates/vibe-agent-projection/src/pkgskill.rs",
         "crates/vibe-cli/src/commands/init/",
+        "crates/vibe-cli/src/cli/pkg.rs",
+        "crates/vibe-cli/tests/cli_init.rs",
         "crates/vibe-cli/src/cli.rs",
         "vibe.toml",
         "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml"
