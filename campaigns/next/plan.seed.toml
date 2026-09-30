@@ -1006,7 +1006,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1", "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1"
-contract_sha256 = "a6267b02ad8ea40da6c31df1cc6f2bd38aeb1551b6a8444713832e43f3ed77d5"
+contract_sha256 = "48b963be99a5c0f287d51283ae354edff07e4d5bb2de7a0fd9bb7558547ecebd"
 
 [[node]]
 id = "M-16-C.2.2"
@@ -1021,7 +1021,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2", "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2"
-contract_sha256 = "a6267b02ad8ea40da6c31df1cc6f2bd38aeb1551b6a8444713832e43f3ed77d5"
+contract_sha256 = "48b963be99a5c0f287d51283ae354edff07e4d5bb2de7a0fd9bb7558547ecebd"
 
 [[node]]
 id = "M-16-C.2.3"
@@ -1036,7 +1036,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3", "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3"
-contract_sha256 = "a6267b02ad8ea40da6c31df1cc6f2bd38aeb1551b6a8444713832e43f3ed77d5"
+contract_sha256 = "48b963be99a5c0f287d51283ae354edff07e4d5bb2de7a0fd9bb7558547ecebd"
 
 [[node]]
 id = "M-16-C.2.4"
@@ -1051,7 +1051,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4", "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4"
-contract_sha256 = "a6267b02ad8ea40da6c31df1cc6f2bd38aeb1551b6a8444713832e43f3ed77d5"
+contract_sha256 = "48b963be99a5c0f287d51283ae354edff07e4d5bb2de7a0fd9bb7558547ecebd"
 
 [[node]]
 id = "M-16-C.3"
