@@ -37,6 +37,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use vibe_core::manifest::Manifest;
+use vibe_lifecycle::process::{SelectedManifestLockWitness, capture_selected_manifest_lock};
 use vibe_workspace::Workspace;
 
 /// The command's ONE read of its selected node's `vibe.toml`.
@@ -66,6 +67,28 @@ pub struct SelectedManifest {
 }
 
 impl SelectedManifest {
+    /// Capture the exact selected manifest/lock bytes before a protected run.
+    ///
+    /// Parsing consumes the captured manifest bytes; it never rereads the
+    /// selected path. The witness covers only these files, not handlers or a
+    /// complete command plan. The caller holds the already selected root's
+    /// mutation lease and owns the later recheck before effects.
+    pub(crate) fn read_witnessed(
+        project_root: &Path,
+    ) -> Result<(Self, SelectedManifestLockWitness)> {
+        let witness = capture_selected_manifest_lock(project_root)?;
+        let text = std::str::from_utf8(&witness.manifest.bytes)
+            .context("selected `vibe.toml` is not UTF-8")?;
+        let manifest = Manifest::parse_str(text)?;
+        Ok((
+            Self {
+                root: project_root.to_path_buf(),
+                result: Ok(manifest),
+            },
+            witness,
+        ))
+    }
+
     /// Take the snapshot. The only `Manifest::read` on this path.
     ///
     /// ```
