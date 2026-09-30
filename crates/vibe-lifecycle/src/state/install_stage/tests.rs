@@ -161,3 +161,38 @@ fn foreign_header_or_source_drift_refuses_without_stage() {
     ));
     lock_drift.assert_no_stage_or_scratch();
 }
+
+#[test]
+fn root_install_header_is_admitted_but_other_phase_header_is_refused() {
+    let install = Fixture::new(true, RUN);
+    let state = LifecycleStateStore::begin(
+        install.lease.clone(),
+        "install".into(),
+        vec!["validate".into(), "install".into()],
+        "2026-09-30T00:00:01Z".into(),
+        RUN.into(),
+        ".".into(),
+        false,
+    )
+    .unwrap();
+    drop(state);
+    install.publish(PLAN).unwrap();
+
+    let wrong = Fixture::new(true, RUN);
+    let state = LifecycleStateStore::begin(
+        wrong.lease.clone(),
+        "validate".into(),
+        vec!["validate".into()],
+        "2026-09-30T00:00:01Z".into(),
+        RUN.into(),
+        ".".into(),
+        false,
+    )
+    .unwrap();
+    drop(state);
+    assert!(matches!(
+        wrong.publish(PLAN),
+        Err(InstallStageError::RecoveryRequired(_))
+    ));
+    wrong.assert_no_stage_or_scratch();
+}

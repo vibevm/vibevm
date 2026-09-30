@@ -1,8 +1,8 @@
-//! Internal, validate-only lifecycle submission through the incumbent runner.
+//! Internal, narrowly protected lifecycle submission through the incumbent runner.
 //!
-//! This first slice deliberately refuses install, provider, workspace-member,
-//! trace and prior-current-state cases. It proves the reservation/header/report
-//! sequence without advertising general effectful lifecycle submission.
+//! Only Validate and a one-node empty-world Install are admitted. General
+//! package install, providers, members, trace and prior-current-state cases
+//! remain unavailable.
 
 use std::path::Path;
 use std::sync::Arc;
@@ -15,8 +15,8 @@ use vibe_lifecycle::{
     LifecycleOutcomeRecoveryReason, LifecycleReportPayload, LifecycleRunJournalObservation,
     LifecycleStateStore, Phase, RunIdentity, RunMetadata, SubmissionNamespace,
     SubmissionReservations, SubmissionScope, create_lifecycle_outcome_marker,
-    inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome, retain_lifecycle_outcome,
-    select_run_identity_for_reservation,
+    inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome,
+    publish_install_entered_stage, retain_lifecycle_outcome, select_run_identity_for_reservation,
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_outcome_marker::{
@@ -33,6 +33,7 @@ use crate::RitualPlan;
 // The only command this internal entry point can express. Effective posture
 // and source identity belong to the separately canonicalized owner plan.
 const VALIDATE_REQUEST: &[u8] = b"{\"operation\":\"lifecycle.validate\",\"schema\":1}";
+const EMPTY_INSTALL_REQUEST: &[u8] = b"{\"operation\":\"lifecycle.install-empty\",\"schema\":1}";
 use crate::command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     lease_default_lifecycle, prepare_default_lifecycle_with_identity,
@@ -45,6 +46,13 @@ use crate::ports::{
     RunObserver,
 };
 use crate::prelude::selected_under_lease;
+
+mod install;
+#[allow(
+    unused_imports,
+    reason = "internal Install adapter is exercised by focused tests"
+)]
+pub(crate) use install::submit_empty_world_install;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RetainedLifecycleResult {
@@ -64,9 +72,32 @@ pub(crate) fn submit_validate_lifecycle(
     target_os: TargetOs,
     observed_at: Timestamp,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_protected_lifecycle(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Phase::Validate,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(super) fn submit_protected_lifecycle(
+    path: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    phase: Phase,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
-        request.requested == Phase::Validate,
-        "protected slice only supports validate"
+        request.requested == phase,
+        "protected slice request differs from its fixed phase"
     );
     ensure!(
         request.agent_mode == RunAgentMode::Cli,
@@ -83,7 +114,7 @@ pub(crate) fn submit_validate_lifecycle(
             && !request.install_inputs.all_features
             && request.install_inputs.language.is_none()
             && !request.install_inputs.exact,
-        "protected validate slice refuses install inputs"
+        "protected slice refuses install inputs"
     );
     let leased = lease_default_lifecycle(path)?;
     let lease = leased.retain_lease();
@@ -92,28 +123,32 @@ pub(crate) fn submit_validate_lifecycle(
     let selection = snapshot.prepare();
     ensure!(
         selection.loaded_root() == Some(lease.root()),
-        "protected validate slice requires selected workspace root"
+        "protected slice requires selected workspace root"
     );
     ensure!(
         selection
             .loaded_workspace()
             .is_some_and(|world| world.iter_nodes().count() == 1),
-        "protected validate slice requires exactly one workspace node"
+        "protected slice requires exactly one workspace node"
     );
     ensure!(
         !selection.request(false),
-        "protected validate slice refuses manifest trace"
+        "protected slice refuses manifest trace"
     );
     let selected = selected_under_lease(&selection, &lease)?;
-    ensure!(
-        selected == ".",
-        "protected validate slice requires root node"
-    );
+    ensure!(selected == ".", "protected slice requires root node");
+    if phase == Phase::Install {
+        install::require_empty_install_world(&selection, &witness)?;
+    }
+    let chain: Vec<String> = vibe_lifecycle::inclusive_chain(phase)
+        .iter()
+        .map(ToString::to_string)
+        .collect();
     let identity = select_run_identity_for_reservation(
         &lease,
         &selected_root,
-        "validate",
-        &["validate".into()],
+        phase.as_str(),
+        &chain,
         &selected,
         request.agent_mode.clone(),
         false,
@@ -130,7 +165,7 @@ pub(crate) fn submit_validate_lifecycle(
         selected_node: &selected,
         witness: &witness,
         workspace_witness: &witness,
-        requested: Phase::Validate,
+        requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
         effective_trace: identity.compile_trace,
@@ -140,7 +175,7 @@ pub(crate) fn submit_validate_lifecycle(
         install_inputs: &request.install_inputs,
     })?;
     recheck_selected_manifest_lock(&selected_root, &witness)?;
-    let mut journal = ValidateJournal {
+    let mut journal = ProtectedJournal {
         leased: Some(leased),
         selection: Some(selection),
         witness,
@@ -151,20 +186,30 @@ pub(crate) fn submit_validate_lifecycle(
         namespace,
         scope,
         key,
+        phase,
+        canonical_plan: &plan,
     };
     submit(
         lease,
         namespace,
         scope,
         key,
-        VALIDATE_REQUEST,
+        request_bytes(phase),
         &plan,
         &mut journal,
     )
     .map_err(anyhow::Error::new)
 }
 
-struct ValidateJournal<'a> {
+fn request_bytes(phase: Phase) -> &'static [u8] {
+    match phase {
+        Phase::Validate => VALIDATE_REQUEST,
+        Phase::Install => EMPTY_INSTALL_REQUEST,
+        _ => unreachable!("protected entry points admit only Validate and Install"),
+    }
+}
+
+struct ProtectedJournal<'a> {
     leased: Option<LeasedDefaultLifecycle>,
     selection: Option<PreparedSelection>,
     witness: SelectedManifestLockWitness,
@@ -175,9 +220,11 @@ struct ValidateJournal<'a> {
     namespace: &'a SubmissionNamespace,
     scope: &'a SubmissionScope,
     key: &'a str,
+    phase: Phase,
+    canonical_plan: &'a [u8],
 }
 
-impl ValidateJournal<'_> {
+impl ProtectedJournal<'_> {
     fn selected_root(&self) -> &Path {
         self.leased
             .as_ref()
@@ -190,17 +237,26 @@ impl ValidateJournal<'_> {
         Ok(())
     }
 
-    fn header(lease: &LifecycleLease, run_id: &str, expected_started: Option<&str>) -> Result<()> {
+    fn header(
+        lease: &LifecycleLease,
+        run_id: &str,
+        expected_started: Option<&str>,
+        phase: Phase,
+    ) -> Result<()> {
         let state = LifecycleStateStore::peek_with_lease(lease)?
             .context("reserved lifecycle header is absent")?;
+        let chain: Vec<String> = vibe_lifecycle::inclusive_chain(phase)
+            .iter()
+            .map(ToString::to_string)
+            .collect();
         ensure!(
             state.run.run_id.as_deref() == Some(run_id)
-                && state.run.requested == "validate"
-                && state.run.chain == ["validate"]
+                && state.run.requested == phase.as_str()
+                && state.run.chain == chain
                 && state.run.selected.as_deref() == Some(".")
                 && !state.run.compile_trace
                 && expected_started.is_none_or(|started| state.run.started == started),
-            "reserved lifecycle header differs from validate identity"
+            "reserved lifecycle header differs from protected identity"
         );
         Ok(())
     }
@@ -232,7 +288,7 @@ impl ValidateJournal<'_> {
     }
 }
 
-impl SubmissionJournal for ValidateJournal<'_> {
+impl SubmissionJournal for ProtectedJournal<'_> {
     type Outcome = RetainedLifecycleResult;
 
     fn proposed_run_id(&self) -> String {
@@ -260,7 +316,8 @@ impl SubmissionJournal for ValidateJournal<'_> {
                     // prepare only the stored ID and never invokes it again.
                     let started =
                         (run_id == self.identity.run_id).then_some(self.identity.started.as_str());
-                    Self::header(lease, run_id, started).map_err(|error| error.to_string())?;
+                    Self::header(lease, run_id, started, self.phase)
+                        .map_err(|error| error.to_string())?;
                     Ok(JournalState::Prepared)
                 }
                 Ok(LifecycleRunJournalObservation::Uncertain { .. }) => Ok(
@@ -307,8 +364,11 @@ impl SubmissionJournal for ValidateJournal<'_> {
             );
             let store = LifecycleStateStore::begin(
                 lease.clone(),
-                "validate".into(),
-                vec!["validate".into()],
+                self.phase.as_str().into(),
+                vibe_lifecycle::inclusive_chain(self.phase)
+                    .iter()
+                    .map(ToString::to_string)
+                    .collect(),
                 self.identity.started.clone(),
                 run_id.to_owned(),
                 ".".into(),
@@ -316,10 +376,10 @@ impl SubmissionJournal for ValidateJournal<'_> {
             )?;
             ensure!(
                 store.state().execution.is_empty(),
-                "new validate header inherited execution rows"
+                "new protected header inherited execution rows"
             );
             drop(store);
-            Self::header(&lease, run_id, Some(&self.identity.started))
+            Self::header(&lease, run_id, Some(&self.identity.started), self.phase)
         })();
         result.map_err(|error| format!("{error:#}"))
     }
@@ -346,7 +406,26 @@ impl SubmissionJournal for ValidateJournal<'_> {
             );
             let reservation_ref = self.reservation_ref(&lease, run_id)?;
             self.recheck()?;
-            Self::header(&lease, run_id, Some(&self.identity.started))?;
+            Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+            if self.phase == Phase::Install {
+                let root = self.selected_root();
+                // This root-only slice has one witness for both the selected
+                // node and the workspace lock home. Publication and readback
+                // occur before the incumbent install can enter any port.
+                let _entered = publish_install_entered_stage(
+                    &lease,
+                    self.namespace,
+                    self.scope,
+                    self.key,
+                    run_id,
+                    request_bytes(self.phase),
+                    self.canonical_plan,
+                    root,
+                    &self.witness,
+                    lease.root(),
+                    &self.witness,
+                )?;
+            }
             let leased = self.leased.take().context("leased stage consumed twice")?;
             let selection = self.selection.take().context("selection consumed twice")?;
             let prepared = prepare_default_lifecycle_with_identity(
@@ -355,13 +434,12 @@ impl SubmissionJournal for ValidateJournal<'_> {
                 selection,
                 self.identity.clone(),
             )?;
-            let outcome = prepared.run(
-                validate_ports(),
-                None,
-                self.target_os,
-                self.observed_at,
-                None,
-            );
+            let ports = if self.phase == Phase::Validate {
+                validate_ports()
+            } else {
+                install::empty_install_ports()
+            };
+            let outcome = prepared.run(ports, None, self.target_os, self.observed_at, None);
             match outcome {
                 PhaseOutcome::Completed(values) => {
                     let report_bytes = serde_json::to_vec(&values.into_report(None))?;
@@ -479,6 +557,7 @@ impl RegistryEnvironment for RejectInstall {
         bail!("validate slice reached registry environment")
     }
 }
+
 impl PackageSourceFactory for RejectInstall {
     fn build(&self, _: PackageSourceBuild<'_>) -> Result<Box<dyn PackageSource>> {
         bail!("validate slice reached package source")
