@@ -38,6 +38,12 @@ use vibe_core::{Group, PackageName};
 
 use crate::{AuthoredFact, FactStatus, Registry, RegistryError, authored_facts};
 
+mod declared;
+pub use declared::{
+    DeclaredDocumentObservation, DeclaredReadProvenance, DeclaredSourceDisposition,
+    observe_declared_document,
+};
+
 /// Which kind of source root a scan walks.
 ///
 /// ```text
