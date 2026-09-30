@@ -20,7 +20,9 @@ const OUTPUT_MAX_BYTES: usize = 16 * 1024;
 const REASON_MAX_BYTES: usize = 512;
 const HOST_MAX_BYTES: usize = 128;
 const RUNNER_MAX_BYTES: usize = 256;
-const ELAPSED_MAX_MS: u64 = 30_000;
+// The child has a 30s deadline; bounded kill, reap and pipe drain may take
+// additional time. Preserve the measured duration instead of capping a fact.
+const ELAPSED_MAX_MS: u64 = 60_000;
 const PASSED_REASON: &str = "exact staged native executable returned vibe 1.1.0";
 
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
