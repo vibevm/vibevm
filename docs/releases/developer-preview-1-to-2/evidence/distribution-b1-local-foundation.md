@@ -20,9 +20,8 @@ pure five-row join 4/4, and local integration cases covering five honest
 `Unavailable` rows, changed bundle refusal and existing capture behavior.
 `cargo xtask check-codegen` passed after the report schema was committed.
 
-This does not accept M-07-B.1. The process fixture proves the harness only;
-it is not native execution of the actual release bundle. Native Windows,
-macOS x86_64, macOS aarch64 and Linux musl release-bundle receipts remain
-unobserved on this host. Default apply readiness still requires all five
-required probes to pass. No public Git push, release upload or publication was
-performed.
+This does not accept M-07-B.1. A later exact Linux GNU bundle smoke is recorded
+in `distribution-b1-native-linux-gnu.md`. Native Windows, macOS x86_64,
+macOS aarch64 and Linux musl release-bundle receipts remain unobserved on this
+host. Default apply readiness still requires all five required probes to pass.
+No public Git push, release upload or publication was performed.
