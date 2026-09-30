@@ -327,6 +327,7 @@
         "crates/vibe-facts/src/sync.rs",
         "crates/vibe-spec/src/resolver/",
         "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
         "crates/vibe-workspace/src/install/bootgen/",
         "crates/vibe-agent-projection/src/pkgskill/",
         "crates/vibe-facts/Cargo.toml",
