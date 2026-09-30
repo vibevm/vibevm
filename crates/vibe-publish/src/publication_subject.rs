@@ -59,7 +59,7 @@ fn nonexecution_evidence(field: &str, value: &str) -> Result<(), PublicationSubj
             "non-execution evidence reference exceeds 512 bytes",
         ));
     }
-    let Some((reason, host)) = value
+    let Some((reason, host_and_report)) = value
         .strip_prefix("reason=")
         .and_then(|rest| rest.split_once(";host="))
     else {
@@ -68,11 +68,18 @@ fn nonexecution_evidence(field: &str, value: &str) -> Result<(), PublicationSubj
             "non-execution evidence must identify reason and host",
         ));
     };
+    let (host, report) = match host_and_report.split_once(";report=") {
+        Some((host, report)) => (host, Some(report)),
+        None => (host_and_report, None),
+    };
     if reason.is_empty() || host.is_empty() || reason.contains(';') || host.contains(';') {
         return Err(invalid(
             field,
             "non-execution evidence must identify reason and host",
         ));
+    }
+    if let Some(report) = report {
+        digest(field, report)?;
     }
     Ok(())
 }
