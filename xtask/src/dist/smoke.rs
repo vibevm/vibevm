@@ -22,6 +22,7 @@ use vibe_wire::generated::publication_subject::PublicationTarget;
 
 use super::build::verified_bundle_entries;
 
+mod report;
 mod report_store;
 
 /// A verified, locally staged bundle. No command has been run in this home.
@@ -224,6 +225,7 @@ pub(crate) struct NativeProbeRecord {
     pub(crate) stderr: String,
     pub(crate) exit_code: Option<i32>,
     pub(crate) elapsed_ms: u128,
+    pub(crate) timed_out: bool,
     pub(crate) output_truncated: bool,
 }
 
@@ -269,6 +271,7 @@ fn probe_record(
         stderr: String::new(),
         exit_code: None,
         elapsed_ms: 0,
+        timed_out: false,
         output_truncated: false,
     }
 }
@@ -436,6 +439,7 @@ pub(crate) fn run_native_probe(stage: &StagedBundle, timeout: Duration) -> Nativ
         }
     };
     result.elapsed_ms = started.elapsed().as_millis();
+    result.timed_out = timed_out;
     result.exit_code = status.and_then(|value| value.code());
     let mut capture_incomplete = false;
     for _ in 0..2 {

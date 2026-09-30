@@ -317,6 +317,7 @@ fn truncated_output_and_timeout_are_failed_probes() {
         "{report:?}"
     );
     assert_eq!(report.reason, "native process timed out");
+    assert!(report.timed_out);
     assert!(report.elapsed_ms < 2_000);
 }
 
