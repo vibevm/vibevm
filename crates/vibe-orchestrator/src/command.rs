@@ -40,7 +40,7 @@ use crate::install::{
     InstallInputs, InstallPolicy, PreparedSelection, SelectedManifest, acquire_lease,
     resolve_project_root,
 };
-use crate::phase::{PhaseOutcome, PhaseRun, run_phases};
+use crate::phase::{PhaseOutcome, PhaseRun};
 use crate::ports::{
     ConfirmGate, InstallManifestMutation, InstallObserver, PackageSourceFactory,
     RegistryEnvironment, RunObserver,
@@ -510,6 +510,30 @@ impl PreparedDefaultLifecycle {
         observed_at: Timestamp,
         deploy: Option<crate::DeployAuthority>,
     ) -> PhaseOutcome {
+        self.run_with_protected(ports, trace, target_os, observed_at, deploy, None)
+    }
+
+    /// Internal one-script route; its stage was published after the owner's
+    /// reservation reached Ready. Ordinary surfaces keep using `run`.
+    pub(crate) fn run_protected_script(
+        self,
+        ports: DefaultLifecyclePorts<'_>,
+        target_os: TargetOs,
+        observed_at: Timestamp,
+        protected: crate::dispatch::ProtectedScriptExecution<'_>,
+    ) -> PhaseOutcome {
+        self.run_with_protected(ports, None, target_os, observed_at, None, Some(protected))
+    }
+
+    fn run_with_protected(
+        self,
+        ports: DefaultLifecyclePorts<'_>,
+        trace: Option<&TraceRun>,
+        target_os: TargetOs,
+        observed_at: Timestamp,
+        deploy: Option<crate::DeployAuthority>,
+        protected: Option<crate::dispatch::ProtectedScriptExecution<'_>>,
+    ) -> PhaseOutcome {
         let DefaultLifecyclePorts {
             observer,
             install_observer,
@@ -521,29 +545,32 @@ impl PreparedDefaultLifecycle {
         } = ports;
         // A plain phase verb owns no clean epoch: the prefix is empty, and
         // the clean-composed epoch stays a surface-side composition.
-        run_phases(PhaseRun {
-            requested: self.requested,
-            phases: self.phases,
-            chain: self.chain,
-            metadata: self.metadata,
-            install_args: self.install_inputs,
-            policy: self.policy,
-            lease: self.prelude.lease,
-            selection: self.prelude.selection,
-            steps: Vec::new(),
-            contributions: Vec::new(),
-            notices: Vec::new(),
-            observer,
-            install_observer,
-            confirm_gate,
-            sources,
-            environment,
-            manifest_mutation,
-            agent,
-            trace,
-            target_os,
-            deploy,
-            observed_at,
-        })
+        crate::phase::run_phases_with_protected(
+            PhaseRun {
+                requested: self.requested,
+                phases: self.phases,
+                chain: self.chain,
+                metadata: self.metadata,
+                install_args: self.install_inputs,
+                policy: self.policy,
+                lease: self.prelude.lease,
+                selection: self.prelude.selection,
+                steps: Vec::new(),
+                contributions: Vec::new(),
+                notices: Vec::new(),
+                observer,
+                install_observer,
+                confirm_gate,
+                sources,
+                environment,
+                manifest_mutation,
+                agent,
+                trace,
+                target_os,
+                deploy,
+                observed_at,
+            },
+            protected,
+        )
     }
 }

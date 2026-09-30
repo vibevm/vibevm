@@ -4,11 +4,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 use anyhow::Result;
 use std::sync::Arc;
 use vibe_lifecycle::handlers::{HandlerRuntime, NativeBackend, PackageBindingBackend};
-use vibe_lifecycle::process::SystemProcessRunner;
+use vibe_lifecycle::process::{ProcessRunner, SystemProcessRunner};
+use vibe_workspace::hooks::InterpreterProbe;
 
 use vibe_lifecycle::{
     AgentBackend, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun,
-    LifecycleRunHandle, RunMetadata,
+    LifecycleRunHandle, RunMetadata, ScriptSourceStage,
 };
 use vibe_lifecycle::{REMOVED_DECLARATION, UNKNOWN_PROVENANCE};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
@@ -35,6 +36,16 @@ use observation::{empty_phase_boundary, observe_empty_fence};
 pub(crate) use outcome::DispatchOutcome;
 use outcome::MeasuredDispatch;
 pub use untracked::dispatch_plan_untracked;
+
+/// A single already-published source stage and the actual process boundary.
+/// Only the internal protected fixture supplies this; normal dispatch uses
+/// the incumbent system runtime with no source stage.
+#[derive(Clone, Copy)]
+pub(crate) struct ProtectedScriptExecution<'a> {
+    pub stage: &'a ScriptSourceStage,
+    pub process: &'a dyn ProcessRunner,
+    pub probe: &'a dyn InterpreterProbe,
+}
 
 #[cfg(test)]
 #[path = "inject.rs"]
@@ -89,6 +100,39 @@ pub(crate) fn dispatch_plan(
     )
 }
 
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn dispatch_plan_protected(
+    observer: &dyn RunObserver,
+    plan: &RitualPlan,
+    lease: Arc<LifecycleLease>,
+    agent: &Arc<dyn AgentBackend>,
+    metadata: RunMetadata,
+    state_chain: Vec<String>,
+    verification_observed_at: Option<Timestamp>,
+    targets: Option<MechanismTargets<'_>>,
+    protected: ProtectedScriptExecution<'_>,
+) -> Result<DispatchOutcome> {
+    lease.ensure_root(&plan.workspace_root, "at protected phase dispatch")?;
+    let run = LifecycleRun::begin(
+        lease,
+        plan.project.clone(),
+        plan.world.clone(),
+        metadata.clone(),
+        state_chain,
+    )?
+    .shared();
+    dispatch_plan_with_run_protected(
+        observer,
+        plan,
+        &run,
+        agent,
+        &metadata,
+        verification_observed_at,
+        targets,
+        Some(protected),
+    )
+}
+
 /// Dispatch one phase plan, carrying whatever rows were measured out with ANY
 /// failure.
 ///
@@ -114,6 +158,29 @@ pub(crate) fn dispatch_plan_with_run(
     verification_observed_at: Option<Timestamp>,
     targets: Option<MechanismTargets<'_>>,
 ) -> Result<DispatchOutcome> {
+    dispatch_plan_with_run_protected(
+        observer,
+        plan,
+        run,
+        agent,
+        metadata,
+        verification_observed_at,
+        targets,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn dispatch_plan_with_run_protected(
+    observer: &dyn RunObserver,
+    plan: &RitualPlan,
+    run: &LifecycleRunHandle,
+    agent: &Arc<dyn AgentBackend>,
+    metadata: &RunMetadata,
+    verification_observed_at: Option<Timestamp>,
+    targets: Option<MechanismTargets<'_>>,
+    protected: Option<ProtectedScriptExecution<'_>>,
+) -> Result<DispatchOutcome> {
     let mut measured = MeasuredDispatch::default();
     dispatch_measured(
         observer,
@@ -124,6 +191,7 @@ pub(crate) fn dispatch_plan_with_run(
         &mut measured,
         verification_observed_at,
         targets,
+        protected,
     )
     .map_err(|error| {
         // Idempotent: a stale stop and a failed handler already froze their
@@ -152,11 +220,18 @@ fn dispatch_measured(
     measured: &mut MeasuredDispatch,
     verification_observed_at: Option<Timestamp>,
     targets: Option<MechanismTargets<'_>>,
+    protected: Option<ProtectedScriptExecution<'_>>,
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
     let native = native_backend(plan, metadata, &native_candidates)?;
-    let runtime = runtime(observer, &package_binding, &native, agent.as_ref());
+    let runtime = runtime(
+        observer,
+        &package_binding,
+        &native,
+        agent.as_ref(),
+        protected,
+    );
     let mut outcome = DispatchOutcome {
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
@@ -557,13 +632,16 @@ fn runtime<'a>(
     package_binding: &'a dyn PackageBindingBackend,
     native: &'a dyn NativeBackend,
     agent: &'a dyn AgentBackend,
+    protected: Option<ProtectedScriptExecution<'a>>,
 ) -> HandlerRuntime<'a> {
     static PROCESS: SystemProcessRunner = SystemProcessRunner;
     static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
     static BINARY_QUIET: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: true };
     static PROBE: vibe_workspace::hooks::SystemProbe = vibe_workspace::hooks::SystemProbe;
+    let process: &dyn ProcessRunner = protected.map_or(&PROCESS, |value| value.process);
+    let probe: &dyn InterpreterProbe = protected.map_or(&PROBE, |value| value.probe);
     HandlerRuntime {
-        process: &PROCESS,
+        process,
         binary: if observer.binary_quiet() {
             &BINARY_QUIET
         } else {
@@ -572,9 +650,9 @@ fn runtime<'a>(
         native,
         package_binding,
         agent,
-        probe: &PROBE,
+        probe,
         streams: observer.stream_mode(),
-        protected_script: None,
+        protected_script: protected.map(|value| value.stage),
     }
 }
 

@@ -19,6 +19,7 @@ use super::submission::{
     SubmissionScope,
 };
 use crate::LifecycleLease;
+use crate::process::ScriptSourceWitness;
 
 const ROOT: [&str; 2] = [".vibe", "lifecycle-outcomes"];
 const FORMAT: &str = "vibevm.lifecycle.script-source-stage/1";
@@ -70,6 +71,24 @@ pub struct ScriptSourceStage {
 }
 
 impl ScriptSourceStage {
+    /// Refuse a stage that captured different bytes or a different local object
+    /// than the source already bound to the reserved pre-effect plan.
+    pub fn matches_witness(
+        &self,
+        expected: &ScriptSourceWitness,
+    ) -> Result<(), ScriptSourceStageError> {
+        if self.provider_root != expected.provider_root
+            || self.provider_root_identity != expected.provider_root_identity
+            || self.script_relative != expected.script_relative
+            || self.source != expected.source
+        {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "published script source differs from reserved witness".into(),
+            ));
+        }
+        self.recheck_before_spawn()
+    }
+
     pub(crate) fn claim_for_execution<'a>(
         &'a self,
         context: &Context,
@@ -178,6 +197,29 @@ pub(crate) struct ScriptSourceAttempt<'a> {
 }
 
 impl<'a> ScriptSourceAttempt<'a> {
+    pub(crate) fn match_invocation(
+        self,
+        provider_root: &Path,
+        resolved_script: &Path,
+        interpreter: &str,
+    ) -> Result<ScriptSourceInvocation<'a>, ScriptSourceStageError> {
+        let expected = if self.stage.script_relative.ends_with(".sh") {
+            "bash"
+        } else if self.stage.script_relative.ends_with(".ps1") {
+            "powershell"
+        } else {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "staged script has no supported interpreter extension".into(),
+            ));
+        };
+        if interpreter != expected {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "resolved interpreter differs from staged script".into(),
+            ));
+        }
+        self.match_resolved(provider_root, resolved_script)
+    }
+
     pub(crate) fn match_resolved(
         self,
         provider_root: &Path,
