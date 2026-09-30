@@ -345,3 +345,61 @@ fn validated_in_place_legacy_without_record_keeps_suffix_route() {
             .any(|row| row.address.ends_with("#LEGACY"))
     );
 }
+
+#[cfg(unix)]
+#[test]
+fn unreadable_selected_source_is_unavailable_while_missing_stays_invalid() {
+    use std::os::unix::fs::symlink;
+    let (root, bodies, slot) = fixture(SpecFormat::Mixed);
+    let selected = slot.join(&bodies[0].0);
+    let raw = fs::read(&selected).unwrap();
+    fs::remove_file(&selected).unwrap();
+    fs::write(slot.join("replacement.md"), raw).unwrap();
+    symlink("../replacement.md", &selected).unwrap();
+    let report = query(&RequirementsQuery::default(), &ctx(root.path()), None).unwrap();
+    assert_eq!(package(&report).state, SourceResultState::Unavailable);
+    assert_eq!(
+        package(&report).reason_code.as_deref(),
+        Some("declared-source-unreadable")
+    );
+    assert!(package(&report).digest.is_none());
+    assert!(
+        report
+            .rows
+            .iter()
+            .all(|row| row.source.package != "org.example/pkg")
+    );
+}
+
+#[test]
+fn in_place_no_record_uses_current_pinned_manifest_as_live_authority() {
+    let root = project("# Host\n\n@fact:HOST Host.\n");
+    write_lock(root.path(), true);
+    let group = Group::parse("org.example").unwrap();
+    let slot = vibe_workspace::vibedeps::in_place_slot_abs_path(root.path(), &group, "pkg");
+    let rel = vibe_core::layout::current_specs_root().join("RULE.md");
+    let path = rel.to_string_lossy().replace('\\', "/");
+    let header = "[package]\ngroup='org.example'\nname='pkg'\nkind='feat'\nversion='1.0.0'\n";
+    let declared = format!(
+        "{header}[[package.sources]]\nfile='{path}'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n"
+    );
+    write(&slot, Path::new("vibe.toml"), declared.as_bytes());
+    write(
+        &slot,
+        &rel,
+        b"# Rule\n\n@fact:LIVE Current. @status:spec/done\n",
+    );
+    let before = query(&RequirementsQuery::default(), &ctx(root.path()), None).unwrap();
+    assert_eq!(package(&before).state, SourceResultState::Unavailable);
+    assert!(
+        before
+            .rows
+            .iter()
+            .all(|row| row.source.package != "org.example/pkg")
+    );
+
+    fs::write(slot.join("vibe.toml"), header).unwrap();
+    let after = query(&RequirementsQuery::default(), &ctx(root.path()), None).unwrap();
+    assert_eq!(package(&after).state, SourceResultState::Available);
+    assert!(after.rows.iter().any(|row| row.address.ends_with("#LIVE")));
+}

@@ -1,6 +1,7 @@
 //! Descriptor-owned requirements source from a lock-selected Mixed slot.
 
 use std::collections::BTreeSet;
+use std::fs;
 use std::path::Path;
 
 use vibe_core::manifest::{Manifest, SourceSelector, SpecFormat};
@@ -10,10 +11,56 @@ use vibe_wire::generated::requirements_report::SourceResultState;
 use vibe_workspace::vibedeps;
 
 use super::{
-    MANIFEST_CAP, REASON_DECLARED_INCOMPLETE, REASON_DECLARED_TRANSFORMED,
-    REASON_DECLARED_UNVERIFIED, RECORD_CAP, SOURCE_CAP, SourceCoord, SourceOutcome, source_result,
+    MANIFEST_CAP, REASON_DECLARED_INCOMPLETE, REASON_DECLARED_LIMIT, REASON_DECLARED_TRANSFORMED,
+    REASON_DECLARED_UNREADABLE, REASON_DECLARED_UNVERIFIED, RECORD_CAP, SOURCE_CAP, SourceCoord,
+    SourceOutcome, source_result,
 };
 use crate::digest::source_result_digest;
+
+const MAX_DECLARED_FILES: usize = 512;
+const MAX_RETAINED_BYTES: u64 = 64 * 1024 * 1024;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ResourcePreflight {
+    Limit,
+    Unreadable,
+}
+
+/// Size metadata is a resource ceiling, never source authority. The pinned
+/// Project read still rechecks each object and enforces its own per-file cap.
+fn preflight_resources(
+    root: &Path,
+    paths: &BTreeSet<String>,
+    max_files: usize,
+    max_bytes: u64,
+) -> Result<BTreeSet<String>, ResourcePreflight> {
+    if paths.len() > max_files {
+        return Err(ResourcePreflight::Limit);
+    }
+    let mut total = 0_u64;
+    let mut present = BTreeSet::new();
+    for path in paths {
+        let metadata = match fs::symlink_metadata(root.join(path)) {
+            Ok(metadata) => metadata,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(_) => return Err(ResourcePreflight::Unreadable),
+        };
+        if !metadata.file_type().is_file() {
+            return Err(ResourcePreflight::Unreadable);
+        }
+        present.insert(path.clone());
+        if metadata.len() > SOURCE_CAP as u64 {
+            return Err(ResourcePreflight::Limit);
+        }
+        total = total
+            .checked_add(metadata.len())
+            .ok_or(ResourcePreflight::Limit)?;
+        if total > max_bytes {
+            return Err(ResourcePreflight::Limit);
+        }
+    }
+    Ok(present)
+}
 
 fn declared_unavailable(coord: &SourceCoord, reason: &'static str) -> SourceOutcome {
     SourceOutcome {
@@ -91,6 +138,10 @@ pub(super) fn observe_selected_declared(coord: &SourceCoord, root: &Path) -> Opt
         match pinned.read_file_snapshot_bounded(vibedeps::SLOT_RECORD_FILENAME, RECORD_CAP) {
             Ok(Some(snapshot)) => snapshot,
             Ok(None) if !authored && coord.in_place => {
+                // In-place has no immutable materialized record. Its CURRENT
+                // pinned manifest is live authority under the owner's weaker
+                // cooperative contract: removing descriptors can select the
+                // legacy route. This is not lock/content-CAS proof.
                 let after = pinned.read_file_snapshot_bounded(Manifest::FILENAME, MANIFEST_CAP);
                 return match after {
                     Ok(Some(after)) if after == manifest => None,
@@ -140,34 +191,49 @@ pub(super) fn observe_selected_declared(coord: &SourceCoord, root: &Path) -> Opt
         return Some(declared_unavailable(coord, REASON_DECLARED_INCOMPLETE));
     }
 
-    let mut captured = Vec::<(String, Option<Vec<u8>>)>::new();
-    let mut seen = BTreeSet::new();
-    let mut unreadable = false;
+    let mut paths = BTreeSet::new();
     for descriptor in &package.sources {
         let SourceSelector::File(path) = descriptor.selector() else {
             unreachable!()
         };
-        if !seen.insert(path.clone()) {
-            continue;
+        paths.insert(path.clone());
+    }
+    let present = match preflight_resources(root, &paths, MAX_DECLARED_FILES, MAX_RETAINED_BYTES) {
+        Ok(present) => present,
+        Err(ResourcePreflight::Limit) => {
+            return Some(declared_unavailable(coord, REASON_DECLARED_LIMIT));
         }
-        let bytes = match pinned.read_file_snapshot_bounded(path, SOURCE_CAP) {
+        Err(ResourcePreflight::Unreadable) => {
+            return Some(declared_unavailable(coord, REASON_DECLARED_UNREADABLE));
+        }
+    };
+    let mut captured = Vec::<(String, Option<Vec<u8>>)>::with_capacity(paths.len());
+    let mut retained = 0_u64;
+    for path in paths {
+        let remaining = MAX_RETAINED_BYTES.saturating_sub(retained);
+        let cap = SOURCE_CAP.min(usize::try_from(remaining).unwrap_or(usize::MAX));
+        let bytes = match pinned.read_file_snapshot_bounded(&path, cap) {
             Ok(Some(snapshot)) => {
+                retained = retained.checked_add(snapshot.size).unwrap_or(u64::MAX);
+                if retained > MAX_RETAINED_BYTES {
+                    return Some(declared_unavailable(coord, REASON_DECLARED_LIMIT));
+                }
                 if !record
                     .files
                     .iter()
-                    .any(|row| row.path == *path && row.sha256 == snapshot.sha256)
+                    .any(|row| row.path == path && row.sha256 == snapshot.sha256)
                 {
                     return Some(unavailable());
                 }
                 Some(snapshot.bytes)
             }
-            Ok(None) => None,
-            Err(_) => {
-                unreadable = true;
-                None
+            Ok(None) if present.contains(&path) => {
+                return Some(declared_unavailable(coord, REASON_DECLARED_UNREADABLE));
             }
+            Ok(None) => None,
+            Err(_) => return Some(declared_unavailable(coord, REASON_DECLARED_UNREADABLE)),
         };
-        captured.push((path.clone(), bytes));
+        captured.push((path, bytes));
     }
     let manifest_after = match pinned.read_file_snapshot_bounded(Manifest::FILENAME, MANIFEST_CAP) {
         Ok(Some(snapshot)) => snapshot,
@@ -201,7 +267,7 @@ pub(super) fn observe_selected_declared(coord: &SourceCoord, root: &Path) -> Opt
         Ok(observed) => observed,
         Err(_) => return Some(declared_invalid(coord, &witnesses)),
     };
-    if unreadable || !observed.complete {
+    if !observed.complete {
         return Some(declared_invalid(coord, &witnesses));
     }
     Some(SourceOutcome {
@@ -219,4 +285,28 @@ pub(super) fn observe_selected_declared(coord: &SourceCoord, root: &Path) -> Opt
         ),
         facts: observed.facts,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{ResourcePreflight, preflight_resources};
+    use std::collections::BTreeSet;
+    use std::fs;
+
+    #[test]
+    fn file_count_and_aggregate_caps_refuse_before_retaining_source_bytes() {
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join("a.md"), b"abc").unwrap();
+        fs::write(root.path().join("b.md"), b"def").unwrap();
+        let paths = BTreeSet::from(["a.md".to_owned(), "b.md".to_owned()]);
+        assert_eq!(
+            preflight_resources(root.path(), &paths, 1, 6),
+            Err(ResourcePreflight::Limit)
+        );
+        assert_eq!(
+            preflight_resources(root.path(), &paths, 2, 5),
+            Err(ResourcePreflight::Limit)
+        );
+        assert_eq!(preflight_resources(root.path(), &paths, 2, 6), Ok(paths));
+    }
 }
