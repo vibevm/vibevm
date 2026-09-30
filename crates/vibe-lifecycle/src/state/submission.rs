@@ -87,6 +87,8 @@ pub enum SubmissionError {
     KeyConflict,
     #[error("submission reservation does not match its namespace, key or domain run")]
     ReservationMismatch,
+    #[error("submission reservation has no proven durable domain journal")]
+    JournalNotReady,
     #[error("domain run `{domain_run_id}` is already reserved by another submission")]
     DomainRunConflict { domain_run_id: String },
     #[error("submission index is malformed or over its size bound: {0}")]
@@ -452,6 +454,50 @@ impl SubmissionReservations {
         } else {
             JournalAdmission::Pending
         })
+    }
+
+    /// Stable correlation with one exact, journal-ready reservation. This
+    /// value carries no effect permission: the domain owner must still prove
+    /// its own journal and outcome. Retired rows remain readable so a lost
+    /// response cannot be relabeled after namespace expiry or collection.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        r = 5
+    )]
+    pub fn reservation_ref(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        domain_run_id: &str,
+    ) -> Result<String, SubmissionError> {
+        let index = read(lease)?;
+        let reserved = reservation(&index, namespace, scope, key, domain_run_id)?;
+        if !reserved.journal_ready {
+            return Err(SubmissionError::JournalNotReady);
+        }
+        let owner = index
+            .namespaces
+            .get(namespace.id())
+            .ok_or(SubmissionError::UnknownNamespace)?;
+        let mut hash = Sha256::new();
+        for (tag, value) in [
+            ("domain", "vibevm/submission-reservation-ref/e1"),
+            ("namespace", namespace.id()),
+            ("context", owner.context.as_str()),
+            ("target", owner.target.as_str()),
+            ("principal", owner.principal.as_str()),
+            ("key", key),
+            ("request_sha256", reserved.request_sha256.as_str()),
+            ("plan_sha256", reserved.plan_sha256.as_str()),
+            ("domain_run_id", reserved.domain_run_id.as_str()),
+        ] {
+            hash.update((tag.len() as u16).to_be_bytes());
+            hash.update(tag.as_bytes());
+            hash.update((value.len() as u64).to_be_bytes());
+            hash.update(value.as_bytes());
+        }
+        Ok(format!("sha256:{:x}", hash.finalize()))
     }
 
     /// Record that the owner has re-read and proven the exact durable domain
@@ -1031,6 +1077,139 @@ mod tests {
             )
             .unwrap(),
             JournalAdmission::Pending
+        );
+    }
+
+    #[test]
+    fn reservation_ref_is_stable_after_retry_and_retirement_without_index_write() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"plan",
+            "run-a",
+        )
+        .unwrap();
+        SubmissionReservations::mark_journal_ready(&lease, &namespace, &scope(), "key", "run-a")
+            .unwrap();
+        SubmissionReservations::retire_namespace(&lease, &namespace, &scope()).unwrap();
+        let before = lease
+            .project()
+            .read_file_bounded(FILE, CAP)
+            .unwrap()
+            .unwrap();
+        let first =
+            SubmissionReservations::reservation_ref(&lease, &namespace, &scope(), "key", "run-a")
+                .unwrap();
+        assert_eq!(first.len(), 71);
+        assert!(
+            first
+                .strip_prefix("sha256:")
+                .unwrap()
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+        );
+        assert_eq!(
+            lease
+                .project()
+                .read_file_bounded(FILE, CAP)
+                .unwrap()
+                .unwrap(),
+            before
+        );
+        drop(lease);
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let restored = SubmissionNamespace::from_host_token(namespace.id().into()).unwrap();
+        let retry =
+            SubmissionReservations::reservation_ref(&lease, &restored, &scope(), "key", "run-a")
+                .unwrap();
+        assert_eq!(retry, first);
+        assert_eq!(
+            lease
+                .project()
+                .read_file_bounded(FILE, CAP)
+                .unwrap()
+                .unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn reservation_ref_refuses_unready_and_foreign_coordinates_without_index_write() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        let other_namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"plan",
+            "run-a",
+        )
+        .unwrap();
+        let before = lease
+            .project()
+            .read_file_bounded(FILE, CAP)
+            .unwrap()
+            .unwrap();
+        assert!(matches!(
+            SubmissionReservations::reservation_ref(&lease, &namespace, &scope(), "key", "run-a"),
+            Err(SubmissionError::JournalNotReady)
+        ));
+        SubmissionReservations::mark_journal_ready(&lease, &namespace, &scope(), "key", "run-a")
+            .unwrap();
+        let ready_bytes = lease
+            .project()
+            .read_file_bounded(FILE, CAP)
+            .unwrap()
+            .unwrap();
+        let foreign = SubmissionScope {
+            principal: "foreign".into(),
+            ..scope()
+        };
+        assert!(matches!(
+            SubmissionReservations::reservation_ref(&lease, &namespace, &foreign, "key", "run-a"),
+            Err(SubmissionError::ForeignScope)
+        ));
+        for (token, key, run) in [
+            (&namespace, "foreign-key", "run-a"),
+            (&namespace, "key", "run-b"),
+            (&other_namespace, "key", "run-a"),
+        ] {
+            assert!(matches!(
+                SubmissionReservations::reservation_ref(&lease, token, &scope(), key, run),
+                Err(SubmissionError::ReservationMismatch)
+            ));
+        }
+        let unissued = SubmissionNamespace::from_host_token(
+            "0000000000000003-00000000000000000000000000000000".into(),
+        )
+        .unwrap();
+        assert!(matches!(
+            SubmissionReservations::reservation_ref(&lease, &unissued, &scope(), "key", "run-a"),
+            Err(SubmissionError::UnknownNamespace)
+        ));
+        assert_ne!(
+            before, ready_bytes,
+            "only mark_journal_ready writes the index"
+        );
+        assert_eq!(
+            lease
+                .project()
+                .read_file_bounded(FILE, CAP)
+                .unwrap()
+                .unwrap(),
+            ready_bytes
         );
     }
 
