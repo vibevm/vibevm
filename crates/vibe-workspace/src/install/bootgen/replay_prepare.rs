@@ -5,9 +5,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use vibe_core::manifest::{ExtensionKey, LinkType, SpecFormat};
-use vibe_spec::{
-    CompilerNativePolicy, CompilerPendingSet, FileResolver, FsSectionSource, SelfCoordinate,
-};
+use vibe_spec::{CompilerNativePolicy, CompilerPendingSet, FsSectionSource, SelfCoordinate};
 
 use crate::boot::hybrid::{UnitId, UnitInput};
 use crate::boot::{BootProvenance, EffectiveBoot};
@@ -54,15 +52,21 @@ pub(super) struct NodeReplayCandidate {
 pub(super) struct BootReplayCandidates {
     workspace_root: PathBuf,
     self_coord: SelfCoordinate,
+    selected_slots: Vec<boot_artifacts::SelectedSlotWitness>,
     units: Vec<UnitReplayCandidate>,
     nodes: Vec<NodeReplayCandidate>,
 }
 
 impl BootReplayCandidates {
-    pub(super) fn new(workspace_root: PathBuf, self_coord: SelfCoordinate) -> Self {
+    pub(super) fn new(
+        workspace_root: PathBuf,
+        self_coord: SelfCoordinate,
+        selected_slots: Vec<boot_artifacts::SelectedSlotWitness>,
+    ) -> Self {
         Self {
             workspace_root,
             self_coord,
+            selected_slots,
             units: Vec::new(),
             nodes: Vec::new(),
         }
@@ -145,6 +149,7 @@ pub(crate) struct SealedBootReplay {
     token: OwnerRuntimeEpochToken,
     workspace_root: PathBuf,
     self_coord: SelfCoordinate,
+    selected_slots: Vec<boot_artifacts::SelectedSlotWitness>,
     lanes: Vec<ReplayLane>,
 }
 
@@ -363,6 +368,7 @@ pub(super) fn seal_replay_set(
         token: epoch.replay_token(),
         workspace_root: candidates.workspace_root,
         self_coord: candidates.self_coord,
+        selected_slots: candidates.selected_slots,
         lanes,
     }))
 }
@@ -419,6 +425,11 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
             return Err(replay_error(&owner.to_string(), "duplicate replay policy"));
         }
     }
+    let selected_resolver = crate::boot_artifacts::descriptor_reader::selected_resolver(
+        &replay.workspace_root,
+        &replay.self_coord,
+        &replay.selected_slots,
+    )?;
     let mut provider = factory.create(policies)?;
     let mut overlay = BTreeMap::new();
     let mut publications = Vec::with_capacity(replay.lanes.len());
@@ -428,10 +439,7 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
         let prepared_index = prepared_indexes[position].take().ok_or_else(|| {
             replay_error(&lane.candidate.owner().to_string(), "lane visited twice")
         })?;
-        let source = FsSectionSource::with_overlay(
-            FileResolver::new(&replay.workspace_root, replay.self_coord.clone()),
-            overlay.clone(),
-        );
+        let source = FsSectionSource::with_overlay(selected_resolver.clone(), overlay.clone());
         let owner = match lane.candidate.owner() {
             OwnerRuntimeId::Unit { provider } => epoch.unit(provider),
             OwnerRuntimeId::Node { rel } => epoch.node(rel),

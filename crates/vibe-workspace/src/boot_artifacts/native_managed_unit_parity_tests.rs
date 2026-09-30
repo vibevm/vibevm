@@ -145,6 +145,192 @@ fn compile_unit(
 }
 
 #[test]
+fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_drift() {
+    let root = tempfile::tempdir().unwrap();
+    fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\ngroup='org.demo'\nname='host'\nversion='1.1.0'\n",
+    )
+    .unwrap();
+    let source = tempfile::tempdir().unwrap();
+    let specs = vibe_core::layout::current_specs_root();
+    let rule = specs.join("common/rule.xml");
+    let ordinary = specs.join("common/guide.md");
+    let data = specs.join("common/guide.xml");
+    fs::create_dir_all(source.path().join("vibevm/vibespecs/common")).unwrap();
+    let fwd = |path: &std::path::Path| path.to_string_lossy().replace('\\', "/");
+    let manifest = format!(
+        "[package]\ngroup='org.demo'\nname='selected'\nkind='tool'\nversion='1.1.0'\nformat='normal'\n\
+         [[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+        fwd(&ordinary),
+        fwd(&data),
+        fwd(&rule),
+    );
+    fs::write(source.path().join("vibe.toml"), &manifest).unwrap();
+    fs::write(
+        source.path().join(&ordinary),
+        b"# Ordinary\n\n#use is literal.\n",
+    )
+    .unwrap();
+    fs::write(
+        source.path().join(&data),
+        b"<data><!-- keep --> raw </data>\n",
+    )
+    .unwrap();
+    fs::write(source.path().join(&rule),
+        b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><RULE fact=\"true\" status=\"impl/done\">native-selected XML</RULE></p></spec>\n")
+        .unwrap();
+    let group = Group::parse("org.demo").unwrap();
+    let version: semver::Version = "1.1.0".parse().unwrap();
+    let hash = ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
+    crate::vibedeps::materialise_with_spec_format(
+        root.path(),
+        &group,
+        "selected",
+        &version,
+        source.path(),
+        crate::vibedeps::CopyMode::Copy,
+        SpecFormat::Mixed,
+        &hash,
+    )
+    .unwrap();
+    let slot = crate::vibedeps::slot_abs_path(root.path(), &group, "selected", &version);
+    let resolution = vec![crate::install::ResolvedDep {
+        kind: PackageKind::Tool,
+        group: group.clone(),
+        name: "selected".into(),
+        version: version.clone(),
+        content_dir: slot.clone(),
+        source_hash: Some(hash.clone()),
+        embedded_sources: Vec::new(),
+        manifest: Manifest::parse_str(&manifest).unwrap(),
+        requires: Vec::new(),
+        admitted_by: None,
+        via_override: None,
+        source_mutable: false,
+        in_place_changed: None,
+    }];
+    let workspace = Workspace::load(root.path()).unwrap();
+    let world = ExtensionWorldEpoch::from_resolution(root.path(), &resolution).unwrap();
+    let lowered = lower_owner_runtimes(
+        &workspace,
+        &world,
+        OwnerRuntimeLowering::new(".", BTreeMap::new()),
+    )
+    .unwrap();
+    let epoch = lowered.bind_run(OwnerRuntimeRunFacts {
+        run_id: "7123456789abcdef0123456789abcdef".into(),
+        state_root: root.path().join(".vibe"),
+        platform: "linux-x86_64".into(),
+        offline: true,
+        created_at: "2026-09-08T00:00:00Z".into(),
+    });
+    let owner = DependencyProviderId::new(
+        group.clone(),
+        vibe_core::PackageName::parse("selected").unwrap(),
+    );
+    let boot = EffectiveBoot {
+        entries: vec![BootEntry {
+            path: slot
+                .join(&rule)
+                .strip_prefix(root.path())
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/"),
+            band: BootBand::Dependency,
+            link: LinkType::Static,
+            when: None,
+            origin: "org.demo/selected".into(),
+            provenance: BootProvenance::Dependency {
+                group: group.clone(),
+                name: "selected".into(),
+            },
+            use_ref: false,
+            format: vibe_core::manifest::PackageFormat::Normal,
+            unit_substituted: false,
+            elided: false,
+        }],
+    };
+    let witness = crate::boot_artifacts::SelectedSlotWitness {
+        group,
+        name: "selected".into(),
+        version,
+        root: slot.clone(),
+        source_hash: Some(hash),
+        spec_format: SpecFormat::Mixed,
+    };
+    let selected = crate::boot_artifacts::native_managed::compile_static_owner_managed_selected(
+        &boot,
+        root.path(),
+        &SelfCoordinate::new(Some("org.demo".into()), "host".into()),
+        SpecFormat::Mixed,
+        epoch.unit(&owner).unwrap(),
+        OwnerNativeCompileMode::Plain,
+        None::<&mut FakeProvider>,
+        &[witness.clone()],
+    )
+    .unwrap()
+    .unwrap();
+    assert!(String::from_utf8_lossy(selected.artifact().bytes()).contains("native-selected XML"));
+    assert_eq!(
+        fs::read(slot.join(&ordinary)).unwrap(),
+        b"# Ordinary\n\n#use is literal.\n"
+    );
+    assert_eq!(
+        fs::read(slot.join(&data)).unwrap(),
+        b"<data><!-- keep --> raw </data>\n"
+    );
+    let mut foreign = witness.clone();
+    foreign.source_hash = Some(ContentHash::parse(&format!("sha256:{}", "2".repeat(64))).unwrap());
+    let error = crate::boot_artifacts::native_managed::compile_static_owner_managed_selected(
+        &boot,
+        root.path(),
+        &SelfCoordinate::new(Some("org.demo".into()), "host".into()),
+        SpecFormat::Mixed,
+        epoch.unit(&owner).unwrap(),
+        OwnerNativeCompileMode::Plain,
+        None::<&mut FakeProvider>,
+        &[foreign.clone()],
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("source hash or format differs"), "{error}");
+    let mut explicit_provider = FakeProvider::new(Reply::Missing);
+    let explicit = crate::boot_artifacts::native_managed::compile_backend_owner_managed_selected(
+        &boot,
+        root.path(),
+        &SelfCoordinate::new(Some("org.demo".into()), "host".into()),
+        vibe_spec::BackendId::new("selected-test").unwrap(),
+        epoch.unit(&owner).unwrap(),
+        &mut explicit_provider,
+        &[foreign],
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(
+        explicit.contains("source hash or format differs"),
+        "{explicit}"
+    );
+    assert!(explicit_provider.owners.is_empty());
+    fs::write(slot.join(rule), b"changed XML\n").unwrap();
+    let error = crate::boot_artifacts::native_managed::compile_static_owner_managed_selected(
+        &boot,
+        root.path(),
+        &SelfCoordinate::new(Some("org.demo".into()), "host".into()),
+        SpecFormat::Mixed,
+        epoch.unit(&owner).unwrap(),
+        OwnerNativeCompileMode::Plain,
+        None::<&mut FakeProvider>,
+        &[witness],
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("changed bytes"), "{error}");
+}
+
+#[test]
 fn package_unit_plain_traced_observed_paths_agree_on_bytes_status_and_evidence() {
     for (reply, run_id) in [
         (Reply::Skip, "5123456789abcdef0123456789abcdef"),

@@ -51,6 +51,17 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             )
         })
         .collect();
+    let selected_slots = resolution
+        .iter()
+        .map(|dep| boot_artifacts::SelectedSlotWitness {
+            group: dep.group.clone(),
+            name: dep.name.clone(),
+            version: dep.version.clone(),
+            root: workspace_root.join(slot_rel_path(dep)),
+            source_hash: dep.source_hash.clone(),
+            spec_format,
+        })
+        .collect::<Vec<_>>();
     let trace_versions: Option<HashMap<UnitId, String>> = trace.map(|_| {
         resolution
             .iter()
@@ -164,7 +175,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             None => boot_artifacts::native_managed::OwnerNativeCompileMode::Plain,
         };
         let prepared_index = boot_artifacts::publication::prepare_index(&effective, spec_format)?;
-        let compiled = boot_artifacts::native_managed::compile_static_owner_managed(
+        let compiled = boot_artifacts::native_managed::compile_static_owner_managed_selected(
             &effective,
             workspace_root,
             self_coord,
@@ -172,6 +183,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             epoch.unit(&owner)?,
             mode,
             provider.as_deref_mut(),
+            &selected_slots,
         )?;
         let pending_frame = compiled
             .as_ref()

@@ -263,6 +263,45 @@ fn empty_replay_is_zero_factory_and_exact_epoch_is_mandatory() {
 }
 
 #[test]
+fn sealed_replay_refuses_descriptor_without_independent_hash_before_factory() {
+    let graph = native_graph_keeping_top("", "", COMPILE_NATIVE);
+    let mut pending = FakeProvider::new(Reply::Missing);
+    let mut replay = collect_replay(&graph, &mut pending);
+    let BootReplaySet::Sealed(ref mut sealed) = replay else {
+        panic!("expected a pending replay lane")
+    };
+    let group = vibe_core::Group::parse("org.fixture").unwrap();
+    let version: semver::Version = "1.1.0".parse().unwrap();
+    let root =
+        crate::vibedeps::slot_abs_path(&graph.workspace.root, &group, "descriptor", &version);
+    write(
+        &root.join("vibe.toml"),
+        "[package]\ngroup='org.fixture'\nname='descriptor'\nkind='flow'\nversion='1.1.0'\n\
+         [[package.sources]]\nfile='vibevm/vibespecs/common/rule.xml'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+    );
+    sealed
+        .selected_slots
+        .push(crate::boot_artifacts::SelectedSlotWitness {
+            group,
+            name: "descriptor".into(),
+            version,
+            root,
+            source_hash: None,
+            spec_format: SpecFormat::Mixed,
+        });
+    let mut factory = FakeReplayFactory::new(Reply::Skip);
+    let error = match prepare_boot_replay(replay, &graph.epoch, &mut factory) {
+        Ok(_) => panic!("descriptor without a selected hash reached replay"),
+        Err(error) => error.to_string(),
+    };
+    assert!(
+        error.contains("independent selected source hash"),
+        "{error}"
+    );
+    assert_eq!(factory.creates, 0);
+}
+
+#[test]
 fn direct_unit_static_closure_and_node_prepare_from_overlay_without_writes() {
     let graph = native_graph_keeping_top("", "", COMPILE_NATIVE);
     let middle = owner(&graph, "middle");

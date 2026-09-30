@@ -43,7 +43,9 @@ use super::{
 mod replay;
 pub(crate) use replay::compile_static_owner_managed_with_source;
 mod explicit;
-pub(crate) use explicit::compile_backend_owner_managed;
+pub(crate) use explicit::compile_backend_owner_managed_selected;
+mod selected;
+pub(crate) use selected::compile_static_owner_managed_selected;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OwnerNativeCompileStatus {
@@ -187,6 +189,7 @@ pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
         provider,
         None,
         None,
+        None,
         finalize_compiler_pending_artifact,
     )
 }
@@ -202,6 +205,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     provider: Option<&mut P>,
     injected_source: Option<&FsSectionSource>,
     injected_overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
+    selected_slots: Option<&[super::SelectedSlotWitness]>,
     finalizer: PendingFinalizer,
 ) -> Result<Option<OwnerManagedStaticCompile>, WorkspaceError> {
     let entries = boot.static_entries().collect::<Vec<_>>();
@@ -238,8 +242,15 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     let source = match injected_source {
         Some(source) => source,
         None => {
-            owned_source =
-                FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+            let resolver = match selected_slots {
+                Some(witnesses) => super::descriptor_reader::selected_resolver(
+                    workspace_root,
+                    self_coord,
+                    witnesses,
+                )?,
+                None => FileResolver::new(workspace_root, self_coord.clone()),
+            };
+            owned_source = FsSectionSource::new(resolver);
             &owned_source
         }
     };
@@ -550,6 +561,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         owner,
         mode,
         provider,
+        None,
         None,
         None,
         finalizer,

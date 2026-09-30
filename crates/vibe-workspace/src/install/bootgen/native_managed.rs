@@ -7,7 +7,7 @@ use vibe_core::manifest::{BootCategory, SpecFormat};
 use crate::boot;
 use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeId};
-use crate::{Workspace, WorkspaceError, boot_artifacts};
+use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
 
 use super::hybrid_emit::{
     append_hoisted, emit_package_units, emit_package_units_bound, with_static_set,
@@ -53,8 +53,31 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
+    let selected_slots = resolution
+        .iter()
+        .map(|dep| {
+            let in_place = dep
+                .manifest
+                .package
+                .as_ref()
+                .is_some_and(|package| package.materialization.is_in_place());
+            let slot = if in_place {
+                vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
+            } else {
+                vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+            };
+            boot_artifacts::SelectedSlotWitness {
+                group: dep.group.clone(),
+                name: dep.name.clone(),
+                version: dep.version.clone(),
+                root: workspace.root.join(slot),
+                source_hash: dep.source_hash.clone(),
+                spec_format,
+            }
+        })
+        .collect();
     let mut replay_candidates =
-        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone());
+        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone(), selected_slots);
     let table = build_unit_table(&workspace.root, resolution);
     let versions: HashMap<UnitId, String> = resolution
         .iter()

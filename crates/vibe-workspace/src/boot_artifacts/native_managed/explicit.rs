@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use vibe_spec::{
-    ArtifactPlan, BackendId, CompilerNativeOutcome, EmittedArtifact, FileResolver, FsSectionSource,
+    ArtifactPlan, BackendId, CompilerNativeOutcome, EmittedArtifact, FsSectionSource,
     SelfCoordinate, compile_artifact_native_managed,
 };
 
@@ -12,14 +12,44 @@ use crate::extension_world::{
 use crate::{WorkspaceError, layout_paths};
 
 use super::{fact_error, inputs, native_compile_error};
+use crate::boot_artifacts::SelectedSlotWitness;
 
-pub(crate) fn compile_backend_owner_managed<P: OwnerNativeCompileProvider>(
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one selected custom backend source boundary"
+)]
+pub(crate) fn compile_backend_owner_managed_selected<P: OwnerNativeCompileProvider>(
     boot: &EffectiveBoot,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     backend: BackendId,
     owner: OwnerRuntimeView<'_>,
     provider: &mut P,
+    selected: &[SelectedSlotWitness],
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+    compile_backend_owner_managed_using(
+        boot,
+        workspace_root,
+        self_coord,
+        backend,
+        owner,
+        provider,
+        selected,
+    )
+}
+
+#[allow(
+    clippy::too_many_arguments,
+    reason = "one custom backend source boundary"
+)]
+fn compile_backend_owner_managed_using<P: OwnerNativeCompileProvider>(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    backend: BackendId,
+    owner: OwnerRuntimeView<'_>,
+    provider: &mut P,
+    selected: &[SelectedSlotWitness],
 ) -> Result<Option<EmittedArtifact>, WorkspaceError> {
     let entries = boot.static_entries().collect::<Vec<_>>();
     if entries.is_empty() {
@@ -38,7 +68,12 @@ pub(crate) fn compile_backend_owner_managed<P: OwnerNativeCompileProvider>(
             reason: error.to_string(),
         })?,
     );
-    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+    let resolver = crate::boot_artifacts::descriptor_reader::selected_resolver(
+        workspace_root,
+        self_coord,
+        selected,
+    )?;
+    let source = FsSectionSource::new(resolver);
     let owner_id = owner.runtime().id().clone();
     let supplied = provider.bind(owner)?;
     let (binding, policy) = supplied.into_parts();
