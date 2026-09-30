@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-073 — Exact publication subjects and effect authority</title>
+  <status stage="spec" state="plan"/>
+  <p>This document governs a future publication operation. The current
+  distribution bundle, platform fragment and aggregate contracts remain the
+  input evidence defined by [PROP-019](PROP-019-version-manager.xml#instances).
+  The format rules of [PROP-044](PROP-044-change-native-formats.xml#root) and
+  the lifecycle ownership rules of
+  [PROP-054](PROP-054-lifecycle-and-extensions.xml#root) still apply. A
+  prepared plan is data for inspection and authorization. It grants no remote
+  write, and this proposal does not authorize a public Git push or release.</p>
+
+  <subject title="1. One exact local publication subject">
+    <PUBLICATION-EXACT-SUBJECT title="Exact source and bundle subject">
+      <p><req-publication-exact-subject fact="true" status="spec/plan">`req r1`</req-publication-exact-subject></p>
+      <p><PUBLICATION-EXACT-SUBJECT-LAW fact="true" status="spec/plan">The
+      publication owner constructs one canonical subject from an explicitly
+      selected clean committed source commit and tree, a separate SHA-256 and
+      byte-length witness for Cargo.lock read from that same commit, the exact
+      mutable SemVer target, and the complete supported platform set. For each
+      target it binds one platform fragment and its exact distribution bundle,
+      raw bootstrap executable, embedded component digests and sizes, source
+      archive digest, size and tree OID, and the fragment's version, commit,
+      tree and target. It also binds the aggregate manifest and the committed
+      installer asset bytes by name, media type, byte length and SHA-256, and
+      names the effective smoke-policy identity and exact evidence or typed
+      unavailability. Every input is validated against its existing strict
+      distribution contract. A missing, duplicate, foreign-target, stale or
+      unverified bundle refuses an apply-ready subject; a matching filename,
+      version or source commit alone never proves its bytes. In the active next
+      campaign the target version is 1.1.0 and mutable: replacing that
+      version's authorized bytes does not increment it, while 1.0.0 remains
+      the already-used predecessor. A changed source tree, committed lock
+      witness, target set, fragment, bundle, installer or smoke evidence changes
+      the subject identity or refuses construction.</PUBLICATION-EXACT-SUBJECT-LAW></p>
+    </PUBLICATION-EXACT-SUBJECT>
+    <PUBLICATION-SUBJECT-DIGEST title="Framed subject identity">
+      <p><req-publication-subject-digest fact="true" status="spec/plan">`req r1`</req-publication-subject-digest></p>
+      <p><PUBLICATION-SUBJECT-DIGEST-LAW fact="true" status="spec/plan">The
+      subject's epoch-one SHA-256 is over a distinct publication-subject domain
+      tag and unambiguous ordered tagged frames. Frames include explicit
+      schema/recipe identity, target repository identity, source commit and
+      tree, committed lock witness, version and mutability, complete target
+      count and canonical target order, each named asset's type, size and
+      digest, and smoke-policy/evidence identity. A collection encodes its
+      count before elements and an optional value encodes presence separately
+      from an empty value. Text uses exact validated UTF-8; integers use
+      fixed-width unsigned big-endian bytes; binary digests use raw decoded
+      bytes. Input declaration order does not choose target order. A digest
+      over only the rendered manifest JSON, a remote tag spelling or a package
+      version is not this subject identity.</PUBLICATION-SUBJECT-DIGEST-LAW></p>
+    </PUBLICATION-SUBJECT-DIGEST>
+  </subject>
+
+  <effects title="2. Pure remote effect partitions">
+    <PUBLICATION-EFFECT-PLAN title="Complete prepared mutation plan">
+      <p><req-publication-effect-plan fact="true" status="spec/plan">`req r1`</req-publication-effect-plan></p>
+      <p><PUBLICATION-EFFECT-PLAN-LAW fact="true" status="spec/plan">A pure
+      planner consumes the validated local subject, an explicitly selected
+      destination owner/repository and a separately captured remote
+      observation. It lists every intended mutation in ordered partitions:
+      create an absent tag ref or retain its exact observed commit ref;
+      replace a known prior draft release by its exact ID and complete asset
+      inventory, then create the new draft; for each supported target replace
+      its bundle, bootstrap and fragment assets by canonical names and exact
+      observed asset IDs; replace the aggregate and three installer assets;
+      and, only when separately authorized, change the verified draft's
+      visibility and latest-release posture. Existing release/tag identity,
+      draft state, source commit, asset names, IDs, sizes and digests, including
+      explicit absence, are plan inputs, not facts inferred after approval.
+      Deleting a release implicitly deletes its assets, so a prior release
+      whose complete asset inventory cannot be observed has an unknown effect
+      set and refuses an apply-ready plan. Cleanup of temporary assets is also
+      an explicit delete partition, never a hidden preparation step. The plan
+      names each replacement's prior ID and intended successor identity,
+      dependency order and recovery prerequisite. Read-only remote discovery
+      occurs outside the pure planner; plan construction itself performs no
+      filesystem or network write, creates no tag or release, and loads no
+      credential.</PUBLICATION-EFFECT-PLAN-LAW></p>
+    </PUBLICATION-EFFECT-PLAN>
+    <PUBLICATION-PLAN-DIGEST title="Exact target and replacement identity">
+      <p><req-publication-plan-digest fact="true" status="spec/plan">`req r1`</req-publication-plan-digest></p>
+      <p><PUBLICATION-PLAN-DIGEST-LAW fact="true" status="spec/plan">The
+      epoch-one effect-plan SHA-256 has a publication-plan domain tag separate
+      from the subject digest. Ordered frames bind the subject digest, target
+      owner/repository, requested operation and visibility posture, every
+      partition and its exact remote precondition, absent/present markers,
+      replaced release/tag/asset IDs and observed generation, intended names
+      and byte digests, smoke policy and recovery prerequisites. Changing a
+      target, remote generation, replacement ID, selected operation or asset
+      changes the plan identity. Immediately before each remote effect the
+      owner reobserves its stated preconditions; drift refuses before that
+      effect. Where a provider offers no atomic compare-and-swap across
+      separate remote objects, a race after reobservation is reported as
+      partial or uncertain with the landed partition recorded, never as a
+      no-effects refusal.</PUBLICATION-PLAN-DIGEST-LAW></p>
+    </PUBLICATION-PLAN-DIGEST>
+  </effects>
+
+  <smoke title="3. Explicit smoke evidence">
+    <PUBLICATION-SMOKE-POLICY title="Skipped is not passed">
+      <p><req-publication-smoke-policy fact="true" status="spec/plan">`req r1`</req-publication-smoke-policy></p>
+      <p><PUBLICATION-SMOKE-POLICY-LAW fact="true" status="spec/plan">The
+      selected smoke policy has its own versioned identity, ordered required
+      probes, platform scope and applicability rule. For each probe the owner
+      records passed, failed, skipped or unavailable separately, with the
+      tested subject/asset digest, tool or runner identity and bounded evidence
+      reference. A skip, unavailable runner, missing target, stale result or
+      test against different bytes never becomes passed by omission. The pure
+      plan states which results are required before an apply-ready or
+      publish-ready verdict; a policy may explicitly allow a skip only by a
+      named rule bound into the plan identity. Current optional build gates
+      are evidence only when they ran against the same pinned source and
+      produced bundle bytes. This clause defines evidence and readiness, not
+      permission to run a costly or remote check automatically.</PUBLICATION-SMOKE-POLICY-LAW></p>
+    </PUBLICATION-SMOKE-POLICY>
+  </smoke>
+
+  <authority title="4. Plan, approval and journal remain different">
+    <PUBLICATION-JOURNAL-BOUNDARY title="No effect from a plan alone">
+      <p><req-publication-journal-boundary fact="true" status="spec/plan">`req r1`</req-publication-journal-boundary></p>
+      <p><PUBLICATION-JOURNAL-BOUNDARY-LAW fact="true" status="spec/plan">The
+      prepared subject and effect plan are inspectable data. Mode A approval
+      and any later explicitly enabled Mode B policy evaluate the same exact
+      plan but are separate authority. Neither an approved plan, a dry-run
+      result, an existing release, a previous successful publication, nor an
+      installed operation descriptor authorizes public publication by itself.
+      A protected machine submission additionally requires the publication
+      owner's own durable pre-effect journal under the M-16-C.2 reservation
+      fence: it records exact plan and remote preconditions before the first
+      write, tracks each landed, pending or uncertain partition, and retains
+      the final or recovery-required outcome. A post-publication manifest or
+      registry fact is evidence of what landed, not a substitute for that
+      journal. Until the owner can recover a lost response without replaying
+      an uncertain remote write, protected machine publication remains
+      unavailable. This proposal neither creates such a journal nor grants a
+      public Git push or release.</PUBLICATION-JOURNAL-BOUNDARY-LAW></p>
+    </PUBLICATION-JOURNAL-BOUNDARY>
+  </authority>
+</spec>
