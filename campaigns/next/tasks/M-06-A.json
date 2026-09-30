@@ -349,6 +349,7 @@
         "crates/vibe-requirements/src/sources/",
         "crates/vibe-requirements/src/digest.rs",
         "crates/vibe-requirements/src/tests_query.rs",
+        "crates/vibe-requirements/src/tests_query/",
         "crates/vibe-requirements/src/tests_query_declared.rs",
         "crates/vibe-requirements/src/lib.rs",
         "crates/vibe-requirements/src/tests_digest.rs",
