@@ -1472,3 +1472,7 @@ mod tests {
         assert_eq!(created.load(std::sync::atomic::Ordering::SeqCst), 1);
     }
 }
+
+#[cfg(test)]
+#[path = "submission/lifetime_tests.rs"]
+mod lifetime_tests;
