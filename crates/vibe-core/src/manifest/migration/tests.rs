@@ -12,6 +12,7 @@ fn selection(
         source_profile: Some(source),
         target_profile: Some(target),
         recipe: Some(recipe),
+        source_decisions: &[],
     }
 }
 
@@ -21,6 +22,9 @@ fn legacy() -> MigrationSelection<'static> {
 fn current() -> MigrationSelection<'static> {
     selection(CURRENT_ABSENT, CURRENT_ABSENT, IDENTITY)
 }
+
+#[path = "tests_source.rs"]
+mod tests_source;
 
 // Deliberately synthetic: a package-role integration of the documented rename,
 // not a retained historical manifest or a real-file migration corpus.

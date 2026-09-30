@@ -178,13 +178,6 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
     if let Err(error) = validate_source_decisions(&request) {
         return MigrationPlanningResponse::Preflight(error);
     }
-    if !request.source_decisions.is_empty() {
-        return MigrationPlanningResponse::Preflight(preflight(
-            Code::InvalidRequest,
-            "source_decisions",
-            "source decisions require a source-migration producer and cannot be ignored",
-        ));
-    }
     let report = match project_core(&request).and_then(|report| {
         validate_report(&report)?;
         Ok(report)
@@ -206,12 +199,27 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
 }
 
 fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
+    let decisions = request
+        .source_decisions
+        .iter()
+        .map(|decision| {
+            let value = serde_json::to_value(decision)
+                .map_err(|_| invalid("source_decisions", "source decision encoding failed"))?;
+            serde_json::from_value::<SourceDescriptor>(value).map_err(|_| {
+                invalid(
+                    "source_decisions",
+                    "source decision is not a valid descriptor",
+                )
+            })
+        })
+        .collect::<Validated<Vec<_>>>()?;
     let outcome = plan_manifest_migration(
         &request.source_text,
         MigrationSelection {
             source_profile: request.source_profile.as_deref(),
             target_profile: request.target_profile.as_deref(),
             recipe: request.recipe.as_deref(),
+            source_decisions: &decisions,
         },
     );
     let outcome = match outcome {
@@ -228,12 +236,16 @@ fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
                     "source_profile" => QuestionField::SourceProfile,
                     "target_profile" => QuestionField::TargetProfile,
                     "recipe" => QuestionField::Recipe,
+                    "source_media" => QuestionField::SourceMedia,
+                    "source_interpretation" => QuestionField::SourceInterpretation,
+                    "source_role" => QuestionField::SourceRole,
+                    "source_loading" => QuestionField::SourceLoading,
                     _ => return Err(invalid("questions.field", "unknown core input field")),
                 };
                 questions.push(Question {
                     field,
                     choices: requirement.choices.into_iter().map(str::to_owned).collect(),
-                    resource_path: None,
+                    resource_path: requirement.resource_path,
                 });
             }
             Outcome::NeedsInput(Box::new(OutcomeNeedsInput { questions }))
@@ -538,12 +550,6 @@ fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
 pub fn validate_report_for_request(request: &PlanRequest, report: &PlanReport) -> Validated<()> {
     if request.schema != 1 {
         return Err(invalid("request.schema", "unsupported request schema"));
-    }
-    if !request.source_decisions.is_empty() {
-        return Err(invalid(
-            "request.source_decisions",
-            "source producer is not installed",
-        ));
     }
     validate_report(report)?;
     let expected = project_core(request)?;

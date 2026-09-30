@@ -10,13 +10,18 @@ use std::ops::Range;
 use sha2::{Digest, Sha256};
 use toml_edit::{Document, Item, TableLike, Value};
 
-use super::Manifest;
+use super::{Manifest, SourceDescriptor};
+
+mod source;
 
 pub const LEGACY_ABSENT: &str = "materialization-legacy-absent-r1";
 pub const CURRENT_ABSENT: &str = "materialization-current-absent-r1";
 pub const CURRENT_EPOCH1: &str = "materialization-current-epoch1-r1";
 pub const SNAPSHOT_TO_COPY: &str = "snapshot-to-copy-r1";
 pub const IDENTITY: &str = "identity-r1";
+pub const SOURCE_BOOT_LEGACY: &str = "source-boot-normal-absent-r1";
+pub const SOURCE_BOOT_CURRENT: &str = "source-boot-normal-declared-absent-r1";
+pub const BOOT_SOURCE_INSERT: &str = "boot-source-explicit-r1";
 
 /// Authored profile epoch provenance, independent of product and wire versions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -33,7 +38,9 @@ pub enum ManifestMigrationEpoch {
 )]
 pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrationEpoch> {
     match profile {
-        LEGACY_ABSENT | CURRENT_ABSENT => Some(ManifestMigrationEpoch::Absent),
+        LEGACY_ABSENT | CURRENT_ABSENT | SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT => {
+            Some(ManifestMigrationEpoch::Absent)
+        }
         CURRENT_EPOCH1 => Some(ManifestMigrationEpoch::Epoch1),
         _ => None,
     }
@@ -45,12 +52,14 @@ pub struct MigrationSelection<'a> {
     pub source_profile: Option<&'a str>,
     pub target_profile: Option<&'a str>,
     pub recipe: Option<&'a str>,
+    pub source_decisions: &'a [SourceDescriptor],
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MigrationInputRequirement {
     pub field: &'static str,
     pub choices: Vec<&'static str>,
+    pub resource_path: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -109,6 +118,10 @@ const EDGES: [(&str, &str, &str); 3] = [
     (CURRENT_ABSENT, CURRENT_ABSENT, IDENTITY),
     (CURRENT_EPOCH1, CURRENT_EPOCH1, IDENTITY),
 ];
+const SOURCE_EDGES: [(&str, &str, &str); 2] = [
+    (SOURCE_BOOT_LEGACY, SOURCE_BOOT_CURRENT, BOOT_SOURCE_INSERT),
+    (SOURCE_BOOT_CURRENT, SOURCE_BOOT_CURRENT, IDENTITY),
+];
 
 /// Plan from exact text without reads, writes, defaults, providers or apply.
 /// Current Manifest validation is the final checker, not the frozen grammar.
@@ -141,12 +154,26 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         selection.recipe,
     ];
     let fields = ["source_profile", "target_profile", "recipe"];
+    let source_lane = !selection.source_decisions.is_empty()
+        || selected.iter().flatten().any(|value| {
+            matches!(
+                *value,
+                SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT | BOOT_SOURCE_INSERT
+            )
+        });
     for (index, value) in selected.iter().enumerate() {
         if let Some(value) = value {
             let known = if index == 2 {
-                matches!(*value, SNAPSHOT_TO_COPY | IDENTITY)
+                matches!(*value, SNAPSHOT_TO_COPY | IDENTITY | BOOT_SOURCE_INSERT)
             } else {
-                matches!(*value, LEGACY_ABSENT | CURRENT_ABSENT | CURRENT_EPOCH1)
+                matches!(
+                    *value,
+                    LEGACY_ABSENT
+                        | CURRENT_ABSENT
+                        | CURRENT_EPOCH1
+                        | SOURCE_BOOT_LEGACY
+                        | SOURCE_BOOT_CURRENT
+                )
             };
             if !known {
                 return Err(refusal(
@@ -157,16 +184,20 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
             }
         }
     }
-    let edges: Vec<_> = EDGES
-        .iter()
-        .copied()
-        .filter(|(source, target, recipe)| {
-            selected
-                .iter()
-                .zip([source, target, recipe])
-                .all(|(choice, value)| choice.is_none_or(|choice| choice == *value))
-        })
-        .collect();
+    let edges: Vec<_> = (if source_lane {
+        &SOURCE_EDGES[..]
+    } else {
+        &EDGES[..]
+    })
+    .iter()
+    .copied()
+    .filter(|(source, target, recipe)| {
+        selected
+            .iter()
+            .zip([source, target, recipe])
+            .all(|(choice, value)| choice.is_none_or(|choice| choice == *value))
+    })
+    .collect();
     if edges.is_empty() {
         return Err(refusal(
             MigrationRefusalKind::IncompatibleEdge,
@@ -188,6 +219,7 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
                 requirements.push(MigrationInputRequirement {
                     field: fields[index],
                     choices,
+                    resource_path: None,
                 });
             }
         }
@@ -202,8 +234,16 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         )
     })?;
     check_shape(&input, source)?;
+    if recipe != BOOT_SOURCE_INSERT && !selection.source_decisions.is_empty() {
+        return Err(shape("source_decisions"));
+    }
     let edits = if recipe == SNAPSHOT_TO_COPY {
         vec![materialization_edit(text, &input)?]
+    } else if recipe == BOOT_SOURCE_INSERT {
+        match source::source_insert_edit(text, &input, selection.source_decisions)? {
+            Ok(edit) => vec![edit],
+            Err(requirement) => return Ok(ManifestMigrationOutcome::NeedsInput(vec![requirement])),
+        }
     } else {
         Vec::new()
     };
@@ -295,6 +335,9 @@ fn only(table: &dyn TableLike, keys: &[&str], field: &str) -> Checked<()> {
 }
 
 fn check_shape(document: &Document<&str>, profile: &str) -> Checked<()> {
+    if matches!(profile, SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT) {
+        return source::check_source_shape(document, profile);
+    }
     let root = document.as_table();
     only(root, &["package", "requires"], "document")?;
     let package = table(root.get("package"), "package")?;

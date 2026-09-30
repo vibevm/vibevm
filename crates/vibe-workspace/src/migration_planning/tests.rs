@@ -31,7 +31,7 @@ fn fixture(family: &str, category: &str, name: &str) -> Value {
 }
 
 #[test]
-fn source_decision_wire_is_explicit_validated_and_not_ignored_before_its_producer() {
+fn source_decision_wire_reaches_the_explicit_boot_migration_producer() {
     let old = sample_request();
     assert!(
         serde_json::to_value(&old)
@@ -46,7 +46,24 @@ fn source_decision_wire_is_explicit_validated_and_not_ignored_before_its_produce
         request.source_decisions[0].file,
         "vibevm/vibespecs/boot/10-flow.xml"
     );
-    preflight_response(plan_migration_request(request), Code::InvalidRequest);
+    let planned = report(request.clone());
+    let output = plan(&planned);
+    assert!(output.after.starts_with(&request.source_text));
+    assert_eq!(output.edits.len(), 1);
+    validate_report_for_request(&request, &planned).unwrap();
+    let mut undecided = request;
+    undecided.source_decisions.clear();
+    let pending = report(undecided.clone());
+    let Outcome::NeedsInput(row) = &pending.outcome else {
+        panic!("media decision required")
+    };
+    assert_eq!(row.questions.len(), 1);
+    assert_eq!(row.questions[0].field, QuestionField::SourceMedia);
+    assert_eq!(
+        row.questions[0].resource_path.as_deref(),
+        Some("vibevm/vibespecs/boot/10-flow.xml")
+    );
+    validate_report_for_request(&undecided, &pending).unwrap();
     for name in [
         "source-path-escape",
         "source-duplicate",
