@@ -7,6 +7,9 @@ use vibe_core::manifest::{
     CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, SNAPSHOT_TO_COPY,
 };
 
+#[path = "tests_apply.rs"]
+mod tests_apply;
+
 const BEFORE: &str = "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"snapshot\"\n";
 const AFTER: &str = "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"copy\"\n";
 fn sample_request() -> PlanRequest {
