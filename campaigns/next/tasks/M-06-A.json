@@ -130,6 +130,7 @@
         "crates/vibe-core/src/manifest/mod.rs",
         "crates/vibe-facts/src/scan/declared.rs",
         "crates/vibe-facts/src/scan/declared/",
+        "crates/vibe-facts/src/scan.rs",
         "crates/vibe-facts/src/lib.rs",
         "crates/vibe-specdoc/src/lib.rs",
         "crates/progress-core/src/parse/",
