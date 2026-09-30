@@ -277,6 +277,133 @@ fn a_document_in_both_forms_is_a_loud_pair_collision() {
     assert!(msg.contains("DEP.md") && msg.contains("DEP.xml"), "{msg}");
 }
 
+#[test]
+fn descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing() {
+    use vibe_core::manifest::SourceInterpretation;
+
+    let ws = tempfile::TempDir::new().unwrap();
+    let slot = ws.path().join("slot");
+    let specs = slot.join("spec");
+    fs::create_dir_all(specs.join("common")).unwrap();
+    fs::write(specs.join("common/guide.md"), b"# ordinary\n").unwrap();
+    fs::write(specs.join("common/guide.xml"), b"<data/>\n").unwrap();
+    let rows = [
+        ("spec/common/guide.md", SourceInterpretation::Commonmark),
+        ("spec/common/guide.xml", SourceInterpretation::XmlData),
+    ]
+    .into_iter()
+    .map(|(path, interpretation)| DescriptorOutputRow {
+        output: path.into(),
+        source: path.into(),
+        interpretation: Some(interpretation),
+        output_sha256: "a".repeat(64),
+        document_address: None,
+    })
+    .collect();
+    let map = ValidatedDescriptorMap::from_witnessed_rows(
+        slot.clone(),
+        specs.clone(),
+        "sha256:captured-package".into(),
+        "b".repeat(64),
+        rows,
+    )
+    .unwrap();
+    let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/guide").unwrap();
+    let descriptor = FileResolver::new(&slot, host_coord())
+        .with_descriptor_source_map(specs.clone(), Some(map))
+        .unwrap();
+    assert!(matches!(
+        descriptor.resolve_file(&addr),
+        Err(ResolveError::DocNotFound { .. })
+    ));
+    let missing = FileResolver::new(&slot, host_coord())
+        .with_descriptor_source_map(specs, None)
+        .unwrap();
+    assert!(matches!(
+        missing.resolve_file(&addr),
+        Err(ResolveError::DescriptorMapMissing { .. })
+    ));
+    let legacy = FileResolver::new(&slot, host_coord());
+    assert!(matches!(
+        legacy.resolve_file(&addr),
+        Err(ResolveError::PairCollision { .. })
+    ));
+}
+
+#[test]
+fn descriptor_map_indexes_only_selected_vibe_and_refuses_forged_or_ambiguous_rows() {
+    use vibe_core::manifest::SourceInterpretation;
+
+    let ws = tempfile::TempDir::new().unwrap();
+    let slot = ws.path().join("slot");
+    let specs = slot.join("spec");
+    let vibe = DescriptorOutputRow {
+        output: "spec/common/guide.md".into(),
+        source: "spec/common/guide.md".into(),
+        interpretation: Some(SourceInterpretation::VibeSpec),
+        output_sha256: "a".repeat(64),
+        document_address: Some("common/guide".into()),
+    };
+    let raw = DescriptorOutputRow {
+        output: "spec/common/guide.xml".into(),
+        source: "spec/common/guide.xml".into(),
+        interpretation: Some(SourceInterpretation::XmlData),
+        output_sha256: "b".repeat(64),
+        document_address: None,
+    };
+    let build = |rows| {
+        ValidatedDescriptorMap::from_witnessed_rows(
+            slot.clone(),
+            specs.clone(),
+            "sha256:captured-package".into(),
+            "c".repeat(64),
+            rows,
+        )
+    };
+    let map = build(vec![vibe.clone(), raw.clone()]).unwrap();
+    let resolver = FileResolver::new(&slot, host_coord())
+        .with_descriptor_source_map(specs.clone(), Some(map))
+        .unwrap();
+    let address = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/guide").unwrap();
+    assert_eq!(
+        resolver.resolve_file(&address).unwrap(),
+        slot.join("spec/common/guide.md")
+    );
+    let mut converted_xml = vibe.clone();
+    converted_xml.output = "spec/common/guide.xml".into();
+    let xml_map = build(vec![converted_xml]).unwrap();
+    let xml_resolver = FileResolver::new(&slot, host_coord())
+        .with_descriptor_source_map(specs.clone(), Some(xml_map))
+        .unwrap();
+    let selected_xml = xml_resolver.resolve_source_file(&address, &[]).unwrap();
+    assert_eq!(selected_xml.path, slot.join("spec/common/guide.xml"));
+    assert_eq!(selected_xml.format, "xml");
+    let unsupported = DescriptorOutputRow {
+        output: "spec/common/guide.txt".into(),
+        source: "spec/common/guide.txt".into(),
+        interpretation: Some(SourceInterpretation::VibeSpec),
+        output_sha256: "a".repeat(64),
+        document_address: Some("common/guide.txt".into()),
+    };
+    assert!(matches!(
+        build(vec![unsupported]),
+        Err(ResolveError::DescriptorMapInvalid { .. })
+    ));
+    let mut forged = raw;
+    forged.document_address = Some("common/guide".into());
+    assert!(matches!(
+        build(vec![forged]),
+        Err(ResolveError::DescriptorMapInvalid { .. })
+    ));
+    let mut second_vibe = vibe.clone();
+    second_vibe.source = "spec/common/guide.xml".into();
+    second_vibe.output = second_vibe.source.clone();
+    assert!(matches!(
+        build(vec![vibe, second_vibe]),
+        Err(ResolveError::DescriptorMapInvalid { .. })
+    ));
+}
+
 // ----- B-028: an absent version resolves to the freshest (F1–F6) --------
 
 /// Build a vibedeps slot `<kind>-<name>` holding the given installed

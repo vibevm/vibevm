@@ -90,6 +90,83 @@ fn descriptor_same_stem_commonmark_and_xml_data_coexist_byte_exact() {
             .iter()
             .all(|file| file.disposition == Some(SlotFileDisposition::Copied))
     );
+    let map = crate::vibedeps::read_validated_descriptor_map(
+        &slot,
+        &group("org.example"),
+        "coexist",
+        &version("1.1.0"),
+        &source_hash(),
+        SpecFormat::Xml,
+    )
+    .unwrap()
+    .unwrap();
+    let specs = map.spec_root().to_owned();
+    let resolver = vibe_spec::FileResolver::new(
+        &slot,
+        vibe_spec::SelfCoordinate::new(Some("org.example".into()), "coexist".into()),
+    )
+    .with_descriptor_source_map(specs, Some(map))
+    .unwrap();
+    let address = vibe_spec::SpecAddress::parse("spec://org.example/coexist/guide").unwrap();
+    assert!(matches!(
+        resolver.resolve_file(&address),
+        Err(vibe_spec::ResolveError::DocNotFound { .. })
+    ));
+    let limited = crate::vibedeps::descriptor_map::read_validated_descriptor_map_with_limits(
+        &slot,
+        &group("org.example"),
+        "coexist",
+        &version("1.1.0"),
+        &source_hash(),
+        SpecFormat::Xml,
+        crate::vibedeps::descriptor_map::DescriptorMapLimits {
+            max_outputs: 1,
+            max_total_bytes: 256 * 1024 * 1024,
+        },
+    )
+    .unwrap_err();
+    assert!(
+        limited.contains("more than 1 selected outputs"),
+        "{limited}"
+    );
+    let limited = crate::vibedeps::descriptor_map::read_validated_descriptor_map_with_limits(
+        &slot,
+        &group("org.example"),
+        "coexist",
+        &version("1.1.0"),
+        &source_hash(),
+        SpecFormat::Xml,
+        crate::vibedeps::descriptor_map::DescriptorMapLimits {
+            max_outputs: 4096,
+            max_total_bytes: 1,
+        },
+    )
+    .unwrap_err();
+    assert!(limited.contains("1-byte cap"), "{limited}");
+    let foreign_hash = ContentHash::parse(&format!("sha256:{}", "f".repeat(64))).unwrap();
+    assert!(
+        crate::vibedeps::read_validated_descriptor_map(
+            &slot,
+            &group("org.example"),
+            "coexist",
+            &version("1.1.0"),
+            &foreign_hash,
+            SpecFormat::Xml,
+        )
+        .is_err()
+    );
+    fs::write(slot.join(&xml_rel), b"changed output").unwrap();
+    assert!(
+        crate::vibedeps::read_validated_descriptor_map(
+            &slot,
+            &group("org.example"),
+            "coexist",
+            &version("1.1.0"),
+            &source_hash(),
+            SpecFormat::Xml,
+        )
+        .is_err()
+    );
 }
 
 #[test]
@@ -148,6 +225,26 @@ fn descriptor_vibe_spec_converts_by_declared_media() {
         == Some(path_to_slash(&rel).as_str())
         && file.path == path_to_slash(&output)
         && file.disposition == Some(SlotFileDisposition::Converted)));
+    let map = crate::vibedeps::read_validated_descriptor_map(
+        &slot,
+        &group("org.example"),
+        "convert",
+        &version("1.1.0"),
+        &source_hash(),
+        SpecFormat::Xml,
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(map.source_witness(), source_hash().as_str());
+    let specs = map.spec_root().to_owned();
+    let resolver = vibe_spec::FileResolver::new(
+        &slot,
+        vibe_spec::SelfCoordinate::new(Some("org.example".into()), "convert".into()),
+    )
+    .with_descriptor_source_map(specs, Some(map))
+    .unwrap();
+    let address = vibe_spec::SpecAddress::parse("spec://org.example/convert/rule").unwrap();
+    assert_eq!(resolver.resolve_file(&address).unwrap(), slot.join(output));
 }
 
 #[test]

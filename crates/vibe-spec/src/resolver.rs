@@ -70,6 +70,9 @@ pub struct FileResolver {
     /// answers with the semver-freshest *installed* version — is never reached.
     /// A coordinate absent from the map refuses rather than falling back.
     selected: Option<BTreeMap<(String, String), SelectedPackage>>,
+    /// Explicit descriptor-owned roots. `None` is a known missing proof and
+    /// refuses; an absent entry alone retains the legacy undeclared route.
+    descriptor_maps: BTreeMap<PathBuf, Option<ValidatedDescriptorMap>>,
 }
 
 /// One row of an already-selected world: the exact version a lock chose and
@@ -173,6 +176,12 @@ pub enum ResolveError {
     /// the same logical document.
     #[error("document `{doc_path}` has multiple active physical forms: {files}")]
     ActiveFormatCollision { doc_path: String, files: String },
+    #[error("descriptor source map is invalid: {reason}")]
+    DescriptorMapInvalid { reason: String },
+    #[error("descriptor-owned source root `{root}` has no validated output map")]
+    DescriptorMapMissing { root: String },
+    #[error("descriptor-owned source root `{root}` cannot use an undeclared frontend")]
+    DescriptorFrontendUnsupported { root: String },
 }
 
 impl FileResolver {
@@ -186,6 +195,7 @@ impl FileResolver {
             ws_root,
             self_coord,
             selected: None,
+            descriptor_maps: BTreeMap::new(),
         }
     }
 
@@ -217,6 +227,7 @@ impl FileResolver {
             ws_root: ws_root.into(),
             self_coord,
             selected: None,
+            descriptor_maps: BTreeMap::new(),
         }
     }
 
@@ -263,7 +274,30 @@ impl FileResolver {
             ws_root: ws_root.into(),
             self_coord,
             selected: Some(selected),
+            descriptor_maps: BTreeMap::new(),
         }
+    }
+
+    /// Bind a descriptor-owned specs root to its separately validated map.
+    /// Passing `None` records known missing evidence and guarantees refusal;
+    /// only roots not marked descriptor-owned use legacy suffix pairing.
+    pub fn with_descriptor_source_map(
+        mut self,
+        specs_root: PathBuf,
+        map: Option<ValidatedDescriptorMap>,
+    ) -> Result<Self, ResolveError> {
+        if !specs_root.is_absolute()
+            || map
+                .as_ref()
+                .is_some_and(|value| value.spec_root() != specs_root)
+            || self.descriptor_maps.contains_key(&specs_root)
+        {
+            return Err(ResolveError::DescriptorMapInvalid {
+                reason: "descriptor root is relative, mismatched or repeated".to_owned(),
+            });
+        }
+        self.descriptor_maps.insert(specs_root, map);
+        Ok(self)
     }
 
     /// The root this resolver's self coordinate resolves against.
@@ -295,6 +329,24 @@ impl FileResolver {
             });
         }
         let base_spec = self.spec_root(&addr.authority)?;
+        if let Some(map) = self.descriptor_maps.get(&base_spec) {
+            let map = map
+                .as_ref()
+                .ok_or_else(|| ResolveError::DescriptorMapMissing {
+                    root: base_spec.display().to_string(),
+                })?;
+            if !active_formats.is_empty() {
+                return Err(ResolveError::DescriptorFrontendUnsupported {
+                    root: base_spec.display().to_string(),
+                });
+            }
+            return map
+                .resolve(&addr.doc_path)
+                .ok_or_else(|| ResolveError::DocNotFound {
+                    doc_path: addr.doc_path.clone(),
+                    base: base_spec.display().to_string(),
+                });
+        }
         let resolved =
             lookup::resolve_doc_with_formats(&base_spec, &addr.doc_path, active_formats)?;
         Ok(ResolvedSourceFile {
@@ -468,6 +520,8 @@ pub(crate) use lookup::{
 #[cfg(test)]
 use lookup::{id_file_matches, is_id_stem};
 use lookup::{read_dir_or_empty, resolve_doc};
+mod source_map;
+pub use source_map::{DescriptorOutputRow, ValidatedDescriptorMap};
 
 /// Version ordering for the freshest-installed rule (B-028): `newest` selects
 /// the semver-newest installed version for an unpinned address.
