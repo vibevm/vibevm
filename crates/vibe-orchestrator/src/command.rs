@@ -102,6 +102,16 @@ pub struct LeasedDefaultLifecycle {
     lease: Arc<LifecycleLease>,
 }
 
+impl LeasedDefaultLifecycle {
+    pub(crate) fn selected_root(&self) -> &Path {
+        &self.selected_root
+    }
+
+    pub(crate) fn retain_lease(&self) -> Arc<LifecycleLease> {
+        self.lease.clone()
+    }
+}
+
 /// Stage one: resolve the root once and take the outermost lease once —
 /// exactly two ordered calls, [`resolve_project_root`] then
 /// [`acquire_lease`] (whose own workspace-locator discovery is read-only

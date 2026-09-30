@@ -185,7 +185,7 @@ pub(crate) fn run_prelude_with_identity(
     })
 }
 
-fn selected_under_lease(
+pub(crate) fn selected_under_lease(
     selection: &PreparedSelection,
     lease: &vibe_lifecycle::LifecycleLease,
 ) -> Result<String> {
