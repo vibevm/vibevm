@@ -5,6 +5,9 @@ use super::{EnvironmentError, invalid};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TargetPathPolicy {
     LinuxBytes,
+    /// POSIX byte components under macOS lexical rules. The storage owner
+    /// still proves physical containment, aliases and actual filesystem case.
+    MacosPosixBytes,
     WindowsPortableWin32Utf8,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -21,7 +24,7 @@ pub struct TargetComponent {
 impl TargetComponent {
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
-        r = 1
+        r = 2
     )]
     pub fn new(policy: TargetPathPolicy, bytes: Vec<u8>) -> Result<Self, EnvironmentError> {
         if bytes.is_empty()
@@ -119,7 +122,7 @@ enum AnchorKey {
 impl AbsoluteTargetPath {
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
-        r = 1
+        r = 2
     )]
     pub fn new(
         policy: TargetPathPolicy,
@@ -127,7 +130,10 @@ impl AbsoluteTargetPath {
         components: Vec<Vec<u8>>,
     ) -> Result<Self, EnvironmentError> {
         match (&anchor, policy) {
-            (TargetAnchor::PosixRoot, TargetPathPolicy::LinuxBytes) => {}
+            (
+                TargetAnchor::PosixRoot,
+                TargetPathPolicy::LinuxBytes | TargetPathPolicy::MacosPosixBytes,
+            ) => {}
             (TargetAnchor::WindowsDrive(letter), TargetPathPolicy::WindowsPortableWin32Utf8)
                 if letter.is_ascii_alphabetic() => {}
             (
@@ -223,5 +229,25 @@ pub(super) fn byte_key(bytes: &[u8], model: CaseComparison) -> Option<Vec<u8>> {
             Some(bytes.iter().map(u8::to_ascii_lowercase).collect())
         }
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod macos_tests {
+    use super::*;
+
+    #[test]
+    fn macos_posix_bytes_are_lexical_without_host_path_inference() {
+        let policy = TargetPathPolicy::MacosPosixBytes;
+        let path = AbsoluteTargetPath::new(
+            policy,
+            TargetAnchor::PosixRoot,
+            vec![b"Library".to_vec(), b"a:b\\c".to_vec()],
+        )
+        .unwrap();
+        assert_eq!(path.policy(), policy);
+        assert_eq!(path.components()[1].bytes(), b"a:b\\c");
+        assert!(TargetComponent::new(policy, b"..".to_vec()).is_err());
+        assert!(AbsoluteTargetPath::new(policy, TargetAnchor::WindowsDrive(b'C'), vec![]).is_err());
     }
 }
