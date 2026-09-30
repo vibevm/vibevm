@@ -10,6 +10,77 @@ use thiserror::Error;
 use vibe_safefs::{FileIdentity, Project, StableFileSnapshot};
 
 const SOURCE_FILE_CAP: usize = 8 * 1024 * 1024;
+const PROMPT_FILE_CAP: usize = 1024 * 1024;
+
+/// Exact bounded local prompt document before any hosted task publication.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PromptSourceWitness {
+    pub provider_root: PathBuf,
+    pub provider_root_identity: FileIdentity,
+    pub prompt_relative: String,
+    pub source: StableFileSnapshot,
+}
+
+impl PromptSourceWitness {
+    pub fn validate(&self) -> Result<(), SourceSnapshotError> {
+        let invalid = |reason: &str| SourceSnapshotError::InvalidWitness {
+            name: "prompt",
+            reason: reason.to_owned(),
+        };
+        if !self.provider_root.is_absolute()
+            || self.prompt_relative.is_empty()
+            || self.prompt_relative.contains('\\')
+            || self
+                .prompt_relative
+                .split('/')
+                .any(|part| part.is_empty() || part == "." || part == "..")
+        {
+            return Err(invalid("provider root or prompt path is invalid"));
+        }
+        if self.source.bytes.len() > PROMPT_FILE_CAP
+            || self.source.size != self.source.bytes.len() as u64
+            || self.source.sha256 != format!("{:x}", Sha256::digest(&self.source.bytes))
+        {
+            return Err(invalid("prompt size or digest differs from bounded bytes"));
+        }
+        Ok(())
+    }
+}
+
+pub fn capture_prompt_source_witness(
+    provider_root: &Path,
+    prompt_relative: &str,
+) -> Result<PromptSourceWitness, SourceSnapshotError> {
+    let project = Project::open(provider_root)
+        .map_err(|error| SourceSnapshotError::Open(error.to_string()))?;
+    let provider_root_identity = project
+        .root_identity()
+        .map_err(|error| SourceSnapshotError::Open(error.to_string()))?;
+    let source = project
+        .read_file_snapshot_bounded(prompt_relative, PROMPT_FILE_CAP)
+        .map_err(|error| SourceSnapshotError::Read {
+            name: "prompt",
+            reason: error.to_string(),
+        })?
+        .ok_or(SourceSnapshotError::MissingPrompt)?;
+    Ok(PromptSourceWitness {
+        provider_root: provider_root.to_path_buf(),
+        provider_root_identity,
+        prompt_relative: prompt_relative.to_owned(),
+        source,
+    })
+}
+
+pub fn recheck_prompt_source_witness(
+    expected: &PromptSourceWitness,
+) -> Result<(), SourceSnapshotError> {
+    let observed =
+        capture_prompt_source_witness(&expected.provider_root, &expected.prompt_relative)?;
+    if observed != *expected {
+        return Err(SourceSnapshotError::Drift { name: "prompt" });
+    }
+    Ok(())
+}
 
 /// A selected script's exact pre-reservation bytes and local filesystem identity.
 /// The identity is rechecked locally and is never serialized as portable authority.
@@ -162,6 +233,8 @@ pub enum SourceSnapshotError {
     MissingManifest,
     #[error("selected script is absent")]
     MissingScript,
+    #[error("selected prompt is absent")]
+    MissingPrompt,
     #[error("selected `{name}` changed since its manifest/lock witness")]
     Drift { name: &'static str },
     #[error("selected `{name}` has an invalid manifest/lock witness: {reason}")]

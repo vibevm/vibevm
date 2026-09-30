@@ -74,6 +74,170 @@ fn script_project() -> tempfile::TempDir {
     dir
 }
 
+fn agent_project() -> tempfile::TempDir {
+    let dir = project();
+    std::fs::write(dir.path().join("vibe.toml"), ONE_AGENT_VALIDATE_MANIFEST).unwrap();
+    let prompt = dir.path().join(ONE_AGENT_PROMPT_PATH);
+    std::fs::create_dir_all(prompt.parent().unwrap()).unwrap();
+    std::fs::write(prompt, b"# Prompt {#root}\n\nWrite the guide.\n").unwrap();
+    dir
+}
+
+fn agent_request() -> DefaultLifecycleRequest {
+    let mut asked = request();
+    asked.agent_mode = RunAgentMode::Agent;
+    asked
+}
+
+#[test]
+fn one_agent_preflight_binds_exact_local_prompt_without_effect() {
+    let dir = agent_project();
+    let admitted =
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).unwrap();
+    assert_eq!(admitted.source.prompt_relative, ONE_AGENT_PROMPT_PATH);
+    assert_eq!(
+        admitted.source.source.bytes,
+        b"# Prompt {#root}\n\nWrite the guide.\n"
+    );
+    assert_eq!(admitted.address, ONE_AGENT_PROMPT_ADDRESS);
+    assert!(admitted.execution_key.contains("park"));
+    assert!(!admitted.provider.is_empty());
+    let resolver = vibe_lifecycle::agent::SelectedWorldPromptResolver::new(dir.path());
+    let resolved = resolver
+        .resolve(&vibe_lifecycle::agent::PromptRequest {
+            address: admitted.address.clone(),
+            provider_root: admitted.source.provider_root.clone(),
+            provider_group: "org.demo".into(),
+            provider_name: "demo".into(),
+            selected_world: Default::default(),
+        })
+        .unwrap();
+    assert!(resolved.text.contains("Write the guide."));
+    assert!(resolved.unsupported.is_empty());
+    let request_value: serde_json::Value =
+        serde_json::from_slice(&admitted.canonical_request).unwrap();
+    let plan_value: serde_json::Value = serde_json::from_slice(&admitted.canonical_plan).unwrap();
+    assert_eq!(plan_value["format"], "vibevm.lifecycle.pre-effect-plan/5");
+    assert_eq!(plan_value["agent_mode"], "agent");
+    assert_eq!(request_value["prompt_source"], plan_value["prompt_source"]);
+    assert!(!dir.path().join(".vibe/machine-submissions.json").exists());
+    assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
+    assert!(!dir.path().join(".vibe/agentic").exists());
+}
+
+#[test]
+fn one_agent_changed_prompt_conflicts_with_reserved_request() {
+    let dir = agent_project();
+    let first =
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).unwrap();
+    std::fs::write(
+        dir.path().join(ONE_AGENT_PROMPT_PATH),
+        b"# Prompt {#root}\n\nWrite the manual.\n",
+    )
+    .unwrap();
+    assert!(vibe_lifecycle::process::recheck_prompt_source_witness(&first.source).is_err());
+    let second =
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).unwrap();
+    assert_ne!(first.canonical_request, second.canonical_request);
+    assert_ne!(first.canonical_plan, second.canonical_plan);
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let lease = Arc::new(LifecycleLease::acquire(dir.path()).unwrap());
+    let run_id = vibe_lifecycle::process::propose_run_id(dir.path()).unwrap();
+    SubmissionReservations::reserve(
+        &lease,
+        &namespace,
+        &scope,
+        "agent",
+        &first.canonical_request,
+        &first.canonical_plan,
+        &run_id,
+    )
+    .unwrap();
+    let before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let conflict = SubmissionReservations::inspect_existing_request(
+        &lease,
+        &namespace,
+        &scope,
+        "agent",
+        &second.canonical_request,
+    )
+    .unwrap_err();
+    assert!(matches!(
+        conflict,
+        vibe_lifecycle::SubmissionError::KeyConflict
+    ));
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        before
+    );
+}
+
+#[test]
+fn one_agent_preflight_refuses_foreign_rows_prompt_and_posture() {
+    let dir = agent_project();
+    let mut wrong = agent_request();
+    wrong.agent_mode = RunAgentMode::Cli;
+    assert!(admit_one_agent_validate_fixture(dir.path(), &wrong, TargetOs::Linux).is_err());
+    let mut wrong = agent_request();
+    wrong.policy.offline = true;
+    assert!(admit_one_agent_validate_fixture(dir.path(), &wrong, TargetOs::Linux).is_err());
+    std::fs::write(
+        dir.path().join(ONE_AGENT_PROMPT_PATH),
+        b"# Prompt {#root}\n\n#embed spec://x/y/common/Z#x\n",
+    )
+    .unwrap();
+    assert!(
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).is_err()
+    );
+    std::fs::write(
+        dir.path().join(ONE_AGENT_PROMPT_PATH),
+        b"# Prompt {#root}\n\nWrite.\n",
+    )
+    .unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), format!("{ONE_AGENT_VALIDATE_MANIFEST}[[extension]]\nid='extra'\npoint='phase:validate'\nhandler={{kind='agent',prompt='spec://org.demo/demo/common/PROMPT-001#root'}}\n")).unwrap();
+    assert!(
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).is_err()
+    );
+}
+
+#[test]
+fn one_agent_fresh_preflight_refuses_prior_header() {
+    let dir = agent_project();
+    let lease = Arc::new(LifecycleLease::acquire(dir.path()).unwrap());
+    let store = LifecycleStateStore::begin(
+        lease.clone(),
+        "validate".into(),
+        vec!["validate".into()],
+        "2026-09-30T00:00:00Z".into(),
+        "a".repeat(32),
+        ".".into(),
+        false,
+    )
+    .unwrap();
+    drop(store);
+    drop(lease);
+    assert!(
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).is_err()
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn one_agent_preflight_refuses_symlinked_prompt_before_reservation() {
+    use std::os::unix::fs::symlink;
+    let dir = agent_project();
+    let path = dir.path().join(ONE_AGENT_PROMPT_PATH);
+    let actual = path.with_file_name("actual.md");
+    std::fs::rename(&path, &actual).unwrap();
+    symlink("actual.md", &path).unwrap();
+    assert!(
+        admit_one_agent_validate_fixture(dir.path(), &agent_request(), TargetOs::Linux).is_err()
+    );
+    assert!(!dir.path().join(".vibe/machine-submissions.json").exists());
+    assert!(!dir.path().join(".vibe/agentic").exists());
+}
+
 fn script_call(
     root: &Path,
     namespace: &SubmissionNamespace,
@@ -745,6 +909,7 @@ fn pending_reservation_attaches_read_only_without_header_or_scratch() {
         workspace_witness: &witness,
         package_source: None,
         script_source: None,
+        prompt_source: None,
         requested: Phase::Validate,
         agent_mode: &RunAgentMode::Cli,
         trace_flag: false,

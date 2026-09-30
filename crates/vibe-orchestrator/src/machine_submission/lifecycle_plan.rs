@@ -14,7 +14,8 @@ use vibe_core::lifecycle::Phase;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::inclusive_chain;
 use vibe_lifecycle::process::{
-    PackageTreeWitness, ScriptSourceWitness, SelectedFileWitness, SelectedManifestLockWitness,
+    PackageTreeWitness, PromptSourceWitness, ScriptSourceWitness, SelectedFileWitness,
+    SelectedManifestLockWitness,
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
@@ -23,6 +24,7 @@ use crate::install::{InstallInputs, InstallPolicy};
 const FORMAT_V2: &str = "vibevm.lifecycle.pre-effect-plan/2";
 const FORMAT_SOURCE_V3: &str = "vibevm.lifecycle.pre-effect-plan/3";
 const FORMAT_SCRIPT_V4: &str = "vibevm.lifecycle.pre-effect-plan/4";
+const FORMAT_AGENT_V5: &str = "vibevm.lifecycle.pre-effect-plan/5";
 const FILE_CAP: u64 = 8 * 1024 * 1024;
 const PATH_CAP: usize = 128 * 1024;
 const SELECTED_CAP: usize = 128 * 1024;
@@ -37,6 +39,13 @@ pub(crate) struct ScriptPlanSource<'a> {
     pub witness: &'a ScriptSourceWitness,
     pub execution_key: &'a str,
     pub provider: &'a str,
+}
+
+pub(crate) struct PromptPlanSource<'a> {
+    pub witness: &'a PromptSourceWitness,
+    pub execution_key: &'a str,
+    pub provider: &'a str,
+    pub address: &'a str,
 }
 
 /// Exact values the owner has already selected under its workspace lease.
@@ -55,6 +64,8 @@ pub(crate) struct LifecyclePreEffectPlanInput<'a> {
     pub package_source: Option<&'a PackageTreeWitness>,
     /// Present only for the separate one-script Validate fixture.
     pub script_source: Option<ScriptPlanSource<'a>>,
+    /// Present only for the separate one-agent Validate fixture.
+    pub prompt_source: Option<PromptPlanSource<'a>>,
     pub requested: Phase,
     pub agent_mode: &'a RunAgentMode,
     pub trace_flag: bool,
@@ -113,7 +124,8 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
         SlotIntegrity::Verify => "verify",
     };
     let mut value = json!({
-        "format": if input.script_source.is_some() { FORMAT_SCRIPT_V4 }
+        "format": if input.prompt_source.is_some() { FORMAT_AGENT_V5 }
+            else if input.script_source.is_some() { FORMAT_SCRIPT_V4 }
             else if input.package_source.is_some() { FORMAT_SOURCE_V3 }
             else { FORMAT_V2 },
         "lease_root": lease_root,
@@ -157,7 +169,7 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
     }
     if let Some(source) = &input.script_source {
         ensure!(
-            input.package_source.is_none(),
+            input.package_source.is_none() && input.prompt_source.is_none(),
             "script and package source cannot be combined"
         );
         ensure!(
@@ -169,9 +181,62 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
             .expect("fixed plan object")
             .insert("script_source".into(), script_source_value(source)?);
     }
+    if let Some(source) = &input.prompt_source {
+        ensure!(
+            input.package_source.is_none() && input.script_source.is_none(),
+            "prompt source cannot combine with another source"
+        );
+        ensure!(
+            input.requested == Phase::Validate && *input.agent_mode == RunAgentMode::Agent,
+            "prompt source requires agent Validate"
+        );
+        value
+            .as_object_mut()
+            .expect("fixed plan object")
+            .insert("prompt_source".into(), prompt_source_value(source)?);
+    }
     let mut bytes = Vec::new();
     write_canonical(&value, &mut bytes)?;
     bounded("canonical_plan", bytes.len(), PLAN_CAP)?;
+    Ok(bytes)
+}
+
+fn prompt_source_value(source: &PromptPlanSource<'_>) -> Result<Value> {
+    source.witness.validate()?;
+    for (name, text) in [
+        ("prompt.execution_key", source.execution_key),
+        ("prompt.provider", source.provider),
+        ("prompt.address", source.address),
+        ("prompt.path", &source.witness.prompt_relative),
+    ] {
+        bounded(name, text.len(), INPUT_STRING_CAP)?;
+        ensure!(!text.is_empty(), "{name} is empty");
+    }
+    Ok(json!({
+        "provider_root": path_value(&source.witness.provider_root, "prompt.provider_root")?,
+        "path": source.witness.prompt_relative,
+        "size": source.witness.source.size,
+        "sha256": format!("sha256:{}", source.witness.source.sha256),
+        "execution_key": source.execution_key,
+        "provider": source.provider,
+        "address": source.address,
+    }))
+}
+
+pub(crate) fn canonical_one_agent_fixture_request(
+    source: &PromptPlanSource<'_>,
+    target_os: vibe_core::manifest::TargetOs,
+) -> Result<Vec<u8>> {
+    let value = json!({
+        "operation": "lifecycle.validate-one-agent-fixture",
+        "schema": 1,
+        "agent_mode": "agent",
+        "target_os": target_os.as_str(),
+        "prompt_source": prompt_source_value(source)?,
+    });
+    let mut bytes = Vec::new();
+    write_canonical(&value, &mut bytes)?;
+    bounded("canonical_request", bytes.len(), PLAN_CAP)?;
     Ok(bytes)
 }
 
