@@ -226,6 +226,21 @@ pub struct NativeOperationBindingRootBinding {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeOperationBindingTargetMode {
+    #[serde(rename = "live_linux_system")]
+    LiveLinuxSystem,
+
+    #[serde(rename = "offline_linux_rootfs")]
+    OfflineLinuxRootfs,
+
+    #[serde(rename = "user_profile")]
+    UserProfile,
+
+    #[serde(rename = "workspace_projection")]
+    WorkspaceProjection,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NativeOperationBindingTargetOs {
     #[serde(rename = "linux")]
     Linux,
@@ -280,6 +295,8 @@ pub struct NativeOperationBinding {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub target_libc: Option<String>,
+
+    pub target_mode: NativeOperationBindingTargetMode,
 
     pub target_os: NativeOperationBindingTargetOs,
 

@@ -33,7 +33,7 @@ fn text(value: &str) -> bool {
 /// physical authority. Every nullable member is required in the JTD form.
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
-    r = 2
+    r = 3
 )]
 pub fn validate_operation_binding(
     binding: &EnvironmentOperationBinding,

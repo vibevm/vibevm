@@ -1,7 +1,7 @@
 {
   "metadata": {
     "description": "Epoch-one host-issued target-binding value. It names context, instance, target and roots but is not an effect grant or physical alias proof.",
-    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING", "r": 2},
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING", "r": 3},
     "rustOptions": {"package": "vibe_wire::environment::e1::operation_binding"},
     "x-vocabularies": ["environment_operation_binding"]
   },

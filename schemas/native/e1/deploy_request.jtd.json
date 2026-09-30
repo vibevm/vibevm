@@ -118,6 +118,7 @@
         "host_context_id": {"type":"string"},
         "instance_ref": {"type":"string"},
         "selected_generation_ref": {"type":"string","nullable":true},
+        "target_mode": {"enum":["workspace_projection","user_profile","offline_linux_rootfs","live_linux_system"],"metadata":{"x-vocabulary":"closed"}},
         "target_role": {"enum":["executor","produced_tool_runtime","emitted_code_target"],"metadata":{"x-vocabulary":"closed"}},
         "target_os": {"enum":["windows","linux","macos"],"metadata":{"x-vocabulary":"closed"}},
         "target_architecture": {"type":"string"},
