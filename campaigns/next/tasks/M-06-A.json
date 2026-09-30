@@ -28,6 +28,7 @@
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-orchestrator/src/machine_operation.rs",
         "crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
+        "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
         "crates/vibe-wire/Cargo.toml",
         "crates/vibe-wire/src/lib.rs"
       ],
@@ -95,7 +96,7 @@
         "PROPOSED core manifest/source_descriptor/; use the root-supplied migration module, not a second engine.",
         "The existing M-13 core planner and workspace replay currently recognize only materialization profiles, three global NeedsInput fields, and nonempty single edits. Extend those exact owners for source profiles, path-specific questions and byte-preserving insertions; do not fake a wider edit span or create a second executor.",
         "The descriptor-selected authored-facts read seam is owned by vibe-facts, so its source module and narrow export may change here. This does not by itself replace the incumbent suffix-based tree walk or close M-06-A.1; reader adoption and M-13 migration still require separate proof.",
-        "Optional source decisions in the registered migration request require None in two existing orchestrator request literals; those exact files are included only for mechanical wire compatibility.",
+        "Optional source decisions in the registered migration request require empty values in existing orchestrator request literals; those exact files are included only for mechanical wire compatibility.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Enclosing module/manifest wire registration edits are included only where required to make the new declared contract compiled and reachable; no unrelated parser migration.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
