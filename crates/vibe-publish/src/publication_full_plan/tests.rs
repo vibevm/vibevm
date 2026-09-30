@@ -1,4 +1,7 @@
 use super::*;
+use vibe_wire::generated::publication_effect_plan::{
+    PublicationObservedAsset, PublicationObservedReleasePresent, PublicationObservedTagPresent,
+};
 
 const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
@@ -7,7 +10,7 @@ const NEW: &str = include_str!(
     "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
 );
 
-fn expected() -> PublicationEffectPlanExpectations<'static> {
+pub(super) fn expected() -> PublicationEffectPlanExpectations<'static> {
     PublicationEffectPlanExpectations {
         subject: crate::publication_subject::PublicationSubjectExpectations {
             version: "1.1.0",
@@ -22,13 +25,13 @@ fn expected() -> PublicationEffectPlanExpectations<'static> {
         allow_replace_published: false,
     }
 }
-fn prepared() -> (PublicationSubject, PublicationEffectPlan) {
+pub(super) fn prepared() -> (PublicationSubject, PublicationEffectPlan) {
     (
         serde_json::from_str(SUBJECT).unwrap(),
         serde_json::from_str(NEW).unwrap(),
     )
 }
-fn scope() -> SubmissionScope {
+pub(super) fn scope() -> SubmissionScope {
     SubmissionScope {
         context: "fixture-host-context".into(),
         target: "github.com/vibevm/vibevm".into(),
@@ -36,21 +39,23 @@ fn scope() -> SubmissionScope {
     }
 }
 
-struct FakeRemote {
+pub(super) struct FakeRemote {
     current: RemoteObservation,
-    calls: Vec<usize>,
+    pub(super) calls: Vec<usize>,
     lost_at: Option<usize>,
     drift_before: Option<usize>,
     observations: usize,
-    forbidden: bool,
+    pub(super) forbidden: bool,
+    unchanged_objects_at: Option<usize>,
 }
 impl FakeRemote {
-    fn new(plan: &PublicationEffectPlan) -> Self {
+    pub(super) fn new(plan: &PublicationEffectPlan) -> Self {
         Self {
             current: RemoteObservation {
                 generation_ref: plan.remote_generation_ref.clone(),
                 tag: plan.observed_tag.clone(),
                 release: plan.observed_release.clone(),
+                latest_release_id: None,
                 last: None,
             },
             calls: Vec::new(),
@@ -58,6 +63,7 @@ impl FakeRemote {
             drift_before: None,
             observations: 0,
             forbidden: false,
+            unchanged_objects_at: None,
         }
     }
 }
@@ -92,13 +98,52 @@ impl FakePlanPort for FakeRemote {
             return Err("fake conditional generation check failed".into());
         }
         let digest = sha(&serde_json::to_vec(partition).unwrap());
+        let next_generation = if transition::effectful(partition) {
+            format!("fake-generation-{}", index + 1)
+        } else {
+            self.current.generation_ref.clone()
+        };
         let receipt = PartitionReceipt {
             index,
             partition_sha256: digest,
-            resulting_generation_ref: format!("fake-generation-{}", index + 1),
+            resulting_generation_ref: next_generation,
             receipt_ref: format!("fake-receipt-{index}"),
         };
         self.calls.push(index);
+        if self.unchanged_objects_at != Some(index) {
+            match partition {
+                PublicationPartition::Tag(step) => {
+                    if matches!(step.action, vibe_wire::generated::publication_effect_plan::PublicationPartitionTagAction::Create) {
+                        self.current.tag = PublicationObservedTag::Present(Box::new(PublicationObservedTagPresent {
+                            reference: format!("refs/tags/{}", step.tag), object_kind: "commit".into(),
+                            object_sha: step.desired_commit.clone(),
+                        }));
+                    }
+                }
+                PublicationPartition::Release(step) => {
+                    self.current.release = PublicationObservedRelease::Present(Box::new(PublicationObservedReleasePresent {
+                        assets: Vec::new(), draft: step.desired_draft,
+                        generation_ref: receipt.resulting_generation_ref.clone(), inventory_complete: true,
+                        release_id: "700".into(), tag: step.desired_tag.clone(),
+                    }));
+                }
+                PublicationPartition::PlatformAssets(step) => {
+                    add_assets(&mut self.current.release, &step.assets, index, &receipt.resulting_generation_ref);
+                }
+                PublicationPartition::Cleanup(_) => {}
+                PublicationPartition::FinalAssets(step) => {
+                    add_assets(&mut self.current.release, &step.assets, index, &receipt.resulting_generation_ref);
+                }
+                PublicationPartition::Finalize(step) => {
+                    if matches!(step.action, vibe_wire::generated::publication_effect_plan::PublicationPartitionFinalizeAction::Publish) {
+                        let PublicationObservedRelease::Present(row) = &mut self.current.release else { panic!("fake draft absent") };
+                        row.draft = false;
+                        row.generation_ref = receipt.resulting_generation_ref.clone();
+                        self.current.latest_release_id = Some(row.release_id.clone());
+                    }
+                }
+            }
+        }
         self.current.generation_ref = receipt.resulting_generation_ref.clone();
         self.current.last = Some(receipt.clone());
         if self.lost_at == Some(index) {
@@ -106,6 +151,26 @@ impl FakePlanPort for FakeRemote {
         }
         Ok(receipt)
     }
+}
+
+fn add_assets(
+    release: &mut PublicationObservedRelease,
+    assets: &[vibe_wire::generated::publication_effect_plan::PublicationAssetEffect],
+    index: usize,
+    generation: &str,
+) {
+    let PublicationObservedRelease::Present(row) = release else {
+        panic!("fake draft absent")
+    };
+    for (offset, asset) in assets.iter().enumerate() {
+        row.assets.push(PublicationObservedAsset {
+            asset_id: (1000 + index * 10 + offset).to_string(),
+            name: asset.name.clone(),
+            size_bytes: asset.desired_size_bytes.clone(),
+            sha256: asset.desired_sha256.clone(),
+        });
+    }
+    row.generation_ref = generation.into();
 }
 
 struct ReadyChecked<'a> {
@@ -209,6 +274,16 @@ fn full_plan_records_each_partition_and_replays_after_lease_exit_without_port_ca
                 .unwrap()
                 .is_some()
         );
+        if !transition::effectful(&plan.partitions[index]) {
+            let landed = journal::read::<Step>(&lease, &run_id, &landed_name(index))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                landed.resulting_generation_ref.as_deref(),
+                Some(landed.expected_generation_ref.as_str()),
+                "validated no-op partition {index} must not invent generation churn"
+            );
+        }
     }
     assert!(
         journal::read::<FinalResult>(&lease, &run_id, "result")
@@ -305,13 +380,109 @@ fn lost_reply_at_every_partition_retains_exact_partial_and_never_reexecutes() {
 }
 
 #[test]
-fn missing_terminal_result_after_all_landed_is_uncertain_and_duplicate_is_read_only() {
-    let project = tempfile::tempdir().unwrap();
+fn callback_and_generation_cannot_complete_unchanged_tag_release_or_assets() {
     let (subject, plan) = prepared();
+    let effectful = plan
+        .partitions
+        .iter()
+        .enumerate()
+        .filter_map(|(index, partition)| {
+            matches!(
+                partition,
+                PublicationPartition::Tag(_)
+                    | PublicationPartition::Release(_)
+                    | PublicationPartition::PlatformAssets(_)
+                    | PublicationPartition::FinalAssets(_)
+            )
+            .then_some(index)
+        })
+        .collect::<Vec<_>>();
+    assert!(!effectful.is_empty());
+    for index in effectful {
+        let project = tempfile::tempdir().unwrap();
+        let selected = scope();
+        let lease = LifecycleLease::acquire(project.path()).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+        let mut fake = FakeRemote::new(&plan);
+        fake.unchanged_objects_at = Some(index);
+        let first = submit_fake_full_plan(
+            &lease,
+            &namespace,
+            &selected,
+            "key-a",
+            &subject,
+            &plan,
+            &expected(),
+            &mut fake,
+        )
+        .unwrap();
+        let Inspection::Partial {
+            run_id,
+            landed,
+            pending: Some(stopped),
+            uncertain: true,
+        } = first
+        else {
+            panic!("unchanged objects at partition {index} falsely completed");
+        };
+        assert_eq!((landed, stopped), (index, index));
+        assert_eq!(fake.calls, (0..=index).collect::<Vec<_>>());
+        assert!(
+            journal::read::<Step>(&lease, &run_id, &landed_name(index))
+                .unwrap()
+                .is_none()
+        );
+        if index + 1 < plan.partitions.len() {
+            assert!(
+                journal::read::<Step>(&lease, &run_id, &pending_name(index + 1))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+        fake.forbidden = true;
+        let replay = submit_fake_full_plan(
+            &lease,
+            &namespace,
+            &selected,
+            "key-a",
+            &subject,
+            &plan,
+            &expected(),
+            &mut fake,
+        )
+        .unwrap();
+        assert!(
+            matches!(replay, Inspection::Partial { run_id: same, landed: count,
+            pending: Some(next), uncertain: true } if same == run_id && count == index && next == index)
+        );
+        assert_eq!(fake.calls.len(), index + 1);
+    }
+}
+
+#[test]
+fn callback_and_generation_cannot_complete_unchanged_publish_visibility() {
+    let (subject, original) = prepared();
+    let mut publish_expected = expected();
+    publish_expected.publish = true;
+    let remote = crate::publication_effect_plan::CapturedPublicationRemote {
+        generation_ref: original.remote_generation_ref,
+        tag: original.observed_tag,
+        release: original.observed_release,
+    };
+    let plan = crate::publication_effect_plan::plan_from_captured_remote(
+        &subject,
+        &publish_expected,
+        &remote,
+    )
+    .unwrap()
+    .plan;
+    let visibility_index = plan.partitions.len() - 1;
+    let project = tempfile::tempdir().unwrap();
     let selected = scope();
     let lease = LifecycleLease::acquire(project.path()).unwrap();
     let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
     let mut fake = FakeRemote::new(&plan);
+    fake.unchanged_objects_at = Some(visibility_index);
     let first = submit_fake_full_plan(
         &lease,
         &namespace,
@@ -319,17 +490,15 @@ fn missing_terminal_result_after_all_landed_is_uncertain_and_duplicate_is_read_o
         "key-a",
         &subject,
         &plan,
-        &expected(),
+        &publish_expected,
         &mut fake,
     )
     .unwrap();
-    let Inspection::Completed { run_id, .. } = first else {
-        panic!("first run incomplete")
-    };
-    std::fs::remove_file(project.path().join(format!(
-        ".vibe/publication-operations/{run_id}.full-plan-result.json"
-    )))
-    .unwrap();
+    assert!(
+        matches!(first, Inspection::Partial { landed, pending: Some(index),
+        uncertain: true, .. } if landed == visibility_index && index == visibility_index)
+    );
+    assert_eq!(fake.calls.len(), plan.partitions.len());
     fake.forbidden = true;
     let replay = submit_fake_full_plan(
         &lease,
@@ -338,13 +507,14 @@ fn missing_terminal_result_after_all_landed_is_uncertain_and_duplicate_is_read_o
         "key-a",
         &subject,
         &plan,
-        &expected(),
+        &publish_expected,
         &mut fake,
     )
     .unwrap();
-    assert!(matches!(replay, Inspection::Partial { run_id: same, landed,
-        pending: None, uncertain: true } if same == run_id && landed == plan.partitions.len()));
-    assert_eq!(fake.calls.len(), plan.partitions.len());
+    assert!(
+        matches!(replay, Inspection::Partial { landed, pending: Some(index),
+        uncertain: true, .. } if landed == visibility_index && index == visibility_index)
+    );
 }
 
 #[test]

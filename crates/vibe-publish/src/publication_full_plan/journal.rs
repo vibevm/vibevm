@@ -5,7 +5,7 @@ use sha2::{Digest, Sha256};
 use vibe_lifecycle::LifecycleLease;
 use vibe_lifecycle::process::is_valid_run_id;
 
-use super::{Error, Result};
+use super::{Error, RemoteObservation, Result};
 
 const HOME: [&str; 2] = [".vibe", "publication-operations"];
 const CAP: usize = 128 * 1024;
@@ -39,6 +39,8 @@ pub(super) struct Step {
     pub expected_generation_ref: String,
     pub resulting_generation_ref: Option<String>,
     pub receipt_ref: Option<String>,
+    pub post_observation_sha256: Option<String>,
+    pub post_observation: Option<RemoteObservation>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
