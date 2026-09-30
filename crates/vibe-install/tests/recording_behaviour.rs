@@ -16,6 +16,7 @@ fn empty_manifest() -> Manifest {
             group: None,
             version: "0.0.1".to_string(),
             spec_format: None,
+            sources: vec![],
             authors: vec![],
         }),
         ..Default::default()

@@ -432,6 +432,7 @@ fn an_untypable_package_name_component_is_a_typed_refusal_naming_it() {
             group: Some(group("org.demo")),
             version: "0.1.0".to_owned(),
             spec_format: None,
+            sources: Vec::new(),
             authors: Vec::new(),
         }),
         ..Manifest::default()

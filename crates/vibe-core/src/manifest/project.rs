@@ -15,6 +15,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use serde::{Deserialize, Serialize};
 
+use super::source_descriptor::SourceDescriptor;
 use crate::error::{Error, Result};
 
 /// `[project]` — the identity of a non-publishable consumer node.
@@ -55,6 +56,10 @@ pub struct ProjectSection {
     /// the install composition root finally falls back to [`SpecFormat::Mixed`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub spec_format: Option<SpecFormat>,
+    /// Opt-in project-relative source interpretation. Empty keeps the
+    /// pre-descriptor host behavior until its consumer is migrated.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub sources: Vec<SourceDescriptor>,
     #[serde(default)]
     pub authors: Vec<String>,
 }

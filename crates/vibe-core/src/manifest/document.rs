@@ -456,6 +456,7 @@ impl Manifest {
                 group: None,
                 version: version.into(),
                 spec_format: None,
+                sources: Vec::new(),
                 authors: Vec::new(),
             }),
             ..Manifest::default()

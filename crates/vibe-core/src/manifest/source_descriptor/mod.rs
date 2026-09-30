@@ -227,50 +227,62 @@ impl PackageMeta {
     /// Resolve one normalized package-relative file. No suffix or content is
     /// consulted; package format and boot linkage remain independent.
     pub fn select_source(&self, file: &str) -> Result<SelectedSource<'_>, SourceSelectionError> {
-        valid_source_path(file).map_err(SourceSelectionError::InvalidPath)?;
-        let identity = format!("{}/{}:{file}", self.group, self.name);
-        let mut best: Option<(u8, usize)> = None;
-        let mut winners = Vec::new();
-        for (index, descriptor) in self.sources.iter().enumerate() {
-            let specificity = match descriptor.selector() {
-                SourceSelector::File(path) if path == file => Some((1, path.split('/').count())),
-                SourceSelector::Directory(path)
-                    if file
-                        .strip_prefix(path)
-                        .is_some_and(|suffix| suffix.starts_with('/')) =>
-                {
-                    Some((0, path.split('/').count()))
-                }
-                _ => None,
-            };
-            if let Some(specificity) = specificity {
-                if best.is_none_or(|previous| specificity > previous) {
-                    best = Some(specificity);
-                    winners.clear();
-                }
-                if best == Some(specificity) {
-                    winners.push(index);
-                }
+        select_source_rows(
+            &format!("{}/{}", self.group, self.name),
+            &self.sources,
+            file,
+        )
+    }
+}
+
+/// One precedence law for package and opt-in project descriptors. `coordinate`
+/// comes from the caller's validated `group/name` manifest identity; this
+/// selector reads neither filesystem metadata nor source bytes.
+pub fn select_source_rows<'a>(
+    coordinate: &str,
+    rows: &'a [SourceDescriptor],
+    file: &str,
+) -> Result<SelectedSource<'a>, SourceSelectionError> {
+    valid_source_path(file).map_err(SourceSelectionError::InvalidPath)?;
+    let identity = format!("{coordinate}:{file}");
+    let mut best: Option<(u8, usize)> = None;
+    let mut winners = Vec::new();
+    for (index, descriptor) in rows.iter().enumerate() {
+        let specificity = match descriptor.selector() {
+            SourceSelector::File(path) if path == file => Some((1, path.split('/').count())),
+            SourceSelector::Directory(path)
+                if file
+                    .strip_prefix(path)
+                    .is_some_and(|suffix| suffix.starts_with('/')) =>
+            {
+                Some((0, path.split('/').count()))
+            }
+            _ => None,
+        };
+        if let Some(specificity) = specificity {
+            if best.is_none_or(|previous| specificity > previous) {
+                best = Some(specificity);
+                winners.clear();
+            }
+            if best == Some(specificity) {
+                winners.push(index);
             }
         }
-        let Some(&first) = winners.first() else {
-            return Ok(SelectedSource::Unclassified { identity });
-        };
-        if winners
-            .iter()
-            .any(|index| self.sources[*index] != self.sources[first])
-        {
-            return Ok(SelectedSource::NeedsInput {
-                identity,
-                declaration_indices: winners,
-            });
-        }
-        Ok(SelectedSource::Descriptor {
-            identity,
-            declaration_index: first,
-            descriptor: &self.sources[first],
-        })
     }
+    let Some(&first) = winners.first() else {
+        return Ok(SelectedSource::Unclassified { identity });
+    };
+    if winners.iter().any(|index| rows[*index] != rows[first]) {
+        return Ok(SelectedSource::NeedsInput {
+            identity,
+            declaration_indices: winners,
+        });
+    }
+    Ok(SelectedSource::Descriptor {
+        identity,
+        declaration_index: first,
+        descriptor: &rows[first],
+    })
 }
 
 #[cfg(test)]
