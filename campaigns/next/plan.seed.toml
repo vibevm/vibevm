@@ -3932,7 +3932,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Shared prepared plan/evidence/authorization model; A approval and B bounded policy evaluator implemented with exact digest/scope/generation","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json"
-contract_sha256 = "aeb27d94a05700512a7e9bf2519f6d7307170aeb371fd7f1a9321f591c635d91"
+contract_sha256 = "c3eb8842990b560adba28d0b948581b473fc8b72d60039c78711d6ef3d12bf1b"
 
 [[node]]
 id = "M-07-A.1"
@@ -3947,7 +3947,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-A.json#M-07-A.1","Plan and corpus show exact binding from source to all bundles and destinations.","Filesystem/network spies show plan construction performs no publication."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json#M-07-A.1"
-contract_sha256 = "aeb27d94a05700512a7e9bf2519f6d7307170aeb371fd7f1a9321f591c635d91"
+contract_sha256 = "c3eb8842990b560adba28d0b948581b473fc8b72d60039c78711d6ef3d12bf1b"
 
 [[node]]
 id = "M-07-A.2"
@@ -3962,7 +3962,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-A.json#M-07-A.2","A and B evaluator examples use one plan model and yield explicit reason codes.","Default construction leaves live B disabled; no secret values enter reports."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-A.json#M-07-A.2"
-contract_sha256 = "aeb27d94a05700512a7e9bf2519f6d7307170aeb371fd7f1a9321f591c635d91"
+contract_sha256 = "c3eb8842990b560adba28d0b948581b473fc8b72d60039c78711d6ef3d12bf1b"
 
 [[node]]
 id = "M-07-B"
