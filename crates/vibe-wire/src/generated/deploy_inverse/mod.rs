@@ -20,4 +20,19 @@ pub struct DeployInverse {
     pub receipt_post_digest: String,
 
     pub prior_state_handle: String,
+
+    /// Host-issued bound target for this inverse; absent keeps legacy marker
+    /// bytes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation_binding: Option<EnvironmentOperationBinding>,
 }
+
+pub use crate::generated::shared::EnvironmentOperationBindingRootBinding;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetMode;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetOs;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetRole;
+
+pub use crate::generated::shared::EnvironmentOperationBinding;

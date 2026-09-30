@@ -1,5 +1,6 @@
 {
   "metadata": {
+    "x-vocabularies": ["environment_operation_binding"],
     "description": "Epoch-1 engine-owned deploy checkpoint ledger. It records the exact plan hash and resource identities whose provider operations completed, in completion order, so interrupted apply can resume without replaying completed effects.",
     "rustOptions": {
       "package": "vibe_wire::deploy_checkpoints"
@@ -7,7 +8,7 @@
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-DEPLOY-RUNTIME"
     },
-    "x-wire-order": ["schema", "plan_hash", "completed"]
+    "x-wire-order": ["schema", "plan_hash", "completed", "operation_binding"]
   },
   "properties": {
     "schema": { "type": "uint32" },
@@ -16,5 +17,8 @@
       "elements": { "type": "string" },
       "metadata": { "x-empty": "emit" }
     }
+  },
+  "optionalProperties": {
+    "operation_binding": { "ref": "environment_operation_binding", "metadata": { "x-default": null, "description": "Host-issued bound target for this plan; absent keeps legacy checkpoint bytes." } }
   }
 }

@@ -2,6 +2,9 @@
 
 use std::path::PathBuf;
 
+use vibe_wire::behaviour::deploy_records::{
+    validate_checkpoints_binding, validate_inverse_binding, validate_lock_resources_binding,
+};
 use vibe_wire::generated::deploy_checkpoints::DeployCheckpoints;
 use vibe_wire::generated::deploy_inverse::DeployInverse;
 use vibe_wire::generated::deploy_lock_resources::DeployLockResources;
@@ -56,6 +59,106 @@ fn every_valid_restart_root_round_trips_through_its_generated_type() {
         decode_inverse(&encode_inverse(&inverse).unwrap()).unwrap(),
         inverse
     );
+    assert!(
+        decode_lock_resources(&corpus("valid/lock_resources_full.json"))
+            .unwrap()
+            .pending
+            .unwrap()
+            .operation_binding
+            .is_none()
+    );
+    assert!(checkpoints.operation_binding.is_none());
+    assert!(inverse.operation_binding.is_none());
+}
+
+#[test]
+fn legacy_none_reencodes_exact_fixture_bytes_except_fixture_final_newline() {
+    // Corpus files end in a newline; the incumbent serde_json::to_vec_pretty
+    // writer does not. No other whitespace, field-order or value difference
+    // is permitted when the opt-in operation_binding is absent.
+    let expected_body = |name: &str| {
+        let mut bytes = corpus(&format!("valid/{name}"));
+        assert_eq!(
+            bytes.pop(),
+            Some(b'\n'),
+            "{name} fixture ends in one newline"
+        );
+        bytes
+    };
+    let lock = decode_lock_resources(&corpus("valid/lock_resources_minimal.json")).unwrap();
+    assert!(lock.committed.is_none() && lock.pending.is_none());
+    assert_eq!(
+        encode_lock_resources(&lock).unwrap(),
+        expected_body("lock_resources_minimal.json")
+    );
+
+    let checkpoint = decode_checkpoints(&corpus("valid/checkpoints.json")).unwrap();
+    assert!(checkpoint.operation_binding.is_none());
+    assert_eq!(
+        encode_checkpoints(&checkpoint).unwrap(),
+        expected_body("checkpoints.json")
+    );
+
+    let inverse = decode_inverse(&corpus("valid/inverse.json")).unwrap();
+    assert!(inverse.operation_binding.is_none());
+    assert_eq!(
+        encode_inverse(&inverse).unwrap(),
+        expected_body("inverse.json")
+    );
+}
+
+#[test]
+fn bound_restart_records_join_one_strict_host_binding() {
+    let lock = decode_lock_resources(&corpus("valid/lock_resources_bound.json")).unwrap();
+    let expected = lock
+        .pending
+        .as_ref()
+        .unwrap()
+        .operation_binding
+        .as_ref()
+        .unwrap()
+        .clone();
+    validate_lock_resources_binding(&lock, Some(&expected)).unwrap();
+    let checkpoints = decode_checkpoints(&corpus("valid/checkpoints_bound.json")).unwrap();
+    validate_checkpoints_binding(&checkpoints, Some(&expected), &"a".repeat(64)).unwrap();
+    let inverse = decode_inverse(&corpus("valid/inverse_bound.json")).unwrap();
+    validate_inverse_binding(&inverse, Some(&expected), 0, "org.example/providers#native").unwrap();
+    assert_eq!(
+        decode_lock_resources(&encode_lock_resources(&lock).unwrap()).unwrap(),
+        lock
+    );
+    assert_eq!(
+        decode_checkpoints(&encode_checkpoints(&checkpoints).unwrap()).unwrap(),
+        checkpoints
+    );
+    assert_eq!(
+        decode_inverse(&encode_inverse(&inverse).unwrap()).unwrap(),
+        inverse
+    );
+
+    let mut foreign = expected.clone();
+    foreign.principal_ref = "another-principal".into();
+    assert!(validate_lock_resources_binding(&lock, Some(&foreign)).is_err());
+    assert!(validate_checkpoints_binding(&checkpoints, Some(&foreign), &"a".repeat(64)).is_err());
+    assert!(
+        validate_inverse_binding(&inverse, Some(&foreign), 0, "org.example/providers#native")
+            .is_err()
+    );
+    assert!(validate_lock_resources_binding(&lock, None).is_err());
+    assert!(validate_checkpoints_binding(&checkpoints, None, &"a".repeat(64)).is_err());
+    assert!(validate_inverse_binding(&inverse, None, 0, "org.example/providers#native").is_err());
+}
+
+#[test]
+fn bound_restart_readers_refuse_unknown_and_missing_required_binding_fields() {
+    assert!(
+        decode_lock_resources(&corpus("invalid/lock_resources_bound_unknown_binding.json"))
+            .is_err()
+    );
+    assert!(
+        decode_checkpoints(&corpus("invalid/checkpoints_bound_missing_nullable.json")).is_err()
+    );
+    assert!(decode_inverse(&corpus("invalid/inverse_bound_unknown_field.json")).is_err());
 }
 
 #[test]
@@ -110,6 +213,7 @@ fn canonical_writer_keeps_the_durable_epoch_one_field_order() {
             schema: 1,
             plan_hash: "a".repeat(64),
             completed: vec!["bin/tool".to_owned()],
+            operation_binding: None,
         })
         .unwrap(),
         b"{\n  \"schema\": 1,\n  \"plan_hash\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"completed\": [\n    \"bin/tool\"\n  ]\n}"
@@ -121,6 +225,7 @@ fn canonical_writer_keeps_the_durable_epoch_one_field_order() {
         resource: "bin/tool".to_owned(),
         receipt_post_digest: "b".repeat(64),
         prior_state_handle: "rollback/one".to_owned(),
+        operation_binding: None,
     };
     let encoded = String::from_utf8(encode_inverse(&inverse).unwrap()).unwrap();
     assert!(encoded.find("\"schema\"").unwrap() < encoded.find("\"generation\"").unwrap());

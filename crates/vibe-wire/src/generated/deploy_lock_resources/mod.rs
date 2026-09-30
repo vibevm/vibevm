@@ -21,6 +21,16 @@ pub struct DeployLockResources {
     pub pending: Option<LockBinding>,
 }
 
+pub use crate::generated::shared::EnvironmentOperationBindingRootBinding;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetMode;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetOs;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetRole;
+
+pub use crate::generated::shared::EnvironmentOperationBinding;
+
 /// An exact non-negative byte count. Stock JTD has no uint64 form, so the
 /// schema's numeric form is narrowed by generated Rust to u64; decimals,
 /// negatives and overflow refuse at the generated reader.
@@ -39,6 +49,11 @@ pub struct LockBinding {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub native: Option<NativeProviderBinding>,
+
+    /// Host-issued bound target for this generation; absent keeps the legacy
+    /// sidecar bytes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation_binding: Option<EnvironmentOperationBinding>,
 }
 
 /// Exact package-native deploy provider identity retained for process restart.
