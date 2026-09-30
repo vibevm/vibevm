@@ -11,6 +11,8 @@ use vibe_wire::generated::artifact_record::{
     ArtifactKind, ArtifactRecord, ArtifactShape, DigestAlgorithm, RelativeRoot,
 };
 
+use crate::mechanism::deploy::binding::LockedLocalDeployBinding;
+
 use super::launcher::{self, LauncherFlavour, Occupant};
 use super::store::{self, PayloadPlacement};
 
@@ -312,7 +314,19 @@ pub(crate) struct BoundVibeBinStore<'a> {
 }
 
 impl<'a> BoundVibeBinStore<'a> {
-    pub(crate) fn new(project: &'a Project, destination: &'a BoundDestinationLock) -> Self {
+    /// The only production construction path: a host-admitted binding owns
+    /// both the pinned source and the live physical destination lock.
+    pub(crate) fn from_locked_admission(admission: &'a LockedLocalDeployBinding) -> Self {
+        Self {
+            project: admission.project(),
+            destination: admission.destination(),
+        }
+    }
+
+    /// Exercise the pinned I/O primitive in isolation without fabricating a
+    /// host binding. This constructor is absent from shipped builds.
+    #[cfg(test)]
+    pub(super) fn for_test(project: &'a Project, destination: &'a BoundDestinationLock) -> Self {
         Self {
             project,
             destination,
