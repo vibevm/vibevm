@@ -29,6 +29,7 @@ enum CacheFault {
     Changed,
     Extra,
     Missing,
+    WrongHash,
     #[cfg(unix)]
     Symlink,
 }
@@ -194,7 +195,7 @@ impl InstallSource for FixtureSource {
                 source: std::io::Error::other("source fetch preceded install-entered stage"),
             });
         }
-        let cached = self
+        let mut cached = self
             .inner
             .resolve_and_fetch(pkgref, store_root, expected_hash)?;
         self.fetches.fetch_add(1, Ordering::SeqCst);
@@ -208,6 +209,9 @@ impl InstallSource for FixtureSource {
             }
             CacheFault::Missing => {
                 std::fs::remove_file(cached.cache_dir.join("README.md")).unwrap();
+            }
+            CacheFault::WrongHash => {
+                cached.content_hash = format!("sha256:{}", "0".repeat(64));
             }
             #[cfg(unix)]
             CacheFault::Symlink => {
@@ -399,6 +403,49 @@ fn changed_extra_or_missing_cached_bytes_refuse_before_slot_lock_and_boot() {
         );
         assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
     }
+}
+
+#[test]
+fn forged_registry_content_hash_refuses_before_lock_and_slot() {
+    let _guard = fixture_guard();
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let mut factory = FixtureFactory::new(registry);
+    factory.cache_fault = CacheFault::WrongHash;
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let first = fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("wrong hash must retain uncertain result: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert!(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    assert!(!project.join("vibe.lock").exists());
+    assert!(
+        !project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+            .exists()
+    );
+    assert!(!project.join("vibevm/vibespecs/boot/INDEX.md").exists());
+    assert_eq!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
 }
 
 #[cfg(unix)]

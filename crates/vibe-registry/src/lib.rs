@@ -361,7 +361,8 @@ pub use error::{AllVersionsUnusableDetail, RegistryError, StoreEntryMismatchDeta
 pub use hash_recipe::{RecipeId, order_entries, order_paths};
 pub(crate) use shippable::copy_dir_recursive;
 pub use shippable::{
-    compute_content_hash, compute_content_hash_with, compute_portable_content_hash,
+    BoundedContentFile, compute_content_hash, compute_content_hash_legacy0_bounded_exact,
+    compute_content_hash_with, compute_portable_content_hash,
 };
 pub use store::{
     InsertOutcome, entry_dir, insert_from, list_all, list_older_than, list_versions, lookup,
