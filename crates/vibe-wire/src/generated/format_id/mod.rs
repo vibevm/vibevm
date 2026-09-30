@@ -65,6 +65,7 @@ pub enum FormatId {
     EnvironmentDefinition,
     EnvironmentExactLock,
     EnvironmentGenerationReceipt,
+    EnvironmentOperationBinding,
     EnvironmentPayloadInventory,
     EnvironmentRealizationError,
     EnvironmentRealizationRequest,

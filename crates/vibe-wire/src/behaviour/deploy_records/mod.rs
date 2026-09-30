@@ -34,8 +34,13 @@ use crate::behaviour::scalars::{
 use crate::generated::deploy_intent::DeployIntent;
 use crate::generated::deploy_receipt::{DeployReceipt, ReceiptStatus};
 
+mod binding;
 mod errors;
 
+pub use binding::{
+    OperationBindingError, validate_native_operation_binding, validate_operation_binding,
+    validate_operation_binding_pair, validate_operation_binding_root,
+};
 pub use errors::{DeployIntentError, DeployReceiptError};
 
 #[cfg(test)]
@@ -72,6 +77,10 @@ pub fn validate_intent(intent: &DeployIntent) -> Result<(), DeployIntentError> {
         return Err(DeployIntentError::TargetNotPortableToken {
             target: preview(&target.target),
         });
+    }
+    if let Some(binding) = &intent.operation_binding {
+        validate_operation_binding(binding)
+            .map_err(|error| DeployIntentError::InvalidBinding { field: error.field })?;
     }
     for (row, resource) in intent.resources.iter().enumerate() {
         if is_unsafe_text(&resource.resource) {
@@ -118,6 +127,10 @@ pub fn validate_receipt(receipt: &DeployReceipt) -> Result<(), DeployReceiptErro
         return Err(DeployReceiptError::TargetNotPortableToken {
             target: preview(&receipt.target),
         });
+    }
+    if let Some(binding) = &receipt.operation_binding {
+        validate_operation_binding(binding)
+            .map_err(|error| DeployReceiptError::InvalidBinding { field: error.field })?;
     }
     for (member, value) in [
         ("artifact_digest", &receipt.artifact_digest),

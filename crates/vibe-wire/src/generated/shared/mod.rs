@@ -1134,6 +1134,76 @@ pub struct EmittedArtifact {
     pub provenance: EmissionProvenance,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnvironmentOperationBindingRootBinding {
+    pub capability_ref: String,
+
+    pub root_role: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvironmentOperationBindingTargetOs {
+    #[serde(rename = "linux")]
+    Linux,
+
+    #[serde(rename = "macos")]
+    Macos,
+
+    #[serde(rename = "windows")]
+    Windows,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvironmentOperationBindingTargetRole {
+    #[serde(rename = "emitted_code_target")]
+    EmittedCodeTarget,
+
+    #[serde(rename = "executor")]
+    Executor,
+
+    #[serde(rename = "produced_tool_runtime")]
+    ProducedToolRuntime,
+}
+
+/// Host-issued, context-scoped target binding data; value equality does
+/// not grant effects. Shared only by strict host-owned intent, receipt and
+/// standalone binding readers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnvironmentOperationBinding {
+    pub admission_epoch: u32,
+
+    pub binding_epoch: u16,
+
+    pub binding_id: String,
+
+    pub host_context_id: String,
+
+    pub instance_ref: String,
+
+    pub principal_ref: String,
+
+    pub root_bindings: Vec<EnvironmentOperationBindingRootBinding>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub selected_generation_ref: Option<String>,
+
+    pub storage_binding_ref: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target_abi: Option<String>,
+
+    pub target_architecture: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target_libc: Option<String>,
+
+    pub target_os: EnvironmentOperationBindingTargetOs,
+
+    pub target_role: EnvironmentOperationBindingTargetRole,
+}
+
 /// The run one verification claim was observed under — the identity half PROP-
 /// 054 `##VERIFY-EVIDENCE-IDENTITY` names first. It is the same run header
 /// `.vibe/lifecycle.toml` records, restated on the evidence wire so a reader

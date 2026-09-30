@@ -15,6 +15,8 @@ use crate::generated::deploy_receipt::ReceiptStatus;
 /// assert the exact family a mutation lands in.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DeployIntentError {
+    /// Bound target metadata is malformed; no effect authority follows from it.
+    InvalidBinding { field: &'static str },
     /// `schema` is not this validator's epoch — a newer journal must
     /// fail loudly, not parse into a wrong meaning.
     SchemaEpoch { found: u32 },
@@ -51,6 +53,8 @@ pub enum DeployIntentError {
 /// offender.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DeployReceiptError {
+    /// Bound target metadata is malformed; no effect authority follows from it.
+    InvalidBinding { field: &'static str },
     /// `schema` is not this validator's epoch.
     SchemaEpoch { found: u32 },
     /// `profile` is not a portable token.
@@ -113,6 +117,7 @@ impl std::fmt::Display for DeployIntentError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         use DeployIntentError as E;
         match self {
+            E::InvalidBinding { field } => write!(f, "operation_binding.{field} is invalid"),
             E::SchemaEpoch { found } => write!(
                 f,
                 "schema = {found} is not the deploy-intent epoch {epoch}",
@@ -162,6 +167,7 @@ impl std::fmt::Display for DeployReceiptError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         use DeployReceiptError as E;
         match self {
+            E::InvalidBinding { field } => write!(f, "operation_binding.{field} is invalid"),
             E::SchemaEpoch { found } => write!(
                 f,
                 "schema = {found} is not the deploy-receipt epoch {epoch}",

@@ -58,6 +58,10 @@ fn every_valid_document_round_trips_and_validates() {
         let authored = read_corpus(&format!("valid/{name}"));
         if name.starts_with("intent") {
             let intent = parse_intent(authored.clone());
+            assert!(
+                intent.operation_binding.is_none(),
+                "legacy {name} must stay unbound"
+            );
             validate_intent(&intent)
                 .unwrap_or_else(|error| panic!("{name} violates a law: {error}"));
             assert_eq!(
@@ -67,6 +71,10 @@ fn every_valid_document_round_trips_and_validates() {
             );
         } else {
             let receipt = parse_receipt(authored.clone());
+            assert!(
+                receipt.operation_binding.is_none(),
+                "legacy {name} must stay unbound"
+            );
             validate_receipt(&receipt)
                 .unwrap_or_else(|error| panic!("{name} violates a law: {error}"));
             assert_eq!(

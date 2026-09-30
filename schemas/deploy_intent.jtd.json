@@ -1,5 +1,6 @@
 {
   "metadata": {
+    "x-vocabularies": ["environment_operation_binding"],
     "description": "Epoch-1 deploy intent journal (R8A2): the durable record written atomically BEFORE apply, carrying the plan hash, the prior receipt generation, and every planned resource with its desired digest (campaigns/packages-2026-09 architecture §7.2). Receipt-last alone cannot cover a crash after the first external write; this journal is what recovery reads. It plans state — it never carries secrets, commands or credentials. Generated Rust is the runtime journal type.",
     "rustOptions": {
       "package": "vibe_wire::deploy_intent"
@@ -39,6 +40,10 @@
     }
   },
   "optionalProperties": {
+    "operation_binding": {
+      "ref": "environment_operation_binding",
+      "metadata": {"x-default": null, "description": "Host-issued opt-in environment binding. Absent keeps the legacy local journal bytes and meaning."}
+    },
     "prior_generation": {
       "type": "uint32",
       "metadata": {

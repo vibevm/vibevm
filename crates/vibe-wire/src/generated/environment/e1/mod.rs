@@ -7,6 +7,7 @@
 pub mod definition;
 pub mod exact_lock;
 pub mod generation_receipt;
+pub mod operation_binding;
 pub mod payload_inventory;
 pub mod realization_error;
 pub mod realization_request;
