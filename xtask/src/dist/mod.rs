@@ -11,6 +11,7 @@ mod archive;
 mod build;
 mod capture;
 mod release;
+mod smoke;
 mod snapshot;
 
 #[derive(Debug, Subcommand)]
