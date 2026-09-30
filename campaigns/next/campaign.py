@@ -483,9 +483,9 @@ def validate_preview_control(manifest, nodes, tasks):
         first = parent["id"] + ".1"
         need(control["bootstrap_gate"] in effective_dependencies(nodes, first),
              f"preview bootstrap prerequisite missing: {first}")
-    supplements = manifest.get("supplemental_work_packages", [])
-    need(supplements and all(group["owner"] == owner for group in supplements),
-         "preview supplemental owner differs")
+    supplements = [group for group in manifest.get("supplemental_work_packages", [])
+                   if group["owner"] == owner]
+    need(supplements, "preview supplemental work packages missing")
     for group in supplements:
         for key in tasks:
             if key.startswith(group["id"] + "."):

@@ -71,7 +71,7 @@ class CampaignChecks(unittest.TestCase):
         result = MODULE["check"](MANIFEST, None)
         self.assertEqual(result["baseline_work_packages"], 86)
         self.assertEqual(result["baseline_implementation_tasks"], 203)
-        self.assertEqual(result["supplemental_tasks"], 11)
+        self.assertEqual(result["supplemental_tasks"], 15)
         self.assertEqual(result["implementation_tasks"], len(self.tasks))
         self.assertGreaterEqual(result["implementation_tasks"], 212)
         self.assertFalse(result["product_gates_executed"])

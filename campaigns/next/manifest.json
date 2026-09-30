@@ -3464,9 +3464,10 @@
     "NEXT-PREVIEW-DOCS",
     "NEXT-PREVIEW-RELEASE",
     "NEXT-PREVIEW-DOCS-INPUT",
-    "RETIRE-NEXT-A26"
+    "RETIRE-NEXT-A26",
+    "M-06-G"
   ],
-  "task_count": 218,
+  "task_count": 222,
   "task_files_sha256": {
     "M-01-A": "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c",
     "M-01-B": "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b",
@@ -3558,7 +3559,8 @@
     "NEXT-PREVIEW-BIND": "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad",
     "NEXT-PREVIEW-DOCS": "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee",
     "NEXT-PREVIEW-RELEASE": "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9",
-    "M-16-C.2": "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
+    "M-16-C.2": "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235",
+    "M-06-G": "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
   },
   "preview_control": "campaigns/next/preview-control.json",
   "supplemental_work_packages": [
@@ -3614,6 +3616,14 @@
         "NEXT-PREVIEW-DOCS"
       ],
       "tasks_file": "campaigns/next/tasks/NEXT-PREVIEW-RELEASE.json"
+    },
+    {
+      "id": "M-06-G",
+      "owner": "M-06",
+      "depends_on": [
+        "M-06-A"
+      ],
+      "tasks_file": "campaigns/next/tasks/M-06-G.json"
     }
   ],
   "verification_policy": "campaigns/next/verification-policy.json"
