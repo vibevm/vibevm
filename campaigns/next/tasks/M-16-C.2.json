@@ -74,6 +74,8 @@
       "read_paths": [
         "crates/vibe-lifecycle/src/mechanism/build.rs",
         "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/mechanism/cargo.rs",
+        "crates/vibe-lifecycle/src/mechanism/cargo/",
         "crates/vibe-lifecycle/src/mechanism/package.rs",
         "crates/vibe-lifecycle/src/mechanism/package/",
         "crates/vibe-lifecycle/src/state/",
@@ -85,6 +87,8 @@
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/build.rs",
         "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/mechanism/cargo.rs",
+        "crates/vibe-lifecycle/src/mechanism/cargo/",
         "crates/vibe-lifecycle/src/mechanism/package.rs",
         "crates/vibe-lifecycle/src/mechanism/package/",
         "crates/vibe-lifecycle/src/state/",
@@ -123,7 +127,8 @@
       "commit_subject": "feat(api): journal build and package effects",
       "notes": [
         "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
-        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication."
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
+        "The builtin Cargo owner is in scope to bind a fixed offline one-bin build to its first command effect. Journal the workspace output and explicit Cargo cache home before command spawn; keep any ambient toolchain/home side effects and cross-process guarantees truthful in typed partial/uncertain observations rather than claiming unrestricted CAS."
       ]
     },
     {
