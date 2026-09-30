@@ -13,6 +13,14 @@ const RUN_A: &str = "00112233445566778899aabbccddeeff";
 const RUN_B: &str = "ffeeddccbbaa99887766554433221100";
 const EFFECT_KEY: &str = "fixture-effect";
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum FixtureFault {
+    None,
+    AfterCountBeforeCheckpoint,
+    AfterRetainedCheckpoint,
+    AfterUncertainCheckpoint,
+}
+
 fn scope() -> SubmissionScope {
     SubmissionScope {
         context: "ctx".into(),
@@ -26,6 +34,8 @@ struct FixtureJournal {
     calls: Arc<AtomicUsize>,
     ready_probe: Option<(SubmissionNamespace, SubmissionScope, String)>,
     hide_result: bool,
+    fault: FixtureFault,
+    fail_initialize_after_begin: bool,
 }
 
 impl FixtureJournal {
@@ -35,6 +45,8 @@ impl FixtureJournal {
             calls,
             ready_probe: None,
             hide_result: false,
+            fault: FixtureFault::None,
+            fail_initialize_after_begin: false,
         }
     }
 
@@ -45,6 +57,16 @@ impl FixtureJournal {
 
     fn without_retained_result(mut self) -> Self {
         self.hide_result = true;
+        self
+    }
+
+    fn failing_invoke(mut self, fault: FixtureFault) -> Self {
+        self.fault = fault;
+        self
+    }
+
+    fn failing_initialize_after_begin(mut self) -> Self {
+        self.fail_initialize_after_begin = true;
         self
     }
 }
@@ -98,8 +120,12 @@ impl SubmissionJournal for FixtureJournal {
             ".".into(),
             false,
         )
-        .map(|_| ())
-        .map_err(|error| error.to_string())
+        .map_err(|error| error.to_string())?;
+        if self.fail_initialize_after_begin {
+            Err("fixture lost initialization response".into())
+        } else {
+            Ok(())
+        }
     }
 
     fn invoke(&mut self, lease: Arc<LifecycleLease>, run_id: &str) -> Result<String, String> {
@@ -124,13 +150,20 @@ impl SubmissionJournal for FixtureJournal {
         )
         .map_err(|error| error.to_string())?;
         self.calls.fetch_add(1, Ordering::SeqCst);
+        if self.fault == FixtureFault::AfterCountBeforeCheckpoint {
+            return Err("fixture effect landed before journal checkpoint".into());
+        }
         store
             .checkpoint(
                 EFFECT_KEY.into(),
                 ExecutionRecord {
                     artifacts: Vec::new(),
                     duration_ms: 0,
-                    fingerprint: format!("fixture:effect:{run_id}"),
+                    fingerprint: if self.fault == FixtureFault::AfterUncertainCheckpoint {
+                        "fixture:uncertain-effect".into()
+                    } else {
+                        format!("fixture:effect:{run_id}")
+                    },
                     phase: "build".into(),
                     status: ExecutionRecordStatus::Ok,
                     tasks: Vec::new(),
@@ -139,6 +172,12 @@ impl SubmissionJournal for FixtureJournal {
                 },
             )
             .map_err(|error| error.to_string())?;
+        if matches!(
+            self.fault,
+            FixtureFault::AfterRetainedCheckpoint | FixtureFault::AfterUncertainCheckpoint
+        ) {
+            return Err("fixture lost effect response".into());
+        }
         Ok(run_id.to_owned())
     }
 }
@@ -160,6 +199,136 @@ fn effect_callback_observes_durable_journal_ready_before_invocation() {
         SubmissionOutcome::Invoked { .. }
     ));
     assert_eq!(calls.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn invoke_error_after_retained_outcome_attaches_to_same_run_once() {
+    let root = tempfile::tempdir().unwrap();
+    let namespace = issue(root.path());
+    let calls = Arc::new(AtomicUsize::new(0));
+    let mut journal = FixtureJournal::new(RUN_A, Arc::clone(&calls))
+        .failing_invoke(FixtureFault::AfterRetainedCheckpoint);
+    assert_eq!(
+        call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut journal,
+            b"request",
+        )
+        .unwrap(),
+        SubmissionOutcome::Invoked {
+            run_id: RUN_A.into(),
+            outcome: RUN_A.into(),
+        }
+    );
+    let mut retry = FixtureJournal::new(RUN_B, Arc::clone(&calls));
+    assert_eq!(
+        call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut retry,
+            b"request",
+        )
+        .unwrap(),
+        SubmissionOutcome::Replayed {
+            run_id: RUN_A.into(),
+            outcome: RUN_A.into(),
+        }
+    );
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn invoke_error_after_counted_effect_keeps_recovery_or_uncertain_run() {
+    for fault in [
+        FixtureFault::AfterCountBeforeCheckpoint,
+        FixtureFault::AfterUncertainCheckpoint,
+    ] {
+        let root = tempfile::tempdir().unwrap();
+        let namespace = issue(root.path());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let mut journal = FixtureJournal::new(RUN_A, Arc::clone(&calls)).failing_invoke(fault);
+        let result = call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut journal,
+            b"request",
+        );
+        match fault {
+            FixtureFault::AfterCountBeforeCheckpoint => assert_eq!(
+                result.unwrap(),
+                SubmissionOutcome::RecoveryRequired {
+                    run_id: RUN_A.into()
+                }
+            ),
+            FixtureFault::AfterUncertainCheckpoint => assert!(matches!(
+                result,
+                Err(SubmissionFailure::UncertainJournal { run_id, .. }) if run_id == RUN_A
+            )),
+            _ => unreachable!(),
+        }
+        let mut retry = FixtureJournal::new(RUN_B, Arc::clone(&calls));
+        let retried = call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut retry,
+            b"request",
+        );
+        match fault {
+            FixtureFault::AfterCountBeforeCheckpoint => assert_eq!(
+                retried.unwrap(),
+                SubmissionOutcome::RecoveryRequired {
+                    run_id: RUN_A.into()
+                }
+            ),
+            FixtureFault::AfterUncertainCheckpoint => assert!(matches!(
+                retried,
+                Err(SubmissionFailure::UncertainJournal { run_id, .. }) if run_id == RUN_A
+            )),
+            _ => unreachable!(),
+        }
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
+}
+
+#[test]
+fn initialize_error_after_durable_prepare_retains_reserved_run_without_effect() {
+    let root = tempfile::tempdir().unwrap();
+    let namespace = issue(root.path());
+    let calls = Arc::new(AtomicUsize::new(0));
+    let mut journal =
+        FixtureJournal::new(RUN_A, Arc::clone(&calls)).failing_initialize_after_begin();
+    assert_eq!(
+        call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut journal,
+            b"request",
+        )
+        .unwrap(),
+        SubmissionOutcome::RecoveryRequired {
+            run_id: RUN_A.into()
+        }
+    );
+    let lease = Arc::new(LifecycleLease::acquire(root.path()).unwrap());
+    assert_eq!(
+        SubmissionReservations::journal_admission(&lease, &namespace, &scope(), "same-key", RUN_A)
+            .unwrap(),
+        JournalAdmission::Pending
+    );
+    let mut retry = FixtureJournal::new(RUN_B, Arc::clone(&calls));
+    assert_eq!(
+        call(Arc::clone(&lease), &namespace, &mut retry, b"request").unwrap(),
+        SubmissionOutcome::RecoveryRequired {
+            run_id: RUN_A.into()
+        }
+    );
+    assert_eq!(
+        SubmissionReservations::journal_admission(&lease, &namespace, &scope(), "same-key", RUN_A)
+            .unwrap(),
+        JournalAdmission::Ready
+    );
+    assert_eq!(calls.load(Ordering::SeqCst), 0);
 }
 
 #[test]

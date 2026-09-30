@@ -55,7 +55,6 @@ pub enum SubmissionOutcome<T> {
 #[derive(Debug)]
 pub enum SubmissionFailure {
     Reservation(SubmissionError),
-    Journal(String),
     MissingJournal { run_id: String },
     ConflictingJournal { run_id: String },
     UncertainJournal { run_id: String, reason: String },
@@ -66,7 +65,6 @@ impl fmt::Display for SubmissionFailure {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Reservation(error) => write!(f, "submission reservation: {error}"),
-            Self::Journal(error) => write!(f, "domain journal: {error}"),
             Self::MissingJournal { run_id } => {
                 write!(f, "prepared journal for {run_id} disappeared")
             }
@@ -98,7 +96,44 @@ fn inspect<J: SubmissionJournal>(
 ) -> Result<JournalState<J::Outcome>, SubmissionFailure> {
     journal
         .inspect(lease, run_id)
-        .map_err(SubmissionFailure::Journal)
+        .map_err(|reason| SubmissionFailure::UncertainJournal {
+            run_id: run_id.to_owned(),
+            reason,
+        })
+}
+
+/// A callback may report failure after writing its journal or even after a
+/// domain effect. Reinspect under the same lease, retaining the reserved ID
+/// in every unresolved answer. Only the effect callback may turn a durable
+/// complete outcome into `Invoked`; initialization may never perform it.
+fn reconcile_callback_error<J: SubmissionJournal>(
+    journal: &mut J,
+    lease: &LifecycleLease,
+    run_id: String,
+    operation: &'static str,
+    original: String,
+) -> Result<SubmissionOutcome<J::Outcome>, SubmissionFailure> {
+    match journal.inspect(lease, &run_id) {
+        Ok(JournalState::Complete(outcome)) if operation == "invoke" => {
+            Ok(SubmissionOutcome::Invoked { run_id, outcome })
+        }
+        Ok(JournalState::Prepared) => Ok(SubmissionOutcome::RecoveryRequired { run_id }),
+        observed => {
+            let detail = match observed {
+                Ok(JournalState::Absent) => "journal absent after callback failure".to_owned(),
+                Ok(JournalState::Uncertain(reason)) => reason,
+                Ok(JournalState::Complete(_)) => {
+                    "initialization unexpectedly left a complete journal".to_owned()
+                }
+                Ok(JournalState::Prepared) => unreachable!("handled above"),
+                Err(reason) => format!("journal reinspection failed: {reason}"),
+            };
+            Err(SubmissionFailure::UncertainJournal {
+                run_id,
+                reason: format!("{operation} failed: {original}; {detail}"),
+            })
+        }
+    }
 }
 
 /// Submit only against a trusted scope/namespace already issued by the host.
@@ -107,7 +142,7 @@ fn inspect<J: SubmissionJournal>(
 #[allow(clippy::too_many_arguments)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
-    r = 2
+    r = 6
 )]
 pub fn submit<J: SubmissionJournal>(
     lease: Arc<LifecycleLease>,
@@ -182,9 +217,9 @@ pub fn submit<J: SubmissionJournal>(
             return Err(SubmissionFailure::UncertainJournal { run_id, reason });
         }
         (JournalAdmission::Pending, JournalState::Absent) => {
-            journal
-                .initialize(Arc::clone(&lease), &run_id)
-                .map_err(SubmissionFailure::Journal)?;
+            if let Err(reason) = journal.initialize(Arc::clone(&lease), &run_id) {
+                return reconcile_callback_error(journal, &lease, run_id, "initialize", reason);
+            }
             match inspect(journal, &lease, &run_id)? {
                 JournalState::Prepared => {}
                 JournalState::Absent => return Err(SubmissionFailure::MissingJournal { run_id }),
@@ -208,9 +243,12 @@ pub fn submit<J: SubmissionJournal>(
         // from a missing result and invoke it a second time.
         return Ok(SubmissionOutcome::RecoveryRequired { run_id });
     }
-    let outcome = journal
-        .invoke(Arc::clone(&lease), &run_id)
-        .map_err(SubmissionFailure::Journal)?;
+    let outcome = match journal.invoke(Arc::clone(&lease), &run_id) {
+        Ok(outcome) => outcome,
+        Err(reason) => {
+            return reconcile_callback_error(journal, &lease, run_id, "invoke", reason);
+        }
+    };
     match inspect(journal, &lease, &run_id)? {
         JournalState::Complete(retained) if retained == outcome => {
             Ok(SubmissionOutcome::Invoked { run_id, outcome })
