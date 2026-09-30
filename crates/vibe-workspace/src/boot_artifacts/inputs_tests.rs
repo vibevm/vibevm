@@ -224,3 +224,135 @@ fn the_adapter_cell_names_no_undetermined_and_no_untyped_document_constructor() 
         );
     }
 }
+
+#[test]
+fn bound_simple_boot_projects_only_selected_vibe_and_refuses_raw_same_stem() {
+    use std::fs;
+
+    use vibe_core::ContentHash;
+    use vibe_core::manifest::SpecFormat;
+    use vibe_spec::{CompilePlans, TransformPlan};
+
+    let workspace = tempfile::tempdir().unwrap();
+    let source = tempfile::tempdir().unwrap();
+    let group = Group::parse("org.example").unwrap();
+    let version = semver::Version::parse("1.1.0").unwrap();
+    let specs = vibe_core::layout::current_specs_root();
+    let vibe = specs.join("common/rule.xml");
+    let raw = specs.join("common/rule.md");
+    let xml_data = specs.join("common/data.xml");
+    let opaque = specs.join("common/opaque.xml");
+    fs::create_dir_all(source.path().join(&vibe).parent().unwrap()).unwrap();
+    fs::write(source.path().join(&vibe), b"<spec xmlns='https://vibevm.org/spec/1'><p><RULE fact='true'>selected simple boot</RULE></p></spec>\n").unwrap();
+    fs::write(
+        source.path().join(&raw),
+        b"# Raw\n\n@fact:FAKE stays literal.\n",
+    )
+    .unwrap();
+    for path in [&xml_data, &opaque] {
+        fs::write(
+            source.path().join(path),
+            b"<spec xmlns='https://vibevm.org/spec/1'><p><FAKE fact='true'>raw</FAKE></p></spec>\n",
+        )
+        .unwrap();
+    }
+    let wire = |path: &Path| path.to_string_lossy().replace('\\', "/");
+    fs::write(source.path().join("vibe.toml"), format!(
+        "[package]\nname='simple'\ngroup='org.example'\nkind='flow'\nversion='1.1.0'\nformat='simple'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/octet-stream'\ninterpretation='opaque'\nrole='resource'\nloading='scan'\n",
+        wire(&vibe), wire(&raw), wire(&xml_data), wire(&opaque)
+    )).unwrap();
+    let hash = ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
+    crate::vibedeps::materialise_with_spec_format(
+        workspace.path(),
+        &group,
+        "simple",
+        &version,
+        source.path(),
+        crate::vibedeps::CopyMode::Copy,
+        SpecFormat::Mixed,
+        &hash,
+    )
+    .unwrap();
+    let slot = crate::vibedeps::slot_rel_path(&group, "simple", &version);
+    let witness = SelectedSlotWitness {
+        group: group.clone(),
+        name: "simple".into(),
+        version,
+        root: workspace.path().join(&slot),
+        source_hash: Some(hash),
+        spec_format: SpecFormat::Mixed,
+    };
+    let entry = BootEntry {
+        path: layout_paths::slot_specs(slot.clone(), "common/rule.xml"),
+        band: BootBand::Dependency,
+        link: LinkType::Static,
+        when: None,
+        origin: "org.example/simple".into(),
+        provenance: BootProvenance::Dependency {
+            group,
+            name: "simple".into(),
+        },
+        use_ref: false,
+        format: PackageFormat::Simple,
+        unit_substituted: false,
+        elided: false,
+    };
+    let coordinate = SelfCoordinate::new(Some("org.host".into()), "host".into());
+    let plans = || CompilePlans::transforms_only(TransformPlan::empty());
+    let render = |entry: BootEntry, witness: &SelectedSlotWitness| {
+        super::super::render_static_observed_selected(
+            &crate::boot::EffectiveBoot {
+                entries: vec![entry],
+            },
+            workspace.path(),
+            &coordinate,
+            SpecFormat::Mixed,
+            None,
+            plans(),
+            std::slice::from_ref(witness),
+        )
+    };
+    let rendered = render(entry.clone(), &witness).unwrap().unwrap();
+    assert!(rendered.contains("selected simple boot"), "{rendered}");
+    for raw_path in ["common/rule.md", "common/data.xml", "common/opaque.xml"] {
+        let raw_entry = BootEntry {
+            path: layout_paths::slot_specs(slot.clone(), raw_path),
+            ..entry.clone()
+        };
+        let raw_error = render(raw_entry, &witness).unwrap_err().to_string();
+        assert!(
+            raw_error.contains("not a selected VibeSpec"),
+            "{raw_path}: {raw_error}"
+        );
+    }
+    let materialized_manifest = witness.root.join("vibe.toml");
+    let original_manifest = fs::read(&materialized_manifest).unwrap();
+    fs::write(
+        &materialized_manifest,
+        "[package]\nname='simple'\ngroup='org.example'\nkind='flow'\nversion='1.1.0'\nformat='simple'\n",
+    )
+    .unwrap();
+    let stripped = render(entry.clone(), &witness).unwrap_err().to_string();
+    assert!(
+        stripped.contains("installed manifest bytes differ from the slot record"),
+        "{stripped}"
+    );
+    fs::write(materialized_manifest, original_manifest).unwrap();
+    let mut foreign = witness.clone();
+    foreign.source_hash = None;
+    let missing = render(entry.clone(), &foreign).unwrap_err().to_string();
+    assert!(
+        missing.contains("independent selected source hash"),
+        "{missing}"
+    );
+    foreign.source_hash = Some(ContentHash::parse(&format!("sha256:{}", "2".repeat(64))).unwrap());
+    let foreign_error = render(entry, &foreign).unwrap_err().to_string();
+    assert!(
+        foreign_error.contains("source hash or format differs"),
+        "{foreign_error}"
+    );
+}

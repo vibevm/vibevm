@@ -350,7 +350,8 @@ fn compile_static_artifact_with_plans(
     if entries.is_empty() {
         return Ok(None);
     }
-    let (inputs, providers) = inputs::build_with_providers(entries, workspace_root, self_coord)?;
+    let (inputs, providers) =
+        inputs::build_with_providers(entries, workspace_root, self_coord, selected_slots)?;
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
