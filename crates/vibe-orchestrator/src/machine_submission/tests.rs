@@ -24,6 +24,8 @@ fn scope() -> SubmissionScope {
 struct FixtureJournal {
     proposed: String,
     calls: Arc<AtomicUsize>,
+    ready_probe: Option<(SubmissionNamespace, SubmissionScope, String)>,
+    hide_result: bool,
 }
 
 impl FixtureJournal {
@@ -31,7 +33,19 @@ impl FixtureJournal {
         Self {
             proposed: proposed.into(),
             calls,
+            ready_probe: None,
+            hide_result: false,
         }
+    }
+
+    fn requiring_ready(mut self, namespace: &SubmissionNamespace) -> Self {
+        self.ready_probe = Some((namespace.clone(), scope(), "same-key".into()));
+        self
+    }
+
+    fn without_retained_result(mut self) -> Self {
+        self.hide_result = true;
+        self
     }
 }
 
@@ -56,6 +70,9 @@ impl SubmissionJournal for FixtureJournal {
             return Ok(JournalState::Uncertain(
                 "different durable run identity".into(),
             ));
+        }
+        if self.hide_result {
+            return Ok(JournalState::Prepared);
         }
         Ok(match state.execution.get(EFFECT_KEY) {
             Some(record)
@@ -86,6 +103,14 @@ impl SubmissionJournal for FixtureJournal {
     }
 
     fn invoke(&mut self, lease: Arc<LifecycleLease>, run_id: &str) -> Result<String, String> {
+        if let Some((namespace, scope, key)) = &self.ready_probe {
+            let admission =
+                SubmissionReservations::journal_admission(&lease, namespace, scope, key, run_id)
+                    .map_err(|error| error.to_string())?;
+            if admission != JournalAdmission::Ready {
+                return Err("fixture effect was reached before journal-ready".into());
+            }
+        }
         let mut store = LifecycleStateStore::begin(
             lease,
             "build".into(),
@@ -116,6 +141,57 @@ impl SubmissionJournal for FixtureJournal {
             .map_err(|error| error.to_string())?;
         Ok(run_id.to_owned())
     }
+}
+
+#[test]
+fn effect_callback_observes_durable_journal_ready_before_invocation() {
+    let root = tempfile::tempdir().unwrap();
+    let namespace = issue(root.path());
+    let calls = Arc::new(AtomicUsize::new(0));
+    let mut journal = FixtureJournal::new(RUN_A, Arc::clone(&calls)).requiring_ready(&namespace);
+    assert!(matches!(
+        call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut journal,
+            b"request",
+        )
+        .unwrap(),
+        SubmissionOutcome::Invoked { .. }
+    ));
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn unavailable_retained_result_requires_recovery_without_second_effect() {
+    let root = tempfile::tempdir().unwrap();
+    let namespace = issue(root.path());
+    let calls = Arc::new(AtomicUsize::new(0));
+    let mut first = FixtureJournal::new(RUN_A, Arc::clone(&calls));
+    call(
+        Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+        &namespace,
+        &mut first,
+        b"request",
+    )
+    .unwrap();
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope()).unwrap();
+    drop(lease);
+    let mut retry = FixtureJournal::new(RUN_B, Arc::clone(&calls)).without_retained_result();
+    assert_eq!(
+        call(
+            Arc::new(LifecycleLease::acquire(root.path()).unwrap()),
+            &namespace,
+            &mut retry,
+            b"request",
+        )
+        .unwrap(),
+        SubmissionOutcome::RecoveryRequired {
+            run_id: RUN_A.into(),
+        }
+    );
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
 }
 
 fn issue(root: &std::path::Path) -> SubmissionNamespace {
