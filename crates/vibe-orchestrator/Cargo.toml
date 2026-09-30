@@ -30,6 +30,7 @@ vibe-workspace.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+vibe-package-source.workspace = true
 thiserror.workspace = true
 vibe-registry.workspace = true
 vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/native-plugin" }

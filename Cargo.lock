@@ -4840,6 +4840,7 @@ dependencies = [
  "vibe-native-loader-fixture",
  "vibe-native-loader-mechanism-fixture",
  "vibe-native-loader-package-provider-fixture",
+ "vibe-package-source",
  "vibe-registry",
  "vibe-resolver",
  "vibe-spec",

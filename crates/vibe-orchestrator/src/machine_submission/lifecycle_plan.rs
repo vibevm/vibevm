@@ -171,6 +171,25 @@ fn package_source_value(source: &PackageTreeWitness) -> Result<Value> {
     }))
 }
 
+/// Fixture-only request identity independent of post-effect manifest/lock
+/// changes. Its source object is identical to the v3 plan's source object.
+pub(crate) fn canonical_one_package_fixture_request(
+    source: &PackageTreeWitness,
+    target_os: vibe_core::manifest::TargetOs,
+) -> Result<Vec<u8>> {
+    source.validate()?;
+    let value = json!({
+        "operation": "lifecycle.install-one-package-fixture",
+        "schema": 1,
+        "target_os": target_os.as_str(),
+        "source": package_source_value(source)?,
+    });
+    let mut bytes = Vec::new();
+    write_canonical(&value, &mut bytes)?;
+    bounded("canonical_request", bytes.len(), PLAN_CAP)?;
+    Ok(bytes)
+}
+
 // Sort every object key independently of serde_json's optional map backend.
 // Arrays retain their authored order; this model contains no floating values.
 fn write_canonical(value: &Value, out: &mut Vec<u8>) -> Result<()> {

@@ -10,7 +10,10 @@ use std::sync::Arc;
 use anyhow::{Context, Result, bail, ensure};
 use vibe_core::manifest::TargetOs;
 use vibe_core::user_config::SlotIntegrity;
-use vibe_lifecycle::process::{SelectedManifestLockWitness, recheck_selected_manifest_lock};
+use vibe_lifecycle::process::{
+    PackageTreeWitness, SelectedManifestLockWitness, capture_package_tree_witness,
+    recheck_package_tree_witness, recheck_selected_manifest_lock,
+};
 use vibe_lifecycle::{
     AgentBackend, ExistingSubmissionInspection, JournalAdmission, LifecycleLease,
     LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleReportPayload,
@@ -27,7 +30,10 @@ use vibe_wire::generated::lifecycle_outcome_marker::{
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::shared::Timestamp;
 
-use super::lifecycle_plan::{LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan};
+use super::lifecycle_plan::{
+    LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan,
+    canonical_one_package_fixture_request,
+};
 use super::{JournalState, SubmissionFailure, SubmissionJournal, SubmissionOutcome, submit};
 use crate::RitualPlan;
 
@@ -65,6 +71,23 @@ mod install;
     reason = "internal Install adapter is exercised by focused tests"
 )]
 pub(crate) use install::submit_empty_world_install;
+#[cfg(test)]
+pub(crate) use install::submit_one_package_fixture_install;
+
+/// A caller-controlled source port is admitted only by the test-only fixture
+/// entry. The existing port cannot prove which tree its implementation serves;
+/// this is not a production package-install authority.
+struct FixtureSourcePort<'a> {
+    source_root: &'a Path,
+    factory: &'a dyn PackageSourceFactory,
+    after_stage: Option<&'a dyn Fn()>,
+}
+
+struct FixtureRuntime<'a> {
+    witness: PackageTreeWitness,
+    factory: &'a dyn PackageSourceFactory,
+    after_stage: Option<&'a dyn Fn()>,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RetainedLifecycleResult {
@@ -107,6 +130,56 @@ pub(super) fn submit_protected_lifecycle(
     observed_at: Timestamp,
     phase: Phase,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_protected_lifecycle_inner(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        phase,
+        None,
+    )
+}
+
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+fn submit_protected_lifecycle_with_fixture<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    fixture: Option<FixtureSourcePort<'a>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_protected_lifecycle_inner(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Phase::Install,
+        fixture,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn submit_protected_lifecycle_inner<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    phase: Phase,
+    fixture: Option<FixtureSourcePort<'a>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
         request.requested == phase,
         "protected slice request differs from its fixed phase"
@@ -121,8 +194,13 @@ pub(super) fn submit_protected_lifecycle(
     );
     ensure!(
         request.assume_yes
-            && !request.policy.offline
-            && request.policy.slot_integrity == SlotIntegrity::TrustPresence
+            && request.policy.offline == fixture.is_some()
+            && request.policy.slot_integrity
+                == if fixture.is_some() {
+                    SlotIntegrity::Verify
+                } else {
+                    SlotIntegrity::TrustPresence
+                }
             && request.policy.spec_format_default.is_none(),
         "protected fixed request refuses variable confirmation or install policy"
     );
@@ -137,13 +215,27 @@ pub(super) fn submit_protected_lifecycle(
     );
     let leased = lease_default_lifecycle(path)?;
     let lease = leased.retain_lease();
-    if let Some(attached) = attach_existing_lifecycle(
-        &lease,
-        namespace,
-        scope,
-        key,
-        request_bytes(phase, target_os),
-    )? {
+    let fixture = fixture
+        .map(|fixture| {
+            ensure!(phase == Phase::Install, "fixture source is Install-only");
+            let pin = vibe_core::PackageRef::parse(install::FIXTURE_PIN)?;
+            let witness =
+                capture_package_tree_witness(fixture.source_root, &pin, install::FIXTURE_FILES)?;
+            Ok(FixtureRuntime {
+                witness,
+                factory: fixture.factory,
+                after_stage: fixture.after_stage,
+            })
+        })
+        .transpose()?;
+    let canonical_request = if let Some(fixture) = &fixture {
+        canonical_one_package_fixture_request(&fixture.witness, target_os)?
+    } else {
+        request_bytes(phase, target_os).to_vec()
+    };
+    if let Some(attached) =
+        attach_existing_lifecycle(&lease, namespace, scope, key, &canonical_request)?
+    {
         return Ok(attached);
     }
     let selected_root = leased.selected_root().to_path_buf();
@@ -166,7 +258,15 @@ pub(super) fn submit_protected_lifecycle(
     let selected = selected_under_lease(&selection, &lease)?;
     ensure!(selected == ".", "protected slice requires root node");
     if phase == Phase::Install {
-        install::require_empty_install_world(&selection, &witness)?;
+        if let Some(fixture) = &fixture {
+            install::require_one_package_fixture_world(&selection, &witness, &fixture.witness)?;
+            ensure!(
+                LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+                "one-package fixture refuses prior lifecycle state"
+            );
+        } else {
+            install::require_empty_install_world(&selection, &witness)?;
+        }
     }
     let chain: Vec<String> = vibe_lifecycle::inclusive_chain(phase)
         .iter()
@@ -193,7 +293,7 @@ pub(super) fn submit_protected_lifecycle(
         selected_node: &selected,
         witness: &witness,
         workspace_witness: &witness,
-        package_source: None,
+        package_source: fixture.as_ref().map(|fixture| &fixture.witness),
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
@@ -217,13 +317,15 @@ pub(super) fn submit_protected_lifecycle(
         key,
         phase,
         canonical_plan: &plan,
+        canonical_request: canonical_request.clone(),
+        fixture,
     };
     submit(
         lease,
         namespace,
         scope,
         key,
-        request_bytes(phase, target_os),
+        &canonical_request,
         &plan,
         &mut journal,
     )
@@ -343,6 +445,8 @@ struct ProtectedJournal<'a> {
     key: &'a str,
     phase: Phase,
     canonical_plan: &'a [u8],
+    canonical_request: Vec<u8>,
+    fixture: Option<FixtureRuntime<'a>>,
 }
 
 impl ProtectedJournal<'_> {
@@ -539,13 +643,19 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     self.scope,
                     self.key,
                     run_id,
-                    request_bytes(self.phase, self.target_os),
+                    &self.canonical_request,
                     self.canonical_plan,
                     root,
                     &self.witness,
                     lease.root(),
                     &self.witness,
                 )?;
+            }
+            if let Some(fixture) = &self.fixture {
+                if let Some(after_stage) = fixture.after_stage {
+                    after_stage();
+                }
+                recheck_package_tree_witness(&fixture.witness)?;
             }
             let leased = self.leased.take().context("leased stage consumed twice")?;
             let selection = self.selection.take().context("selection consumed twice")?;
@@ -557,6 +667,8 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             )?;
             let ports = if self.phase == Phase::Validate {
                 validate_ports()
+            } else if let Some(fixture) = &self.fixture {
+                install::one_package_fixture_ports(fixture.factory)
             } else {
                 install::empty_install_ports()
             };
