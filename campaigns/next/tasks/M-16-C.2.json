@@ -1,0 +1,234 @@
+{
+  "id": "M-16-C.2",
+  "tasks": [
+    {
+      "id": "M-16-C.2.1",
+      "title": "Bind reserved lifecycle execution to retained outcomes",
+      "goal": "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-lifecycle/src/process/",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-lifecycle/src/process/",
+        "crates/vibe-lifecycle/src/runner.rs",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "steps": [
+        "Freeze an owner-computed command/selected-source plan and choose a pure run ID under the existing lifecycle lease before scratch or prerequisite effects.",
+        "Reserve the exact run ID through C.1, durably initialize and reread the matching lifecycle header, mark journal-ready, then permit scratch and tracked lifecycle execution through the incumbent runner.",
+        "Build a registered report and per-run outcome marker from actual PhaseOutcome and measured partial evidence; publish/read back report before marker and reply only after validation.",
+        "On EOF/crash, inspect the same run ID and marker; recover exact retained bytes or return recovery-required/uncertain without a second handler call. Preserve the legacy default path."
+      ],
+      "positive_cases": [
+        "One counted handler effect after ready yields a retained report and marker that replay after response loss or later header replacement.",
+        "A parked run retains its identity and does not start a second provider."
+      ],
+      "negative_cases": [
+        "A changed command/source snapshot, foreign run ID, or absent journal-ready reaches scratch/install/provider.",
+        "A crash after handler effect before marker is reported as no-effects or retried automatically."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1",
+        "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.",
+        "Focused positive and negative cases pass; no other domain is claimed by this child."
+      ],
+      "safe_stop": "The child has retained exact owner evidence and typed recovery-required state; later children remain required for parent C.2.",
+      "commit_subject": "feat(api): retain reserved lifecycle outcomes",
+      "notes": [
+        "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication."
+      ]
+    },
+    {
+      "id": "M-16-C.2.2",
+      "title": "Journal direct build and package effects",
+      "goal": "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/build.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/",
+        "crates/vibe-lifecycle/src/mechanism/package.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "steps": [
+        "Capture exact build/package plan, before-image/resource ownership and reserved run binding before provider.apply or output directory creation.",
+        "Retain completed/partial result and artifact-record link under each existing domain owner; crash after effect but before artifact record remains uncertain, never absent.",
+        "Join C.1 reservation under the same domain lease and prove duplicate retry does not invoke build/package providers again."
+      ],
+      "positive_cases": [
+        "A lost build/package response attaches to its owner result with the same run ID and no second effect.",
+        "Both direct paths expose inspectable partial state after a stopped provider."
+      ],
+      "negative_cases": [
+        "A post-effect artifact record substitutes for a pre-effect journal.",
+        "An absent record after a counted effect causes a second provider call."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2",
+        "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.",
+        "Focused positive and negative cases pass; no other domain is claimed by this child."
+      ],
+      "safe_stop": "The child has retained exact owner evidence and typed recovery-required state; later children remain required for parent C.2.",
+      "commit_subject": "feat(api): journal build and package effects",
+      "notes": [
+        "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication."
+      ]
+    },
+    {
+      "id": "M-16-C.2.3",
+      "title": "Link deploy journals to reserved operation owners",
+      "goal": "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-orchestrator/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "steps": [
+        "Bind a reserved operation to the exact DeploymentHome and plan hash before effect; require the existing physical locks and admitted target root.",
+        "On process exit or crash, report receipt, pending intent, partial publication and unsupported recovery truth from the domain journal; do not infer success from a callback or current bytes alone.",
+        "Retain cross-instance/principal refusal and one-writer limits through attach and retry."
+      ],
+      "positive_cases": [
+        "A lost deploy response reattaches to the same receipt or pending recovery handle without another apply.",
+        "Bound and legacy deploy records retain their original identity and compatibility rules."
+      ],
+      "negative_cases": [
+        "A copied receipt/sidecar or same bytes transfer owner identity.",
+        "A second client bypasses the deploy lock or runs apply over an unretired intent."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3",
+        "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.",
+        "Focused positive and negative cases pass; no other domain is claimed by this child."
+      ],
+      "safe_stop": "The child has retained exact owner evidence and typed recovery-required state; later children remain required for parent C.2.",
+      "commit_subject": "feat(api): attach deploy to reserved owner",
+      "notes": [
+        "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication."
+      ]
+    },
+    {
+      "id": "M-16-C.2.4",
+      "title": "Journal remote publication and reconcile owner lifetime",
+      "goal": "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.",
+      "read_paths": [
+        "crates/vibe-publish/src/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-index/src/journal/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
+      ],
+      "write_paths": [
+        "crates/vibe-publish/src/",
+        "crates/vibe-publish/Cargo.toml",
+        "crates/vibe-orchestrator/src/",
+        "crates/vibe-lifecycle/src/state/",
+        "crates/vibe-index/src/journal/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/"
+      ],
+      "steps": [
+        "Bind a prepared exact publication subject/effect plan and remote generation to an owner run journal before repo/tag/release/asset writes; never reuse the registry fact log as this journal.",
+        "Reconcile repo-created-before-push, lost atomic push/release response and third-state remote refs without repeating an uncertain effect; retain partial/terminal result for retry.",
+        "Review lifecycle, build, package, deploy and publication owners together for API exit, EOF, owner crash, one-writer/parked limits and local attach; unsupported adapters remain unavailable."
+      ],
+      "positive_cases": [
+        "A lost remote response returns the same run and a retained result or explicit partial/recovery state.",
+        "After API exit the owner identity remains inspectable without a permanent service."
+      ],
+      "negative_cases": [
+        "A registry Published fact or identical remote bytes is treated as operation completion.",
+        "EOF silently restarts publication or an unavailable domain is advertised as callable."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-publish target/cases are TO BIND from source/metadata to affected remote-owner obligations; select a named lib/test case before compiling.",
+        "RUN BOUND CHECKS: cargo test -p vibe-publish --lib <reviewed case> -- --exact, verify a nonzero selected case."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4",
+        "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.",
+        "Focused positive and negative cases pass; no other domain is claimed by this child."
+      ],
+      "safe_stop": "The child has retained exact owner evidence and typed recovery-required state; later children remain required for parent C.2.",
+      "commit_subject": "feat(api): retain publication owner recovery",
+      "notes": [
+        "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
+        "Prerequisite: accepted M-07-A.1 exact publication subject/effect plan; journal work never authorizes public Git or release."
+      ]
+    }
+  ]
+}

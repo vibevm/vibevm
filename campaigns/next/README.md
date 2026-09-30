@@ -4,7 +4,7 @@ The shared contract is [NEXT-IMPLEMENTATION-CAMPAIGN.xml](../../vibevm/vibespecs
 
 Pending research: [fractal planning, lowering and staged delivery](../../vibevm/vibespecs/design/fractal-planning-and-staged-delivery.xml) preserves the owner's concept and this discussion. It is a non-normative design idea, not an activated exception to existing rules or a change to this campaign's task graph.
 
-The baseline is refined plan revision 4 at commit ce0fa4c51e370ce3141021e29a9539c40eed6892. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributed four supplemental groups and 11 tasks; the later Fable gap review added M-01-C.4, and M-14-C.3 separates first bound effect from physical fencing. The current authoring graph has 214 tasks and 427 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
+The baseline is refined plan revision 4 at commit ce0fa4c51e370ce3141021e29a9539c40eed6892. Its 17 milestones and 86 work packages are preserved as 201 smaller implementation tasks. The preview-transition addition contributed four supplemental groups and 11 tasks; the later Fable gap review added M-01-C.4, M-14-C.3 separates first bound effect from physical fencing, and M-16-C.2 has four required domain-owner children. The current authoring graph has 218 tasks and 431 plan nodes. The original sixty XML units and 229 clauses remain intact; NEXT-A26 adds twelve clauses, for 61 units and 241 clauses to promote. Matching counts alone does not establish coverage: the checker compares stable ID sets and effective dependency edges. The historical planning baseline is not automatically the actual DP1 capture.
 
 ## Start in an exact local context
 
@@ -45,7 +45,7 @@ Optional `--bindings <local-json>` refines the same task IDs with narrower read/
 
 Use parallelism between existing ready tasks or bounded independent worker packets inside one ready task. All parent acceptance obligations remain. Preparation and review can overlap independent production on captured inputs, but cannot bypass a prerequisite. Keep candidate production within review capacity; do not add a reviewer/tester trio or duplicate full suites for every small task.
 
-At the time of this parallelism addition, it preserved the then-425-node graph and 212 task contracts byte-for-byte. Subsequent owner-directed amendments changed the current inventory to 427 nodes and 214 tasks. The `.1` to `.2` sequencing rule and Phase 0 ordering still hold; `NEXT-PREVIEW-DOCS.2` remains after its 17 workstream dependencies. Incoming documentation is bound at its existing input gate; then only affected packets, topic maps and evidence need adaptation.
+At the time of this parallelism addition, it preserved the then-425-node graph and 212 task contracts byte-for-byte. Subsequent owner-directed amendments changed the current inventory to 431 nodes and 218 tasks. The `.1` to `.2` sequencing rule and Phase 0 ordering still hold; `NEXT-PREVIEW-DOCS.2` remains after its 17 workstream dependencies. Incoming documentation is bound at its existing input gate; then only affected packets, topic maps and evidence need adaptation.
 
 ## Change accounting, migration and documentation
 
@@ -149,7 +149,7 @@ outer roots are not arbitrary write authority. Unknown/foreign/upstream/history,
 fixture/epoch and literal workspace inheritance values are preserved. The accepted
 M-13-A task/census remains historical and is not rewritten as today's edit grant.
 
-The current 427 node IDs, 214 task IDs and DAG/predecessor guards remain. M-13-D.2 still follows
+The current 431 node IDs, 218 task IDs and DAG/predecessor guards remain. M-13-D.2 still follows
 M-13-D.1 and finally reconciles current1.1.0, reusing matching B.1 evidence without
 another increment. Earlier statements that a planning addition left task contracts
 byte-identical describe that historical addition, not this explicit owner amendment.

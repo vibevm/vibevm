@@ -185,14 +185,14 @@ id = "D-025"
 source = "refined-plan:revision-4:decision:D-025"
 text = "Все возможности VibeVM и внутренние структуры для анализа/отладки должны быть доступны внешним IDE-клиентам; сначала переделать общую архитектуру фичей, сам плагин/IDE/MVP пока не планировать"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3"]
 
 [[mandate]]
 id = "D-026"
 source = "refined-plan:revision-4:decision:D-026"
 text = "Extreme Total Observability — общий принцип: каждое значимое состояние, решение, преобразование, действие и отказ имеет machine-readable inspection/explanation с provenance и явной неполнотой"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3"]
 
 [[mandate]]
 id = "F-004"
@@ -395,42 +395,42 @@ id = "F-029"
 source = "project-review:revision-4:F-029"
 text = "· P1 · Universal IDE/ETO coverage is not implied by selected JSON commands"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "F-030"
 source = "project-review:revision-4:F-030"
 text = "· P1 · Current package tree is a useful summary, not a complete source/reference snapshot"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "F-031"
 source = "project-review:revision-4:F-031"
 text = "· P1 · Serial MCP dispatch and startup policy do not provide an interactive operation/session path"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-032"
 source = "project-review:revision-4:F-032"
 text = "· P1 · Text-only tool errors can hide effects and advertised schemas are not always enforced"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "F-033"
 source = "project-review:revision-4:F-033"
 text = "· P1 · Package rename requires a semantic transaction, not the current conversion command"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "F-034"
 source = "project-review:revision-4:F-034"
 text = "· P2 · Existing compiler trace is a foundation, not total observability"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "NEXT-PLAN-ONLY"
@@ -982,16 +982,76 @@ contract_sha256 = "a372332a738c6acac06b2f6a4a1a39a17797913131ecb35973ad0039253c4
 id = "M-16-C.2"
 parent = "M-16-C"
 order = 142
-kind = "atom"
+kind = "group"
 title = "Link short-lived operation owners to domain recovery"
 state = "planned"
 zoom = "summary"
 depends_on = ["M-16-C.1"]
 mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.2","Durable identity and recovery evidence survive transport lifetime.","No permanent autonomous service or multi-run scheduler is required."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.2","All four required domain children and cross-domain owner-lifetime proof are accepted; no fixture result substitutes for a real journal."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.2"
 contract_sha256 = "a372332a738c6acac06b2f6a4a1a39a17797913131ecb35973ad0039253c421a"
+
+[[node]]
+id = "M-16-C.2.1"
+parent = "M-16-C.2"
+order = 1421
+kind = "atom"
+title = "Bind reserved lifecycle execution to retained outcomes"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-16-C.1"]
+mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1", "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1"
+contract_sha256 = "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
+
+[[node]]
+id = "M-16-C.2.2"
+parent = "M-16-C.2"
+order = 1422
+kind = "atom"
+title = "Journal direct build and package effects"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-16-C.2.1"]
+mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2", "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2"
+contract_sha256 = "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
+
+[[node]]
+id = "M-16-C.2.3"
+parent = "M-16-C.2"
+order = 1423
+kind = "atom"
+title = "Link deploy journals to reserved operation owners"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-16-C.2.2"]
+mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3", "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3"
+contract_sha256 = "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
+
+[[node]]
+id = "M-16-C.2.4"
+parent = "M-16-C.2"
+order = 1424
+kind = "atom"
+title = "Journal remote publication and reconcile owner lifetime"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-16-C.2.3","M-07-A.1"]
+mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4", "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.", "Focused positive and negative cases pass; no other domain is claimed by this child."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4"
+contract_sha256 = "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
 
 [[node]]
 id = "M-16-C.3"

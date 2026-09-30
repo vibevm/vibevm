@@ -222,7 +222,9 @@ class CampaignChecks(unittest.TestCase):
             group["tasks"].append(task)
         payload = json.dumps(group).encode()
         path = ROOT / "campaigns/next/tasks/fixture-refinement.json"
-        manifest["refinements"] = [{"id": parent, "tasks_file": path.relative_to(ROOT).as_posix()}]
+        manifest["refinements"].append(
+            {"id": parent, "tasks_file": path.relative_to(ROOT).as_posix()}
+        )
         manifest["task_files_sha256"][parent] = MODULE["digest"](payload)
         original_read = Path.read_bytes
 
