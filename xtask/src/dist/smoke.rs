@@ -22,6 +22,8 @@ use vibe_wire::generated::publication_subject::PublicationTarget;
 
 use super::build::verified_bundle_entries;
 
+mod report_store;
+
 /// A verified, locally staged bundle. No command has been run in this home.
 #[allow(dead_code)]
 pub(crate) struct StagedBundle {
