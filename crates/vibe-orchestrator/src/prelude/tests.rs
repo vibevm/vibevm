@@ -7,6 +7,81 @@ use vibe_wire::generated::shared::{Timestamp, TraceReportStatus};
 
 const PLAIN: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
 
+#[test]
+fn supplied_identity_crosses_prelude_without_selection_or_scratch() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), PLAIN).unwrap();
+    let root = crate::install::resolve_project_root(dir.path()).unwrap();
+    let lease = std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&root).unwrap());
+    let selection = crate::SelectedManifest::read(&root).prepare();
+    let supplied = identity(false);
+    let result = run_prelude_with_identity(selection, lease, supplied.clone()).unwrap();
+    assert_eq!(result.identity, supplied);
+    assert_eq!(result.selected, ".");
+    assert!(!root.join(".vibe/lifecycle").exists());
+    assert!(!root.join(".vibe/lifecycle.toml").exists());
+}
+
+#[test]
+fn supplied_identity_rejects_an_invalid_run_id_before_scratch() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), PLAIN).unwrap();
+    let root = crate::install::resolve_project_root(dir.path()).unwrap();
+    let lease = std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&root).unwrap());
+    let selection = crate::SelectedManifest::read(&root).prepare();
+    let mut supplied = identity(false);
+    supplied.run_id = "not-a-run-id".into();
+    let error = run_prelude_with_identity(selection, lease, supplied)
+        .err()
+        .expect("malformed preselected identity must refuse")
+        .to_string();
+    assert!(error.contains("32 lowercase hex"), "{error}");
+    assert!(!root.join(".vibe/lifecycle").exists());
+}
+
+#[test]
+fn supplied_identity_refuses_a_workspace_outside_its_lease() {
+    let leased = tempfile::tempdir().unwrap();
+    let foreign = tempfile::tempdir().unwrap();
+    std::fs::write(leased.path().join("vibe.toml"), PLAIN).unwrap();
+    std::fs::write(foreign.path().join("vibe.toml"), PLAIN).unwrap();
+    let leased_root = crate::install::resolve_project_root(leased.path()).unwrap();
+    let foreign_root = crate::install::resolve_project_root(foreign.path()).unwrap();
+    let lease = std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&leased_root).unwrap());
+    let selection = crate::SelectedManifest::read(&foreign_root).prepare();
+    let error = run_prelude_with_identity(selection, lease, identity(false))
+        .err()
+        .expect("foreign root must refuse")
+        .to_string();
+    assert!(error.contains("root"), "{error}");
+    assert!(!foreign_root.join(".vibe/lifecycle").exists());
+}
+
+#[test]
+fn default_prelude_still_allocates_its_fresh_scratch_run() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), PLAIN).unwrap();
+    let root = crate::install::resolve_project_root(dir.path()).unwrap();
+    let lease = std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(&root).unwrap());
+    let selection = crate::SelectedManifest::read(&root).prepare();
+    let prelude = run_prelude(
+        selection,
+        lease,
+        "create",
+        &["validate".into(), "install".into(), "create".into()],
+        RunAgentMode::Cli,
+        false,
+        false,
+    )
+    .unwrap();
+    assert!(!prelude.identity.adopted);
+    assert!(
+        root.join(".vibe/lifecycle")
+            .join(&prelude.identity.run_id)
+            .is_dir()
+    );
+}
+
 /// A run id and start spelled exactly as `select_run_identity` hands them over.
 fn identity(compile_trace: bool) -> RunIdentity {
     RunIdentity {
