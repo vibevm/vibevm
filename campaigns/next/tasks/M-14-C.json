@@ -121,7 +121,8 @@
         "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
-        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs"
+        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
       ],
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
@@ -141,7 +142,8 @@
         "vibevm/vibespecs/common/PROP-076-environment-model.xml",
         "schemas/",
         "formats/",
-        "crates/vibe-wire/"
+        "crates/vibe-wire/",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
       ],
       "steps": [
         "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
@@ -181,7 +183,8 @@
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
         "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock.",
-        "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects."
+        "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects.",
+        "A bound provider adapter needs a typed pre-effect refusal for unsupported apply/recover/remove; do not reuse an error that falsely claims a journal or effect outcome."
       ]
     }
   ]
