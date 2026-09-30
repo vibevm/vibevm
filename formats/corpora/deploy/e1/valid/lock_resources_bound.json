@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "pending": {
+    "generation": 0,
+    "plan_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "resources": [
+      "bin/tool"
+    ],
+    "operation_binding": {
+      "binding_epoch": 1,
+      "binding_id": "binding-a",
+      "host_context_id": "context-a",
+      "instance_ref": "instance-a",
+      "selected_generation_ref": null,
+      "target_mode": "user_profile",
+      "target_role": "produced_tool_runtime",
+      "target_os": "linux",
+      "target_architecture": "x86_64",
+      "target_abi": "gnu",
+      "target_libc": "glibc",
+      "principal_ref": "principal-a",
+      "storage_binding_ref": "storage-a",
+      "root_bindings": [
+        {
+          "root_role": "settings",
+          "capability_ref": "settings-a"
+        }
+      ],
+      "admission_epoch": 1
+    }
+  }
+}

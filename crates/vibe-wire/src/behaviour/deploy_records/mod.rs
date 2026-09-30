@@ -38,7 +38,8 @@ mod binding;
 mod errors;
 
 pub use binding::{
-    OperationBindingError, validate_native_operation_binding, validate_operation_binding,
+    OperationBindingError, validate_checkpoints_binding, validate_inverse_binding,
+    validate_lock_resources_binding, validate_native_operation_binding, validate_operation_binding,
     validate_operation_binding_pair, validate_operation_binding_root,
 };
 pub use errors::{DeployIntentError, DeployReceiptError};

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "plan_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "completed": [
+    "store/payload"
+  ],
+  "operation_binding": {
+    "binding_epoch": 1,
+    "binding_id": "binding-a",
+    "host_context_id": "context-a",
+    "instance_ref": "instance-a",
+    "target_mode": "user_profile",
+    "target_role": "produced_tool_runtime",
+    "target_os": "linux",
+    "target_architecture": "x86_64",
+    "target_abi": "gnu",
+    "target_libc": "glibc",
+    "principal_ref": "principal-a",
+    "storage_binding_ref": "storage-a",
+    "root_bindings": [
+      {
+        "root_role": "settings",
+        "capability_ref": "settings-a"
+      }
+    ],
+    "admission_epoch": 1
+  }
+}

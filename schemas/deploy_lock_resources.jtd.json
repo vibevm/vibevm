@@ -1,5 +1,6 @@
 {
   "metadata": {
+    "x-vocabularies": ["environment_operation_binding"],
     "description": "Epoch-1 engine-owned deploy lock sidecar. It durably retains committed and pending generation bindings, including the exact package-native provider image identity needed for read-only process-restart rehydration. Neither slot is reconstructible after a crash.",
     "rustOptions": {
       "package": "vibe_wire::deploy_lock_resources"
@@ -37,7 +38,7 @@
     "lock_binding": {
       "metadata": {
         "description": "One generation's physical lock set joined to the exact plan and optional native provider runtime that produced it.",
-        "x-wire-order": ["generation", "plan_hash", "resources", "native"]
+        "x-wire-order": ["generation", "plan_hash", "resources", "native", "operation_binding"]
       },
       "properties": {
         "generation": { "type": "uint32" },
@@ -48,6 +49,10 @@
         }
       },
       "optionalProperties": {
+        "operation_binding": {
+          "ref": "environment_operation_binding",
+          "metadata": { "x-default": null, "description": "Host-issued bound target for this generation; absent keeps the legacy sidecar bytes." }
+        },
         "native": {
           "ref": "native_provider_binding",
           "metadata": { "x-default": null }
