@@ -22,7 +22,7 @@
     {
       "target": "x86_64-unknown-linux-musl",
       "bundle_name": "vibevm-1.1.0-x86_64-unknown-linux-musl.zip",
-      "bundle_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "bundle_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
       "bundle_size_bytes": "101",
       "host": "linux/x86_64/gnu",
       "status": "unavailable",
@@ -36,7 +36,7 @@
     {
       "target": "x86_64-unknown-linux-gnu",
       "bundle_name": "vibevm-1.1.0-x86_64-unknown-linux-gnu.zip",
-      "bundle_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "bundle_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
       "bundle_size_bytes": "102",
       "host": "linux/x86_64/gnu",
       "status": "unavailable",
@@ -50,7 +50,7 @@
     {
       "target": "x86_64-apple-darwin",
       "bundle_name": "vibevm-1.1.0-x86_64-apple-darwin.zip",
-      "bundle_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "bundle_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
       "bundle_size_bytes": "103",
       "host": "linux/x86_64/gnu",
       "status": "unavailable",
@@ -64,7 +64,7 @@
     {
       "target": "aarch64-apple-darwin",
       "bundle_name": "vibevm-1.1.0-aarch64-apple-darwin.zip",
-      "bundle_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "bundle_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
       "bundle_size_bytes": "104",
       "host": "linux/x86_64/gnu",
       "status": "unavailable",
