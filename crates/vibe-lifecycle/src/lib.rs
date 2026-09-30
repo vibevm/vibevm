@@ -160,6 +160,7 @@ pub use state::{
     fingerprint_execution, fingerprint_execution_with, fingerprint_handler_execution,
     fingerprint_handler_execution_with, pending_hosted_tasks, preparation_error_fingerprint,
     preparation_error_fingerprint_for_identity, select_run_identity,
+    select_run_identity_for_reservation,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

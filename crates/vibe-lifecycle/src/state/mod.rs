@@ -31,7 +31,9 @@ pub(crate) use fingerprint::{
     FramedHash, InputRefusal, ManifestOutcome, PreparedFingerprint, PreparedInputManifest,
     prepare_handler_execution_with,
 };
-pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
+pub use identity::{
+    RunIdentity, SupersededTrace, select_run_identity, select_run_identity_for_reservation,
+};
 #[allow(
     unused_imports,
     reason = "C.2 pure validator; owner persistence follows"
