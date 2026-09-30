@@ -201,7 +201,12 @@
         "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
         "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
         "crates/vibe-workspace/src/vibedeps/slot_diff/",
+        "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+        "crates/vibe-workspace/src/boot_artifacts.rs",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
         "crates/vibe-spec/src/resolver/",
+        "crates/vibe-spec/tests/resolve.rs",
         "crates/vibe-specdoc/Cargo.toml",
         "crates/vibe-specdoc/src/lib.rs",
         "crates/vibe-workspace/Cargo.toml",
@@ -247,6 +252,7 @@
         "PROP-072 SOURCE-REPRESENTATION-COLLISION separates original source identity, output path and Vibe document address. The transformed-slot test owner is included for exact raw-byte and collision cases. Descriptor packages select before conversion; unclassified legacy paths retain only their bounded compatibility route. Resolver adoption needs a validated output-to-source witness map, not a new suffix guess.",
         "Cross-platform filename aliases use the owner's weaker cooperative contract: detect provable exact/case aliases, refuse observed no-replace target collisions and carry an explicit warning where Unicode normalization cannot be proved. Do not blanket-ban non-ASCII paths or block convenient Linux use solely for an unavailable stronger guarantee.",
         "The incumbent slot writer uses replacing TempPath::persist and removes hardlink destinations. Descriptor-owned materialization therefore needs a strict new-path no-replace policy in slot_diff before derived conversion can publish without overwriting an unrecognized target alias; legacy slot updates retain their existing behavior.",
+        "For the first installed-slot reader, build a validated output-to-source/interpretation map from the retained SlotRecord plus a pinned installed manifest and output-byte checks, then inject it into the workspace boot FileResolver constructors. The current record proves output SHA and package source_hash but not each transformed original file's SHA; do not claim stronger original-byte proof. Lifecycle-agent and vibe-doc citation consumers remain explicitly due at A.4 rather than silently inheriting a suffix lookup.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
