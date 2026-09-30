@@ -65,6 +65,7 @@ fn native_dispatch_converts_exact_context_and_reply_without_tasks() {
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
+        protected_script: None,
     };
 
     let (reply, streams) = runtime.dispatch(&row, &context).unwrap();
@@ -143,6 +144,7 @@ fn compiler_native_is_refused_before_the_lifecycle_backend() {
         agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
+        protected_script: None,
     };
 
     let error = runtime

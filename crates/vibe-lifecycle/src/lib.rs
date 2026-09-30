@@ -157,12 +157,14 @@ pub use state::{
     FingerprintError, JournalAdmission, LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason,
     LifecycleOutcomeStoreError, LifecycleReportPayload, LifecycleRunJournalObservation,
     LifecycleStateError, LifecycleStateStore, LifecycleTasksError, PostPublicationRecovery,
-    ReservationDecision, RunIdentity, SubmissionError, SubmissionNamespace, SubmissionReservations,
-    SubmissionScope, SupersededTrace, create_lifecycle_outcome_marker, fingerprint_execution,
-    fingerprint_execution_with, fingerprint_handler_execution, fingerprint_handler_execution_with,
+    ReservationDecision, RunIdentity, ScriptSourceStage, ScriptSourceStageError, SubmissionError,
+    SubmissionNamespace, SubmissionReservations, SubmissionScope, SupersededTrace,
+    create_lifecycle_outcome_marker, fingerprint_execution, fingerprint_execution_with,
+    fingerprint_handler_execution, fingerprint_handler_execution_with,
     inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome, pending_hosted_tasks,
     preparation_error_fingerprint, preparation_error_fingerprint_for_identity,
-    retain_lifecycle_outcome, select_run_identity, select_run_identity_for_reservation,
+    publish_script_source_stage, retain_lifecycle_outcome, select_run_identity,
+    select_run_identity_for_reservation,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

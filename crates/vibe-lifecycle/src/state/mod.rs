@@ -52,13 +52,8 @@ pub use outcome_store::{
 pub use run_journal::{
     LifecycleRunJournalError, LifecycleRunJournalObservation, inspect_reserved_lifecycle_run,
 };
-#[allow(
-    unused_imports,
-    reason = "protected script handler wiring follows this stage foundation"
-)]
-pub(crate) use source_stage::{
-    ScriptSourceStage, ScriptSourceStageError, publish_script_source_stage,
-};
+pub(crate) use source_stage::ScriptSourceAttempt;
+pub use source_stage::{ScriptSourceStage, ScriptSourceStageError, publish_script_source_stage};
 pub use store::LifecycleStateStore;
 pub use submission::{
     JournalAdmission, ReservationDecision, SubmissionError, SubmissionNamespace,

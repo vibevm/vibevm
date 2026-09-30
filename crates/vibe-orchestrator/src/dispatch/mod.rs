@@ -574,6 +574,7 @@ fn runtime<'a>(
         agent,
         probe: &PROBE,
         streams: observer.stream_mode(),
+        protected_script: None,
     }
 }
 
