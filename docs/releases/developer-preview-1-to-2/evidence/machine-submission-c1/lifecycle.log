@@ -1,0 +1,64 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.54s
+     Running unittests src/lib.rs (target/debug/deps/vibe_lifecycle-1f5a78475863519a)
+
+running 7 tests
+test state::submission::tests::owner_assigns_distinct_epochs_and_rejects_excessive_ttl ... ok
+test state::submission::tests::journal_ready_marker_requires_matching_reserved_run_and_scope ... ok
+test state::submission::tests::same_key_with_different_payload_or_plan_refuses ... ok
+test state::submission::tests::retry_after_response_loss_attaches_to_durable_run ... ok
+test state::submission::tests::expired_conflicting_key_persists_retirement_before_refusal ... ok
+test state::submission::tests::expiry_and_retirement_preserve_tombstone_without_dispatch ... ok
+test state::submission::tests::simultaneous_same_key_has_one_created_decision ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 687 filtered out; finished in 0.00s
