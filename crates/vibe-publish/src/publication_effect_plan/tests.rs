@@ -1,4 +1,3 @@
-use serde_json::{Value, json};
 use vibe_wire::generated::publication_effect_plan::{
     PublicationEffectPlan, PublicationObservedRelease, PublicationPartition, PublicationPriorAsset,
     PublicationPriorAssetPresent,
@@ -6,14 +5,16 @@ use vibe_wire::generated::publication_effect_plan::{
 use vibe_wire::generated::publication_subject::{PublicationSmokeProbeStatus, PublicationSubject};
 
 use super::{
-    CapturedPublicationRemote, PublicationEffectPlanExpectations, plan_from_captured_remote,
-    publication_effect_plan_digest, require_apply_ready_effect_plan,
+    CapturedPublicationRemote, PublicationEffectPlanError, PublicationEffectPlanExpectations,
+    plan_from_captured_remote, publication_effect_plan_digest, require_apply_ready_effect_plan,
     validate_publication_effect_plan,
 };
 use crate::publication_subject::{PublicationSubjectExpectations, publication_subject_digest};
-use crate::release_manifest::{
-    DISTRIBUTION_PRODUCT, DISTRIBUTION_REPOSITORY, DISTRIBUTION_SOURCE_ARCHIVE_FILENAME,
-};
+use crate::release_manifest::DISTRIBUTION_REPOSITORY;
+
+const SUBJECT: &str = include_str!(
+    "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
+);
 
 const NEW: &str = include_str!(
     "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
@@ -42,90 +43,14 @@ fn plan_expected() -> PublicationEffectPlanExpectations<'static> {
     }
 }
 
-fn local_asset(
-    effect: &vibe_wire::generated::publication_effect_plan::PublicationAssetEffect,
-) -> Value {
-    json!({
-        "name": effect.name,
-        "media_type": effect.media_type,
-        "size_bytes": effect.desired_size_bytes,
-        "sha256": effect.desired_sha256,
-    })
-}
-
-fn subject_for(plan: &PublicationEffectPlan) -> PublicationSubject {
-    let commit = match &plan.partitions[0] {
-        PublicationPartition::Tag(value) => &value.desired_commit,
-        _ => panic!("fixture starts with tag"),
-    };
-    let tree = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
-    let archive_digest = format!("sha256:{}", "9".repeat(64));
-    let targets: Vec<Value> = plan.partitions[2..7]
-        .iter()
-        .map(|partition| {
-            let PublicationPartition::PlatformAssets(value) = partition else {
-                panic!("fixture has five platform partitions")
-            };
-            let bootstrap = &value.assets[1];
-            let suffix = if value.target == "x86_64-pc-windows-msvc" {
-                ".exe"
-            } else {
-                ""
-            };
-            json!({
-                "target": value.target,
-                "bundle": local_asset(&value.assets[0]),
-                "bootstrap": local_asset(bootstrap),
-                "fragment": local_asset(&value.assets[2]),
-                "components": [
-                    {"name":"vibe", "path":format!("vibe{suffix}"),
-                     "size_bytes":bootstrap.desired_size_bytes, "sha256":bootstrap.desired_sha256},
-                    {"name":"vibe-index", "path":format!("vibe-index{suffix}"),
-                     "size_bytes":"12", "sha256":format!("sha256:{}", "1".repeat(64))}
-                ],
-                "source_archive": {"path":DISTRIBUTION_SOURCE_ARCHIVE_FILENAME,
-                    "size_bytes":"123", "sha256":archive_digest, "tree_oid":tree}
-            })
-        })
-        .collect();
-    let final_assets = match &plan.partitions[8] {
-        PublicationPartition::FinalAssets(value) => &value.assets,
-        _ => panic!("fixture has final assets"),
-    };
-    let installers: Vec<Value> = ["bash", "powershell", "cmd"]
-        .iter()
-        .enumerate()
-        .map(|(index, kind)| json!({"kind":kind, "asset":local_asset(&final_assets[index + 1])}))
-        .collect();
-    let probes: Vec<Value> = targets
-        .iter()
-        .map(|row| {
-            json!({"probe_id":"launch", "target":row["target"], "status":"passed",
-                   "tested_sha256":row["bundle"]["sha256"],
-                   "runner_ref":"fixture-runner", "evidence_ref":"fixture-evidence"})
-        })
-        .collect();
-    serde_json::from_value(json!({
-        "schema":1,
-        "product":DISTRIBUTION_PRODUCT,
-        "repository":DISTRIBUTION_REPOSITORY,
-        "version":"1.1.0",
-        "mutable":true,
-        "source":{"commit":commit, "tree":tree,
-                  "cargo_lock":{"name":"Cargo.lock", "media_type":"text/plain",
-                                "size_bytes":"1", "sha256":format!("sha256:{}", "a".repeat(64))}},
-        "targets":targets,
-        "aggregate":local_asset(&final_assets[0]),
-        "installers":installers,
-        "smoke":{"policy_id":"distribution-smoke/e1", "policy_epoch":1, "probes":probes}
-    }))
-    .unwrap()
-}
-
 fn prepared(raw: &str) -> (PublicationEffectPlan, PublicationSubject) {
-    let mut plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
-    let subject = subject_for(&plan);
-    plan.subject_sha256 = publication_subject_digest(&subject, &subject_expected()).unwrap();
+    let plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
+    let subject: PublicationSubject = serde_json::from_str(SUBJECT).unwrap();
+    let digest = publication_subject_digest(&subject, &subject_expected()).unwrap();
+    assert_eq!(
+        plan.subject_sha256, digest,
+        "raw corpus must bind independent subject"
+    );
     (plan, subject)
 }
 
@@ -308,7 +233,7 @@ fn old_draft_assets_remain_only_in_deletion_observation() {
 }
 
 #[test]
-fn two_complete_corpus_shapes_validate_after_binding_to_real_subject_digest() {
+fn two_raw_complete_corpora_bind_independent_subject_without_mutation() {
     for raw in [NEW, REPLACE] {
         let (plan, subject) = prepared(raw);
         validate_publication_effect_plan(&plan, &subject, &plan_expected()).unwrap();
@@ -389,20 +314,35 @@ fn skipped_smoke_is_inspectable_but_not_apply_ready() {
 #[test]
 fn three_semantic_invalid_corpora_refuse() {
     let (_, subject) = prepared(REPLACE);
-    for raw in [
-        include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/changed-target-replacement.json"
+    for (raw, field) in [
+        (
+            include_str!(
+                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/changed-target-replacement.json"
+            ),
+            "partitions[2]",
         ),
-        include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/incomplete-release-inventory.json"
+        (
+            include_str!(
+                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/incomplete-release-inventory.json"
+            ),
+            "observed_release",
         ),
-        include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/wrong-partition-order.json"
+        (
+            include_str!(
+                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/wrong-partition-order.json"
+            ),
+            "partitions[0]",
         ),
     ] {
-        let mut plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
-        plan.subject_sha256 = publication_subject_digest(&subject, &subject_expected()).unwrap();
-        assert!(validate_publication_effect_plan(&plan, &subject, &plan_expected()).is_err());
+        let plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
+        assert_eq!(
+            plan.subject_sha256,
+            publication_subject_digest(&subject, &subject_expected()).unwrap()
+        );
+        assert!(matches!(
+            validate_publication_effect_plan(&plan, &subject, &plan_expected()),
+            Err(PublicationEffectPlanError::Invalid { field: actual, .. }) if actual == field
+        ));
     }
 }
 
