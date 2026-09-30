@@ -70,7 +70,7 @@ class CampaignChecks(unittest.TestCase):
     def test_real_seed_has_complete_acyclic_coverage(self):
         result = MODULE["check"](MANIFEST, None)
         self.assertEqual(result["baseline_work_packages"], 86)
-        self.assertEqual(result["baseline_implementation_tasks"], 201)
+        self.assertEqual(result["baseline_implementation_tasks"], 203)
         self.assertEqual(result["supplemental_tasks"], 11)
         self.assertEqual(result["implementation_tasks"], len(self.tasks))
         self.assertGreaterEqual(result["implementation_tasks"], 212)

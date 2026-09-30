@@ -87,7 +87,7 @@
     {
       "id": "M-14-C.2",
       "title": "Fence aliased roots and stale target generations",
-      "goal": "Fence aliased roots and stale target generations, then admit the first supported local bound builtin effect through pinned root handles.",
+      "goal": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.",
       "read_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
@@ -149,19 +149,16 @@
         "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
         "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
         "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
-        "Move the first successful bound local UserProfile vibe-bin apply behind pinned host root handles and a shared physical destination lock; provider I/O must use the admitted handles or an equivalent verified capability path, never only checked strings.",
-        "Carry optional binding through pending/committed lock sidecar, checkpoint and inverse markers as well as intent/receipt; absent legacy binding retains exact old bytes. Bound interrupted intent or missing sidecar never uses legacy reconstruction and keeps a recovery-required/partial result after possible publication."
+        "Prepare the pinned builtin provider and optional bound sidecar/checkpoint/inverse carriers; refuse actual bound publication until C.3 threads a host grant through the incumbent transaction."
       ],
       "positive_cases": [
         "Disjoint injected homes can proceed independently.",
-        "Two aliases of one root conflict even when their logical instance IDs differ.",
-        "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals."
+        "Two aliases of one root conflict even when their logical instance IDs differ."
       ],
       "negative_cases": [
         "Expired generation or changed root reuses an earlier plan.",
         "Equal file bytes transfer ownership between receipt families.",
-        "A changed request body root, unsupported target mode/OS or provider scope escalation reaches a bound provider effect after a host grant was minted.",
-        "A copied bound sidecar, checkpoint or inverse from another instance/principal is accepted through legacy fallback during recovery."
+        "An unsupported or mismatched bound operation reaches a provider effect before C.3."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -171,20 +168,121 @@
         "TO CREATE: concurrent alias-root and stale-generation replay cases."
       ],
       "acceptance": [
-        "One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.",
-        "Tests use disposable roots and never the developer's real HOME.",
-        "No bound builtin effect begins until host-issued root handles, principal and resource grant are checked under the physical destination fence; native/other providers remain unsupported until equivalent admission exists."
+        "Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.",
+        "Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.",
+        "Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2."
       ],
-      "safe_stop": "Fencing tests pass and retained receipts remain inspectable after conflict.",
+      "safe_stop": "Physical fence, pinned capabilities and durable bound carrier tests pass; first actual bound builtin effect remains C.3.",
       "commit_subject": "fix(deploy): fence alias roots and stale target replay",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
+        "A bound provider adapter needs a typed pre-effect refusal for unsupported apply/recover/remove; do not reuse an error that falsely claims a journal or effect outcome.",
+        "C.3 owns engine admission, first successful builtin publication, bound receipt and actual interrupted-effect truth."
+      ]
+    },
+    {
+      "id": "M-14-C.3",
+      "title": "Apply the first host-admitted bound builtin through the incumbent engine",
+      "goal": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.",
+      "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/component.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/pinned.rs",
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/file/stable.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "schemas/deploy_lock_resources.jtd.json",
+        "schemas/deploy_checkpoints.jtd.json",
+        "schemas/deploy_inverse.jtd.json",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-safefs/src/",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-safefs/Cargo.toml",
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+      ],
+      "steps": [
+        "Require trusted host admission before inverse recovery, provider selection and state creation; bind the request, plan, physical resources and generation to one live destination lock.",
+        "Use the pinned project artifact, settings, bin and store handles in the incumbent provider apply/verify path; publish payload, launcher and pointer with existing checkpoints and retain the lock through receipt/commit.",
+        "Carry the exact operation binding through intent, pending/committed lock sidecar, checkpoints, inverse, receipt and inspection; legacy None bytes remain unchanged.",
+        "Limit first support to local UserProfile builtin deploy:vibe-bin with project-root artifact evidence and no prior bound generation. Refuse native/plugin/skill, slot/store-relative artifacts and unsupported recovery/remove until equivalent admission exists.",
+        "Report a landed write without final receipt as partial/uncertain with retained intent; never reconstruct bound sidecars from legacy fallback."
+      ],
+      "positive_cases": [
+        "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals.",
+        "Two aliases of one physical root cannot simultaneously publish through distinct logical bindings.",
+        "A legacy unbound operation retains its existing byte-compatible records and behavior."
+      ],
+      "negative_cases": [
+        "Changed request body root, principal, target generation or provider scope reaches a bound effect after grant issuance.",
+        "A copied bound sidecar, checkpoint, inverse or receipt from another instance is replayed.",
+        "An interrupted bound write is reported as no-effects or reconstructed through a legacy fallback.",
+        "Unsupported native/plugin/skill or unadmitted artifact source reaches a bound provider effect."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "TO CREATE: concurrent alias-root and stale-generation replay cases."
+      ],
+      "acceptance": [
+        "One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.",
+        "Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.",
+        "After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled."
+      ],
+      "safe_stop": "First supported bound builtin effect and disposable-root replay checks pass; broader recovery and provider families remain explicitly gated.",
+      "commit_subject": "feat(deploy): apply host-admitted bound builtin",
+      "notes": [
+        "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+        "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
         "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock.",
-        "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects.",
-        "A bound provider adapter needs a typed pre-effect refusal for unsupported apply/recover/remove; do not reuse an error that falsely claims a journal or effect outcome."
+        "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects."
       ]
     }
   ]

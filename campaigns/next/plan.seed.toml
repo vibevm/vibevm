@@ -150,7 +150,7 @@ id = "D-020"
 source = "refined-plan:revision-4:decision:D-020"
 text = "VibeVM должен стать менеджером пакетов/окружений от пользовательского HOME до будущего Linux-дистрибутива; архитектура tools/install готовится сейчас, полный дистрибутив пока только outline"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3"]
 
 [[mandate]]
 id = "D-021"
@@ -346,14 +346,14 @@ id = "F-022"
 source = "project-review:revision-4:F-022"
 text = "· P1 · Deployment identity and platform describe the host, not a target environment"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-05","M-05-A","M-05-A.1","M-05-A.2","M-05-B","M-05-B.1","M-05-B.2","M-05-B.3","M-05-C","M-05-C.1","M-05-C.2","M-05-C.3","M-05-D","M-05-D.1","M-05-D.2","M-05-E","M-05-E.1","M-05-E.2","M-05-E.3","M-05-E.4","M-05-F","M-05-F.1","M-05-F.2","M-05-G","M-05-G.1","M-05-G.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-05","M-05-A","M-05-A.1","M-05-A.2","M-05-B","M-05-B.1","M-05-B.2","M-05-B.3","M-05-C","M-05-C.1","M-05-C.2","M-05-C.3","M-05-D","M-05-D.1","M-05-D.2","M-05-E","M-05-E.1","M-05-E.2","M-05-E.3","M-05-E.4","M-05-F","M-05-F.1","M-05-F.2","M-05-G","M-05-G.1","M-05-G.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-023"
 source = "project-review:revision-4:F-023"
 text = "· P1 · Source installation and a single binary store do not form an installed runtime closure"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-024"
@@ -367,28 +367,28 @@ id = "F-025"
 source = "project-review:revision-4:F-025"
 text = "· P1 · Arch integration requires a backend authority boundary"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-026"
 source = "project-review:revision-4:F-026"
 text = "· P1 · Docker support needs a real image backend and scoped evidence"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-027"
 source = "project-review:revision-4:F-027"
 text = "· P2 · AI-aware infrastructure needs structured service bindings beyond agent config"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-028"
 source = "project-review:revision-4:F-028"
 text = "· P1 · Nix-like profiles need closed builds and host-independent supply paths"
 disposition = "owned"
-nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-14","M-14-A","M-14-A.1","M-14-A.2","M-14-B","M-14-B.1","M-14-B.2","M-14-C","M-14-C.1","M-14-C.2","M-14-C.3","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-029"
@@ -1834,7 +1834,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Implement explicit local target binding through provider requests/plans/grants/receipts/locks, same-root alias fencing and cross-target refusal; executable environment/schema seams for M-03/M-05/M-08","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json"
-contract_sha256 = "215e0e14ddbd3d5747bef39954c7711d9396817ddd6995aed93d2ec9fb31d794"
+contract_sha256 = "f6eff06b8a148710613135296190fea96f6afaf9cfcdd425ee459812c1c1adb7"
 
 [[node]]
 id = "M-14-C.1"
@@ -1849,7 +1849,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.1","Target binding survives typed carriers; legacy None remains byte-compatible.","Bound effects without admitted physical roots refuse before recovery/provider."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.1"
-contract_sha256 = "215e0e14ddbd3d5747bef39954c7711d9396817ddd6995aed93d2ec9fb31d794"
+contract_sha256 = "f6eff06b8a148710613135296190fea96f6afaf9cfcdd425ee459812c1c1adb7"
 
 [[node]]
 id = "M-14-C.2"
@@ -1861,10 +1861,25 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-14-C.1"]
 mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.2","One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.","First bound local builtin effect uses pinned roots and shared physical fence; disposable-root tests avoid real HOME."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.2","One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.","Pinned roots, cooperating physical lock and bound sidecars refuse effects pending C.3; tests use disposable roots."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.2"
-contract_sha256 = "215e0e14ddbd3d5747bef39954c7711d9396817ddd6995aed93d2ec9fb31d794"
+contract_sha256 = "f6eff06b8a148710613135296190fea96f6afaf9cfcdd425ee459812c1c1adb7"
+
+[[node]]
+id = "M-14-C.3"
+parent = "M-14-C"
+order = 133
+kind = "atom"
+title = "Apply the first host-admitted bound builtin through the incumbent engine"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-14-C.2"]
+mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-14-C.json#M-14-C.3","First bound builtin effect uses admitted pinned roots and incumbent transaction in two disposable homes.","Partial/uncertain post-publication truth retains intent and mismatched grants refuse before effect."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-14-C.json#M-14-C.3"
+contract_sha256 = "f6eff06b8a148710613135296190fea96f6afaf9cfcdd425ee459812c1c1adb7"
 
 [[node]]
 id = "NEXT-GATE-M-14"
