@@ -104,6 +104,7 @@ fn selected_world_exposes_declared_and_absent_sources_without_a_callable_route()
                 source_profile: None,
                 target_profile: None,
                 recipe: None,
+                source_decisions: Vec::new(),
             }
         ),
         Err(MachineOperationError::UnavailableOperation(_))

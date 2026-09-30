@@ -14,6 +14,7 @@ fn request() -> PlanRequest {
         source_profile: None,
         target_profile: None,
         recipe: None,
+        source_decisions: Vec::new(),
     }
 }
 fn envelope(body: Body) -> OperationEnvelope {
@@ -74,6 +75,7 @@ fn admitted_planner_result_replays_before_publication() {
         source_profile: Some("materialization-current-absent-r1".to_owned()),
         target_profile: Some("materialization-current-absent-r1".to_owned()),
         recipe: Some("identity-r1".to_owned()),
+        source_decisions: Vec::new(),
     };
     let MigrationPlanningResponse::Report(report) = plan_migration_request(current.clone()) else {
         panic!("current identity request unexpectedly preflighted")

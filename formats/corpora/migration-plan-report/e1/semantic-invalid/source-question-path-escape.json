@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "needs_input",
+    "questions": [
+      {
+        "field": "source_media",
+        "resource_path": "../escape.xml",
+        "choices": [
+          "application/xml",
+          "text/markdown"
+        ]
+      }
+    ]
+  }
+}

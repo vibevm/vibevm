@@ -35,6 +35,24 @@
       "metadata": {
         "x-default": null
       }
+    },
+    "source_decisions": {
+      "elements": { "ref": "source_decision" },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Explicit exact-file source answers. The owning planner validates paths and refuses to ignore rows until a source producer consumes them."
+      }
+    }
+  },
+  "definitions": {
+    "source_decision": {
+      "properties": {
+        "file": { "type": "string" },
+        "media": { "type": "string" },
+        "interpretation": { "enum": ["vibe-spec", "vibe-doc", "commonmark", "xml-data", "opaque"], "metadata": { "x-vocabulary": "closed" } },
+        "role": { "enum": ["spec", "documentation", "resource"], "metadata": { "x-vocabulary": "closed" } },
+        "loading": { "enum": ["scan", "explicit"], "metadata": { "x-vocabulary": "closed" } }
+      }
     }
   }
 }
