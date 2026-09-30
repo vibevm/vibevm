@@ -10,6 +10,7 @@ mod outcome_marker;
 mod outcome_store;
 mod recovery;
 mod run_journal;
+mod source_stage;
 mod store;
 mod submission;
 mod tasks;
@@ -50,6 +51,13 @@ pub use outcome_store::{
 #[allow(unused_imports, reason = "C.2 preparation; domain adapter follows")]
 pub use run_journal::{
     LifecycleRunJournalError, LifecycleRunJournalObservation, inspect_reserved_lifecycle_run,
+};
+#[allow(
+    unused_imports,
+    reason = "protected script handler wiring follows this stage foundation"
+)]
+pub(crate) use source_stage::{
+    ScriptSourceStage, ScriptSourceStageError, publish_script_source_stage,
 };
 pub use store::LifecycleStateStore;
 pub use submission::{
