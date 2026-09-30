@@ -310,6 +310,55 @@ fn init_package_boot_snippet_names_the_group_once() {
 }
 
 #[test]
+fn init_package_honours_link_and_format_defaults() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+    for (name, flags, expected_link, expected_format) in [
+        ("static-flow", vec!["--link", "static"], "static", "normal"),
+        (
+            "dynamic-flow",
+            vec!["--link", "dynamic", "--format", "simple"],
+            "dynamic",
+            "simple",
+        ),
+        ("default-flow", vec![], "dynamic", "normal"),
+    ] {
+        user.vibe()
+            .args([
+                "init",
+                "package",
+                &format!("org.example/{name}"),
+                "--kind",
+                "flow",
+                "--version",
+                "1.1.0",
+            ])
+            .args(&flags)
+            .arg("--path")
+            .arg(root)
+            .assert()
+            .success();
+        let manifest = root
+            .join(common::pack_rel(&format!("org.example/{name}/v1.1.0")))
+            .join("vibe.toml");
+        let body = fs::read_to_string(&manifest).unwrap();
+        assert!(body.contains("kind = \"flow\""), "{body}");
+        assert!(
+            body.contains(&format!("link = \"{expected_link}\"")),
+            "{body}"
+        );
+        assert!(
+            body.contains(&format!("format = \"{expected_format}\"")),
+            "{body}"
+        );
+    }
+    let help = user.vibe().args(["init", "--help"]).output().unwrap();
+    assert!(help.status.success());
+    assert!(String::from_utf8_lossy(&help.stdout).contains("Default: normal"));
+}
+
+#[test]
 fn init_default_has_no_project_registries() {
     // Since the default pair (vibespecs GitHub + GitVerse) moved from
     // the project `vibe.toml` to the machine-global `~/.vibe/registry.toml`

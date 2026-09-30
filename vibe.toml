@@ -31,12 +31,12 @@ exclude = [
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of packages it authors: flow:multi-user-planning above resolves from
-# the local packages/ tree; it is not yet a consumer of any remote vibevm
+# the local vibevm/vibepacks/ tree; it is not yet a consumer of any remote vibevm
 # registry. The `[[registry]]` blocks
 # below are the same defaults `vibe init` writes for every new
 # project, kept here so `vibe check` / `vibe show config` can resolve
 # provenance against the same shape every other vibevm project uses.
-# Full self-hosting under `packages/` lands post-M1.
+# Full self-hosting under `vibevm/vibepacks/` lands post-M1.
 #
 # Two registries by default: `vibespecs` on GitHub is the canonical
 # publish target (the only host where `vibe registry publish` drives

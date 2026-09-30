@@ -77,7 +77,7 @@ pub struct InitArgs {
     #[arg(long)]
     pub description: Option<String>,
 
-    /// Package format: simple or normal. Default: simple.
+    /// Package format: simple or normal. Default: normal.
     #[arg(long)]
     pub format: Option<String>,
 

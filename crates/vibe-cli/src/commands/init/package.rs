@@ -41,7 +41,14 @@ fn boot_category(kind: PackageKind) -> &'static str {
     }
 }
 
-/// Create a package in an existing project root (dynamic link).
+fn requested_link<'a>(args: &'a InitArgs, default: &'a str) -> Result<&'a str> {
+    match args.link.as_deref().unwrap_or(default) {
+        link @ ("static" | "dynamic") => Ok(link),
+        other => bail!("`--link {other}` is not a package boot link (expected static or dynamic)"),
+    }
+}
+
+/// Create a package in an existing project root (dynamic link by default).
 pub(super) fn create_package_in_project(
     ctx: &output::Context,
     args: &InitArgs,
@@ -92,7 +99,7 @@ pub(super) fn create_package_in_project(
         &path,
         group,
         name,
-        "dynamic",
+        requested_link(args, "dynamic")?,
         &fields,
         kind,
         translation.as_ref(),
@@ -131,7 +138,7 @@ pub(super) fn create_group_in_project(
     Ok(())
 }
 
-/// Create the package directory tree for project+package (static link).
+/// Create the package directory tree for project+package (static link by default).
 pub(super) fn create_package_dirs(
     ctx: &output::Context,
     project_root: &Path,
@@ -157,7 +164,7 @@ pub(super) fn create_package_dirs(
         project_root,
         group,
         name,
-        default_link,
+        requested_link(args, default_link)?,
         &fields,
         requested_kind(args)?,
         None,
