@@ -6,8 +6,9 @@ use vibe_wire::generated::publication_effect_plan::{
 use vibe_wire::generated::publication_subject::{PublicationSmokeProbeStatus, PublicationSubject};
 
 use super::{
-    PublicationEffectPlanExpectations, publication_effect_plan_digest,
-    require_apply_ready_effect_plan, validate_publication_effect_plan,
+    CapturedPublicationRemote, PublicationEffectPlanExpectations, plan_from_captured_remote,
+    publication_effect_plan_digest, require_apply_ready_effect_plan,
+    validate_publication_effect_plan,
 };
 use crate::publication_subject::{PublicationSubjectExpectations, publication_subject_digest};
 use crate::release_manifest::{
@@ -37,6 +38,7 @@ fn plan_expected() -> PublicationEffectPlanExpectations<'static> {
         owner: "vibevm",
         repository: "vibevm",
         publish: false,
+        allow_replace_published: false,
     }
 }
 
@@ -125,6 +127,184 @@ fn prepared(raw: &str) -> (PublicationEffectPlan, PublicationSubject) {
     let subject = subject_for(&plan);
     plan.subject_sha256 = publication_subject_digest(&subject, &subject_expected()).unwrap();
     (plan, subject)
+}
+
+fn captured(plan: &PublicationEffectPlan) -> CapturedPublicationRemote {
+    CapturedPublicationRemote {
+        generation_ref: plan.remote_generation_ref.clone(),
+        tag: plan.observed_tag.clone(),
+        release: plan.observed_release.clone(),
+    }
+}
+
+#[test]
+fn pure_constructor_matches_new_and_replace_partition_corpora() {
+    let unused_workspace = tempfile::tempdir().unwrap();
+    let before = std::fs::read_dir(unused_workspace.path()).unwrap().count();
+    for raw in [NEW, REPLACE] {
+        let (plan, subject) = prepared(raw);
+        let built =
+            plan_from_captured_remote(&subject, &plan_expected(), &captured(&plan)).unwrap();
+        assert_eq!(built.plan, plan);
+        assert_eq!(
+            built.digest,
+            publication_effect_plan_digest(&plan, &subject, &plan_expected()).unwrap()
+        );
+        assert_eq!(
+            built.digest,
+            plan_from_captured_remote(&subject, &plan_expected(), &captured(&plan))
+                .unwrap()
+                .digest
+        );
+    }
+    assert_eq!(
+        std::fs::read_dir(unused_workspace.path()).unwrap().count(),
+        before
+    );
+}
+
+#[test]
+fn captured_remote_generation_id_and_visibility_change_constructed_identity() {
+    let (plan, subject) = prepared(REPLACE);
+    let baseline = plan_from_captured_remote(&subject, &plan_expected(), &captured(&plan)).unwrap();
+    let mut changed = captured(&plan);
+    changed.generation_ref.push_str("-next");
+    assert_ne!(
+        baseline.digest,
+        plan_from_captured_remote(&subject, &plan_expected(), &changed)
+            .unwrap()
+            .digest
+    );
+    let mut changed = captured(&plan);
+    let PublicationObservedRelease::Present(release) = &mut changed.release else {
+        panic!("fixture replaces a draft")
+    };
+    release.release_id = "124".into();
+    assert_ne!(
+        baseline.digest,
+        plan_from_captured_remote(&subject, &plan_expected(), &changed)
+            .unwrap()
+            .digest
+    );
+    let mut selected = plan_expected();
+    selected.publish = true;
+    let publish = plan_from_captured_remote(&subject, &selected, &captured(&plan)).unwrap();
+    assert_ne!(baseline.digest, publish.digest);
+    assert!(validate_publication_effect_plan(&publish.plan, &subject, &plan_expected()).is_err());
+}
+
+#[test]
+fn constructor_refuses_incomplete_or_incompatible_remote_before_plan() {
+    let (plan, subject) = prepared(REPLACE);
+    let mut remote = captured(&plan);
+    let PublicationObservedRelease::Present(release) = &mut remote.release else {
+        panic!("fixture replaces a draft")
+    };
+    release.inventory_complete = false;
+    assert!(plan_from_captured_remote(&subject, &plan_expected(), &remote).is_err());
+    let mut remote = captured(&plan);
+    let PublicationObservedRelease::Present(release) = &mut remote.release else {
+        panic!("fixture replaces a draft")
+    };
+    release.draft = false;
+    assert!(plan_from_captured_remote(&subject, &plan_expected(), &remote).is_err());
+    let mut remote = captured(&plan);
+    let vibe_wire::generated::publication_effect_plan::PublicationObservedTag::Present(tag) =
+        &mut remote.tag
+    else {
+        panic!("fixture retains a tag")
+    };
+    tag.object_sha = "c".repeat(40);
+    assert!(plan_from_captured_remote(&subject, &plan_expected(), &remote).is_err());
+}
+
+#[test]
+fn published_mutable_release_requires_explicit_replacement_posture() {
+    let (plan, subject) = prepared(REPLACE);
+    let mut remote = captured(&plan);
+    let PublicationObservedRelease::Present(release) = &mut remote.release else {
+        panic!("fixture replaces a known release")
+    };
+    release.draft = false;
+    assert!(plan_from_captured_remote(&subject, &plan_expected(), &remote).is_err());
+
+    let mut selected = plan_expected();
+    selected.allow_replace_published = true;
+    let built = plan_from_captured_remote(&subject, &selected, &remote).unwrap();
+    assert_eq!(built.plan.partitions.len(), 10);
+    assert_eq!(subject.version, "1.1.0");
+    let PublicationObservedRelease::Present(observed) = &built.plan.observed_release else {
+        panic!("the plan must retain published-release deletion evidence")
+    };
+    assert!(!observed.draft);
+    assert_eq!(observed.release_id, "123");
+    assert!(observed.inventory_complete);
+    assert_eq!(observed.assets.len(), 1);
+    for partition in &built.plan.partitions {
+        let assets = match partition {
+            PublicationPartition::PlatformAssets(value) => &value.assets,
+            PublicationPartition::FinalAssets(value) => &value.assets,
+            _ => continue,
+        };
+        assert!(
+            assets
+                .iter()
+                .all(|asset| matches!(asset.prior, PublicationPriorAsset::Absent(_)))
+        );
+    }
+    assert!(validate_publication_effect_plan(&built.plan, &subject, &selected).is_ok());
+    assert!(validate_publication_effect_plan(&built.plan, &subject, &plan_expected()).is_err());
+
+    let mut next = remote;
+    let PublicationObservedRelease::Present(release) = &mut next.release else {
+        panic!("fixture replaces a known release")
+    };
+    release.release_id = "124".into();
+    assert_ne!(
+        built.digest,
+        plan_from_captured_remote(&subject, &selected, &next)
+            .unwrap()
+            .digest
+    );
+}
+
+#[test]
+fn old_draft_assets_remain_only_in_deletion_observation() {
+    let (plan, subject) = prepared(REPLACE);
+    let mut remote = captured(&plan);
+    let PublicationObservedRelease::Present(release) = &mut remote.release else {
+        panic!("fixture replaces a draft")
+    };
+    release.assets.push(
+        vibe_wire::generated::publication_effect_plan::PublicationObservedAsset {
+            name: subject.targets[0].bundle.name.clone(),
+            asset_id: "789".into(),
+            size_bytes: "100".into(),
+            sha256: format!("sha256:{}", "f".repeat(64)),
+        },
+    );
+    let built = plan_from_captured_remote(&subject, &plan_expected(), &remote).unwrap();
+    let PublicationObservedRelease::Present(prior_release) = &built.plan.observed_release else {
+        panic!("built plan binds old release")
+    };
+    assert!(
+        prior_release
+            .assets
+            .iter()
+            .any(|asset| asset.asset_id == "789")
+    );
+    for partition in &built.plan.partitions {
+        let assets = match partition {
+            PublicationPartition::PlatformAssets(value) => &value.assets,
+            PublicationPartition::FinalAssets(value) => &value.assets,
+            _ => continue,
+        };
+        assert!(
+            assets
+                .iter()
+                .all(|asset| matches!(asset.prior, PublicationPriorAsset::Absent(_)))
+        );
+    }
 }
 
 #[test]
