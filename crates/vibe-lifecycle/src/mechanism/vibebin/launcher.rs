@@ -270,16 +270,21 @@ pub(crate) fn classify(path: &Path) -> Result<Occupant, FileFault> {
         Err(FileFault::Read(_)) => return Ok(Occupant::Unmarked),
         Err(fault) => return Err(fault),
     };
-    if contains(&bytes, VIBE_BIN_MARKER) {
-        return Ok(Occupant::OurGenre);
+    Ok(classify_bytes(&bytes))
+}
+
+/// The one marker classification shared by legacy and bound held-byte reads.
+pub(crate) fn classify_bytes(bytes: &[u8]) -> Occupant {
+    if contains(bytes, VIBE_BIN_MARKER) {
+        return Occupant::OurGenre;
     }
-    if contains(&bytes, PROJECT_SHIM_MARKER) {
-        return Ok(Occupant::ProjectShim);
+    if contains(bytes, PROJECT_SHIM_MARKER) {
+        return Occupant::ProjectShim;
     }
-    if contains(&bytes, MARKER_PREFIX) {
-        return Ok(Occupant::ForeignGenre);
+    if contains(bytes, MARKER_PREFIX) {
+        return Occupant::ForeignGenre;
     }
-    Ok(Occupant::Unmarked)
+    Occupant::Unmarked
 }
 
 /// §7.1's collision law: refuse unless the path is vacant or already ours.
