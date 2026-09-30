@@ -1,0 +1,10 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 1 test
+test environment::target_path::macos_tests::macos_posix_bytes_are_lexical_without_host_path_inference ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 564 filtered out; finished in 0.00s
