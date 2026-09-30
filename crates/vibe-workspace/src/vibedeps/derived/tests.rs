@@ -117,7 +117,7 @@ fn descriptor_same_stem_commonmark_and_xml_data_coexist_byte_exact() {
         &group("org.example"),
         "coexist",
         &version("1.1.0"),
-        &source_hash(),
+        Some(&source_hash()),
         SpecFormat::Xml,
         crate::vibedeps::descriptor_map::DescriptorMapLimits {
             max_outputs: 1,
@@ -134,7 +134,7 @@ fn descriptor_same_stem_commonmark_and_xml_data_coexist_byte_exact() {
         &group("org.example"),
         "coexist",
         &version("1.1.0"),
-        &source_hash(),
+        Some(&source_hash()),
         SpecFormat::Xml,
         crate::vibedeps::descriptor_map::DescriptorMapLimits {
             max_outputs: 4096,

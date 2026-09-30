@@ -138,7 +138,9 @@ impl ValidatedDescriptorMap {
             .to_owned();
         Some(ResolvedSourceFile {
             path,
-            format: serialization(&row.output)?.to_owned(),
+            // `format` names the compiler frontend. Both admitted Vibe disk
+            // serializations enter the built-in Markdown projection reader.
+            format: "markdown".to_owned(),
             physical_stem,
         })
     }

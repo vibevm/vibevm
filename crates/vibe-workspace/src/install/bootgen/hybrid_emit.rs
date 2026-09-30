@@ -171,6 +171,17 @@ pub(super) fn emit_package_units(
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), slot_rel_path(d)))
         .collect();
+    let selected_slots = resolution
+        .iter()
+        .map(|dep| boot_artifacts::SelectedSlotWitness {
+            group: dep.group.clone(),
+            name: dep.name.clone(),
+            version: dep.version.clone(),
+            root: workspace_root.join(slot_rel_path(dep)),
+            source_hash: dep.source_hash.clone(),
+            spec_format,
+        })
+        .collect::<Vec<_>>();
     // The resolved version of each unit — the label half of a unit's trace
     // identity, read from the resolution exactly as the boot-graph
     // fingerprint's `versions` map is. `None` when there is no recorder: off
@@ -252,6 +263,7 @@ pub(super) fn emit_package_units(
             fp,
             spec_format,
             unit_trace.as_ref(),
+            &selected_slots,
             // THIS package's own plan, never the node's (PROP-054
             // ##COMPILE-ACTIVATION: activation authority follows the
             // artifact being written, and the artifact here is the
@@ -367,6 +379,7 @@ fn emit_effective(
     fingerprint: &str,
     spec_format: SpecFormat,
     unit_trace: Option<&UnitTrace<'_>>,
+    selected_slots: &[boot_artifacts::SelectedSlotWitness],
     plans: CompilePlans,
 ) -> Result<(), WorkspaceError> {
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
@@ -399,13 +412,14 @@ fn emit_effective(
     // published the INDEX before compiling and could not promise that.
     let index_text =
         boot_artifacts::render_index_with_spec_format(effective, Some(fingerprint), spec_format)?;
-    let static_text = boot_artifacts::render_static_observed(
+    let static_text = boot_artifacts::render_static_observed_selected(
         effective,
         workspace_root,
         self_coord,
         spec_format,
         unit_trace.map(UnitTrace::acquisition),
         plans,
+        selected_slots,
     )?;
     // ONE crash-recoverable publication: INDEX, the selected STATIC's
     // presence/bytes, and the stale spelling's absence land together — or
