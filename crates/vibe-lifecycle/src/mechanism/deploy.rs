@@ -12,6 +12,7 @@ use vibe_wire::generated::deploy_receipt::{DeployIdentity, DeployReceipt};
 use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 pub(crate) mod artifact;
+pub(crate) mod binding;
 pub(crate) mod error;
 pub(crate) mod inverse;
 mod inverse_resume;
@@ -604,3 +605,7 @@ mod client_gate_tests;
 #[cfg(test)]
 #[path = "deploy/bound_tests.rs"]
 mod bound_tests;
+
+#[cfg(test)]
+#[path = "deploy/binding_tests.rs"]
+mod binding_tests;
