@@ -39,44 +39,10 @@ pub(super) fn take_fact_type(text: &str, s: usize, e: usize) -> Option<String> {
 /// Whether the fact anchor at the start of a span uses the definition form
 /// (`@fact:<ID>` / `@fact/<type>:<ID>`) rather than the legacy `##<ID>` form.
 ///
-/// Duplicate checking uses this to avoid counting a parsed definition twice:
-/// once from the segmented fact and once from the raw definition-token scan.
+/// The swallowed-anchor checker uses this to distinguish an actual parsed
+/// definition from a quoted or incidental spelling.
 pub(super) fn fact_anchor_is_qualified(text: &str, s: usize, e: usize) -> bool {
     parse_anchor(text, s, e).is_some_and(|a| a.form == AnchorForm::Qualified)
-}
-
-/// Every qualified definition-form token in `text[s..e]`.
-///
-/// This is the shared token reader for the two placement diagnostics. The
-/// caller chooses the lexical surface: `Block::scan_text` suppresses inline
-/// code for the swallowed-anchor law, while raw text lets the duplicate law
-/// catch a definition-form token mistakenly used as a code-formatted
-/// citation. Fenced blocks never reach either caller.
-pub(super) fn qualified_fact_tokens(text: &str, s: usize, e: usize) -> Vec<(String, usize, usize)> {
-    let mut out = Vec::new();
-    let mut cursor = s;
-    while cursor < e {
-        let Some(rel) = text[cursor..e].find("@fact") else {
-            break;
-        };
-        let at = cursor + rel;
-        let boundary_ok = at == s
-            || text[..at]
-                .chars()
-                .next_back()
-                .is_none_or(|c| !c.is_ascii_alphanumeric());
-        if boundary_ok
-            && let Some(token) = parse_anchor_token(&text[at..e])
-            && token.form == AnchorForm::Qualified
-        {
-            let end = at + token.len;
-            out.push((token.id.to_string(), at, end));
-            cursor = end;
-            continue;
-        }
-        cursor = at + "@fact".len();
-    }
-    out
 }
 
 /// The one reader of the anchor grammar. Both public entry points go through
