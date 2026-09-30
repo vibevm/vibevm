@@ -478,3 +478,123 @@ fn same_key_changed_remote_generation_is_c1_conflict_before_fake_port() {
     ));
     assert_eq!(fake.creates, 1);
 }
+
+#[test]
+fn missing_or_corrupt_pending_never_replays_fake_effect() {
+    let project = tempfile::tempdir().unwrap();
+    let (subject, plan, after_tag) = prepared();
+    let selected = scope();
+    let lease = LifecycleLease::acquire(project.path()).unwrap();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+    let mut fake = FakeTag::new(&plan, after_tag);
+    let first = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    let PublicationTagInspection::Completed { run_id, .. } = first else {
+        panic!("fake tag was not created");
+    };
+    let pending = project.path().join(format!(
+        ".vibe/publication-operations/{run_id}.tag-pending.json"
+    ));
+    fake.forbid_calls = true;
+    std::fs::remove_file(&pending).unwrap();
+    let missing = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    assert!(
+        matches!(missing, PublicationTagInspection::RecoveryRequired { run_id: same } if same == run_id)
+    );
+    std::fs::write(&pending, b"{").unwrap();
+    let corrupt = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    assert!(
+        matches!(corrupt, PublicationTagInspection::Uncertain { run_id: same, pending: true, .. } if same == run_id)
+    );
+    assert_eq!(fake.creates, 1);
+}
+
+#[test]
+fn corrupt_landed_or_result_never_replays_fake_effect() {
+    let project = tempfile::tempdir().unwrap();
+    let (subject, plan, after_tag) = prepared();
+    let selected = scope();
+    let lease = LifecycleLease::acquire(project.path()).unwrap();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+    let mut fake = FakeTag::new(&plan, after_tag);
+    let first = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    let PublicationTagInspection::Completed { run_id, .. } = first else {
+        panic!("fake tag was not created");
+    };
+    let home = project.path().join(".vibe/publication-operations");
+    let landed = home.join(format!("{run_id}.tag-landed.json"));
+    let result = home.join(format!("{run_id}.tag-result.json"));
+    let landed_bytes = std::fs::read(&landed).unwrap();
+    fake.forbid_calls = true;
+    std::fs::write(&landed, b"{").unwrap();
+    let corrupt_landed = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    assert!(
+        matches!(corrupt_landed, PublicationTagInspection::Uncertain { run_id: same, landed: true, .. } if same == run_id)
+    );
+    std::fs::write(&landed, landed_bytes).unwrap();
+    std::fs::write(&result, b"{").unwrap();
+    let corrupt_result = submit_fake_tag_create(
+        &lease,
+        &namespace,
+        &selected,
+        "key-a",
+        &subject,
+        &plan,
+        &expected(),
+        &mut fake,
+    )
+    .unwrap();
+    assert!(
+        matches!(corrupt_result, PublicationTagInspection::Uncertain { run_id: same, landed: true, .. } if same == run_id)
+    );
+    assert_eq!(fake.creates, 1);
+}
