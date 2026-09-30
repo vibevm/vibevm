@@ -4885,6 +4885,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-registry",
+ "vibe-safefs",
  "vibe-wire",
  "walkdir",
 ]
