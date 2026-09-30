@@ -27,24 +27,25 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use anyhow::Result;
+use anyhow::{Result, ensure};
 use specmark::spec;
 use vibe_core::manifest::{Manifest, TargetOs};
 use vibe_lifecycle::inclusive_chain;
-use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
+use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunIdentity, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::shared::Timestamp;
 use vibe_workspace::compile_trace::TraceRun;
 
 use crate::install::{
-    InstallInputs, InstallPolicy, SelectedManifest, acquire_lease, resolve_project_root,
+    InstallInputs, InstallPolicy, PreparedSelection, SelectedManifest, acquire_lease,
+    resolve_project_root,
 };
 use crate::phase::{PhaseOutcome, PhaseRun, run_phases};
 use crate::ports::{
     ConfirmGate, InstallManifestMutation, InstallObserver, PackageSourceFactory,
     RegistryEnvironment, RunObserver,
 };
-use crate::prelude::{RunPrelude, run_prelude};
+use crate::prelude::{RunPrelude, run_prelude, run_prelude_with_identity};
 use crate::trace::{Clock, TracePreparation};
 
 #[cfg(test)]
@@ -261,36 +262,76 @@ pub fn prepare_default_lifecycle(
         selected_root,
         lease,
     } = leased;
-    let DefaultLifecycleRequest {
-        requested,
-        force,
-        agent_mode,
-        assume_yes,
-        trace_flag,
-        install_inputs,
-        policy,
-    } = request;
     // The chain is DERIVED, never supplied: the canonical inclusive prefix
     // through `requested`, both as phases (for dispatch) and as the string
     // chain (for identity/state/reporting). A caller cannot forge either.
-    let phases: Vec<Phase> = inclusive_chain(requested).to_vec();
+    let phases: Vec<Phase> = inclusive_chain(request.requested).to_vec();
     let chain: Vec<String> = phases.iter().map(Phase::to_string).collect();
     // The ONE selected-manifest snapshot, at the root the lease already
     // pinned — never at a raw `--path` again.
     let selection = SelectedManifest::read(&selected_root).prepare();
     // The effective trace request: the raw flag OR the snapshot's own
     // `[compile] trace` vote — combined once, here.
-    let trace_request = selection.request(trace_flag);
+    let trace_request = selection.request(request.trace_flag);
     // The ONE identity selection, against the same lease.
     let prelude = run_prelude(
         selection,
         lease,
-        &requested.to_string(),
+        &request.requested.to_string(),
         &chain,
-        agent_mode.clone(),
-        force,
+        request.agent_mode.clone(),
+        request.force,
         trace_request,
     )?;
+    Ok(assemble_prepared(request, phases, chain, prelude))
+}
+
+/// Prepare the ordinary derived chain with a caller's already witnessed
+/// selection and owner-selected identity, without selecting it again.
+///
+/// This is only a composition step. The caller must hold the selected root's
+/// lease, reserve the identity, prove a matching journal-ready header, and
+/// recheck its source witness before permitting trace, scratch, install or
+/// handler effects. This constructor proves none of those later obligations.
+#[allow(
+    dead_code,
+    reason = "machine submission wiring follows this foundation"
+)]
+pub(crate) fn prepare_default_lifecycle_with_identity(
+    leased: LeasedDefaultLifecycle,
+    request: DefaultLifecycleRequest,
+    selection: PreparedSelection,
+    identity: RunIdentity,
+) -> Result<PreparedDefaultLifecycle> {
+    let LeasedDefaultLifecycle {
+        selected_root,
+        lease,
+    } = leased;
+    ensure!(
+        selection.root() == selected_root.as_path(),
+        "witnessed lifecycle selection does not name the leased selected root"
+    );
+    let phases: Vec<Phase> = inclusive_chain(request.requested).to_vec();
+    let chain: Vec<String> = phases.iter().map(Phase::to_string).collect();
+    let prelude = run_prelude_with_identity(selection, lease, identity)?;
+    Ok(assemble_prepared(request, phases, chain, prelude))
+}
+
+fn assemble_prepared(
+    request: DefaultLifecycleRequest,
+    phases: Vec<Phase>,
+    chain: Vec<String>,
+    prelude: RunPrelude,
+) -> PreparedDefaultLifecycle {
+    let DefaultLifecycleRequest {
+        requested,
+        force,
+        agent_mode,
+        assume_yes,
+        trace_flag: _,
+        install_inputs,
+        policy,
+    } = request;
     let metadata = RunMetadata {
         requested: requested.to_string(),
         chain: chain.clone(),
@@ -305,7 +346,7 @@ pub fn prepare_default_lifecycle(
         started: prelude.identity.started.clone(),
         selected: prelude.selected.clone(),
     };
-    Ok(PreparedDefaultLifecycle {
+    PreparedDefaultLifecycle {
         requested,
         phases,
         chain,
@@ -313,7 +354,7 @@ pub fn prepare_default_lifecycle(
         install_inputs,
         policy,
         prelude,
-    })
+    }
 }
 
 /// The ports one default-lifecycle run executes through — every surface

@@ -7,15 +7,17 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use vibe_lifecycle::process::StreamMode;
-use vibe_lifecycle::{AgentBackend, Phase, RunMetadata};
+use vibe_lifecycle::{AgentBackend, Phase, RunIdentity, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 
 use super::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     PreparedDefaultLifecycle, lease_default_lifecycle, prepare_default_lifecycle,
+    prepare_default_lifecycle_with_identity,
 };
 use crate::RitualPlan;
+use crate::install::SelectedManifest;
 use crate::ports::{
     ConfirmGate, InstallNarration, InstallObserver, NoManifestMutation, PackageSource,
     PackageSourceBuild, PackageSourceFactory, RegistryEnvironment, RegistryEnvironmentSnapshot,
@@ -62,6 +64,85 @@ fn request(requested: Phase) -> DefaultLifecycleRequest {
         install_inputs: Default::default(),
         policy: Default::default(),
     }
+}
+
+fn fixed_identity() -> RunIdentity {
+    RunIdentity {
+        run_id: "c".repeat(32),
+        started: "2026-09-30T00:00:00Z".to_string(),
+        adopted: false,
+        compile_trace: false,
+        superseded_trace: None,
+    }
+}
+
+#[test]
+fn preselected_identity_keeps_id_and_allocates_no_scratch() {
+    let project = empty_project();
+    let leased = lease_default_lifecycle(project.path()).unwrap();
+    let (snapshot, _witness) = SelectedManifest::read_witnessed(&leased.selected_root).unwrap();
+    let identity = fixed_identity();
+    let prepared = prepare_default_lifecycle_with_identity(
+        leased,
+        request(Phase::Build),
+        snapshot.prepare(),
+        identity.clone(),
+    )
+    .unwrap();
+    assert_eq!(prepared.metadata().run_id, identity.run_id);
+    assert_eq!(prepared.metadata().started, identity.started);
+    assert_eq!(
+        prepared.metadata().chain,
+        ["validate", "install", "generate", "build"]
+    );
+    assert_eq!(prepared.metadata().selected, ".");
+    assert!(
+        !project
+            .path()
+            .join(".vibe/lifecycle")
+            .join(&identity.run_id)
+            .exists()
+    );
+}
+
+#[test]
+fn preselected_identity_refuses_a_foreign_selected_root_without_scratch() {
+    let project = empty_project();
+    let other = empty_project();
+    let leased = lease_default_lifecycle(project.path()).unwrap();
+    let (snapshot, _witness) = SelectedManifest::read_witnessed(other.path()).unwrap();
+    let identity = fixed_identity();
+    let result = prepare_default_lifecycle_with_identity(
+        leased,
+        request(Phase::Validate),
+        snapshot.prepare(),
+        identity.clone(),
+    );
+    assert!(result.is_err());
+    assert!(
+        !project
+            .path()
+            .join(".vibe/lifecycle")
+            .join(&identity.run_id)
+            .exists()
+    );
+    assert!(
+        !other
+            .path()
+            .join(".vibe/lifecycle")
+            .join(&identity.run_id)
+            .exists()
+    );
+}
+
+#[test]
+fn preselected_identity_leaves_legacy_allocation_path_intact() {
+    let project = empty_project();
+    let leased = lease_default_lifecycle(project.path()).unwrap();
+    let prepared = prepare_default_lifecycle(leased, request(Phase::Validate)).unwrap();
+    let run_id = &prepared.metadata().run_id;
+    assert!(vibe_lifecycle::process::is_valid_run_id(run_id));
+    assert!(project.path().join(".vibe/lifecycle").join(run_id).is_dir());
 }
 
 // ---- 1. the exact field sets ----------------------------------------------
