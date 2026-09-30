@@ -141,6 +141,7 @@
       "title": "Link deploy journals to reserved operation owners",
       "goal": "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.",
       "read_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/",
         "crates/vibe-lifecycle/src/mechanism/vibebin/",
         "crates/vibe-lifecycle/src/state/",
@@ -150,6 +151,7 @@
         "crates/vibe-wire/"
       ],
       "write_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/",
         "crates/vibe-lifecycle/src/mechanism/vibebin/",
         "crates/vibe-lifecycle/src/state/",
@@ -188,7 +190,8 @@
       "commit_subject": "feat(api): attach deploy to reserved owner",
       "notes": [
         "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
-        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication."
+        "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
+        "The first host-admitted bound deploy:vibe-bin route lives in deploy.rs. Bind one reserved run to the incumbent DeploymentHome, plan hash and physical lock chain before acquire_destination; preserve legacy and non-enrolled routes with typed refusal for protected submission."
       ]
     },
     {
