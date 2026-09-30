@@ -6,9 +6,7 @@ use super::content_hash;
 use crate::doc::{BlockKind, Fact, FactKind, Issue, IssueCode, ParsedDoc, Severity};
 use specmark::spec;
 
-pub(super) use super::anchor_token::{
-    fact_anchor_is_qualified, qualified_fact_tokens, take_fact_id, take_fact_type,
-};
+pub(super) use super::anchor_token::{fact_anchor_is_qualified, take_fact_id, take_fact_type};
 
 /// Byte offset of a list item's content when the line opens one
 /// (`- ` / `* ` / `+ ` / `N. ` / `N) `), else None. A GFM task-list

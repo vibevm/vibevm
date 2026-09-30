@@ -20,10 +20,10 @@
 //! [`NOT_CANONICAL`] names the pages that parse but whose own bytes are
 //! not what the writer emits. [`PLAIN_PAGES`] names the pages that carry
 //! no construct of the genre at all, so the two genre laws cannot tell
-//! them from a spec. [`UNPARSABLE_PROJECTIONS`] names the pages whose
-//! Markdown projection quotes the markup itself and so does not re-parse.
-//! All four are tripwires: repair a page and the test that guards its
-//! entry fails, which is how the entry gets deleted.
+//! them from a spec. [`UNPARSABLE_PROJECTIONS`] reserves a counted place
+//! for projections that fail to re-parse; it is empty today. All four are
+//! tripwires: repair a page and the test that guards its entry fails,
+//! which is how the entry gets deleted.
 //!
 //! This is the counterpart of `redbook_roundtrip.rs`, which holds the same
 //! laws for the spec vocabulary on a `flow` package.
@@ -130,18 +130,10 @@ const PLAIN_PAGES: &[(&str, &str)] = &[(
 )];
 
 /// Pages whose Markdown projection does not even re-parse, with the
-/// scanner's own reason. The genre's projection is one way by law; these
-/// pages go one step further because they QUOTE the dialect's markup in
-/// inline code, and the Markdown scanner reads a code-span quotation as a
-/// definition (a fence it skips; a code span it does not). The entry is a
-/// tripwire: `unparsable_projections_still_fail_for_the_recorded_reason`
-/// fails the moment the projection parses again — because the page was
-/// rephrased or the scanner learned to skip code spans — and the line is
-/// deleted with it.
-const UNPARSABLE_PROJECTIONS: &[(&str, &str)] = &[(
-    "tutorials/markdown-and-xml.xml",
-    "fact id `@fact:ONE-IDEA` is defined twice",
-)];
+/// scanner's own reason. The list is empty now that inline-code quotations
+/// remain opaque to the fact-anchor scanner. Its test remains a tripwire for
+/// any future entry.
+const UNPARSABLE_PROJECTIONS: &[(&str, &str)] = &[];
 
 /// The corpus: every page of the documentation package the pivot can read,
 /// by relative path — [`QUARANTINED`] pages excluded, and counted.
@@ -472,7 +464,7 @@ fn doc_genre_is_not_round_trippable_through_markdown() {
         );
         divergent += 1;
         // The projection must still PARSE — the scanners read it — unless
-        // the page quotes the markup itself (pinned in UNPARSABLE_PROJECTIONS).
+        // an explicitly recorded unparsable projection is present.
         if UNPARSABLE_PROJECTIONS.iter().any(|(p, _)| *p == rel) {
             continue;
         }
