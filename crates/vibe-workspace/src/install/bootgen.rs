@@ -26,6 +26,9 @@ use owner_plans::{plan_digest_frames, plan_digest_frames_for};
 #[cfg(test)]
 #[path = "bootgen/compile_plan_tests.rs"]
 mod compile_plan_tests;
+#[cfg(test)]
+#[path = "bootgen/selected_node_tests.rs"]
+mod selected_node_tests;
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;

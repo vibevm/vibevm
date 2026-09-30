@@ -13,7 +13,10 @@ use super::{
     OwnerManagedStaticCompile, OwnerNativeCompileMode, compile_static_owner_managed_using,
     finalize_compiler_pending_artifact,
 };
-use crate::boot_artifacts::SelectedSlotWitness;
+use crate::boot_artifacts::{SelectedSlotWitness, WrittenArtifacts};
+use crate::compile_trace::TraceRun;
+
+use super::{OwnerNativeCompileContinuation, write_boot_artifacts_owner_managed_using};
 
 #[allow(
     clippy::too_many_arguments,
@@ -41,5 +44,33 @@ pub(crate) fn compile_static_owner_managed_selected<P: OwnerNativeCompileProvide
         None,
         Some(witnesses),
         finalize_compiler_pending_artifact,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn write_boot_artifacts_owner_managed_selected<P: OwnerNativeCompileProvider>(
+    node_dir: &Path,
+    node_rel: &str,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    boot: &EffectiveBoot,
+    spec_format: SpecFormat,
+    trace: Option<&TraceRun>,
+    owner: OwnerRuntimeView<'_>,
+    provider: Option<&mut P>,
+    witnesses: &[SelectedSlotWitness],
+) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
+    write_boot_artifacts_owner_managed_using(
+        node_dir,
+        node_rel,
+        workspace_root,
+        self_coord,
+        boot,
+        spec_format,
+        trace,
+        owner,
+        provider,
+        finalize_compiler_pending_artifact,
+        Some(witnesses),
     )
 }

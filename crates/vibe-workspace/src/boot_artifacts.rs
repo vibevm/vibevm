@@ -71,7 +71,7 @@ mod inputs;
 /// compile result's attribution side, out of line per the file-length
 /// budget.
 mod analyzed;
-pub(crate) use analyzed::{StaticCompile, compile_static_analyzed};
+pub(crate) use analyzed::{StaticCompile, compile_static_analyzed_selected};
 
 /// Manager-owned per-unit publication — the compiled INDEX/STATIC triple's
 /// narrow seam onto the transaction manager (R4.1 atom B).
@@ -296,7 +296,6 @@ pub(crate) fn render_static_observed(
         })
         .transpose()
 }
-
 /// Compile one node's static lane exactly once, traced or not.
 ///
 /// The trace law of this seam (R3.4): no static entries means no scope AND no
@@ -305,6 +304,7 @@ pub(crate) fn render_static_observed(
 /// the compiler. The injected compiler is used only by characterization tests;
 /// observed/traced paths retain the real built-in schedule.
 #[allow(clippy::too_many_arguments)]
+#[cfg(test)]
 pub(crate) fn compile_static_artifact_with(
     boot: &EffectiveBoot,
     workspace_root: &Path,
