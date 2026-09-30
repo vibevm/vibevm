@@ -443,3 +443,35 @@ fn frozen_profile_epoch_metadata_is_explicit_and_unknown_is_unrecognized() {
         assert_eq!(manifest_migration_profile_epoch(profile), None);
     }
 }
+
+#[test]
+fn ordered_insertions_keep_untouched_utf8_comments_and_crlf_bytes() {
+    let before = "α=1 # keep\r\nβ=2\r\n";
+    let edits = [
+        MigrationTokenEdit {
+            field: "package.sources",
+            before_span: 0..0,
+            before_token: String::new(),
+            after_token: "# source\r\n".into(),
+        },
+        MigrationTokenEdit {
+            field: "package.sources",
+            before_span: before.len()..before.len(),
+            before_token: String::new(),
+            after_token: "# end\r\n".into(),
+        },
+    ];
+    assert_eq!(
+        replay_edits(before, &edits).unwrap(),
+        format!("# source\r\n{before}# end\r\n")
+    );
+    let duplicated = [edits[0].clone(), edits[0].clone()];
+    assert!(replay_edits(before, &duplicated).is_err());
+    let split_utf8 = [MigrationTokenEdit {
+        field: "package.sources",
+        before_span: 1..1,
+        before_token: String::new(),
+        after_token: "x".into(),
+    }];
+    assert!(replay_edits(before, &split_utf8).is_err());
+}

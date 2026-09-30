@@ -207,19 +207,7 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
     } else {
         Vec::new()
     };
-    let after = if let Some(edit) = edits.first() {
-        let prefix = text.get(..edit.before_span.start).ok_or_else(unprovable)?;
-        let suffix = text.get(edit.before_span.end..).ok_or_else(unprovable)?;
-        let after = format!("{prefix}{}{suffix}", edit.after_token);
-        if after.get(..prefix.len()) != Some(prefix)
-            || after.get(prefix.len() + edit.after_token.len()..) != Some(suffix)
-        {
-            return Err(unprovable());
-        }
-        after
-    } else {
-        text.to_owned()
-    };
+    let after = replay_edits(text, &edits)?;
     let output = Document::parse(after.as_str()).map_err(|_| unprovable())?;
     check_shape(&output, target)?;
     let checked_manifest = Manifest::parse_str(&after).map_err(|_| {
@@ -432,6 +420,36 @@ fn unprovable() -> MigrationRefusal {
         "package.materialization",
         "selected token span or replacement cannot be proved",
     )
+}
+
+/// Reconstruct from original source coordinates, including ordered insertions.
+/// Unmentioned bytes are copied verbatim and never passed through a formatter.
+fn replay_edits(text: &str, edits: &[MigrationTokenEdit]) -> Checked<String> {
+    let mut after = String::with_capacity(text.len());
+    let mut cursor = 0;
+    let mut prior_insertion = None;
+    for edit in edits {
+        let start = edit.before_span.start;
+        let end = edit.before_span.end;
+        if start < cursor
+            || end < start
+            || (start == end && edit.after_token.is_empty())
+            || prior_insertion == Some(start)
+        {
+            return Err(unprovable());
+        }
+        let untouched = text.get(cursor..start).ok_or_else(unprovable)?;
+        let original = text.get(start..end).ok_or_else(unprovable)?;
+        if original != edit.before_token {
+            return Err(unprovable());
+        }
+        after.push_str(untouched);
+        after.push_str(&edit.after_token);
+        cursor = end;
+        prior_insertion = (start == end).then_some(start);
+    }
+    after.push_str(text.get(cursor..).ok_or_else(unprovable)?);
+    Ok(after)
 }
 
 fn materialization_edit(text: &str, document: &Document<&str>) -> Checked<MigrationTokenEdit> {
