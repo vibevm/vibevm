@@ -1,0 +1,20 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-wire v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-wire)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.62s
+     Running tests/deploy_records_wire_corpus.rs (target/debug/deps/deploy_records_wire_corpus-2bed65d000ff8764)
+
+running 10 tests
+test a_bad_plan_hash_is_a_typed_refusal_naming_the_member ... ok
+test a_bad_receipt_digest_is_a_typed_refusal_naming_the_member ... ok
+test a_blank_project_is_a_typed_refusal_naming_the_member ... ok
+test a_blank_owned_resource_is_a_typed_refusal_naming_the_row ... ok
+test the_minimal_intent_and_receipt_carry_exactly_the_wire_minimum ... ok
+test the_full_documents_carry_every_optional_member ... ok
+test the_readers_refuse_unknown_members_and_name_them ... ok
+test the_finalisation_matrix_is_cited_from_the_corpus ... ok
+test every_valid_document_round_trips_and_validates ... ok
+test registry_records_are_pinned ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
