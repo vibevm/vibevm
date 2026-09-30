@@ -14,7 +14,7 @@ mod package_tree_snapshot;
 mod scratch;
 mod source_snapshot;
 pub use package_tree_snapshot::{
-    PackageTreeFileWitness, PackageTreeWitness, PackageTreeWitnessError,
+    PackageTreeFileWitness, PackageTreeWitness, PackageTreeWitnessError, attest_package_tree_copy,
     capture_package_tree_witness, recheck_package_tree_witness,
 };
 use scratch::create_unique_file;

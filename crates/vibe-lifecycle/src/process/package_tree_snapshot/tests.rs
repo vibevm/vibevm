@@ -35,6 +35,30 @@ fn stable_tree_is_complete_sorted_and_rechecks() {
 }
 
 #[test]
+fn cache_copy_attestation_compares_complete_bytes_not_root_identity() {
+    let source = fixture();
+    let selected =
+        capture_package_tree_witness(source.path(), &pin(), &["vibe.toml", "README.md"]).unwrap();
+    let copy = fixture();
+    let attested = attest_package_tree_copy(&selected, copy.path()).unwrap();
+    assert_ne!(attested.root_identity, selected.root_identity);
+    assert_eq!(attested.files, selected.files);
+    selected.validate_copy_content(&attested).unwrap();
+    let mut forged = attested.clone();
+    forged.files[0].bytes += 1;
+    assert!(selected.validate_copy_content(&forged).is_err());
+
+    std::fs::write(copy.path().join("README.md"), b"Source\n").unwrap();
+    assert!(attest_package_tree_copy(&selected, copy.path()).is_err());
+    std::fs::write(copy.path().join("README.md"), b"source\n").unwrap();
+    std::fs::write(copy.path().join("extra.txt"), b"extra").unwrap();
+    assert!(attest_package_tree_copy(&selected, copy.path()).is_err());
+    std::fs::remove_file(copy.path().join("extra.txt")).unwrap();
+    std::fs::remove_file(copy.path().join("README.md")).unwrap();
+    assert!(attest_package_tree_copy(&selected, copy.path()).is_err());
+}
+
+#[test]
 fn changed_byte_and_manifest_identity_are_refused() {
     let dir = fixture();
     let witness =

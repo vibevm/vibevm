@@ -5,6 +5,7 @@
 use super::*;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
+use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use vibe_core::PackageRef;
@@ -17,7 +18,27 @@ use vibe_package_source::{
 use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
 
+static FIXTURE_LOCK: Mutex<()> = Mutex::new(());
+fn fixture_guard() -> std::sync::MutexGuard<'static, ()> {
+    FIXTURE_LOCK.lock().unwrap()
+}
+
+#[derive(Clone, Copy)]
+enum CacheFault {
+    None,
+    Changed,
+    Extra,
+    Missing,
+    #[cfg(unix)]
+    Symlink,
+}
+
 fn setup() -> (tempfile::TempDir, PathBuf, PathBuf) {
+    let isolated = vibe_test_support::isolated_home().expect("fixture tests require isolated home");
+    let package_cache = isolated.join("cache/org.example/fixture");
+    if package_cache.exists() {
+        std::fs::remove_dir_all(&package_cache).unwrap();
+    }
     let dir = tempfile::tempdir().unwrap();
     let project = dir.path().join("consumer");
     let registry = dir.path().join("registry");
@@ -80,6 +101,7 @@ struct FixtureFactory {
     builds: AtomicUsize,
     fetches: Arc<AtomicUsize>,
     fail_after_fetch: bool,
+    cache_fault: CacheFault,
 }
 
 impl FixtureFactory {
@@ -91,6 +113,7 @@ impl FixtureFactory {
             builds: AtomicUsize::new(0),
             fetches: Arc::new(AtomicUsize::new(0)),
             fail_after_fetch: false,
+            cache_fault: CacheFault::None,
         }
     }
 }
@@ -125,6 +148,7 @@ impl PackageSourceFactory for FixtureFactory {
             inner: RegistryPackageSource::new(resolver, Box::new(ExactQualifier)),
             fetches: Arc::clone(&self.fetches),
             fail_after_fetch: self.fail_after_fetch,
+            cache_fault: self.cache_fault,
             project_root: input.project_root.to_path_buf(),
         }))
     }
@@ -134,6 +158,7 @@ struct FixtureSource {
     inner: RegistryPackageSource,
     fetches: Arc<AtomicUsize>,
     fail_after_fetch: bool,
+    cache_fault: CacheFault,
     project_root: PathBuf,
 }
 
@@ -173,6 +198,28 @@ impl InstallSource for FixtureSource {
             .inner
             .resolve_and_fetch(pkgref, store_root, expected_hash)?;
         self.fetches.fetch_add(1, Ordering::SeqCst);
+        match self.cache_fault {
+            CacheFault::None => {}
+            CacheFault::Changed => {
+                std::fs::write(cached.cache_dir.join("README.md"), b"wrong cache bytes\n").unwrap();
+            }
+            CacheFault::Extra => {
+                std::fs::write(cached.cache_dir.join("extra.txt"), b"unexpected").unwrap();
+            }
+            CacheFault::Missing => {
+                std::fs::remove_file(cached.cache_dir.join("README.md")).unwrap();
+            }
+            #[cfg(unix)]
+            CacheFault::Symlink => {
+                use std::os::unix::fs::symlink;
+                std::fs::remove_file(cached.cache_dir.join("README.md")).unwrap();
+                symlink(
+                    cached.cache_dir.join("vibe.toml"),
+                    cached.cache_dir.join("README.md"),
+                )
+                .unwrap();
+            }
+        }
         if self.fail_after_fetch {
             return Err(RegistryError::Io {
                 path: store_root.to_path_buf(),
@@ -209,6 +256,7 @@ impl InstallSource for FixtureSource {
 
 #[test]
 fn source_drift_after_stage_refuses_before_factory_or_install_effect() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     let registry = source
@@ -264,6 +312,7 @@ fn source_drift_after_stage_refuses_before_factory_or_install_effect() {
 
 #[test]
 fn failure_after_cache_fetch_is_retained_uncertain_and_never_refetched() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     let registry = source
@@ -307,7 +356,86 @@ fn failure_after_cache_fetch_is_retained_uncertain_and_never_refetched() {
 }
 
 #[test]
+fn changed_extra_or_missing_cached_bytes_refuse_before_slot_lock_and_boot() {
+    let _guard = fixture_guard();
+    assert!(vibe_test_support::isolated_home().is_some());
+    for fault in [CacheFault::Changed, CacheFault::Extra, CacheFault::Missing] {
+        let (_dir, project, source) = setup();
+        let registry = source
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .to_path_buf();
+        let mut factory = FixtureFactory::new(registry);
+        factory.cache_fault = fault;
+        let scope = scope();
+        let namespace = issue(&project, &scope);
+        let first = fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap();
+        let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+            panic!("mismatched cache must retain uncertain result: {first:?}")
+        };
+        assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+        assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+        assert!(
+            project
+                .join(".vibe/lifecycle-outcomes")
+                .join(format!("{run_id}.install-entered.json"))
+                .is_file()
+        );
+        assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+        assert!(!project.join("vibe.lock").exists());
+        assert!(
+            !project
+                .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+                .exists()
+        );
+        assert!(!project.join("vibevm/vibespecs/boot/INDEX.md").exists());
+        assert_eq!(
+            fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+            SubmissionOutcome::Replayed { run_id, outcome }
+        );
+        assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    }
+}
+
+#[cfg(unix)]
+#[test]
+fn symlinked_cache_child_refuses_before_slot_lock_and_boot() {
+    let _guard = fixture_guard();
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let mut factory = FixtureFactory::new(registry);
+    factory.cache_fault = CacheFault::Symlink;
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let first = fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap();
+    let SubmissionOutcome::Invoked { outcome, .. } = first else {
+        panic!("symlinked cache must retain uncertain result: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert!(!project.join("vibe.lock").exists());
+    assert!(
+        !project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+            .exists()
+    );
+    assert!(!project.join("vibevm/vibespecs/boot/INDEX.md").exists());
+}
+
+#[test]
 fn one_package_install_is_staged_then_retained_and_replayed_without_second_effect() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     let factory = FixtureFactory::new(
@@ -358,6 +486,7 @@ fn one_package_install_is_staged_then_retained_and_replayed_without_second_effec
 
 #[test]
 fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     let registry = source
@@ -385,6 +514,7 @@ fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
 
 #[test]
 fn nonfixed_root_manifest_refuses_before_reservation_or_source_port() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     std::fs::write(
@@ -414,6 +544,7 @@ fn nonfixed_root_manifest_refuses_before_reservation_or_source_port() {
 
 #[test]
 fn source_hook_declaration_refuses_before_reservation_or_fetch() {
+    let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     std::fs::write(
@@ -445,6 +576,7 @@ fn source_hook_declaration_refuses_before_reservation_or_fetch() {
 
 #[test]
 fn factory_bound_to_another_source_root_refuses_before_reservation() {
+    let _guard = fixture_guard();
     let (_dir, project, source) = setup();
     let foreign = tempfile::tempdir().unwrap();
     let factory = FixtureFactory::new(foreign.path().to_path_buf());
