@@ -3,6 +3,7 @@
 
 use super::*;
 use crate::install::resolve_project_root;
+use vibe_lifecycle::process::recheck_selected_manifest_lock;
 
 fn project(body: &str) -> tempfile::TempDir {
     let dir = tempfile::tempdir().unwrap();
@@ -11,6 +12,67 @@ fn project(body: &str) -> tempfile::TempDir {
 }
 
 const PLAIN: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
+
+#[test]
+fn witnessed_manifest_parses_the_captured_bytes_without_writing() {
+    let dir = project(PLAIN);
+    std::fs::write(dir.path().join("vibe.lock"), b"lock bytes").unwrap();
+    let root = resolve_project_root(dir.path()).unwrap();
+    let before = std::fs::read_dir(&root).unwrap().count();
+    let (selected, witness) = SelectedManifest::read_witnessed(&root).unwrap();
+    assert_eq!(witness.manifest.bytes, PLAIN.as_bytes());
+    assert_eq!(witness.lock.as_ref().unwrap().bytes, b"lock bytes");
+    assert_eq!(
+        selected
+            .parsed_ref()
+            .unwrap()
+            .project
+            .as_ref()
+            .unwrap()
+            .name,
+        "demo"
+    );
+    assert!(selected.prepare().prove().is_ok());
+    assert_eq!(std::fs::read_dir(&root).unwrap().count(), before);
+    assert!(!root.join(".vibe").exists());
+}
+
+#[test]
+fn witnessed_manifest_and_lock_recheck_detects_later_drift() {
+    let dir = project(PLAIN);
+    let (selected, witness) = SelectedManifest::read_witnessed(dir.path()).unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), PLAIN.replace("demo", "other")).unwrap();
+    assert!(recheck_selected_manifest_lock(dir.path(), &witness).is_err());
+    assert_eq!(
+        selected
+            .parsed_ref()
+            .unwrap()
+            .project
+            .as_ref()
+            .unwrap()
+            .name,
+        "demo"
+    );
+
+    std::fs::write(dir.path().join("vibe.toml"), PLAIN).unwrap();
+    std::fs::write(dir.path().join("vibe.lock"), b"appeared").unwrap();
+    assert!(recheck_selected_manifest_lock(dir.path(), &witness).is_err());
+}
+
+#[test]
+fn witnessed_manifest_refuses_malformed_and_invalid_utf8_bytes() {
+    let malformed = project("[project\nbroken\n");
+    assert!(SelectedManifest::read_witnessed(malformed.path()).is_err());
+    assert!(!malformed.path().join(".vibe").exists());
+
+    let invalid_utf8 = tempfile::tempdir().unwrap();
+    std::fs::write(invalid_utf8.path().join("vibe.toml"), [0xff, 0xfe]).unwrap();
+    let Err(error) = SelectedManifest::read_witnessed(invalid_utf8.path()) else {
+        panic!("invalid UTF-8 must refuse");
+    };
+    assert!(error.to_string().contains("not UTF-8"), "{error:#}");
+    assert!(!invalid_utf8.path().join(".vibe").exists());
+}
 
 #[test]
 fn one_snapshot_answers_activation_and_still_yields_the_manifest() {
