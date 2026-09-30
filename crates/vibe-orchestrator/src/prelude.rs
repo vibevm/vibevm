@@ -3,7 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, ensure};
 use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
@@ -138,6 +138,57 @@ pub fn run_prelude(
     force: bool,
     compile_trace: bool,
 ) -> Result<RunPrelude> {
+    let selected = selected_under_lease(&selection, &lease)?;
+    // The identity borrows the lease BEFORE its state read, so the prior
+    // state it decides adoption against is a post-acquisition snapshot.
+    let identity = vibe_lifecycle::select_run_identity(
+        &lease,
+        selection.root(),
+        requested,
+        chain,
+        &selected,
+        agent_mode,
+        force,
+        compile_trace,
+        vibe_core::timestamp::now_utc(),
+    )?;
+    Ok(RunPrelude {
+        identity,
+        selection,
+        lease,
+        selected,
+    })
+}
+
+/// Carry a separately chosen identity into the same selected-world prelude.
+/// This constructor does not select, reserve, journal or admit an effect; its
+/// caller must prove those obligations before execution or trace preparation.
+#[allow(
+    dead_code,
+    reason = "machine submission wiring follows this foundation"
+)]
+pub(crate) fn run_prelude_with_identity(
+    selection: PreparedSelection,
+    lease: std::sync::Arc<vibe_lifecycle::LifecycleLease>,
+    identity: vibe_lifecycle::RunIdentity,
+) -> Result<RunPrelude> {
+    let selected = selected_under_lease(&selection, &lease)?;
+    ensure!(
+        vibe_lifecycle::process::is_valid_run_id(&identity.run_id),
+        "preselected lifecycle run id must be 32 lowercase hex characters"
+    );
+    Ok(RunPrelude {
+        identity,
+        selection,
+        lease,
+        selected,
+    })
+}
+
+fn selected_under_lease(
+    selection: &PreparedSelection,
+    lease: &vibe_lifecycle::LifecycleLease,
+) -> Result<String> {
     // The post-acquisition root law: a workspace loaded under a DIFFERENT
     // root than the one this command leased would read and write state
     // beside another process's lock, on a pre-lease snapshot this lease
@@ -169,23 +220,5 @@ pub fn run_prelude(
             .to_string(),
         None => ".".to_string(),
     };
-    // The identity borrows the lease BEFORE its state read, so the prior
-    // state it decides adoption against is a post-acquisition snapshot.
-    let identity = vibe_lifecycle::select_run_identity(
-        &lease,
-        selection.root(),
-        requested,
-        chain,
-        &selected,
-        agent_mode,
-        force,
-        compile_trace,
-        vibe_core::timestamp::now_utc(),
-    )?;
-    Ok(RunPrelude {
-        identity,
-        selection,
-        lease,
-        selected,
-    })
+    Ok(selected)
 }
