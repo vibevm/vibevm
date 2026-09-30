@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "needs_input",
+    "questions": [
+      {
+        "field": "source_media",
+        "choices": [
+          "application/xml",
+          "text/markdown"
+        ]
+      }
+    ]
+  }
+}

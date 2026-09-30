@@ -16,7 +16,95 @@ fn sample_request() -> PlanRequest {
         source_profile: Some(LEGACY_ABSENT.to_owned()),
         target_profile: Some(CURRENT_ABSENT.to_owned()),
         recipe: Some(SNAPSHOT_TO_COPY.to_owned()),
+        source_decisions: Vec::new(),
     }
+}
+
+fn fixture(family: &str, category: &str, name: &str) -> Value {
+    let path = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../formats/corpora")
+        .join(family)
+        .join("e1")
+        .join(category)
+        .join(format!("{name}.json"));
+    serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap()
+}
+
+#[test]
+fn source_decision_wire_is_explicit_validated_and_not_ignored_before_its_producer() {
+    let old = sample_request();
+    assert!(
+        serde_json::to_value(&old)
+            .unwrap()
+            .get("source_decisions")
+            .is_none()
+    );
+    let value = fixture("migration-plan-request", "valid", "source-decision");
+    let request = decode_migration_request(value).unwrap();
+    assert_eq!(request.source_decisions.len(), 1);
+    assert_eq!(
+        request.source_decisions[0].file,
+        "vibevm/vibespecs/boot/10-flow.xml"
+    );
+    preflight_response(plan_migration_request(request), Code::InvalidRequest);
+    for name in [
+        "source-path-escape",
+        "source-duplicate",
+        "source-media-mismatch",
+    ] {
+        preflight_response(
+            plan_migration_value(fixture("migration-plan-request", "semantic-invalid", name)),
+            Code::InvalidRequest,
+        );
+    }
+    preflight_response(
+        plan_migration_value(fixture(
+            "migration-plan-request",
+            "structural-invalid",
+            "source-unknown-interpretation",
+        )),
+        Code::InvalidRequest,
+    );
+    preflight_response(
+        plan_migration_value(fixture(
+            "migration-plan-request",
+            "presence-invalid",
+            "source-decisions-null",
+        )),
+        Code::InvalidRequest,
+    );
+}
+
+#[test]
+fn path_specific_questions_require_resource_and_closed_choice_vocabulary() {
+    let value = fixture("migration-plan-report", "valid", "needs-input-source");
+    let report: PlanReport = serde_json::from_value(value).unwrap();
+    validate_report(&report).unwrap();
+    let Outcome::NeedsInput(row) = &report.outcome else {
+        panic!("source question")
+    };
+    assert_eq!(row.questions[0].field, QuestionField::SourceMedia);
+    assert_eq!(
+        row.questions[0].resource_path.as_deref(),
+        Some("vibevm/vibespecs/boot/10-flow.xml")
+    );
+    for name in [
+        "source-question-missing-path",
+        "global-question-with-path",
+        "source-question-duplicate",
+        "source-question-path-escape",
+    ] {
+        let report: PlanReport =
+            serde_json::from_value(fixture("migration-plan-report", "semantic-invalid", name))
+                .unwrap();
+        assert!(validate_report(&report).is_err(), "{name}");
+    }
+    let mut unknown = report.clone();
+    let Outcome::NeedsInput(row) = &mut unknown.outcome else {
+        unreachable!()
+    };
+    row.questions[0].choices = vec!["text/plain;not-media".into()];
+    assert!(validate_report(&unknown).is_err());
 }
 fn report(request: PlanRequest) -> PlanReport {
     match plan_migration_request(request) {

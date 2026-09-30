@@ -153,7 +153,11 @@
           "enum": [
             "source_profile",
             "target_profile",
-            "recipe"
+            "recipe",
+            "source_media",
+            "source_interpretation",
+            "source_role",
+            "source_loading"
           ],
           "metadata": {
             "x-vocabulary": "closed"
@@ -166,6 +170,15 @@
           "metadata": {
             "x-empty": "emit",
             "description": "Exact named choices in owning planner order."
+          }
+        }
+      },
+      "optionalProperties": {
+        "resource_path": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Required for source-specific question kinds, absent for the three global selection fields."
           }
         }
       }

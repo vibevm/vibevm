@@ -358,6 +358,7 @@ mod tests {
             recipe: None,
             source_profile: None,
             target_profile: None,
+            source_decisions: Vec::new(),
         }
     }
 

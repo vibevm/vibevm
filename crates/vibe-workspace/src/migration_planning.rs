@@ -7,9 +7,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATI
 
 use serde::{Serialize, Serializer};
 use serde_json::Value;
+use std::collections::BTreeSet;
+use std::path::Path;
 use vibe_core::manifest::{
     ManifestMigrationEpoch, ManifestMigrationOutcome, ManifestMigrationPlan, MigrationRefusalKind,
-    MigrationSelection, manifest_migration_profile_epoch, plan_manifest_migration,
+    MigrationSelection, SourceDescriptor, declarant_path, manifest_migration_profile_epoch,
+    plan_manifest_migration,
 };
 use vibe_wire::generated::migration::e1::{
     plan_error::{PlanError, PlanErrorStage},
@@ -119,7 +122,43 @@ pub fn decode_migration_request(value: Value) -> Result<PlanRequest, PlanError> 
             "unsupported request schema",
         ));
     }
+    validate_source_decisions(&request)?;
     Ok(request)
+}
+
+fn validate_source_decisions(request: &PlanRequest) -> Result<(), PlanError> {
+    let mut seen = BTreeSet::new();
+    for decision in &request.source_decisions {
+        declarant_path(Path::new(&decision.file)).map_err(|_| {
+            preflight(
+                Code::InvalidRequest,
+                "source_decisions.file",
+                "source file path is not a normalized package-relative path",
+            )
+        })?;
+        if !seen.insert(decision.file.to_lowercase()) {
+            return Err(preflight(
+                Code::InvalidRequest,
+                "source_decisions.file",
+                "duplicate source decision path",
+            ));
+        }
+        let value = serde_json::to_value(decision).map_err(|_| {
+            preflight(
+                Code::InvalidRequest,
+                "source_decisions",
+                "source decision could not be encoded",
+            )
+        })?;
+        serde_json::from_value::<SourceDescriptor>(value).map_err(|_| {
+            preflight(
+                Code::InvalidRequest,
+                "source_decisions",
+                "source media, interpretation, role or loading is invalid",
+            )
+        })?;
+    }
+    Ok(())
 }
 
 /// Typed callers have already lost JSON presence provenance; JSON callers
@@ -134,6 +173,16 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
             Code::UnsupportedSchema,
             "schema",
             "unsupported request schema",
+        ));
+    }
+    if let Err(error) = validate_source_decisions(&request) {
+        return MigrationPlanningResponse::Preflight(error);
+    }
+    if !request.source_decisions.is_empty() {
+        return MigrationPlanningResponse::Preflight(preflight(
+            Code::InvalidRequest,
+            "source_decisions",
+            "source decisions require a source-migration producer and cannot be ignored",
         ));
     }
     let report = match project_core(&request).and_then(|report| {
@@ -184,6 +233,7 @@ fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
                 questions.push(Question {
                     field,
                     choices: requirement.choices.into_iter().map(str::to_owned).collect(),
+                    resource_path: None,
                 });
             }
             Outcome::NeedsInput(Box::new(OutcomeNeedsInput { questions }))
@@ -302,10 +352,43 @@ fn validate_report(report: &PlanReport) -> Validated<()> {
             }
             let mut fields = Vec::new();
             for question in &outcome.questions {
-                if fields.contains(&question.field) {
-                    return Err(invalid("questions.field", "duplicate input field"));
+                let is_source = matches!(
+                    question.field,
+                    QuestionField::SourceMedia
+                        | QuestionField::SourceInterpretation
+                        | QuestionField::SourceRole
+                        | QuestionField::SourceLoading
+                );
+                match (is_source, question.resource_path.as_deref()) {
+                    (true, Some(path)) if declarant_path(Path::new(path)).is_ok() => {}
+                    (true, _) => {
+                        return Err(invalid(
+                            "questions.resource_path",
+                            "source question requires a normalized file path",
+                        ));
+                    }
+                    (false, None) => {}
+                    (false, Some(_)) => {
+                        return Err(invalid(
+                            "questions.resource_path",
+                            "global question cannot name a resource",
+                        ));
+                    }
                 }
-                fields.push(question.field.clone());
+                let identity = (
+                    question.field.clone(),
+                    question
+                        .resource_path
+                        .as_ref()
+                        .map(|path| path.to_lowercase()),
+                );
+                if fields.contains(&identity) {
+                    return Err(invalid(
+                        "questions.field",
+                        "duplicate input field and resource",
+                    ));
+                }
+                fields.push(identity);
                 if question.choices.is_empty()
                     || question.choices.iter().any(|choice| choice.is_empty())
                 {
@@ -317,10 +400,43 @@ fn validate_report(report: &PlanReport) -> Validated<()> {
                         return Err(invalid("questions.choices", "duplicate choice"));
                     }
                     choices.push(choice.clone());
+                    if !valid_question_choice(&question.field, choice) {
+                        return Err(invalid(
+                            "questions.choices",
+                            "choice is outside the question vocabulary",
+                        ));
+                    }
                 }
             }
             Ok(())
         }
+    }
+}
+
+fn valid_question_choice(field: &QuestionField, choice: &str) -> bool {
+    match field {
+        QuestionField::SourceInterpretation => matches!(
+            choice,
+            "vibe-spec" | "vibe-doc" | "commonmark" | "xml-data" | "opaque"
+        ),
+        QuestionField::SourceRole => matches!(choice, "spec" | "documentation" | "resource"),
+        QuestionField::SourceLoading => matches!(choice, "scan" | "explicit"),
+        QuestionField::SourceMedia => {
+            let Some((kind, subtype)) = choice.split_once('/') else {
+                return false;
+            };
+            !kind.is_empty()
+                && !subtype.is_empty()
+                && !subtype.contains('/')
+                && [kind, subtype].iter().all(|part| {
+                    part.bytes().all(|byte| {
+                        byte.is_ascii_lowercase()
+                            || byte.is_ascii_digit()
+                            || matches!(byte, b'.' | b'-' | b'+' | b'_')
+                    })
+                })
+        }
+        _ => !choice.is_empty(),
     }
 }
 
@@ -422,6 +538,12 @@ fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
 pub fn validate_report_for_request(request: &PlanRequest, report: &PlanReport) -> Validated<()> {
     if request.schema != 1 {
         return Err(invalid("request.schema", "unsupported request schema"));
+    }
+    if !request.source_decisions.is_empty() {
+        return Err(invalid(
+            "request.source_decisions",
+            "source producer is not installed",
+        ));
     }
     validate_report(report)?;
     let expected = project_core(request)?;
