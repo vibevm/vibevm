@@ -56,7 +56,15 @@ pub fn read_slot_record(slot: &Path) -> Result<SlotRecord, String> {
             path.display()
         )
     })?;
-    let wire: WireSlotRecord = toml::from_str(&text)
+    read_slot_record_bytes(&path, text.as_bytes())
+}
+
+/// Parse exactly the bytes obtained by a caller's held no-follow snapshot.
+/// Reuses the same wire and semantic validator as the legacy path reader.
+pub(super) fn read_slot_record_bytes(path: &Path, bytes: &[u8]) -> Result<SlotRecord, String> {
+    let text = std::str::from_utf8(bytes)
+        .map_err(|error| format!("slot record UTF-8 failure at `{}`: {error}", path.display()))?;
+    let wire: WireSlotRecord = toml::from_str(text)
         .map_err(|error| format!("slot record parse failure at `{}`: {error}", path.display()))?;
     let record = record_from_wire(wire).map_err(|error| format_validation_error(&path, error))?;
     validate_record(&record).map_err(|error| format_validation_error(&path, error))?;
