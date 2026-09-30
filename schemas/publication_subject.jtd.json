@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "description": "Epoch-one exact local subject for a prepared vibevm distribution publication. This value is not an effect grant.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-EXACT-SUBJECT" },
+    "rustOptions": { "package": "vibe_wire::publication_subject" }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "product": { "type": "string" },
+    "repository": { "type": "string" },
+    "version": { "type": "string" },
+    "mutable": { "type": "boolean" },
+    "source": { "ref": "publication_source" },
+    "targets": {
+      "elements": { "ref": "publication_target" },
+      "metadata": { "x-empty": "emit", "description": "Exactly the supported targets in the distribution contract's canonical order; validated semantically." }
+    },
+    "aggregate": { "ref": "publication_asset" },
+    "installers": {
+      "elements": { "ref": "publication_installer" },
+      "metadata": { "x-empty": "emit", "description": "Exactly bash, PowerShell and cmd installer assets, each bound to committed bytes." }
+    },
+    "smoke": { "ref": "publication_smoke" }
+  },
+  "definitions": {
+    "publication_source": {
+      "properties": {
+        "commit": { "type": "string" },
+        "tree": { "type": "string" },
+        "cargo_lock": { "ref": "publication_asset" }
+      }
+    },
+    "publication_asset": {
+      "properties": {
+        "name": { "type": "string" },
+        "media_type": { "type": "string" },
+        "size_bytes": {
+          "type": "string",
+          "metadata": { "description": "Canonical nonnegative decimal u64 byte count; JTD has no uint64 primitive." }
+        },
+        "sha256": {
+          "type": "string",
+          "metadata": { "description": "Lowercase sha256:<64hex> of the exact asset bytes." }
+        }
+      }
+    },
+    "publication_component": {
+      "properties": {
+        "name": { "enum": ["vibe", "vibe-index"], "metadata": { "x-vocabulary": "closed" } },
+        "path": { "type": "string" },
+        "size_bytes": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "publication_source_archive": {
+      "properties": {
+        "path": { "type": "string" },
+        "size_bytes": { "type": "string" },
+        "sha256": { "type": "string" },
+        "tree_oid": { "type": "string" }
+      }
+    },
+    "publication_target": {
+      "properties": {
+        "target": { "type": "string" },
+        "bundle": { "ref": "publication_asset" },
+        "bootstrap": { "ref": "publication_asset" },
+        "fragment": { "ref": "publication_asset" },
+        "components": { "elements": { "ref": "publication_component" }, "metadata": { "x-empty": "emit" } },
+        "source_archive": { "ref": "publication_source_archive" }
+      }
+    },
+    "publication_installer": {
+      "properties": {
+        "kind": { "enum": ["bash", "powershell", "cmd"], "metadata": { "x-vocabulary": "closed" } },
+        "asset": { "ref": "publication_asset" }
+      }
+    },
+    "publication_smoke": {
+      "properties": {
+        "policy_id": { "type": "string" },
+        "policy_epoch": { "type": "uint32" },
+        "probes": { "elements": { "ref": "publication_smoke_probe" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "publication_smoke_probe": {
+      "properties": {
+        "probe_id": { "type": "string" },
+        "target": { "type": "string" },
+        "status": { "enum": ["passed", "failed", "skipped", "unavailable"], "metadata": { "x-vocabulary": "closed" } }
+      },
+      "optionalProperties": {
+        "tested_sha256": { "type": "string", "metadata": { "x-default": null } },
+        "runner_ref": { "type": "string", "metadata": { "x-default": null } },
+        "evidence_ref": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

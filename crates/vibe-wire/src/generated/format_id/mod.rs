@@ -142,6 +142,8 @@ pub enum FormatId {
     PreviewDocumentationCapture,
     PreviewDocumentationMap,
     PreviewTransition,
+    PublicationEffectPlan,
+    PublicationSubject,
     ReleaseImpact,
     RequirementsReport,
     ScrapeHealthResult,
