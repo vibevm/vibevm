@@ -104,6 +104,7 @@ impl NativeDeployProvider {
 
     fn identity(&self, request: &DeployTargetRequest<'_>) -> request::InvocationIdentity {
         request::InvocationIdentity {
+            operation_binding: None,
             provider: self.provider.clone(),
             mechanism: self.mechanism.descriptor().id.clone(),
             target: request.target.id.clone(),

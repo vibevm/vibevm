@@ -66,8 +66,9 @@ pub use client_projection::ClientProjectionError;
 pub use deploy::{
     ClientExecutable, ClientExecutables, DEPLOY_STATE_DIR, DeployError, DeployExecution,
     DeployOutcome, DeployPlanReport, DeployResourcePlan, DeploySelection, DeployStatus,
-    DeployedResource, DeploymentRow, RemovalOutcome, deploy_state_home, execute_deploy_targets,
-    list_deployments, plan_deploy_targets, undeploy_targets,
+    DeployedResource, DeploymentRow, RemovalOutcome, deploy_state_home,
+    execute_bound_deploy_targets, execute_deploy_targets, list_deployments, plan_deploy_targets,
+    undeploy_targets,
 };
 pub use error::{DeployProviderError, MechanismError};
 pub use package::{

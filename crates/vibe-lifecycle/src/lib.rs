@@ -131,8 +131,9 @@ pub use mechanism::{
     DeployStatus, DeployedResource, DeploymentRow, LegacyArtifactEvidence, LegacyArtifactRead,
     LegacyArtifactReadError, MechanismError, PackageError, PackageExecution, PackageOutcome,
     PackagedArtifact, ProducedArtifact, RecordError, RemovalOutcome, deploy_state_home,
-    execute_build_targets, execute_deploy_targets, execute_package_targets, list_deployments,
-    plan_deploy_targets, read_legacy_artifact, undeploy_targets,
+    execute_bound_deploy_targets, execute_build_targets, execute_deploy_targets,
+    execute_package_targets, list_deployments, plan_deploy_targets, read_legacy_artifact,
+    undeploy_targets,
 };
 // The mechanism PLANE, through the same compatibility door the extension
 // plane already uses. The two executors above take a `MechanismRegistry`,

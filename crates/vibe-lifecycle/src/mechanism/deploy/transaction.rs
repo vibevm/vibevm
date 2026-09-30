@@ -147,6 +147,7 @@ impl Transaction<'_> {
         // and the digest the prior receipt recorded, because recovery
         // compares against exactly those two and nothing else.
         let intent = DeployIntent {
+            operation_binding: None,
             plan_hash: plan_hash.clone(),
             resources: plan
                 .resources
@@ -478,6 +479,7 @@ impl Transaction<'_> {
             .artifact
             .map_or_else(|| "0".repeat(64), |artifact| artifact.digest.clone());
         Ok(DeployReceipt {
+            operation_binding: None,
             applied_at: stamped,
             artifact_digest,
             desired_config_digest: plan.config_digest.clone(),
@@ -590,6 +592,101 @@ pub(crate) fn plan_hash(
     for locked in &plan.lock_resources {
         hash.update(b"\x00lock\x00");
         hash.update(locked.as_bytes());
+    }
+    format!("{:x}", hash.finalize())
+}
+
+/// A distinct bound-plan domain. This is not used by the legacy transaction:
+/// until trusted root handles are admitted, bound apply refuses before
+/// preplanning. The exact binding bytes are nevertheless ready for the
+/// future admitted path, and legacy `plan_hash` remains byte-identical.
+#[allow(dead_code, reason = "bound apply waits for host root-handle admission")]
+pub(crate) fn bound_plan_hash(
+    request: &DeployTargetRequest<'_>,
+    provider_pin: &str,
+    plan: &DeployPlan,
+    binding: &vibe_wire::generated::shared::EnvironmentOperationBinding,
+) -> String {
+    use vibe_wire::generated::shared::{
+        EnvironmentOperationBindingTargetMode as Mode, EnvironmentOperationBindingTargetOs as Os,
+        EnvironmentOperationBindingTargetRole as Role,
+    };
+    let mut hash = Sha256::new();
+    hash.update(b"deploy-plan/bound/1\x00");
+    let mut frame = |tag: &str, value: &[u8]| {
+        hash.update((tag.len() as u16).to_be_bytes());
+        hash.update(tag.as_bytes());
+        hash.update((value.len() as u64).to_be_bytes());
+        hash.update(value);
+    };
+    frame(
+        "legacy_plan_hash",
+        plan_hash(request, provider_pin, plan).as_bytes(),
+    );
+    frame("binding_epoch", &binding.binding_epoch.to_be_bytes());
+    frame("admission_epoch", &binding.admission_epoch.to_be_bytes());
+    for (tag, value) in [
+        ("binding_id", binding.binding_id.as_str()),
+        ("host_context_id", binding.host_context_id.as_str()),
+        ("instance_ref", binding.instance_ref.as_str()),
+        ("principal_ref", binding.principal_ref.as_str()),
+        ("storage_binding_ref", binding.storage_binding_ref.as_str()),
+        ("target_architecture", binding.target_architecture.as_str()),
+    ] {
+        frame(tag, value.as_bytes());
+    }
+    frame(
+        "selected_generation.present",
+        &[u8::from(binding.selected_generation_ref.is_some())],
+    );
+    if let Some(value) = &binding.selected_generation_ref {
+        frame("selected_generation", value.as_bytes());
+    }
+    frame(
+        "target_abi.present",
+        &[u8::from(binding.target_abi.is_some())],
+    );
+    if let Some(value) = &binding.target_abi {
+        frame("target_abi", value.as_bytes());
+    }
+    frame(
+        "target_libc.present",
+        &[u8::from(binding.target_libc.is_some())],
+    );
+    if let Some(value) = &binding.target_libc {
+        frame("target_libc", value.as_bytes());
+    }
+    frame(
+        "target_os",
+        match &binding.target_os {
+            Os::Linux => b"linux",
+            Os::Macos => b"macos",
+            Os::Windows => b"windows",
+        },
+    );
+    frame(
+        "target_role",
+        match &binding.target_role {
+            Role::Executor => b"executor",
+            Role::ProducedToolRuntime => b"produced_tool_runtime",
+            Role::EmittedCodeTarget => b"emitted_code_target",
+        },
+    );
+    frame(
+        "target_mode",
+        match &binding.target_mode {
+            Mode::WorkspaceProjection => b"workspace_projection",
+            Mode::UserProfile => b"user_profile",
+            Mode::OfflineLinuxRootfs => b"offline_linux_rootfs",
+            Mode::LiveLinuxSystem => b"live_linux_system",
+        },
+    );
+    let mut roots = binding.root_bindings.iter().collect::<Vec<_>>();
+    roots.sort_by(|a, b| a.root_role.cmp(&b.root_role));
+    frame("roots.count", &(roots.len() as u64).to_be_bytes());
+    for root in roots {
+        frame("root.role", root.root_role.as_bytes());
+        frame("root.capability", root.capability_ref.as_bytes());
     }
     format!("{:x}", hash.finalize())
 }
