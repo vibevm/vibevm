@@ -354,7 +354,7 @@ fn failure_after_cache_fetch_is_retained_uncertain_and_never_refetched() {
     let SubmissionOutcome::Invoked { run_id, outcome } = first else {
         panic!("failed domain run should retain an uncertain marker: {first:?}")
     };
-    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
     assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
     assert!(
@@ -400,7 +400,7 @@ fn changed_extra_or_missing_cached_bytes_refuse_before_slot_lock_and_boot() {
         let SubmissionOutcome::Invoked { run_id, outcome } = first else {
             panic!("mismatched cache must retain uncertain result: {first:?}")
         };
-        assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+        assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
         assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
         assert!(
             project
@@ -444,7 +444,7 @@ fn forged_registry_content_hash_refuses_before_lock_and_slot() {
     let SubmissionOutcome::Invoked { run_id, outcome } = first else {
         panic!("wrong hash must retain uncertain result: {first:?}")
     };
-    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
     assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
     assert!(
@@ -506,7 +506,7 @@ fn cache_drift_at_confirm_is_uncertain_before_apply_and_never_retried() {
     let SubmissionOutcome::Invoked { run_id, outcome } = first else {
         panic!("post-fetch drift must retain an uncertain result: {first:?}")
     };
-    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
     assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
     assert_eq!(confirm.calls.load(Ordering::SeqCst), 1);
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
@@ -552,7 +552,7 @@ fn symlinked_cache_child_refuses_before_slot_lock_and_boot() {
     let SubmissionOutcome::Invoked { outcome, .. } = first else {
         panic!("symlinked cache must retain uncertain result: {first:?}")
     };
-    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
     assert!(!project.join("vibe.lock").exists());
     assert!(

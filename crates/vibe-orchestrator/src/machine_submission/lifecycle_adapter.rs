@@ -9,24 +9,25 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result, bail, ensure};
 use vibe_core::manifest::TargetOs;
-#[cfg(test)]
 use vibe_core::manifest::{ExtensionHandler, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::{
     PackageTreeWitness, SelectedManifestLockWitness, capture_package_tree_witness,
     recheck_package_tree_witness, recheck_selected_manifest_lock,
 };
-#[cfg(test)]
-use vibe_lifecycle::process::{ScriptSourceWitness, capture_script_source_witness};
+use vibe_lifecycle::process::{
+    ProcessRunner, ScriptSourceWitness, SourceSnapshotError, capture_script_source_witness,
+    recheck_script_source_witness,
+};
 use vibe_lifecycle::{
     AgentBackend, ExistingSubmissionInspection, JournalAdmission, LifecycleLease,
     LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleReportPayload,
     LifecycleRunJournalObservation, LifecycleStateStore, Phase, RunIdentity, RunMetadata,
     SubmissionNamespace, SubmissionReservations, SubmissionScope, create_lifecycle_outcome_marker,
     inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome,
-    publish_install_entered_stage, retain_lifecycle_outcome, select_run_identity_for_reservation,
+    publish_install_entered_stage, publish_script_source_stage, retain_lifecycle_outcome,
+    select_run_identity_for_reservation,
 };
-#[cfg(test)]
 use vibe_lifecycle::{ExtensionProvider, HandlerExecution};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle_outcome_marker::{
@@ -35,15 +36,18 @@ use vibe_wire::generated::lifecycle_outcome_marker::{
 };
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::shared::Timestamp;
+use vibe_workspace::hooks::InterpreterProbe;
 
 use super::lifecycle_plan::{
     LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan,
     canonical_one_package_fixture_request,
 };
-#[cfg(test)]
 use super::lifecycle_plan::{ScriptPlanSource, canonical_one_script_fixture_request};
 use super::{JournalState, SubmissionFailure, SubmissionJournal, SubmissionOutcome, submit};
 use crate::RitualPlan;
+use crate::dispatch::ProtectedScriptExecution;
+use crate::failure::Measurement;
+use crate::values::LifecycleValues;
 
 // The target OS changes lifecycle behavior and belongs in this fixed
 // request. `observed_at` is execution evidence: retries retain the first
@@ -100,6 +104,14 @@ struct FixtureRuntime<'a> {
     confirm: Option<&'a dyn ConfirmGate>,
 }
 
+struct ScriptFixturePort<'a> {
+    admitted: OneScriptValidateAdmission,
+    process: &'a dyn ProcessRunner,
+    probe: &'a dyn InterpreterProbe,
+    after_stage: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RetainedLifecycleResult {
     pub marker: LifecycleOutcomeMarker,
@@ -130,10 +142,7 @@ pub(crate) fn submit_validate_lifecycle(
     )
 }
 
-/// Fixed, effect-free admission for the future one-script protected Validate.
-/// It deliberately does not reserve or dispatch: the runner has no staged
-/// source port yet, so admitting an effect here would be unsafe.
-#[cfg(test)]
+/// Fixed, effect-free admission for the one-script protected Validate fixture.
 pub(crate) struct OneScriptValidateAdmission {
     pub canonical_request: Vec<u8>,
     pub canonical_plan: Vec<u8>,
@@ -142,10 +151,8 @@ pub(crate) struct OneScriptValidateAdmission {
     pub provider: String,
 }
 
-#[cfg(test)]
 const ONE_SCRIPT_VALIDATE_MANIFEST: &str = "[project]\nname = 'demo'\nversion = '1.1.0'\n[[extension]]\nid = 'once'\npoint = 'phase:validate'\nhandler = { kind = 'script', base = 'run' }\n";
 
-#[cfg(test)]
 pub(crate) fn admit_one_script_validate_fixture(
     path: &Path,
     request: &DefaultLifecycleRequest,
@@ -188,10 +195,6 @@ pub(crate) fn admit_one_script_validate_fixture(
         selected_under_lease(&selection, &lease)? == ".",
         "fixture requires root node"
     );
-    ensure!(
-        LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
-        "fixture refuses prior lifecycle header"
-    );
     let manifest = selection
         .parsed_ref()
         .context("fixture manifest did not parse")?;
@@ -230,6 +233,13 @@ pub(crate) fn admit_one_script_validate_fixture(
         TargetOs::Linux | TargetOs::Macos => "run.sh",
     };
     let source = capture_script_source_witness(&host.root, script_relative)?;
+    if target_os == TargetOs::Windows {
+        match capture_script_source_witness(&host.root, "run.sh") {
+            Ok(_) => bail!("Windows fixture refuses alternate run.sh selection"),
+            Err(SourceSnapshotError::MissingScript) => {}
+            Err(error) => return Err(error.into()),
+        }
+    }
     let execution_key = HandlerExecution::from_row(row).key();
     let provider = row.provider().to_string();
     let script = ScriptPlanSource {
@@ -265,6 +275,44 @@ pub(crate) fn admit_one_script_validate_fixture(
     })
 }
 
+/// Test-only counted effect route. The caller's process is an observation
+/// port, not a production authorization to execute arbitrary handlers.
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn submit_one_script_validate_fixture<'a>(
+    path: &Path,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    process: &'a dyn ProcessRunner,
+    probe: &'a dyn InterpreterProbe,
+    after_stage: Option<&'a dyn Fn()>,
+    after_effect: Option<&'a dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    let admitted = admit_one_script_validate_fixture(path, &request, target_os)?;
+    submit_protected_lifecycle_inner(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Phase::Validate,
+        None,
+        Some(ScriptFixturePort {
+            admitted,
+            process,
+            probe,
+            after_stage,
+            after_effect,
+        }),
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(super) fn submit_protected_lifecycle(
     path: &Path,
@@ -285,6 +333,7 @@ pub(super) fn submit_protected_lifecycle(
         target_os,
         observed_at,
         phase,
+        None,
         None,
     )
 }
@@ -311,6 +360,7 @@ fn submit_protected_lifecycle_with_fixture<'a>(
         observed_at,
         Phase::Install,
         fixture,
+        None,
     )
 }
 
@@ -325,7 +375,16 @@ fn submit_protected_lifecycle_inner<'a>(
     observed_at: Timestamp,
     phase: Phase,
     fixture: Option<FixtureSourcePort<'a>>,
+    script: Option<ScriptFixturePort<'a>>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    ensure!(
+        fixture.is_none() || script.is_none(),
+        "protected fixture sources cannot be combined"
+    );
+    ensure!(
+        script.is_none() || phase == Phase::Validate,
+        "script fixture is Validate-only"
+    );
     ensure!(
         request.requested == phase,
         "protected slice request differs from its fixed phase"
@@ -375,7 +434,9 @@ fn submit_protected_lifecycle_inner<'a>(
             })
         })
         .transpose()?;
-    let canonical_request = if let Some(fixture) = &fixture {
+    let canonical_request = if let Some(script) = &script {
+        script.admitted.canonical_request.clone()
+    } else if let Some(fixture) = &fixture {
         canonical_one_package_fixture_request(&fixture.witness, target_os)?
     } else {
         request_bytes(phase, target_os).to_vec()
@@ -404,7 +465,32 @@ fn submit_protected_lifecycle_inner<'a>(
     );
     let selected = selected_under_lease(&selection, &lease)?;
     ensure!(selected == ".", "protected slice requires root node");
-    if phase == Phase::Validate {
+    if let Some(script) = &script {
+        let manifest = selection
+            .parsed_ref()
+            .context("script fixture manifest did not parse")?;
+        ensure!(
+            manifest == &Manifest::parse_str(ONE_SCRIPT_VALIDATE_MANIFEST)?,
+            "script fixture manifest changed"
+        );
+        install::require_empty_lock(&witness)?;
+        let world = selection
+            .loaded_workspace()
+            .context("script fixture workspace did not load")?;
+        let ritual =
+            crate::world::plan_default_prepared(&selected_root, world, &[Phase::Validate])?;
+        ensure!(
+            ritual.executions().len() == 1,
+            "script fixture plan changed"
+        );
+        let row = &ritual.executions()[0].row;
+        ensure!(
+            HandlerExecution::from_row(row).key() == script.admitted.execution_key
+                && row.provider().to_string() == script.admitted.provider,
+            "script fixture execution identity changed"
+        );
+        recheck_script_source_witness(&script.admitted.source)?;
+    } else if phase == Phase::Validate {
         install::require_empty_install_world(&selection, &witness)
             .context("protected Validate requires an empty handler-free world")?;
     }
@@ -445,7 +531,11 @@ fn submit_protected_lifecycle_inner<'a>(
         witness: &witness,
         workspace_witness: &witness,
         package_source: fixture.as_ref().map(|fixture| &fixture.witness),
-        script_source: None,
+        script_source: script.as_ref().map(|script| ScriptPlanSource {
+            witness: &script.admitted.source,
+            execution_key: &script.admitted.execution_key,
+            provider: &script.admitted.provider,
+        }),
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
@@ -455,6 +545,12 @@ fn submit_protected_lifecycle_inner<'a>(
         policy: &request.policy,
         install_inputs: &request.install_inputs,
     })?;
+    if let Some(script) = &script {
+        ensure!(
+            plan == script.admitted.canonical_plan,
+            "script fixture pre-effect plan changed"
+        );
+    }
     recheck_selected_manifest_lock(&selected_root, &witness)?;
     let mut journal = ProtectedJournal {
         leased: Some(leased),
@@ -471,6 +567,7 @@ fn submit_protected_lifecycle_inner<'a>(
         canonical_plan: &plan,
         canonical_request: canonical_request.clone(),
         fixture,
+        script,
     };
     submit(
         lease,
@@ -599,6 +696,7 @@ struct ProtectedJournal<'a> {
     canonical_plan: &'a [u8],
     canonical_request: Vec<u8>,
     fixture: Option<FixtureRuntime<'a>>,
+    script: Option<ScriptFixturePort<'a>>,
 }
 
 impl ProtectedJournal<'_> {
@@ -803,6 +901,31 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     &self.witness,
                 )?;
             }
+            let script_stage = if let Some(script) = &self.script {
+                recheck_script_source_witness(&script.admitted.source)?;
+                let stage = publish_script_source_stage(
+                    &lease,
+                    self.namespace,
+                    self.scope,
+                    self.key,
+                    run_id,
+                    &self.canonical_request,
+                    self.canonical_plan,
+                    Phase::Validate.as_str(),
+                    &script.admitted.execution_key,
+                    &script.admitted.provider,
+                    &script.admitted.source.provider_root,
+                    &script.admitted.source.script_relative,
+                )?;
+                stage.matches_witness(&script.admitted.source)?;
+                if let Some(after_stage) = script.after_stage {
+                    after_stage();
+                }
+                Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                Some(stage)
+            } else {
+                None
+            };
             if let Some(fixture) = &self.fixture {
                 if let Some(after_stage) = fixture.after_stage {
                     after_stage();
@@ -832,7 +955,24 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             } else {
                 install::empty_install_ports()
             };
-            let outcome = prepared.run(ports, None, self.target_os, self.observed_at, None);
+            let outcome = if let (Some(script), Some(stage)) = (&self.script, &script_stage) {
+                prepared.run_protected_script(
+                    ports,
+                    self.target_os,
+                    self.observed_at,
+                    ProtectedScriptExecution {
+                        stage,
+                        process: script.process,
+                        probe: script.probe,
+                    },
+                )
+            } else {
+                prepared.run(ports, None, self.target_os, self.observed_at, None)
+            };
+            if let Some(after_effect) = self.script.as_ref().and_then(|script| script.after_effect)
+            {
+                after_effect()?;
+            }
             match outcome {
                 PhaseOutcome::Completed(values) => {
                     let report_bytes = serde_json::to_vec(&values.into_report(None))?;
@@ -853,7 +993,64 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                         Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
                     }
                 }
-                PhaseOutcome::Parked(_) | PhaseOutcome::Failed { .. } => {
+                PhaseOutcome::Parked(values) => {
+                    let report_bytes = serde_json::to_vec(&values.into_report(None))?;
+                    match create_lifecycle_outcome_marker(
+                        run_id,
+                        &reservation_ref,
+                        MarkerOutcome::Parked,
+                        EffectState::Uncertain,
+                        LifecycleReportPayload::Available(&report_bytes),
+                    ) {
+                        Ok(marker) => retained(
+                            &lease,
+                            run_id,
+                            &reservation_ref,
+                            &marker,
+                            Some(&report_bytes),
+                        ),
+                        Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
+                    }
+                }
+                PhaseOutcome::Failed {
+                    measurement:
+                        Measurement::Lifecycle {
+                            rows,
+                            stopped_phase,
+                            requested,
+                            chain,
+                            verification,
+                        },
+                    ..
+                } => {
+                    let report_bytes = serde_json::to_vec(
+                        &LifecycleValues::failed_with_verification(
+                            &requested,
+                            chain,
+                            &stopped_phase,
+                            rows,
+                            verification.map(|item| *item),
+                        )
+                        .into_report(None),
+                    )?;
+                    match create_lifecycle_outcome_marker(
+                        run_id,
+                        &reservation_ref,
+                        MarkerOutcome::Failed,
+                        EffectState::Uncertain,
+                        LifecycleReportPayload::Available(&report_bytes),
+                    ) {
+                        Ok(marker) => retained(
+                            &lease,
+                            run_id,
+                            &reservation_ref,
+                            &marker,
+                            Some(&report_bytes),
+                        ),
+                        Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
+                    }
+                }
+                PhaseOutcome::Failed { .. } => {
                     self.retain_uncertain(&lease, run_id, &reservation_ref)
                 }
             }

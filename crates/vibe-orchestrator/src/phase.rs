@@ -152,13 +152,20 @@ pub enum PhaseOutcome {
 /// # }
 /// ```
 pub fn run_phases(inputs: PhaseRun<'_>) -> PhaseOutcome {
+    run_phases_with_protected(inputs, None)
+}
+
+pub(crate) fn run_phases_with_protected(
+    inputs: PhaseRun<'_>,
+    protected: Option<crate::dispatch::ProtectedScriptExecution<'_>>,
+) -> PhaseOutcome {
     let requested = inputs.requested;
     let chain = inputs.chain.clone();
     let mut measured = Measured {
         contributions: inputs.contributions.clone(),
         verification: None,
     };
-    match run(inputs, &mut measured) {
+    match run(inputs, &mut measured, protected) {
         Ok(Outcome::Completed(values)) => PhaseOutcome::Completed(values),
         Ok(Outcome::Parked(values)) => PhaseOutcome::Parked(values),
         // A handler failure arrives CARRIED, with the rows and emission policy
@@ -203,7 +210,11 @@ enum Outcome {
     clippy::too_many_lines,
     reason = "one phase run, in its canonical order"
 )]
-fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
+fn run(
+    inputs: PhaseRun<'_>,
+    measured: &mut Measured,
+    protected: Option<crate::dispatch::ProtectedScriptExecution<'_>>,
+) -> Result<Outcome> {
     let PhaseRun {
         requested,
         phases,
@@ -480,6 +491,10 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
     // complete derived chain, so the engine-owned verify boundary is allowed
     // to fire — see `dispatch::verify` for the partial epoch it is not.
     let dispatched = if let Some(shared) = collector.into_lifecycle_run() {
+        anyhow::ensure!(
+            protected.is_none(),
+            "protected script cannot follow prerequisite install"
+        );
         dispatch::dispatch_plan_with_run(
             observer,
             &ritual,
@@ -488,6 +503,18 @@ fn run(inputs: PhaseRun<'_>, measured: &mut Measured) -> Result<Outcome> {
             &metadata,
             Some(observed_at),
             Some(targets),
+        )
+    } else if let Some(protected) = protected {
+        dispatch::dispatch_plan_protected(
+            observer,
+            &ritual,
+            lease,
+            &agent,
+            metadata,
+            state_chain,
+            Some(observed_at),
+            Some(targets),
+            protected,
         )
     } else {
         dispatch::dispatch_plan(

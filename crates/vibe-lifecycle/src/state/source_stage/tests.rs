@@ -401,6 +401,27 @@ fn protected_script_drift_refuses_before_scratch_and_process() {
 }
 
 #[test]
+fn protected_script_refuses_foreign_interpreter_before_scratch() {
+    let fixture = Fixture::new(true);
+    let (execution, context) = script_execution(&fixture);
+    let stage = stage_for_execution(&fixture, &execution);
+    let script = fixture.provider.join("run.sh").canonicalize().unwrap();
+    let error = stage
+        .claim_for_execution(
+            &context,
+            &execution.key(),
+            &execution.row().provider().to_string(),
+            &fixture.provider,
+        )
+        .unwrap()
+        .match_invocation(&fixture.provider, &script, "powershell")
+        .err()
+        .expect("foreign interpreter must refuse");
+    assert!(matches!(error, ScriptSourceStageError::RecoveryRequired(_)));
+    assert!(!fixture.dir.path().join(".vibe/lifecycle").exists());
+}
+
+#[test]
 fn protected_script_stage_cannot_dispatch_twice() {
     let fixture = Fixture::new(true);
     let (execution, context) = script_execution(&fixture);

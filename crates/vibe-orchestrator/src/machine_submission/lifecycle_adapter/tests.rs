@@ -1,6 +1,54 @@
 //! Focused validate-only machine submission proofs.
 
 use super::*;
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+use vibe_lifecycle::process::{ProcessError, ProcessOutput, ProcessRunner, ProcessSpec};
+
+struct CountedScriptProcess {
+    count: AtomicUsize,
+    root: PathBuf,
+}
+impl CountedScriptProcess {
+    fn new(root: &Path) -> Self {
+        Self {
+            count: AtomicUsize::new(0),
+            root: root.to_path_buf(),
+        }
+    }
+    fn count(&self) -> usize {
+        self.count.load(Ordering::SeqCst)
+    }
+}
+impl ProcessRunner for CountedScriptProcess {
+    fn run(&self, _: &ProcessSpec) -> Result<ProcessOutput, ProcessError> {
+        let staged = std::fs::read_dir(self.root.join(".vibe/lifecycle-outcomes"))
+            .unwrap()
+            .any(|entry| {
+                entry
+                    .unwrap()
+                    .file_name()
+                    .to_string_lossy()
+                    .ends_with(".script-source.json")
+            });
+        assert!(
+            staged,
+            "script source stage must be durable before process.run"
+        );
+        self.count.fetch_add(1, Ordering::SeqCst);
+        Ok(ProcessOutput {
+            code: Some(0),
+            ..ProcessOutput::default()
+        })
+    }
+}
+struct ScriptProbe;
+impl vibe_workspace::hooks::InterpreterProbe for ScriptProbe {
+    fn has(&self, program: &str) -> bool {
+        matches!(program, "bash" | "powershell")
+    }
+}
 
 #[path = "tests/fixture.rs"]
 mod fixture;
@@ -19,7 +67,184 @@ fn script_project() -> tempfile::TempDir {
     let dir = project();
     std::fs::write(dir.path().join("vibe.toml"), ONE_SCRIPT_VALIDATE_MANIFEST).unwrap();
     std::fs::write(dir.path().join("run.sh"), b"echo one\n").unwrap();
+    if cfg!(windows) {
+        std::fs::remove_file(dir.path().join("run.sh")).unwrap();
+        std::fs::write(dir.path().join("run.ps1"), b"Write-Output one\n").unwrap();
+    }
     dir
+}
+
+fn script_call(
+    root: &Path,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    process: &CountedScriptProcess,
+    after_stage: Option<&dyn Fn()>,
+    after_effect: Option<&dyn Fn() -> Result<()>>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_script_validate_fixture(
+        root,
+        namespace,
+        scope,
+        key,
+        request(),
+        TargetOs::current().expect("supported fixture platform"),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+        process,
+        &ScriptProbe,
+        after_stage,
+        after_effect,
+    )
+}
+
+#[test]
+fn one_script_validate_runs_once_after_stage_and_replays_retained_report() {
+    let dir = script_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let process = CountedScriptProcess::new(dir.path());
+    let first = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        None,
+        None,
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first script must invoke")
+    };
+    assert_eq!(process.count(), 1);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(outcome.report_bytes.as_ref().unwrap()).unwrap();
+    assert!(report.ok);
+    assert_eq!(report.contributions.len(), 1);
+    assert!(
+        dir.path()
+            .join(".vibe/lifecycle-outcomes")
+            .read_dir()
+            .unwrap()
+            .any(|entry| entry
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .contains("script-source"))
+    );
+    std::fs::write(
+        dir.path().join(".vibe/lifecycle.toml"),
+        b"later unrelated header",
+    )
+    .unwrap();
+    let second = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        None,
+        None,
+    )
+    .unwrap();
+    assert_eq!(second, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(process.count(), 1);
+}
+
+#[test]
+fn one_script_changed_after_stage_refuses_before_process() {
+    let dir = script_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let process = CountedScriptProcess::new(dir.path());
+    let path = dir
+        .path()
+        .join(if cfg!(windows) { "run.ps1" } else { "run.sh" });
+    let change = || std::fs::write(&path, b"changed\n").unwrap();
+    let first = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        Some(&change),
+        None,
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { outcome, .. } = first else {
+        panic!("source drift must retain an outcome")
+    };
+    assert_eq!(process.count(), 0);
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Failed);
+    assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(outcome.report_bytes.as_ref().unwrap()).unwrap();
+    assert!(!report.ok);
+    assert_eq!(report.steps.last().unwrap().status, "fail");
+    assert_eq!(report.contributions.len(), 1);
+    assert!(dir.path().join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
+fn one_script_foreign_header_after_stage_refuses_process() {
+    let dir = script_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let process = CountedScriptProcess::new(dir.path());
+    let header = dir.path().join(".vibe/lifecycle.toml");
+    let replace = || std::fs::write(&header, b"foreign header").unwrap();
+    let result = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        Some(&replace),
+        None,
+    );
+    assert!(
+        !matches!(result, Ok(SubmissionOutcome::Invoked { .. })),
+        "{result:?}"
+    );
+    assert_eq!(process.count(), 0);
+    assert!(dir.path().join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
+fn one_script_missing_marker_after_counted_effect_never_retries() {
+    let dir = script_project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let process = CountedScriptProcess::new(dir.path());
+    let fail = || anyhow::bail!("injected lost result before marker");
+    let first = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        None,
+        Some(&fail),
+    );
+    assert!(
+        matches!(first, Ok(SubmissionOutcome::RecoveryRequired { .. })),
+        "{first:?}"
+    );
+    assert_eq!(process.count(), 1);
+    let second = script_call(
+        dir.path(),
+        &namespace,
+        &scope,
+        "script",
+        &process,
+        None,
+        None,
+    )
+    .unwrap();
+    assert!(matches!(second, SubmissionOutcome::RecoveryRequired { .. }));
+    assert_eq!(process.count(), 1);
 }
 
 #[test]

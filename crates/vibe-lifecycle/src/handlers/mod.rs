@@ -329,7 +329,7 @@ impl HandlerRuntime<'_> {
         let gate = attempt
             .map(|stage| {
                 stage
-                    .match_resolved(provider, &script)
+                    .match_invocation(provider, &script, &invocation.interpreter)
                     .map_err(|error| HandlerError::SourceStage {
                         key: key.clone(),
                         reason: error.to_string(),
