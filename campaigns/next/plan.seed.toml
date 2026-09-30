@@ -961,7 +961,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Responsive on-demand host/CLI/MCP service adapters; atomic scoped submission reservation, host-issued namespace epochs/expiry and compact dedup tombstones, pinned active/recovery identities; domain-journal linkage, progress/replay/control/attach, typed input/admission and partial outcomes; existing execution limits preserved","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json"
-contract_sha256 = "686ed6d5ced15860b3132d6e39a3f09a79a4ab37d816f92ddfe1970225312da8"
+contract_sha256 = "2bdddc08ad593c375b9f3ea39575c6cff994c7b5384c98a7226666218bf52db3"
 
 [[node]]
 id = "M-16-C.1"
@@ -976,7 +976,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.1","Fixture effect starts only after durable reservation and matching journal-ready proof.","Dedup index points at the fixture journal; real owners and adapters remain C.2/C.4 obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.1"
-contract_sha256 = "686ed6d5ced15860b3132d6e39a3f09a79a4ab37d816f92ddfe1970225312da8"
+contract_sha256 = "2bdddc08ad593c375b9f3ea39575c6cff994c7b5384c98a7226666218bf52db3"
 
 [[node]]
 id = "M-16-C.2"
@@ -991,7 +991,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.2","All four required domain children and cross-domain owner-lifetime proof are accepted; no fixture result substitutes for a real journal."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.2"
-contract_sha256 = "686ed6d5ced15860b3132d6e39a3f09a79a4ab37d816f92ddfe1970225312da8"
+contract_sha256 = "2bdddc08ad593c375b9f3ea39575c6cff994c7b5384c98a7226666218bf52db3"
 
 [[node]]
 id = "M-16-C.2.1"
@@ -1066,7 +1066,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.3","Stream ordering domains and cancellation capability limits are explicit.","Stopping trace observation never falsely cancels the underlying build."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.3"
-contract_sha256 = "686ed6d5ced15860b3132d6e39a3f09a79a4ab37d816f92ddfe1970225312da8"
+contract_sha256 = "2bdddc08ad593c375b9f3ea39575c6cff994c7b5384c98a7226666218bf52db3"
 
 [[node]]
 id = "M-16-C.4"
@@ -1081,7 +1081,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.4","Machine mode has no hidden TTY prompt or omitted per-operation option.","Public A/future B and exact target/effect grants remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.4"
-contract_sha256 = "686ed6d5ced15860b3132d6e39a3f09a79a4ab37d816f92ddfe1970225312da8"
+contract_sha256 = "2bdddc08ad593c375b9f3ea39575c6cff994c7b5384c98a7226666218bf52db3"
 
 [[node]]
 id = "M-16-D"
