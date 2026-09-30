@@ -258,6 +258,15 @@ pub trait PackageSource: vibe_install::InstallSource {
         pkgref: &vibe_core::PackageRef,
         locked: &Lockfile,
     ) -> Result<vibe_core::PackageRef>;
+
+    /// Final read-only cache check after a Ready plan was confirmed and
+    /// immediately before apply can write a slot, lock or boot output.
+    /// Ordinary sources have no protected cache witness; their historical
+    /// behavior remains unchanged. A protected source overrides this with
+    /// its own owner-validated receipt and bounded reobservation.
+    fn recheck_before_apply(&self, _resolution: &[ResolvedDep]) -> Result<()> {
+        Ok(())
+    }
 }
 
 /// The surface's own manifest mutation, applied at the ONE position the
