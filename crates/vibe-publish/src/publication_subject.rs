@@ -102,10 +102,10 @@ fn asset(
     digest(&format!("{field}.sha256"), &value.sha256)
 }
 
-/// Structural JTD decoding is only the first gate. This semantic gate checks
-/// the exact current cohort and all cross-document relations needed before a
-/// subject can be considered apply-ready. A future policy may allow a skip
-/// only through a different explicit versioned policy/rule identity.
+/// Structural JTD decoding is only the first gate. This pure semantic gate
+/// checks identity and evidence coherence while retaining all four typed
+/// smoke outcomes, including a skipped or unavailable probe. Apply readiness
+/// is a separate decision below.
 pub fn validate_publication_subject(
     subject: &PublicationSubject,
     expected: &PublicationSubjectExpectations<'_>,
@@ -316,29 +316,52 @@ pub fn validate_publication_subject(
                 "expected one launch probe per canonical target",
             ));
         }
-        if probe.status != PublicationSmokeProbeStatus::Passed {
-            return Err(invalid(
-                format!("smoke.probes[{index}].status"),
-                "not passed; a skipped probe requires a separate explicit versioned policy rule",
-            ));
+        if let Some(tested) = probe.tested_sha256.as_deref() {
+            digest(&format!("smoke.probes[{index}].tested_sha256"), tested)?;
+            if tested != target.bundle.sha256 {
+                return Err(invalid(
+                    format!("smoke.probes[{index}].tested_sha256"),
+                    "probe evidence names bytes other than this target's bundle",
+                ));
+            }
         }
-        if probe.tested_sha256.as_deref() != Some(target.bundle.sha256.as_str())
-            || probe.runner_ref.as_deref().is_none_or(str::is_empty)
-            || probe.evidence_ref.as_deref().is_none_or(str::is_empty)
+        if let Some(runner) = probe.runner_ref.as_deref() {
+            nonblank(&format!("smoke.probes[{index}].runner_ref"), runner)?;
+        }
+        if let Some(evidence) = probe.evidence_ref.as_deref() {
+            nonblank(&format!("smoke.probes[{index}].evidence_ref"), evidence)?;
+        }
+        if matches!(
+            &probe.status,
+            PublicationSmokeProbeStatus::Passed | PublicationSmokeProbeStatus::Failed
+        ) && (probe.tested_sha256.is_none()
+            || probe.runner_ref.is_none()
+            || probe.evidence_ref.is_none())
         {
             return Err(invalid(
                 format!("smoke.probes[{index}]"),
-                "passed probe lacks exact bundle, runner or evidence witness",
+                "an executed probe lacks exact bundle, runner or evidence witness",
             ));
         }
-        nonblank(
-            &format!("smoke.probes[{index}].runner_ref"),
-            probe.runner_ref.as_deref().unwrap(),
-        )?;
-        nonblank(
-            &format!("smoke.probes[{index}].evidence_ref"),
-            probe.evidence_ref.as_deref().unwrap(),
-        )?;
+    }
+    Ok(())
+}
+
+/// The default versioned smoke rule admits only exact passed probes. A
+/// skipped probe remains a valid inspectable subject, but an apply decision
+/// needs a different explicit future policy/rule ID to permit that skip.
+pub fn require_apply_ready_default_smoke(
+    subject: &PublicationSubject,
+    expected: &PublicationSubjectExpectations<'_>,
+) -> Result<(), PublicationSubjectError> {
+    validate_publication_subject(subject, expected)?;
+    for (index, probe) in subject.smoke.probes.iter().enumerate() {
+        if probe.status != PublicationSmokeProbeStatus::Passed {
+            return Err(invalid(
+                format!("smoke.probes[{index}].status"),
+                "not passed under distribution-smoke/e1; a skipped probe requires a separate explicit versioned policy rule",
+            ));
+        }
     }
     Ok(())
 }
