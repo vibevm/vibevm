@@ -23,6 +23,12 @@ use vibe_lifecycle::{
 )]
 mod lifecycle_plan;
 
+#[allow(
+    dead_code,
+    reason = "internal validate-only lifecycle submission foundation"
+)]
+mod lifecycle_adapter;
+
 /// Exact domain-journal observation under the same outer mutation lease.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum JournalState<T> {
