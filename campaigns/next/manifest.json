@@ -2951,7 +2951,12 @@
       "M-17-C"
     ]
   },
-  "refinements": [],
+  "refinements": [
+    {
+      "id": "M-16-C.2",
+      "tasks_file": "campaigns/next/tasks/M-16-C.2.json"
+    }
+  ],
   "extra_dependencies": {
     "M-01-A.1": [
       "NEXT-P0-GATE",
@@ -3461,7 +3466,7 @@
     "NEXT-PREVIEW-DOCS-INPUT",
     "RETIRE-NEXT-A26"
   ],
-  "task_count": 214,
+  "task_count": 218,
   "task_files_sha256": {
     "M-01-A": "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c",
     "M-01-B": "f1b4ac741de0f6db4158b1c75d803718d31ab504fd0b998525d6525d7a9b721b",
@@ -3552,7 +3557,8 @@
     "NEXT-PREVIEW-BASE": "bfa7c0ad5574dcf1a2eca76315d12af94110e872af2c6c041389c3cdd615e51f",
     "NEXT-PREVIEW-BIND": "f31f9b98f1ac4a3102af843a949e06bd0e192f6fe57cca69b470e649a40198ad",
     "NEXT-PREVIEW-DOCS": "21a21528d00cf2181018b8b067771267ac4af6285e6137b44b5c5315784157ee",
-    "NEXT-PREVIEW-RELEASE": "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9"
+    "NEXT-PREVIEW-RELEASE": "cd6a1ae09f4a31092543361558067e59db2bdf97b4311973143f1f7b817d1ac9",
+    "M-16-C.2": "069f3094146825a31ef2d4dc339d3e841f9ee17184dc129e11932b1b90c52235"
   },
   "preview_control": "campaigns/next/preview-control.json",
   "supplemental_work_packages": [
