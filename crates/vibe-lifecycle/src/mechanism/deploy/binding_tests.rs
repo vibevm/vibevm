@@ -137,19 +137,37 @@ fn disjoint_trusted_local_homes_get_distinct_binding_and_lock() {
     ))
     .unwrap();
     admitted_a
-        .preflight(&a_execution, admitted_a.binding(), "principal-a")
+        .preflight(
+            &a_execution,
+            admitted_a.binding(),
+            "principal-a",
+            Some("generation-a"),
+        )
         .unwrap();
     admitted_b
-        .preflight(&b_execution, admitted_b.binding(), "principal-b")
+        .preflight(
+            &b_execution,
+            admitted_b.binding(),
+            "principal-b",
+            Some("generation-a"),
+        )
         .unwrap();
     assert_ne!(
         admitted_a.binding().binding_id,
         admitted_b.binding().binding_id
     );
-    let locked_a = admitted_a.acquire_destination().unwrap();
-    let locked_b = admitted_b.acquire_destination().unwrap();
-    locked_a.reobserve_before_commit().unwrap();
-    locked_b.reobserve_before_commit().unwrap();
+    let locked_a = admitted_a
+        .acquire_destination(Some("generation-a"))
+        .unwrap();
+    let locked_b = admitted_b
+        .acquire_destination(Some("generation-a"))
+        .unwrap();
+    locked_a
+        .reobserve_before_commit(Some("generation-a"))
+        .unwrap();
+    locked_b
+        .reobserve_before_commit(Some("generation-a"))
+        .unwrap();
     assert_ne!(
         locked_a.settings().root_identity().unwrap(),
         locked_b.settings().root_identity().unwrap()
@@ -179,14 +197,57 @@ fn same_physical_settings_root_refuses_second_participating_writer() {
         Mode::UserProfile,
     ))
     .unwrap();
-    let held = first.acquire_destination().unwrap();
+    let held = first.acquire_destination(Some("generation-a")).unwrap();
     assert!(matches!(
-        second.acquire_destination(),
+        second.acquire_destination(Some("generation-a")),
         Err(LocalAdmissionError::Destination(
             BoundVibeBinError::LockBusy
         ))
     ));
-    held.reobserve_before_commit().unwrap();
+    held.reobserve_before_commit(Some("generation-a")).unwrap();
+}
+
+#[test]
+#[cfg(unix)]
+fn aliased_settings_spellings_contend_for_one_physical_lock() {
+    use std::os::unix::fs::symlink;
+
+    let fixture = Fixture::new("same-package-bytes");
+    let targets = [target("local-helper", "helper.exe", &[])];
+    let selection = selection("local", &["local-helper"]);
+    let state = fixture.state_home();
+    let execution = fixture.execution(&targets, &selection, &state);
+    let first = AdmittedLocalDeployBinding::issue(facts(
+        &execution,
+        "instance-a",
+        "nonce-a",
+        "principal-a",
+        Mode::UserProfile,
+    ))
+    .unwrap();
+    let alias_dir = tempfile::tempdir().unwrap();
+    let alias = alias_dir.path().join("settings-alias");
+    symlink(execution.settings_root, &alias).unwrap();
+    let mut second_facts = facts(
+        &execution,
+        "instance-b",
+        "nonce-b",
+        "principal-a",
+        Mode::UserProfile,
+    );
+    second_facts.settings_root = &alias;
+    second_facts.allow_alias_resolution = true;
+    let second = AdmittedLocalDeployBinding::issue(second_facts).unwrap();
+    assert_ne!(first.binding().binding_id, second.binding().binding_id);
+    assert_eq!(second.alias_warnings().len(), 1);
+    let held = first.acquire_destination(Some("generation-a")).unwrap();
+    assert!(matches!(
+        second.acquire_destination(Some("generation-a")),
+        Err(LocalAdmissionError::Destination(
+            BoundVibeBinError::LockBusy
+        ))
+    ));
+    held.reobserve_before_commit(Some("generation-a")).unwrap();
 }
 
 #[test]
@@ -215,7 +276,12 @@ fn changed_body_principal_or_mode_refuses_before_destination_lock() {
     ))
     .unwrap();
     assert!(matches!(
-        admitted.preflight(&execution, admitted.binding(), "other-principal"),
+        admitted.preflight(
+            &execution,
+            admitted.binding(),
+            "other-principal",
+            Some("generation-a")
+        ),
         Err(LocalAdmissionError::ExecutionMismatch { field: "principal" })
     ));
     let other = tempfile::tempdir().unwrap();
@@ -224,7 +290,12 @@ fn changed_body_principal_or_mode_refuses_before_destination_lock() {
         ..execution
     };
     assert!(matches!(
-        admitted.preflight(&changed, admitted.binding(), "principal-a"),
+        admitted.preflight(
+            &changed,
+            admitted.binding(),
+            "principal-a",
+            Some("generation-a")
+        ),
         Err(LocalAdmissionError::ExecutionMismatch {
             field: "settings_root"
         })
@@ -232,7 +303,95 @@ fn changed_body_principal_or_mode_refuses_before_destination_lock() {
     let mut changed_binding = admitted.binding().clone();
     changed_binding.target_mode = Mode::WorkspaceProjection;
     assert!(matches!(
-        admitted.preflight(&execution, &changed_binding, "principal-a"),
+        admitted.preflight(
+            &execution,
+            &changed_binding,
+            "principal-a",
+            Some("generation-a")
+        ),
         Err(LocalAdmissionError::BindingMismatch)
+    ));
+}
+
+#[test]
+fn stale_trusted_generation_refuses_before_destination_setup() {
+    let fixture = Fixture::new("same-package-bytes");
+    let targets = [target("local-helper", "helper.exe", &[])];
+    let selection = selection("local", &["local-helper"]);
+    let state = fixture.state_home();
+    let execution = fixture.execution(&targets, &selection, &state);
+    let admitted = AdmittedLocalDeployBinding::issue(facts(
+        &execution,
+        "instance-a",
+        "nonce-a",
+        "principal-a",
+        Mode::UserProfile,
+    ))
+    .unwrap();
+    let lock_home = execution.settings_root.join(".vibe");
+    assert!(!lock_home.exists());
+    assert!(matches!(
+        admitted.preflight(
+            &execution,
+            admitted.binding(),
+            "principal-a",
+            Some("generation-b"),
+        ),
+        Err(LocalAdmissionError::StaleGeneration)
+    ));
+    assert!(matches!(
+        admitted.acquire_destination(Some("generation-b")),
+        Err(LocalAdmissionError::StaleGeneration)
+    ));
+    assert!(!lock_home.exists());
+}
+
+#[test]
+fn generation_change_after_lock_refuses_final_observation() {
+    let fixture = Fixture::new("same-package-bytes");
+    let targets = [target("local-helper", "helper.exe", &[])];
+    let selection = selection("local", &["local-helper"]);
+    let state = fixture.state_home();
+    let execution = fixture.execution(&targets, &selection, &state);
+    let admitted = AdmittedLocalDeployBinding::issue(facts(
+        &execution,
+        "instance-a",
+        "nonce-a",
+        "principal-a",
+        Mode::UserProfile,
+    ))
+    .unwrap();
+    let held = admitted.acquire_destination(Some("generation-a")).unwrap();
+    assert!(matches!(
+        held.reobserve_before_commit(Some("generation-b")),
+        Err(LocalAdmissionError::StaleGeneration)
+    ));
+}
+
+#[test]
+#[cfg(unix)]
+fn named_bin_retarget_refuses_final_bound_observation() {
+    let fixture = Fixture::new("same-package-bytes");
+    let targets = [target("local-helper", "helper.exe", &[])];
+    let selection = selection("local", &["local-helper"]);
+    let state = fixture.state_home();
+    let execution = fixture.execution(&targets, &selection, &state);
+    let admitted = AdmittedLocalDeployBinding::issue(facts(
+        &execution,
+        "instance-a",
+        "nonce-a",
+        "principal-a",
+        Mode::UserProfile,
+    ))
+    .unwrap();
+    let held = admitted.acquire_destination(Some("generation-a")).unwrap();
+    let bin = execution.settings_root.join("bin");
+    std::fs::rename(&bin, execution.settings_root.join("bin-old")).unwrap();
+    std::fs::create_dir(&bin).unwrap();
+    assert!(matches!(
+        held.reobserve_before_commit(Some("generation-a")),
+        Err(LocalAdmissionError::Destination(
+            BoundVibeBinError::ChildDrift("bin")
+        ))
     ));
 }

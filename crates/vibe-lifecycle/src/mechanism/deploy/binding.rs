@@ -58,6 +58,8 @@ pub(crate) enum LocalAdmissionError {
     ExecutionMismatch { field: &'static str },
     #[error("request binding differs from the host-issued binding")]
     BindingMismatch,
+    #[error("the selected target generation is no longer current")]
+    StaleGeneration,
     #[error(transparent)]
     Destination(#[from] BoundVibeBinError),
     #[error(
@@ -397,6 +399,19 @@ impl AdmittedLocalDeployBinding {
         self.home.reobserve()
     }
 
+    /// The caller supplies a fresh trusted-host observation, independently of
+    /// the request and this retained grant. The grant cannot prove its own
+    /// generation is still selected.
+    fn require_current_generation(
+        &self,
+        current_generation_ref: Option<&str>,
+    ) -> Result<(), LocalAdmissionError> {
+        if self.binding.selected_generation_ref.as_deref() != current_generation_ref {
+            return Err(LocalAdmissionError::StaleGeneration);
+        }
+        Ok(())
+    }
+
     /// Body paths and principal are compared before provider selection or
     /// destination-lock infrastructure. No field is inferred from the body.
     pub(crate) fn preflight(
@@ -404,7 +419,9 @@ impl AdmittedLocalDeployBinding {
         execution: &DeployExecution<'_>,
         selected: &EnvironmentOperationBinding,
         principal: &str,
+        current_generation_ref: Option<&str>,
     ) -> Result<(), LocalAdmissionError> {
+        self.require_current_generation(current_generation_ref)?;
         if selected != &self.binding {
             return Err(LocalAdmissionError::BindingMismatch);
         }
@@ -444,7 +461,9 @@ impl AdmittedLocalDeployBinding {
     /// lock. No second lock file is acquired; the provider borrows this owner.
     pub(crate) fn acquire_destination(
         self,
+        current_generation_ref: Option<&str>,
     ) -> Result<LockedLocalDeployBinding, LocalAdmissionError> {
+        self.require_current_generation(current_generation_ref)?;
         self.reobserve_roots()?;
         let Self {
             binding,
@@ -474,11 +493,11 @@ impl AdmittedLocalDeployBinding {
             },
             destination,
         };
-        locked.reobserve_before_commit().map_err(|error| {
-            LocalAdmissionError::PostLockObservation {
+        locked
+            .reobserve_before_commit(current_generation_ref)
+            .map_err(|error| LocalAdmissionError::PostLockObservation {
                 reason: error.to_string(),
-            }
-        })?;
+            })?;
         Ok(locked)
     }
 }
@@ -532,7 +551,13 @@ impl LockedLocalDeployBinding {
         .flatten()
         .collect()
     }
-    pub(crate) fn reobserve_before_commit(&self) -> Result<(), LocalAdmissionError> {
+    pub(crate) fn reobserve_before_commit(
+        &self,
+        current_generation_ref: Option<&str>,
+    ) -> Result<(), LocalAdmissionError> {
+        if self.binding.selected_generation_ref.as_deref() != current_generation_ref {
+            return Err(LocalAdmissionError::StaleGeneration);
+        }
         self.project.reobserve()?;
         self.home.reobserve()?;
         self.settings.reobserve()?;
@@ -545,6 +570,7 @@ impl LockedLocalDeployBinding {
         {
             return Err(LocalAdmissionError::RootChanged { role: "settings" });
         }
+        self.destination.validate_children()?;
         Ok(())
     }
 }

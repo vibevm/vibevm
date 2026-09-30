@@ -180,7 +180,7 @@ impl BoundDestinationLock {
         &self.settings
     }
 
-    fn validate_children(&self) -> Result<(), BoundVibeBinError> {
+    pub(crate) fn validate_children(&self) -> Result<(), BoundVibeBinError> {
         for (name, wanted) in [
             (store::BIN_DIR, self.bin_identity),
             (store::STORE_DIR, self.store_identity),
