@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -11,18 +11,30 @@ use sha2::{Digest, Sha256};
 use vibe_core::layout;
 use vibe_core::manifest::SpecFormat;
 use vibe_core::{ContentHash, Group};
-use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
-use vibe_specdoc::doc::{Block, BlockNode, Section, SpecDoc, StatusEl, Unit};
+use vibe_facts::{Registry, overlay_file_hash};
 
 use super::slot_diff::{
     MaterialiseReport, PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot,
-    sort_prepared_files,
+    reconcile_slot_descriptor, sort_prepared_files,
 };
 use super::{
     CopyMode, SLOT_RECORD_FILENAME, SlotFile, SlotFileDisposition, SlotRecord,
     compute_recorded_payload_hash, io_err, read_slot_record, slot_abs_path,
 };
 use crate::{WorkspaceError, path_to_slash};
+
+mod overlay;
+mod selection;
+#[cfg(test)]
+mod tests;
+mod transform;
+
+use overlay::apply_overlay;
+use selection::{
+    SelectedMaterialization, classify, materialise_mixed_descriptor, read_descriptor_package,
+    require_exact_sources, reserve_output,
+};
+use transform::{is_spec_document, transform_declared_file, transform_file};
 
 /// Legacy transformed-slot identity filename, retained read-only.
 pub const DERIVED_MANIFEST_FILENAME: &str = ".vibe-derived.toml";
@@ -79,14 +91,12 @@ pub struct DerivedManifest {
 
 /// Materialise a package in the requested representation.
 ///
-/// `Mixed` delegates to the byte-for-byte materialiser. `Markdown` and `Xml`
-/// transform only spec-genre documents: any
-/// `.md`/`.xml` below the live specs root, plus the package-root README pair.
-/// Files already in the target format and every non-spec file copy verbatim.
-/// An opposite-format candidate that the pivot rejects also copies verbatim
-/// and is recorded as `copied`, preserving install availability honestly.
-/// Existing recorded slots are reconciled by output path and hash, so renamed
-/// outputs are removed while unrecorded build artifacts remain untouched.
+/// Legacy packages without source declarations keep the suffix-driven route.
+/// Descriptor packages select each original source before any conversion:
+/// only declared Vibe documents in the supported specs-root/README layout
+/// enter the pivot; ordinary data copy byte-for-byte. `Mixed` copies all
+/// bytes but still uses descriptor preflight and strict slot publication.
+/// The slot record retains both source and output paths for transformed rows.
 #[allow(clippy::too_many_arguments)]
 pub fn materialise_with_spec_format(
     workspace_root: &Path,
@@ -123,6 +133,21 @@ pub(crate) fn materialise_with_spec_format_report(
     source_hash: &ContentHash,
 ) -> Result<MaterialiseReport, WorkspaceError> {
     if spec_format == SpecFormat::Mixed {
+        if content_src.is_dir() {
+            if let Some(declared) = read_descriptor_package(content_src, group, name, version)? {
+                super::refuse_reserved_source_record(content_src)?;
+                return materialise_mixed_descriptor(
+                    workspace_root,
+                    content_src,
+                    group,
+                    name,
+                    version,
+                    mode,
+                    source_hash,
+                    &declared,
+                );
+            }
+        }
         return super::materialise_with_report(
             workspace_root,
             group,
@@ -156,20 +181,68 @@ pub(crate) fn materialise_with_spec_format_report(
         });
     }
     super::refuse_reserved_source_record(content_src)?;
+    let descriptors = read_descriptor_package(content_src, group, name, version)?;
     let mut sources = Vec::new();
     collect_files(content_src, content_src, &mut sources)?;
     sources.sort_by(|a, b| a.0.cmp(&b.0));
+    if let Some(declared) = descriptors.as_ref() {
+        require_exact_sources(&declared.meta, &sources, content_src)?;
+    }
 
     let mut outputs = BTreeSet::new();
+    let mut exact_outputs = BTreeMap::new();
+    let mut folded_outputs = BTreeMap::new();
+    let mut vibe_addresses = BTreeMap::<String, String>::new();
     let mut incoming = Vec::new();
     let mut files = Vec::new();
     for (rel, source) in sources {
-        let transformed = transform_file(&source, &rel, spec_format, &package, &overlay)?;
+        let transformed = if let Some(declared) = descriptors.as_ref() {
+            match classify(&declared.meta, &rel)? {
+                SelectedMaterialization::Raw => None,
+                SelectedMaterialization::Vibe {
+                    interpretation,
+                    media,
+                } => {
+                    if is_spec_document(&rel) {
+                        let address = vibe_spec::canonical_doc_path(&path_to_slash(&rel));
+                        let wire = path_to_slash(&rel);
+                        if let Some(first) = vibe_addresses.insert(address.clone(), wire.clone()) {
+                            return Err(WorkspaceError::SpecMaterialization {
+                                path: source,
+                                reason: format!(
+                                    "selected Vibe sources `{first}` and `{wire}` claim one document address `{address}`"
+                                ),
+                            });
+                        }
+                    }
+                    transform_declared_file(
+                        &declared.project,
+                        &source,
+                        &rel,
+                        spec_format,
+                        &package,
+                        &overlay,
+                        interpretation,
+                        media,
+                    )?
+                }
+            }
+        } else {
+            transform_file(&source, &rel, spec_format, &package, &overlay)?
+        };
         let output_rel = transformed
             .as_ref()
             .map_or_else(|| rel.clone(), |(path, _)| path.clone());
         let output_wire = path_to_slash(&output_rel);
-        if !outputs.insert(output_wire.clone()) {
+        if descriptors.is_some() {
+            reserve_output(
+                &slot,
+                &rel,
+                &output_rel,
+                &mut exact_outputs,
+                &mut folded_outputs,
+            )?;
+        } else if !outputs.insert(output_wire.clone()) {
             return Err(WorkspaceError::SpecMaterialization {
                 path: slot.join(&output_rel),
                 reason: format!(
@@ -182,6 +255,14 @@ pub(crate) fn materialise_with_spec_format_report(
             (
                 PreparedSlotFile::from_bytes(output_rel.clone(), bytes),
                 SlotFileDisposition::Converted,
+            )
+        } else if rel == Path::new("vibe.toml") && descriptors.is_some() {
+            (
+                PreparedSlotFile::from_bytes(
+                    output_rel.clone(),
+                    descriptors.as_ref().unwrap().manifest_bytes.clone(),
+                ),
+                SlotFileDisposition::Copied,
             )
         } else {
             (
@@ -216,7 +297,14 @@ pub(crate) fn materialise_with_spec_format_report(
         derived_hash: Some(derived_hash),
         files,
     };
-    reconcile_slot(&slot, &incoming, &record)
+    if descriptors.is_some() {
+        reconcile_slot_descriptor(&slot, &incoming, &record).map_err(|error| WorkspaceError::SpecMaterialization {
+            path: slot,
+            reason: format!("descriptor slot publication refused; state may be partial and requires inspection before retry: {error}"),
+        })
+    } else {
+        reconcile_slot(&slot, &incoming, &record)
+    }
 }
 
 /// Read and validate the typed derived manifest from `slot`.
@@ -401,151 +489,6 @@ fn collect_files(
         }
     }
     Ok(())
-}
-
-fn transform_file(
-    source: &Path,
-    rel: &Path,
-    format: SpecFormat,
-    package: &str,
-    overlay: &PackageOverlay,
-) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
-    if !is_spec_document(rel) {
-        return Ok(None);
-    }
-    let extension = rel.extension().and_then(|s| s.to_str());
-    let opposite = matches!(
-        (format, extension),
-        (SpecFormat::Xml, Some("md")) | (SpecFormat::Markdown, Some("xml"))
-    );
-    let address_prefix = format!(
-        "spec://{package}/{}#",
-        vibe_spec::canonical_doc_path(&path_to_slash(rel))
-    );
-    let overlay_applies = overlay.contains_document(&address_prefix);
-    if !opposite && !overlay_applies {
-        return Ok(None);
-    }
-    let text = match fs::read_to_string(source) {
-        Ok(text) => text,
-        Err(error) if overlay_applies => {
-            return Err(WorkspaceError::SpecMaterialization {
-                path: source.to_path_buf(),
-                reason: format!("overlay-targeted spec cannot be read as text: {error}"),
-            });
-        }
-        Err(_) => return Ok(None),
-    };
-    let parsed = match extension {
-        Some("md") => vibe_specdoc::from_markdown(&text),
-        Some("xml") => vibe_specdoc::from_xml(&text),
-        _ => return Ok(None),
-    };
-    let mut doc = match parsed {
-        Ok(doc) => doc,
-        Err(error) if overlay_applies => {
-            return Err(WorkspaceError::SpecMaterialization {
-                path: source.to_path_buf(),
-                reason: format!("overlay-targeted spec cannot enter the pivot: {error}"),
-            });
-        }
-        Err(_) => return Ok(None),
-    };
-    apply_overlay(&mut doc, &address_prefix, overlay);
-    let (converted, output) = match format {
-        SpecFormat::Xml => (vibe_specdoc::to_xml(&doc), rel.with_extension("xml")),
-        SpecFormat::Markdown => (vibe_specdoc::to_markdown(&doc), rel.with_extension("md")),
-        SpecFormat::Mixed => return Ok(None),
-    };
-    Ok(Some((output, converted.into_bytes())))
-}
-
-fn apply_overlay(doc: &mut SpecDoc, address_prefix: &str, overlay: &PackageOverlay) {
-    apply_blocks(&mut doc.preamble, address_prefix, overlay);
-    for section in &mut doc.sections {
-        apply_section(section, address_prefix, overlay);
-    }
-}
-
-fn apply_section(section: &mut Section, address_prefix: &str, overlay: &PackageOverlay) {
-    apply_blocks(&mut section.blocks, address_prefix, overlay);
-    for child in &mut section.sections {
-        apply_section(child, address_prefix, overlay);
-    }
-}
-
-fn apply_blocks(blocks: &mut [BlockNode], address_prefix: &str, overlay: &PackageOverlay) {
-    for node in blocks {
-        match &mut node.block {
-            Block::Paragraph(unit) | Block::Quote(unit) => {
-                apply_unit(unit, address_prefix, overlay);
-            }
-            Block::List { items, .. } => {
-                for unit in items {
-                    apply_unit(unit, address_prefix, overlay);
-                }
-            }
-            Block::Table { rows } => {
-                for unit in rows.iter_mut().flatten() {
-                    apply_unit(unit, address_prefix, overlay);
-                }
-            }
-            Block::Fence { .. } => {}
-            // The documentation genre's own units take the overlay by the
-            // same address rule; its other blocks carry no unit.
-            Block::Note { body, .. } => apply_unit(body, address_prefix, overlay),
-            Block::Figure { caption, .. } => apply_unit(caption, address_prefix, overlay),
-            Block::Example { .. }
-            | Block::ExampleRef { .. }
-            | Block::Rule { .. }
-            | Block::Derived { .. }
-            | Block::Prompt { .. } => {}
-        }
-    }
-}
-
-fn apply_unit(unit: &mut Unit, address_prefix: &str, overlay: &PackageOverlay) {
-    let Some(fact) = unit.fact.as_mut() else {
-        return;
-    };
-    let Some(id) = fact.id.as_deref() else {
-        return;
-    };
-    let Some(status) = overlay.status_for(&format!("{address_prefix}{id}")) else {
-        return;
-    };
-    match fact.status.as_mut() {
-        Some(authored) => {
-            authored.stage = status.stage();
-            authored.state = status.state();
-        }
-        None => fact.status = Some(status_element(status)),
-    }
-}
-
-fn status_element(status: FactStatus) -> StatusEl {
-    StatusEl {
-        stage: status.stage(),
-        state: status.state(),
-        action: None,
-        actionstage: None,
-        audience: Vec::new(),
-        comment: None,
-        r#ref: None,
-    }
-}
-
-fn is_spec_document(rel: &Path) -> bool {
-    let extension = rel.extension().and_then(|s| s.to_str());
-    if !matches!(extension, Some("md" | "xml")) {
-        return false;
-    }
-    let under_spec = rel.starts_with(layout::current_specs_root());
-    let root_readme = rel
-        .parent()
-        .is_some_and(|parent| parent.as_os_str().is_empty())
-        && matches!(rel.file_stem().and_then(|s| s.to_str()), Some("README"));
-    under_spec || root_readme
 }
 
 /// True for the slot's generated boot artifacts (either `STATIC` spelling and
