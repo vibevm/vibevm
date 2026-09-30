@@ -66,6 +66,15 @@ pub enum ReservationDecision {
     Retired { domain_run_id: Option<String> },
 }
 
+/// The admission handshake is separate from the domain's execution status.
+/// `Ready` means the caller proved a matching durable journal before effects;
+/// it never means the effect itself completed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JournalAdmission {
+    Pending,
+    Ready,
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum SubmissionError {
     #[error("invalid submission {0}")]
@@ -76,6 +85,8 @@ pub enum SubmissionError {
     ForeignScope,
     #[error("submission key already names different request or plan bytes")]
     KeyConflict,
+    #[error("submission reservation does not match its namespace, key or domain run")]
+    ReservationMismatch,
     #[error("submission index is malformed or over its size bound: {0}")]
     InvalidIndex(String),
     #[error("submission index I/O refused: {0}")]
@@ -124,6 +135,8 @@ struct ReservationRow {
     request_sha256: String,
     plan_sha256: String,
     domain_run_id: String,
+    #[serde(default)]
+    journal_ready: bool,
 }
 
 fn valid_field(value: &str) -> bool {
@@ -387,12 +400,58 @@ impl SubmissionReservations {
                 request_sha256,
                 plan_sha256,
                 domain_run_id: domain_run_id.to_owned(),
+                journal_ready: false,
             },
         );
         publish(lease, &index)?;
         Ok(ReservationDecision::Created {
             domain_run_id: domain_run_id.to_owned(),
         })
+    }
+
+    /// Inspect the pre-effect journal handshake for an already validated
+    /// reservation. The owning service must first call `reserve` with the
+    /// canonical payload, so a client cannot use this lookup as admission.
+    pub fn journal_admission(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        domain_run_id: &str,
+    ) -> Result<JournalAdmission, SubmissionError> {
+        let index = read(lease)?;
+        let row = reservation(&index, namespace, scope, key, domain_run_id)?;
+        Ok(if row.journal_ready {
+            JournalAdmission::Ready
+        } else {
+            JournalAdmission::Pending
+        })
+    }
+
+    /// Record that the owner has re-read and proven the exact durable domain
+    /// journal. Publication uncertainty refuses effect dispatch; a retry
+    /// reconciles the index and journal under the same outer lease.
+    pub fn mark_journal_ready(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        domain_run_id: &str,
+    ) -> Result<(), SubmissionError> {
+        let mut index = read(lease)?;
+        let prior = reservation(&index, namespace, scope, key, domain_run_id)?;
+        if prior.journal_ready {
+            return Ok(());
+        }
+        index
+            .namespaces
+            .get_mut(namespace.id())
+            .unwrap()
+            .keys
+            .get_mut(key)
+            .unwrap()
+            .journal_ready = true;
+        publish(lease, &index)
     }
 
     /// Retire without deleting any compact reservation identity. A retired
@@ -419,6 +478,33 @@ impl SubmissionReservations {
         }
         Ok(())
     }
+}
+
+fn reservation<'a>(
+    index: &'a Index,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    domain_run_id: &str,
+) -> Result<&'a ReservationRow, SubmissionError> {
+    let namespace = index
+        .namespaces
+        .get(namespace.id())
+        .ok_or(SubmissionError::UnknownNamespace)?;
+    if namespace.context != scope.context
+        || namespace.target != scope.target
+        || namespace.principal != scope.principal
+    {
+        return Err(SubmissionError::ForeignScope);
+    }
+    let row = namespace
+        .keys
+        .get(key)
+        .ok_or(SubmissionError::ReservationMismatch)?;
+    if row.domain_run_id != domain_run_id {
+        return Err(SubmissionError::ReservationMismatch);
+    }
+    Ok(row)
 }
 
 #[cfg(test)]
@@ -670,6 +756,51 @@ mod tests {
             ),
             Err(SubmissionError::ForeignScope)
         ));
+    }
+
+    #[test]
+    fn journal_ready_marker_requires_matching_reserved_run_and_scope() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"plan",
+            "run-a",
+        )
+        .unwrap();
+        let foreign = SubmissionScope {
+            principal: "other".into(),
+            ..scope()
+        };
+        assert!(matches!(
+            SubmissionReservations::mark_journal_ready(
+                &lease,
+                &namespace,
+                &scope(),
+                "key",
+                "run-b",
+            ),
+            Err(SubmissionError::ReservationMismatch)
+        ));
+        assert!(matches!(
+            SubmissionReservations::mark_journal_ready(
+                &lease, &namespace, &foreign, "key", "run-a",
+            ),
+            Err(SubmissionError::ForeignScope)
+        ));
+        assert_eq!(
+            SubmissionReservations::journal_admission(
+                &lease, &namespace, &scope(), "key", "run-a",
+            )
+            .unwrap(),
+            JournalAdmission::Pending
+        );
     }
 
     #[test]
