@@ -120,6 +120,7 @@
         "crates/vibe-mcp/src/tools/lifecycle_tasks.rs",
         "crates/vibe-mcp/src/tools.rs",
         "crates/vibe-orchestrator/Cargo.toml",
+        "Cargo.lock",
         "crates/vibe-orchestrator/src/lib.rs",
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
@@ -183,7 +184,8 @@
         "C.2 must keep the ordinary default-lifecycle path byte/behavior compatible while a separate machine path reserves a pure run ID, proves its matching lifecycle journal and ready marker, then permits scratch/prerequisite/provider effects. A matching lifecycle freshness header is not a terminal result; per-run owner-retained outcomes and cross-domain recovery remain separate work.",
         "A lifecycle freshness header is not a terminal result. The lifecycle owner must retain a registered per-run marker and validated report payload (or typed unavailable partial evidence) under its own lease-pinned state, before replying. A displaced header without that owner record remains recovery-required; no result is copied into the reservation index.",
         "Source audit found direct build/package apply before artifact records and remote publication before any local run journal; these are owner-journal implementation gaps, not evidence that C.1 protects them. Registry fact log is not a remote publication operation journal. All publication tests in this campaign use isolated fixture remotes; no next/1.1.0 public Git action.",
-        "A protected one-package local fixture needs a bounded no-follow package-tree witness before reservation and a recheck before the first install effect. The lifecycle process subtree is included for that witness and its tests; existing plan v2 bytes remain unchanged for Validate and empty Install, with any source-bound variant explicitly versioned."
+        "A protected one-package local fixture needs a bounded no-follow package-tree witness before reservation and a recheck before the first install effect. The lifecycle process subtree is included for that witness and its tests; existing plan v2 bytes remain unchanged for Validate and empty Install, with any source-bound variant explicitly versioned.",
+        "A test-only orchestrator dev-dependency for an exact offline package-source fixture may update Cargo.lock; production orchestrator must not depend on vibe-package-source because that would cycle. Keep source-bound one-package admission test-only until the source factory contract binds served bytes to the pre-effect witness."
       ]
     },
     {
