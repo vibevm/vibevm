@@ -39,6 +39,73 @@ pub struct PackageTreeWitness {
     pub tree_sha256: String,
 }
 
+impl PackageTreeWitness {
+    /// Check the portable fields of a caller-supplied witness without I/O.
+    /// Opaque root identity is checked only by the later physical recheck.
+    pub fn validate(&self) -> Result<(), PackageTreeWitnessError> {
+        if !self.root.is_absolute()
+            || !self.package_pin.is_qualified()
+            || !self.package_pin.version.is_exact_pin()
+            || self.package_pin.kind.is_none()
+            || self.files.is_empty()
+            || self.files.len() > FILE_COUNT_CAP
+        {
+            return Err(PackageTreeWitnessError::InvalidSelection(
+                "root, exact pin or file count is invalid".into(),
+            ));
+        }
+        let mut previous: Option<&str> = None;
+        let mut seen = BTreeSet::new();
+        let mut total = 0_u64;
+        for file in &self.files {
+            declarant_path(Path::new(&file.relative_path)).map_err(|error| {
+                PackageTreeWitnessError::InvalidSelection(error.reason().into())
+            })?;
+            if file.relative_path.split('/').count() > DEPTH_CAP
+                || file.bytes > FILE_CAP
+                || previous.is_some_and(|path| path >= file.relative_path.as_str())
+                || file
+                    .relative_path
+                    .match_indices('/')
+                    .any(|(index, _)| seen.contains(&file.relative_path[..index]))
+            {
+                return Err(PackageTreeWitnessError::InvalidSelection(
+                    "file path order, depth or size is invalid".into(),
+                ));
+            }
+            let digest = file.sha256.strip_prefix("sha256:").ok_or_else(|| {
+                PackageTreeWitnessError::InvalidSelection("file hash prefix is invalid".into())
+            })?;
+            if digest.len() != 64
+                || !digest
+                    .bytes()
+                    .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+            {
+                return Err(PackageTreeWitnessError::InvalidSelection(
+                    "file hash shape is invalid".into(),
+                ));
+            }
+            total = total.checked_add(file.bytes).ok_or_else(|| {
+                PackageTreeWitnessError::InvalidSelection("aggregate size overflow".into())
+            })?;
+            previous = Some(&file.relative_path);
+            seen.insert(file.relative_path.as_str());
+        }
+        if total > TOTAL_CAP
+            || !self
+                .files
+                .iter()
+                .any(|file| file.relative_path == "vibe.toml")
+            || self.tree_sha256 != tree_digest(&self.files)
+        {
+            return Err(PackageTreeWitnessError::InvalidSelection(
+                "manifest membership, aggregate size or tree digest is invalid".into(),
+            ));
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum PackageTreeWitnessError {
     #[error("invalid fixture package-tree selection: {0}")]
@@ -78,13 +145,15 @@ pub fn capture_package_tree_witness(
         ));
     }
     let tree_sha256 = tree_digest(&files);
-    Ok(PackageTreeWitness {
+    let witness = PackageTreeWitness {
         root: root.to_path_buf(),
         root_identity,
         package_pin: package_pin.clone(),
         files,
         tree_sha256,
-    })
+    };
+    witness.validate()?;
+    Ok(witness)
 }
 
 /// Reobserve through the same bounded no-follow path before source effects.

@@ -165,6 +165,7 @@ pub(super) fn submit_protected_lifecycle(
         selected_node: &selected,
         witness: &witness,
         workspace_witness: &witness,
+        package_source: None,
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
