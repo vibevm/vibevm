@@ -86,7 +86,7 @@
         "crates/vibe-publish/src/lib.rs"
       ],
       "steps": [
-        "Add the explicit skip input to the existing preparation surface using the actual CLI grammar; route it through the shared service.",
+        "Add the explicit skip input to a standalone, non-destructive local preparation surface using the actual CLI grammar; route it through the shared service, never the GitHub release replacement path.",
         "Bind requested target scope and skip reason/policy to a new prepared plan; keep pass/fail/skipped/unavailable distinct.",
         "Ensure default failed smoke blocks readiness; explicit skip creates new evidence rather than editing a failed row; source tests remain separately requested."
       ],
@@ -114,7 +114,7 @@
       ],
       "acceptance": [
         "CLI and machine preparation return equivalent smoke policy/status.",
-        "Existing accepted skipped path is represented without a false execution claim."
+        "An explicitly skipped path is inspectable without a false execution claim and remains not apply-ready under the default e1 policy."
       ],
       "safe_stop": "Local preparation reports include exact smoke policy; remote apply remains untouched.",
       "commit_subject": "feat(dist): expose default smoke and explicit skip policy",
