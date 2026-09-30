@@ -54,6 +54,17 @@ fn assert_semantic_report_refusal(case: &mut LifecycleOutcomeMarker, report: ser
     ));
 }
 
+fn assert_semantic_report_acceptance(case: &mut LifecycleOutcomeMarker, report: serde_json::Value) {
+    let bytes = serde_json::to_vec(&report).unwrap();
+    let ReportEvidence::Available(evidence) = &mut case.report else {
+        panic!("semantic report test requires available evidence");
+    };
+    evidence.bytes = u32::try_from(bytes.len()).unwrap();
+    evidence.sha256 = format!("{:x}", Sha256::digest(&bytes));
+    validate_lifecycle_outcome_marker(case, &case.run_id, &case.reservation_ref, Some(&bytes))
+        .unwrap();
+}
+
 #[test]
 fn strict_shape_corpus_rejects_unknown_missing_or_wrong_typed_members() {
     for name in [
@@ -193,4 +204,43 @@ fn report_phase_status_and_requested_chain_must_match_the_marker_outcome() {
     wrong["ok"] = false.into();
     wrong["steps"] = serde_json::json!([{"phase":"verify", "status":"fail"}]);
     assert_semantic_report_refusal(&mut failed, wrong);
+}
+
+#[test]
+fn failed_marker_accepts_only_a_truthful_stopped_phase_or_ordered_measured_prefix() {
+    let mut failed = marker("valid", "completed-available");
+    failed.outcome = Outcome::Failed;
+    let mut report =
+        serde_json::from_slice::<serde_json::Value>(&report(&failed.run_id, false)).unwrap();
+    report["ok"] = false.into();
+    report["chain"] = serde_json::json!(["validate", "install", "generate", "build"]);
+    report["steps"] = serde_json::json!([{"phase":"build", "status":"fail"}]);
+    assert_semantic_report_acceptance(&mut failed, report.clone());
+
+    report["steps"] = serde_json::json!([{"phase":"install", "status":"fail"}]);
+    assert_semantic_report_acceptance(&mut failed, report.clone());
+
+    report["steps"] = serde_json::json!([
+        {"phase":"validate", "status":"ok"},
+        {"phase":"install", "status":"fail"}
+    ]);
+    assert_semantic_report_acceptance(&mut failed, report.clone());
+
+    for wrong_steps in [
+        serde_json::json!([{"phase":"verify", "status":"fail"}]),
+        serde_json::json!([
+            {"phase":"install", "status":"ok"},
+            {"phase":"validate", "status":"fail"}
+        ]),
+        serde_json::json!([
+            {"phase":"validate", "status":"ok"},
+            {"phase":"validate", "status":"fail"}
+        ]),
+    ] {
+        report["steps"] = wrong_steps;
+        assert_semantic_report_refusal(&mut failed, report.clone());
+    }
+    report["steps"] = serde_json::json!([{"phase":"build", "status":"fail"}]);
+    report["chain"] = serde_json::json!(["validate", "install", "build", "build"]);
+    assert_semantic_report_refusal(&mut failed, report);
 }
