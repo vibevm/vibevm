@@ -23,6 +23,54 @@ fn a_stable_source_streams_to_an_atomically_verified_destination() {
     );
 }
 
+#[test]
+fn bounded_stable_observation_accepts_exact_limit_and_refuses_one_byte_less() {
+    let root = tempfile::tempdir().expect("tempdir");
+    let bytes = vec![0x5a; 2 * 64 * 1024 + 17];
+    std::fs::write(root.path().join("bundle.bin"), &bytes).expect("fixture writes");
+    let project = Project::open(root.path()).expect("capability opens");
+    let exact = project
+        .stable_file_state_bounded("bundle.bin", bytes.len() as u64)
+        .expect("exact bound observes")
+        .expect("file is present");
+    assert_eq!(exact.bytes, bytes.len() as u64);
+    assert_eq!(exact.sha256, format!("{:x}", Sha256::digest(&bytes)));
+    assert_eq!(
+        project.stable_file_state("bundle.bin").unwrap(),
+        Some(exact)
+    );
+    let below = (bytes.len() - 1) as u64;
+    let refusal = project
+        .stable_file_state_bounded("bundle.bin", below)
+        .expect_err("over-cap file refuses");
+    assert!(format!("{refusal:#}").contains(&format!("over the {below}-byte cap")));
+    assert!(project.stable_file_state_bounded("bundle.bin", 0).is_err());
+}
+
+#[cfg(unix)]
+#[test]
+fn bounded_stable_observation_refuses_symlink_and_hardlink_aliases() {
+    let root = tempfile::tempdir().expect("tempdir");
+    std::fs::write(root.path().join("actual.bin"), b"payload").unwrap();
+    std::os::unix::fs::symlink("actual.bin", root.path().join("linked.bin")).unwrap();
+    std::fs::hard_link(
+        root.path().join("actual.bin"),
+        root.path().join("hardlinked.bin"),
+    )
+    .unwrap();
+    let project = Project::open(root.path()).unwrap();
+    assert!(
+        project
+            .stable_file_state_bounded("linked.bin", 1024)
+            .is_err()
+    );
+    assert!(
+        project
+            .stable_file_state_bounded("hardlinked.bin", 1024)
+            .is_err()
+    );
+}
+
 #[cfg(unix)]
 #[test]
 fn exact_unix_mode_is_published_before_the_destination_becomes_visible() {
