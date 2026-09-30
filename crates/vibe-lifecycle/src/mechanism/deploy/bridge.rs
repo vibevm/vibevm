@@ -154,7 +154,7 @@ fn publish<T: Serialize>(
     Ok(())
 }
 
-fn canonical_request(
+pub(super) fn canonical_request(
     execution: &DeployExecution<'_>,
     binding: &EnvironmentOperationBinding,
     principal: &str,
