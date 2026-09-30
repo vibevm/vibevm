@@ -1,118 +1,36 @@
-//! Inverted-index full-text search — built lazily per query against
-//! the loaded [`Index`]. Tokeniser: lowercase ASCII alphanumeric
-//! runs; ~30-stopword filter (matches the discipline from
-//! `vibe-check::activation_conflict`).
+//! Full-text search over the loaded [`Index`] — built per query, never
+//! stored, so no mutation has anything to invalidate.
 //!
-//! Scoring is term-overlap: a hit gains one point per query token
-//! it carries. Ties are broken by the `(group, name)` identity in
-//! lexicographic order. Good enough for the indexed scale targeted by
-//! slice 4 (≤ 10k packages); a tantivy-backed upgrade is a v1 lever.
+//! The tokeniser, the token set of a record and the ranking are not
+//! this crate's: they live in [`vibe_wire::behaviour::index_search`]
+//! beside the record type, one home for this server and for the
+//! registry client's scan of a static mirror's `primary.jsonl`
+//! (PROP-005 §2.12 `##TEXT-INDEX`, §2.14 `##INT-SEARCH`). What stays
+//! here is the answer path's own judgement — search answers only over
+//! what this build can act on (`quarantine::usable_versions`, never
+//! `pkg.versions` raw, §2.6) — and the capability / PURL lookups, which
+//! are exact matches and not text.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
-use std::collections::{BTreeMap, BTreeSet};
-
 use specmark::spec;
-use vibe_core::Group;
 
 use crate::index::Index;
-use crate::index::quarantine::{usable_latest_stable, usable_versions};
+use crate::index::quarantine::usable_versions;
 use crate::types::{PackageKind, VersionEntry};
 
-const STOPWORDS: &[&str] = &[
-    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "he", "in", "is", "it",
-    "its", "of", "on", "or", "she", "that", "the", "this", "to", "was", "were", "with", "you",
-    "your",
-];
-
-#[derive(Debug, Clone)]
-pub struct SearchHit {
-    pub kind: PackageKind,
-    pub group: Group,
-    pub name: String,
-    pub latest_stable: Option<semver::Version>,
-    pub score: usize,
-    pub matched_tokens: Vec<String>,
-    pub description: Option<String>,
-}
-
-pub fn tokenise(text: &str) -> Vec<String> {
-    let mut out = Vec::new();
-    let mut buf = String::new();
-    for c in text.chars() {
-        if c.is_ascii_alphanumeric() {
-            buf.push(c.to_ascii_lowercase());
-        } else if !buf.is_empty() {
-            push_if_keepable(&mut out, std::mem::take(&mut buf));
-        }
-    }
-    if !buf.is_empty() {
-        push_if_keepable(&mut out, buf);
-    }
-    out
-}
-
-fn push_if_keepable(out: &mut Vec<String>, tok: String) {
-    if STOPWORDS.contains(&tok.as_str()) {
-        return;
-    }
-    if tok.len() < 2 {
-        return;
-    }
-    out.push(tok);
-}
+pub use vibe_wire::behaviour::index_search::{PackageHit as SearchHit, tokenise};
 
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli",
     r = 2
 )]
 pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> Vec<SearchHit> {
-    let query_tokens: BTreeSet<String> = tokenise(query).into_iter().collect();
-    if query_tokens.is_empty() {
-        return Vec::new();
-    }
-    let mut hits: BTreeMap<(Group, String), SearchHit> = BTreeMap::new();
-    for pkg in index.by_pkgref.values() {
-        let latest = usable_versions(pkg)
-            .rfind(|v| v.version.pre.is_empty())
-            .or_else(|| usable_versions(pkg).next_back());
-        let Some(latest) = latest else {
-            continue;
-        };
-        // `kind` is per-version metadata (PROP-008 §2.3) — filter on
-        // the version actually scored.
-        if let Some(k) = &kind_filter
-            && latest.kind != *k
-        {
-            continue;
-        }
-        let pkg_tokens: BTreeSet<String> = collect_tokens_for(latest).into_iter().collect();
-        let matched: BTreeSet<&String> = query_tokens.intersection(&pkg_tokens).collect();
-        if matched.is_empty() {
-            continue;
-        }
-        let key = (pkg.group.clone(), pkg.name.clone());
-        hits.insert(
-            key,
-            SearchHit {
-                kind: latest.kind.clone(),
-                group: pkg.group.clone(),
-                name: pkg.name.clone(),
-                latest_stable: usable_latest_stable(pkg).cloned(),
-                score: matched.len(),
-                matched_tokens: matched.into_iter().cloned().collect(),
-                description: latest.description.clone(),
-            },
-        );
-    }
-    let mut out: Vec<SearchHit> = hits.into_values().collect();
-    out.sort_by(|a, b| {
-        b.score
-            .cmp(&a.score)
-            .then(a.group.cmp(&b.group))
-            .then(a.name.cmp(&b.name))
-    });
-    out
+    vibe_wire::behaviour::index_search::search_packages(
+        index.by_pkgref.values().map(usable_versions),
+        query,
+        kind_filter.as_ref(),
+    )
 }
 
 /// Find every package whose latest version `provides` the named capability.
@@ -184,31 +102,6 @@ pub(crate) fn describes_purl(entry: &VersionEntry, query: &str) -> bool {
             .any(|s| s.describes.as_deref() == Some(query))
 }
 
-fn collect_tokens_for(entry: &VersionEntry) -> Vec<String> {
-    let mut text = String::new();
-    text.push_str(&entry.name);
-    text.push(' ');
-    if let Some(d) = &entry.description {
-        text.push_str(d);
-        text.push(' ');
-    }
-    for k in &entry.keywords {
-        text.push_str(k);
-        text.push(' ');
-    }
-    if let Some(p) = &entry.provides {
-        for c in &p.capabilities {
-            text.push_str(c);
-            text.push(' ');
-        }
-    }
-    if let Some(p) = &entry.describes {
-        text.push_str(p);
-        text.push(' ');
-    }
-    tokenise(&text)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -223,7 +116,6 @@ mod tests {
         assert!(tokens.contains(&"lazy".to_string()));
         assert!(tokens.contains(&"dog".to_string()));
         assert!(!tokens.contains(&"the".to_string()));
-        assert!(!tokens.contains(&"over".to_string()) || tokens.contains(&"over".to_string())); // "over" isn't a stopword
     }
 
     #[test]
