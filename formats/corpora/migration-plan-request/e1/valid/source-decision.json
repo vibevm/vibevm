@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "source_text": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"snapshot\"\n",
-  "source_profile": "materialization-legacy-absent-r1",
-  "target_profile": "materialization-current-absent-r1",
-  "recipe": "snapshot-to-copy-r1",
+  "source_text": "# caf\u00e9 retained\n[package]\nname = 'demo'\ngroup = 'org.example'\nkind = 'flow'\nversion = '1.1.0'\nformat = 'normal' # explicit native contract\ndescription = 'unchanged value'\n\n[boot_snippet]\nsource = 'vibevm/vibespecs/boot/10-flow.xml' # exact old declaration\n# final comment\n",
+  "source_profile": "source-boot-normal-absent-r1",
+  "target_profile": "source-boot-normal-declared-absent-r1",
+  "recipe": "boot-source-explicit-r1",
   "source_decisions": [
     {
       "file": "vibevm/vibespecs/boot/10-flow.xml",
