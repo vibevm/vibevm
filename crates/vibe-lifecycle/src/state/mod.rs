@@ -58,8 +58,8 @@ pub(crate) use source_stage::ScriptSourceAttempt;
 pub use source_stage::{ScriptSourceStage, ScriptSourceStageError, publish_script_source_stage};
 pub use store::LifecycleStateStore;
 pub use submission::{
-    JournalAdmission, ReservationDecision, SubmissionError, SubmissionNamespace,
-    SubmissionReservations, SubmissionScope,
+    ExistingSubmissionInspection, JournalAdmission, ReservationDecision, SubmissionError,
+    SubmissionNamespace, SubmissionReservations, SubmissionScope,
 };
 pub use tasks::{LifecycleTasksError, pending_hosted_tasks};
 
