@@ -30,6 +30,10 @@ pub struct PackageCapture<'a> {
     pub capture: &'a Reference,
     pub owner: &'a Reference,
     pub files: Vec<CapturedFile<'a>>,
+    /// Resolver/configuration-owner supplied exact bytes. `None` means no
+    /// capture was made; `Some(&[])` is a real empty configuration.
+    pub configuration_owner: &'a Reference,
+    pub configuration_bytes: Option<&'a [u8]>,
 }
 
 /// Exact captured lock/closure bytes of a native or external backend.
@@ -38,6 +42,8 @@ pub struct ExternalCapture<'a> {
     pub closure: &'a Reference,
     pub owner: &'a Reference,
     pub bytes: &'a [u8],
+    pub configuration_owner: &'a Reference,
+    pub configuration_bytes: Option<&'a [u8]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -442,6 +448,21 @@ pub fn exact_lock_digest(
         hash.text("selected.content", row.content.as_str())?;
         reference(&mut hash, "selected.capture", &row.capture)?;
         reference(&mut hash, "selected.configuration", &row.configuration)?;
+        let configuration = evidence.configuration_bytes.ok_or_else(|| {
+            invalid(
+                "exact.configuration",
+                "selected package configuration capture is missing",
+            )
+        })?;
+        reference(
+            &mut hash,
+            "selected.configuration.owner",
+            evidence.configuration_owner,
+        )?;
+        hash.bytes(
+            "selected.configuration.bytes_sha256",
+            &Sha256::digest(configuration),
+        );
         hash.text("selected.role", role(row.role))?;
         reference(&mut hash, "selected.capture.owner", evidence.owner)?;
         hash.text("selected.capture.tree", &observed_tree)?;
@@ -456,6 +477,21 @@ pub fn exact_lock_digest(
         reference(&mut hash, "external.backend", &row.backend)?;
         reference(&mut hash, "external.closure", &row.closure)?;
         reference(&mut hash, "external.configuration", &row.configuration)?;
+        let configuration = evidence.configuration_bytes.ok_or_else(|| {
+            invalid(
+                "exact.configuration",
+                "external closure configuration capture is missing",
+            )
+        })?;
+        reference(
+            &mut hash,
+            "external.configuration.owner",
+            evidence.configuration_owner,
+        )?;
+        hash.bytes(
+            "external.configuration.bytes_sha256",
+            &Sha256::digest(configuration),
+        );
         hash.text("external.role", role(row.role))?;
         reference(&mut hash, "external.capture.owner", evidence.owner)?;
         hash.bytes(
@@ -833,6 +869,8 @@ mod tests {
                 PackageCapture {
                     capture,
                     owner,
+                    configuration_owner: owner,
+                    configuration_bytes: Some(b"configuration"),
                     files: vec![CapturedFile {
                         relative_path: "payload.bin".into(),
                         bytes: if capture.as_str() == "capture-a" {
@@ -949,6 +987,8 @@ mod tests {
         captures.push(PackageCapture {
             capture: &extra,
             owner: &owner,
+            configuration_owner: &owner,
+            configuration_bytes: Some(b"configuration"),
             files: vec![CapturedFile {
                 relative_path: "payload.bin".into(),
                 bytes: b"x",
@@ -974,6 +1014,85 @@ mod tests {
                 &[]
             )
             .is_err()
+        );
+    }
+
+    #[test]
+    fn package_configuration_bytes_bind_exact_lock_and_absence_refuses() {
+        let definition = definition(false, "gnu");
+        let lock = lock(&definition, false, b"one", b"two");
+        let toolchain = target_for(&definition);
+        let target =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        let owner = r("configuration-owner");
+        let mut captures = evidence(&lock, &owner, b"one", b"two");
+        let original = exact_lock_digest(&definition, &lock, &target, &captures, &[]).unwrap();
+        captures[0].configuration_bytes = Some(b"changed configuration");
+        assert_ne!(
+            original,
+            exact_lock_digest(&definition, &lock, &target, &captures, &[]).unwrap()
+        );
+        captures[0].configuration_bytes = Some(b"");
+        assert_ne!(
+            original,
+            exact_lock_digest(&definition, &lock, &target, &captures, &[]).unwrap()
+        );
+        captures[0].configuration_bytes = None;
+        assert_eq!(
+            exact_lock_digest(&definition, &lock, &target, &captures, &[])
+                .unwrap_err()
+                .field,
+            "exact.configuration"
+        );
+    }
+
+    #[test]
+    fn external_configuration_bytes_bind_exact_lock_and_absence_refuses() {
+        let definition = definition(false, "gnu");
+        let base = lock(&definition, false, b"one", b"two");
+        let mut closure = base.closure().clone();
+        closure.external_backends.push(ExternalBackendClosure {
+            backend: r("cargo"),
+            closure: r("cargo-lock"),
+            configuration: r("same-config-ref"),
+            role: DependencyRole::Build,
+        });
+        let lock = EnvironmentLock::new(
+            LockId::new("opaque-lock", "resolver").unwrap(),
+            &definition,
+            closure,
+        )
+        .unwrap();
+        let toolchain = target_for(&definition);
+        let target =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        let owner = r("closure-owner");
+        let backend = r("cargo");
+        let closure_ref = r("cargo-lock");
+        let captures = evidence(&lock, &owner, b"one", b"two");
+        let mut external = [ExternalCapture {
+            backend: &backend,
+            closure: &closure_ref,
+            owner: &owner,
+            bytes: b"unchanged external lock",
+            configuration_owner: &owner,
+            configuration_bytes: Some(b"first config"),
+        }];
+        let original =
+            exact_lock_digest(&definition, &lock, &target, &captures, &external).unwrap();
+        external[0].configuration_bytes = Some(b"second config");
+        assert_ne!(
+            original,
+            exact_lock_digest(&definition, &lock, &target, &captures, &external).unwrap()
+        );
+        external[0].configuration_bytes = None;
+        assert_eq!(
+            exact_lock_digest(&definition, &lock, &target, &captures, &external)
+                .unwrap_err()
+                .field,
+            "exact.configuration"
         );
     }
 
