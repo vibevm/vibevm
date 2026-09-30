@@ -16,7 +16,8 @@ use vibe_lifecycle::process::{
     recheck_package_tree_witness, recheck_selected_manifest_lock,
 };
 use vibe_lifecycle::process::{
-    ProcessRunner, ScriptSourceWitness, SourceSnapshotError, capture_script_source_witness,
+    ProcessRunner, PromptSourceWitness, ScriptSourceWitness, SourceSnapshotError,
+    capture_prompt_source_witness, capture_script_source_witness, recheck_prompt_source_witness,
     recheck_script_source_witness,
 };
 use vibe_lifecycle::{
@@ -42,7 +43,10 @@ use super::lifecycle_plan::{
     LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan,
     canonical_one_package_fixture_request,
 };
-use super::lifecycle_plan::{ScriptPlanSource, canonical_one_script_fixture_request};
+use super::lifecycle_plan::{
+    PromptPlanSource, ScriptPlanSource, canonical_one_agent_fixture_request,
+    canonical_one_script_fixture_request,
+};
 use super::{JournalState, SubmissionFailure, SubmissionJournal, SubmissionOutcome, submit};
 use crate::RitualPlan;
 use crate::dispatch::ProtectedScriptExecution;
@@ -153,6 +157,159 @@ pub(crate) struct OneScriptValidateAdmission {
 
 const ONE_SCRIPT_VALIDATE_MANIFEST: &str = "[project]\nname = 'demo'\nversion = '1.1.0'\n[[extension]]\nid = 'once'\npoint = 'phase:validate'\nhandler = { kind = 'script', base = 'run' }\n";
 
+pub(crate) const ONE_AGENT_VALIDATE_MANIFEST: &str = "[project]\ngroup = 'org.demo'\nname = 'demo'\nversion = '1.1.0'\n[[extension]]\nid = 'park'\npoint = 'phase:validate'\nhandler = { kind = 'agent', prompt = 'spec://org.demo/demo/common/PROMPT-001#root' }\n[extension.config]\noutputs = [{ path = 'docs/result.md', kind = 'file', accept = 'non-empty file' }]\n";
+pub(crate) const ONE_AGENT_PROMPT_PATH: &str = "spec/common/PROMPT-001.md";
+const ONE_AGENT_PROMPT_ADDRESS: &str = "spec://org.demo/demo/common/PROMPT-001#root";
+
+/// Effect-free, fixed one-agent fixture admission. A future owner route may
+/// reserve these exact bytes; this function does not publish a hosted task.
+pub(crate) struct OneAgentValidateAdmission {
+    pub canonical_request: Vec<u8>,
+    pub canonical_plan: Vec<u8>,
+    pub source: PromptSourceWitness,
+    pub execution_key: String,
+    pub provider: String,
+    pub address: String,
+}
+
+pub(crate) fn admit_one_agent_validate_fixture(
+    path: &Path,
+    request: &DefaultLifecycleRequest,
+    target_os: TargetOs,
+) -> Result<OneAgentValidateAdmission> {
+    ensure!(
+        request.requested == Phase::Validate
+            && request.agent_mode == RunAgentMode::Agent
+            && !request.force
+            && !request.trace_flag
+            && request.assume_yes
+            && request.install_inputs.packages.is_empty()
+            && request.install_inputs.features.is_empty()
+            && !request.install_inputs.no_default_features
+            && !request.install_inputs.all_features
+            && request.install_inputs.language.is_none()
+            && !request.install_inputs.exact
+            && !request.policy.offline
+            && request.policy.slot_integrity == SlotIntegrity::TrustPresence
+            && request.policy.spec_format_default.is_none(),
+        "one-agent fixture refuses variable command or install inputs"
+    );
+    let leased = lease_default_lifecycle(path)?;
+    let lease = leased.retain_lease();
+    let selected_root = leased.selected_root();
+    let (snapshot, witness) = SelectedManifest::read_witnessed(selected_root)?;
+    let selection = snapshot.prepare();
+    ensure!(
+        selection.loaded_root() == Some(lease.root()),
+        "agent fixture requires selected root"
+    );
+    ensure!(
+        selection
+            .loaded_workspace()
+            .is_some_and(|world| world.iter_nodes().count() == 1),
+        "agent fixture requires one workspace node"
+    );
+    ensure!(
+        !selection.request(false),
+        "agent fixture refuses manifest trace"
+    );
+    ensure!(
+        selected_under_lease(&selection, &lease)? == ".",
+        "agent fixture requires root node"
+    );
+    ensure!(
+        LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+        "agent fixture refuses prior lifecycle header"
+    );
+    let manifest = selection
+        .parsed_ref()
+        .context("agent fixture manifest did not parse")?;
+    ensure!(
+        manifest == &Manifest::parse_str(ONE_AGENT_VALIDATE_MANIFEST)?,
+        "agent fixture refuses unreviewed manifest declarations"
+    );
+    install::require_empty_lock(&witness)?;
+    let world = selection
+        .loaded_workspace()
+        .context("agent fixture workspace did not load")?;
+    let ritual = crate::world::plan_default_prepared(selected_root, world, &[Phase::Validate])?;
+    ensure!(
+        ritual.executions().len() == 1,
+        "agent fixture requires exactly one planned handler"
+    );
+    let planned = &ritual.executions()[0];
+    ensure!(
+        planned.phase == Phase::Validate.as_str(),
+        "agent fixture planned foreign phase"
+    );
+    let row = &planned.row;
+    let ExtensionHandler::Agent { prompt } = &row.declaration().handler else {
+        bail!("agent fixture planned non-agent handler")
+    };
+    ensure!(
+        prompt == ONE_AGENT_PROMPT_ADDRESS,
+        "agent fixture prompt address differs"
+    );
+    let ExtensionProvider::Host(host) = row.provider() else {
+        bail!("agent fixture planned dependency provider")
+    };
+    ensure!(
+        host.root == selected_root,
+        "agent fixture provider root differs"
+    );
+    let source = capture_prompt_source_witness(&host.root, ONE_AGENT_PROMPT_PATH)?;
+    let text =
+        std::str::from_utf8(&source.source.bytes).context("agent fixture prompt is not UTF-8")?;
+    ensure!(
+        text.starts_with("# Prompt {#root}\n") && text.trim().len() > "# Prompt {#root}".len(),
+        "agent fixture prompt has no fixed root section/body"
+    );
+    ensure!(
+        !["#embed", "#use", "#source"]
+            .iter()
+            .any(|directive| text.contains(directive)),
+        "agent fixture prompt refuses composition directives"
+    );
+    let execution_key = HandlerExecution::from_row(row).key();
+    let provider = row.provider().to_string();
+    let address = prompt.clone();
+    let prompt_source = PromptPlanSource {
+        witness: &source,
+        execution_key: &execution_key,
+        provider: &provider,
+        address: &address,
+    };
+    let canonical_request = canonical_one_agent_fixture_request(&prompt_source, target_os)?;
+    let canonical_plan = canonical_lifecycle_pre_effect_plan(&LifecyclePreEffectPlanInput {
+        lease_root: lease.root(),
+        selected_root,
+        selected_node: ".",
+        witness: &witness,
+        workspace_witness: &witness,
+        package_source: None,
+        script_source: None,
+        prompt_source: Some(prompt_source),
+        requested: Phase::Validate,
+        agent_mode: &request.agent_mode,
+        trace_flag: false,
+        effective_trace: false,
+        force: false,
+        assume_yes: true,
+        policy: &request.policy,
+        install_inputs: &request.install_inputs,
+    })?;
+    recheck_selected_manifest_lock(selected_root, &witness)?;
+    recheck_prompt_source_witness(&source)?;
+    Ok(OneAgentValidateAdmission {
+        canonical_request,
+        canonical_plan,
+        source,
+        execution_key,
+        provider,
+        address,
+    })
+}
+
 pub(crate) fn admit_one_script_validate_fixture(
     path: &Path,
     request: &DefaultLifecycleRequest,
@@ -256,6 +413,7 @@ pub(crate) fn admit_one_script_validate_fixture(
         workspace_witness: &witness,
         package_source: None,
         script_source: Some(script),
+        prompt_source: None,
         requested: Phase::Validate,
         agent_mode: &request.agent_mode,
         trace_flag: false,
@@ -536,6 +694,7 @@ fn submit_protected_lifecycle_inner<'a>(
             execution_key: &script.admitted.execution_key,
             provider: &script.admitted.provider,
         }),
+        prompt_source: None,
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,

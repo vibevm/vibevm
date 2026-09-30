@@ -24,8 +24,9 @@ pub use scratch::{
     write_atomic_json,
 };
 pub use source_snapshot::{
-    ScriptSourceWitness, SelectedFileWitness, SelectedManifestLockWitness, SourceSnapshotError,
-    capture_script_source_witness, capture_selected_manifest_lock, recheck_script_source_witness,
+    PromptSourceWitness, ScriptSourceWitness, SelectedFileWitness, SelectedManifestLockWitness,
+    SourceSnapshotError, capture_prompt_source_witness, capture_script_source_witness,
+    capture_selected_manifest_lock, recheck_prompt_source_witness, recheck_script_source_witness,
     recheck_selected_manifest_lock,
 };
 
