@@ -110,11 +110,31 @@ pub(crate) fn refuse_foreign_ownership(
     target: &str,
     resources: &[String],
 ) -> Result<(), DeployError> {
+    refuse_foreign_ownership_rows(state.receipts()?, home, target, resources)
+}
+
+/// The bound path enumerates the retained state directory rather than its
+/// display pathname. The collision judgement itself is shared with legacy.
+pub(crate) fn refuse_foreign_ownership_bound(
+    state: &DeployState,
+    home: &DeploymentHome,
+    target: &str,
+    resources: &[String],
+) -> Result<(), DeployError> {
+    refuse_foreign_ownership_rows(state.receipts_bound()?, home, target, resources)
+}
+
+fn refuse_foreign_ownership_rows(
+    receipts: Vec<(String, DeployReceipt)>,
+    home: &DeploymentHome,
+    target: &str,
+    resources: &[String],
+) -> Result<(), DeployError> {
     let planned: std::collections::BTreeMap<String, &String> = resources
         .iter()
         .map(|resource| (vibe_safefs::path_identity_key(resource), resource))
         .collect();
-    for (deployment, receipt) in state.receipts()? {
+    for (deployment, receipt) in receipts {
         if deployment == home.id() || receipt.status == ReceiptStatus::RolledBack {
             continue;
         }
