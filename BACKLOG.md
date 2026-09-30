@@ -2330,7 +2330,7 @@ structure, and it goes when the file does.
 | @fact:B211-WHAT **what** | `vibe init package … --link static` writes `link = "dynamic"`, and without `--format` the scaffold writes `format = "normal"` although `--help` says the default is `simple`. |
 | @fact:B211-EVIDENCE **evidence** | 2026-09-27, the sandbox walks of `DOCS-MD-XML-TUTORIAL` (`f-cat-link-static`, `f-cat-defaults`) and `DOCS-OBSIDIAN-TUTORIAL`. |
 | @fact:B211-SEVERITY **severity** | P2 — the scaffold silently ignores an explicit `--link` choice; the format help also disagrees with output. |
-| @fact:B211-DISPOSITION **disposition** | `scheduled` in NEXT M-06-A.4 — honour `--link static/dynamic`, reconcile the format default/help, and update affected tutorial/reference examples (see also `B-201`). |
+| @fact:B211-DISPOSITION **disposition** | `resolved` in NEXT M-06-A.4: `51f931d94` honors `--link static/dynamic` and aligns `--format` help with the `normal` scaffold default (focused CLI test 1/1); `1eda062db` corrects the English/Russian Markdown/XML tutorials (both XML files parsed). An authored manifest with absent `format` still defaults to `simple`. See also `B-201`. |
 | @fact:B211-FILED **filed by** | DOCS-MD-XML-TUTORIAL (M-052), 2026-09-27. |
 
 ## B-212 — PROP-035 lags the compiler it describes {#b-212}
