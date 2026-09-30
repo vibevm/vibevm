@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "description": "Epoch-one bounded machine report for five exact native distribution launch probes. This report is evidence data, not a publication grant or a claim that unavailable targets ran.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-SMOKE-POLICY" },
+    "rustOptions": { "package": "vibe_wire::distribution_smoke_report" }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "version": { "type": "string" },
+    "source_commit": { "type": "string" },
+    "source_tree": { "type": "string" },
+    "smoke_policy_id": { "type": "string" },
+    "smoke_policy_epoch": { "type": "uint32" },
+    "targets": {
+      "elements": { "ref": "distribution_smoke_target" },
+      "metadata": { "x-empty": "emit", "description": "Exactly five canonical bundle targets; order, count, digest joins and native proof are semantic checks outside JTD." }
+    }
+  },
+  "definitions": {
+    "distribution_smoke_target": {
+      "properties": {
+        "target": { "type": "string" },
+        "bundle_name": { "type": "string" },
+        "bundle_sha256": { "type": "string" },
+        "bundle_size_bytes": { "type": "string", "metadata": { "description": "Canonical decimal u64 byte count, checked semantically." } },
+        "host": { "type": "string" },
+        "status": { "enum": ["passed", "failed", "skipped", "unavailable"], "metadata": { "x-vocabulary": "closed" } },
+        "reason": { "type": "string" },
+        "stdout": { "type": "string", "metadata": { "description": "Bounded lossy UTF-8 capture; empty when no child ran." } },
+        "stderr": { "type": "string", "metadata": { "description": "Bounded lossy UTF-8 capture; empty when no child ran." } },
+        "elapsed_ms": { "type": "string", "metadata": { "description": "Canonical decimal u64 duration, checked semantically." } },
+        "timed_out": { "type": "boolean" },
+        "output_truncated": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "runner_ref": { "type": "string", "metadata": { "x-default": null } },
+        "tested_sha256": { "type": "string", "metadata": { "x-default": null } },
+        "executable_sha256": { "type": "string", "metadata": { "x-default": null } },
+        "exit_code": { "type": "int32", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

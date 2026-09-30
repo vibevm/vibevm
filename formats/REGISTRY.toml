@@ -950,6 +950,17 @@ unknown_fields = "deny"
 corpus = "formats/corpora/publication_subject/e1"
 sunset = "none"
 
+# Content-addressed local proof of five native launch outcomes. The subject
+# binds this report by digest after it has been persisted and re-read.
+[format.distribution-smoke-report]
+epoch = 1
+schema = "schemas/distribution_smoke_report.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/distribution_smoke_report/e1"
+sunset = "none"
+
 [format.publication-effect-plan]
 epoch = 1
 schema = "schemas/publication_effect_plan.jtd.json"
