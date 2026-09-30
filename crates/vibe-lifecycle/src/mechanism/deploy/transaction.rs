@@ -31,13 +31,14 @@ use vibe_wire::generated::deploy_receipt::{
     DeployIdentity, DeployReceipt, OwnedResource, ProviderIdentity, ReceiptStatus, Rfc3339Timestamp,
 };
 
+use super::binding::LockedLocalDeployBinding;
 use super::error::DeployError;
 use super::observation::{divergent, drifted, mismatched, prior_digest};
 use super::protocol::{DeployPlan, destination_scope};
 use super::sidecar;
 use super::state::{CheckpointLedger, DeployState, DeploymentHome, InverseRecord};
 use crate::mechanism::record::sanitize;
-use crate::mechanism::{DeployProvider, DeployTargetRequest, EffectClass};
+use crate::mechanism::{BUILTIN_VIBE_BIN_PIN, DeployProvider, DeployTargetRequest, EffectClass};
 
 #[path = "transaction/inverse.rs"]
 mod inverse;
@@ -197,6 +198,232 @@ impl Transaction<'_> {
         )?;
         applied.settlement = settlement;
         Ok(applied)
+    }
+
+    /// First-generation bound apply through the incumbent journal and
+    /// provider protocol. The host owns `admitted` and the fresh generation
+    /// oracle; neither the request nor a provider descriptor can mint them.
+    /// Interrupted bound work is deliberately refused before provider calls
+    /// until a separate pinned recovery owner is admitted.
+    pub(crate) fn apply_bound(
+        &self,
+        provider: &dyn DeployProvider,
+        request: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+        admitted: &LockedLocalDeployBinding,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
+    ) -> Result<AppliedDeployment, DeployError> {
+        let binding = admitted.binding();
+        if self.home.operation_binding() != Some(binding) {
+            return Err(DeployError::BindingMismatch {
+                record: "bound transaction home",
+            });
+        }
+        let directory = self.home.directory();
+        let expected = DeploymentHome::new_bound(
+            directory.parent().ok_or(DeployError::BindingMismatch {
+                record: "bound transaction home",
+            })?,
+            &self.identity.project,
+            self.identity.package.as_deref(),
+            &request.target.id,
+            binding,
+        )?;
+        if self.home.id() != expected.id() {
+            return Err(DeployError::BindingMismatch {
+                record: "bound transaction home",
+            });
+        }
+        let observe = |current: &mut dyn FnMut() -> Result<Option<String>, DeployError>| {
+            let selected = current()?;
+            admitted
+                .reobserve_before_commit(selected.as_deref())
+                .map_err(|error| DeployError::BoundGrantChanged {
+                    target: request.target.id.clone(),
+                    reason: error.to_string(),
+                })?;
+            self.state.verify_bound_home(admitted.settings())
+        };
+        observe(current_generation)?;
+        if request.prior_receipt.is_some() || self.state.read_receipt(self.home)?.is_some() {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: request.target.id.clone(),
+                record: "receipt",
+            });
+        }
+        if request.recovery_intent.is_some() || self.state.read_intent(self.home)?.is_some() {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: request.target.id.clone(),
+                record: "intent",
+            });
+        }
+        if self.state.read_inverse(self.home)?.is_some() {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: request.target.id.clone(),
+                record: "inverse marker",
+            });
+        }
+        let plan_hash = bound_plan_hash(request, self.provider_pin, plan, binding);
+        if self
+            .state
+            .read_checkpoints(self.home, &plan_hash)?
+            .is_some()
+        {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: request.target.id.clone(),
+                record: "checkpoint ledger",
+            });
+        }
+        if self
+            .state
+            .read_lock_resources(self.home)?
+            .is_some_and(|sidecar| sidecar.committed.is_some())
+        {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: request.target.id.clone(),
+                record: "committed lock sidecar",
+            });
+        }
+        let descriptor = provider.descriptor();
+        if self.provider_pin != BUILTIN_VIBE_BIN_PIN
+            || descriptor.provider.key != BUILTIN_VIBE_BIN_PIN
+            || self.scope != EffectClass::User
+            || descriptor.scope() != EffectClass::User
+            || provider.native_binding().is_some()
+            || request.artifact.is_none()
+        {
+            return Err(DeployError::BoundRootAdmissionUnavailable {
+                binding: binding.binding_id.clone(),
+            });
+        }
+        let stamped = self.timestamp(request)?;
+        let fingerprint = provider.fingerprint(request, plan)?;
+        observe(current_generation)?;
+        // Durable pending physical ownership precedes the intent, which in
+        // turn precedes every provider effect. No bound legacy fallback can
+        // reconstruct this sidecar after an interrupted publication.
+        sidecar::stage_pending_with_binding(
+            self.state,
+            self.home,
+            0,
+            &plan_hash,
+            &plan.lock_resources,
+            None,
+            Some(binding),
+        )?;
+        let intent = DeployIntent {
+            operation_binding: Some(binding.clone()),
+            plan_hash: plan_hash.clone(),
+            resources: plan
+                .resources
+                .iter()
+                .map(|planned| IntentResource {
+                    resource: planned.resource.clone(),
+                    desired_digest: planned.desired_digest.clone(),
+                    prior_digest: None,
+                })
+                .collect(),
+            schema: INTENT_EPOCH,
+            started_at: stamped,
+            target: DeployTargetIdentity {
+                generation: 0,
+                profile: request.profile.to_owned(),
+                project: self.identity.project.clone(),
+                target: request.target.id.clone(),
+                package: self.identity.package.clone(),
+            },
+            prior_generation: None,
+        };
+        self.state.write_intent(self.home, &intent)?;
+        // These checks happen after the durable intent but before apply; a
+        // refusal here retains it and does not claim an effect occurred.
+        observe(current_generation)?;
+        let mut ledger = CheckpointLedger::open(self.state, self.home, &plan_hash)?;
+        let uncertain = |reason: String| DeployError::BoundPublicationUncertain {
+            target: request.target.id.clone(),
+            binding: binding.binding_id.clone(),
+            reason,
+        };
+        let report = provider
+            .apply(request, plan, &mut ledger)
+            .map_err(|error| uncertain(error.to_string()))?;
+        if report.prior_state_handle.is_some() {
+            return Err(uncertain(
+                "first bound generation unexpectedly reported a prior state handle".into(),
+            ));
+        }
+        let after_effect = |current: &mut dyn FnMut() -> Result<Option<String>, DeployError>| {
+            observe(current).map_err(|error| uncertain(error.to_string()))
+        };
+        after_effect(current_generation)?;
+        let resources: Vec<String> = plan
+            .resources
+            .iter()
+            .map(|planned| planned.resource.clone())
+            .collect();
+        let observed = provider
+            .verify(request, &resources)
+            .map_err(|error| uncertain(error.to_string()))?;
+        let mismatched = mismatched(plan, &observed);
+        if !mismatched.is_empty() {
+            return Err(uncertain(format!(
+                "independent verify differs at {}",
+                mismatched.join(", ")
+            )));
+        }
+        let owned: Vec<OwnedResource> = observed
+            .into_iter()
+            .filter_map(|resource| {
+                resource.digest.map(|digest| OwnedResource {
+                    resource: resource.resource,
+                    post_digest: digest,
+                })
+            })
+            .collect();
+        let mut receipt = self
+            .receipt(
+                provider,
+                request,
+                plan,
+                0,
+                &owned,
+                report.prior_state_handle.clone(),
+                &format!(
+                    "{}; provider fingerprint {} over {}",
+                    report.evidence, fingerprint.digest, fingerprint.summary
+                ),
+                ReceiptStatus::Verified,
+                false,
+            )
+            .map_err(|error| uncertain(error.to_string()))?;
+        receipt.operation_binding = Some(binding.clone());
+        after_effect(current_generation)?;
+        self.state
+            .write_receipt(self.home, &receipt)
+            .map_err(|error| uncertain(error.to_string()))?;
+        after_effect(current_generation)?;
+        sidecar::promote(self.state, self.home, 0, &plan_hash)
+            .map_err(|error| uncertain(error.to_string()))?;
+        after_effect(current_generation)?;
+        self.state.retire_intent(self.home).map_err(|error| {
+            DeployError::BoundCommitCleanupUncertain {
+                target: request.target.id.clone(),
+                binding: binding.binding_id.clone(),
+                reason: error.to_string(),
+            }
+        })?;
+        observe(current_generation).map_err(|error| DeployError::BoundCommitCleanupUncertain {
+            target: request.target.id.clone(),
+            binding: binding.binding_id.clone(),
+            reason: error.to_string(),
+        })?;
+        Ok(AppliedDeployment {
+            generation: 0,
+            reversible: plan.reversible,
+            resources: owned,
+            prior_state_handle: report.prior_state_handle,
+            settlement: Settlement::Nothing,
+        })
     }
 
     /// Settle an unretired intent journal, whatever it turns out to be.

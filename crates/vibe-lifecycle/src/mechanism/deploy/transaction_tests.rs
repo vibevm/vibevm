@@ -12,6 +12,134 @@ use super::state::{DeployState, DeploymentHome};
 use super::support::{Faults, Fixture, FixtureProvider, Witness, selected, selection, target};
 use super::{DeployError, apply_selection};
 
+#[test]
+fn bound_transaction_refuses_prior_intent_before_provider_or_effect() {
+    use vibe_wire::generated::deploy_intent::{
+        DeployIntent, DeployTargetIdentity, PlannedResource,
+    };
+    use vibe_wire::generated::deploy_receipt::DeployIdentity;
+    use vibe_wire::generated::shared::{
+        EnvironmentOperationBindingTargetMode as Mode, EnvironmentOperationBindingTargetOs as Os,
+        EnvironmentOperationBindingTargetRole as Role,
+    };
+
+    use super::binding::{AdmittedLocalDeployBinding, TrustedLocalDeployFacts};
+    use super::protocol::{DeployPlan, DeployTargetRequest, PlannedDeployResource};
+    use super::transaction::Transaction;
+    use crate::mechanism::EffectClass;
+
+    let fixture = Fixture::new("helper-bytes");
+    let row = target("local-helper", "helper.exe", &[]);
+    let os = match std::env::consts::OS {
+        "linux" => Os::Linux,
+        "macos" => Os::Macos,
+        "windows" => Os::Windows,
+        other => panic!("unsupported test host {other}"),
+    };
+    let issued = AdmittedLocalDeployBinding::issue(TrustedLocalDeployFacts {
+        host_context_id: "fixture-host",
+        instance_ref: "fixture-instance",
+        selected_generation_ref: Some("generation-a"),
+        principal_ref: "fixture-principal",
+        admission_epoch: 1,
+        binding_nonce: "fixture-nonce",
+        allow_alias_resolution: false,
+        target_mode: Mode::UserProfile,
+        target_role: Role::ProducedToolRuntime,
+        target_os: os,
+        target_architecture: std::env::consts::ARCH,
+        target_abi: None,
+        target_libc: None,
+        project_root: fixture.project.path(),
+        settings_root: fixture.settings.path(),
+        user_home: fixture.home.path(),
+    })
+    .unwrap();
+    let admitted = issued.acquire_destination(Some("generation-a")).unwrap();
+    let state = DeployState::open_bound(admitted.settings()).unwrap();
+    let state_home = fixture.state_home();
+    let home = DeploymentHome::new_bound(
+        &state_home,
+        "org.example/demo",
+        None,
+        &row.id,
+        admitted.binding(),
+    )
+    .unwrap();
+    let identity = DeployIdentity {
+        project: "org.example/demo".into(),
+        package: None,
+    };
+    let transaction = Transaction {
+        state: &state,
+        home: &home,
+        identity: &identity,
+        provider_pin: super::support::FIXTURE_PIN,
+        scope: EffectClass::User,
+        created_at: "2026-09-30T00:00:00Z",
+    };
+    let request = DeployTargetRequest {
+        target: &row,
+        profile: "local",
+        project_root: fixture.project.path(),
+        settings_root: fixture.settings.path(),
+        user_home: fixture.home.path(),
+        clients: &fixture.clients,
+        prior_receipt: None,
+        recovery_intent: None,
+        artifact: None,
+        staging: None,
+    };
+    let plan = DeployPlan {
+        resources: vec![PlannedDeployResource {
+            resource: "bin/helper".into(),
+            desired_digest: "a".repeat(64),
+        }],
+        lock_resources: vec!["bin/helper".into()],
+        config_digest: "b".repeat(64),
+        reversible: true,
+        summary: "fixture".into(),
+    };
+    state
+        .write_intent(
+            &home,
+            &DeployIntent {
+                operation_binding: Some(admitted.binding().clone()),
+                plan_hash: "c".repeat(64),
+                resources: vec![PlannedResource {
+                    resource: "bin/helper".into(),
+                    desired_digest: "a".repeat(64),
+                    prior_digest: None,
+                }],
+                schema: 1,
+                started_at: "2026-09-30T00:00:00Z".parse().unwrap(),
+                target: DeployTargetIdentity {
+                    generation: 0,
+                    profile: "local".into(),
+                    project: "org.example/demo".into(),
+                    target: row.id.clone(),
+                    package: None,
+                },
+                prior_generation: None,
+            },
+        )
+        .unwrap();
+    let provider = FixtureProvider::new(fixture.destination.path(), &["bin/helper"]);
+    let mut fresh = || Ok(Some("generation-a".into()));
+    let error = transaction
+        .apply_bound(&provider, &request, &plan, &admitted, &mut fresh)
+        .unwrap_err();
+    assert!(matches!(
+        error,
+        DeployError::BoundPriorGenerationUnavailable {
+            record: "intent",
+            ..
+        }
+    ));
+    assert!(state.read_intent(&home).unwrap().is_some());
+    assert!(!fixture.destination.path().join("bin/helper").exists());
+}
+
 /// Read the raw JSON of one state file, or `None`.
 fn state_file(fixture: &Fixture, target_id: &str, name: &str) -> Option<serde_json::Value> {
     let home = DeploymentHome::new(&fixture.state_home(), "org.example/demo", None, target_id);

@@ -47,10 +47,51 @@ pub enum DeployError {
     )]
     BoundRootAdmissionUnavailable { binding: String },
 
+    /// The first bound path is deliberately limited to one local builtin
+    /// UserProfile target until other providers have equivalent admission.
+    #[error("bound deployment scope is unsupported before effects: {reason}")]
+    BoundScopeUnsupported { reason: String },
+
     /// One bound state member cannot be read under a different binding or
     /// under the legacy namespace, even when its path was copied there.
     #[error("{record} operation binding differs from the deployment state's expected binding")]
     BindingMismatch { record: &'static str },
+
+    /// The bound intent survives a possible external write; recovery needs
+    /// fresh host admission and must not infer no-effects from this failure.
+    #[error(
+        "bound deployment of `{target}` under `{binding}` may have published resources: {reason}; the intent is retained and recovery requires fresh host admission"
+    )]
+    BoundPublicationUncertain {
+        target: String,
+        binding: String,
+        reason: String,
+    },
+
+    /// The initial bound route has no admitted update/recovery owner yet.
+    #[error(
+        "bound deployment of `{target}` has a prior {record}; this first-generation route refuses before effects until bound recovery and update are admitted"
+    )]
+    BoundPriorGenerationUnavailable {
+        target: String,
+        record: &'static str,
+    },
+
+    /// The retained host grant no longer observes its admitted roots or
+    /// selected generation, before this operation has invoked a provider.
+    #[error("bound deployment of `{target}` refused before effects: host grant changed: {reason}")]
+    BoundGrantChanged { target: String, reason: String },
+
+    /// A receipt was written; cleanup or the final root observation failed.
+    /// Do not claim that the intent definitely survived the cleanup tail.
+    #[error(
+        "bound deployment of `{target}` under `{binding}` wrote its receipt but finalization is uncertain: {reason}; inspect the retained receipt, sidecar and any remaining intent/checkpoint before retry"
+    )]
+    BoundCommitCleanupUncertain {
+        target: String,
+        binding: String,
+        reason: String,
+    },
 
     /// §3.1's four-step law refused to select a provider.
     #[error(transparent)]
