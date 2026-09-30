@@ -345,6 +345,7 @@
         "crates/vibe-agent-projection/src/pkgskill.rs",
         "crates/vibe-cli/src/commands/init/",
         "crates/vibe-requirements/src/sources.rs",
+        "crates/vibe-requirements/src/sources/",
         "crates/vibe-requirements/src/digest.rs",
         "crates/vibe-requirements/src/tests_query.rs",
         "crates/vibe-requirements/src/tests_query_declared.rs",
