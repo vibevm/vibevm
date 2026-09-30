@@ -450,3 +450,5 @@ mod scan_tests;
 mod scan_witness_tests;
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_sync;

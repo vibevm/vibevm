@@ -24,6 +24,7 @@ vibe-spec.workspace = true
 # The PROP-045 pivot IR is the one shared traversal for authored package
 # facts used by both adopt and the adoption report.
 vibe-specdoc.workspace = true
+vibe-safefs.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
