@@ -4,7 +4,7 @@
     {
       "id": "M-14-C.1",
       "title": "Carry the target binding through local operation seams",
-      "goal": "Make existing local requests, prepared effects, grants and receipts refer to the exact target and principal.",
+      "goal": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.",
       "read_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
@@ -51,19 +51,17 @@
         "crates/vibe-orchestrator/src/dispatch/mechanism.rs"
       ],
       "steps": [
-        "Trace the existing deploy/native and extension request carriers and add the M-14 bindings without changing legacy operation meaning.",
-        "Use trusted root registration from M-16; providers receive bound roots and requested capabilities, while the host issues exact effect grants.",
-        "Propagate instance/generation/platform/principal through plans, before-images, journals and retained inspection; reject mismatched replay before provider invocation.",
-        "Use opt-in optional typed target binding in existing epoch-one intent/receipt/native request, with all-or-none continuity and a distinct instance-keyed bound state namespace; absent binding preserves legacy local bytes and key semantics."
+        "Trace existing deploy/native and extension request carriers, add an optional typed binding without changing legacy local operation meaning or serialized None bytes.",
+        "Use host-issued context/target binding values from M-16 conventions; keep a distinct bound state key, include binding in bound plan hash, and validate intent, receipt, native request and structured inspection equality before replay.",
+        "Refuse bound apply before inverse recovery, provider selection or state creation when no pinned host root/effect grant exists; never derive one from a request body or package descriptor. C.2 supplies the first supported bound effect."
       ],
       "positive_cases": [
-        "The same source package deployed into two injected homes gets distinct receipts.",
-        "A valid local compatibility request produces the same projected files as before."
+        "The same package under two injected instance bindings gets distinct state keys and typed receipt/inspection identities without touching either destination.",
+        "A legacy local compatibility request keeps the incumbent projected files and byte-compatible unbound records."
       ],
       "negative_cases": [
-        "Changing only a body path redirects a valid grant to another root.",
-        "A package descriptor grants itself new filesystem or execution authority.",
-        "A bound intent or receipt borrows a legacy deployment key/receipt, or one carrier silently drops the target binding."
+        "A request body path or package descriptor self-grants a new root.",
+        "A copied legacy or other-instance receipt is accepted under a bound key, or unsupported bound apply reaches recovery/provider."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -73,22 +71,23 @@
         "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
       ],
       "acceptance": [
-        "Target identity survives every request-to-receipt carrier and appears in structured inspection.",
-        "Unsupported cross-target operations return before effects."
+        "Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.",
+        "Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1."
       ],
-      "safe_stop": "Local compatibility is green; Linux execution stays unimplemented until M-15-K.",
+      "safe_stop": "Bound carrier and early-refusal tests pass; first real bound effect and physical alias fencing remain C.2.",
       "commit_subject": "feat(deploy): bind local effects to environment targets",
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "The expanded schema/wire/CLI/orchestrator perimeter is limited to the opt-in target-binding carrier and its mechanically required codegen/constructor/validation changes. M-14-C.2 owns physical alias/root-handle fencing."
+        "The expanded schema/wire/CLI/orchestrator perimeter is limited to the opt-in target-binding carrier and its mechanically required codegen/constructor/validation changes. M-14-C.2 owns physical alias/root-handle fencing.",
+        "The incumbent builtin vibe-bin provider writes through raw paths; C.1 must not enable bound effects merely by pinning an unrelated Project handle. C.2 owns handle-constrained I/O and shared physical locking before the first bound UserProfile apply."
       ]
     },
     {
       "id": "M-14-C.2",
       "title": "Fence aliased roots and stale target generations",
-      "goal": "Prove logical instance separation does not permit competing writes to the same physical resource.",
+      "goal": "Fence aliased roots and stale target generations, then admit the first supported local bound builtin effect through pinned root handles.",
       "read_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
@@ -101,7 +100,11 @@
         "crates/vibe-lifecycle/src/mechanism.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-safefs/Cargo.toml",
-        "crates/vibe-safefs/src/lib.rs"
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-cli/src/commands/deploy.rs"
       ],
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
@@ -113,20 +116,28 @@
         "crates/vibe-lifecycle/src/mechanism.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-safefs/Cargo.toml",
-        "crates/vibe-safefs/src/lib.rs"
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
       ],
       "steps": [
         "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
         "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
-        "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write."
+        "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
+        "Move the first successful bound local UserProfile vibe-bin apply behind pinned host root handles and a shared physical destination lock; provider I/O must use the admitted handles or an equivalent verified capability path, never only checked strings."
       ],
       "positive_cases": [
         "Disjoint injected homes can proceed independently.",
-        "Two aliases of one root conflict even when their logical instance IDs differ."
+        "Two aliases of one root conflict even when their logical instance IDs differ.",
+        "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals."
       ],
       "negative_cases": [
         "Expired generation or changed root reuses an earlier plan.",
-        "Equal file bytes transfer ownership between receipt families."
+        "Equal file bytes transfer ownership between receipt families.",
+        "A changed request body root, unsupported target mode/OS or provider scope escalation reaches a bound provider effect after a host grant was minted."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -137,7 +148,8 @@
       ],
       "acceptance": [
         "One physical resource cannot have two simultaneous admitted writers through distinct logical bindings.",
-        "Tests use disposable roots and never the developer's real HOME."
+        "Tests use disposable roots and never the developer's real HOME.",
+        "No bound builtin effect begins until host-issued root handles, principal and resource grant are checked under the physical destination fence; native/other providers remain unsupported until equivalent admission exists."
       ],
       "safe_stop": "Fencing tests pass and retained receipts remain inspectable after conflict.",
       "commit_subject": "fix(deploy): fence alias roots and stale target replay",
