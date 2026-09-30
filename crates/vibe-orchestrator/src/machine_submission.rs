@@ -15,6 +15,14 @@ use vibe_lifecycle::{
     SubmissionReservations, SubmissionScope,
 };
 
+// The pure, pre-install command/source identity used by a later lifecycle
+// adapter. It neither reserves nor admits an effect on its own.
+#[allow(
+    dead_code,
+    reason = "lifecycle submission adapter follows this plan model"
+)]
+mod lifecycle_plan;
+
 /// Exact domain-journal observation under the same outer mutation lease.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum JournalState<T> {
