@@ -379,9 +379,10 @@ impl<'a> Adapter<'a> {
     fn item_unit(&self, b: &progress_core::doc::Block, f: &progress_core::doc::Fact) -> Unit {
         let mut unit = self.unit_from_fact(b, f);
         if let Some(line) = self.lines.get(f.line - 1) {
-            let indent = line.len() - line.trim_start().len();
+            // `list_marker_len` includes both the indentation and marker.
+            // Counting the indent again can slice inside a UTF-8 character.
             if let Some(mlen) = list_marker_len(line) {
-                let after = &line[indent + mlen..];
+                let after = &line[mlen..];
                 let blen = task_box_len(after);
                 if blen > 0 && !unit.text.is_empty() {
                     unit.text = format!("{}{}", &after[..blen], unit.text);
