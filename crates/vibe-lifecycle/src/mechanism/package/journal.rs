@@ -1,8 +1,9 @@
-//! A first, effect-free owner intent for one fixed local static-file package.
+//! Owner journal for one fixed local static-file package operation.
 //!
 //! This is deliberately narrower than the legacy package executor. Ready
-//! records that a later copy MAY occur; it does not claim that one did. An
-//! existing reservation is observation only and never invokes a provider.
+//! records that a copy MAY occur; only a separately published result after
+//! actual output and A2 verification records completion. Existing keys are
+//! inspection only and never invoke the provider again.
 
 use std::path::Path;
 
@@ -12,7 +13,8 @@ use vibe_core::manifest::{ArtifactInput, ArtifactKind, ExtensionHandler};
 use vibe_extension_registry::{MechanismSelection, resolve_mechanism};
 use vibe_safefs::{PinnedAbsentPath, Project, StableFileSnapshot};
 
-use super::PackageExecution;
+use super::protocol::ResolvedInput;
+use super::{PackageError, PackageExecution, PackageOutcome, execute_one};
 use crate::mechanism::{BUILTIN_STATIC_FILE_NAME, BUILTIN_STATIC_FILE_PIN};
 use crate::process::propose_run_id;
 use crate::{
@@ -30,6 +32,10 @@ const FORMAT: &str = "vibevm.package.static-file-intent/1";
 const SOURCE_CAP: usize = 2 * 1024 * 1024;
 const INTENT_CAP: usize = 16 * 1024;
 const C1_CAP: usize = 1024 * 1024;
+const RECORD_CAP: usize = 64 * 1024;
+const RESULT_CAP: usize = 16 * 1024;
+const OUTPUT_FILE: &str = "target/vibe-package/launcher/launcher.bin";
+const RESULT_FORMAT: &str = "vibevm.package.static-file-result/1";
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum StaticFileJournalError {
@@ -60,6 +66,17 @@ macro_rules! ensure {
     };
 }
 
+mod execution;
+#[cfg(test)]
+use execution::result_name;
+pub(crate) use execution::{BoundSource, execute_fixed_static_file, verify_bound_source};
+#[cfg(test)]
+pub(crate) use execution::{
+    execute_fixed_static_file_with_hook, execute_fixed_static_file_with_pre_execute_hook,
+    execute_fixed_static_file_with_record_hook,
+};
+use execution::{read_completion, verify_completed};
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum StaticFileJournalInspection {
     /// The owner intent and C.1 Ready bit were read back; no copy is granted
@@ -71,14 +88,85 @@ pub(crate) enum StaticFileJournalInspection {
     RecoveryRequired {
         run_id: String,
     },
-    /// Intent exists; an effect may have happened in a later executor, so a
-    /// retry must not infer absence or invoke it again.
+    /// Intent exists but no verified result can be furnished. Physical
+    /// observations are candidates, never a completion proof.
     Uncertain {
         run_id: String,
+        partial: StaticFilePartialEvidence,
+    },
+    /// The owner result was published after actual output and A2 record
+    /// verification. Replays never invoke the provider again.
+    Completed {
+        run_id: String,
+        output_sha256: String,
+        artifact_record: String,
     },
     Retired {
         run_id: Option<String>,
     },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct StaticFilePartialEvidence {
+    pub output_directory: ObservedPresence,
+    pub output_file: ObservedFile,
+    pub artifact_record: ObservedFile,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum ObservedPresence {
+    Absent,
+    Present,
+    Unavailable(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum ObservedFile {
+    Absent,
+    Present { sha256: String, bytes: u64 },
+    Unavailable(String),
+}
+
+fn uncertain(lease: &LifecycleLease, run_id: String) -> StaticFileJournalInspection {
+    StaticFileJournalInspection::Uncertain {
+        run_id,
+        partial: inspect_partial(lease),
+    }
+}
+
+fn inspect_partial(lease: &LifecycleLease) -> StaticFilePartialEvidence {
+    let output_directory = match lease
+        .project()
+        .dir_if_present(&["target", "vibe-package", TARGET])
+    {
+        Ok(Some(_)) => ObservedPresence::Present,
+        Ok(None) => ObservedPresence::Absent,
+        Err(error) => ObservedPresence::Unavailable(error.to_string()),
+    };
+    let output_file = match lease
+        .project()
+        .read_file_snapshot_bounded(OUTPUT_FILE, SOURCE_CAP)
+    {
+        Ok(Some(snapshot)) => ObservedFile::Present {
+            sha256: snapshot.sha256,
+            bytes: snapshot.size,
+        },
+        Ok(None) => ObservedFile::Absent,
+        Err(error) => ObservedFile::Unavailable(error.to_string()),
+    };
+    let artifact_record = match lease.project().read_file_bounded(RECORD, RECORD_CAP) {
+        Ok(Some(bytes)) => ObservedFile::Present {
+            sha256: sha(&bytes),
+            bytes: bytes.len() as u64,
+        },
+        Ok(None) => ObservedFile::Absent,
+        Err(error) => ObservedFile::Unavailable(error.to_string()),
+    };
+    StaticFilePartialEvidence {
+        output_directory,
+        output_file,
+        artifact_record,
+    }
 }
 
 #[derive(Debug)]
@@ -114,6 +202,20 @@ struct Intent {
     stage: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CompletionRecord {
+    format: String,
+    run_id: String,
+    reservation_ref: String,
+    plan_sha256: String,
+    output_relative: String,
+    output_sha256: String,
+    output_bytes: u64,
+    artifact_record: String,
+    artifact_record_sha256: String,
+}
+
 /// Reserve and durably publish one owner intent under the SAME lease used by
 /// C.1. This does no provider work and never creates an output or A2 record.
 pub(crate) fn reserve_fixed_static_file_intent(
@@ -137,22 +239,44 @@ pub(crate) fn reserve_fixed_static_file_intent(
         ExistingSubmissionInspection::Reserved {
             domain_run_id,
             journal_admission,
+            reservation_ref,
             retired,
-            ..
         } => {
             if retired {
                 return Ok(StaticFileJournalInspection::Retired {
                     run_id: Some(domain_run_id),
                 });
             }
-            let observed = read_intent(lease, &domain_run_id)?;
+            let observed = match read_intent(lease, &domain_run_id) {
+                Ok(observed) => observed,
+                Err(_) => return Ok(uncertain(lease, domain_run_id)),
+            };
             return Ok(match (journal_admission, observed) {
                 (JournalAdmission::Ready, Some(intent))
                     if intent.run_id == domain_run_id
-                        && intent.request_sha256 == sha(&subject.request) =>
+                        && intent.request_sha256 == sha(&subject.request)
+                        && intent.plan_sha256
+                            == SubmissionReservations::inspect_reserved_plan_sha256(
+                                lease,
+                                namespace,
+                                scope,
+                                key,
+                                &domain_run_id,
+                            )? =>
                 {
-                    StaticFileJournalInspection::Uncertain {
-                        run_id: domain_run_id,
+                    match (reservation_ref, read_completion(lease, &domain_run_id)) {
+                        (Some(expected_ref), Ok(Some(completion)))
+                            if completion.reservation_ref == expected_ref
+                                && completion.plan_sha256 == intent.plan_sha256
+                                && verify_completed(lease, &intent, &completion).is_ok() =>
+                        {
+                            StaticFileJournalInspection::Completed {
+                                run_id: domain_run_id,
+                                output_sha256: completion.output_sha256,
+                                artifact_record: completion.artifact_record,
+                            }
+                        }
+                        _ => uncertain(lease, domain_run_id),
                     }
                 }
                 _ => StaticFileJournalInspection::RecoveryRequired {

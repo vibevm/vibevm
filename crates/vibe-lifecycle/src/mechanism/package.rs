@@ -35,6 +35,11 @@ use vibe_safefs::Project;
 
 mod error;
 mod inputs;
+#[allow(
+    dead_code,
+    unused_imports,
+    reason = "protected host composition follows this domain owner"
+)]
 pub(crate) mod journal;
 mod native;
 pub(crate) mod protocol;
@@ -225,7 +230,7 @@ fn execute_targets(
         let Some(target) = execution.targets.get(index) else {
             continue;
         };
-        outcomes.push(execute_one(execution, target, prepared)?);
+        outcomes.push(execute_one(execution, target, prepared, None)?);
     }
     Ok(outcomes)
 }
@@ -235,6 +240,7 @@ fn execute_one(
     execution: &PackageExecution<'_>,
     target: &ArtifactPackageTarget,
     prepared: Option<&crate::native::PreparedNativeMechanisms>,
+    bound_source: Option<&journal::BoundSource<'_>>,
 ) -> Result<PackageOutcome, PackageError> {
     let selection = resolve_mechanism(
         execution.registry,
@@ -333,6 +339,9 @@ fn execute_one(
         }
     };
     let resolved = resolve_inputs(execution.project_root, target)?;
+    if let Some(bound) = bound_source {
+        journal::verify_bound_source(bound, &resolved, target)?;
+    }
     let request = PackageTargetRequest {
         target,
         project_root: execution.project_root,
@@ -345,6 +354,11 @@ fn execute_one(
         prepare_output_dir(&request)?;
     }
     let staged = provider.apply(&request, &plan)?;
+    if let Some(bound) = bound_source {
+        if let Some(after_apply) = bound.after_apply {
+            after_apply();
+        }
+    }
     let produced = record_all_builtin(
         execution,
         &request,
