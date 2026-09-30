@@ -11,11 +11,16 @@ use specmark::spec;
 use thiserror::Error;
 
 mod scratch;
+mod source_snapshot;
 use scratch::create_unique_file;
 pub use scratch::{
     PendingReply, ScratchError, allocate_pending_reply, allocate_run_id,
     ensure_reserved_run_scratch, execution_scratch, is_valid_run_id, propose_run_id,
     write_atomic_json,
+};
+pub use source_snapshot::{
+    SelectedFileWitness, SelectedManifestLockWitness, SourceSnapshotError,
+    capture_selected_manifest_lock, recheck_selected_manifest_lock,
 };
 
 pub const STREAM_CAP: usize = 1024 * 1024;

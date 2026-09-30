@@ -2,6 +2,87 @@ use super::*;
 use std::ffi::OsString;
 
 #[test]
+fn selected_manifest_lock_witness_reads_exact_bytes_without_writing() {
+    let dir = tempfile::tempdir().unwrap();
+    let manifest = b"[package]\nname = 'sample'\n";
+    let lock = b"[meta]\nversion = 1\n";
+    std::fs::write(dir.path().join("vibe.toml"), manifest).unwrap();
+    std::fs::write(dir.path().join("vibe.lock"), lock).unwrap();
+    let before = std::fs::read_dir(dir.path()).unwrap().count();
+    let witness = capture_selected_manifest_lock(dir.path()).unwrap();
+    assert_eq!(witness.manifest.bytes, manifest);
+    assert_eq!(witness.manifest.size, manifest.len() as u64);
+    assert_eq!(witness.manifest.sha256.len(), "sha256:".len() + 64);
+    assert_eq!(witness.lock.as_ref().unwrap().bytes, lock);
+    recheck_selected_manifest_lock(dir.path(), &witness).unwrap();
+    assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
+    assert!(!dir.path().join(".vibe").exists());
+}
+
+#[test]
+fn selected_manifest_lock_witness_refuses_manifest_drift() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), b"one").unwrap();
+    let witness = capture_selected_manifest_lock(dir.path()).unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), b"two").unwrap();
+    assert!(matches!(
+        recheck_selected_manifest_lock(dir.path(), &witness),
+        Err(SourceSnapshotError::Drift { name: "vibe.toml" })
+    ));
+}
+
+#[test]
+fn selected_manifest_lock_witness_refuses_lock_disappearance_and_reappearance() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("vibe.toml"), b"manifest").unwrap();
+    let absent = capture_selected_manifest_lock(dir.path()).unwrap();
+    assert!(absent.lock.is_none());
+    std::fs::write(dir.path().join("vibe.lock"), b"lock").unwrap();
+    assert!(matches!(
+        recheck_selected_manifest_lock(dir.path(), &absent),
+        Err(SourceSnapshotError::Drift { name: "vibe.lock" })
+    ));
+    let present = capture_selected_manifest_lock(dir.path()).unwrap();
+    std::fs::remove_file(dir.path().join("vibe.lock")).unwrap();
+    assert!(matches!(
+        recheck_selected_manifest_lock(dir.path(), &present),
+        Err(SourceSnapshotError::Drift { name: "vibe.lock" })
+    ));
+}
+
+#[test]
+fn selected_manifest_lock_witness_refuses_oversize_file() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        vec![b'x'; 8 * 1024 * 1024 + 1],
+    )
+    .unwrap();
+    assert!(matches!(
+        capture_selected_manifest_lock(dir.path()),
+        Err(SourceSnapshotError::Read {
+            name: "vibe.toml",
+            ..
+        })
+    ));
+}
+
+#[cfg(unix)]
+#[test]
+fn selected_manifest_lock_witness_refuses_symlink() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("real.toml"), b"manifest").unwrap();
+    std::os::unix::fs::symlink("real.toml", dir.path().join("vibe.toml")).unwrap();
+    assert!(matches!(
+        capture_selected_manifest_lock(dir.path()),
+        Err(SourceSnapshotError::Read {
+            name: "vibe.toml",
+            ..
+        })
+    ));
+}
+
+#[test]
 fn run_id_and_key_components_are_fixed_hex_lengths() {
     let dir = tempfile::tempdir().unwrap();
     let run = allocate_run_id(dir.path()).unwrap();
