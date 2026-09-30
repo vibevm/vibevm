@@ -128,10 +128,11 @@ pub use mechanism::{
     ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, ClientExecutable,
     ClientExecutables, ClientProjectionError, DEPLOY_STATE_DIR, DeployError, DeployExecution,
     DeployOutcome, DeployPlanReport, DeployProviderError, DeployResourcePlan, DeploySelection,
-    DeployStatus, DeployedResource, DeploymentRow, MechanismError, PackageError, PackageExecution,
-    PackageOutcome, PackagedArtifact, ProducedArtifact, RecordError, RemovalOutcome,
-    deploy_state_home, execute_build_targets, execute_deploy_targets, execute_package_targets,
-    list_deployments, plan_deploy_targets, undeploy_targets,
+    DeployStatus, DeployedResource, DeploymentRow, LegacyArtifactEvidence, LegacyArtifactRead,
+    LegacyArtifactReadError, MechanismError, PackageError, PackageExecution, PackageOutcome,
+    PackagedArtifact, ProducedArtifact, RecordError, RemovalOutcome, deploy_state_home,
+    execute_build_targets, execute_deploy_targets, execute_package_targets, list_deployments,
+    plan_deploy_targets, read_legacy_artifact, undeploy_targets,
 };
 // The mechanism PLANE, through the same compatibility door the extension
 // plane already uses. The two executors above take a `MechanismRegistry`,
