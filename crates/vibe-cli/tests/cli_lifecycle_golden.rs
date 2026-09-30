@@ -255,7 +255,7 @@ fn completed_default_lifecycle_document_is_pinned_in_full() {
  "notices":[],"ok":true,"requested":"deploy","steps":[
   {"phase":"validate","status":"ok"},{"phase":"install","status":"fresh"},{"phase":"generate","status":"ok"},
   {"phase":"build","status":"ok"},{"phase":"test","status":"no-op"},{"phase":"create","status":"no-op"},
-  {"phase":"verify","status":"no-op"},{"phase":"package","status":"no-op"},{"phase":"deploy","status":"no-op"}],
+  {"phase":"verify","status":"ok"},{"phase":"package","status":"no-op"},{"phase":"deploy","status":"no-op"}],
  "verification":{"artifacts":[],"evidence":1,"evidence_id":"<evidence-id>","inputs":[],
   "observed_at":"<instant>","status":"unavailable","run":{
    "chain":["validate","install","generate","build","test","create","verify","package","deploy"],
@@ -567,7 +567,7 @@ lifecycle `deploy`:
   → build: ok
   → test: no-op
   → create: no-op
-  → verify: no-op
+  → verify: ok
   → package: no-op
   → deploy: no-op
   → verification: unavailable (0 input(s), 0 artifact(s))

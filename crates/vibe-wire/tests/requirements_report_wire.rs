@@ -96,12 +96,18 @@ fn the_format_is_inventoried_under_a_surface_neutral_id() {
             .any(|id| id.id() == "requirements-report"),
         "the registry row must have reached the generated FormatId"
     );
-    // The `cli-*` family's own count comment stays honest: this row is
-    // not one of them.
-    let cli_rows = formats.keys().filter(|id| id.starts_with("cli-")).count();
-    assert_eq!(
-        cli_rows, 13,
-        "the CLI report family did not grow; the requirements root lives in its own section"
+    // Pin the row's section, not the changing number of `cli-*` formats.
+    let at = registry
+        .find("[format.requirements-report]")
+        .expect("the row is in the registry");
+    let section = registry[..at]
+        .lines()
+        .rev()
+        .find(|line| line.starts_with("# ── "))
+        .expect("every row stands under a section heading");
+    assert!(
+        section.contains("Requirements metadata answer"),
+        "the requirements root lives in its own section, got: {section}"
     );
     assert!(
         corpus_dir().is_dir(),
