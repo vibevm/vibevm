@@ -197,6 +197,7 @@
         "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
         "crates/vibe-specdoc/src/",
         "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/src/vibedeps/derived/",
         "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
         "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
         "crates/vibe-workspace/src/vibedeps/slot_diff/",
