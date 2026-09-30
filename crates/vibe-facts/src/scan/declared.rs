@@ -14,6 +14,11 @@ use vibe_specdoc::doc::Vocabulary;
 use super::{SourceFileWitness, address_prefix};
 use crate::AuthoredFact;
 
+mod walk;
+pub use walk::{
+    CapturedDeclaredDocument, DeclaredTreeObservation, DeclaredWalkError, observe_declared_source,
+};
+
 /// Classification and declaration origin are distinct from byte witnesses.
 /// The selected row is authored intent, not a verified trust assertion.
 #[derive(Debug, Clone, PartialEq, Eq)]

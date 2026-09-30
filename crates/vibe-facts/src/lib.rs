@@ -26,10 +26,11 @@ pub use lifecycle::{OrphanReport, orphans, package_file_path, remove_package_fil
 pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use report::{AdoptionCounts, AuthoredFact, adoption_counts, authored_facts};
 pub use scan::{
-    AdoptionObservation, AdoptionRow, AuthoredSourceObservation, DeclaredDocumentObservation,
-    DeclaredReadProvenance, DeclaredSourceDisposition, SourceFileWitness, SourceIssue, SourceKind,
+    AdoptionObservation, AdoptionRow, AuthoredSourceObservation, CapturedDeclaredDocument,
+    DeclaredDocumentObservation, DeclaredReadProvenance, DeclaredSourceDisposition,
+    DeclaredTreeObservation, DeclaredWalkError, SourceFileWitness, SourceIssue, SourceKind,
     address_prefix, join_adoption, observe_authored_source, observe_declared_document,
-    scan_authored_facts,
+    observe_declared_source, scan_authored_facts,
 };
 pub use store::{Registry, RegistrySnapshot};
 
