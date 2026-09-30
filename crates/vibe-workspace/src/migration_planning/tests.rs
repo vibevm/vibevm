@@ -51,6 +51,40 @@ fn preflight_response(response: MigrationPlanningResponse, code: Code) {
 }
 
 #[test]
+fn replay_validator_accepts_bounded_insertions_but_not_duplicate_or_empty_edits() {
+    let mut result = report(sample_request());
+    let plan = plan_mut(&mut result);
+    let original = plan.before.clone();
+    let end = original.len().to_string();
+    plan.edits = vec![
+        TokenEdit {
+            field: "package.sources".into(),
+            before_start: "0".into(),
+            before_end: "0".into(),
+            before_token: String::new(),
+            after_token: "# declared\r\n".into(),
+        },
+        TokenEdit {
+            field: "package.sources".into(),
+            before_start: end.clone(),
+            before_end: end,
+            before_token: String::new(),
+            after_token: "# retained\r\n".into(),
+        },
+    ];
+    plan.after = format!("# declared\r\n{original}# retained\r\n");
+    assert!(validate_plan(plan, false).is_ok());
+
+    let mut duplicate = plan.clone();
+    duplicate.edits[1] = duplicate.edits[0].clone();
+    assert!(validate_plan(&duplicate, false).is_err());
+
+    let mut empty = plan.clone();
+    empty.edits[0].after_token.clear();
+    assert!(validate_plan(&empty, false).is_err());
+}
+
+#[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
     r = 1

@@ -365,14 +365,19 @@ fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
         return Err(invalid("edits", "planned output must contain a real edit"));
     }
     let mut cursor = 0;
+    let mut prior_insertion = None;
     let mut after = String::new();
     for edit in &plan.edits {
         let start = decimal(&edit.before_start)?;
         let end = decimal(&edit.before_end)?;
-        if start < cursor || end <= start {
+        if start < cursor
+            || end < start
+            || (start == end && edit.after_token.is_empty())
+            || prior_insertion == Some(start)
+        {
             return Err(invalid(
                 "edits",
-                "edits are empty, overlapping or out of source order",
+                "edits are empty, overlapping, duplicated insertions or out of source order",
             ));
         }
         let prefix = plan
@@ -392,6 +397,7 @@ fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
         after.push_str(prefix);
         after.push_str(&edit.after_token);
         cursor = end;
+        prior_insertion = (start == end).then_some(start);
     }
     after.push_str(
         plan.before
