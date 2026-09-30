@@ -1,6 +1,7 @@
 //! Private, fake-remote full-plan owner. Every partition has its own durable
 //! Pending/Landed pair under one C.1 run. No live adapter or public entry exists.
 
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use vibe_lifecycle::process::propose_run_id;
 use vibe_lifecycle::{
@@ -19,6 +20,7 @@ use crate::publication_effect_plan::{
 };
 
 mod journal;
+mod transition;
 use journal::{FinalResult, Intent, Step, landed_name, pending_name, sha};
 
 const C1_CAP: usize = 1024 * 1024;
@@ -62,7 +64,7 @@ pub(crate) enum Inspection {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct PartitionReceipt {
     pub index: usize,
     pub partition_sha256: String,
@@ -70,11 +72,12 @@ pub(crate) struct PartitionReceipt {
     pub receipt_ref: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct RemoteObservation {
     pub generation_ref: String,
     pub tag: PublicationObservedTag,
     pub release: PublicationObservedRelease,
+    pub latest_release_id: Option<String>,
     pub last: Option<PartitionReceipt>,
 }
 
@@ -104,6 +107,16 @@ fn select(
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
 ) -> Result<Selected> {
+    if let Some((index, _)) = plan
+        .partitions
+        .iter()
+        .enumerate()
+        .find(|(_, partition)| !transition::supports(partition))
+    {
+        return Err(Error::Refused(format!(
+            "fake remote cannot prove partition {index} before reservation"
+        )));
+    }
     require_apply_ready_effect_plan(plan, subject, expected).map_err(Error::io)?;
     let semantic_plan_sha256 =
         publication_effect_plan_digest(plan, subject, expected).map_err(Error::io)?;
@@ -154,6 +167,7 @@ fn initial_matches(observed: &RemoteObservation, plan: &PublicationEffectPlan) -
     observed.generation_ref == plan.remote_generation_ref
         && observed.tag == plan.observed_tag
         && observed.release == plan.observed_release
+        && observed.latest_release_id.is_none()
         && observed.last.is_none()
 }
 
@@ -176,6 +190,8 @@ fn expected_pending(intent: &Intent, index: usize, generation: &str) -> Step {
         expected_generation_ref: generation.into(),
         resulting_generation_ref: None,
         receipt_ref: None,
+        post_observation_sha256: None,
+        post_observation: None,
     }
 }
 
@@ -185,6 +201,7 @@ fn inspect(
     scope: &SubmissionScope,
     key: &str,
     selected: &Selected,
+    plan: &PublicationEffectPlan,
     run_id: String,
     admission: JournalAdmission,
     reservation_ref: Option<String>,
@@ -204,7 +221,13 @@ fn inspect(
     {
         return Ok(Inspection::RecoveryRequired { run_id });
     }
-    let mut generation = intent.remote_generation_ref.clone();
+    let mut before = RemoteObservation {
+        generation_ref: plan.remote_generation_ref.clone(),
+        tag: plan.observed_tag.clone(),
+        release: plan.observed_release.clone(),
+        latest_release_id: None,
+        last: None,
+    };
     let mut landed_hashes = Vec::with_capacity(intent.partition_sha256.len());
     for index in 0..intent.partition_sha256.len() {
         let pending = match journal::read::<Step>(lease, &run_id, &pending_name(index)) {
@@ -214,7 +237,7 @@ fn inspect(
         let Some(pending) = pending else {
             return Ok(partial(run_id, index, None, false));
         };
-        if pending != expected_pending(&intent, index, &generation) {
+        if pending != expected_pending(&intent, index, &before.generation_ref) {
             return Ok(Inspection::RecoveryRequired { run_id });
         }
         let bytes = match journal::read_bytes(lease, &run_id, &landed_name(index)) {
@@ -230,7 +253,7 @@ fn inspect(
             || landed.c1_plan_sha256 != intent.c1_plan_sha256
             || landed.index != index
             || landed.partition_sha256 != intent.partition_sha256[index]
-            || landed.expected_generation_ref != generation
+            || landed.expected_generation_ref != before.generation_ref
             || landed
                 .resulting_generation_ref
                 .as_deref()
@@ -239,7 +262,26 @@ fn inspect(
         {
             return Ok(partial(run_id, index, Some(index), true));
         }
-        generation = landed.resulting_generation_ref.clone().unwrap();
+        let Some(after) = landed.post_observation.as_ref() else {
+            return Ok(partial(run_id, index, Some(index), true));
+        };
+        let receipt = PartitionReceipt {
+            index,
+            partition_sha256: landed.partition_sha256.clone(),
+            resulting_generation_ref: landed.resulting_generation_ref.clone().unwrap(),
+            receipt_ref: landed.receipt_ref.clone().unwrap(),
+        };
+        if landed.post_observation_sha256.as_deref()
+            != Some(sha(&serde_json::to_vec(after)?).as_str())
+            || after.generation_ref != receipt.resulting_generation_ref
+            || after.last.as_ref() != Some(&receipt)
+            || transition::effectful(&plan.partitions[index])
+                && after.generation_ref == before.generation_ref
+            || !transition::verifies(&before, after, &plan.partitions[index])
+        {
+            return Ok(partial(run_id, index, Some(index), true));
+        }
+        before = after.clone();
         landed_hashes.push(sha(&bytes));
     }
     let result = match journal::read::<FinalResult>(lease, &run_id, "result") {
@@ -298,6 +340,7 @@ pub(crate) fn submit_fake_full_plan(
                 scope,
                 key,
                 &selected,
+                plan,
                 domain_run_id,
                 journal_admission,
                 reservation_ref,
@@ -361,7 +404,8 @@ pub(crate) fn submit_fake_full_plan(
         if receipt.index != index
             || receipt.partition_sha256 != intent.partition_sha256[index]
             || receipt.resulting_generation_ref.is_empty()
-            || receipt.resulting_generation_ref == current.generation_ref
+            || transition::effectful(partition)
+                && receipt.resulting_generation_ref == current.generation_ref
             || receipt.receipt_ref.is_empty()
         {
             return Ok(partial(run_id, index, Some(index), true));
@@ -372,6 +416,8 @@ pub(crate) fn submit_fake_full_plan(
         };
         if after.generation_ref != receipt.resulting_generation_ref
             || after.last.as_ref() != Some(&receipt)
+            || transition::effectful(partition) && after.generation_ref == current.generation_ref
+            || !transition::verifies(&current, &after, partition)
         {
             return Ok(partial(run_id, index, Some(index), true));
         }
@@ -384,6 +430,8 @@ pub(crate) fn submit_fake_full_plan(
             expected_generation_ref: current.generation_ref,
             resulting_generation_ref: Some(receipt.resulting_generation_ref),
             receipt_ref: Some(receipt.receipt_ref),
+            post_observation_sha256: Some(sha(&serde_json::to_vec(&after)?)),
+            post_observation: Some(after.clone()),
         };
         let landed_bytes = match journal::publish(lease, &run_id, &landed_name(index), &landed) {
             Ok(bytes) => bytes,
@@ -409,5 +457,9 @@ pub(crate) fn submit_fake_full_plan(
     })
 }
 
+#[cfg(test)]
+mod capability_tests;
+#[cfg(test)]
+mod replay_tests;
 #[cfg(test)]
 mod tests;
