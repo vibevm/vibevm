@@ -15,6 +15,9 @@ use walkdir::WalkDir;
 use crate::RegistryError;
 use crate::hash_recipe::{LEGACY0_EXCLUDES, RecipeId, order_entries};
 
+mod bounded;
+pub use bounded::{BoundedContentFile, compute_content_hash_legacy0_bounded_exact};
+
 /// Prune build output from a [`WalkDir`] walk so the hash and slot cover only
 /// the shippable tree — per-entry, so an excluded dir is skipped, not entered.
 /// The list is recipe 0's frozen [`LEGACY0_EXCLUDES`]; recipe 1's data-driven

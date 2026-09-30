@@ -15,7 +15,7 @@ use vibe_lifecycle::process::{
     PackageTreeWitness, attest_package_tree_copy, capture_selected_manifest_lock,
     recheck_package_tree_witness,
 };
-use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
+use vibe_registry::{BoundedContentFile, CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{DepProviderError, ResolvedGraph, SolveError};
 
 use crate::ports::{PackageSource, PackageSourceBuild, PackageSourceFactory};
@@ -131,9 +131,25 @@ impl AttestingSource {
             "fetched package did not land in the selected cache entry"
         );
         attest_package_tree_copy(&self.expected, &cached.cache_dir)?;
-        // `cached.content_hash` is producer metadata. Its registry recipe
-        // needs a separate bounded no-follow owner before a production lock
-        // may use it as an attested identity. This wrapper is internal only.
+        let rows: Vec<BoundedContentFile> = self
+            .expected
+            .files
+            .iter()
+            .map(|file| BoundedContentFile {
+                relative_path: file.relative_path.clone(),
+                bytes: file.bytes,
+                sha256: file.sha256.clone(),
+            })
+            .collect();
+        let replayed = vibe_registry::compute_content_hash_legacy0_bounded_exact(
+            &cached.cache_dir,
+            &self.expected.package_pin,
+            &rows,
+        )?;
+        ensure!(
+            replayed.as_str() == cached.content_hash,
+            "fetched content_hash differs from bounded recipe-zero replay"
+        );
         recheck_package_tree_witness(&self.expected)?;
         Ok(())
     }
