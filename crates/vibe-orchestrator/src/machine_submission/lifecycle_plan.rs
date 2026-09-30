@@ -24,7 +24,8 @@ const SELECTED_CAP: usize = 128 * 1024;
 const INPUT_COUNT_CAP: usize = 1024;
 const INPUT_STRING_CAP: usize = 4096;
 const LANGUAGE_CAP: usize = 256;
-const PLAN_CAP: usize = 2 * 1024 * 1024;
+// C.1 reserves at most 1 MiB of canonical plan bytes.
+const PLAN_CAP: usize = 1024 * 1024;
 
 /// Exact values the owner has already selected under its workspace lease.
 /// There is deliberately no run ID or start clock: retries of the same key
