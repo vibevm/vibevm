@@ -53,6 +53,7 @@ use crate::mechanism::{
 };
 
 pub(crate) mod bound;
+pub(crate) mod bound_provider;
 pub(crate) mod config;
 pub(crate) mod launcher;
 pub(crate) mod store;

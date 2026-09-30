@@ -101,6 +101,7 @@ pub(crate) const CHECKPOINT_EPOCH: u32 = 1;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct CheckpointRecord {
     pub(crate) schema: u32,
+    pub(crate) operation_binding: Option<EnvironmentOperationBinding>,
     pub(crate) plan_hash: String,
     /// Resource identities whose operation completed, in completion order.
     pub(crate) completed: Vec<String>,
@@ -185,6 +186,10 @@ impl DeploymentHome {
     /// of the state home sees.
     pub(crate) fn id(&self) -> &str {
         &self.id
+    }
+
+    pub(crate) fn operation_binding(&self) -> Option<&EnvironmentOperationBinding> {
+        self.binding.as_ref()
     }
 
     /// The absolute directory of this deployment.
@@ -366,6 +371,20 @@ impl DeployState {
             return Ok(None);
         };
         record.validate()?;
+        if home.operation_binding().is_some()
+            && record.committed.is_none()
+            && record.pending.is_none()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: LOCK_RESOURCES_FILE,
+            });
+        }
+        for binding in [record.committed.as_ref(), record.pending.as_ref()]
+            .into_iter()
+            .flatten()
+        {
+            home.ensure_binding(LOCK_RESOURCES_FILE, binding.operation_binding.as_ref())?;
+        }
         Ok(Some(record))
     }
 
@@ -384,6 +403,20 @@ impl DeployState {
         record: &LockResources,
     ) -> Result<(), DeployError> {
         record.validate()?;
+        if home.operation_binding().is_some()
+            && record.committed.is_none()
+            && record.pending.is_none()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: LOCK_RESOURCES_FILE,
+            });
+        }
+        for binding in [record.committed.as_ref(), record.pending.as_ref()]
+            .into_iter()
+            .flatten()
+        {
+            home.ensure_binding(LOCK_RESOURCES_FILE, binding.operation_binding.as_ref())?;
+        }
         self.publish(&home.member(LOCK_RESOURCES_FILE), record)?;
         let read_back = self.read_lock_resources(home)?;
         if read_back.as_ref() != Some(record) {
@@ -478,7 +511,13 @@ impl DeployState {
             return Ok(None);
         };
         wire::validate_checkpoint(&record)?;
+        home.ensure_binding(CHECKPOINT_FILE, record.operation_binding.as_ref())?;
         if record.plan_hash != plan_hash {
+            if home.operation_binding().is_some() {
+                return Err(DeployError::BindingMismatch {
+                    record: CHECKPOINT_FILE,
+                });
+            }
             return Ok(None);
         }
         Ok(Some(record))
@@ -491,6 +530,7 @@ impl DeployState {
         record: &CheckpointRecord,
     ) -> Result<(), DeployError> {
         wire::validate_checkpoint(record)?;
+        home.ensure_binding(CHECKPOINT_FILE, record.operation_binding.as_ref())?;
         self.publish(&home.member(CHECKPOINT_FILE), record)
     }
 

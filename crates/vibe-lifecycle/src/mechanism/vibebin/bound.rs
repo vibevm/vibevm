@@ -83,6 +83,10 @@ impl BoundProjectArtifact {
             bytes: measured_bytes,
         })
     }
+
+    pub(crate) fn matches_resolved(&self, relative: &str, digest: &str, bytes: u64) -> bool {
+        self.relative == relative && self.digest == digest && self.bytes == bytes
+    }
 }
 
 /// The destination capability and its lock are one value. A caller cannot

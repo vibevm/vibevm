@@ -33,6 +33,7 @@ fn from_wire(value: generated::DeployLockResources) -> LockResources {
 
 fn binding_to_wire(value: &LockBinding) -> generated::LockBinding {
     generated::LockBinding {
+        operation_binding: value.operation_binding.clone(),
         generation: value.generation,
         plan_hash: value.plan_hash.clone(),
         resources: value.resources.clone(),
@@ -42,6 +43,7 @@ fn binding_to_wire(value: &LockBinding) -> generated::LockBinding {
 
 fn binding_from_wire(value: generated::LockBinding) -> LockBinding {
     LockBinding {
+        operation_binding: value.operation_binding,
         generation: value.generation,
         plan_hash: value.plan_hash,
         resources: value.resources,
@@ -122,6 +124,7 @@ mod tests {
             schema: 1,
             committed: None,
             pending: Some(LockBinding {
+                operation_binding: None,
                 generation: 3,
                 plan_hash: "b".repeat(64),
                 resources: vec!["config/tool.json".to_owned()],
@@ -170,6 +173,7 @@ mod tests {
             schema: 1,
             committed: None,
             pending: Some(LockBinding {
+                operation_binding: None,
                 generation: 3,
                 plan_hash: "b".repeat(64),
                 resources: vec!["config/tool.json".to_owned()],

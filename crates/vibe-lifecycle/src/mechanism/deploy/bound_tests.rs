@@ -7,6 +7,8 @@ use vibe_wire::generated::shared::{
 };
 
 use super::protocol::{DeployPlan, DeployTargetRequest};
+use super::sidecar::{LOCK_RESOURCES_EPOCH, LockBinding, LockResources};
+use super::state::{CHECKPOINT_EPOCH, CheckpointRecord, InverseRecord};
 use super::state::{DeployState, DeploymentHome};
 use super::support::{Fixture, FixtureProvider, selected, selection, target};
 use super::transaction::{bound_plan_hash, plan_hash};
@@ -68,6 +70,68 @@ fn bound_homes_are_instance_keyed_and_never_legacy_keys() {
 }
 
 #[test]
+fn bound_sidecars_checkpoints_and_inverse_refuse_copied_or_legacy_identity() {
+    let fixture = Fixture::new("helper-bytes");
+    let root = fixture.state_home();
+    let state = DeployState::open(&root).unwrap();
+    let a_binding = binding("sidecar-a");
+    let b_binding = binding("sidecar-b");
+    let a =
+        DeploymentHome::new_bound(&root, "org.example/demo", None, "helper", &a_binding).unwrap();
+    let b =
+        DeploymentHome::new_bound(&root, "org.example/demo", None, "helper", &b_binding).unwrap();
+    let plan_hash = "a".repeat(64);
+    let sidecar = LockResources {
+        schema: LOCK_RESOURCES_EPOCH,
+        committed: None,
+        pending: Some(LockBinding {
+            operation_binding: Some(a_binding.clone()),
+            generation: 0,
+            plan_hash: plan_hash.clone(),
+            resources: vec!["bin/helper".into()],
+            native: None,
+        }),
+    };
+    state.write_lock_resources(&a, &sidecar).unwrap();
+    assert!(matches!(
+        state.write_lock_resources(&b, &sidecar),
+        Err(DeployError::BindingMismatch { .. })
+    ));
+    let checkpoint = CheckpointRecord {
+        schema: CHECKPOINT_EPOCH,
+        operation_binding: Some(a_binding.clone()),
+        plan_hash: plan_hash.clone(),
+        completed: vec!["store/payload".into()],
+    };
+    state.write_checkpoints(&a, &checkpoint).unwrap();
+    assert!(matches!(
+        state.write_checkpoints(&b, &checkpoint),
+        Err(DeployError::BindingMismatch { .. })
+    ));
+    assert!(matches!(
+        state.read_checkpoints(&a, &"b".repeat(64)),
+        Err(DeployError::BindingMismatch { .. })
+    ));
+    let mut inverse = InverseRecord::new(
+        0,
+        "org.vibevm/vibe#vibe-bin",
+        "bin/helper",
+        &plan_hash,
+        "pointer:a",
+    );
+    assert!(matches!(
+        state.write_inverse(&a, &inverse),
+        Err(DeployError::BindingMismatch { .. })
+    ));
+    inverse.operation_binding = Some(a_binding);
+    state.write_inverse(&a, &inverse).unwrap();
+    assert!(matches!(
+        state.write_inverse(&b, &inverse),
+        Err(DeployError::BindingMismatch { .. })
+    ));
+}
+
+#[test]
 fn bound_apply_refuses_before_selection_or_state_creation() {
     let fixture = Fixture::new("helper-bytes");
     let targets = [target("local-helper", "helper.exe", &[])];
@@ -126,6 +190,18 @@ fn bound_receipts_stay_distinct_and_copied_legacy_receipt_refuses() {
     let mut a_receipt = prior.clone();
     a_receipt.operation_binding = Some(a_binding.clone());
     state.write_receipt(&a, &a_receipt).unwrap();
+    assert!(matches!(
+        super::sidecar::inverse_locks(
+            None,
+            &a_receipt,
+            super::sidecar::Ownership {
+                target: "local-helper",
+                pin: "org.example/deployers#fixture",
+                reference: false,
+            }
+        ),
+        Err(DeployError::LockSidecarMissing { .. })
+    ));
     let mut b_receipt = prior.clone();
     b_receipt.operation_binding = Some(b_binding.clone());
     state.write_receipt(&b, &b_receipt).unwrap();

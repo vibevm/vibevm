@@ -40,6 +40,22 @@ use super::{MechanismError, preview};
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum DeployProviderError {
+    /// A pinned bound provider has been planned, but the engine has not yet
+    /// proved a binding-aware durable journal for this effect verb. No
+    /// provider effect is attempted through this refusal.
+    #[error(
+        "[[deploy.target]] `{target}` cannot run bound vibe-bin `{operation}` before the host-issued binding and durable recovery carriers are admitted (violates spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-BOUND-BUILTIN)"
+    )]
+    BoundEffectNotReady {
+        target: String,
+        operation: &'static str,
+    },
+
+    #[error(
+        "[[deploy.target]] `{target}` bound artifact `{artifact}` differs from the pinned project-root record admitted by the host (violates spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-BOUND-BUILTIN)"
+    )]
+    BoundArtifactMismatch { target: String, artifact: String },
+
     /// A selected package-native provider failed admission or one exact
     /// operation. The reason is sanitized and bounded before construction;
     /// request bodies and configuration never enter this diagnostic.
