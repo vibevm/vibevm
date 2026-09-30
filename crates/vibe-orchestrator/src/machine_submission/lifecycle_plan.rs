@@ -1,7 +1,8 @@
 //! Versioned bytes for a lifecycle command's pre-install plan.
 //!
-//! Only the selected `vibe.toml` and optional `vibe.lock` are witnessed here.
-//! Other workspace members, installed sources, handler executables, and the
+//! The selected node and workspace root each contribute their `vibe.toml`
+//! and optional `vibe.lock` witnesses. Other workspace members, installed
+//! sources, handler executables, and the
 //! post-install RitualPlan are outside this identity. The builder is pure and
 //! does not provide a content CAS against writers outside the lease protocol.
 
@@ -17,7 +18,7 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::install::{InstallInputs, InstallPolicy};
 
-const FORMAT: &str = "vibevm.lifecycle.pre-effect-plan/1";
+const FORMAT: &str = "vibevm.lifecycle.pre-effect-plan/2";
 const FILE_CAP: u64 = 8 * 1024 * 1024;
 const PATH_CAP: usize = 128 * 1024;
 const SELECTED_CAP: usize = 128 * 1024;
@@ -34,7 +35,10 @@ pub(crate) struct LifecyclePreEffectPlanInput<'a> {
     pub lease_root: &'a Path,
     pub selected_root: &'a Path,
     pub selected_node: &'a str,
+    /// Exact selected-node files; may differ from the workspace-root files.
     pub witness: &'a SelectedManifestLockWitness,
+    /// Exact workspace-root files, including the effective-world lock.
+    pub workspace_witness: &'a SelectedManifestLockWitness,
     pub requested: Phase,
     pub agent_mode: &'a RunAgentMode,
     pub trace_flag: bool,
@@ -52,6 +56,11 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
     input: &LifecyclePreEffectPlanInput<'_>,
 ) -> Result<Vec<u8>> {
     input.witness.validate()?;
+    input.workspace_witness.validate()?;
+    ensure!(
+        input.lease_root != input.selected_root || input.witness == input.workspace_witness,
+        "one root cannot have two different manifest/lock witnesses"
+    );
     let lease_root = path_value(input.lease_root, "lease_root")?;
     let selected_root = path_value(input.selected_root, "selected_root")?;
     bounded("selected_node", input.selected_node.len(), SELECTED_CAP)?;
@@ -61,6 +70,14 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
         .lock
         .as_ref()
         .map(|witness| witness_value(witness, "vibe.lock"))
+        .transpose()?;
+    let workspace_manifest =
+        witness_value(&input.workspace_witness.manifest, "workspace vibe.toml")?;
+    let workspace_lock = input
+        .workspace_witness
+        .lock
+        .as_ref()
+        .map(|witness| witness_value(witness, "workspace vibe.lock"))
         .transpose()?;
     let packages = bounded_strings("packages", &input.install_inputs.packages)?;
     let features = bounded_strings("features", &input.install_inputs.features)?;
@@ -86,6 +103,8 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
         "selected_node": input.selected_node,
         "manifest": manifest,
         "lock": lock,
+        "workspace_manifest": workspace_manifest,
+        "workspace_lock": workspace_lock,
         "requested": input.requested.as_str(),
         "chain": chain,
         "agent_mode": agent_mode,
@@ -164,7 +183,7 @@ fn bounded_strings<'a>(name: &str, values: &'a [String]) -> Result<Vec<&'a str>>
 }
 
 fn witness_value(witness: &SelectedFileWitness, name: &str) -> Result<Value> {
-    ensure!(witness.size <= FILE_CAP, "{name} exceeds selected-file cap");
+    ensure!(witness.size <= FILE_CAP, "{name} exceeds source-file cap");
     ensure!(
         witness.size == witness.bytes.len() as u64,
         "{name} witness byte count differs from its size"
@@ -220,349 +239,5 @@ fn hex(bytes: &[u8]) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use vibe_core::manifest::SpecFormat;
-
-    fn witness(byte: u8) -> SelectedFileWitness {
-        SelectedFileWitness::from_bytes(vec![byte])
-    }
-
-    fn model<'a>(
-        root: &'a Path,
-        sources: &'a SelectedManifestLockWitness,
-        policy: &'a InstallPolicy,
-        install: &'a InstallInputs,
-        mode: &'a RunAgentMode,
-    ) -> LifecyclePreEffectPlanInput<'a> {
-        LifecyclePreEffectPlanInput {
-            lease_root: root,
-            selected_root: root,
-            selected_node: ".",
-            witness: sources,
-            requested: Phase::Create,
-            agent_mode: mode,
-            trace_flag: false,
-            effective_trace: false,
-            force: false,
-            assume_yes: false,
-            policy,
-            install_inputs: install,
-        }
-    }
-
-    #[test]
-    fn same_inputs_have_same_bytes_and_no_identity_or_clock_field() {
-        let dir = tempfile::tempdir().unwrap();
-        let sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        let policy = InstallPolicy::default();
-        let install = InstallInputs::default();
-        let mode = RunAgentMode::Cli;
-        let input = model(dir.path(), &sources, &policy, &install, &mode);
-        // Exact-field destructuring fails to compile if a future edit adds a
-        // random run ID or start clock to this input type.
-        let LifecyclePreEffectPlanInput {
-            lease_root,
-            selected_root,
-            selected_node,
-            witness,
-            requested,
-            agent_mode,
-            trace_flag,
-            effective_trace,
-            force,
-            assume_yes,
-            policy,
-            install_inputs,
-        } = &input;
-        let _ = (
-            lease_root,
-            selected_root,
-            selected_node,
-            witness,
-            requested,
-            agent_mode,
-            trace_flag,
-            effective_trace,
-            force,
-            assume_yes,
-            policy,
-            install_inputs,
-        );
-        let before = std::fs::read_dir(dir.path()).unwrap().count();
-        let first = canonical_lifecycle_pre_effect_plan(&input).unwrap();
-        let second = canonical_lifecycle_pre_effect_plan(&input).unwrap();
-        assert_eq!(first, second);
-        assert!(first.starts_with(b"{\"agent_mode\":\"cli\","));
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-        let parsed: Value = serde_json::from_slice(&first).unwrap();
-        assert_eq!(parsed["chain"][0], "validate");
-        assert_eq!(parsed["requested"], "create");
-        assert!(parsed.get("run_id").is_none() && parsed.get("started").is_none());
-    }
-
-    fn assert_changed(input: LifecyclePreEffectPlanInput<'_>, baseline: &[u8]) {
-        assert_ne!(
-            canonical_lifecycle_pre_effect_plan(&input).unwrap(),
-            baseline
-        );
-    }
-
-    #[test]
-    fn critical_posture_witness_and_path_changes_change_bytes() {
-        let dir = tempfile::tempdir().unwrap();
-        let sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        let mut policy = InstallPolicy::default();
-        let mut install = InstallInputs::default();
-        let mode = RunAgentMode::Cli;
-        let baseline = canonical_lifecycle_pre_effect_plan(&model(
-            dir.path(),
-            &sources,
-            &policy,
-            &install,
-            &mode,
-        ))
-        .unwrap();
-
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.effective_trace = true;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.trace_flag = true;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.force = true;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.assume_yes = true;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.requested = Phase::Build;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.selected_node = "member";
-        assert_changed(changed, &baseline);
-        let other_root = dir.path().join("other");
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.selected_root = &other_root;
-        assert_changed(changed, &baseline);
-        let mut changed = model(dir.path(), &sources, &policy, &install, &mode);
-        changed.lease_root = &other_root;
-        assert_changed(changed, &baseline);
-        let agent_mode = RunAgentMode::Agent;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &agent_mode),
-            &baseline,
-        );
-
-        let with_lock = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: Some(witness(b'b')),
-        };
-        assert_changed(
-            model(dir.path(), &with_lock, &policy, &install, &mode),
-            &baseline,
-        );
-        let changed_sources = SelectedManifestLockWitness {
-            manifest: witness(b'b'),
-            lock: None,
-        };
-        assert_changed(
-            model(dir.path(), &changed_sources, &policy, &install, &mode),
-            &baseline,
-        );
-
-        policy.offline = true;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        policy.offline = false;
-        policy.spec_format_default = Some(SpecFormat::Xml);
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        policy.spec_format_default = None;
-        policy.slot_integrity = SlotIntegrity::Verify;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        policy.slot_integrity = SlotIntegrity::TrustPresence;
-
-        install.packages.push("org.example/demo".into());
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        install.packages.clear();
-        install.features.push("extra".into());
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        install.features.clear();
-        install.language = Some("rust".into());
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        install.language = None;
-        install.no_default_features = true;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        install.no_default_features = false;
-        install.all_features = true;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-        install.all_features = false;
-        install.exact = true;
-        assert_changed(
-            model(dir.path(), &sources, &policy, &install, &mode),
-            &baseline,
-        );
-    }
-
-    #[test]
-    fn oversized_fields_refuse_before_any_write() {
-        let dir = tempfile::tempdir().unwrap();
-        let sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        let policy = InstallPolicy::default();
-        let mut install = InstallInputs::default();
-        install.packages.push("x".repeat(INPUT_STRING_CAP + 1));
-        let mode = RunAgentMode::Cli;
-        let before = std::fs::read_dir(dir.path()).unwrap().count();
-        let error = canonical_lifecycle_pre_effect_plan(&model(
-            dir.path(),
-            &sources,
-            &policy,
-            &install,
-            &mode,
-        ))
-        .unwrap_err()
-        .to_string();
-        assert!(error.contains("packages exceeds"), "{error}");
-        install.packages = vec!["x".repeat(3000); INPUT_COUNT_CAP];
-        let error = canonical_lifecycle_pre_effect_plan(&model(
-            dir.path(),
-            &sources,
-            &policy,
-            &install,
-            &mode,
-        ))
-        .unwrap_err()
-        .to_string();
-        assert!(error.contains("canonical_plan exceeds"), "{error}");
-        install.packages.clear();
-        let oversized_root = dir.path().join("x".repeat(PATH_CAP + 1));
-        let mut input = model(dir.path(), &sources, &policy, &install, &mode);
-        input.selected_root = &oversized_root;
-        let error = canonical_lifecycle_pre_effect_plan(&input)
-            .unwrap_err()
-            .to_string();
-        assert!(error.contains("selected_root exceeds"), "{error}");
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-    }
-
-    #[test]
-    fn fabricated_same_format_digest_refuses_before_serialization() {
-        let dir = tempfile::tempdir().unwrap();
-        let mut sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        sources.manifest.sha256 = format!("sha256:{}", "b".repeat(64));
-        let policy = InstallPolicy::default();
-        let install = InstallInputs::default();
-        let mode = RunAgentMode::Cli;
-        let before = std::fs::read_dir(dir.path()).unwrap().count();
-        let error = canonical_lifecycle_pre_effect_plan(&model(
-            dir.path(),
-            &sources,
-            &policy,
-            &install,
-            &mode,
-        ))
-        .unwrap_err()
-        .to_string();
-        assert!(error.contains("digest does not match bytes"), "{error}");
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-    }
-
-    #[cfg(unix)]
-    #[test]
-    fn unix_path_encoding_preserves_non_utf8_bytes_without_writing() {
-        use std::ffi::OsStr;
-        use std::os::unix::ffi::OsStrExt;
-
-        let dir = tempfile::tempdir().unwrap();
-        let selected = dir.path().join(OsStr::from_bytes(b"member-\xff"));
-        let sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        let policy = InstallPolicy::default();
-        let install = InstallInputs::default();
-        let mode = RunAgentMode::Cli;
-        let mut input = model(dir.path(), &sources, &policy, &install, &mode);
-        input.selected_root = &selected;
-        let before = std::fs::read_dir(dir.path()).unwrap().count();
-        let bytes = canonical_lifecycle_pre_effect_plan(&input).unwrap();
-        let parsed: Value = serde_json::from_slice(&bytes).unwrap();
-        assert_eq!(parsed["selected_root"]["encoding"], "unix-bytes-hex");
-        assert!(
-            parsed["selected_root"]["value"]
-                .as_str()
-                .unwrap()
-                .ends_with("ff")
-        );
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-    }
-
-    #[cfg(windows)]
-    #[test]
-    fn windows_path_encoding_preserves_wide_units_without_writing() {
-        use std::ffi::OsString;
-        use std::os::windows::ffi::OsStringExt;
-
-        let dir = tempfile::tempdir().unwrap();
-        let selected = dir.path().join(OsString::from_wide(&[0xd800]));
-        let sources = SelectedManifestLockWitness {
-            manifest: witness(b'a'),
-            lock: None,
-        };
-        let policy = InstallPolicy::default();
-        let install = InstallInputs::default();
-        let mode = RunAgentMode::Cli;
-        let mut input = model(dir.path(), &sources, &policy, &install, &mode);
-        input.selected_root = &selected;
-        let before = std::fs::read_dir(dir.path()).unwrap().count();
-        let bytes = canonical_lifecycle_pre_effect_plan(&input).unwrap();
-        let parsed: Value = serde_json::from_slice(&bytes).unwrap();
-        assert_eq!(
-            parsed["selected_root"]["encoding"],
-            "windows-utf16-units-hex"
-        );
-        assert!(
-            parsed["selected_root"]["value"]
-                .as_str()
-                .unwrap()
-                .ends_with("d800")
-        );
-        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-    }
-}
+#[path = "lifecycle_plan/tests.rs"]
+mod tests;
