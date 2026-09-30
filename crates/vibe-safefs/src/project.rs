@@ -315,16 +315,35 @@ impl Project {
     fn acquire(&self, name: &str, blocking: bool) -> Result<Option<LockGuard>> {
         ensure_safe_component(name)?;
         let vibe = self.dir(&[".vibe"], true)?;
-        let display = vibe.join(name);
+        vibe.acquire_lock_file(name, blocking)
+    }
+}
+
+impl Pinned {
+    /// Try to lock one regular single-link file directly below this held
+    /// directory. Two aliases that pin the same directory contend on the
+    /// same file; no ambient pathname is opened. A nonparticipating writer
+    /// can still mutate content, so this is a cooperating-writer fence.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PHYSICAL-TARGET-FENCE",
+        r = 1
+    )]
+    pub fn try_lock_file(&self, name: &str) -> Result<Option<LockGuard>> {
+        self.acquire_lock_file(name, false)
+    }
+
+    fn acquire_lock_file(&self, name: &str, blocking: bool) -> Result<Option<LockGuard>> {
+        ensure_safe_component(name)?;
+        let display = self.join(name);
         for _ in 0..LOCK_ATTEMPTS {
             let mut options = crate::file::cap_options();
-            let file = vibe
+            let file = self
                 .dir
                 .open_with(name, options.read(true).write(true).create(true))
                 .with_context(|| format!("opening lock `{}`", display.display()))?
                 .into_std();
             crate::file::verify_regular_single_link(&file, &display)?;
-            crate::race_hook::before_lock(&vibe, name);
+            crate::race_hook::before_lock(self, name);
             let held = if blocking {
                 file.lock()
                     .map(|()| true)
@@ -342,7 +361,7 @@ impl Project {
             if !held {
                 return Ok(None);
             }
-            if still_named(&vibe, name, &file, &display)? {
+            if still_named(self, name, &file, &display)? {
                 return Ok(Some(LockGuard { _file: file }));
             }
             // Dropping releases the lock on the object the name no longer
