@@ -10,8 +10,13 @@ use std::process::{Command, Stdio};
 use specmark::spec;
 use thiserror::Error;
 
+mod package_tree_snapshot;
 mod scratch;
 mod source_snapshot;
+pub use package_tree_snapshot::{
+    PackageTreeFileWitness, PackageTreeWitness, PackageTreeWitnessError,
+    capture_package_tree_witness, recheck_package_tree_witness,
+};
 use scratch::create_unique_file;
 pub use scratch::{
     PendingReply, ScratchError, allocate_pending_reply, allocate_run_id,
