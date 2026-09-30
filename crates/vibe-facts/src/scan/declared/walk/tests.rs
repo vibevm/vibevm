@@ -25,6 +25,7 @@ fn provenance<'o, 'raw>(
         | DeclaredDocumentObservation::Raw { provenance, .. }
         | DeclaredDocumentObservation::Unsupported { provenance, .. }
         | DeclaredDocumentObservation::Invalid { provenance, .. }
+        | DeclaredDocumentObservation::Structure { provenance, .. }
         | DeclaredDocumentObservation::Facts { provenance, .. } => provenance,
     }
 }
@@ -149,4 +150,30 @@ fn declared_directory_media_not_suffix_selects_xml_reader() {
         provenance(&observed.documents[0].1).reader,
         Some("vibe-specdoc:xml/spec")
     );
+}
+
+#[test]
+fn exact_commonmark_structure_is_complete_without_facts_but_directory_default_is_not() {
+    let exact = package(
+        "[[sources]]\nfile = 'README.md'\nmedia = 'text/markdown'\ninterpretation = 'commonmark'\nrole = 'documentation'\nloading = 'scan'\n",
+    );
+    let raw = b"# Title\n\n#use package and @requires:plan stay prose.\n";
+    let observed = observe_declared_source(&exact, &[row("README.md", Some(raw))]).unwrap();
+    assert!(observed.complete);
+    assert!(observed.facts.is_empty());
+    assert!(
+        matches!(&observed.documents[0].1, DeclaredDocumentObservation::Structure { provenance, document }
+        if provenance.reader == Some("vibe-specdoc:commonmark") && document.source().as_bytes() == raw)
+    );
+
+    let directory = package(
+        "[[sources]]\ndirectory = 'docs'\nmedia = 'text/markdown'\ninterpretation = 'commonmark'\nrole = 'documentation'\nloading = 'scan'\n",
+    );
+    let observed = observe_declared_source(&directory, &[row("docs/one.md", Some(raw))]).unwrap();
+    assert!(!observed.complete);
+    assert!(observed.facts.is_empty());
+    assert!(matches!(
+        &observed.documents[0].1,
+        DeclaredDocumentObservation::Structure { .. }
+    ));
 }

@@ -101,7 +101,10 @@ pub fn observe_declared_source<'a>(
                 }
                 facts.push(fact.clone());
             }
-        } else if !matches!(&observed, DeclaredDocumentObservation::Raw { .. }) {
+        } else if !matches!(
+            &observed,
+            DeclaredDocumentObservation::Raw { .. } | DeclaredDocumentObservation::Structure { .. }
+        ) {
             complete = false;
         }
         documents.push((path, observed));

@@ -27,10 +27,11 @@ pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use report::{AdoptionCounts, AuthoredFact, adoption_counts, authored_facts};
 pub use scan::{
     AdoptionObservation, AdoptionRow, AuthoredSourceObservation, CapturedDeclaredDocument,
-    DeclaredDocumentObservation, DeclaredReadProvenance, DeclaredSourceDisposition,
-    DeclaredTreeObservation, DeclaredWalkError, SourceFileWitness, SourceIssue, SourceKind,
-    address_prefix, join_adoption, observe_authored_source, observe_declared_document,
-    observe_declared_source, scan_authored_facts,
+    DeclaredDocumentObservation, DeclaredExportError, DeclaredExportResolution,
+    DeclaredReadProvenance, DeclaredSourceDisposition, DeclaredTreeObservation, DeclaredWalkError,
+    SourceFileWitness, SourceIssue, SourceKind, address_prefix, join_adoption,
+    observe_authored_source, observe_declared_document, observe_declared_source,
+    resolve_declared_export, scan_authored_facts,
 };
 pub use store::{Registry, RegistrySnapshot};
 

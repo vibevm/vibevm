@@ -9,12 +9,15 @@ use vibe_core::PackageKind;
 use vibe_core::manifest::{
     PackageMeta, SelectedSource, SourceDescriptor, SourceInterpretation, SourceSelectionError,
 };
+use vibe_specdoc::commonmark::CommonMarkDoc;
 use vibe_specdoc::doc::Vocabulary;
 
 use super::{SourceFileWitness, address_prefix};
 use crate::AuthoredFact;
 
+mod export;
 mod walk;
+pub use export::{DeclaredExportError, DeclaredExportResolution, resolve_declared_export};
 pub use walk::{
     CapturedDeclaredDocument, DeclaredTreeObservation, DeclaredWalkError, observe_declared_source,
 };
@@ -75,6 +78,12 @@ pub enum DeclaredDocumentObservation<'a> {
     Facts {
         provenance: DeclaredReadProvenance,
         facts: Vec<AuthoredFact>,
+    },
+    /// Ordinary Markdown structure from exactly the witnessed UTF-8 bytes.
+    /// No Vibe fact or directive reader runs for this variant.
+    Structure {
+        provenance: DeclaredReadProvenance,
+        document: CommonMarkDoc,
     },
 }
 
@@ -154,10 +163,27 @@ pub fn observe_declared_document<'a>(
             });
         }
         SourceInterpretation::Commonmark => {
-            return Ok(DeclaredDocumentObservation::Unsupported {
+            if media != "text/markdown" {
+                return Ok(DeclaredDocumentObservation::Unsupported {
+                    provenance,
+                    bytes: raw,
+                    reason: "declared media has no ordinary CommonMark reader",
+                });
+            }
+            let text = match std::str::from_utf8(raw) {
+                Ok(text) => text,
+                Err(error) => {
+                    return Ok(DeclaredDocumentObservation::Invalid {
+                        provenance,
+                        bytes: raw,
+                        reason: format!("invalid UTF-8: {error}"),
+                    });
+                }
+            };
+            provenance.reader = Some("vibe-specdoc:commonmark");
+            return Ok(DeclaredDocumentObservation::Structure {
                 provenance,
-                bytes: raw,
-                reason: "ordinary CommonMark structural reader is not wired at this seam",
+                document: CommonMarkDoc::parse(text),
             });
         }
         SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc => {}
