@@ -6,6 +6,7 @@ mod error;
 mod fingerprint;
 mod identity;
 mod io;
+mod outcome_marker;
 mod recovery;
 mod run_journal;
 mod store;
@@ -30,6 +31,11 @@ pub(crate) use fingerprint::{
     prepare_handler_execution_with,
 };
 pub use identity::{RunIdentity, SupersededTrace, select_run_identity};
+#[allow(
+    unused_imports,
+    reason = "C.2 pure validator; owner persistence follows"
+)]
+pub use outcome_marker::{LifecycleOutcomeMarkerError, validate_lifecycle_outcome_marker};
 #[allow(unused_imports, reason = "C.2 preparation; domain adapter follows")]
 pub use run_journal::{
     LifecycleRunJournalError, LifecycleRunJournalObservation, inspect_reserved_lifecycle_run,

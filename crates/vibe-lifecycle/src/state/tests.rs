@@ -37,6 +37,10 @@ mod inputs;
 mod observe;
 
 #[cfg(test)]
+#[path = "tests/outcome_marker.rs"]
+mod outcome_marker;
+
+#[cfg(test)]
 #[path = "tests/lockfile.rs"]
 mod lockfile;
 
