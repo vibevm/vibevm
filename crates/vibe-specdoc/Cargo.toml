@@ -21,6 +21,7 @@ quick-xml.workspace = true
 progress-core.workspace = true
 # Separate ordinary CommonMark reader; never feeds the Vibe fact/directive IR.
 pulldown-cmark.workspace = true
+sha2.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

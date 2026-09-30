@@ -7,7 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#g
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as _, ser::Error as _};
 
 use crate::capability_ref::CapabilityRef;
 use crate::error::{Error, Result};
@@ -25,7 +25,7 @@ use super::capabilities::{AccessLevel, Requires, link_key};
 use super::deps::{inline_to_git_dep, inline_to_path_dep, inline_to_var_dep};
 use super::{
     Authorship, GitPackageDep, GitRefKind, LinkType, Materialization, PackageFormat, PackageMeta,
-    PathPackageDep, PublishPosture, VarRegistryDep, is_false,
+    PathPackageDep, PublishPosture, SourceExport, VarRegistryDep, is_false,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -82,6 +82,8 @@ struct PackageMetaWire {
     spec_format: Option<SpecFormat>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     sources: Vec<SourceDescriptor>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    source_exports: Vec<SourceExport>,
     #[serde(default, skip_serializing_if = "is_false")]
     frozen: bool,
     #[serde(default)]
@@ -173,8 +175,22 @@ impl Serialize for PackageMeta {
     where
         S: Serializer,
     {
+        validate_source_export_names(&self.source_exports).map_err(S::Error::custom)?;
         PackageMetaWire::from(self.clone()).serialize(serializer)
     }
+}
+
+fn validate_source_export_names(exports: &[SourceExport]) -> std::result::Result<(), String> {
+    let mut names = std::collections::BTreeSet::new();
+    for export in exports {
+        if !names.insert(export.name()) {
+            return Err(format!(
+                "source export name `{}` is duplicated in this package",
+                export.name()
+            ));
+        }
+    }
+    Ok(())
 }
 
 impl<'de> Deserialize<'de> for PackageMeta {
@@ -182,7 +198,9 @@ impl<'de> Deserialize<'de> for PackageMeta {
     where
         D: Deserializer<'de>,
     {
-        Ok(PackageMetaWire::deserialize(deserializer)?.into())
+        let wire = PackageMetaWire::deserialize(deserializer)?;
+        validate_source_export_names(&wire.source_exports).map_err(D::Error::custom)?;
+        Ok(wire.into())
     }
 }
 
@@ -272,6 +290,7 @@ impl From<PackageMeta> for PackageMetaWire {
             epoch: value.epoch,
             spec_format: value.spec_format,
             sources: value.sources,
+            source_exports: value.source_exports,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,
@@ -301,6 +320,7 @@ impl From<PackageMetaWire> for PackageMeta {
             epoch: value.epoch,
             spec_format: value.spec_format,
             sources: value.sources,
+            source_exports: value.source_exports,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,

@@ -1,4 +1,5 @@
-use super::{CommonMarkDoc, HeadingLookupError, NodeKind};
+use super::{CommonMarkDoc, ExportResolutionError, HeadingLookupError, NodeKind};
+use sha2::{Digest, Sha256};
 
 #[test]
 fn structural_sections_fences_and_links_keep_exact_source_spans() {
@@ -104,4 +105,61 @@ fn vibe_shaped_words_remain_ordinary_text_even_in_tables_and_code() {
             .count(),
         1
     );
+}
+
+#[test]
+fn named_export_walks_exact_nested_sections_and_binds_captured_bytes() {
+    let source = "# Guide\n\n## Introduction\nText and [link](target).\n\n## Other\nRest.\n";
+    let path = ["Guide".to_owned(), "Introduction".to_owned()];
+    let doc = CommonMarkDoc::parse(source);
+    let selected = doc.resolve_export("intro.v1", &path).unwrap();
+    assert_eq!(selected.name, "intro.v1");
+    assert_eq!(selected.node, doc.heading("Introduction").unwrap());
+    assert_eq!(
+        &source[selected.span.clone()],
+        "## Introduction\nText and [link](target).\n\n"
+    );
+    assert_eq!(selected.source_sha256.len(), 71);
+    assert_eq!(
+        selected.source_sha256,
+        format!("sha256:{:x}", Sha256::digest(source.as_bytes()))
+    );
+    assert_eq!(doc.resolve_export("intro.v1", &path).unwrap(), selected);
+
+    let changed = CommonMarkDoc::parse(&source.replace("Text and", "Changed text and"));
+    let changed_export = changed.resolve_export("intro.v1", &path).unwrap();
+    assert_ne!(selected.source_sha256, changed_export.source_sha256);
+    assert_ne!(selected.span, changed_export.span);
+}
+
+#[test]
+fn named_export_refuses_sibling_ambiguity_missing_and_malformed_selectors() {
+    let doc = CommonMarkDoc::parse("# Guide\n## Repeat\nA.\n## Repeat\nB.\n");
+    let repeated = ["Guide".to_owned(), "Repeat".to_owned()];
+    assert!(matches!(
+        doc.resolve_export("repeat", &repeated),
+        Err(ExportResolutionError::Ambiguous { index: 1, .. })
+    ));
+    assert!(matches!(
+        doc.resolve_export("missing", &["Guide".into(), "Absent".into()]),
+        Err(ExportResolutionError::Missing { index: 1, .. })
+    ));
+    assert!(matches!(
+        doc.resolve_export("1bad", &["Guide".into()]),
+        Err(ExportResolutionError::MalformedName)
+    ));
+    for bad in [
+        vec![],
+        vec![" Guide".into()],
+        vec!["Guide  Name".into()],
+        vec!["Guide", ""].into_iter().map(str::to_owned).collect(),
+    ] {
+        assert!(
+            matches!(
+                doc.resolve_export("valid", &bad),
+                Err(ExportResolutionError::MalformedHeadings)
+            ),
+            "{bad:?}"
+        );
+    }
 }

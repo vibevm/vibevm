@@ -5066,6 +5066,7 @@ dependencies = [
  "progress-core",
  "pulldown-cmark",
  "quick-xml",
+ "sha2",
  "tempfile",
 ]
 
