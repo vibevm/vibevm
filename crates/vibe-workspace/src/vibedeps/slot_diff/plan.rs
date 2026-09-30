@@ -23,6 +23,7 @@ impl DiffPlan {
         slot: &Path,
         incoming: &[PreparedSlotFile],
         old: &SlotRecord,
+        strict: bool,
     ) -> Result<Self, WorkspaceError> {
         let old_files: BTreeMap<&str, &SlotFile> = old
             .files
@@ -55,6 +56,7 @@ impl DiffPlan {
                 old_file,
                 file.sha256(),
                 stale_scaffold,
+                strict,
             )?);
         }
         Ok(Self { keep, stale })

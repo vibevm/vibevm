@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
-use std::io::{Read, Write};
+use std::io::Read;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
@@ -16,11 +16,23 @@ use super::{
 };
 use crate::{WorkspaceError, path_to_slash};
 
+mod place;
 mod plan;
 mod report;
 
+#[cfg(test)]
+#[path = "slot_diff/strict_tests.rs"]
+mod strict_tests;
+
+use place::{place_all, place_atomically, place_strict_recorded};
 use plan::DiffPlan;
 pub(crate) use report::MaterialiseReport;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum PublicationPolicy {
+    Legacy,
+    DescriptorStrict,
+}
 
 /// Content prepared and hashed before the slot is mutated.
 pub(super) struct PreparedSlotFile {
@@ -126,13 +138,41 @@ pub(super) fn reconcile_slot(
     files: &[PreparedSlotFile],
     record: &SlotRecord,
 ) -> Result<MaterialiseReport, WorkspaceError> {
+    reconcile_slot_with_policy(slot, files, record, PublicationPolicy::Legacy)
+}
+
+/// Opt-in publication fence for descriptor-owned materialization. An
+/// unrecorded slot is never claimed, and a new output name never replaces an
+/// occupant even when its bytes happen to match. This is a cooperative
+/// target-filesystem fence: recorded exact-owned updates still replace after
+/// validation, and concurrent external writers can race that validation.
+pub(super) fn reconcile_slot_descriptor(
+    slot: &Path,
+    files: &[PreparedSlotFile],
+    record: &SlotRecord,
+) -> Result<MaterialiseReport, WorkspaceError> {
+    reconcile_slot_with_policy(slot, files, record, PublicationPolicy::DescriptorStrict)
+}
+
+fn reconcile_slot_with_policy(
+    slot: &Path,
+    files: &[PreparedSlotFile],
+    record: &SlotRecord,
+    policy: PublicationPolicy,
+) -> Result<MaterialiseReport, WorkspaceError> {
     let old_record = inspect_existing_record(slot)?;
     let footprint = files.iter().map(|file| file.path.clone()).collect();
 
     let Some(old_record) = old_record else {
-        let migrated = slot.exists();
-        migrate_unrecorded_slot(slot)?;
-        place_all(slot, files)?;
+        let migrated = if policy == PublicationPolicy::Legacy {
+            let existed = slot.exists();
+            migrate_unrecorded_slot(slot)?;
+            existed
+        } else {
+            create_new_slot(slot)?;
+            false
+        };
+        place_all(slot, files, policy)?;
         write_record_last(slot, record)?;
         let written = files.iter().map(|file| file.path.clone()).collect();
         return Ok(MaterialiseReport::new(
@@ -145,12 +185,31 @@ pub(super) fn reconcile_slot(
         ));
     };
 
-    let plan = DiffPlan::build(slot, files, &old_record)?;
+    let plan = DiffPlan::build(
+        slot,
+        files,
+        &old_record,
+        policy == PublicationPolicy::DescriptorStrict,
+    )?;
+    if policy == PublicationPolicy::DescriptorStrict {
+        verify_recorded_paths(slot, &old_record)?;
+    }
     let removed = remove_stale_files(slot, &plan.stale)?;
     let mut written = Vec::new();
     for (file, keep) in files.iter().zip(plan.keep) {
         if !keep {
-            place_atomically(slot, file)?;
+            let replace = if policy == PublicationPolicy::Legacy {
+                true
+            } else {
+                let wire = file.path_wire();
+                old_record.files.iter().any(|old| old.path == wire)
+                    && exact_spelling_present(&slot.join(&file.path))?
+            };
+            if policy == PublicationPolicy::DescriptorStrict && replace {
+                place_strict_recorded(slot, file)?;
+            } else {
+                place_atomically(slot, file, replace)?;
+            }
             written.push(file.path.clone());
         }
     }
@@ -192,8 +251,13 @@ fn inspect_destination(
     old: Option<&super::SlotFile>,
     incoming_hash: &str,
     stale_scaffold: bool,
+    strict: bool,
 ) -> Result<bool, WorkspaceError> {
     match fs::symlink_metadata(path) {
+        Ok(_) if strict && old.is_none() && !stale_scaffold => Err(materialisation_error(
+            path,
+            "strict descriptor publication found an unrecorded occupied output path",
+        )),
         Ok(metadata) if old.is_none() && metadata.file_type().is_file() => {
             let actual = sha256_file(path).map_err(|reason| materialisation_error(path, reason))?;
             if actual == incoming_hash {
@@ -232,6 +296,47 @@ fn inspect_destination(
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
         Err(error) => Err(io_err(path, error)),
     }
+}
+
+fn exact_spelling_present(path: &Path) -> Result<bool, WorkspaceError> {
+    let parent = path.parent().expect("an output path has a parent");
+    let name = path.file_name().expect("an output path has a basename");
+    let entries = match fs::read_dir(parent) {
+        Ok(entries) => entries,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+        Err(error) => return Err(io_err(parent, error)),
+    };
+    for entry in entries {
+        if entry.map_err(|error| io_err(parent, error))?.file_name() == name {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+fn verify_recorded_paths(slot: &Path, record: &SlotRecord) -> Result<(), WorkspaceError> {
+    for old in &record.files {
+        let path = slot.join(&old.path);
+        let metadata = match fs::symlink_metadata(&path) {
+            Ok(metadata) => metadata,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(error) => return Err(io_err(&path, error)),
+        };
+        if !metadata.file_type().is_file() || !exact_spelling_present(&path)? {
+            return Err(materialisation_error(
+                &path,
+                "recorded descriptor output is not an exact-spelling regular file",
+            ));
+        }
+        let actual = sha256_file(&path).map_err(|reason| materialisation_error(&path, reason))?;
+        if actual != old.sha256 {
+            return Err(materialisation_error(
+                &path,
+                "recorded descriptor output changed before replacement or removal",
+            ));
+        }
+    }
+    Ok(())
 }
 
 fn directory_contains_only_stale(
@@ -388,115 +493,20 @@ fn migrate_unrecorded_slot(slot: &Path) -> Result<(), WorkspaceError> {
     fs::create_dir_all(slot).map_err(|error| io_err(slot, error))
 }
 
-fn place_all(slot: &Path, files: &[PreparedSlotFile]) -> Result<(), WorkspaceError> {
-    for file in files {
-        place_atomically(slot, file)?;
-    }
-    Ok(())
-}
-
-fn place_atomically(slot: &Path, file: &PreparedSlotFile) -> Result<(), WorkspaceError> {
-    let destination = slot.join(&file.path);
-    let parent = destination
-        .parent()
-        .expect("a prepared relative file always has a parent");
-    fs::create_dir_all(parent).map_err(|error| io_err(parent, error))?;
-    match &file.content {
-        PreparedContent::Bytes(bytes) => {
-            let mut temporary = staged_file(parent)?;
-            temporary
-                .as_file_mut()
-                .write_all(bytes)
-                .map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
+fn create_new_slot(slot: &Path) -> Result<(), WorkspaceError> {
+    match fs::symlink_metadata(slot) {
+        Ok(_) => {
+            return Err(materialisation_error(
+                slot,
+                "strict descriptor publication refuses an unrecorded existing slot",
+            ));
         }
-        PreparedContent::Source {
-            path,
-            mode: CopyMode::Copy,
-        } => {
-            let temporary = staged_file(parent)?;
-            fs::copy(path, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
-        }
-        PreparedContent::Source {
-            path,
-            mode: CopyMode::Hardlink,
-        } => place_hardlink(path, &destination, parent, &file.sha256),
-    }
-}
-
-fn staged_file(parent: &Path) -> Result<tempfile::NamedTempFile, WorkspaceError> {
-    tempfile::Builder::new()
-        .prefix(".vibe-place-")
-        .tempfile_in(parent)
-        .map_err(|error| io_err(parent, error))
-}
-
-fn persist_staged(
-    temporary: tempfile::NamedTempFile,
-    destination: &Path,
-    expected_hash: &str,
-) -> Result<(), WorkspaceError> {
-    let actual = sha256_file(temporary.path())
-        .map_err(|reason| materialisation_error(temporary.path(), reason))?;
-    if actual != expected_hash {
-        return Err(materialisation_error(
-            destination,
-            format!(
-                "incoming payload changed while materialising: prepared {}, placed {actual}",
-                expected_hash
-            ),
-        ));
-    }
-    temporary
-        .as_file()
-        .sync_all()
-        .map_err(|error| io_err(temporary.path(), error))?;
-    temporary
-        .into_temp_path()
-        .persist(destination)
-        .map_err(|error| io_err(destination, error.error))?;
-    Ok(())
-}
-
-fn place_hardlink(
-    source: &Path,
-    destination: &Path,
-    parent: &Path,
-    expected_hash: &str,
-) -> Result<(), WorkspaceError> {
-    let source_hash =
-        sha256_file(source).map_err(|reason| materialisation_error(source, reason))?;
-    if source_hash != expected_hash {
-        return Err(materialisation_error(
-            destination,
-            format!(
-                "incoming payload changed while materialising: prepared {expected_hash}, source {source_hash}"
-            ),
-        ));
-    }
-    match fs::remove_file(destination) {
-        Ok(()) => {}
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => return Err(io_err(destination, error)),
+        Err(error) => return Err(io_err(slot, error)),
     }
-    if fs::hard_link(source, destination).is_ok() {
-        let actual = sha256_file(destination)
-            .map_err(|reason| materialisation_error(destination, reason))?;
-        if actual == expected_hash {
-            return Ok(());
-        }
-        let _ = fs::remove_file(destination);
-        return Err(materialisation_error(
-            destination,
-            format!(
-                "incoming payload changed while materialising: prepared {expected_hash}, linked {actual}"
-            ),
-        ));
-    }
-    let temporary = staged_file(parent)?;
-    fs::copy(source, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
-    persist_staged(temporary, destination, expected_hash)
+    let parent = slot.parent().expect("a slot has a parent");
+    fs::create_dir_all(parent).map_err(|error| io_err(parent, error))?;
+    fs::create_dir(slot).map_err(|error| io_err(slot, error))
 }
 
 fn remove_stale_files(slot: &Path, stale: &[PathBuf]) -> Result<Vec<PathBuf>, WorkspaceError> {
