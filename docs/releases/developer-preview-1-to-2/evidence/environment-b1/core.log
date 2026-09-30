@@ -1,0 +1,20 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-core v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.65s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-d561f242d587f08b)
+
+running 10 tests
+test environment::exact::tests::exact_constraint_mismatch_and_unknown_selected_facts_refuse ... ok
+test environment::exact::tests::missing_or_extra_capture_refuses_exact_lock ... ok
+test environment::exact::tests::windows_target_never_serializes_linux_ids_or_unproven_acl ... ok
+test environment::exact::tests::wrong_target_privileged_and_incomplete_payload_evidence_refuse ... ok
+test environment::exact::tests::macos_generation_uses_distinct_posix_policy_and_principal_tags ... ok
+test environment::exact::tests::payload_bytes_and_target_metadata_change_generation_digest ... ok
+test environment::exact::tests::external_configuration_bytes_bind_exact_lock_and_absence_refuses ... ok
+test environment::exact::tests::package_configuration_bytes_bind_exact_lock_and_absence_refuses ... ok
+test environment::exact::tests::authored_any_selects_concrete_target_and_role_in_exact_identity ... ok
+test environment::exact::tests::reordered_equivalent_definition_and_lock_have_one_exact_digest ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 559 filtered out; finished in 0.00s
