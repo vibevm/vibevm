@@ -91,7 +91,14 @@
         "crates/vibe-lifecycle/src/state/identity.rs",
         "crates/vibe-lifecycle/src/process/scratch.rs",
         "crates/vibe-lifecycle/src/state/run_journal.rs",
-        "crates/vibe-lifecycle/src/runner/tests.rs"
+        "crates/vibe-lifecycle/src/runner/tests.rs",
+        "schemas/lifecycle_report.jtd.json",
+        "schemas/lifecycle_state.jtd.json",
+        "formats/REGISTRY.toml",
+        "crates/vibe-wire/src/generated/lifecycle_report/mod.rs",
+        "crates/vibe-orchestrator/src/values.rs",
+        "crates/vibe-orchestrator/src/failure.rs",
+        "formats/EPOCHS.toml"
       ],
       "write_paths": [
         "crates/vibe-orchestrator/src/",
@@ -110,7 +117,12 @@
         "crates/vibe-orchestrator/src/command.rs",
         "crates/vibe-orchestrator/src/prelude.rs",
         "crates/vibe-lifecycle/src/state/identity.rs",
-        "crates/vibe-lifecycle/src/process/scratch.rs"
+        "crates/vibe-lifecycle/src/process/scratch.rs",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/",
+        "crates/vibe-orchestrator/src/values.rs",
+        "crates/vibe-orchestrator/src/failure.rs"
       ],
       "steps": [
         "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
@@ -146,7 +158,8 @@
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "C.2 must keep the ordinary default-lifecycle path byte/behavior compatible while a separate machine path reserves a pure run ID, proves its matching lifecycle journal and ready marker, then permits scratch/prerequisite/provider effects. A matching lifecycle freshness header is not a terminal result; per-run owner-retained outcomes and cross-domain recovery remain separate work."
+        "C.2 must keep the ordinary default-lifecycle path byte/behavior compatible while a separate machine path reserves a pure run ID, proves its matching lifecycle journal and ready marker, then permits scratch/prerequisite/provider effects. A matching lifecycle freshness header is not a terminal result; per-run owner-retained outcomes and cross-domain recovery remain separate work.",
+        "A lifecycle freshness header is not a terminal result. The lifecycle owner must retain a registered per-run marker and validated report payload (or typed unavailable partial evidence) under its own lease-pinned state, before replying. A displaced header without that owner record remains recovery-required; no result is copied into the reservation index."
       ]
     },
     {
