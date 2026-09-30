@@ -4,6 +4,7 @@ use std::fs;
 use std::path::Path;
 
 use super::*;
+use vibe_core::manifest::SpecFormat;
 
 /// A package tree with one spec document and a manifest.
 fn package(root: &Path, group: &str, name: &str, version: &str, lang: Option<&str>, body: &str) {
@@ -187,4 +188,189 @@ fn a_directory_that_is_not_a_version_is_not_a_candidate() {
     fs::create_dir_all(packages.join("org.acme/lib/notes")).unwrap();
     let world = SpecSources::new().with_in_tree(&packages);
     assert!(world.instance_of("org.acme", "lib").is_none());
+}
+
+fn descriptor_lock_world() -> (tempfile::TempDir, PathBuf, String) {
+    let root = tempfile::tempdir().unwrap();
+    fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\ngroup='org.host'\nname='reader'\nversion='1.1.0'\n",
+    )
+    .unwrap();
+    let source = tempfile::tempdir().unwrap();
+    let specs = vibe_core::layout::current_specs_root();
+    let guide_xml = specs.join("common/guide.xml");
+    let guide_md = specs.join("common/guide.md");
+    let data_xml = specs.join("common/data.xml");
+    for (relative, bytes) in [
+        (&guide_xml, b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><RULE fact=\"true\" status=\"spec/done\">selected XML</RULE></p></spec>\n".as_slice()),
+        (&guide_md, b"# Ordinary\n\n@fact:FAKE literal CommonMark.\n".as_slice()),
+        (&data_xml, b"<data>raw XML</data>\n".as_slice()),
+    ] {
+        let path = source.path().join(relative);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, bytes).unwrap();
+    }
+    let slash = |path: &Path| path.to_string_lossy().replace('\\', "/");
+    let manifest = format!(
+        "[package]\ngroup='org.acme'\nname='lib'\nkind='flow'\nversion='1.1.0'\nformat='normal'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+        slash(&guide_xml),
+        slash(&guide_md),
+        slash(&data_xml),
+    );
+    fs::write(source.path().join("vibe.toml"), manifest).unwrap();
+    let group = Group::parse("org.acme").unwrap();
+    let version: semver::Version = "1.1.0".parse().unwrap();
+    let hash = ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
+    vibe_workspace::vibedeps::materialise_with_spec_format(
+        root.path(),
+        &group,
+        "lib",
+        &version,
+        source.path(),
+        vibe_workspace::vibedeps::CopyMode::Copy,
+        SpecFormat::Mixed,
+        &hash,
+    )
+    .unwrap();
+    let slot = vibe_workspace::vibedeps::slot_abs_path(root.path(), &group, "lib", &version);
+    let lock = format!(
+        "[meta]\ngenerated_by='test'\ngenerated_at='2026-10-01T00:00:00Z'\nschema_version={}\n\
+         [[package]]\nkind='flow'\nname='lib'\ngroup='org.acme'\nversion='1.1.0'\n\
+         source_url='file:///fixture'\ncontent_hash='{}'\n",
+        vibe_core::manifest::CURRENT_SCHEMA_VERSION,
+        hash.as_str(),
+    );
+    fs::write(root.path().join("vibe.lock"), &lock).unwrap();
+    (root, slot, lock)
+}
+
+#[test]
+fn lock_citation_selects_vibe_xml_beside_raw_same_stem_resources() {
+    let (root, slot, _) = descriptor_lock_world();
+    let world = SpecSources::new().with_lock(root.path());
+    let found = world
+        .locate(&address("spec://org.acme/lib/common/guide#RULE"))
+        .unwrap();
+    assert_eq!(found.source, Source::Lock);
+    assert_eq!(
+        found.path,
+        slot.join(vibe_core::layout::current_specs_root())
+            .join("common/guide.xml")
+    );
+    assert_eq!(
+        fs::read(
+            slot.join(vibe_core::layout::current_specs_root())
+                .join("common/guide.md")
+        )
+        .unwrap(),
+        b"# Ordinary\n\n@fact:FAKE literal CommonMark.\n"
+    );
+}
+
+#[test]
+fn lock_citation_refuses_foreign_hash_or_changed_selected_output() {
+    let (root, slot, lock) = descriptor_lock_world();
+    let world = SpecSources::new().with_lock(root.path());
+    let cite = address("spec://org.acme/lib/common/guide#RULE");
+    fs::write(
+        root.path().join("vibe.lock"),
+        lock.replace(&"1".repeat(64), &"2".repeat(64)),
+    )
+    .unwrap();
+    let foreign = world.locate(&cite).unwrap_err();
+    assert!(foreign.contains("source hash"), "{foreign}");
+    fs::write(root.path().join("vibe.lock"), lock).unwrap();
+    fs::write(
+        slot.join(vibe_core::layout::current_specs_root())
+            .join("common/guide.xml"),
+        b"changed XML\n",
+    )
+    .unwrap();
+    let changed = world.locate(&cite).unwrap_err();
+    assert!(changed.contains("changed bytes"), "{changed}");
+}
+
+#[test]
+fn in_tree_and_store_declared_sources_refuse_unwitnessed_suffix_lookup() {
+    let (root, slot, _) = descriptor_lock_world();
+    let source = root.path().join("packs/org.acme/lib/v1.1.0");
+    fs::create_dir_all(source.parent().unwrap()).unwrap();
+    fs::rename(&slot, &source).unwrap();
+    let cite = address("spec://org.acme/lib/common/guide#RULE");
+    for world in [
+        SpecSources::new().with_in_tree(root.path().join("packs")),
+        SpecSources::new().with_store(root.path().join("packs")),
+    ] {
+        let error = world.locate(&cite).unwrap_err();
+        assert!(error.contains("descriptor-owned"), "{error}");
+    }
+}
+
+#[test]
+fn lock_citation_cannot_downgrade_after_manifest_rows_or_record_disappear() {
+    let (root, slot, _) = descriptor_lock_world();
+    let world = SpecSources::new().with_lock(root.path());
+    let cite = address("spec://org.acme/lib/common/guide#RULE");
+    let manifest = fs::read_to_string(slot.join("vibe.toml")).unwrap();
+    let stripped = manifest.split("[[package.sources]]").next().unwrap();
+    fs::write(slot.join("vibe.toml"), stripped).unwrap();
+    let altered = world.locate(&cite).unwrap_err();
+    assert!(altered.contains("manifest bytes differ"), "{altered}");
+    fs::remove_file(slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME)).unwrap();
+    let missing = world.locate(&cite).unwrap_err();
+    assert!(missing.contains("no retained slot record"), "{missing}");
+}
+
+#[test]
+fn no_descriptor_copied_lock_slot_keeps_legacy_lookup() {
+    let root = tempfile::tempdir().unwrap();
+    fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\nname='reader'\nversion='1.1.0'\n",
+    )
+    .unwrap();
+    let source = tempfile::tempdir().unwrap();
+    package(
+        source.path(),
+        "org.acme",
+        "lib",
+        "1.0.1",
+        None,
+        "legacy rule",
+    );
+    let group = Group::parse("org.acme").unwrap();
+    let version: semver::Version = "1.0.1".parse().unwrap();
+    let hash = ContentHash::parse(&format!("sha256:{}", "3".repeat(64))).unwrap();
+    vibe_workspace::vibedeps::materialise_with_spec_format(
+        root.path(),
+        &group,
+        "lib",
+        &version,
+        source.path(),
+        vibe_workspace::vibedeps::CopyMode::Copy,
+        SpecFormat::Mixed,
+        &hash,
+    )
+    .unwrap();
+    fs::write(
+        root.path().join("vibe.lock"),
+        format!(
+            "[meta]\ngenerated_by='test'\ngenerated_at='2026-10-01T00:00:00Z'\nschema_version={}\n\
+         [[package]]\nkind='flow'\nname='lib'\ngroup='org.acme'\nversion='1.0.1'\n\
+         source_url='file:///fixture'\ncontent_hash='{}'\n",
+            vibe_core::manifest::CURRENT_SCHEMA_VERSION,
+            hash.as_str(),
+        ),
+    )
+    .unwrap();
+    let world = SpecSources::new().with_lock(root.path());
+    let found = world
+        .locate(&address("spec://org.acme/lib/common/PROP-001#A-RULE"))
+        .unwrap();
+    assert_eq!(found.source, Source::Lock);
+    assert!(found.path.ends_with("PROP-001-thing.xml"));
 }

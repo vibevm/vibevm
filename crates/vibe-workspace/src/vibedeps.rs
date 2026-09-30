@@ -45,7 +45,8 @@ pub use derived::{
     read_derived_manifest,
 };
 pub use descriptor_map::{
-    read_validated_descriptor_map, read_validated_descriptor_map_optional_hash,
+    read_validated_descriptor_map, read_validated_descriptor_map_for_citation,
+    read_validated_descriptor_map_optional_hash,
 };
 pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;

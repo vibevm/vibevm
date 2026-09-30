@@ -73,6 +73,33 @@ pub fn read_validated_descriptor_map_optional_hash(
     )
 }
 
+/// Citation lookup has an independent lock hash and version, but the lock
+/// does not pin the target representation. A copied slot must retain a record
+/// even when its current manifest has no descriptor rows; an in-place legacy
+/// source may have no record and retains that weaker compatibility route.
+pub fn read_validated_descriptor_map_for_citation(
+    slot: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    expected_source_hash: &ContentHash,
+    require_legacy_record: bool,
+) -> Result<Option<ValidatedDescriptorMap>, String> {
+    read_validated_descriptor_map_with_optional_format(
+        slot,
+        group,
+        name,
+        version,
+        Some(expected_source_hash),
+        None,
+        require_legacy_record,
+        DescriptorMapLimits {
+            max_outputs: MAX_SELECTED_OUTPUTS,
+            max_total_bytes: MAX_TOTAL_OUTPUT_BYTES,
+        },
+    )
+}
+
 #[allow(
     clippy::too_many_arguments,
     reason = "testable descriptor-only resource ceiling"
@@ -84,6 +111,29 @@ pub(super) fn read_validated_descriptor_map_with_limits(
     version: &semver::Version,
     expected_source_hash: Option<&ContentHash>,
     expected_format: SpecFormat,
+    limits: DescriptorMapLimits,
+) -> Result<Option<ValidatedDescriptorMap>, String> {
+    read_validated_descriptor_map_with_optional_format(
+        slot,
+        group,
+        name,
+        version,
+        expected_source_hash,
+        Some(expected_format),
+        false,
+        limits,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn read_validated_descriptor_map_with_optional_format(
+    slot: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    expected_source_hash: Option<&ContentHash>,
+    expected_format: Option<SpecFormat>,
+    require_legacy_record: bool,
     limits: DescriptorMapLimits,
 ) -> Result<Option<ValidatedDescriptorMap>, String> {
     if limits.max_outputs == 0 || limits.max_total_bytes == 0 {
@@ -102,25 +152,41 @@ pub(super) fn read_validated_descriptor_map_with_limits(
         .get("package")
         .and_then(toml::Value::as_table)
         .is_some_and(|table| table.contains_key("sources") || table.contains_key("source_exports"));
-    if !authored {
-        return Ok(None);
-    }
-    let expected_source_hash = expected_source_hash.ok_or_else(|| {
-        "descriptor-owned slot has no independent selected source hash".to_owned()
-    })?;
     let package = Manifest::parse_str(text)
-        .map_err(|error| format!("installed descriptor manifest: {error}"))?
+        .map_err(|error| format!("installed slot manifest: {error}"))?
         .package
-        .ok_or_else(|| "installed descriptors require [package]".to_owned())?;
+        .ok_or_else(|| "installed slot requires [package]".to_owned())?;
     if &package.group != group || package.name != name || &package.version != version {
-        return Err("installed descriptor package differs from selected coordinate".into());
+        return Err("installed package differs from selected coordinate".into());
     }
     let record_before = project
         .read_file_snapshot_bounded(SLOT_RECORD_FILENAME, RECORD_CAP)
-        .map_err(|error| format!("slot record: {error:#}"))?
-        .ok_or_else(|| "descriptor-owned slot has no retained slot record".to_owned())?;
+        .map_err(|error| format!("slot record: {error:#}"))?;
+    if !authored && record_before.is_none() && !require_legacy_record {
+        let after = project
+            .read_file_snapshot_bounded(Manifest::FILENAME, MANIFEST_CAP)
+            .map_err(|error| format!("manifest recheck: {error:#}"))?
+            .ok_or_else(|| "manifest disappeared during legacy lookup".to_owned())?;
+        if manifest != after {
+            return Err("manifest changed during legacy lookup".into());
+        }
+        return Ok(None);
+    }
+    let record_before = record_before.ok_or_else(|| {
+        if authored {
+            "descriptor-owned slot has no retained slot record"
+        } else {
+            "selected copied slot has no retained slot record"
+        }
+        .to_owned()
+    })?;
     let record = read_slot_record_bytes(&slot.join(SLOT_RECORD_FILENAME), &record_before.bytes)?;
-    if &record.source_hash != expected_source_hash || record.spec_format != expected_format {
+    if (authored || require_legacy_record) && expected_source_hash.is_none() {
+        return Err("descriptor-owned slot has no independent selected source hash".into());
+    }
+    if expected_source_hash.is_some_and(|hash| &record.source_hash != hash)
+        || expected_format.is_some_and(|format| record.spec_format != format)
+    {
         return Err("slot record source hash or format differs from selected package".into());
     }
     let manifest_row = record
@@ -130,6 +196,20 @@ pub(super) fn read_validated_descriptor_map_with_limits(
         .ok_or_else(|| "slot record has no manifest output row".to_owned())?;
     if manifest_row.sha256 != manifest.sha256 {
         return Err("installed manifest bytes differ from the slot record".into());
+    }
+    if !authored {
+        let record_after = project
+            .read_file_snapshot_bounded(SLOT_RECORD_FILENAME, RECORD_CAP)
+            .map_err(|error| format!("slot record recheck: {error:#}"))?
+            .ok_or_else(|| "slot record disappeared during legacy lookup".to_owned())?;
+        let manifest_after = project
+            .read_file_snapshot_bounded(Manifest::FILENAME, MANIFEST_CAP)
+            .map_err(|error| format!("manifest recheck: {error:#}"))?
+            .ok_or_else(|| "manifest disappeared during legacy lookup".to_owned())?;
+        if record_before != record_after || manifest != manifest_after {
+            return Err("slot record or manifest changed during legacy lookup".into());
+        }
+        return Ok(None);
     }
     let spec_relative = selected_specs_root(slot)?;
     // Decide the exact finite map from validated record/manifest data before
@@ -240,7 +320,10 @@ pub(super) fn read_validated_descriptor_map_with_limits(
     let map = ValidatedDescriptorMap::from_witnessed_rows(
         slot.to_owned(),
         slot.join(spec_relative),
-        expected_source_hash.as_str().to_owned(),
+        expected_source_hash
+            .expect("descriptor-owned hash checked above")
+            .as_str()
+            .to_owned(),
         manifest.sha256,
         rows,
     )
